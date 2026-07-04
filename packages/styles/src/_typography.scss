@@ -1,0 +1,100 @@
+// Font Family Tokens
+$pathable-font-heading: 'Fredoka', system-ui, sans-serif;
+$pathable-font-alternate-heading: 'Montserrat Bold', system-ui, sans-serif;
+$pathable-font-subheading: 'Poppins Bold', system-ui, sans-serif;
+$pathable-font-body: 'Nunito', system-ui, serif;
+
+$typography-scale: (
+  'display-lg': (
+    'font-family': $pathable-font-heading,
+    'font-size': 32px,
+    'line-height': 40px,
+    'font-weight': 400,
+  ),
+  'heading-lg': (
+    'font-family': $pathable-font-subheading,
+    'font-size': 24px,
+    'line-height': 32px,
+    'font-weight': 700,
+  ),
+  'heading-md': (
+    'font-family': $pathable-font-subheading,
+    'font-size': 20px,
+    'line-height': 28px,
+    'font-weight': 700,
+  ),
+  'heading-sm': (
+    'font-family': $pathable-font-subheading,
+    'font-size': 18px,
+    'line-height': 24px,
+    'font-weight': 700,
+  ),
+  'body-lg': (
+    'font-family': $pathable-font-body,
+    'font-size': 18px,
+    'line-height': 28px,
+    'font-weight': 400,
+  ),
+  'body-md': (
+    'font-family': $pathable-font-body,
+    'font-size': 16px,
+    'line-height': 24px,
+    'font-weight': 400,
+  ),
+  'body-sm': (
+    'font-family': $pathable-font-body,
+    'font-size': 14px,
+    'line-height': 20px,
+    'font-weight': 400,
+  ),
+  'label-md': (
+    'font-family': $pathable-font-body,
+    'font-size': 14px,
+    'line-height': 20px,
+    'font-weight': 600,
+  ),
+  'label-sm': (
+    'font-family': $pathable-font-body,
+    'font-size': 12px,
+    'line-height': 16px,
+    'font-weight': 600,
+  ),
+  'caption-md': (
+    'font-family': $pathable-font-body,
+    'font-size': 12px,
+    'line-height': 16px,
+    'font-weight': 400,
+  ),
+);
+
+:root {
+  --pathable-font-heading: #{$pathable-font-heading};
+  --pathable-font-alternate-heading: #{$pathable-font-alternate-heading};
+  --pathable-font-subheading: #{$pathable-font-subheading};
+  --pathable-font-body: #{$pathable-font-body};
+}
+
+// Typography Scale
+$ui-display-lg: 32px;
+$ui-heading-lg: 24px;
+$ui-heading-md: 20px;
+$ui-heading-sm: 18px;
+$ui-body-lg: 18px;
+$ui-body-md: 16px;
+$ui-body-sm: 14px;
+$ui-label-md: 14px;
+$ui-label-sm: 12px;
+$ui-caption-md: 12px;
+
+:root {
+  --ui-display-lg: #{$ui-display-lg};
+  --ui-heading-lg: #{$ui-heading-lg};
+  --ui-heading-md: #{$ui-heading-md};
+  --ui-heading-sm: #{$ui-heading-sm};
+  --ui-body-lg: #{$ui-body-lg};
+  --ui-body-md: #{$ui-body-md};
+  --ui-body-sm: #{$ui-body-sm};
+  --ui-label-md: #{$ui-label-md};
+  --ui-label-sm: #{$ui-label-sm};
+  --ui-caption-md: #{$ui-caption-md};
+}

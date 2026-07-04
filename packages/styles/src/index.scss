@@ -1,55 +1,8 @@
-@use 'sass:color';
+@use 'sass:map';
 
-// Brand color variables
-$brand-primary: #4f46e5;
-$brand-secondary: #7c3aed;
-$font-stack:
-  'Inter',
-  system-ui,
-  -apple-system,
-  sans-serif;
-$border-radius: 8px;
-
-// Mixin for card styling
-@mixin card($padding: 1.5rem) {
-  border-radius: $border-radius;
-  padding: $padding;
-  background: white;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
-}
-
-// Root styles
-:root {
-  --color-primary: #{$brand-primary};
-  --color-secondary: #{$brand-secondary};
-  --font-family: #{$font-stack};
-}
-
-// Nested example: button component
-.btn {
-  font-family: var(--font-family);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: $border-radius;
-  cursor: pointer;
-
-  &-primary {
-    background: var(--color-primary);
-    color: white;
-
-    &:hover {
-      background: color.adjust($brand-primary, $lightness: -10%);
-    }
-  }
-}
-
-// Component using mixin
-.card {
-  @include card;
-
-  &-featured {
-    @include card(2rem);
-
-    border: 2px solid var(--color-primary);
-  }
-}
+@forward '_colors';
+@forward '_typography';
+@forward '_spacing';
+@forward '_elevation';
+@forward '_radius';
+@forward '_semantic';

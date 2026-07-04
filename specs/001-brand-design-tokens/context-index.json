@@ -1,0 +1,97 @@
+{
+  "feature": "001-brand-design-tokens",
+  "documents": {
+    "plan": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/plan.md",
+      "headings": [
+        "Summary",
+        "Technical Context",
+        "Constitution Check",
+        "Project Structure",
+        "Complexity Tracking",
+        "Phase 0: Research",
+        "Phase 1: Design and Contracts"
+      ]
+    },
+    "spec": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/spec.md",
+      "headings": [
+        "User Scenarios & Testing",
+        "User Story 1 - Developer uses CSS custom properties from the styles package (Priority: P1)",
+        "User Story 2 - Developer uses semantic color tokens for light-mode UI (Priority: P2)",
+        "User Story 3 - Developer uses SCSS variables and maps for advanced customization (Priority: P3)",
+        "Edge Cases",
+        "Requirements",
+        "Success Criteria",
+        "Assumptions",
+        "Clarifications"
+      ]
+    },
+    "research": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/research.md",
+      "headings": [
+        "1. Brand Color Data Source",
+        "2. Font-to-Role Mapping",
+        "3. Typography Scale Values",
+        "4. Elevation Box-Shadow Values",
+        "5. Semantic Token Naming Convention",
+        "6. README.md Markdown Issues",
+        "7. Package Distribution"
+      ]
+    },
+    "data-model": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/data-model.md",
+      "headings": [
+        "Entity: BrandColor",
+        "Entity: SemanticToken",
+        "Entity: FontFamilyToken",
+        "Entity: TypographyScaleToken",
+        "Entity: SpacingToken",
+        "Entity: ElevationToken",
+        "Entity: RadiusToken"
+      ]
+    },
+    "contracts": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/contracts/README.md",
+      "headings": [
+        "CSS Custom Property Contract",
+        "SCSS API",
+        "Compliance"
+      ]
+    },
+    "quickstart": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/quickstart.md",
+      "headings": [
+        "Install",
+        "CSS Import",
+        "SCSS Import",
+        "Usage Examples",
+        "Build",
+        "References"
+      ]
+    },
+    "tasks": {
+      "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/tasks.md",
+      "headings": [
+        "Phase 1: Setup (Shared Infrastructure)",
+        "Phase 2: Foundational (Blocking Prerequisites)",
+        "Phase 3: User Story 1 - Developer uses CSS custom properties from the styles package (Priority: P1)",
+        "Phase 4: User Story 2 - Developer uses semantic color tokens for light-mode UI (Priority: P2)",
+        "Phase 5: User Story 3 - Developer uses SCSS variables and maps for advanced customization (Priority: P3)",
+        "Phase 6: Polish & Cross-Cutting Concerns",
+        "Dependencies & Execution Order",
+        "Parallel Example: User Story 1",
+        "Implementation Strategy"
+      ]
+    }
+  },
+  "existing_source_files": {
+    "packages/styles/package.json": "/home/jake/PathableAI/styles/packages/styles/package.json",
+    "packages/styles/src/index.scss": "/home/jake/PathableAI/styles/packages/styles/src/index.scss",
+    "packages/styles/dist/styles.css": "/home/jake/PathableAI/styles/packages/styles/dist/styles.css",
+    "packages/styles/dist/styles.css.map": "/home/jake/PathableAI/styles/packages/styles/dist/styles.css.map",
+    "packages/styles/README.md": "/home/jake/PathableAI/styles/packages/styles/README.md",
+    "packages/styles/BRAND_RULES.md": "/home/jake/PathableAI/styles/packages/styles/BRAND_RULES.md",
+    "packages/styles/AGENTS.md": "/home/jake/PathableAI/styles/packages/styles/AGENTS.md"
+  }
+}
