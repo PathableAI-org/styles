@@ -53,11 +53,7 @@
     },
     "contracts": {
       "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/contracts/README.md",
-      "headings": [
-        "CSS Custom Property Contract",
-        "SCSS API",
-        "Compliance"
-      ]
+      "headings": ["CSS Custom Property Contract", "SCSS API", "Compliance"]
     },
     "quickstart": {
       "path": "/home/jake/PathableAI/styles/specs/001-brand-design-tokens/quickstart.md",

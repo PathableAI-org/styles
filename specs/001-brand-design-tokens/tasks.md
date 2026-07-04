@@ -1,5 +1,5 @@
 ---
-description: "Task list for Brand Design Tokens feature implementation"
+description: 'Task list for Brand Design Tokens feature implementation'
 ---
 
 # Tasks: Brand Design Tokens

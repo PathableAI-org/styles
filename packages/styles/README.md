@@ -49,17 +49,19 @@ Use exported tokens instead of hardcoded colors or font names whenever possible.
 
 ```css
 .example {
-color: var(--pathable-color-text);
-background: var(--pathable-color-surface);
-font-family: var(--pathable-font-body);
+  color: var(--pathable-color-text);
+  background: var(--pathable-color-surface);
+  font-family: var(--pathable-font-body);
 }
 ```
 
 ## Guidance
+
 See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
 Applications SHOULD consume semantic tokens like --pathable-color-text instead of directly using brand colors like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
+
 ## Accessibility
 
 PathAble styles should prioritize readability, contrast, and usability. When a brand color combination does not provide sufficient contrast, accessibility MUST take priority over visual preference.

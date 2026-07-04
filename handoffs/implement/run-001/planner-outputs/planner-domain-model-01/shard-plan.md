@@ -5,6 +5,7 @@
 **task_ids**: T001, T005, T006, T007, T008, T009, T010, T011, T012, T013, T014, T015, T016, T017, T018, T019, T020, T021, T022
 
 ### Tasks (US1 — CSS Custom Properties)
+
 - **T001**: Remove placeholder content from `packages/styles/src/index.scss`
 - **T005**: Create modular `packages/styles/src/index.scss` with `@forward` for all six partials
 - **T006**: Verify `pnpm build` succeeds
@@ -16,10 +17,12 @@
 - **T012**: Build + verify US1 tokens in dist/styles.css
 
 ### Tasks (US2 — Semantic Colors)
+
 - **T013**: Create `packages/styles/src/_semantic.scss` with 10 semantic color tokens
 - **T014**: Build + verify US2 tokens + WCAG AA contrast
 
 ### Tasks (US3 — SCSS Maps)
+
 - **T015**: Add `$brand-colors` Sass map to `_colors.scss`
 - **T016**: Add `$typography-scale` Sass map to `_typography.scss`
 - **T017**: Add `$spacing-scale` Sass map to `_spacing.scss`
@@ -30,6 +33,7 @@
 - **T022**: Build + clean test file
 
 ### Write paths
+
 - `packages/styles/src/index.scss`
 - `packages/styles/src/_colors.scss`
 - `packages/styles/src/_typography.scss`
@@ -40,6 +44,7 @@
 - `packages/styles/src/_test-import.scss` (temporary)
 
 ### Read paths
+
 - `packages/styles/src/index.scss` (existing)
 - `packages/styles/package.json`
 - `specs/001-brand-design-tokens/context-index.json`

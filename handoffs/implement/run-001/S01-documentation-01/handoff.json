@@ -3,13 +3,29 @@
   "shard_id": "S01-documentation-01",
   "agent_topology": {
     "core_agent": { "role": "orchestrator" },
-    "vertical_planner_agent": { "role": "planner", "vertical_planner_only": true, "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false },
-    "worker_agent": { "role": "executor", "single_handoff_only": true, "may_dispatch_workers": false, "may_update_tasks_md": false }
+    "vertical_planner_agent": {
+      "role": "planner",
+      "vertical_planner_only": true,
+      "may_execute_implementation": false,
+      "may_write_manifest": false,
+      "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor",
+      "single_handoff_only": true,
+      "may_dispatch_workers": false,
+      "may_update_tasks_md": false
+    }
   },
   "lifecycle_stage": "worker_execution",
   "vertical_capability": "documentation",
   "capability_boundary": {
-    "owns": ["packages/styles/README.md", "packages/styles/BRAND_RULES.md", "packages/styles/AGENTS.md", "packages/styles/.stylelintrc.json"],
+    "owns": [
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md",
+      "packages/styles/.stylelintrc.json"
+    ],
     "depends_on": [],
     "must_not_touch": ["packages/styles/src/", "packages/styles/dist/"]
   },
@@ -57,7 +73,20 @@
     "receipt_path": "handoffs/implement/run-001/S01-documentation-01/results/receipt.json",
     "committer": "core_agent",
     "contract_type": "speckit.implement.receipt.v1",
-    "required_fields": ["contract_type", "shard_id", "task_type", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_type",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
   },
-  "forbidden_actions": ["edit tasks.md", "edit packages/styles/src/", "edit packages/styles/dist/", "dispatch workers"]
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit packages/styles/src/",
+    "edit packages/styles/dist/",
+    "dispatch workers"
+  ]
 }

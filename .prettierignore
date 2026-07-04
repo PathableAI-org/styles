@@ -3,3 +3,5 @@ dist
 .specify
 .cursor
 pnpm-lock.yaml
+handoffs
+specs

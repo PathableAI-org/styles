@@ -12,9 +12,11 @@
 - **T026**: Quickstart validation — run through CSS import, SCSS import, usage examples
 
 ### Write paths
+
 - (none — verification only, no source file changes)
 
 ### Read paths
+
 - `packages/styles/package.json`
 - `packages/styles/dist/styles.css`
 - `packages/styles/src/`
@@ -22,6 +24,7 @@
 - `specs/001-brand-design-tokens/quickstart.md`
 
 ### Depends on
+
 - S02-domain-model-01 (token partials)
 - S03-domain-model-02 (semantic tokens, SCSS maps)
 - S01-documentation-01 (README, package.json, stylelint)

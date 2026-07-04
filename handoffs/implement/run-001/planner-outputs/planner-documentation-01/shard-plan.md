@@ -11,11 +11,13 @@
 - **T004**: Create `.stylelintrc.json` at `packages/styles/` with SCSS linting rules
 
 ### Write paths
+
 - `packages/styles/package.json`
 - `packages/styles/README.md`
 - `packages/styles/.stylelintrc.json`
 
 ### Read paths
+
 - `packages/styles/package.json`
 - `packages/styles/README.md`
 - `specs/001-brand-design-tokens/context-index.json`

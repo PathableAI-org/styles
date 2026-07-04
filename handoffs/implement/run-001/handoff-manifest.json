@@ -9,22 +9,34 @@
       "vertical_capability": "documentation",
       "planner_id": "planner-documentation-01",
       "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-documentation-01/shard-plan.md",
-      "handoff_draft_paths": ["handoffs/implement/run-001/S01-documentation-01/handoff.json"],
-      "context_digest_draft_paths": ["handoffs/implement/run-001/S01-documentation-01/context-digest.md"]
+      "handoff_draft_paths": [
+        "handoffs/implement/run-001/S01-documentation-01/handoff.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/run-001/S01-documentation-01/context-digest.md"
+      ]
     },
     {
       "vertical_capability": "domain-model",
       "planner_id": "planner-domain-model-01",
       "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/shard-plan.md",
-      "handoff_draft_paths": ["handoffs/implement/run-001/S02-domain-model-01/handoff.json"],
-      "context_digest_draft_paths": ["handoffs/implement/run-001/S02-domain-model-01/context-digest.md"]
+      "handoff_draft_paths": [
+        "handoffs/implement/run-001/S02-domain-model-01/handoff.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/run-001/S02-domain-model-01/context-digest.md"
+      ]
     },
     {
       "vertical_capability": "integration",
       "planner_id": "planner-integration-01",
       "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/shard-plan.md",
-      "handoff_draft_paths": ["handoffs/implement/run-001/S04-integration-01/handoff.json"],
-      "context_digest_draft_paths": ["handoffs/implement/run-001/S04-integration-01/context-digest.md"]
+      "handoff_draft_paths": [
+        "handoffs/implement/run-001/S04-integration-01/handoff.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/run-001/S04-integration-01/context-digest.md"
+      ]
     }
   ],
   "shards": [
@@ -41,7 +53,27 @@
       "handoff_path": "handoffs/implement/run-001/S02-domain-model-01/handoff.json",
       "context_digest_path": "handoffs/implement/run-001/S02-domain-model-01/context-digest.md",
       "receipt_path": "handoffs/implement/run-001/S02-domain-model-01/results/receipt.json",
-      "task_ids": ["T001", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022"],
+      "task_ids": [
+        "T001",
+        "T005",
+        "T006",
+        "T007",
+        "T008",
+        "T009",
+        "T010",
+        "T011",
+        "T012",
+        "T013",
+        "T014",
+        "T015",
+        "T016",
+        "T017",
+        "T018",
+        "T019",
+        "T020",
+        "T021",
+        "T022"
+      ],
       "vertical_capability": "domain-model"
     },
     {

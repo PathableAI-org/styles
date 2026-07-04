@@ -29,7 +29,13 @@
     },
     "T025": {
       "status": "passed",
-      "package_json_files_field": ["README.md", "BRAND_RULES.md", "AGENTS.md", "dist", "src"],
+      "package_json_files_field": [
+        "README.md",
+        "BRAND_RULES.md",
+        "AGENTS.md",
+        "dist",
+        "src"
+      ],
       "required_files_in_field": {
         "README.md": "present",
         "BRAND_RULES.md": "present",
@@ -61,7 +67,14 @@
         },
         "scss_use_entry_point": {
           "path": "packages/styles/src/index.scss",
-          "forwards": ["_colors", "_typography", "_spacing", "_elevation", "_radius", "_semantic"],
+          "forwards": [
+            "_colors",
+            "_typography",
+            "_spacing",
+            "_elevation",
+            "_radius",
+            "_semantic"
+          ],
           "summary": "SCSS entry point forwards all partials and can be consumed via @use '@pathable/styles' as tokens"
         },
         "token_examples_from_quickstart_md": {
