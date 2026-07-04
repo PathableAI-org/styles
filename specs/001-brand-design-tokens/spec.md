@@ -16,7 +16,7 @@
 - [Assumptions](#assumptions)
 - [Clarifications](#clarifications)
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Developer uses CSS custom properties from the styles package (Priority: P1)
 
@@ -74,7 +74,7 @@ A design system contributor wants to extend the styles package by importing the 
 - What happens if a future brand color update changes a hex value? (Only the token definition file needs updating; downstream consumers using semantic tokens are unaffected)
 - What if the content in README.md, BRAND_RULES.md, or AGENTS.md drifts from the shipped token values? (Documentation is authoritive for brand rules but tokens in compiled CSS are the runtime source of truth; discrepancies should be filed as issues)
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -124,7 +124,7 @@ A design system contributor wants to extend the styles package by importing the 
 - **Elevation Token**: A named CSS custom property containing a box-shadow value at a defined level (sm, md, lg, xl).
 - **Radius Token**: A named CSS custom property containing a border-radius pixel value.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

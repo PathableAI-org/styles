@@ -17,14 +17,14 @@ Visual design should support trust, clarity, and human connection. Brand express
 
 ## Color Palette
 
-| Name | Hex | RGB | CMYK | Pantone |
-|---|---:|---:|---:|---|
-| Intelligent Jade | `#1cae96` | `rgb(28, 174, 150)` | `84%, 0%, 14%, 32%` | `3272 C` |
-| PathAble Blue | `#00365c` | `rgb(0, 54, 92)` | `100%, 41%, 0%, 64%` | `541 C` |
-| Bright Blue Brooks | `#4899e8` | `rgb(72, 153, 232)` | `69%, 34%, 0%, 9%` | `2727 C` |
-| Tech Teal | `#015a76` | `rgb(1, 90, 118)` | `99%, 24%, 0%, 54%` | `3025 C` |
-| Lived-In Lime | `#d3ff66` | `rgb(211, 255, 102)` | `17%, 0%, 60%, 0%` | `388 C` |
-| Shilling Silver | `#dde2e8` | `rgb(221, 226, 232)` | `5%, 3%, 0%, 9%` | `656 C` |
+| Name               |       Hex |                  RGB |                 CMYK | Pantone  |
+| ------------------ | --------: | -------------------: | -------------------: | -------- |
+| Intelligent Jade   | `#1cae96` |  `rgb(28, 174, 150)` |  `84%, 0%, 14%, 32%` | `3272 C` |
+| PathAble Blue      | `#00365c` |     `rgb(0, 54, 92)` | `100%, 41%, 0%, 64%` | `541 C`  |
+| Bright Blue Brooks | `#4899e8` |  `rgb(72, 153, 232)` |   `69%, 34%, 0%, 9%` | `2727 C` |
+| Tech Teal          | `#015a76` |    `rgb(1, 90, 118)` |  `99%, 24%, 0%, 54%` | `3025 C` |
+| Lived-In Lime      | `#d3ff66` | `rgb(211, 255, 102)` |   `17%, 0%, 60%, 0%` | `388 C`  |
+| Shilling Silver    | `#dde2e8` | `rgb(221, 226, 232)` |     `5%, 3%, 0%, 9%` | `656 C`  |
 
 ## Color Hierarchy
 
@@ -40,11 +40,11 @@ Tertiary colors are derived from brand colors at `10%` opacity. They are intende
 
 Recommended tertiary colors:
 
-| Name | Source |
-|---|---|
-| Bright Blue Brooks 10% | `rgba(72, 153, 232, 0.1)` |
-| Shilling Silver 10% | `rgba(221, 226, 232, 0.1)` |
-| Intelligent Jade 10% | `rgba(28, 174, 150, 0.1)` |
+| Name                   | Source                     |
+| ---------------------- | -------------------------- |
+| Bright Blue Brooks 10% | `rgba(72, 153, 232, 0.1)`  |
+| Shilling Silver 10%    | `rgba(221, 226, 232, 0.1)` |
+| Intelligent Jade 10%   | `rgba(28, 174, 150, 0.1)`  |
 
 Tertiary colors should add character without reducing readability.
 
@@ -52,19 +52,19 @@ Tertiary colors should add character without reducing readability.
 
 The strongest general-purpose pairing is:
 
-| Background | Foreground | Usage |
-|---|---|---|
+| Background      | Foreground    | Usage                                               |
+| --------------- | ------------- | --------------------------------------------------- |
 | Shilling Silver | PathAble Blue | Preferred high-legibility pairing for web and print |
 
 Other approved pairings include:
 
-| Background | Foreground | Usage |
-|---|---|---|
-| PathAble Blue | White or Shilling Silver | Strong contrast |
-| Tech Teal | White | Strong contrast |
-| Intelligent Jade | White | Strong contrast |
-| Bright Blue Brooks | White | Use when contrast remains sufficient |
-| Dark brand backgrounds | Lived-In Lime | Accent or highlight only |
+| Background             | Foreground               | Usage                                |
+| ---------------------- | ------------------------ | ------------------------------------ |
+| PathAble Blue          | White or Shilling Silver | Strong contrast                      |
+| Tech Teal              | White                    | Strong contrast                      |
+| Intelligent Jade       | White                    | Strong contrast                      |
+| Bright Blue Brooks     | White                    | Use when contrast remains sufficient |
+| Dark brand backgrounds | Lived-In Lime            | Accent or highlight only             |
 
 Lived-In Lime may be used as an accent on darker backgrounds to highlight key words, focus states, or important moments. It should be used sparingly.
 
@@ -82,12 +82,12 @@ When brand expression and accessibility conflict, accessibility takes priority.
 
 ## Typography
 
-| Use | Font | Weight |
-|---|---|---|
-| Heading | `Fredoka` | `Regular` |
-| Alternate Heading | `Montserrat` | `Bold` |
-| Subheading | `Poppins` | `Bold` |
-| Body Text | `Nunito` | `Regular` |
+| Use               | Font         | Weight    |
+| ----------------- | ------------ | --------- |
+| Heading           | `Fredoka`    | `Regular` |
+| Alternate Heading | `Montserrat` | `Bold`    |
+| Subheading        | `Poppins`    | `Bold`    |
+| Body Text         | `Nunito`     | `Regular` |
 
 ## Typography Hierarchy
 

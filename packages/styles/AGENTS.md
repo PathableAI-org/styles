@@ -16,14 +16,14 @@ Agents MUST NOT invent new typography rules unless explicitly instructed.
 
 Agents MAY use these brand colors:
 
-| Name | Hex |
-|---|---:|
-| Intelligent Jade | `#1cae96` |
-| PathAble Blue | `#00365c` |
+| Name               |       Hex |
+| ------------------ | --------: |
+| Intelligent Jade   | `#1cae96` |
+| PathAble Blue      | `#00365c` |
 | Bright Blue Brooks | `#4899e8` |
-| Tech Teal | `#015a76` |
-| Lived-In Lime | `#d3ff66` |
-| Shilling Silver | `#dde2e8` |
+| Tech Teal          | `#015a76` |
+| Lived-In Lime      | `#d3ff66` |
+| Shilling Silver    | `#dde2e8` |
 
 Agents MUST preserve these names when documenting or exposing tokens.
 
@@ -82,11 +82,11 @@ Typography Tokens
 
 Agents MUST use these typography roles:
 
-Role	Font	Weight
-Heading	Fredoka	Regular
-Alternate Heading	Montserrat	Bold
-Subheading	Poppins	Bold
-Body Text	Nunito	Regular
+Role Font Weight
+Heading Fredoka Regular
+Alternate Heading Montserrat Bold
+Subheading Poppins Bold
+Body Text Nunito Regular
 
 Agents MUST use Fredoka Regular for headings when available.
 

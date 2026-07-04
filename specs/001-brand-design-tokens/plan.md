@@ -42,21 +42,21 @@ Add PathAble brand design tokens (6 brand colors, 10 semantic colors, 4 font fam
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. CSS Custom Properties Are the Runtime Contract | PASS | All tokens will be emitted as CSS custom properties in `:root` |
-| II. SCSS Is an Authoring and Extension Layer | PASS | SCSS modularized with partials; every Sass variable produces a CSS custom property |
-| III. pnpm Workspaces Structure the Repository | PASS | Package lives at `packages/styles` in existing pnpm workspace |
-| IV. First Implementation Slice Is Narrow | PASS | Only design tokens; no Vue, React, Tailwind, or full docs site in this feature |
-| V. Published Artifacts Must Be Reliable | PASS | `dist/styles.css` compiled; `package.json` will declare entrypoints; doc files included via `"files"` |
-| VI. Token Naming Must Be Semantic and Stable | PASS | `--pathable-color-bg`, `--pathable-color-text`, `--space-16`, `--elevation-sm`, etc. follow semantic convention |
-| VII. Design Source Alignment Matters | PASS | All values confirmed from Brand Book PDF, Figma text/effect properties, and COLOR_AND_TYPOGRAPHY_RULES.md |
-| VIII. Accessibility Is Part of Token Quality | PASS | SC-005 requires WCAG AA contrast (4.5:1) for `--pathable-color-text` on `--pathable-color-bg` |
-| IX. Framework Independence Comes First | PASS | Pure SCSS/CSS; no framework dependencies |
-| X. Documentation Is a First-Class Package Concern | PASS | README.md exists and is fixed; BRAND_RULES.md and AGENTS.md included; docs site deferred |
-| XI. Versioning and Release Discipline | PASS | Token additions are minor version changes. Build output verified via `pnpm build` |
+| Principle                                         | Status | Notes                                                                                                           |
+| ------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| I. CSS Custom Properties Are the Runtime Contract | PASS   | All tokens will be emitted as CSS custom properties in `:root`                                                  |
+| II. SCSS Is an Authoring and Extension Layer      | PASS   | SCSS modularized with partials; every Sass variable produces a CSS custom property                              |
+| III. pnpm Workspaces Structure the Repository     | PASS   | Package lives at `packages/styles` in existing pnpm workspace                                                   |
+| IV. First Implementation Slice Is Narrow          | PASS   | Only design tokens; no Vue, React, Tailwind, or full docs site in this feature                                  |
+| V. Published Artifacts Must Be Reliable           | PASS   | `dist/styles.css` compiled; `package.json` will declare entrypoints; doc files included via `"files"`           |
+| VI. Token Naming Must Be Semantic and Stable      | PASS   | `--pathable-color-bg`, `--pathable-color-text`, `--space-16`, `--elevation-sm`, etc. follow semantic convention |
+| VII. Design Source Alignment Matters              | PASS   | All values confirmed from Brand Book PDF, Figma text/effect properties, and COLOR_AND_TYPOGRAPHY_RULES.md       |
+| VIII. Accessibility Is Part of Token Quality      | PASS   | SC-005 requires WCAG AA contrast (4.5:1) for `--pathable-color-text` on `--pathable-color-bg`                   |
+| IX. Framework Independence Comes First            | PASS   | Pure SCSS/CSS; no framework dependencies                                                                        |
+| X. Documentation Is a First-Class Package Concern | PASS   | README.md exists and is fixed; BRAND_RULES.md and AGENTS.md included; docs site deferred                        |
+| XI. Versioning and Release Discipline             | PASS   | Token additions are minor version changes. Build output verified via `pnpm build`                               |
 
 **Gate Result**: PASS — all constitution principles satisfied. No violations requiring complexity justification.
 
@@ -107,6 +107,7 @@ No constitution violations detected. Complexity tracking is not required.
 ## Phase 0: Research
 
 No unresolved unknowns or NEEDS CLARIFICATION markers remain in the spec. All token values have been confirmed from:
+
 - Brand Book PDF (6 brand color hex values, 4 font families, typography roles)
 - Figma text layer properties (typography scale: font-size, line-height, font-weight)
 - Figma effect properties (elevation: box-shadow values using PathAble Blue at varying opacities)
@@ -118,6 +119,7 @@ The `research.md` file should document the key data sources and the decision to 
 ### Research output: [research.md](research.md)
 
 Create `research.md` documenting:
+
 1. **Data Source**: Brand Book PDF (March 2026 by CTRL STUDIO) — hex/RGB/CMYK/Pantone for 6 brand colors
 2. **Font Mapping Resolution**: COLOR_AND_TYPOGRAPHY_RULES.md corrected the FR-003 font-to-role mapping (alternate heading = Montserrat Bold, subheading = Poppins Bold)
 3. **Typographic Scale**: Figma text nodes provided exact font-size and line-height for all 10 roles
@@ -144,6 +146,7 @@ The data model captures all token entities and their attributes:
 This is a CSS design token package — there are no external API contracts, command schemas, or service interfaces. The public contract is the set of CSS custom properties emitted on `:root` and the SCSS `@forward` API.
 
 Create [contracts/README.md](contracts/README.md) documenting:
+
 - The CSS custom property naming convention (`--pathable-` prefix, `--space-`, `--elevation-`, `--radius-`)
 - The SCSS entry point (`@use '@pathable/styles'`)
 - How consumers import and use the tokens
@@ -151,6 +154,7 @@ Create [contracts/README.md](contracts/README.md) documenting:
 ### Quickstart: [quickstart.md](quickstart.md)
 
 Create a quickstart guide showing:
+
 1. Install: `pnpm add @pathable/styles`
 2. CSS import path: `@import '@pathable/styles/dist/styles.css'` or in HTML as `<link>`
 3. SCSS import path: `@use '@pathable/styles' as tokens;`

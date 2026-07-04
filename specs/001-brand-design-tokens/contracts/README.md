@@ -9,27 +9,30 @@ The `@pathable/styles` package publishes its tokens as CSS custom properties on 
 
 ### Naming Convention
 
-| Category | Prefix | Example |
-|----------|--------|---------|
-| Brand Colors | `--pathable-` + lowercase-kebab name | `--pathable-blue` |
-| Semantic Colors | `--pathable-color-` + role name | `--pathable-color-bg` |
-| Font Families | `--pathable-font-` + role name | `--pathable-font-heading` |
-| Typography Scale | `--ui-` + role + size | `--ui-heading-lg` |
-| Spacing | `--space-` + value in px | `--space-16` |
-| Elevation | `--elevation-` + level | `--elevation-md` |
-| Radius | `--radius-` + size name | `--radius-md` |
+| Category         | Prefix                               | Example                   |
+| ---------------- | ------------------------------------ | ------------------------- |
+| Brand Colors     | `--pathable-` + lowercase-kebab name | `--pathable-blue`         |
+| Semantic Colors  | `--pathable-color-` + role name      | `--pathable-color-bg`     |
+| Font Families    | `--pathable-font-` + role name       | `--pathable-font-heading` |
+| Typography Scale | `--ui-` + role + size                | `--ui-heading-lg`         |
+| Spacing          | `--space-` + value in px             | `--space-16`              |
+| Elevation        | `--elevation-` + level               | `--elevation-md`          |
+| Radius           | `--radius-` + size name              | `--radius-md`             |
 
 ### Import Paths
 
 **CSS (in HTML or CSS file):**
+
 ```html
 <link rel="stylesheet" href="node_modules/@pathable/styles/dist/styles.css" />
 ```
+
 ```css
 @import '@pathable/styles/dist/styles.css';
 ```
 
 **SCSS:**
+
 ```scss
 @use '@pathable/styles' as tokens;
 ```

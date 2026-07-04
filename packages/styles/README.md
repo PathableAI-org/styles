@@ -15,23 +15,23 @@ This package is the implementation source for PathAble visual design foundations
 
 ## Brand Colors
 
-| Name | Hex |
-|---|---:|
-| Intelligent Jade | `#1cae96` |
-| PathAble Blue | `#00365c` |
+| Name               |       Hex |
+| ------------------ | --------: |
+| Intelligent Jade   | `#1cae96` |
+| PathAble Blue      | `#00365c` |
 | Bright Blue Brooks | `#4899e8` |
-| Tech Teal | `#015a76` |
-| Lived-In Lime | `#d3ff66` |
-| Shilling Silver | `#dde2e8` |
+| Tech Teal          | `#015a76` |
+| Lived-In Lime      | `#d3ff66` |
+| Shilling Silver    | `#dde2e8` |
 
 ## Typography
 
-| Use | Font | Weight |
-|---|---|---|
-| Heading | `Fredoka` | `Regular` |
-| Alternate Heading | `Montserrat` | `Bold` |
-| Subheading | `Poppins` | `Bold` |
-| Body Text | `Nunito` | `Regular` |
+| Use               | Font         | Weight    |
+| ----------------- | ------------ | --------- |
+| Heading           | `Fredoka`    | `Regular` |
+| Alternate Heading | `Montserrat` | `Bold`    |
+| Subheading        | `Poppins`    | `Bold`    |
+| Body Text         | `Nunito`     | `Regular` |
 
 ## Usage
 
@@ -48,9 +48,9 @@ Import the SCSS entrypoint:
 Use exported tokens instead of hardcoded colors or font names whenever possible.
 
 .example {
-  color: var(--pathable-color-text);
-  background: var(--pathable-color-surface);
-  font-family: var(--pathable-font-body);
+color: var(--pathable-color-text);
+background: var(--pathable-color-surface);
+font-family: var(--pathable-font-body);
 }
 Guidance
 See BRAND_RULES.md for full color and typography guidance.
