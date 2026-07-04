@@ -1,6 +1,13 @@
 {
   "name": "@pathable/styles",
   "private": true,
+  "files": [
+    "README.md",
+    "BRAND_RULES.md",
+    "AGENTS.md",
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "sass src/index.scss dist/styles.css",
     "watch": "sass --watch src/index.scss dist/styles.css",

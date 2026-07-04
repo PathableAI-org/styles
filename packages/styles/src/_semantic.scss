@@ -1,0 +1,37 @@
+// Semantic Color Tokens
+$pathable-color-bg: #dde2e8;
+$pathable-color-surface: #ffffff;
+$pathable-color-text: #00365c;
+$pathable-color-text-muted: #015a76;
+$pathable-color-border: #dde2e8;
+$pathable-color-link: #4899e8;
+$pathable-color-accent: #1cae96;
+$pathable-color-focus-ring: #4899e8;
+$pathable-color-danger: #dc3545;
+$pathable-color-success: #1cae96;
+
+$semantic-colors: (
+  'bg': #dde2e8,
+  'surface': #ffffff,
+  'text': #00365c,
+  'text-muted': #015a76,
+  'border': #dde2e8,
+  'link': #4899e8,
+  'accent': #1cae96,
+  'focus-ring': #4899e8,
+  'danger': #dc3545,
+  'success': #1cae96,
+);
+
+:root {
+  --pathable-color-bg: #{$pathable-color-bg};
+  --pathable-color-surface: #{$pathable-color-surface};
+  --pathable-color-text: #{$pathable-color-text};
+  --pathable-color-text-muted: #{$pathable-color-text-muted};
+  --pathable-color-border: #{$pathable-color-border};
+  --pathable-color-link: #{$pathable-color-link};
+  --pathable-color-accent: #{$pathable-color-accent};
+  --pathable-color-focus-ring: #{$pathable-color-focus-ring};
+  --pathable-color-danger: #{$pathable-color-danger};
+  --pathable-color-success: #{$pathable-color-success};
+}

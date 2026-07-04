@@ -1,0 +1,11 @@
+$radius-scale: (
+  sm: 4px,
+  md: 8px,
+  lg: 12px,
+);
+
+:root {
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}

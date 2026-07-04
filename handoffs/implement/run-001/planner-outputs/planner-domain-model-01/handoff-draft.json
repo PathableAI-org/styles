@@ -1,0 +1,142 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S02-domain-model-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": {
+      "role": "planner",
+      "vertical_planner_only": true,
+      "may_execute_implementation": false,
+      "may_write_manifest": false,
+      "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor",
+      "single_handoff_only": true,
+      "may_dispatch_workers": false,
+      "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "worker_execution",
+  "vertical_capability": "domain-model",
+  "capability_boundary": {
+    "owns": ["packages/styles/src/"],
+    "depends_on": [],
+    "must_not_touch": [
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md",
+      "packages/styles/dist/"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/context-digest-draft.md",
+    "vertical_capability": "domain-model"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-domain-model-01",
+    "handoff_draft_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/context-digest-draft.md"
+  },
+  "task_ids": [
+    "T001",
+    "T005",
+    "T006",
+    "T007",
+    "T008",
+    "T009",
+    "T010",
+    "T011",
+    "T012",
+    "T013",
+    "T014",
+    "T015",
+    "T016",
+    "T017",
+    "T018",
+    "T019",
+    "T020",
+    "T021",
+    "T022"
+  ],
+  "task_type": "implementation",
+  "task_text": [
+    "- [ ] T001 Remove placeholder brand-agnostic content from `packages/styles/src/index.scss`",
+    "- [ ] T005 Create the modular `packages/styles/src/index.scss` entry point with `@forward` directives for all six partials (`_colors`, `_semantic`, `_typography`, `_spacing`, `_elevation`, `_radius`) — each wrapped in a `@use 'sass:map'` block at the top",
+    "- [ ] T006 Verify `pnpm build` succeeds at `packages/styles/` and produces valid `dist/styles.css`",
+    "- [ ] T007 [P] [US1] Create `packages/styles/src/_colors.scss` with brand color CSS custom properties: `--pathable-blue` (#00365c), `--intelligent-jade` (#1cae96), `--bright-blue-brooks` (#4899e8), `--tech-teal` (#015a76), `--lived-in-lime` (#d3ff66), `--shilling-silver` (#dde2e8) on `:root`, plus Sass variables for each (e.g., `$pathable-blue: #00365c`)",
+    "- [ ] T008 [P] [US1] Create `packages/styles/src/_typography.scss` with font family CSS custom properties (`--pathable-font-heading`: Fredoka, system-ui, sans-serif; `--pathable-font-alternate-heading`: Montserrat Bold, system-ui, sans-serif; `--pathable-font-subheading`: Poppins Bold, system-ui, sans-serif; `--pathable-font-body`: Nunito, system-ui, serif) and typography scale tokens (`--ui-display-lg` through `--ui-caption-md`) with exact font-size, line-height, and font-weight values from research.md Section 3",
+    "- [ ] T009 [P] [US1] Create `packages/styles/src/_spacing.scss` with spacing scale CSS custom properties: `--space-4`, `--space-8`, `--space-12`, `--space-16`, `--space-24`, `--space-32`, `--space-48` with corresponding pixel values on `:root`",
+    "- [ ] T010 [P] [US1] Create `packages/styles/src/_elevation.scss` with elevation CSS custom properties: `--elevation-sm`, `--elevation-md`, `--elevation-lg`, `--elevation-xl` with exact box-shadow values from research.md Section 4 on `:root`",
+    "- [ ] T011 [P] [US1] Create `packages/styles/src/_radius.scss` with border-radius CSS custom properties: `--radius-sm` (4px), `--radius-md` (8px), `--radius-lg` (12px) on `:root`",
+    "- [ ] T012 [US1] Run `pnpm build` at `packages/styles/` and verify `dist/styles.css` contains all brand color, typography, spacing, elevation, and radius tokens as CSS custom properties on `:root` with correct values",
+    "- [ ] T013 [US2] Create `packages/styles/src/_semantic.scss` with 10 semantic color CSS custom properties on `:root`: `--pathable-color-bg` (#dde2e8 or White), `--pathable-color-surface` (White), `--pathable-color-text` (#00365c), `--pathable-color-text-muted` (#015a76), `--pathable-color-border` (#dde2e8), `--pathable-color-link` (#4899e8), `--pathable-color-accent` (#1cae96), `--pathable-color-focus-ring` (#4899e8), `--pathable-color-danger` (accessibility-appropriate red), `--pathable-color-success` (#1cae96). Add Sass variables for each.",
+    "- [ ] T014 [US2] Run `pnpm build` at `packages/styles/` and verify `dist/styles.css` contains all 10 semantic tokens. Calculate contrast ratio of `--pathable-color-text` (#00365c) against `--pathable-color-bg` (#dde2e8/White) and confirm it meets WCAG AA minimum of 4.5:1.",
+    "- [ ] T015 [P] [US3] Add Sass `$brand-colors` map to `packages/styles/src/_colors.scss` containing all 6 brand colors as name-value pairs",
+    "- [ ] T016 [P] [US3] Add Sass `$typography-scale` map to `packages/styles/src/_typography.scss` containing all 10 typography roles as name-value maps with font-family, font-size, line-height, font-weight keys",
+    "- [ ] T017 [P] [US3] Add Sass `$spacing-scale` map to `packages/styles/src/_spacing.scss` containing all 7 spacing values",
+    "- [ ] T018 [P] [US3] Add Sass `$elevation-levels` map to `packages/styles/src/_elevation.scss` containing all 4 elevation levels",
+    "- [ ] T019 [P] [US3] Add Sass `$radius-scale` map to `packages/styles/src/_radius.scss` containing all 3 border-radius values",
+    "- [ ] T020 [US3] Add Sass `$semantic-colors` map to `packages/styles/src/_semantic.scss` containing all 10 semantic tokens as name-value pairs",
+    "- [ ] T021 [US3] Verify `packages/styles/src/index.scss` `@forward` directives expose all Sass variables and maps. Create a test file at `packages/styles/src/_test-import.scss` that `@use 'index' as tokens;` and outputs `$pathable-blue`, `$brand-colors`, `$semantic-colors`, `$spacing-scale` values to confirm they are accessible.",
+    "- [ ] T022 [US3] Run `pnpm build` at `packages/styles/` and confirm no errors from SCSS variable/map exports. Remove the test file `packages/styles/src/_test-import.scss` after verification."
+  ],
+  "context_digest_path": "handoffs/implement/run-001/S02-domain-model-01/context-digest.md",
+  "context_index_path": "specs/001-brand-design-tokens/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/src/index.scss",
+    "packages/styles/package.json",
+    "specs/001-brand-design-tokens/context-index.json",
+    "specs/001-brand-design-tokens/research.md",
+    "specs/001-brand-design-tokens/data-model.md",
+    "specs/001-brand-design-tokens/contracts/README.md",
+    "specs/001-brand-design-tokens/quickstart.md",
+    "specs/001-brand-design-tokens/spec.md"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/src/index.scss",
+    "packages/styles/src/_colors.scss",
+    "packages/styles/src/_typography.scss",
+    "packages/styles/src/_spacing.scss",
+    "packages/styles/src/_elevation.scss",
+    "packages/styles/src/_radius.scss",
+    "packages/styles/src/_semantic.scss",
+    "packages/styles/src/_test-import.scss",
+    "handoffs/implement/run-001/S02-domain-model-01/results",
+    "handoffs/implement/run-001/S02-domain-model-01/results/receipt.json"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "cd packages/styles && pnpm build",
+    "grep -q '--pathable-blue' packages/styles/dist/styles.css",
+    "grep -q '--space-16' packages/styles/dist/styles.css",
+    "grep -q '--elevation-md' packages/styles/dist/styles.css",
+    "grep -q '--radius-lg' packages/styles/dist/styles.css",
+    "grep -q '--pathable-color-bg' packages/styles/dist/styles.css",
+    "grep -q '--pathable-color-text' packages/styles/dist/styles.css"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-001/S02-domain-model-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_type",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit packages/styles/README.md",
+    "edit packages/styles/BRAND_RULES.md",
+    "edit packages/styles/AGENTS.md",
+    "dispatch workers"
+  ]
+}

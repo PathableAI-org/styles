@@ -1,0 +1,97 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S04-integration-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": {
+      "role": "planner",
+      "vertical_planner_only": true,
+      "may_execute_implementation": false,
+      "may_write_manifest": false,
+      "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor",
+      "single_handoff_only": true,
+      "may_dispatch_workers": false,
+      "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "worker_execution",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": ["packages/styles/dist/", "packages/styles/package.json"],
+    "depends_on": [
+      "S01-documentation-01",
+      "S02-domain-model-01",
+      "S03-domain-model-02"
+    ],
+    "must_not_touch": [
+      "packages/styles/src/",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/context-digest-draft.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-integration-01",
+    "handoff_draft_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/context-digest-draft.md"
+  },
+  "task_ids": ["T023", "T024", "T025", "T026"],
+  "task_type": "implementation",
+  "task_text": [
+    "- [ ] T023 Run `pnpm build` at `packages/styles/` and verify `dist/styles.css` compiles without warnings or errors",
+    "- [ ] T024 Run linting and formatting checks: `pnpm lint:styles` and format check",
+    "- [ ] T025 Verify `packages/styles/package.json` `\"files\"` field includes `README.md`, `BRAND_RULES.md`, `AGENTS.md`, `dist/`, and `src/` — run `pnpm pack --dry-run` if available to list included files",
+    "- [ ] T026 Quickstart validation: Run through the quickstart.md scenarios — install flow, CSS import, SCSS import, and basic usage examples"
+  ],
+  "context_digest_path": "handoffs/implement/run-001/S04-integration-01/context-digest.md",
+  "context_index_path": "specs/001-brand-design-tokens/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/package.json",
+    "packages/styles/dist/styles.css",
+    "packages/styles/src/",
+    "specs/001-brand-design-tokens/context-index.json",
+    "specs/001-brand-design-tokens/quickstart.md"
+  ],
+  "allowed_write_paths": [
+    "handoffs/implement/run-001/S04-integration-01/results",
+    "handoffs/implement/run-001/S04-integration-01/results/receipt.json"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "cd packages/styles && pnpm build",
+    "cd packages/styles && pnpm lint:styles",
+    "cd packages/styles && pnpm pack --dry-run"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-001/S04-integration-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_type",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit packages/styles/src/",
+    "edit packages/styles/README.md",
+    "edit packages/styles/BRAND_RULES.md",
+    "edit packages/styles/AGENTS.md",
+    "dispatch workers"
+  ]
+}

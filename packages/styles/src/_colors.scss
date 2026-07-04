@@ -1,0 +1,25 @@
+// Brand Color Tokens
+$pathable-blue: #00365c;
+$intelligent-jade: #1cae96;
+$bright-blue-brooks: #4899e8;
+$tech-teal: #015a76;
+$lived-in-lime: #d3ff66;
+$shilling-silver: #dde2e8;
+
+$brand-colors: (
+  'pathable-blue': #00365c,
+  'intelligent-jade': #1cae96,
+  'bright-blue-brooks': #4899e8,
+  'tech-teal': #015a76,
+  'lived-in-lime': #d3ff66,
+  'shilling-silver': #dde2e8,
+);
+
+:root {
+  --pathable-blue: #{$pathable-blue};
+  --intelligent-jade: #{$intelligent-jade};
+  --bright-blue-brooks: #{$bright-blue-brooks};
+  --tech-teal: #{$tech-teal};
+  --lived-in-lime: #{$lived-in-lime};
+  --shilling-silver: #{$shilling-silver};
+}
