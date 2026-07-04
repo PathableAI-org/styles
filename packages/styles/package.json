@@ -1,0 +1,12 @@
+{
+  "name": "@pathable/styles",
+  "private": true,
+  "scripts": {
+    "build": "sass src/index.scss dist/styles.css",
+    "watch": "sass --watch src/index.scss dist/styles.css",
+    "lint:styles": "stylelint 'src/**/*.scss'"
+  },
+  "devDependencies": {
+    "sass": "^1.86.3"
+  }
+}
