@@ -1,0 +1,28 @@
+---
+title: For Agents
+description: Rules and conventions for AI coding agents working with PathableAI styles.
+---
+
+These rules govern how AI coding agents should work with PathableAI styles.
+
+## Token usage
+
+- **MUST** use design tokens from `@pathable/styles` rather than hard-coded values.
+- **Prefer** semantic tokens (`--pathable-color-text`, `--pathable-color-surface`) over raw brand tokens for UI elements.
+
+## Color
+
+- **MUST NOT** introduce new brand colors without review. Use existing brand and semantic tokens.
+- **MUST** check contrast ratios when combining foreground and background tokens.
+- Use `--pathable-color-accent` for interactive/highlighted elements.
+
+## Typography
+
+- **MUST** use `--pathable-font-heading` (Fredoka) for all heading elements.
+- **MUST** use `--pathable-font-body` (Nunito) for all body text.
+- **MUST NOT** introduce new font families.
+
+## Spacing and layout
+
+- **SHOULD** use the `--pathable-spacing-*` scale for margins and padding.
+- **SHOULD** use `--pathable-radius-*` tokens for border-radius instead of arbitrary values.

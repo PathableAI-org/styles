@@ -1,0 +1,21 @@
+@import '@pathable/styles/dist/styles.css';
+
+:root {
+  /* Background and surface */
+  --sl-color-bg: var(--pathable-color-bg);
+  --sl-color-bg-nav: var(--pathable-color-surface);
+  --sl-color-bg-sidebar: var(--pathable-color-surface);
+  --sl-color-bg-inline-code: var(--pathable-color-surface);
+
+  /* Text */
+  --sl-color-text: var(--pathable-color-text);
+  --sl-color-text-accent: var(--pathable-color-accent);
+
+  /* Accent */
+  --sl-color-accent: var(--pathable-color-accent);
+  --sl-color-accent-high: var(--pathable-color-accent);
+
+  /* Typography */
+  --sl-font: var(--pathable-font-body);
+  --sl-font-headings: var(--pathable-font-heading);
+}
