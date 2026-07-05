@@ -1,5 +1,5 @@
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from 'astro/config'
+import starlight from '@astrojs/starlight'
 
 export default defineConfig({
   integrations: [
@@ -7,11 +7,14 @@ export default defineConfig({
       title: 'Pathable Styles',
       customCss: ['./src/styles/custom.css'],
       sidebar: [
-        { label: 'Getting Started', autogenerate: { directory: 'getting-started' } },
+        {
+          label: 'Getting Started',
+          autogenerate: { directory: 'getting-started' },
+        },
         { label: 'Foundations', autogenerate: { directory: 'foundations' } },
         { label: 'For Agents', autogenerate: { directory: 'for-agents' } },
         { label: 'Roadmap', autogenerate: { directory: 'roadmap' } },
       ],
     }),
   ],
-});
+})
