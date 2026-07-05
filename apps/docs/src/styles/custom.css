@@ -29,7 +29,8 @@
 
 html {
   scroll-padding-top: calc(
-    1.5rem + var(--sl-nav-height) + var(--sl-horizontal-nav-height) + var(--sl-mobile-toc-height, 0rem)
+    1.5rem + var(--sl-nav-height) + var(--sl-horizontal-nav-height) +
+      var(--sl-mobile-toc-height, 0rem)
   ) !important;
 }
 
@@ -47,7 +48,10 @@ html {
 
 /* Make the table of contents start below the horizontal nav */
 .right-sidebar {
-  padding-top: calc(var(--sl-nav-height) + var(--sl-horizontal-nav-height)) !important;
+  padding-top: calc(
+    var(--sl-nav-height) + var(--sl-horizontal-nav-height)
+  ) !important;
+  background: var(--sl-color-bg-nav);
 }
 
 /* ============================================
@@ -74,11 +78,6 @@ html {
 /* Subtle left sidebar styling */
 .sidebar-content {
   padding: 1.25rem var(--sl-sidebar-pad-x) 0;
-}
-
-/* TOC right sidebar background */
-.right-sidebar {
-  background: var(--sl-color-bg-nav);
 }
 
 /* ============================================

@@ -1,6 +1,5 @@
 ---
-const { sidebar, starlightRoute } = Astro.locals;
-const currentPath = starlightRoute.id;
+const currentPath = Astro.url.pathname;
 
 // Top-level page groups for the horizontal nav — mirrored from astro.config.mjs sidebar.
 // These map group labels to their main page paths.
@@ -26,7 +25,7 @@ function isCurrent(href: string): boolean {
       {
         primaryNavItems.map((item) => (
           <li class:list={['nav-item', { 'is-current': isCurrent(item.href) }]}>
-            <a href={item.href}>{item.label}</a>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
           </li>
         ))
       }
