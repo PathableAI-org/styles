@@ -6,6 +6,9 @@ export default defineConfig({
     starlight({
       title: 'Pathable Styles',
       customCss: ['./src/styles/custom.css'],
+      components: {
+        PageFrame: './src/components/PageFrame.astro',
+      },
       sidebar: [
         {
           label: 'Getting Started',
