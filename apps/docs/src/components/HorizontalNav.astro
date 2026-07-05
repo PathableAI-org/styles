@@ -1,0 +1,110 @@
+---
+const { sidebar, starlightRoute } = Astro.locals;
+const currentPath = starlightRoute.id;
+
+// Top-level page groups for the horizontal nav — mirrored from astro.config.mjs sidebar.
+// These map group labels to their main page paths.
+const primaryNavItems: { label: string; href: string }[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Getting Started', href: '/getting-started/' },
+  { label: 'Foundations', href: '/foundations/' },
+  { label: 'For Agents', href: '/for-agents/' },
+  { label: 'Roadmap', href: '/roadmap/' },
+];
+
+function isCurrent(href: string): boolean {
+  // Normalize: trim trailing slash for comparison
+  const page = currentPath.replace(/\/$/, '');
+  const target = href.replace(/\/$/, '');
+  return page === target;
+}
+---
+
+<nav class="horizontal-nav print:hidden" aria-label="Primary navigation">
+  <div class="horizontal-nav-inner">
+    <ul class="nav-list">
+      {
+        primaryNavItems.map((item) => (
+          <li class:list={['nav-item', { 'is-current': isCurrent(item.href) }]}>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .horizontal-nav {
+    position: fixed;
+    z-index: calc(var(--sl-z-index-navbar) - 1);
+    inset-inline-start: 0;
+    inset-block-start: var(--sl-nav-height);
+    width: 100%;
+    height: var(--sl-horizontal-nav-height, 3rem);
+    background-color: var(--sl-color-bg-nav);
+    border-bottom: 1px solid var(--sl-color-hairline-shade);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .horizontal-nav-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    max-width: var(--sl-content-width);
+    margin-inline: auto;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0;
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  .nav-item a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1rem;
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+  }
+
+  .nav-item a:hover {
+    color: var(--sl-color-text-accent);
+    background-color: var(--sl-color-gray-7);
+  }
+
+  .nav-item.is-current a {
+    color: var(--sl-color-text-accent);
+    border-bottom-color: var(--sl-color-accent);
+    font-weight: 600;
+  }
+
+  @media (max-width: 49.999rem) {
+    .horizontal-nav {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-item a {
+      padding: 0 0.75rem;
+      font-size: var(--sl-text-xs);
+    }
+  }
+</style>
