@@ -26,10 +26,10 @@
 
 **Purpose**: Initialize the docs workspace and update monorepo configuration
 
-- [ ] T001 Update `pnpm-workspace.yaml` at repo root to include `"apps/*"` alongside existing `"packages/*"`
-- [ ] T002 Create `apps/docs/package.json` with name `@pathable/docs`, set `"private": true`, add dependencies on `astro`, `@astrojs/starlight`, and `"@pathable/styles": "workspace:*"`
-- [ ] T003 [P] Create `apps/docs/tsconfig.json` with Astro-compatible TypeScript configuration (extends `astro/tsconfigs/strict`)
-- [ ] T004 Run `pnpm install` from repo root and verify `pnpm-lock.yaml` is updated
+- [x] T001 Update `pnpm-workspace.yaml` at repo root to include `"apps/*"` alongside existing `"packages/*"`
+- [x] T002 Create `apps/docs/package.json` with name `@pathable/docs`, set `"private": true`, add dependencies on `astro`, `@astrojs/starlight`, and `"@pathable/styles": "workspace:*"`
+- [x] T003 [P] Create `apps/docs/tsconfig.json` with Astro-compatible TypeScript configuration (extends `astro/tsconfigs/strict`)
+- [x] T004 Run `pnpm install` from repo root and verify `pnpm-lock.yaml` is updated
 
 **Checkpoint**: Docs workspace is registered and dependencies are installed.
 
@@ -41,8 +41,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create `apps/docs/astro.config.mjs` with `@astrojs/starlight` integration, title "Pathable Styles", and a placeholder sidebar that will be refined by US2 tasks
-- [ ] T006 Run `pnpm build` from repo root and confirm both `packages/styles/dist/styles.css` and `apps/docs/dist/` are produced without errors
+- [x] T005 Create `apps/docs/astro.config.mjs` with `@astrojs/starlight` integration, title "Pathable Styles", and a placeholder sidebar that will be refined by US2 tasks
+- [x] T006 Run `pnpm build` from repo root and confirm both `packages/styles/dist/styles.css` and `apps/docs/dist/` are produced without errors
 
 **Checkpoint**: Foundation ready — Starlight site builds successfully. User story implementation can now begin.
 
@@ -54,8 +54,8 @@
 
 **Independent Test**: Open `apps/docs/dist/index.html` (or dev server) and inspect the page background — it uses `var(--pathable-color-bg)` and resolves to the correct Pathable brand color. DevTools shows the custom property is defined by `@pathable/styles/dist/styles.css`.
 
-- [ ] T007 [P] [US1] Create custom stylesheet at `apps/docs/src/styles/custom.css` that imports `@pathable/styles/dist/styles.css` and applies Pathable CSS custom properties (e.g., `--pathable-color-bg`, `--pathable-color-surface`, `--pathable-color-text`, `--pathable-color-accent`, `--pathable-font-body`, `--pathable-font-heading`) to Starlight theme elements
-- [ ] T008 [US1] Create homepage at `apps/docs/src/content/docs/index.mdx` stating in plain language: that Pathable Styles is the foundational SCSS/CSS package for Pathable brand styles; the first version documents style foundations, usage guidance, and agent-facing rules; it is not yet a complete component library; future versions may add HTML/CSS examples, React examples, Vue examples, and a component catalog
+- [x] T007 [P] [US1] Create custom stylesheet at `apps/docs/src/styles/custom.css` that imports `@pathable/styles/dist/styles.css` and applies Pathable CSS custom properties (e.g., `--pathable-color-bg`, `--pathable-color-surface`, `--pathable-color-text`, `--pathable-color-accent`, `--pathable-font-body`, `--pathable-font-heading`) to Starlight theme elements
+- [x] T008 [US1] Create homepage at `apps/docs/src/content/docs/index.mdx` stating in plain language: that Pathable Styles is the foundational SCSS/CSS package for Pathable brand styles; the first version documents style foundations, usage guidance, and agent-facing rules; it is not yet a complete component library; future versions may add HTML/CSS examples, React examples, Vue examples, and a component catalog
 
 **Checkpoint**: Homepage renders with Pathable brand styles applied. Custom properties resolve from `@pathable/styles`.
 
@@ -67,11 +67,11 @@
 
 **Independent Test**: Open the built site and click each nav item. `/getting-started/` shows setup guidance with GitHub dependency instructions. `/foundations/` describes style tokens. `/for-agents/` explains agent rules. `/roadmap/` lists future plans.
 
-- [ ] T009 [P] [US2] Create Getting Started page at `apps/docs/src/content/docs/getting-started/index.mdx` with brief instructions on adding `@pathable/styles` from GitHub (e.g., `"@pathable/styles": "github:PathableAI-org/styles"` in `package.json`) and local workspace consumption via `workspace:*`
-- [ ] T010 [P] [US2] Create Foundations page at `apps/docs/src/content/docs/foundations/index.mdx` briefly describing the style foundations available: brand colors, typography (font families, scale), spacing scale, elevation levels, and border-radius tokens
-- [ ] T011 [P] [US2] Create For Agents page at `apps/docs/src/content/docs/for-agents/index.mdx` explaining the agent-facing rules and how AI agents should consume the styles package (reference `AGENTS.md` and `BRAND_RULES.md` from `packages/styles`)
-- [ ] T012 [P] [US2] Create Roadmap page at `apps/docs/src/content/docs/roadmap/index.mdx` listing future plans: HTML/CSS examples, React examples, Vue examples, component catalog, npm publishing
-- [ ] T012b [US2] Update `apps/docs/astro.config.mjs` sidebar configuration to include all four nav sections in the correct order: Getting Started, Foundations, For Agents, Roadmap
+- [x] T009 [P] [US2] Create Getting Started page at `apps/docs/src/content/docs/getting-started/index.mdx` with brief instructions on adding `@pathable/styles` from GitHub (e.g., `"@pathable/styles": "github:PathableAI-org/styles"` in `package.json`) and local workspace consumption via `workspace:*`
+- [x] T010 [P] [US2] Create Foundations page at `apps/docs/src/content/docs/foundations/index.mdx` briefly describing the style foundations available: brand colors, typography (font families, scale), spacing scale, elevation levels, and border-radius tokens
+- [x] T011 [P] [US2] Create For Agents page at `apps/docs/src/content/docs/for-agents/index.mdx` explaining the agent-facing rules and how AI agents should consume the styles package (reference `AGENTS.md` and `BRAND_RULES.md` from `packages/styles`)
+- [x] T012 [P] [US2] Create Roadmap page at `apps/docs/src/content/docs/roadmap/index.mdx` listing future plans: HTML/CSS examples, React examples, Vue examples, component catalog, npm publishing
+- [x] T012b [US2] Update `apps/docs/astro.config.mjs` sidebar configuration to include all four nav sections in the correct order: Getting Started, Foundations, For Agents, Roadmap
 
 **Checkpoint**: All four nav sections are visible in the sidebar and each page renders correct content.
 
@@ -83,7 +83,7 @@
 
 **Independent Test**: Open a PR with the docs changes. The docs-ci.yml workflow appears in the PR checks. It runs pnpm install, builds styles, then builds docs. The check shows green on success.
 
-- [ ] T013 Create `.github/workflows/docs-ci.yml` with trigger on `pull_request` (all branches), containing steps: checkout, `pnpm/action-setup` (with version from root `package.json`), `actions/setup-node`, `pnpm install`, `pnpm --filter @pathable/styles build`, `pnpm --filter @pathable/docs build`. No deploy step.
+- [x] T013 Create `.github/workflows/docs-ci.yml` with trigger on `pull_request` (all branches), containing steps: checkout, `pnpm/action-setup` (with version from root `package.json`), `actions/setup-node`, `pnpm install`, `pnpm --filter @pathable/styles build`, `pnpm --filter @pathable/docs build`. No deploy step.
 
 **Checkpoint**: PR workflow runs and validates the build.
 
@@ -95,7 +95,7 @@
 
 **Independent Test**: Merge a change to `main`. The docs-deploy.yml workflow runs, builds, and deploys to GitHub Pages. The live site is accessible at the Pages URL.
 
-- [ ] T014 Create `.github/workflows/docs-deploy.yml` with trigger on `push` to `main`, permissions `contents: read`, `pages: write`, `id-token: write`, environment `github-pages`. Steps: checkout, `pnpm/action-setup`, `actions/setup-node`, `pnpm install`, `pnpm --filter @pathable/styles build`, `pnpm --filter @pathable/docs build`, `actions/configure-pages`, `actions/upload-pages-artifact` with path `apps/docs/dist`, `actions/deploy-pages`
+- [x] T014 Create `.github/workflows/docs-deploy.yml` with trigger on `push` to `main`, permissions `contents: read`, `pages: write`, `id-token: write`, environment `github-pages`. Steps: checkout, `pnpm/action-setup`, `actions/setup-node`, `pnpm install`, `pnpm --filter @pathable/styles build`, `pnpm --filter @pathable/docs build`, `actions/configure-pages`, `actions/upload-pages-artifact` with path `apps/docs/dist`, `actions/deploy-pages`
 
 **Checkpoint**: Deploy workflow publishes to Pages on push to main.
 
@@ -105,8 +105,8 @@
 
 **Purpose**: Verification that everything works together end-to-end
 
-- [ ] T015 Run full build from repo root (`pnpm build`) and confirm zero errors
-- [ ] T016 Run quickstart.md validation path: build styles independently, build docs independently, verify nav sections in output, confirm `packages/styles` behavior is unchanged (no new files, no modified src files)
+- [x] T015 Run full build from repo root (`pnpm build`) and confirm zero errors
+- [x] T016 Run quickstart.md validation path: build styles independently, build docs independently, verify nav sections in output, confirm `packages/styles` behavior is unchanged (no new files, no modified src files)
 
 ---
 

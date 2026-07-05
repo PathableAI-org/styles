@@ -1,0 +1,73 @@
+{
+  "contract_type": "speckit.implement.context-index.v1",
+  "feature_path": "specs/002-docs-poc",
+  "feature_name": "GitHub Pages Docs PoC",
+  "documents": {
+    "spec.md": {
+      "path": "specs/002-docs-poc/spec.md",
+      "description": "Feature specification with 19 functional requirements",
+      "key_aspects": [
+        "FR-001 to FR-004: workspace setup requirements",
+        "FR-005 to FR-006: style integration requirements",
+        "FR-007: four nav sections requirement",
+        "FR-008: homepage content requirements",
+        "FR-009 to FR-012: page content requirements",
+        "FR-013: root build script requirement",
+        "FR-014: PR CI workflow requirement",
+        "FR-015 to FR-016: deploy workflow requirement",
+        "FR-019: existing styles package must be untouched"
+      ]
+    },
+    "plan.md": {
+      "path": "specs/002-docs-poc/plan.md",
+      "description": "Implementation plan with phases, project structure, and constitution check"
+    },
+    "data-model.md": {
+      "path": "specs/002-docs-poc/data-model.md",
+      "description": "Entity topology: docs workspace, docs page, GitHub Actions workflows"
+    },
+    "research.md": {
+      "path": "specs/002-docs-poc/research.md",
+      "description": "Technology confirmations — all choices specified"
+    },
+    "contracts/README.md": {
+      "path": "specs/002-docs-poc/contracts/README.md",
+      "description": "Interface contracts: workspace dependency, build output, deployment, CI"
+    },
+    "quickstart.md": {
+      "path": "specs/002-docs-poc/quickstart.md",
+      "description": "Validation path: install, build styles, build docs, full build, verify"
+    },
+    "tasks.md": {
+      "path": "specs/002-docs-poc/tasks.md",
+      "description": "Task breakdown: 6 phases, 16 tasks"
+    }
+  },
+  "constants": {
+    "workspace_name": "@pathable/docs",
+    "docs_dir": "apps/docs",
+    "styles_package": "@pathable/styles",
+    "styles_workspace_dir": "packages/styles",
+    "workspace_yaml": "pnpm-workspace.yaml",
+    "pr_workflow": ".github/workflows/docs-ci.yml",
+    "deploy_workflow": ".github/workflows/docs-deploy.yml",
+    "astro_config": "apps/docs/astro.config.mjs",
+    "package_manager": "pnpm@10.33.0",
+    "root_build_cmd": "pnpm build"
+  },
+  "boundaries": {
+    "must_not_touch": [
+      "packages/styles/src/**",
+      "packages/styles/dist/**",
+      "packages/styles/package.json",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ]
+  },
+  "existing_files": {
+    "pnpm-workspace.yaml": { "exists": true, "current": "packages:\n  - 'packages/*'\n" },
+    "root package.json": { "exists": true, "scripts.build": "pnpm -r build" },
+    "packages/styles/package.json": { "exists": true, "name": "@pathable/styles", "files": ["README.md", "BRAND_RULES.md", "AGENTS.md", "dist", "src"] }
+  }
+}
