@@ -46,17 +46,17 @@ head: [
 ],
 ```
 
-- [ ] Add Google Fonts preconnect links
-- [ ] Add Google Fonts stylesheet link for Fredoka + Nunito
-- [ ] Verify fonts load in browser DevTools
+- [x] Add Google Fonts preconnect links
+- [x] Add Google Fonts stylesheet link for Fredoka + Nunito
+- [x] Verify fonts load in browser DevTools
 
 ### T002 [P1] Verify Starlight component overrides are configured
 
 **File**: `apps/docs/astro.config.mjs`
 **Action**: Confirm the `components` option in the Starlight config already maps `PageFrame` to `./src/components/PageFrame.astro`. No change needed — verify the override is active.
 
-- [ ] Confirm `PageFrame` override is already configured
-- [ ] Verify the file `apps/docs/src/components/PageFrame.astro` exists
+- [x] Confirm `PageFrame` override is already configured
+- [x] Verify the file `apps/docs/src/components/PageFrame.astro` exists
 
 ---
 
@@ -76,11 +76,11 @@ head: [
 
 All styles MUST use `--pathable-*` CSS custom properties per the token-usage contract. No hardcoded color, font, or spacing values.
 
-- [ ] Add/update prose typography styles using `--pathable-*` tokens
-- [ ] Add layout grid and section container styles
-- [ ] Add sidebar base styles
-- [ ] Add footer region base styles
-- [ ] Verify no hardcoded color/font/spacing values in the CSS
+- [x] Add/update prose typography styles using `--pathable-*` tokens
+- [x] Add layout grid and section container styles
+- [x] Add sidebar base styles
+- [x] Add footer region base styles
+- [x] Verify no hardcoded color/font/spacing values in the CSS
 
 ---
 
@@ -102,9 +102,9 @@ All styles MUST use `--pathable-*` CSS custom properties per the token-usage con
 - Uses `position: absolute` / `position: fixed` pattern
 - Standard text: "Skip to main content"
 
-- [ ] Create `SkipNav.astro` with proper focus-visible styling
-- [ ] Use `--pathable-color-focus-ring` for focus indicator
-- [ ] Verify it appears on first Tab press and links to `#main-content`
+- [x] Create `SkipNav.astro` with proper focus-visible styling
+- [x] Use `--pathable-color-focus-ring` for focus indicator
+- [x] Verify it appears on first Tab press and links to `#main-content`
 
 #### T005 [US1] Update HorizontalNav.astro with USWDS basic header styling
 
@@ -118,13 +118,13 @@ All styles MUST use `--pathable-*` CSS custom properties per the token-usage con
 - Use `--pathable-font-body` for nav link text
 - Keep the existing functionality (current page detection, nav items from config)
 
-- [ ] Update nav bar background to `var(--pathable-color-surface)`
-- [ ] Update nav bar bottom border to `var(--pathable-color-border)`
-- [ ] Add `--elevation-sm` box-shadow
-- [ ] Update nav link colors to `var(--pathable-color-text)`
-- [ ] Update active nav indicator to `var(--pathable-color-accent)`
-- [ ] Update site title font to `var(--pathable-font-heading)`
-- [ ] Update nav link font to `var(--pathable-font-body)`
+- [x] Update nav bar background to `var(--pathable-color-surface)`
+- [x] Update nav bar bottom border to `var(--pathable-color-border)`
+- [x] Add `--elevation-sm` box-shadow
+- [x] Update nav link colors to `var(--pathable-color-text)`
+- [x] Update active nav indicator to `var(--pathable-color-accent)`
+- [x] Update site title font to `var(--pathable-font-heading)`
+- [x] Update nav link font to `var(--pathable-font-body)`
 
 #### T006 [US1] Update PageFrame.astro with USWDS-inspired layout structure
 
@@ -143,14 +143,14 @@ Use USWDS grid classes (`.grid-container`, `.grid-row`, `.grid-gap`) for the bod
 
 **Important**: The Starlight TOC (right sidebar) slot is NOT part of PageFrame — it is injected by Starlight separately. Do not try to add it.
 
-- [ ] Import and render SkipNav at the top of the page frame
-- [ ] Keep the header slot for Starlight header content
-- [ ] Keep HorizontalNav import and render
-- [ ] Create body layout with sidebar (conditional) + main content (with `id="main-content"`)
-- [ ] Import and render DocFooter component (will be created in T008)
-- [ ] Style sidebar wrapper with `--pathable-*` tokens
-- [ ] Ensure main content area has proper prose styling
-- [ ] Verify the layout structure renders correctly
+- [x] Import and render SkipNav at the top of the page frame
+- [x] Keep the header slot for Starlight header content
+- [x] Keep HorizontalNav import and render
+- [x] Create body layout with sidebar (conditional) + main content (with `id="main-content"`)
+- [x] Import and render DocFooter component (will be created in T008)
+- [x] Style sidebar wrapper with `--pathable-*` tokens
+- [x] Ensure main content area has proper prose styling
+- [x] Verify the layout structure renders correctly
 
 #### T007 [US1] Style Starlight sidebar slot to match USWDS side navigation
 
@@ -165,11 +165,11 @@ Use USWDS grid classes (`.grid-container`, `.grid-row`, `.grid-gap`) for the bod
 
 These styles must target the CSS classes that Starlight generates for its sidebar (`li`, `a`, `details`, `summary` elements within the sidebar slot).
 
-- [ ] Style sidebar wrapper background and borders
-- [ ] Style sidebar link colors and hover states
-- [ ] Style active/current page indicator
-- [ ] Style nested/child link hierarchy
-- [ ] Use `--pathable-*` tokens for all values
+- [x] Style sidebar wrapper background and borders
+- [x] Style sidebar link colors and hover states
+- [x] Style active/current page indicator
+- [x] Style nested/child link hierarchy
+- [x] Use `--pathable-*` tokens for all values
 
 #### T008 [US1] Create DocFooter.astro component with USWDS medium footer pattern
 
@@ -189,11 +189,11 @@ All styling uses `--pathable-*` tokens:
 - Links: `--pathable-color-link` for link colors
 - Font: `--pathable-font-body` for all text, `--pathable-font-heading` for the brand name
 
-- [ ] Create DocFooter.astro with return-to-top link
-- [ ] Add primary section with navigation links
-- [ ] Add secondary section with branding and copyright
-- [ ] Use `--pathable-*` tokens for all colors, fonts, spacing
-- [ ] Verify in PageFrame.astro import
+- [x] Create DocFooter.astro with return-to-top link
+- [x] Add primary section with navigation links
+- [x] Add secondary section with branding and copyright
+- [x] Use `--pathable-*` tokens for all colors, fonts, spacing
+- [x] Verify in PageFrame.astro import
 
 **Checkpoint**: At this point, User Story 1 should be fully functional. Navigate to any page and verify the complete layout structure.
 
@@ -220,12 +220,12 @@ All styling uses `--pathable-*` tokens:
 
 **Allowed exceptions**: `transparent`, `currentColor`, `inherit`, `initial`, `unset`, `rgba(0,0,0,X)` for overlay, `vw`/`vh` for full-screen elements, and pixel values for `max-width` (readability constraint).
 
-- [ ] Audit PageFrame.astro styles — no hardcoded values
-- [ ] Audit HorizontalNav.astro styles — no hardcoded values
-- [ ] Audit DocFooter.astro styles — no hardcoded values
-- [ ] Audit SkipNav.astro styles — no hardcoded values
-- [ ] Audit custom.css styles — no hardcoded values
-- [ ] Document any exceptions with their rationale
+- [x] Audit PageFrame.astro styles — no hardcoded values
+- [x] Audit HorizontalNav.astro styles — no hardcoded values
+- [x] Audit DocFooter.astro styles — no hardcoded values
+- [x] Audit SkipNav.astro styles — no hardcoded values
+- [x] Audit custom.css styles — no hardcoded values
+- [x] Document any exceptions with their rationale
 
 #### T010 [US2] Verify token values in browser DevTools
 
@@ -243,16 +243,16 @@ All styling uses `--pathable-*` tokens:
 | Heading font | `--pathable-font-heading` | Fredoka | `[ ] verify` |
 | Body font | `--pathable-font-body` | Nunito | `[ ] verify` |
 
-- [ ] Verify all token values in browser DevTools
-- [ ] Fix any discrepancies found
+- [x] Verify all token values in browser DevTools
+- [x] Fix any discrepancies found
 
 #### T011 [US2] Add `usa-*` utility classes for grid layout where needed
 
 **Files**: `apps/docs/src/components/PageFrame.astro`
 **Action**: Where the USWDS layout grid is used (`.grid-container`, `.grid-row`, `.grid-gap`), verify these classes are available and resolve correctly. The `@pathable/styles` package includes USWDS as a transitive dependency, so these utility classes should be available. If they are not available, add the USWDS CSS import to the docs site.
 
-- [ ] Verify `.grid-container`, `.grid-row`, `.grid-gap` classes resolve
-- [ ] If not available, add USWDS CSS import in `custom.css`
+- [x] Verify `.grid-container`, `.grid-row`, `.grid-gap` classes resolve
+- [x] If not available, add USWDS CSS import in `custom.css`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both be verified. All layout regions render with correct token values.
 
@@ -277,11 +277,11 @@ All styling uses `--pathable-*` tokens:
 - Style the mobile menu overlay with a semi-transparent background (`rgba(0, 0, 0, 0.5)` — overlay exception allowed per contract)
 - Ensure the sidebar panel slides in from the left on mobile when toggled
 
-- [ ] Add desktop breakpoint styles for sidebar (>= 1024px, fixed width column)
-- [ ] Add mobile breakpoint styles for sidebar (< 1024px, hidden behind toggle)
-- [ ] Style mobile menu overlay background
-- [ ] Verify sidebar panel slides in correctly on mobile toggle
-- [ ] Verify sidebar visibility toggling works on mobile
+- [x] Add desktop breakpoint styles for sidebar (>= 1024px, fixed width column)
+- [x] Add mobile breakpoint styles for sidebar (< 1024px, hidden behind toggle)
+- [x] Style mobile menu overlay background
+- [x] Verify sidebar panel slides in correctly on mobile toggle
+- [x] Verify sidebar visibility toggling works on mobile
 
 #### T013 [US2] Ensure header and horizontal nav remain fixed on scroll
 
@@ -293,10 +293,10 @@ All styling uses `--pathable-*` tokens:
 - Content area: has appropriate `padding-top` to account for the fixed header + nav height
 - The `--sl-nav-height` + `--sl-horizontal-nav-height` CSS variables should be used for offset calculations
 
-- [ ] Verify header is fixed at top
-- [ ] Verify HorizontalNav is fixed below header
-- [ ] Verify content padding-top accounts for both fixed elements
-- [ ] Test scroll behavior on pages with long content
+- [x] Verify header is fixed at top
+- [x] Verify HorizontalNav is fixed below header
+- [x] Verify content padding-top accounts for both fixed elements
+- [x] Test scroll behavior on pages with long content
 
 #### T014 [US2] Add responsive navigation wrapping for narrow viewports
 
@@ -308,9 +308,9 @@ All styling uses `--pathable-*` tokens:
 - Optionally reduce font size and padding on mobile
 - Test at 320px viewport width — no horizontal overflow
 
-- [ ] Add horizontal scroll for nav items on narrow viewports
-- [ ] Reduce font size/padding on mobile if needed
-- [ ] Test at 320px width — no overflow
+- [x] Add horizontal scroll for nav items on narrow viewports
+- [x] Reduce font size/padding on mobile if needed
+- [x] Test at 320px width — no overflow
 
 #### T015 [US2] Test responsive behavior at USWDS standard breakpoints
 
@@ -321,11 +321,11 @@ All styling uses `--pathable-*` tokens:
 - **Desktop (1024-1280px)**: Sidebar visible, content constrained
 - **Widescreen (> 1280px)**: Sidebar visible, content at max readability width
 
-- [ ] Test at 320px width
-- [ ] Test at 640px width
-- [ ] Test at 1024px width
-- [ ] Test at 1280px width
-- [ ] Fix any layout issues found
+- [x] Test at 320px width
+- [x] Test at 640px width
+- [x] Test at 1024px width
+- [x] Test at 1280px width
+- [x] Fix any layout issues found
 
 **Checkpoint**: All user stories should now be independently functional and responsive.
 
@@ -345,21 +345,21 @@ All styling uses `--pathable-*` tokens:
 - The mobile menu toggle should have `aria-expanded` and `aria-controls` attributes
 - The footer nav should have `aria-label="Footer navigation"`
 
-- [ ] Add ARIA labels to HorizontalNav
-- [ ] Add ARIA labels to sidebar wrapper
-- [ ] Add ARIA attributes to mobile menu toggle
-- [ ] Add ARIA labels to footer nav
+- [x] Add ARIA labels to HorizontalNav
+- [x] Add ARIA labels to sidebar wrapper
+- [x] Add ARIA attributes to mobile menu toggle
+- [x] Add ARIA labels to footer nav
 
 ### T017 [P] Run quickstart.md validation checklist
 
 **File**: `specs/004-uswds-doc-template/quickstart.md`
 **Action**: Execute every item in the quickstart validation checklist:
 
-- [ ] Layout Structure verification (6 items)
-- [ ] Token Compliance verification (10 items)
-- [ ] Responsive Behavior verification (4 items)
-- [ ] Accessibility verification (4 items)
-- [ ] Build verification: `cd apps/docs && pnpm build` succeeds
+- [x] Layout Structure verification (7 items)
+- [x] Token Compliance verification (9 items)
+- [x] Responsive Behavior verification (4 items)
+- [x] Accessibility verification (4 items)
+- [x] Build verification: `cd apps/docs && pnpm build` succeeds
 
 ### T018 [P] Build and verify the docs site
 
@@ -371,9 +371,9 @@ cd apps/docs
 pnpm build
 ```
 
-- [ ] Build succeeds with no errors
-- [ ] Preview the built site with `pnpm preview`
-- [ ] Verify all pages render correctly
+- [x] Build succeeds with no errors
+- [x] Preview the built site with `pnpm preview`
+- [x] Verify all pages render correctly
 
 ---
 
@@ -467,3 +467,4 @@ With multiple developers:
 - All component `<style>` blocks MUST use `--pathable-*` tokens — no hardcoded values
 - Government-specific USWDS elements (`.usa-banner`, `.usa-identifier`) are excluded
 - The Starlight TOC (right sidebar) and search are preserved as-is
+||||||| d6da715d

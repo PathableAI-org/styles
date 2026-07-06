@@ -3,6 +3,7 @@ $pathable-font-heading: 'Fredoka', system-ui, sans-serif;
 $pathable-font-alternate-heading: 'Montserrat Bold', system-ui, sans-serif;
 $pathable-font-subheading: 'Poppins Bold', system-ui, sans-serif;
 $pathable-font-body: 'Nunito', system-ui, serif;
+$pathable-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
 $typography-scale: (
   'display-lg': (
@@ -72,6 +73,7 @@ $typography-scale: (
   --pathable-font-alternate-heading: #{$pathable-font-alternate-heading};
   --pathable-font-subheading: #{$pathable-font-subheading};
   --pathable-font-body: #{$pathable-font-body};
+  --pathable-font-mono: #{$pathable-font-mono};
 }
 
 // Typography Scale

@@ -1,0 +1,31 @@
+---
+// Skip-to-main-content accessibility link
+// USWDS .usa-skipnav pattern — hidden off-screen, visible on keyboard focus
+---
+
+<a href="#main-content" class="skip-nav">
+  Skip to main content
+</a>
+
+<style>
+  .skip-nav {
+    position: absolute;
+    left: 0;
+    top: -100%;
+    z-index: 500;
+    background: var(--pathable-color-surface);
+    color: var(--pathable-color-text);
+    padding: var(--space-8) var(--space-16);
+    font-family: var(--pathable-font-body);
+    font-size: 1rem;
+    text-decoration: none;
+    outline: none;
+    transition: top 0.1s ease;
+  }
+
+  .skip-nav:focus-visible {
+    top: 0;
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+</style>
