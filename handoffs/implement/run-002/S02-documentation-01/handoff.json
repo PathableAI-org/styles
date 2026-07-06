@@ -1,0 +1,109 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S02-documentation-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": {
+      "role": "planner",
+      "vertical_planner_only": true,
+      "may_execute_implementation": false,
+      "may_write_manifest": false,
+      "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor",
+      "single_handoff_only": true,
+      "may_dispatch_workers": false,
+      "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "worker_execution",
+  "vertical_capability": "documentation",
+  "capability_boundary": {
+    "owns": [
+      "apps/docs/astro.config.mjs",
+      "apps/docs/src/styles/custom.css",
+      "apps/docs/src/content/docs/index.mdx"
+    ],
+    "depends_on": [
+      "S01-documentation-01 (workspace scaffolding: pnpm-workspace.yaml, package.json, tsconfig.json)"
+    ],
+    "must_not_touch": [
+      "packages/styles/src/",
+      "packages/styles/dist/",
+      "packages/styles/package.json",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md",
+      "specs/002-docs-poc/tasks.md",
+      "pnpm-workspace.yaml",
+      "apps/docs/package.json",
+      "apps/docs/tsconfig.json"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-002/planner-outputs/planner-documentation-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-002/planner-outputs/planner-documentation-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-002/planner-outputs/planner-documentation-01/context-digest-draft.md",
+    "vertical_capability": "documentation"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-documentation-01",
+    "handoff_draft_path": "handoffs/implement/run-002/planner-outputs/planner-documentation-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-002/planner-outputs/planner-documentation-01/context-digest-draft.md"
+  },
+  "task_ids": ["T005", "T012b", "T007", "T008"],
+  "task_type": "implementation",
+  "task_text": [
+    "- [ ] T005 + T012b (merged) Create `apps/docs/astro.config.mjs` with `@astrojs/starlight` integration, title \"Pathable Styles\", and sidebar with all four sections: Getting Started, Foundations, For Agents, Roadmap",
+    "- [ ] T007 [P] [US1] Create custom stylesheet at `apps/docs/src/styles/custom.css` that imports `@pathable/styles/dist/styles.css` and applies Pathable CSS custom properties to Starlight theme elements (background, surface, text, accent, font-body, font-heading)",
+    "- [ ] T008 [US1] Create homepage at `apps/docs/src/content/docs/index.mdx` stating: Pathable Styles is the foundational SCSS/CSS package for Pathable brand styles; first version documents style foundations, usage guidance, and agent-facing rules; it is not yet a complete component library; future versions may add HTML/CSS examples, React examples, Vue examples, and a component catalog"
+  ],
+  "context_digest_path": "handoffs/implement/run-002/S02-documentation-01/context-digest.md",
+  "context_index_path": "specs/002-docs-poc/context-index.json",
+  "allowed_read_paths": [
+    "apps/docs/package.json",
+    "specs/002-docs-poc/plan.md",
+    "specs/002-docs-poc/context-index.json",
+    "specs/002-docs-poc/spec.md",
+    "specs/002-docs-poc/data-model.md",
+    "packages/styles/dist/styles.css"
+  ],
+  "allowed_write_paths": [
+    "apps/docs/astro.config.mjs",
+    "apps/docs/src/styles/custom.css",
+    "apps/docs/src/content/docs/index.mdx",
+    "handoffs/implement/run-002/S02-documentation-01/results"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "test -f apps/docs/astro.config.mjs && echo 'config exists'",
+    "test -f apps/docs/src/styles/custom.css && echo 'custom.css exists'",
+    "test -f apps/docs/src/content/docs/index.mdx && echo 'index.mdx exists'",
+    "pnpm --filter @pathable/styles build && pnpm --filter @pathable/docs build"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-002/S02-documentation-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_type",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit packages/styles/",
+    "edit pnpm-workspace.yaml",
+    "edit apps/docs/package.json",
+    "edit apps/docs/tsconfig.json",
+    "dispatch workers",
+    "edit handoff-manifest.json"
+  ]
+}

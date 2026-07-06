@@ -1,0 +1,27 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S03-documentation-01",
+  "task_type": "implementation",
+  "task_ids": ["T009", "T010", "T011", "T012"],
+  "completed_task_ids": ["T009", "T010", "T011", "T012"],
+  "changed_paths": [
+    "apps/docs/src/content/docs/getting-started/index.mdx",
+    "apps/docs/src/content/docs/foundations/index.mdx",
+    "apps/docs/src/content/docs/for-agents/index.mdx",
+    "apps/docs/src/content/docs/roadmap/index.mdx"
+  ],
+  "validation_evidence": {
+    "file_existence_checks": {
+      "getting-started": { "path": "apps/docs/src/content/docs/getting-started/index.mdx", "exists": true },
+      "foundations": { "path": "apps/docs/src/content/docs/foundations/index.mdx", "exists": true },
+      "for-agents": { "path": "apps/docs/src/content/docs/for-agents/index.mdx", "exists": true },
+      "roadmap": { "path": "apps/docs/src/content/docs/roadmap/index.mdx", "exists": true }
+    },
+    "build_attempt": {
+      "command": "pnpm --filter @pathable/docs build",
+      "exit_code": 1,
+      "error": "ERR_PNPM_RECURSIVE_RUN_NO_SCRIPT - docs workspace has no build script yet (provided by dependent shard S01-documentation-01)"
+    },
+    "notes": "All 4 MDX content pages created successfully. Docs build depends on S01-documentation-01 (workspace scaffolding) which provides the build script in package.json."
+  }
+}

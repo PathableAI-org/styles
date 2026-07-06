@@ -1,0 +1,35 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S01-documentation-01",
+  "task_type": "implementation",
+  "task_ids": ["T001", "T002", "T003"],
+  "completed_task_ids": ["T001", "T002", "T003"],
+  "changed_paths": [
+    "pnpm-workspace.yaml",
+    "apps/docs/package.json",
+    "apps/docs/tsconfig.json"
+  ],
+  "validation_evidence": [
+    {
+      "task_id": "T001",
+      "command": "cat pnpm-workspace.yaml | grep \"apps/*\"",
+      "result": "matches expected pattern",
+      "spec_ref": "spec.md:FR-003 — pnpm-workspace.yaml includes both packages/* and apps/*",
+      "quickstart_ref": "quickstart.md:Step 1 — verify pnpm-workspace.yaml includes apps/*"
+    },
+    {
+      "task_id": "T002",
+      "command": "node -e \"const p = require('./apps/docs/package.json'); console.log(p.name, p.private, Object.keys(p.dependencies || {}))\"",
+      "result": "@pathable/docs true [ 'astro', '@astrojs/starlight', '@pathable/styles' ]",
+      "spec_ref": "spec.md:FR-004 — name @pathable/docs, private true, dep @pathable/styles workspace:*",
+      "quickstart_ref": "quickstart.md:Step 1 — workspace setup"
+    },
+    {
+      "task_id": "T003",
+      "command": "test -f apps/docs/tsconfig.json && echo 'tsconfig exists'",
+      "result": "tsconfig exists",
+      "spec_ref": "spec.md:FR-001 — docs workspace at apps/docs with Astro; plan.md line 80 shows tsconfig.json at apps/docs/",
+      "quickstart_ref": "quickstart.md:Step 1 — workspace setup"
+    }
+  ]
+}
