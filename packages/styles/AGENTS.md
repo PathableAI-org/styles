@@ -157,3 +157,22 @@ Agents MUST document any new token with its intended role.
 Agents MUST check contrast before using color pairs for text.
 
 Agents MUST NOT hardcode brand values throughout application code when a token exists.
+
+## USWDS Token Usage
+
+This package wraps USWDS v3.x theme color tokens. When creating or editing SCSS that references brand colors:
+
+- Agents MUST use `uswds.color("token-name")` to reference brand colors in SCSS (e.g., `uswds.color("blue-warm-80v")` for PathAble Blue)
+- Agents MUST NOT use `$theme-color-primary` directly — that returns a string token name, not a hex color
+- Agents MUST NOT edit `_uswds-theme.scss` to add new theme overrides without explicit instructions
+- Agents MUST keep all USWDS theme color overrides scoped within `_uswds-theme.scss` per FR-008
+- Agents MAY reference the USWDS token mapping table in BRAND_RULES.md for token lookups
+
+For SCSS consumers, the correct pattern is:
+
+```scss
+@use "uswds-core" as uswds;
+$my-variable: uswds.color("blue-warm-80v");
+```
+
+For CSS consumers, the compiled output contains resolved hex values via `--pathable-*` custom properties.

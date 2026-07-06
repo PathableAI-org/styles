@@ -1,0 +1,125 @@
+{
+  "contract_type": "speckit.implement.manifest.v1",
+  "run_id": "run-003",
+  "feature_path": "specs/003-wrap-uswds-theme",
+  "context_index_path": "specs/003-wrap-uswds-theme/context-index.json",
+  "execution_mode": "manual_fresh_worker_session",
+  "planner_outputs": [
+    {
+      "vertical_capability": "integration",
+      "planner_id": "planner-integration-01",
+      "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/shard-plan.md",
+      "handoff_draft_paths": [
+        "handoffs/implement/run-003/S01-integration-01/handoff.json",
+        "handoffs/implement/run-003/S02-integration-02/handoff.json",
+        "handoffs/implement/run-003/S03-integration-03/handoff.json",
+        "handoffs/implement/run-003/S04-integration-04/handoff.json",
+        "handoffs/implement/run-003/S05-integration-05/handoff.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/run-003/S01-integration-01/context-digest.md",
+        "handoffs/implement/run-003/S02-integration-02/context-digest.md",
+        "handoffs/implement/run-003/S03-integration-03/context-digest.md",
+        "handoffs/implement/run-003/S04-integration-04/context-digest.md",
+        "handoffs/implement/run-003/S05-integration-05/context-digest.md"
+      ]
+    },
+    {
+      "vertical_capability": "documentation",
+      "planner_id": "planner-documentation-01",
+      "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-documentation-01/shard-plan.md",
+      "handoff_draft_paths": [
+        "handoffs/implement/run-003/S06-documentation-01/handoff.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/run-003/S06-documentation-01/context-digest.md"
+      ]
+    },
+    {
+      "vertical_capability": "cleanup",
+      "planner_id": "planner-cleanup-01",
+      "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-cleanup-01/shard-plan.md",
+      "handoff_draft_paths": [
+        "handoffs/implement/run-003/S07-cleanup-01/handoff.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/run-003/S07-cleanup-01/context-digest.md"
+      ]
+    }
+  ],
+  "shards": [
+    {
+      "shard_id": "S01-integration-01",
+      "handoff_path": "handoffs/implement/run-003/S01-integration-01/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S01-integration-01/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S01-integration-01/results/receipt.json",
+      "task_ids": ["T001", "T002", "T003", "T004"],
+      "vertical_capability": "integration"
+    },
+    {
+      "shard_id": "S02-integration-02",
+      "handoff_path": "handoffs/implement/run-003/S02-integration-02/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S02-integration-02/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S02-integration-02/results/receipt.json",
+      "task_ids": ["T005", "T006", "T007", "T008", "T009"],
+      "vertical_capability": "integration"
+    },
+    {
+      "shard_id": "S03-integration-03",
+      "handoff_path": "handoffs/implement/run-003/S03-integration-03/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S03-integration-03/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S03-integration-03/results/receipt.json",
+      "task_ids": ["T010", "T011", "T012", "T013", "T014", "T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022", "T023", "T024", "T025", "T026", "T027", "T028", "T029", "T030"],
+      "vertical_capability": "integration"
+    },
+    {
+      "shard_id": "S04-integration-04",
+      "handoff_path": "handoffs/implement/run-003/S04-integration-04/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S04-integration-04/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S04-integration-04/results/receipt.json",
+      "task_ids": ["T031", "T032", "T033", "T034", "T035"],
+      "vertical_capability": "integration"
+    },
+    {
+      "shard_id": "S05-integration-05",
+      "handoff_path": "handoffs/implement/run-003/S05-integration-05/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S05-integration-05/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S05-integration-05/results/receipt.json",
+      "task_ids": ["T036", "T037", "T038"],
+      "vertical_capability": "integration"
+    },
+    {
+      "shard_id": "S06-documentation-01",
+      "handoff_path": "handoffs/implement/run-003/S06-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S06-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S06-documentation-01/results/receipt.json",
+      "task_ids": ["T039", "T040", "T041"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S07-cleanup-01",
+      "handoff_path": "handoffs/implement/run-003/S07-cleanup-01/handoff.json",
+      "context_digest_path": "handoffs/implement/run-003/S07-cleanup-01/context-digest.md",
+      "receipt_path": "handoffs/implement/run-003/S07-cleanup-01/results/receipt.json",
+      "task_ids": ["T042", "T043", "T044"],
+      "vertical_capability": "cleanup"
+    }
+  ],
+  "dependencies": [
+    { "shard_id": "S01-integration-01", "depends_on": [] },
+    { "shard_id": "S02-integration-02", "depends_on": ["S01-integration-01"] },
+    { "shard_id": "S03-integration-03", "depends_on": ["S02-integration-02"] },
+    { "shard_id": "S04-integration-04", "depends_on": ["S03-integration-03"] },
+    { "shard_id": "S05-integration-05", "depends_on": ["S02-integration-02"] },
+    { "shard_id": "S06-documentation-01", "depends_on": ["S03-integration-03"] },
+    { "shard_id": "S07-cleanup-01", "depends_on": ["S04-integration-04", "S05-integration-05", "S06-documentation-01"] }
+  ],
+  "dispatch_order": [
+    ["S01-integration-01"],
+    ["S02-integration-02"],
+    ["S03-integration-03"],
+    ["S04-integration-04", "S05-integration-05"],
+    ["S06-documentation-01"],
+    ["S07-cleanup-01"]
+  ]
+}

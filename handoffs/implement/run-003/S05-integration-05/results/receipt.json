@@ -1,0 +1,30 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S05-integration-05",
+  "task_type": "implementation",
+  "task_ids": ["T036", "T037", "T038"],
+  "completed_task_ids": ["T036", "T037", "T038"],
+  "changed_paths": [
+    "packages/styles/src/_uswds-theme.scss"
+  ],
+  "validation_evidence": [
+    {
+      "task_id": "T036",
+      "description": "Documentation comments explaining each theme family mapping",
+      "status": "passed",
+      "detail": "Each family section has a comment block explaining which brand color maps to which family, the USWDS system token, and deltaE value. Comments include: Base (gray-cool) → Shilling Silver, Primary (blue-warm) → PathAble Blue, Secondary (mint-cool) → Intelligent Jade, Accent-cool (blue) → Bright Blue Brooks + Tech Teal as accent-cool-dark, Accent-warm (green-warm) → Lived-in Lime"
+    },
+    {
+      "task_id": "T037",
+      "description": "Upgrade instruction comment at top of _uswds-theme.scss",
+      "status": "passed",
+      "detail": "Comment block at lines 9-11: 'To upgrade USWDS: bump version in package.json, rebuild, verify no unexpected color changes. Only this file needs review.'"
+    },
+    {
+      "task_id": "T038",
+      "description": "FR-008 compliance verification",
+      "status": "passed",
+      "detail": "All $theme-color-* and $theme-link-* overrides are scoped exclusively within _uswds-theme.scss. No theme-color or link-color overrides exist in _colors.scss, _semantic.scss, index.scss, or any other src file."
+    }
+  ]
+}

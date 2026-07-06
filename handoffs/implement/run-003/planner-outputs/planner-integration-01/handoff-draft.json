@@ -1,0 +1,20 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "planner_draft": true,
+  "vertical_capability": "integration",
+  "planner_id": "planner-integration-01",
+  "handoff_draft_paths": [
+    "handoffs/implement/run-003/S01-integration-01/handoff.json",
+    "handoffs/implement/run-003/S02-integration-02/handoff.json",
+    "handoffs/implement/run-003/S03-integration-03/handoff.json",
+    "handoffs/implement/run-003/S04-integration-04/handoff.json",
+    "handoffs/implement/run-003/S05-integration-05/handoff.json"
+  ],
+  "context_digest_draft_paths": [
+    "handoffs/implement/run-003/S01-integration-01/context-digest.md",
+    "handoffs/implement/run-003/S02-integration-02/context-digest.md",
+    "handoffs/implement/run-003/S03-integration-03/context-digest.md",
+    "handoffs/implement/run-003/S04-integration-04/context-digest.md",
+    "handoffs/implement/run-003/S05-integration-05/context-digest.md"
+  ]
+}

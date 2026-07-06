@@ -1,0 +1,39 @@
+{
+  "contract_type": "speckit.implement.context-index.v1",
+  "feature_path": "specs/003-wrap-uswds-theme",
+  "artifacts": {
+    "spec": "specs/003-wrap-uswds-theme/spec.md",
+    "plan": "specs/003-wrap-uswds-theme/plan.md",
+    "research": "specs/003-wrap-uswds-theme/research.md",
+    "data_model": "specs/003-wrap-uswds-theme/data-model.md",
+    "scss_interface": "specs/003-wrap-uswds-theme/contracts/scss-interface.md",
+    "quickstart": "specs/003-wrap-uswds-theme/quickstart.md",
+    "tasks": "specs/003-wrap-uswds-theme/tasks.md",
+    "checklist": "specs/003-wrap-uswds-theme/checklists/requirements.md"
+  },
+  "source_paths": {
+    "package_json": "packages/styles/package.json",
+    "index_scss": "packages/styles/src/index.scss",
+    "colors_scss": "packages/styles/src/_colors.scss",
+    "semantic_scss": "packages/styles/src/_semantic.scss",
+    "typography_scss": "packages/styles/src/_typography.scss",
+    "spacing_scss": "packages/styles/src/_spacing.scss",
+    "elevation_scss": "packages/styles/src/_elevation.scss",
+    "radius_scss": "packages/styles/src/_radius.scss",
+    "agents_md": "packages/styles/AGENTS.md",
+    "brand_rules_md": "packages/styles/BRAND_RULES.md"
+  },
+  "build_config": {
+    "build_command": "sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "uswds_dependency": "@uswds/uswds@^3.0.0",
+    "load_path": "node_modules/@uswds/uswds/packages"
+  },
+  "token_mapping": {
+    "pathable-blue": { "uswds_token": "blue-warm-80v", "family": "primary", "deltaE": 5.56 },
+    "intelligent-jade": { "uswds_token": "mint-cool-30v", "family": "secondary", "deltaE": 7.84 },
+    "bright-blue-brooks": { "uswds_token": "blue-30v", "family": "accent-cool", "deltaE": 10.70 },
+    "tech-teal": { "uswds_token": "cyan-60v", "family": "accent-cool-dark", "deltaE": 8.10 },
+    "lived-in-lime": { "uswds_token": "green-warm-10v", "family": "accent-warm", "deltaE": 18.97 },
+    "shilling-silver": { "uswds_token": "gray-cool-10", "family": "base", "deltaE": 2.79 }
+  }
+}

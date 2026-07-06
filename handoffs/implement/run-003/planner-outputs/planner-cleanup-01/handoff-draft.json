@@ -1,0 +1,12 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "planner_draft": true,
+  "vertical_capability": "cleanup",
+  "planner_id": "planner-cleanup-01",
+  "handoff_draft_paths": [
+    "handoffs/implement/run-003/S07-cleanup-01/handoff.json"
+  ],
+  "context_digest_draft_paths": [
+    "handoffs/implement/run-003/S07-cleanup-01/context-digest.md"
+  ]
+}

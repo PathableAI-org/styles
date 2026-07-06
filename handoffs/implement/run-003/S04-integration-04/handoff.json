@@ -1,0 +1,74 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S04-integration-04",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": { "role": "planner", "vertical_planner_only": true, "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false },
+    "worker_agent": { "role": "executor", "single_handoff_only": true, "may_dispatch_workers": false, "may_update_tasks_md": false }
+  },
+  "lifecycle_stage": "verification",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": [],
+    "depends_on": ["S03-integration-03"],
+    "must_not_touch": [
+      "packages/styles/src/",
+      "packages/styles/package.json",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-integration-01",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md"
+  },
+  "task_ids": ["T031", "T032", "T033", "T034", "T035"],
+  "task_type": "implementation",
+  "task_text": [
+    "T031: Visually verify that USWDS error state components render with the error color #dc3545 (via red-60v USWDS token). Report findings.",
+    "T032: Visually verify that USWDS success state components render with Intelligent Jade (#1cae96 / mint-cool-30v). Report findings.",
+    "T033: Visually verify that USWDS focus indicators render with Bright Blue Brooks (#4899e8 / blue-40v). Report findings.",
+    "T034: Visually review dark-primary (PathAble Blue) hover states on USWDS primary buttons — if USWDS darkening produces a near-black color, override the hover grade with an explicitly chosen brand-aligned color. Report findings.",
+    "T035: Visually verify WCAG AA contrast on common text-on-background pairs (PathAble Blue text on Shilling Silver background, white text on PathAble Blue background). Report findings."
+  ],
+  "context_digest_path": "handoffs/implement/run-003/S04-integration-04/context-digest.md",
+  "context_index_path": "specs/003-wrap-uswds-theme/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/dist/styles.css",
+    "packages/styles/src/_uswds-theme.scss",
+    "specs/003-wrap-uswds-theme/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/src/_uswds-theme.scss"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "echo 'Manual visual verification tasks — see receipt for findings'"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-003/S04-integration-04/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_type", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit _colors.scss",
+    "edit _semantic.scss",
+    "edit index.scss",
+    "edit package.json",
+    "edit README.md",
+    "edit BRAND_RULES.md",
+    "edit AGENTS.md",
+    "dispatch workers"
+  ]
+}
