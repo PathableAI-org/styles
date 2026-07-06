@@ -30,14 +30,14 @@ Visual design should support trust, clarity, and human connection. Brand express
 
 Each brand color is mapped to the closest USWDS v3.x system token. These mappings are configured in `src/_uswds-theme.scss` and are the single source of truth for theme color overrides.
 
-| Brand Color | Hex | USWDS Theme Family | USWDS System Token | Mapped Hex | ΔE |
-|---|---|---|---|---|---|
-| PathAble Blue | `#00365c` | Primary | `blue-warm-80v` | `#162e51` | 5.56 |
-| Intelligent Jade | `#1cae96` | Secondary | `mint-cool-30v` | `#1dc2ae` | 7.84 |
-| Bright Blue Brooks | `#4899e8` | Accent-cool | `blue-30v` | `#58b4ff` | 10.70 |
-| Tech Teal | `#015a76` | Accent-cool-dark | `cyan-60v` | `#00687d` | 8.10 |
-| Lived-In Lime | `#d3ff66` | Accent-warm | `green-warm-10v` | `#e7f434` | 18.97 |
-| Shilling Silver | `#dde2e8` | Base | `gray-cool-10` | `#dfe1e2` | 2.79 |
+| Brand Color        | Hex       | USWDS Theme Family | USWDS System Token | Mapped Hex | ΔE    |
+| ------------------ | --------- | ------------------ | ------------------ | ---------- | ----- |
+| PathAble Blue      | `#00365c` | Primary            | `blue-warm-80v`    | `#162e51`  | 5.56  |
+| Intelligent Jade   | `#1cae96` | Secondary          | `mint-cool-30v`    | `#1dc2ae`  | 7.84  |
+| Bright Blue Brooks | `#4899e8` | Accent-cool        | `blue-30v`         | `#58b4ff`  | 10.70 |
+| Tech Teal          | `#015a76` | Accent-cool-dark   | `cyan-60v`         | `#00687d`  | 8.10  |
+| Lived-In Lime      | `#d3ff66` | Accent-warm        | `green-warm-10v`   | `#e7f434`  | 18.97 |
+| Shilling Silver    | `#dde2e8` | Base               | `gray-cool-10`     | `#dfe1e2`  | 2.79  |
 
 **ΔE (deltaE 1976)**: Perceptual color distance. Values below 10 are imperceptible to most viewers. Lived-In Lime has the furthest match (ΔE 18.97) — documented as an anticipated edge case.
 

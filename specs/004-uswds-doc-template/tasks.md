@@ -467,3 +467,4 @@ With multiple developers:
 - All component `<style>` blocks MUST use `--pathable-*` tokens — no hardcoded values
 - Government-specific USWDS elements (`.usa-banner`, `.usa-identifier`) are excluded
 - The Starlight TOC (right sidebar) and search are preserved as-is
+||||||| d6da715d
