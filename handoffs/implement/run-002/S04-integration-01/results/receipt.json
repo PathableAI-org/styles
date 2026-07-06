@@ -1,0 +1,19 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S04-integration-01",
+  "task_type": "implementation",
+  "task_ids": ["T013", "T014"],
+  "completed_task_ids": ["T013", "T014"],
+  "changed_paths": [
+    ".github/workflows/docs-ci.yml",
+    ".github/workflows/docs-deploy.yml"
+  ],
+  "validation_evidence": [
+    { "command": "test -f .github/workflows/docs-ci.yml", "expected": "CI workflow exists", "actual": "CI workflow exists", "passed": true },
+    { "command": "test -f .github/workflows/docs-deploy.yml", "expected": "deploy workflow exists", "actual": "deploy workflow exists", "passed": true },
+    { "command": "grep -q 'pull_request' .github/workflows/docs-ci.yml", "expected": "PR trigger configured", "actual": "PR trigger configured", "passed": true },
+    { "command": "grep -q 'deploy-pages' .github/workflows/docs-deploy.yml", "expected": "deploy step configured", "actual": "deploy step configured", "passed": true }
+  ],
+  "completed_at": "2026-07-04T22:06:00Z",
+  "agent": "worker_agent"
+}
