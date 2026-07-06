@@ -86,6 +86,7 @@ screenshots/
 specs/**/*.json
 specs/**/part*.md
 specs/**/merged*.md
+specs/**/handoffs/
 
 # Vite files
 vite.config.js.timestamp-*
@@ -94,6 +95,9 @@ vite.config.ts.timestamp-*
 
 # Astro build artifacts (.astro cache directory)
 .astro/
+
+# pnpm store
+.pnpm-store/
 
 # Build outputs
 apps/docs/dist/

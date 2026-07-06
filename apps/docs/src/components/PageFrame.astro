@@ -1,17 +1,20 @@
 ---
 import MobileMenuToggle from 'virtual:starlight/components/MobileMenuToggle';
 import HorizontalNav from './HorizontalNav.astro';
+import SkipNav from './SkipNav.astro';
+import DocFooter from './DocFooter.astro';
 
 const { hasSidebar } = Astro.locals.starlightRoute;
 ---
 
+<SkipNav />
 <div class="page sl-flex">
 	<header class="header"><slot name="header" /></header>
 	<HorizontalNav />
 	<div class="body-layout">
 		{
 			hasSidebar && (
-				<nav class="sidebar print:hidden" aria-label={Astro.locals.t('sidebarNav.accessibleLabel')}>
+				<nav class="sidebar print:hidden" aria-label="Secondary navigation">
 					<MobileMenuToggle />
 					<div id="starlight__sidebar" class="sidebar-pane">
 						<div class="sidebar-content sl-flex">
@@ -21,8 +24,9 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 				</nav>
 			)
 		}
-		<div class="main-frame"><slot /></div>
+		<main id="main-content" class="main-frame"><slot /></main>
 	</div>
+	<DocFooter />
 </div>
 
 <style>
@@ -38,17 +42,17 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		inset-block-start: 0;
 		width: 100%;
 		height: var(--sl-nav-height);
-		border-bottom: 1px solid var(--sl-color-hairline-shade);
+		border-bottom: 1px solid var(--pathable-color-border);
 		padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
 		padding-inline-end: var(--sl-nav-pad-x);
-		background-color: var(--sl-color-bg-nav);
+		background-color: var(--pathable-color-surface);
 	}
 
 	:global([data-has-sidebar]) .header {
 		padding-inline-end: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
 	}
 
-	@media (min-width: 50rem) {
+	@media (min-width: 64rem) {
 		:global([data-has-sidebar]) .header {
 			padding-inline-end: var(--sl-nav-pad-x);
 		}
@@ -67,23 +71,57 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		inset-block: calc(var(--sl-nav-height) + var(--sl-horizontal-nav-height, 3rem)) 0;
 		inset-inline-start: 0;
 		width: 100%;
-		background-color: var(--sl-color-black);
+		background-color: var(--pathable-color-surface);
 		overflow-y: auto;
+		transform: translateX(-100%);
+		transition: transform 0.3s ease, visibility 0.3s ease;
 	}
 
 	:global([aria-expanded='true']) ~ .sidebar-pane {
 		--sl-sidebar-visibility: visible;
+		transform: translateX(0);
 	}
 
 	.sidebar-content {
 		height: 100%;
 		min-height: max-content;
-		padding: 1rem var(--sl-sidebar-pad-x) 0;
+		padding: var(--space-16) var(--sl-sidebar-pad-x) 0;
 		flex-direction: column;
-		gap: 1rem;
+		gap: var(--space-16);
 	}
 
-	@media (min-width: 50rem) {
+	/* Mobile: sidebar slides in from left with overlay behind */
+	@media (max-width: 63.999rem) {
+		.sidebar-pane {
+			width: 20rem;
+			max-width: 80vw;
+			transform: translateX(-100%);
+			transition: transform 0.3s ease, visibility 0.3s ease;
+		}
+
+		:global([aria-expanded='true']) ~ .sidebar-pane {
+			transform: translateX(0);
+		}
+
+		.sidebar::before {
+			content: '';
+			position: fixed;
+			inset: 0;
+			z-index: calc(var(--sl-z-index-menu) - 1);
+			background: rgba(0, 0, 0, 0.5);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			pointer-events: none;
+		}
+
+		.sidebar:has([aria-expanded='true'])::before {
+			opacity: 1;
+			pointer-events: auto;
+		}
+	}
+
+	/* Desktop (>= 1024px): sidebar visible as column */
+	@media (min-width: 64rem) {
 		.sidebar-content::after {
 			content: '';
 			padding-bottom: 1px;
@@ -92,11 +130,16 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		.sidebar-pane {
 			--sl-sidebar-visibility: visible;
 			width: var(--sl-sidebar-width);
-			background-color: var(--sl-color-bg-sidebar);
-			border-inline-end: 1px solid var(--sl-color-hairline-shade);
+			background-color: var(--pathable-color-surface);
+			border-inline-end: 1px solid var(--pathable-color-border);
 			position: fixed;
 			top: calc(var(--sl-nav-height) + var(--sl-horizontal-nav-height, 3rem));
 			bottom: 0;
+			transform: translateX(0);
+		}
+
+		.sidebar::before {
+			display: none;
 		}
 	}
 
@@ -106,7 +149,7 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		padding-inline-start: var(--sl-content-inline-start);
 	}
 
-	@media (min-width: 72rem) {
+	@media (min-width: 64rem) {
 		:global([data-has-sidebar]) .main-frame {
 			margin-inline-start: var(--sl-sidebar-width);
 		}
