@@ -94,3 +94,7 @@ vite.config.ts.timestamp-*
 
 # Astro build artifacts (.astro cache directory)
 .astro/
+
+# Build outputs
+apps/docs/dist/
+packages/styles/dist/
