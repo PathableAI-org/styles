@@ -5,3 +5,16 @@ dist
 pnpm-lock.yaml
 handoffs
 specs
+.pnpm-store
+.astro
+.env*
+*.tsbuildinfo
+coverage
+.nyc_output
+.next
+.nuxt
+build/Release
+*.tgz
+.cache
+.npm
+.eslintcache
