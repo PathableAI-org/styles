@@ -171,8 +171,8 @@ This package wraps USWDS v3.x theme color tokens. When creating or editing SCSS 
 For SCSS consumers, the correct pattern is:
 
 ```scss
-@use "uswds-core" as uswds;
-$my-variable: uswds.color("blue-warm-80v");
+@use 'uswds-core' as uswds;
+$my-variable: uswds.color('blue-warm-80v');
 ```
 
 For CSS consumers, the compiled output contains resolved hex values via `--pathable-*` custom properties.

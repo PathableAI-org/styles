@@ -96,5 +96,5 @@ vite.config.ts.timestamp-*
 .astro/
 
 # Build outputs
-apps/docs/dist/
-packages/styles/dist/
+dist/
+.pnpm-store/

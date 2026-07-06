@@ -59,7 +59,7 @@ pnpm add @pathable/styles @uswds/uswds
 
 ```scss
 // Import USWDS component styles separately (e.g., usa-button)
-@use "uswds";
+@use 'uswds';
 
 // @pathable/styles provides the theme token configuration
 // that makes USWDS components render with PathAble brand colors

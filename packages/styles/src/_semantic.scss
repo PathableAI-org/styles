@@ -1,28 +1,28 @@
-@use "uswds-core" as uswds;
+@use 'uswds-core' as uswds;
 
 // Semantic Color Tokens
-$pathable-color-bg: uswds.color("gray-cool-10");
+$pathable-color-bg: uswds.color('gray-cool-10');
 $pathable-color-surface: #ffffff;
-$pathable-color-text: uswds.color("blue-warm-80v");
-$pathable-color-text-muted: uswds.color("cyan-60v");
-$pathable-color-border: uswds.color("gray-cool-10");
-$pathable-color-link: uswds.color("blue-30v");
-$pathable-color-accent: uswds.color("mint-cool-30v");
-$pathable-color-focus-ring: uswds.color("blue-40v");
+$pathable-color-text: uswds.color('blue-warm-80v');
+$pathable-color-text-muted: uswds.color('cyan-60v');
+$pathable-color-border: uswds.color('gray-cool-10');
+$pathable-color-link: uswds.color('blue-30v');
+$pathable-color-accent: uswds.color('mint-cool-30v');
+$pathable-color-focus-ring: uswds.color('blue-40v');
 $pathable-color-danger: #dc3545;
-$pathable-color-success: uswds.color("mint-cool-30v");
+$pathable-color-success: uswds.color('mint-cool-30v');
 
 $semantic-colors: (
-  'bg': uswds.color("gray-cool-10"),
+  'bg': uswds.color('gray-cool-10'),
   'surface': #ffffff,
-  'text': uswds.color("blue-warm-80v"),
-  'text-muted': uswds.color("cyan-60v"),
-  'border': uswds.color("gray-cool-10"),
-  'link': uswds.color("blue-30v"),
-  'accent': uswds.color("mint-cool-30v"),
-  'focus-ring': uswds.color("blue-40v"),
+  'text': uswds.color('blue-warm-80v'),
+  'text-muted': uswds.color('cyan-60v'),
+  'border': uswds.color('gray-cool-10'),
+  'link': uswds.color('blue-30v'),
+  'accent': uswds.color('mint-cool-30v'),
+  'focus-ring': uswds.color('blue-40v'),
   'danger': #dc3545,
-  'success': uswds.color("mint-cool-30v"),
+  'success': uswds.color('mint-cool-30v'),
 );
 
 :root {
