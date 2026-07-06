@@ -7,23 +7,33 @@ The Pathable design system is built on a set of foundational tokens organized in
 
 ## Brand colors
 
-Core brand palette for PathableAI products.
+Core brand palette for PathableAI products. Each brand color maps to a USWDS system color token.
 
-| Token                       | Role      |
-| --------------------------- | --------- |
-| `--pathable-blue`           | Primary   |
-| `--intelligent-jade`        | Secondary |
-| _(additional brand tokens)_ |           |
+| Token                       | Role        | USWDS token         |
+| --------------------------- | ----------- | ------------------- |
+| `--pathable-blue`           | Primary     | `blue-warm-80v`     |
+| `--intelligent-jade`        | Secondary   | `mint-cool-30v`     |
+| `--bright-blue-brooks`      | Accent-cool | `blue-30v`          |
+| `--tech-teal`               | Accent-cool | `cyan-60v`          |
+| `--lived-in-lime`           | Accent-warm | `green-warm-10v`    |
+| `--shilling-silver`         | Base        | `gray-cool-10`      |
 
 ## Semantic colors
 
 Tokens that carry meaning and map to interface roles.
 
-- **Text** — `--pathable-color-text`
-- **Background** — `--pathable-color-bg`
-- **Surface** — `--pathable-color-surface`
-- **Accent** — `--pathable-color-accent`
-- **Border** — `--pathable-color-border`
+| Token                        | Role              |
+| ---------------------------- | ----------------- |
+| `--pathable-color-text`      | Body text         |
+| `--pathable-color-text-muted`| Muted text        |
+| `--pathable-color-bg`        | Page background   |
+| `--pathable-color-surface`   | Card / surface    |
+| `--pathable-color-accent`    | Interactive / highlight |
+| `--pathable-color-border`    | Borders           |
+| `--pathable-color-link`      | Links             |
+| `--pathable-color-focus-ring`| Focus outlines    |
+| `--pathable-color-success`   | Success states    |
+| `--pathable-color-danger`    | Error / danger    |
 
 ## Typography
 
@@ -48,3 +58,41 @@ Box-shadow tokens for surface elevation (`--pathable-elevation-*`).
 | `--pathable-radius-md`   | Medium |
 | `--pathable-radius-lg`   | Large  |
 | `--pathable-radius-full` | Full   |
+
+## USWDS integration
+
+`@pathable/styles` is built on top of the [U.S. Web Design System](https://designsystem.digital.gov/) (USWDS) v3.x. The Pathable brand colors are mapped to USWDS system color tokens using the `$theme-color-*` settings. This means you can use USWDS utility classes alongside Pathable design tokens.
+
+### Available USWDS theme families
+
+USWDS generates utility classes for each theme color family. These are available in your CSS:
+
+| Family          | USWDS class prefix            | Corresponding token            |
+| --------------- | ----------------------------- | ------------------------------ |
+| Base            | `bg-base-*`, `text-base-*`    | Shilling Silver (gray-cool)    |
+| Primary         | `bg-primary-*`, `text-primary-*` | PathAble Blue (blue-warm)   |
+| Secondary       | `bg-secondary-*`, `text-secondary-*` | Intelligent Jade (mint-cool) |
+| Accent-cool     | `bg-accent-cool-*`, `text-accent-cool-*` | Bright Blue Brooks / Tech Teal |
+| Accent-warm     | `bg-accent-warm-*`, `text-accent-warm-*` | Lived-in Lime |
+| Error           | `bg-error-*`, `text-error-*`  | Red (dc3545)                   |
+| Warning         | `bg-warning-*`, `text-warning-*` | Gold                        |
+| Success         | `bg-success-*`, `text-success-*` | Mint-cool (teal-green)     |
+| Info            | `bg-info-*`, `text-info-*`    | Blue (Bright Blue Brooks)      |
+| Disabled        | `bg-disabled-*`, `text-disabled-*` | Gray                       |
+
+### Utility example
+
+```html
+<button class="bg-primary text-white padding-2 radius-md">
+  Styled with USWDS utilities
+</button>
+```
+
+### When to use what
+
+| Situation                       | Recommended approach                         |
+| ------------------------------- | -------------------------------------------- |
+| Custom component styling        | Use `--pathable-*` CSS custom properties     |
+| Quick prototyping / HTML demos  | Use USWDS utility classes                    |
+| Color-based semantic states     | Use `--pathable-color-*` tokens              |
+| Spacing, layout, typography     | Use `--pathable-spacing-*`, `--pathable-font-*` tokens |

@@ -14,6 +14,11 @@
   /* Accent */
   --sl-color-accent: var(--pathable-color-accent);
   --sl-color-accent-high: var(--pathable-color-accent);
+  --sl-color-accent-low: color-mix(in srgb, var(--pathable-color-accent) 20%, transparent);
+
+  /* Borders and dividers */
+  --sl-color-hairline: var(--pathable-color-border);
+  --sl-color-hairline-light: color-mix(in srgb, var(--pathable-color-border) 50%, transparent);
 
   /* Typography */
   --sl-font: var(--pathable-font-body);
