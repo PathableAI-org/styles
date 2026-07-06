@@ -116,6 +116,12 @@
   $theme-link-color: "blue-30v",
   $theme-link-visited-color: "blue-30v",
 
+  // -------- Focus color --------
+  $theme-focus-color: "blue-40v",
+
+  // -------- Suppress notifications --------
+  $theme-show-notifications: false,
+
   // -------- Unused grades (set to false) --------
   $theme-color-primary-lightest: false,
   $theme-color-primary-darkest: false,
