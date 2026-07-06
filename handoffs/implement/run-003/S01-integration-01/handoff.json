@@ -1,0 +1,78 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S01-integration-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": { "role": "planner", "vertical_planner_only": true, "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false },
+    "worker_agent": { "role": "executor", "single_handoff_only": true, "may_dispatch_workers": false, "may_update_tasks_md": false }
+  },
+  "lifecycle_stage": "setup",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": [
+      "packages/styles/package.json",
+      "packages/styles/src/"
+    ],
+    "depends_on": [],
+    "must_not_touch": [
+      "packages/styles/src/_uswds-theme.scss",
+      "packages/styles/src/_colors.scss",
+      "packages/styles/src/_semantic.scss",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-integration-01",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md"
+  },
+  "task_ids": ["T001", "T002", "T003", "T004"],
+  "task_type": "implementation",
+  "task_text": [
+    "T001: Add @uswds/uswds (v3.x latest stable) as a runtime dependency in packages/styles/package.json (dependencies, not devDependencies)",
+    "T002: Update build script in packages/styles/package.json to include --load-path=node_modules/@uswds/uswds/packages in the Sass command",
+    "T003: Install updated dependencies via pnpm install at repository root",
+    "T004: Verify the package builds successfully after dependency installation by running pnpm build in packages/styles/"
+  ],
+  "context_digest_path": "handoffs/implement/run-003/S01-integration-01/context-digest.md",
+  "context_index_path": "specs/003-wrap-uswds-theme/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/package.json",
+    "packages/styles/src/index.scss",
+    "specs/003-wrap-uswds-theme/plan.md",
+    "specs/003-wrap-uswds-theme/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/package.json"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "test -f packages/styles/package.json && node -e \"const p = require('./packages/styles/package.json'); const deps = p.dependencies || {}; const hasDep = '@uswds/uswds' in deps; const hasBuild = p.scripts && p.scripts.build && p.scripts.build.includes('--load-path'); console.assert(hasDep, 'USWDS dependency not found in dependencies'); console.assert(hasBuild, 'build script missing --load-path'); console.log('All checks passed');\"",
+    "cd packages/styles && pnpm build 2>&1 && echo 'BUILD_OK'"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-003/S01-integration-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_type", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit _uswds-theme.scss",
+    "edit _colors.scss",
+    "edit _semantic.scss",
+    "edit README.md",
+    "edit BRAND_RULES.md",
+    "edit AGENTS.md",
+    "dispatch workers"
+  ]
+}

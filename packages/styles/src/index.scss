@@ -1,5 +1,6 @@
 @use 'sass:map';
 
+@forward 'uswds-theme';
 @forward '_colors';
 @forward '_typography';
 @forward '_spacing';

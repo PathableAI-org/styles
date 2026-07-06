@@ -9,9 +9,12 @@
     "src"
   ],
   "scripts": {
-    "build": "sass src/index.scss dist/styles.css",
-    "watch": "sass --watch src/index.scss dist/styles.css",
+    "build": "sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "watch": "sass --watch --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "lint:styles": "stylelint 'src/**/*.scss'"
+  },
+  "dependencies": {
+    "@uswds/uswds": "^3.0.0"
   },
   "devDependencies": {
     "sass": "^1.86.3"

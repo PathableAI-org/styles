@@ -45,6 +45,38 @@ Import the SCSS entrypoint:
 @use "@pathable/styles";
 ```
 
+### USWDS Integration
+
+This package wraps USWDS v3.x theme color tokens to match PathAble brand colors. When using USWDS components alongside `@pathable/styles`, USWDS components automatically render with brand-aligned colors.
+
+**Installation with USWDS:**
+
+```bash
+pnpm add @pathable/styles @uswds/uswds
+```
+
+**Usage with USWDS components:**
+
+```scss
+// Import USWDS component styles separately (e.g., usa-button)
+@use "uswds";
+
+// @pathable/styles provides the theme token configuration
+// that makes USWDS components render with PathAble brand colors
+```
+
+```css
+/* When using compiled CSS, import both: */
+/* @import '@pathable/styles/dist/styles.css'; */
+/* @import '@uswds/uswds/dist/css/uswds.css'; */
+```
+
+The compiled `dist/styles.css` includes USWDS theme token configuration but **not** USWDS component styles. Consumers who need USWDS components must add USWDS as their own dependency and import components separately.
+
+For detailed setup instructions, see [quickstart.md](specs/003-wrap-uswds-theme/quickstart.md).
+
+### Token Usage
+
 Use exported tokens instead of hardcoded colors or font names whenever possible.
 
 ```css

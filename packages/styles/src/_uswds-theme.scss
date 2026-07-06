@@ -1,0 +1,128 @@
+// ==========================================
+// USWDS Theme Color Configuration
+// ==========================================
+//
+// This file is the single source of truth for all USWDS theme color token
+// overrides. Per FR-008, ALL USWDS theme color overrides MUST be scoped
+// exclusively within this file.
+//
+// Upgrade Instructions:
+// To upgrade USWDS: bump version in package.json, rebuild, verify no
+// unexpected color changes. Only this file needs review.
+//
+// ==========================================
+// Base Family (gray-cool) — Shilling Silver (#dde2e8)
+// ==========================================
+// Shilling Silver maps to gray-cool-10 (ΔE 2.79 — near-perfect match).
+// Neutral grades use standard USWDS gray-cool tokens.
+// ==========================================
+
+// ==========================================
+// Primary Family (blue-warm) — PathAble Blue (#00365c)
+// ==========================================
+// PathAble Blue maps to blue-warm-80v (ΔE 5.56 — same token as USWDS
+// default primary-darker).
+// ==========================================
+
+// ==========================================
+// Secondary Family (mint-cool) — Intelligent Jade (#1cae96)
+// ==========================================
+// Intelligent Jade maps to mint-cool-30v (ΔE 7.84 — slightly more
+// saturated teal-green).
+// ==========================================
+
+// ==========================================
+// Accent-cool Family (blue) — Bright Blue Brooks (#4899e8)
+// ==========================================
+// Bright Blue Brooks maps to blue-30v (ΔE 10.70 — slightly brighter,
+// more saturated). Tech Teal (#015a76) maps to cyan-60v (ΔE 8.10)
+// and fills the accent-cool-dark grade.
+// ==========================================
+
+// ==========================================
+// Accent-warm Family (green-warm) — Lived-in Lime (#d3ff66)
+// ==========================================
+// Lived-in Lime maps to green-warm-10v (ΔE 18.97 — furthest match;
+// documented edge case in spec).
+// ==========================================
+
+@use "uswds-core" with (
+  // -------- Base family: Shilling Silver --------
+  $theme-color-base-lightest: "gray-cool-5",
+  $theme-color-base-lighter: "gray-cool-2",
+  $theme-color-base-light: "gray-cool-3",
+  $theme-color-base: "gray-cool-10",
+  $theme-color-base-dark: "gray-cool-80",
+  $theme-color-base-darker: "gray-cool-90",
+  $theme-color-base-darkest: "gray-90",
+  $theme-color-base-ink: "gray-90",
+
+  // -------- Primary family: PathAble Blue --------
+  $theme-color-primary-lighter: "blue-warm-10",
+  $theme-color-primary-light: "blue-warm-20",
+  $theme-color-primary: "blue-warm-80v",
+  $theme-color-primary-vivid: "blue-warm-70v",
+  $theme-color-primary-dark: "blue-warm-80",
+  $theme-color-primary-darker: "blue-warm-90",
+
+  // -------- Secondary family: Intelligent Jade --------
+  $theme-color-secondary-lighter: "mint-cool-10",
+  $theme-color-secondary-light: "mint-cool-20",
+  $theme-color-secondary: "mint-cool-30v",
+  $theme-color-secondary-vivid: "mint-cool-40v",
+  $theme-color-secondary-dark: "mint-cool-80v",
+  $theme-color-secondary-darker: "mint-cool-90",
+
+  // -------- Accent-cool family: Bright Blue Brooks + Tech Teal --------
+  $theme-color-accent-cool-lighter: "blue-10",
+  $theme-color-accent-cool-light: "blue-20",
+  $theme-color-accent-cool: "blue-30v",
+  $theme-color-accent-cool-dark: "cyan-60v",
+  $theme-color-accent-cool-darker: "blue-90",
+
+  // -------- Accent-warm family: Lived-in Lime --------
+  $theme-color-accent-warm-lighter: "green-warm-10",
+  $theme-color-accent-warm-light: "green-warm-20",
+  $theme-color-accent-warm: "green-warm-10v",
+  $theme-color-accent-warm-dark: "green-warm-80",
+  $theme-color-accent-warm-darker: "green-warm-90",
+
+  // -------- State tokens --------
+  // Error: #dc3545 via red-60v (existing semantic token, no direct USWDS mapping)
+  $theme-color-error: "red-60v",
+  $theme-color-error-dark: "red-70v",
+  $theme-color-error-lighter: "red-10",
+
+  // Warning: gold-20v
+  $theme-color-warning: "gold-20v",
+  $theme-color-warning-dark: "gold-30v",
+  $theme-color-warning-lighter: "gold-5",
+
+  // Success: Intelligent Jade via mint-cool-30v
+  $theme-color-success: "mint-cool-30v",
+  $theme-color-success-dark: "mint-cool-40v",
+  $theme-color-success-lighter: "mint-cool-5",
+
+  // Info: Bright Blue Brooks via blue-30v
+  $theme-color-info: "blue-30v",
+  $theme-color-info-dark: "blue-40v",
+  $theme-color-info-lighter: "blue-5",
+
+  // Disabled: gray-cool-20
+  $theme-color-disabled: "gray-cool-20",
+  $theme-color-disabled-dark: "gray-30",
+
+  // -------- Link colors --------
+  $theme-link-color: "blue-30v",
+  $theme-link-visited-color: "blue-30v",
+
+  // -------- Unused grades (set to false) --------
+  $theme-color-primary-lightest: false,
+  $theme-color-primary-darkest: false,
+  $theme-color-secondary-lightest: false,
+  $theme-color-secondary-darkest: false,
+  $theme-color-accent-cool-lightest: false,
+  $theme-color-accent-cool-darkest: false,
+  $theme-color-accent-warm-lightest: false,
+  $theme-color-accent-warm-darkest: false
+);

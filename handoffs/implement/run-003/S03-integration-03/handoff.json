@@ -1,0 +1,102 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S03-integration-03",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": { "role": "planner", "vertical_planner_only": true, "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false },
+    "worker_agent": { "role": "executor", "single_handoff_only": true, "may_dispatch_workers": false, "may_update_tasks_md": false }
+  },
+  "lifecycle_stage": "implementation",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": [
+      "packages/styles/src/_colors.scss",
+      "packages/styles/src/_semantic.scss",
+      "packages/styles/src/index.scss"
+    ],
+    "depends_on": ["S02-integration-02"],
+    "must_not_touch": [
+      "packages/styles/package.json",
+      "packages/styles/src/_uswds-theme.scss",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-integration-01",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md"
+  },
+  "task_ids": ["T010", "T011", "T012", "T013", "T014", "T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022", "T023", "T024", "T025", "T026", "T027", "T028", "T029", "T030"],
+  "task_type": "implementation",
+  "task_text": [
+    "T010: Add @use \"uswds-core\" as uswds; at the top of packages/styles/src/_colors.scss",
+    "T011: Replace $pathable-blue: #00365c with $pathable-blue: uswds.color(\"blue-warm-80v\"); and update the $brand-colors map value in _colors.scss",
+    "T012: Replace $intelligent-jade: #1cae96 with $intelligent-jade: uswds.color(\"mint-cool-30v\"); and update the $brand-colors map in _colors.scss",
+    "T013: Replace $bright-blue-brooks: #4899e8 with $bright-blue-brooks: uswds.color(\"blue-30v\"); and update the $brand-colors map in _colors.scss",
+    "T014: Replace $tech-teal: #015a76 with $tech-teal: uswds.color(\"cyan-60v\"); and update the $brand-colors map in _colors.scss",
+    "T015: Replace $lived-in-lime: #d3ff66 with $lived-in-lime: uswds.color(\"green-warm-10v\"); and update the $brand-colors map in _colors.scss",
+    "T016: Replace $shilling-silver: #dde2e8 with $shilling-silver: uswds.color(\"gray-cool-10\"); and update the $brand-colors map in _colors.scss",
+    "T017: Add @use \"uswds-core\" as uswds; at the top of packages/styles/src/_semantic.scss",
+    "T018: Update $pathable-color-text in _semantic.scss to reference uswds.color(\"blue-warm-80v\") (aliasStatus: MUST)",
+    "T019: Update $pathable-color-text-muted in _semantic.scss to reference uswds.color(\"cyan-60v\") (aliasStatus: MUST)",
+    "T020: Update $pathable-color-link in _semantic.scss to reference uswds.color(\"blue-30v\") (aliasStatus: MUST)",
+    "T021: Update $pathable-color-accent in _semantic.scss to reference uswds.color(\"mint-cool-30v\") (aliasStatus: MUST)",
+    "T022: Update $pathable-color-focus-ring in _semantic.scss to reference uswds.color(\"blue-40v\") (aliasStatus: MUST)",
+    "T023: Update $pathable-color-success in _semantic.scss to reference uswds.color(\"mint-cool-30v\") (aliasStatus: MUST)",
+    "T024: Optionally update $pathable-color-bg in _semantic.scss to reference uswds.color(\"gray-cool-10\") (aliasStatus: SHOULD)",
+    "T025: Optionally update $pathable-color-border in _semantic.scss to reference uswds.color(\"gray-cool-10\") (aliasStatus: SHOULD)",
+    "T026: Update packages/styles/src/index.scss — Add @forward \"uswds-theme\"; as the first forward statement, before all existing forwards. Do NOT add @forward \"uswds\" (tokens-only per FR-006).",
+    "T027: Rebuild packages/styles/dist/styles.css via pnpm build and verify compilation succeeds without errors",
+    "T028: Verify backward compatibility — confirm dist/styles.css still contains --pathable-blue, --pathable-color-text, and all other --pathable-* CSS custom properties",
+    "T029: Verify tokens-only output — confirm dist/styles.css does NOT contain .usa- prefixed component classes",
+    "T030: Verify brand-to-USWDS mapping — confirm dist/styles.css contains USWDS system token hex values mapped to brand colors"
+  ],
+  "context_digest_path": "handoffs/implement/run-003/S03-integration-03/context-digest.md",
+  "context_index_path": "specs/003-wrap-uswds-theme/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/src/_colors.scss",
+    "packages/styles/src/_semantic.scss",
+    "packages/styles/src/index.scss",
+    "packages/styles/src/_uswds-theme.scss",
+    "packages/styles/package.json",
+    "specs/003-wrap-uswds-theme/research.md",
+    "specs/003-wrap-uswds-theme/data-model.md",
+    "specs/003-wrap-uswds-theme/contracts/scss-interface.md",
+    "specs/003-wrap-uswds-theme/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/src/_colors.scss",
+    "packages/styles/src/_semantic.scss",
+    "packages/styles/src/index.scss"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "cd packages/styles && pnpm build 2>&1 && echo 'BUILD_OK'",
+    "grep -c '--pathable-blue' packages/styles/dist/styles.css | xargs echo 'pathable-blue-count:'",
+    "grep -c '.usa-' packages/styles/dist/styles.css | xargs echo 'usa-class-count:'"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-003/S03-integration-03/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_type", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit package.json",
+    "edit _uswds-theme.scss",
+    "edit README.md",
+    "edit BRAND_RULES.md",
+    "edit AGENTS.md",
+    "dispatch workers"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S02-integration-02",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": { "role": "planner", "vertical_planner_only": true, "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false },
+    "worker_agent": { "role": "executor", "single_handoff_only": true, "may_dispatch_workers": false, "may_update_tasks_md": false }
+  },
+  "lifecycle_stage": "foundational",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": [
+      "packages/styles/src/_uswds-theme.scss"
+    ],
+    "depends_on": ["S01-integration-01"],
+    "must_not_touch": [
+      "packages/styles/package.json",
+      "packages/styles/src/_colors.scss",
+      "packages/styles/src/_semantic.scss",
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-integration-01",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-integration-01/context-digest-draft.md"
+  },
+  "task_ids": ["T005", "T006", "T007", "T008", "T009"],
+  "task_type": "implementation",
+  "task_text": [
+    "T005: Create packages/styles/src/_uswds-theme.scss with @use \"uswds-core\" with (...) block containing ALL theme color family mappings from research.md Decision D2 (all grades for primary/blue-warm, secondary/mint-cool, accent-cool/blue, accent-warm/green-warm, base/gray-cool families). Include Tech Teal as accent-cool-dark (cyan-60v).",
+    "T006: Add state token configuration to _uswds-theme.scss — error (red-60v), warning (gold-20v), success (mint-cool-30v), info (blue-30v), disabled (gray-cool-20) tokens using system tokens from research.md Decision D4",
+    "T007: Add link color and focus color configuration to _uswds-theme.scss — $theme-link-color: \"blue-30v\", $theme-link-visited-color: \"blue-30v\", $theme-focus-color: \"blue-40v\"",
+    "T008: Set all 8 unused grades to false in _uswds-theme.scss per research.md Decision D5 (primary-lightest, primary-darkest, secondary-lightest, secondary-darkest, accent-cool-lightest, accent-cool-darkest, accent-warm-lightest, accent-warm-darkest)",
+    "T009: Verify _uswds-theme.scss compiles without errors by building packages/styles/dist/styles.css"
+  ],
+  "context_digest_path": "handoffs/implement/run-003/S02-integration-02/context-digest.md",
+  "context_index_path": "specs/003-wrap-uswds-theme/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/src/",
+    "packages/styles/package.json",
+    "specs/003-wrap-uswds-theme/research.md",
+    "specs/003-wrap-uswds-theme/data-model.md",
+    "specs/003-wrap-uswds-theme/contracts/scss-interface.md",
+    "specs/003-wrap-uswds-theme/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/src/_uswds-theme.scss"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "test -f packages/styles/src/_uswds-theme.scss && echo 'FILE_EXISTS'",
+    "cd packages/styles && pnpm build 2>&1 && echo 'BUILD_OK'"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-003/S02-integration-02/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_type", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit package.json",
+    "edit _colors.scss",
+    "edit _semantic.scss",
+    "edit index.scss",
+    "edit README.md",
+    "edit BRAND_RULES.md",
+    "edit AGENTS.md",
+    "dispatch workers"
+  ]
+}

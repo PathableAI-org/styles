@@ -1,0 +1,77 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S06-documentation-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": { "role": "planner", "vertical_planner_only": true, "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false },
+    "worker_agent": { "role": "executor", "single_handoff_only": true, "may_dispatch_workers": false, "may_update_tasks_md": false }
+  },
+  "lifecycle_stage": "documentation",
+  "vertical_capability": "documentation",
+  "capability_boundary": {
+    "owns": [
+      "packages/styles/README.md",
+      "packages/styles/BRAND_RULES.md",
+      "packages/styles/AGENTS.md"
+    ],
+    "depends_on": ["S03-integration-03"],
+    "must_not_touch": [
+      "packages/styles/src/",
+      "packages/styles/package.json"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-003/planner-outputs/planner-documentation-01/shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-documentation-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-documentation-01/context-digest-draft.md",
+    "vertical_capability": "documentation"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-documentation-01",
+    "handoff_draft_path": "handoffs/implement/run-003/planner-outputs/planner-documentation-01/handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-003/planner-outputs/planner-documentation-01/context-digest-draft.md"
+  },
+  "task_ids": ["T039", "T040", "T041"],
+  "task_type": "implementation",
+  "task_text": [
+    "T039: Update packages/styles/README.md with USWDS integration documentation — include installation instructions (pnpm add @pathable/styles @uswds/uswds), usage examples, and link to quickstart.md",
+    "T040: Update packages/styles/BRAND_RULES.md with USWDS system token references alongside hex values — add a mapping table showing each brand color, its USWDS system token, and deltaE value from research.md",
+    "T041: Update packages/styles/AGENTS.md with USWDS token usage rules — agents must use uswds.color(\"blue-warm-80v\") pattern when referencing brand colors in new SCSS"
+  ],
+  "context_digest_path": "handoffs/implement/run-003/S06-documentation-01/context-digest.md",
+  "context_index_path": "specs/003-wrap-uswds-theme/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/README.md",
+    "packages/styles/BRAND_RULES.md",
+    "packages/styles/AGENTS.md",
+    "packages/styles/src/_uswds-theme.scss",
+    "specs/003-wrap-uswds-theme/quickstart.md",
+    "specs/003-wrap-uswds-theme/data-model.md",
+    "specs/003-wrap-uswds-theme/research.md",
+    "specs/003-wrap-uswds-theme/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/README.md",
+    "packages/styles/BRAND_RULES.md",
+    "packages/styles/AGENTS.md"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "grep -q 'uswds' packages/styles/README.md && echo 'README_OK'",
+    "grep -q 'uswds.color' packages/styles/AGENTS.md && echo 'AGENTS_OK'",
+    "grep -q 'deltaE' packages/styles/BRAND_RULES.md && echo 'BRAND_RULES_OK'"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-003/S06-documentation-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_type", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit src/",
+    "edit package.json",
+    "dispatch workers"
+  ]
+}

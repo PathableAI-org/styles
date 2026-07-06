@@ -29,10 +29,10 @@
 
 **Purpose**: Project initialization — add USWDS dependency and configure the Sass build pipeline
 
-- [ ] T001 Add `@uswds/uswds` (v3.x latest stable) as a runtime dependency in `packages/styles/package.json`
-- [ ] T002 [P] Update build script in `packages/styles/package.json` to include `--load-path=node_modules/@uswds/uswds/packages` in the Sass command
-- [ ] T003 [P] Install updated dependencies via `pnpm install` at repository root
-- [ ] T004 Verify the package builds successfully after dependency installation by running `pnpm build` in `packages/styles/`
+- [x] T001 Add `@uswds/uswds` (v3.x latest stable) as a runtime dependency in `packages/styles/package.json`
+- [x] T002 [P] Update build script in `packages/styles/package.json` to include `--load-path=node_modules/@uswds/uswds/packages` in the Sass command
+- [x] T003 [P] Install updated dependencies via `pnpm install` at repository root
+- [x] T004 Verify the package builds successfully after dependency installation by running `pnpm build` in `packages/styles/`
 
 ---
 
@@ -42,11 +42,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create `packages/styles/src/_uswds-theme.scss` with `@use "uswds-core" with (...)` block containing ALL theme color family mappings from `research.md` Decision D2 (all grades for primary/blue-warm, secondary/mint-cool, accent-cool/blue, accent-warm/green-warm, base/gray-cool families)
-- [ ] T006 Add state token configuration to `_uswds-theme.scss` — error, warning, success, info, disabled tokens using system tokens from `research.md` Decision D4
-- [ ] T007 Add link color and focus color configuration to `_uswds-theme.scss` — `$theme-link-color`, `$theme-link-visited-color`, `$theme-focus-color`
-- [ ] T008 Set all unused grades to `false` in `_uswds-theme.scss` — explicitly set the 8 grades listed in `research.md` Decision D5
-- [ ] T009 Verify `_uswds-theme.scss` compiles without errors by building `packages/styles/dist/styles.css`
+- [x] T005 Create `packages/styles/src/_uswds-theme.scss` with `@use "uswds-core" with (...)` block containing ALL theme color family mappings from `research.md` Decision D2 (all grades for primary/blue-warm, secondary/mint-cool, accent-cool/blue, accent-warm/green-warm, base/gray-cool families)
+- [x] T006 Add state token configuration to `_uswds-theme.scss` — error, warning, success, info, disabled tokens using system tokens from `research.md` Decision D4
+- [x] T007 Add link color and focus color configuration to `_uswds-theme.scss` — `$theme-link-color`, `$theme-link-visited-color`, `$theme-focus-color`
+- [x] T008 Set all unused grades to `false` in `_uswds-theme.scss` — explicitly set the 8 grades listed in `research.md` Decision D5
+- [x] T009 Verify `_uswds-theme.scss` compiles without errors by building `packages/styles/dist/styles.css`
 
 **Checkpoint**: Foundation ready — USWDS theme token configuration is in place and compiling.
 
@@ -60,27 +60,27 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 `packages/styles/src/_colors.scss` — Add `@use "uswds-core" as uswds;` at the top of the file
-- [ ] T011 [P] [US1] Replace `$pathable-blue: #00365c` with `$pathable-blue: uswds.color("blue-warm-80v");` and update the `$brand-colors` map value accordingly in `packages/styles/src/_colors.scss`
-- [ ] T012 [P] [US1] Replace `$intelligent-jade: #1cae96` with `$intelligent-jade: uswds.color("mint-cool-30v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
-- [ ] T013 [P] [US1] Replace `$bright-blue-brooks: #4899e8` with `$bright-blue-brooks: uswds.color("blue-30v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
-- [ ] T014 [P] [US1] Replace `$tech-teal: #015a76` with `$tech-teal: uswds.color("cyan-60v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
-- [ ] T015 [P] [US1] Replace `$lived-in-lime: #d3ff66` with `$lived-in-lime: uswds.color("green-warm-10v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
-- [ ] T016 [P] [US1] Replace `$shilling-silver: #dde2e8` with `$shilling-silver: uswds.color("gray-cool-10");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
-- [ ] T017 Update `packages/styles/src/_semantic.scss` — Add `@use "uswds-core" as uswds;` at the top of the file
-- [ ] T018 [P] [US1] Update `$pathable-color-text` in `_semantic.scss` to reference `uswds.color("blue-warm-80v")` (aliasStatus: MUST)
-- [ ] T019 [P] [US1] Update `$pathable-color-text-muted` in `_semantic.scss` to reference `uswds.color("cyan-60v")` (aliasStatus: MUST)
-- [ ] T020 [P] [US1] Update `$pathable-color-link` in `_semantic.scss` to reference `uswds.color("blue-30v")` (aliasStatus: MUST)
-- [ ] T021 [P] [US1] Update `$pathable-color-accent` in `_semantic.scss` to reference `uswds.color("mint-cool-30v")` (aliasStatus: MUST)
-- [ ] T022 [P] [US1] Update `$pathable-color-focus-ring` in `_semantic.scss` to reference `uswds.color("blue-40v")` (aliasStatus: MUST)
-- [ ] T023 [P] [US1] Update `$pathable-color-success` in `_semantic.scss` to reference `uswds.color("mint-cool-30v")` (aliasStatus: MUST)
-- [ ] T024 [P] [US1] Optionally update `$pathable-color-bg` in `_semantic.scss` to reference `uswds.color("gray-cool-10")` (aliasStatus: SHOULD)
-- [ ] T025 [P] [US1] Optionally update `$pathable-color-border` in `_semantic.scss` to reference `uswds.color("gray-cool-10")` (aliasStatus: SHOULD)
-- [ ] T026 Update `packages/styles/src/index.scss` — Add `@forward "uswds-theme";` as the first forward statement, before all existing forwards. Do NOT add `@forward "uswds"` (tokens-only per FR-006).
-- [ ] T027 Rebuild `packages/styles/dist/styles.css` via `pnpm build` and verify compilation succeeds without errors
-- [ ] T028 Verify backward compatibility — confirm `dist/styles.css` still contains `--pathable-blue`, `--pathable-color-text`, and all other `--pathable-*` CSS custom properties
-- [ ] T029 Verify tokens-only output — confirm `dist/styles.css` does NOT contain `.usa-` prefixed component classes (verify no USWDS component styles leaked in)
-- [ ] T030 Verify brand-to-USWDS mapping — confirm `dist/styles.css` contains the USWDS system token hex values mapped to brand colors (e.g., `#162e51` for PathAble Blue, `#1dc2ae` for Intelligent Jade)
+- [x] T010 `packages/styles/src/_colors.scss` — Add `@use "uswds-core" as uswds;` at the top of the file
+- [x] T011 [P] [US1] Replace `$pathable-blue: #00365c` with `$pathable-blue: uswds.color("blue-warm-80v");` and update the `$brand-colors` map value accordingly in `packages/styles/src/_colors.scss`
+- [x] T012 [P] [US1] Replace `$intelligent-jade: #1cae96` with `$intelligent-jade: uswds.color("mint-cool-30v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
+- [x] T013 [P] [US1] Replace `$bright-blue-brooks: #4899e8` with `$bright-blue-brooks: uswds.color("blue-30v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
+- [x] T014 [P] [US1] Replace `$tech-teal: #015a76` with `$tech-teal: uswds.color("cyan-60v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
+- [x] T015 [P] [US1] Replace `$lived-in-lime: #d3ff66` with `$lived-in-lime: uswds.color("green-warm-10v");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
+- [x] T016 [P] [US1] Replace `$shilling-silver: #dde2e8` with `$shilling-silver: uswds.color("gray-cool-10");` and update the `$brand-colors` map accordingly in `packages/styles/src/_colors.scss`
+- [x] T017 Update `packages/styles/src/_semantic.scss` — Add `@use "uswds-core" as uswds;` at the top of the file
+- [x] T018 [P] [US1] Update `$pathable-color-text` in `_semantic.scss` to reference `uswds.color("blue-warm-80v")` (aliasStatus: MUST)
+- [x] T019 [P] [US1] Update `$pathable-color-text-muted` in `_semantic.scss` to reference `uswds.color("cyan-60v")` (aliasStatus: MUST)
+- [x] T020 [P] [US1] Update `$pathable-color-link` in `_semantic.scss` to reference `uswds.color("blue-30v")` (aliasStatus: MUST)
+- [x] T021 [P] [US1] Update `$pathable-color-accent` in `_semantic.scss` to reference `uswds.color("mint-cool-30v")` (aliasStatus: MUST)
+- [x] T022 [P] [US1] Update `$pathable-color-focus-ring` in `_semantic.scss` to reference `uswds.color("blue-40v")` (aliasStatus: MUST)
+- [x] T023 [P] [US1] Update `$pathable-color-success` in `_semantic.scss` to reference `uswds.color("mint-cool-30v")` (aliasStatus: MUST)
+- [x] T024 [P] [US1] Optionally update `$pathable-color-bg` in `_semantic.scss` to reference `uswds.color("gray-cool-10")` (aliasStatus: SHOULD)
+- [x] T025 [P] [US1] Optionally update `$pathable-color-border` in `_semantic.scss` to reference `uswds.color("gray-cool-10")` (aliasStatus: SHOULD)
+- [x] T026 Update `packages/styles/src/index.scss` — Add `@forward "uswds-theme";` as the first forward statement, before all existing forwards. Do NOT add `@forward "uswds"` (tokens-only per FR-006).
+- [x] T027 Rebuild `packages/styles/dist/styles.css` via `pnpm build` and verify compilation succeeds without errors
+- [x] T028 Verify backward compatibility — confirm `dist/styles.css` still contains `--pathable-blue`, `--pathable-color-text`, and all other `--pathable-*` CSS custom properties
+- [x] T029 Verify tokens-only output — confirm `dist/styles.css` does NOT contain `.usa-` prefixed component classes (verify no USWDS component styles leaked in)
+- [x] T030 Verify brand-to-USWDS mapping — confirm `dist/styles.css` contains the USWDS system token hex values mapped to brand colors (e.g., `#162e51` for PathAble Blue, `#1dc2ae` for Intelligent Jade)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently.
 
@@ -94,11 +94,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T031 [P] [US2] Visually verify that USWDS error state components (`.usa-alert--error`, `.usa-input--error`) render with the error color `#dc3545` (via `red-60v` USWDS token)
-- [ ] T032 [P] [US2] Visually verify that USWDS success state components (`.usa-alert--success`, `.usa-input--success`) render with Intelligent Jade (`#1cae96` / `mint-cool-30v`)
-- [ ] T033 [P] [US2] Visually verify that USWDS focus indicators render with Bright Blue Brooks (`#4899e8` / `blue-40v`)
-- [ ] T034 [US2] Visually review dark-primary (PathAble Blue) hover states on USWDS primary buttons — if USWDS darkening produces a near-black color, override the hover grade with an explicitly chosen brand-aligned color
-- [ ] T035 [US2] Visually verify WCAG AA contrast on common text-on-background pairs (e.g., PathAble Blue text on Shilling Silver background, white text on PathAble Blue background)
+- [x] T031 [P] [US2] Visually verify that USWDS error state components (`.usa-alert--error`, `.usa-input--error`) render with the error color `#dc3545` (via `red-60v` USWDS token)
+- [x] T032 [P] [US2] Visually verify that USWDS success state components (`.usa-alert--success`, `.usa-input--success`) render with Intelligent Jade (`#1cae96` / `mint-cool-30v`)
+- [x] T033 [P] [US2] Visually verify that USWDS focus indicators render with Bright Blue Brooks (`#4899e8` / `blue-40v`)
+- [x] T034 [US2] Visually review dark-primary (PathAble Blue) hover states on USWDS primary buttons — if USWDS darkening produces a near-black color, override the hover grade with an explicitly chosen brand-aligned color
+- [x] T035 [US2] Visually verify WCAG AA contrast on common text-on-background pairs (e.g., PathAble Blue text on Shilling Silver background, white text on PathAble Blue background)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently.
 
@@ -112,9 +112,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T036 [P] [US3] Create documentation comments in `_uswds-theme.scss` that explain each theme family mapping (which brand color maps to which family and grade)
-- [ ] T037 [P] [US3] Add a comment block at the top of `_uswds-theme.scss` with upgrade instructions: "To upgrade USWDS: bump version in package.json, rebuild, verify no unexpected color changes. Only this file needs review."
-- [ ] T038 [US3] Verify FR-008 compliance — confirm that ALL USWDS theme color overrides are scoped exclusively within `_uswds-theme.scss` and no overrides exist in any other file
+- [x] T036 [P] [US3] Create documentation comments in `_uswds-theme.scss` that explain each theme family mapping (which brand color maps to which family and grade)
+- [x] T037 [P] [US3] Add a comment block at the top of `_uswds-theme.scss` with upgrade instructions: "To upgrade USWDS: bump version in package.json, rebuild, verify no unexpected color changes. Only this file needs review."
+- [x] T038 [US3] Verify FR-008 compliance — confirm that ALL USWDS theme color overrides are scoped exclusively within `_uswds-theme.scss` and no overrides exist in any other file
 
 **Checkpoint**: All user stories should now be independently functional.
 
@@ -124,12 +124,12 @@
 
 **Purpose**: Documentation updates, backward compatibility verification, and final build checks.
 
-- [ ] T039 [P] Update `packages/styles/README.md` with USWDS integration documentation — include installation instructions (`pnpm add @pathable/styles @uswds/uswds`), usage examples, and link to quickstart.md
-- [ ] T040 [P] Update `packages/styles/BRAND_RULES.md` with USWDS system token references alongside hex values — add a mapping table showing each brand color, its USWDS system token, and deltaE value
-- [ ] T041 [P] Update `packages/styles/AGENTS.md` with USWDS token usage rules — agents must use `uswds.color("blue-warm-80v")` pattern when referencing brand colors in new SCSS
-- [ ] T042 Build and verify final `dist/styles.css` — confirm all existing `--pathable-*` CSS custom properties are present, all `$theme-color-*` tokens are configured, and no `.usa-` component styles leaked in
-- [ ] T043 Run `pnpm pack --dry-run` in `packages/styles/` to verify published package contents are correct (should include `dist/`, `src/`, README, BRAND_RULES, AGENTS)
-- [ ] T044 Commit all changes with a descriptive message
+- [x] T039 [P] Update `packages/styles/README.md` with USWDS integration documentation — include installation instructions (`pnpm add @pathable/styles @uswds/uswds`), usage examples, and link to quickstart.md
+- [x] T040 [P] Update `packages/styles/BRAND_RULES.md` with USWDS system token references alongside hex values — add a mapping table showing each brand color, its USWDS system token, and deltaE value
+- [x] T041 [P] Update `packages/styles/AGENTS.md` with USWDS token usage rules — agents must use `uswds.color("blue-warm-80v")` pattern when referencing brand colors in new SCSS
+- [x] T042 Build and verify final `dist/styles.css` — confirm all existing `--pathable-*` CSS custom properties are present, all `$theme-color-*` tokens are configured, and no `.usa-` component styles leaked in
+- [x] T043 Run `pnpm pack --dry-run` in `packages/styles/` to verify published package contents are correct (should include `dist/`, `src/`, README, BRAND_RULES, AGENTS)
+- [x] T044 Commit all changes with a descriptive message
 
 ---
 
