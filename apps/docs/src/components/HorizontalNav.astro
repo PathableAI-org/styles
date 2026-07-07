@@ -1,8 +1,6 @@
 ---
 const currentPath = Astro.url.pathname;
 
-// Top-level page groups for the horizontal nav — mirrored from astro.config.mjs sidebar.
-// These map group labels to their main page paths.
 const primaryNavItems: { label: string; href: string }[] = [
   { label: 'Home', href: '/' },
   { label: 'Getting Started', href: '/getting-started/' },
@@ -12,20 +10,25 @@ const primaryNavItems: { label: string; href: string }[] = [
 ];
 
 function isCurrent(href: string): boolean {
-  // Normalize: trim trailing slash for comparison
   const page = currentPath.replace(/\/$/, '');
   const target = href.replace(/\/$/, '');
   return page === target;
 }
 ---
 
-<nav class="horizontal-nav print:hidden" aria-label="Primary navigation">
+<nav class="horizontal-nav print:hidden pathable-bg-surface" aria-label="Primary navigation">
   <div class="horizontal-nav-inner">
-    <ul class="nav-list">
+    <ul class="nav-list pathable-margin-0 pathable-padding-0 pathable-display-flex">
       {
         primaryNavItems.map((item) => (
-          <li class:list={['nav-item', { 'is-current': isCurrent(item.href) }]}>
-            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+          <li class:list={['nav-item pathable-display-flex pathable-flex-align-center pathable-margin-0', { 'is-current': isCurrent(item.href) }]}>
+            <a
+              href={item.href}
+              class="pathable-display-flex pathable-flex-align-center pathable-font-family-body pathable-text-primary"
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
           </li>
         ))
       }
@@ -41,7 +44,6 @@ function isCurrent(href: string): boolean {
     inset-block-start: var(--sl-nav-height);
     width: 100%;
     height: var(--sl-horizontal-nav-height, 3rem);
-    background-color: var(--pathable-color-surface);
     border-bottom: 1px solid var(--pathable-color-border);
     box-shadow: var(--elevation-sm);
   }
@@ -56,29 +58,21 @@ function isCurrent(href: string): boolean {
 
   .nav-list {
     list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
     gap: 0;
     height: 100%;
     align-items: stretch;
   }
 
   .nav-item {
-    display: flex;
     align-items: center;
-    margin: 0;
   }
 
   .nav-item a {
-    display: flex;
     align-items: center;
     height: 100%;
-padding: 0 var(--space-16);
-		color: var(--pathable-color-text);
-		font-size: var(--sl-text-sm);
+    padding: 0 var(--space-16);
+    font-size: var(--sl-text-sm);
     font-weight: 500;
-    font-family: var(--pathable-font-body);
     text-decoration: none;
     white-space: nowrap;
     border-bottom: 3px solid transparent;
@@ -102,8 +96,8 @@ padding: 0 var(--space-16);
     }
 
     .nav-item a {
-padding: 0 var(--space-12);
-		font-size: var(--sl-text-xs);
+      padding: 0 var(--space-12);
+      font-size: var(--sl-text-xs);
     }
   }
 

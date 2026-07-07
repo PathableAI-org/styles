@@ -1,7 +1,4 @@
 ---
-// USWDS medium footer pattern — simplified for Pathable Styles docs
-// Three sections: return-to-top, primary nav links, secondary branding
-
 const currentYear = new Date().getFullYear();
 
 const footerLinks: { label: string; href: string }[] = [
@@ -13,18 +10,18 @@ const footerLinks: { label: string; href: string }[] = [
 ];
 ---
 
-<footer class="doc-footer">
-  <div class="footer-return-to-top">
-    <a href="#">Return to top</a>
+<footer class="doc-footer pathable-bg-surface pathable-text-primary pathable-font-family-body">
+  <div class="footer-return-to-top pathable-text-center pathable-padding-2">
+    <a href="#" class="pathable-text-link pathable-font-family-body">Return to top</a>
   </div>
 
-  <div class="footer-primary-section">
+  <div class="footer-primary-section pathable-padding-y-4 pathable-padding-x-2">
     <nav aria-label="Footer navigation">
       <div class="footer-primary-inner">
-        <ul class="footer-nav-list">
+        <ul class="footer-nav-list pathable-margin-0 pathable-padding-0">
           {footerLinks.map((link) => (
-            <li>
-              <a href={link.href}>{link.label}</a>
+            <li class="pathable-margin-0">
+              <a href={link.href} class="pathable-text-link pathable-font-family-body">{link.label}</a>
             </li>
           ))}
         </ul>
@@ -32,36 +29,28 @@ const footerLinks: { label: string; href: string }[] = [
     </nav>
   </div>
 
-  <div class="footer-secondary-section">
-    <div class="footer-secondary-inner">
-      <div class="footer-brand">
-        <span class="footer-brand-name">Pathable Styles</span>
-        <span class="footer-copyright">&copy; {currentYear} Pathable AI</span>
+  <div class="footer-secondary-section pathable-padding-y-3 pathable-padding-x-2">
+    <div class="footer-secondary-inner pathable-display-flex pathable-flex-justify-between pathable-flex-align-center">
+      <div class="footer-brand pathable-display-flex pathable-flex-align-center">
+        <span class="footer-brand-name pathable-font-family-heading pathable-text-primary">PathAble Styles</span>
+        <span class="footer-copyright pathable-text-muted">&copy; {currentYear} PathAble AI</span>
       </div>
-      <div class="footer-attribution">Powered by USWDS</div>
+      <div class="footer-attribution pathable-text-muted">Powered by USWDS</div>
     </div>
   </div>
 </footer>
 
 <style>
   .doc-footer {
-    background-color: var(--pathable-color-surface);
-    color: var(--pathable-color-text);
-    font-family: var(--pathable-font-body);
     border-top: 1px solid var(--pathable-color-border);
   }
 
-  /* --- Return to top --- */
   .footer-return-to-top {
-    text-align: center;
-    padding: var(--space-16);
     border-bottom: 1px solid var(--pathable-color-border);
   }
 
   .footer-return-to-top a {
-    color: var(--pathable-color-link);
     text-decoration: none;
-    font-family: var(--pathable-font-body);
     font-size: 0.9rem;
   }
 
@@ -69,9 +58,7 @@ const footerLinks: { label: string; href: string }[] = [
     text-decoration: underline;
   }
 
-  /* --- Primary section --- */
   .footer-primary-section {
-    padding: var(--space-32) var(--space-16);
     border-bottom: 1px solid var(--pathable-color-border);
   }
 
@@ -82,21 +69,13 @@ const footerLinks: { label: string; href: string }[] = [
 
   .footer-nav-list {
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: var(--space-12);
   }
 
-  .footer-nav-list li {
-    margin: 0;
-  }
-
   .footer-nav-list a {
-    color: var(--pathable-color-link);
     text-decoration: none;
-    font-family: var(--pathable-font-body);
     font-size: 0.9rem;
   }
 
@@ -104,41 +83,27 @@ const footerLinks: { label: string; href: string }[] = [
     text-decoration: underline;
   }
 
-  /* --- Secondary section --- */
-  .footer-secondary-section {
-    padding: var(--space-24) var(--space-16);
-  }
-
   .footer-secondary-inner {
     max-width: var(--sl-content-width);
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     flex-wrap: wrap;
     gap: var(--space-16);
   }
 
   .footer-brand {
-    display: flex;
-    align-items: center;
     gap: var(--space-16);
     flex-wrap: wrap;
   }
 
   .footer-brand-name {
-    font-family: var(--pathable-font-heading);
     font-size: 1.1rem;
-    color: var(--pathable-color-text);
   }
 
   .footer-copyright {
     font-size: 0.85rem;
-    color: var(--pathable-color-text-muted);
   }
 
   .footer-attribution {
     font-size: 0.85rem;
-    color: var(--pathable-color-text-muted);
   }
 </style>

@@ -45,7 +45,6 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		border-bottom: 1px solid var(--pathable-color-border);
 		padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
 		padding-inline-end: var(--sl-nav-pad-x);
-		background-color: var(--pathable-color-surface);
 	}
 
 	:global([data-has-sidebar]) .header {
@@ -71,7 +70,6 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		inset-block: calc(var(--sl-nav-height) + var(--sl-horizontal-nav-height, 3rem)) 0;
 		inset-inline-start: 0;
 		width: 100%;
-		background-color: var(--pathable-color-surface);
 		overflow-y: auto;
 		transform: translateX(-100%);
 		transition: transform 0.3s ease, visibility 0.3s ease;
@@ -130,7 +128,6 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 		.sidebar-pane {
 			--sl-sidebar-visibility: visible;
 			width: var(--sl-sidebar-width);
-			background-color: var(--pathable-color-surface);
 			border-inline-end: 1px solid var(--pathable-color-border);
 			position: fixed;
 			top: calc(var(--sl-nav-height) + var(--sl-horizontal-nav-height, 3rem));

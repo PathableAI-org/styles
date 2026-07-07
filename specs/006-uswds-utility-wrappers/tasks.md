@@ -32,8 +32,8 @@
 
 **Purpose**: Verify the existing build tooling is functional and the branch is ready for development.
 
-- [ ] T001 Verify that `packages/styles` builds cleanly with `pnpm build` before making changes
-- [ ] T002 Verify the docs site loads with `pnpm dev` in `apps/docs` before making changes
+- [x] T001 Verify that `packages/styles` builds cleanly with `pnpm build` before making changes
+- [x] T002 Verify the docs site loads with `pnpm dev` in `apps/docs` before making changes
 
 ---
 
@@ -45,14 +45,14 @@
 
 ### Implementation
 
-- [ ] T003 Create `packages/styles/src/_utilities.scss` with the configuration map for the following utility modules: background-color, color, padding, padding-x, padding-y, margin, margin-x, margin-y, margin-top, margin-bottom. Each module entry must include `class`, `property`, `values` map, `responsive` flag, and `state` variants list per the contract in `specs/006-uswds-utility-wrappers/contracts/scss-interface.md`. Values must resolve via `uswds.color()`, `uswds.units()`, and direct string literals per `research.md`.
-- [ ] T004 [P] Add the display, font-family, font-weight, border, border-radius, flex, align-items, justify-content, width, max-width, and text-align utility modules to `packages/styles/src/_utilities.scss`. Each module must follow the same configuration map pattern from T003.
-- [ ] T005 Implement the base class generation loop in `packages/styles/src/_utilities.scss` that iterates over all module definitions and emits `.pathable-{base}-{value} { property: value; }` rules for each value token.
-- [ ] T006 Implement the dual CSS custom property emission in a `:root` block in `packages/styles/src/_utilities.scss` using an `@each` loop that generates both `--pathable-{name}: {value}` and `--usa-{name}: {value}` for every utility value token, matching the pattern in `packages/styles/src/_typography.scss`.
-- [ ] T007 Update `packages/styles/src/index.scss` to forward the new `_utilities` partial, placing the forward after `_uswds-theme` and before `_semantic` in the dependency chain.
-- [ ] T008 Rebuild `packages/styles/dist/styles.css` via `pnpm build` in `packages/styles` and verify the compiled output contains `.pathable-bg-primary`, `.pathable-padding-4`, `.pathable-display-flex`, `.pathable-font-family-body`, and at least 10 additional `.pathable-*` utility classes from the configuration map.
-- [ ] T009 Verify compiled `dist/styles.css` by running `rg '--pathable-(bg|padding|text|display)-' dist/styles.css` and `rg '--usa-(bg|padding|text|display)-' dist/styles.css` to confirm both namespaces are present for utility value tokens.
-- [ ] T010 Verify the compiled CSS gzip size increase is under 50 KB by comparing `dist/styles.css` before and after the change.
+- [x] T003 Create `packages/styles/src/_utilities.scss` with the configuration map for the following utility modules: background-color, color, padding, padding-x, padding-y, margin, margin-x, margin-y, margin-top, margin-bottom. Each module entry must include `class`, `property`, `values` map, `responsive` flag, and `state` variants list per the contract in `specs/006-uswds-utility-wrappers/contracts/scss-interface.md`. Values must resolve via `uswds.color()`, `uswds.units()`, and direct string literals per `research.md`.
+- [x] T004 [P] Add the display, font-family, font-weight, border, border-radius, flex, align-items, justify-content, width, max-width, and text-align utility modules to `packages/styles/src/_utilities.scss`. Each module must follow the same configuration map pattern from T003.
+- [x] T005 Implement the base class generation loop in `packages/styles/src/_utilities.scss` that iterates over all module definitions and emits `.pathable-{base}-{value} { property: value; }` rules for each value token.
+- [x] T006 Implement the dual CSS custom property emission in a `:root` block in `packages/styles/src/_utilities.scss` using an `@each` loop that generates both `--pathable-{name}: {value}` and `--usa-{name}: {value}` for every utility value token, matching the pattern in `packages/styles/src/_typography.scss`.
+- [x] T007 Update `packages/styles/src/index.scss` to forward the new `_utilities` partial, placing the forward after `_uswds-theme` and before `_semantic` in the dependency chain.
+- [x] T008 Rebuild `packages/styles/dist/styles.css` via `pnpm build` in `packages/styles` and verify the compiled output contains `.pathable-bg-primary`, `.pathable-padding-4`, `.pathable-display-flex`, `.pathable-font-family-body`, and at least 10 additional `.pathable-*` utility classes from the configuration map.
+- [x] T009 Verify compiled `dist/styles.css` by running `rg '--pathable-(bg|padding|text|display)-' dist/styles.css` and `rg '--usa-(bg|padding|text|display)-' dist/styles.css` to confirm both namespaces are present for utility value tokens.
+- [x] T010 Verify the compiled CSS gzip size increase is under 50 KB by comparing `dist/styles.css` before and after the change.
 
 **Checkpoint**: Foundation ready — utility classes exist in compiled CSS, dual CSS custom properties are present, and the build passes cleanly. User story implementation can now begin.
 
@@ -66,11 +66,11 @@
 
 ### Implementation
 
-- [ ] T011 [US1] Refactor `apps/docs/src/components/SkipNav.astro` by replacing all CSS in its `<style>` block with inline `.pathable-*` utility classes and removing the `<style>` block entirely. Verify the skip link still appears on focus and functions correctly.
-- [ ] T012 [P] [US1] Refactor `apps/docs/src/styles/custom.css` by replacing ad-hoc CSS property declarations with `.pathable-*` utility classes applied in the corresponding Astro components. Target at least the following sections: scroll-padding, site-title, sidebar, footer, blockquotes, tables, and code blocks. Measure before/after line count reduction.
-- [ ] T013 [US1] Refactor `apps/docs/src/components/PageFrame.astro`'s `<style>` block by replacing ad-hoc CSS with `.pathable-*` utility classes. Target: layout padding, background colors, border properties, and spacing declarations that have a matching utility class.
-- [ ] T014 [US1] Refactor `apps/docs/src/components/HorizontalNav.astro`'s `<style>` block to use `.pathable-*` utility classes where possible (background, border, spacing, font-family). Preserve complex styling (position, z-index, transition animations) that cannot be replaced by utility classes.
-- [ ] T015 [P] [US1] Refactor `apps/docs/src/components/DocFooter.astro`'s `<style>` block to use `.pathable-*` utility classes (padding, border, font-family, text color). Preserve layout-specific rules (flex wrap, min-width, grid) that have no utility equivalent.
+- [x] T011 [US1] Refactor `apps/docs/src/components/SkipNav.astro` by replacing all CSS in its `<style>` block with inline `.pathable-*` utility classes and removing the `<style>` block entirely. Verify the skip link still appears on focus and functions correctly.
+- [x] T012 [P] [US1] Refactor `apps/docs/src/styles/custom.css` by replacing ad-hoc CSS property declarations with `.pathable-*` utility classes applied in the corresponding Astro components. Target at least the following sections: scroll-padding, site-title, sidebar, footer, blockquotes, tables, and code blocks. Measure before/after line count reduction.
+- [x] T013 [US1] Refactor `apps/docs/src/components/PageFrame.astro`'s `<style>` block by replacing ad-hoc CSS with `.pathable-*` utility classes. Target: layout padding, background colors, border properties, and spacing declarations that have a matching utility class.
+- [x] T014 [US1] Refactor `apps/docs/src/components/HorizontalNav.astro`'s `<style>` block to use `.pathable-*` utility classes where possible (background, border, spacing, font-family). Preserve complex styling (position, z-index, transition animations) that cannot be replaced by utility classes.
+- [x] T015 [P] [US1] Refactor `apps/docs/src/components/DocFooter.astro`'s `<style>` block to use `.pathable-*` utility classes (padding, border, font-family, text color). Preserve layout-specific rules (flex wrap, min-width, grid) that have no utility equivalent.
 - [ ] T016 [US1] Verify zero visual regressions by running the docs site (`pnpm dev` in `apps/docs`) and visually comparing each page against a before-screenshot or the previous rendering, confirming all refactored components render identically.
 
 **Checkpoint**: Docs site utility class refactoring complete. All pages render identically. Custom CSS line count reduced by at least 50%.
@@ -85,10 +85,10 @@
 
 ### Implementation
 
-- [ ] T017 [US2] Add responsive breakpoint variants to `packages/styles/src/_utilities.scss` for enabled breakpoints (`mobile-lg: 480px`, `tablet: 640px`, `desktop: 1024px`). Generate `.{breakpoint}\:pathable-{base}-{value}` classes wrapped in `@media (min-width: ...)`. Target: padding, margin, display, and text-align modules first.
-- [ ] T018 [US2] Add hover and focus state variants to `packages/styles/src/_utilities.scss` for modules that support them. Generate `.{state}\:pathable-{base}-{value}` classes with `&:{state}` nesting. Target: background-color, color, border-color, and text-decoration modules.
-- [ ] T019 [US2] Rebuild `packages/styles/dist/styles.css` via `pnpm build` and verify responsive variants exist (e.g., `.tablet\:pathable-padding-4`, `.desktop\:pathable-display-flex`) and state variants exist (e.g., `.hover\:pathable-bg-primary`, `.focus\:pathable-border-2`).
-- [ ] T020 [US2] Create a test HTML page at `specs/006-uswds-utility-wrappers/test-utilities.html` that imports `packages/styles/dist/styles.css` and demonstrates at least one usage of each utility module including responsive and state variants. The page must render correctly when opened in a browser.
+- [x] T017 [US2] Add responsive breakpoint variants to `packages/styles/src/_utilities.scss` for enabled breakpoints (`mobile-lg: 480px`, `tablet: 640px`, `desktop: 1024px`). Generate `.{breakpoint}\:pathable-{base}-{value}` classes wrapped in `@media (min-width: ...)`. Target: padding, margin, display, and text-align modules first.
+- [x] T018 [US2] Add hover and focus state variants to `packages/styles/src/_utilities.scss` for modules that support them. Generate `.{state}\:pathable-{base}-{value}` classes with `&:{state}` nesting. Target: background-color, color, border-color, and text-decoration modules.
+- [x] T019 [US2] Rebuild `packages/styles/dist/styles.css` via `pnpm build` and verify responsive variants exist (e.g., `.tablet\:pathable-padding-4`, `.desktop\:pathable-display-flex`) and state variants exist (e.g., `.hover\:pathable-bg-primary`, `.focus\:pathable-border-2`).
+- [x] T020 [US2] Create a test HTML page at `specs/006-uswds-utility-wrappers/test-utilities.html` that imports `packages/styles/dist/styles.css` and demonstrates at least one usage of each utility module including responsive and state variants. The page must render correctly when opened in a browser.
 
 **Checkpoint**: All 15+ utility modules have responsive and state variants. Test HTML page renders correctly.
 
@@ -102,10 +102,10 @@
 
 ### Implementation
 
-- [ ] T021 [US3] Audit `packages/styles/src/_utilities.scss` to confirm every value in every utility module configuration map is emitted under both `--pathable-*` and `--usa-*` namespaces in the `:root` block. Add any missing entries.
-- [ ] T022 [P] [US3] Update `packages/styles/AGENTS.md` to document the dual CSS custom property naming convention for utility tokens (`.pathable-*` classes and `--pathable-*` / `--usa-*` custom properties).
-- [ ] T023 [P] [US3] Update `packages/styles/BRAND_RULES.md` to document the utility class naming convention and provide examples of `.pathable-*` class usage.
-- [ ] T024 [US3] Verify dual naming by running `rg '--(pathable|usa)-(bg|padding|text|display)-' packages/styles/dist/styles.css` and confirming each token appears under both namespaces.
+- [x] T021 [US3] Audit `packages/styles/src/_utilities.scss` to confirm every value in every utility module configuration map is emitted under both `--pathable-*` and `--usa-*` namespaces in the `:root` block. Add any missing entries.
+- [x] T022 [P] [US3] Update `packages/styles/AGENTS.md` to document the dual CSS custom property naming convention for utility tokens (`.pathable-*` classes and `--pathable-*` / `--usa-*` custom properties).
+- [x] T023 [P] [US3] Update `packages/styles/BRAND_RULES.md` to document the utility class naming convention and provide examples of `.pathable-*` class usage.
+- [x] T024 [US3] Verify dual naming by running `rg '--(pathable|usa)-(bg|padding|text|display)-' packages/styles/dist/styles.css` and confirming each token appears under both namespaces.
 
 **Checkpoint**: All utility values are verifiably dual-named. Agent and brand documentation updated.
 
@@ -115,10 +115,10 @@
 
 **Purpose**: Final cleanup, documentation, and validation.
 
-- [ ] T025 Run `pnpm build` in `packages/styles` one final time and verify zero build errors.
-- [ ] T026 Run `pnpm dev` in `apps/docs` and verify the docs site loads and renders without errors.
-- [ ] T027 Verify the checklist at `specs/006-uswds-utility-wrappers/checklists/requirements.md` against the implementation.
-- [ ] T028 Create a final size report comparing `dist/styles.css` before and after utility classes using `wc -c` on the uncompressed and gzipped files.
+- [x] T025 Run `pnpm build` in `packages/styles` one final time and verify zero build errors.
+- [x] T026 Run `pnpm dev` in `apps/docs` and verify the docs site loads and renders without errors.
+- [x] T027 Verify the checklist at `specs/006-uswds-utility-wrappers/checklists/requirements.md` against the implementation.
+- [x] T028 Create a final size report comparing `dist/styles.css` before and after utility classes using `wc -c` on the uncompressed and gzipped files.
 
 ---
 

@@ -216,3 +216,57 @@ Most typography CSS custom properties are emitted in two namespaces: `--pathable
 Font files (`.woff2`) are bundled with the `@pathable/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script. The fonts are published in the `fonts/` directory and referenced by the compiled CSS at `../fonts/...` relative to `dist/styles.css`.
 
 Consuming projects do not need to manually place font files — they are distributed automatically with the package.
+
+## USWDS Utility Wrappers Usage
+
+This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as dual `--pathable-*` / `--usa-*` CSS custom properties.
+
+### Utility Class Naming Convention
+
+| Module | Class Pattern | CSS Property |
+|--------|--------------|--------------|
+| background-color | `.pathable-bg-{value}` | `background-color` |
+| color | `.pathable-text-{value}` | `color` |
+| padding | `.pathable-padding-{n}` | `padding` |
+| padding-x | `.pathable-padding-x-{n}` | `padding-left` + `padding-right` |
+| padding-y | `.pathable-padding-y-{n}` | `padding-top` + `padding-bottom` |
+| margin | `.pathable-margin-{n}` | `margin` |
+| margin-x | `.pathable-margin-x-{n}` | `margin-left` + `margin-right` |
+| margin-y | `.pathable-margin-y-{n}` | `margin-top` + `margin-bottom` |
+| margin-top | `.pathable-margin-top-{n}` | `margin-top` |
+| margin-bottom | `.pathable-margin-bottom-{n}` | `margin-bottom` |
+| display | `.pathable-display-{value}` | `display` |
+| font-family | `.pathable-font-family-{role}` | `font-family` |
+| font-weight | `.pathable-text-{weight}` | `font-weight` |
+| border | `.pathable-border-{n}` | `border` |
+| border-radius | `.pathable-border-radius-{value}` | `border-radius` |
+| flex | `.pathable-flex-{n}` | `flex` |
+| align-items | `.pathable-flex-align-{value}` | `align-items` |
+| justify-content | `.pathable-flex-justify-{value}` | `justify-content` |
+| width | `.pathable-width-{value}` | `width` |
+| max-width | `.pathable-maxw-{value}` | `max-width` |
+| text-align | `.pathable-text-{alignment}` | `text-align` |
+
+### Responsive Variants
+
+Breakpoint-prefixed variants follow `.{breakpoint}\:pathable-{base}-{value}`:
+
+| Breakpoint | Min Width |
+|-----------|-----------|
+| `mobile-lg` | 480px |
+| `tablet` | 640px |
+| `desktop` | 1024px |
+
+### State Variants
+
+State variants follow `.{state}\:pathable-{base}-{value}`:
+
+- `hover:` — for background-color and color modules
+- `focus:` — for background-color and color modules
+
+### SCSS Utility Token Reference Rules
+
+- Agents MUST use `.pathable-*` utility classes in HTML/Astro templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
+- Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
+- Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
+- Agents May use `--pathable-{module}-{value}` and `--usa-{module}-{value}` CSS custom properties as alternatives to the class-based utilities.
