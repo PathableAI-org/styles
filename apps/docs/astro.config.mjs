@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 
 export default defineConfig({
+  site: 'https://pathableai-org.github.io',
+  base: '/styles',
   integrations: [
     starlight({
       title: 'Pathable Styles',
