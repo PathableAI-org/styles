@@ -52,262 +52,280 @@ $-spacing-tokens: (
 $pathable-utilities: (
   // -------- Background Color --------
   'bg': (
-    'class': 'pathable-bg',
-    'property': 'background-color',
-    'values': (
-      'primary': uswds.color('blue-warm-80v'),
-      'base': uswds.color('gray-cool-10'),
-      'surface': #ffffff,
-      'accent': uswds.color('mint-cool-30v'),
-      'link': uswds.color('blue-30v'),
-      'focus-ring': uswds.color('blue-40v'),
-      'danger': #dc3545,
-      'success': uswds.color('mint-cool-30v'),
-      'transparent': transparent,
+      'class': 'pathable-bg',
+      'property': 'background-color',
+      'values': (
+        'primary': uswds.color('blue-warm-80v'),
+        'base': uswds.color('gray-cool-10'),
+        'surface': #ffffff,
+        'accent': uswds.color('mint-cool-30v'),
+        'link': uswds.color('blue-30v'),
+        'focus-ring': uswds.color('blue-40v'),
+        'danger': #dc3545,
+        'success': uswds.color('mint-cool-30v'),
+        'transparent': transparent,
+      ),
+      'responsive': false,
+      'state': (
+        'hover',
+        'focus',
+      ),
     ),
-    'responsive': false,
-    'state': ('hover', 'focus'),
-  ),
 
   // -------- Text Color --------
   'text': (
-    'class': 'pathable-text',
-    'property': 'color',
-    'values': (
-      'base': uswds.color('gray-cool-10'),
-      'primary': uswds.color('blue-warm-80v'),
-      'muted': uswds.color('cyan-60v'),
-      'accent': uswds.color('mint-cool-30v'),
-      'link': uswds.color('blue-30v'),
-      'white': #ffffff,
+      'class': 'pathable-text',
+      'property': 'color',
+      'values': (
+        'base': uswds.color('gray-cool-10'),
+        'primary': uswds.color('blue-warm-80v'),
+        'muted': uswds.color('cyan-60v'),
+        'accent': uswds.color('mint-cool-30v'),
+        'link': uswds.color('blue-30v'),
+        'white': #ffffff,
+      ),
+      'responsive': false,
+      'state': (
+        'hover',
+        'focus',
+      ),
     ),
-    'responsive': false,
-    'state': ('hover', 'focus'),
-  ),
 
   // -------- Padding --------
   'padding': (
-    'class': 'pathable-padding',
-    'property': 'padding',
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-padding',
+      'property': 'padding',
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Padding X (left + right) --------
   'padding-x': (
-    'class': 'pathable-padding-x',
-    'property': ('padding-left', 'padding-right'),
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-padding-x',
+      'property': (
+        'padding-left',
+        'padding-right',
+      ),
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Padding Y (top + bottom) --------
   'padding-y': (
-    'class': 'pathable-padding-y',
-    'property': ('padding-top', 'padding-bottom'),
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-padding-y',
+      'property': (
+        'padding-top',
+        'padding-bottom',
+      ),
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Margin --------
   'margin': (
-    'class': 'pathable-margin',
-    'property': 'margin',
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-margin',
+      'property': 'margin',
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Margin X (left + right) --------
   'margin-x': (
-    'class': 'pathable-margin-x',
-    'property': ('margin-left', 'margin-right'),
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-margin-x',
+      'property': (
+        'margin-left',
+        'margin-right',
+      ),
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Margin Y (top + bottom) --------
   'margin-y': (
-    'class': 'pathable-margin-y',
-    'property': ('margin-top', 'margin-bottom'),
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-margin-y',
+      'property': (
+        'margin-top',
+        'margin-bottom',
+      ),
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Margin Top --------
   'margin-top': (
-    'class': 'pathable-margin-top',
-    'property': 'margin-top',
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-margin-top',
+      'property': 'margin-top',
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Margin Bottom --------
   'margin-bottom': (
-    'class': 'pathable-margin-bottom',
-    'property': 'margin-bottom',
-    'values': $-spacing-tokens,
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-margin-bottom',
+      'property': 'margin-bottom',
+      'values': $-spacing-tokens,
+      'responsive': true,
+      'state': (),
+    ),
 
   // -------- Display --------
   'display': (
-    'class': 'pathable-display',
-    'property': 'display',
-    'values': (
-      'flex': flex,
-      'block': block,
-      'inline': inline,
-      'inline-block': inline-block,
-      'none': none,
+      'class': 'pathable-display',
+      'property': 'display',
+      'values': (
+        'flex': flex,
+        'block': block,
+        'inline': inline,
+        'inline-block': inline-block,
+        'none': none,
+      ),
+      'responsive': true,
+      'state': (),
     ),
-    'responsive': true,
-    'state': (),
-  ),
 
   // -------- Font Family --------
   'font-family': (
-    'class': 'pathable-font-family',
-    'property': 'font-family',
-    'values': (
-      'heading': uswds.get-font-stack('heading'),
-      'body': uswds.get-font-stack('body'),
-      'mono': uswds.get-font-stack('code'),
-      'alt': uswds.get-font-stack('alt'),
+      'class': 'pathable-font-family',
+      'property': 'font-family',
+      'values': (
+        'heading': uswds.get-font-stack('heading'),
+        'body': uswds.get-font-stack('body'),
+        'mono': uswds.get-font-stack('code'),
+        'alt': uswds.get-font-stack('alt'),
+      ),
+      'responsive': false,
+      'state': (),
     ),
-    'responsive': false,
-    'state': (),
-  ),
 
   // -------- Font Weight --------
   'text-weight': (
-    'class': 'pathable-text',
-    'property': 'font-weight',
-    'values': (
-      'normal': uswds.$theme-font-weight-normal,
-      'semibold': uswds.$theme-font-weight-semibold,
-      'bold': uswds.$theme-font-weight-bold,
+      'class': 'pathable-text',
+      'property': 'font-weight',
+      'values': (
+        'normal': uswds.$theme-font-weight-normal,
+        'semibold': uswds.$theme-font-weight-semibold,
+        'bold': uswds.$theme-font-weight-bold,
+      ),
+      'responsive': false,
+      'state': (),
     ),
-    'responsive': false,
-    'state': (),
-  ),
 
   // -------- Border --------
   'border': (
-    'class': 'pathable-border',
-    'property': 'border',
-    'values': (
-      '0': uswds.units(0),
-      '1': uswds.units(1),
-      '2': uswds.units(2),
-      '3': uswds.units('05'),
-      '4': uswds.units(4),
-      '5': uswds.units(5),
+      'class': 'pathable-border',
+      'property': 'border',
+      'values': (
+        '0': uswds.units(0),
+        '1': uswds.units(1),
+        '2': uswds.units(2),
+        '3': uswds.units('05'),
+        '4': uswds.units(4),
+        '5': uswds.units(5),
+      ),
+      'responsive': false,
+      'state': (),
     ),
-    'responsive': false,
-    'state': (),
-  ),
 
   // -------- Border Radius --------
   'border-radius': (
-    'class': 'pathable-border-radius',
-    'property': 'border-radius',
-    'values': (
-      'sm': uswds.units(1),
-      'md': uswds.units(2),
-      'lg': uswds.units(4),
+      'class': 'pathable-border-radius',
+      'property': 'border-radius',
+      'values': (
+        'sm': uswds.units(1),
+        'md': uswds.units(2),
+        'lg': uswds.units(4),
+      ),
+      'responsive': false,
+      'state': (),
     ),
-    'responsive': false,
-    'state': (),
-  ),
 
   // -------- Flex --------
   'flex': (
-    'class': 'pathable-flex',
-    'property': 'flex',
-    'values': (
-      '1': 1 1 0%,
-      'fill': 1 1 auto,
+      'class': 'pathable-flex',
+      'property': 'flex',
+      'values': (
+        '1': 1 1 0%,
+        'fill': 1 1 auto,
+      ),
+      'responsive': true,
+      'state': (),
     ),
-    'responsive': true,
-    'state': (),
-  ),
 
   // -------- Align Items --------
   'align-items': (
-    'class': 'pathable-flex-align',
-    'property': 'align-items',
-    'values': (
-      'center': center,
-      'start': flex-start,
-      'end': flex-end,
-      'stretch': stretch,
-      'baseline': baseline,
+      'class': 'pathable-flex-align',
+      'property': 'align-items',
+      'values': (
+        'center': center,
+        'start': flex-start,
+        'end': flex-end,
+        'stretch': stretch,
+        'baseline': baseline,
+      ),
+      'responsive': true,
+      'state': (),
     ),
-    'responsive': true,
-    'state': (),
-  ),
 
   // -------- Justify Content --------
   'justify-content': (
-    'class': 'pathable-flex-justify',
-    'property': 'justify-content',
-    'values': (
-      'center': center,
-      'start': flex-start,
-      'end': flex-end,
-      'between': space-between,
-      'around': space-around,
+      'class': 'pathable-flex-justify',
+      'property': 'justify-content',
+      'values': (
+        'center': center,
+        'start': flex-start,
+        'end': flex-end,
+        'between': space-between,
+        'around': space-around,
+      ),
+      'responsive': true,
+      'state': (),
     ),
-    'responsive': true,
-    'state': (),
-  ),
 
   // -------- Width --------
   'width': (
-    'class': 'pathable-width',
-    'property': 'width',
-    'values': (
-      'full': 100%,
-      'auto': auto,
+      'class': 'pathable-width',
+      'property': 'width',
+      'values': (
+        'full': 100%,
+        'auto': auto,
+      ),
+      'responsive': true,
+      'state': (),
     ),
-    'responsive': true,
-    'state': (),
-  ),
 
   // -------- Max Width --------
   'maxw': (
-    'class': 'pathable-maxw',
-    'property': 'max-width',
-    'values': (
-      'mobile': 320px,
-      'mobile-lg': 480px,
-      'tablet': 640px,
-      'desktop': 1024px,
+      'class': 'pathable-maxw',
+      'property': 'max-width',
+      'values': (
+        'mobile': 320px,
+        'mobile-lg': 480px,
+        'tablet': 640px,
+        'desktop': 1024px,
+      ),
+      'responsive': false,
+      'state': (),
     ),
-    'responsive': false,
-    'state': (),
-  ),
 
   // -------- Text Align --------
   'text-align': (
-    'class': 'pathable-text',
-    'property': 'text-align',
-    'values': (
-      'center': center,
-      'left': left,
-      'right': right,
-    ),
-    'responsive': true,
-    'state': (),
-  ),
+      'class': 'pathable-text',
+      'property': 'text-align',
+      'values': (
+        'center': center,
+        'left': left,
+        'right': right,
+      ),
+      'responsive': true,
+      'state': (),
+    )
 );
 
 // ==========================================

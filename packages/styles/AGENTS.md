@@ -223,39 +223,39 @@ This package generates `.pathable-*` CSS utility classes from configuration maps
 
 ### Utility Class Naming Convention
 
-| Module | Class Pattern | CSS Property |
-|--------|--------------|--------------|
-| background-color | `.pathable-bg-{value}` | `background-color` |
-| color | `.pathable-text-{value}` | `color` |
-| padding | `.pathable-padding-{n}` | `padding` |
-| padding-x | `.pathable-padding-x-{n}` | `padding-left` + `padding-right` |
-| padding-y | `.pathable-padding-y-{n}` | `padding-top` + `padding-bottom` |
-| margin | `.pathable-margin-{n}` | `margin` |
-| margin-x | `.pathable-margin-x-{n}` | `margin-left` + `margin-right` |
-| margin-y | `.pathable-margin-y-{n}` | `margin-top` + `margin-bottom` |
-| margin-top | `.pathable-margin-top-{n}` | `margin-top` |
-| margin-bottom | `.pathable-margin-bottom-{n}` | `margin-bottom` |
-| display | `.pathable-display-{value}` | `display` |
-| font-family | `.pathable-font-family-{role}` | `font-family` |
-| font-weight | `.pathable-text-{weight}` | `font-weight` |
-| border | `.pathable-border-{n}` | `border` |
-| border-radius | `.pathable-border-radius-{value}` | `border-radius` |
-| flex | `.pathable-flex-{n}` | `flex` |
-| align-items | `.pathable-flex-align-{value}` | `align-items` |
-| justify-content | `.pathable-flex-justify-{value}` | `justify-content` |
-| width | `.pathable-width-{value}` | `width` |
-| max-width | `.pathable-maxw-{value}` | `max-width` |
-| text-align | `.pathable-text-{alignment}` | `text-align` |
+| Module           | Class Pattern                     | CSS Property                     |
+| ---------------- | --------------------------------- | -------------------------------- |
+| background-color | `.pathable-bg-{value}`            | `background-color`               |
+| color            | `.pathable-text-{value}`          | `color`                          |
+| padding          | `.pathable-padding-{n}`           | `padding`                        |
+| padding-x        | `.pathable-padding-x-{n}`         | `padding-left` + `padding-right` |
+| padding-y        | `.pathable-padding-y-{n}`         | `padding-top` + `padding-bottom` |
+| margin           | `.pathable-margin-{n}`            | `margin`                         |
+| margin-x         | `.pathable-margin-x-{n}`          | `margin-left` + `margin-right`   |
+| margin-y         | `.pathable-margin-y-{n}`          | `margin-top` + `margin-bottom`   |
+| margin-top       | `.pathable-margin-top-{n}`        | `margin-top`                     |
+| margin-bottom    | `.pathable-margin-bottom-{n}`     | `margin-bottom`                  |
+| display          | `.pathable-display-{value}`       | `display`                        |
+| font-family      | `.pathable-font-family-{role}`    | `font-family`                    |
+| font-weight      | `.pathable-text-{weight}`         | `font-weight`                    |
+| border           | `.pathable-border-{n}`            | `border`                         |
+| border-radius    | `.pathable-border-radius-{value}` | `border-radius`                  |
+| flex             | `.pathable-flex-{n}`              | `flex`                           |
+| align-items      | `.pathable-flex-align-{value}`    | `align-items`                    |
+| justify-content  | `.pathable-flex-justify-{value}`  | `justify-content`                |
+| width            | `.pathable-width-{value}`         | `width`                          |
+| max-width        | `.pathable-maxw-{value}`          | `max-width`                      |
+| text-align       | `.pathable-text-{alignment}`      | `text-align`                     |
 
 ### Responsive Variants
 
 Breakpoint-prefixed variants follow `.{breakpoint}\:pathable-{base}-{value}`:
 
-| Breakpoint | Min Width |
-|-----------|-----------|
-| `mobile-lg` | 480px |
-| `tablet` | 640px |
-| `desktop` | 1024px |
+| Breakpoint  | Min Width |
+| ----------- | --------- |
+| `mobile-lg` | 480px     |
+| `tablet`    | 640px     |
+| `desktop`   | 1024px    |
 
 ### State Variants
 

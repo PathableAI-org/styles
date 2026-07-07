@@ -203,28 +203,30 @@ The `@pathable/styles` package generates `.pathable-*` CSS utility classes. See 
 
 ### Common Utility Class Examples
 
-| Purpose | Class | Effect |
-|---------|-------|--------|
-| Primary background | `.pathable-bg-primary` | PathAble Blue background |
-| Surface background | `.pathable-bg-surface` | White surface background |
-| Primary text | `.pathable-text-primary` | PathAble Blue text |
-| Body font | `.pathable-font-family-body` | Nunito font |
-| Heading font | `.pathable-font-family-heading` | Fredoka font |
-| Spacing | `.pathable-padding-2` | 8px padding all sides |
-| Spacing | `.pathable-padding-4` | 16px padding all sides |
-| Spacing | `.pathable-margin-top-2` | 8px top margin |
-| Layout | `.pathable-display-flex` | Flex container |
-| Alignment | `.pathable-flex-align-center` | Center alignment |
-| Alignment | `.pathable-flex-justify-between` | Space between |
-| Border | `.pathable-border-1` | 1px border |
-| Border radius | `.pathable-border-radius-sm` | 4px border radius |
+| Purpose            | Class                            | Effect                   |
+| ------------------ | -------------------------------- | ------------------------ |
+| Primary background | `.pathable-bg-primary`           | PathAble Blue background |
+| Surface background | `.pathable-bg-surface`           | White surface background |
+| Primary text       | `.pathable-text-primary`         | PathAble Blue text       |
+| Body font          | `.pathable-font-family-body`     | Nunito font              |
+| Heading font       | `.pathable-font-family-heading`  | Fredoka font             |
+| Spacing            | `.pathable-padding-2`            | 8px padding all sides    |
+| Spacing            | `.pathable-padding-4`            | 16px padding all sides   |
+| Spacing            | `.pathable-margin-top-2`         | 8px top margin           |
+| Layout             | `.pathable-display-flex`         | Flex container           |
+| Alignment          | `.pathable-flex-align-center`    | Center alignment         |
+| Alignment          | `.pathable-flex-justify-between` | Space between            |
+| Border             | `.pathable-border-1`             | 1px border               |
+| Border radius      | `.pathable-border-radius-sm`     | 4px border radius        |
 
 ### Responsive Variants
 
 Use breakpoint prefixes for responsive layouts:
 
 ```html
-<div class="pathable-padding-1 tablet:pathable-padding-4 desktop:pathable-padding-8">
+<div
+  class="pathable-padding-1 tablet:pathable-padding-4 desktop:pathable-padding-8"
+>
   Responsive padding
 </div>
 ```
