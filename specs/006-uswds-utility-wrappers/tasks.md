@@ -62,16 +62,16 @@
 
 **Goal**: The `apps/docs` site replaces ad-hoc CSS rules in `custom.css` and component `<style>` blocks with `.pathable-*` utility classes, eliminating at least 80% of the ad-hoc declarations and reducing total custom CSS line count by at least 50%.
 
-**Independent Test**: The `SkipNav.astro` component can be refactored to use `.pathable-bg-surface`, `.pathable-text-base`, `.pathable-font-body`, and `.pathable-focus-ring` classes, eliminating its entire `<style>` block while rendering identically in the browser.
+**Independent Test**: The `SkipNav.astro` component can be refactored to use `.pathable-bg-surface`, `.pathable-text-primary`, `.pathable-font-family-body`, and `.pathable-padding-*` classes, keeping only the `:focus-visible` rule in its `<style>` block while rendering identically in the browser.
 
 ### Implementation
 
-- [x] T011 [US1] Refactor `apps/docs/src/components/SkipNav.astro` by replacing all CSS in its `<style>` block with inline `.pathable-*` utility classes and removing the `<style>` block entirely. Verify the skip link still appears on focus and functions correctly.
+- [x] T011 [US1] Refactor `apps/docs/src/components/SkipNav.astro` by replacing most CSS in its `<style>` block with inline `.pathable-*` utility classes. Keep the `:focus-visible` rule (cannot be expressed as a utility class) in the `<style>` block. Verify the skip link still appears on focus and functions correctly.
 - [x] T012 [P] [US1] Refactor `apps/docs/src/styles/custom.css` by replacing ad-hoc CSS property declarations with `.pathable-*` utility classes applied in the corresponding Astro components. Target at least the following sections: scroll-padding, site-title, sidebar, footer, blockquotes, tables, and code blocks. Measure before/after line count reduction.
 - [x] T013 [US1] Refactor `apps/docs/src/components/PageFrame.astro`'s `<style>` block by replacing ad-hoc CSS with `.pathable-*` utility classes. Target: layout padding, background colors, border properties, and spacing declarations that have a matching utility class.
 - [x] T014 [US1] Refactor `apps/docs/src/components/HorizontalNav.astro`'s `<style>` block to use `.pathable-*` utility classes where possible (background, border, spacing, font-family). Preserve complex styling (position, z-index, transition animations) that cannot be replaced by utility classes.
 - [x] T015 [P] [US1] Refactor `apps/docs/src/components/DocFooter.astro`'s `<style>` block to use `.pathable-*` utility classes (padding, border, font-family, text color). Preserve layout-specific rules (flex wrap, min-width, grid) that have no utility equivalent.
-- [ ] T016 [US1] Verify zero visual regressions by running the docs site (`pnpm dev` in `apps/docs`) and visually comparing each page against a before-screenshot or the previous rendering, confirming all refactored components render identically.
+- [x] T016 [US1] Verify zero visual regressions by running the docs site (`pnpm dev` in `apps/docs`) and visually comparing each page against a before-screenshot or the previous rendering, confirming all refactored components render identically.
 
 **Checkpoint**: Docs site utility class refactoring complete. All pages render identically. Custom CSS line count reduced by at least 50%.
 
