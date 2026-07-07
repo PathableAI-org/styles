@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PathAble Utilities Test</title>
+  <link rel="stylesheet" href="../../packages/styles/dist/styles.css" />
+  <style>
+    body { font-family: 'Nunito', system-ui, sans-serif; padding: 2rem; background: #f5f5f5; }
+    h1, h2 { margin-top: 2rem; margin-bottom: 0.5rem; }
+    h1 { font-family: 'Fredoka', system-ui, sans-serif; }
+    section { margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 8px; }
+    .demo-box { padding: 0.5rem; margin-bottom: 0.5rem; }
+    .badge { font-size: 0.75rem; color: #666; margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body>
+  <h1>PathAble Utility Classes Test</h1>
+  <p>This page validates that all utility modules from <code>@pathable/styles</code> compile and apply correctly.</p>
+
+  <!-- Background Color -->
+  <section>
+    <h2>Background Color</h2>
+    <div class="demo-box pathable-bg-primary"><div class="badge">.pathable-bg-primary</div>Primary Background</div>
+    <div class="demo-box pathable-bg-base"><div class="badge">.pathable-bg-base</div>Base Background</div>
+    <div class="demo-box pathable-bg-surface"><div class="badge">.pathable-bg-surface</div>Surface Background</div>
+    <div class="demo-box pathable-bg-accent"><div class="badge">.pathable-bg-accent</div>Accent Background</div>
+    <div class="demo-box pathable-bg-transparent"><div class="badge">.pathable-bg-transparent</div>Transparent BG</div>
+    <div class="demo-box pathable-bg-link"><div class="badge">.pathable-bg-link</div>Link BG Color</div>
+  </section>
+
+  <!-- Text Color -->
+  <section>
+    <h2>Text Color</h2>
+    <div class="demo-box pathable-bg-surface">
+      <p class="pathable-text-primary"><span class="badge">.pathable-text-primary</span> Primary text</p>
+      <p class="pathable-text-base"><span class="badge">.pathable-text-base</span> Base text</p>
+      <p class="pathable-text-muted"><span class="badge">.pathable-text-muted</span> Muted text</p>
+      <div class="pathable-bg-primary"><p class="pathable-text-white"><span class="badge">.pathable-text-white</span> White text</p></div>
+    </div>
+  </section>
+
+  <!-- Padding -->
+  <section>
+    <h2>Padding (Spacing)</h2>
+    <div class="pathable-bg-base pathable-padding-0"><span class="badge">.pathable-padding-0</span></div>
+    <div class="pathable-bg-base pathable-padding-1"><span class="badge">.pathable-padding-1</span></div>
+    <div class="pathable-bg-base pathable-padding-2"><span class="badge">.pathable-padding-2</span></div>
+    <div class="pathable-bg-base pathable-padding-4"><span class="badge">.pathable-padding-4</span></div>
+    <div class="pathable-bg-accent pathable-padding-x-2"><span class="badge">.pathable-padding-x-2</span> Horizontal padding</div>
+    <div class="pathable-bg-accent pathable-padding-y-1"><span class="badge">.pathable-padding-y-1</span> Vertical padding</div>
+  </section>
+
+  <!-- Margin -->
+  <section>
+    <h2>Margin</h2>
+    <div class="pathable-bg-surface pathable-margin-0 pathable-border-1"><span class="badge">.pathable-margin-0</span> No margin</div>
+    <div class="pathable-bg-surface pathable-margin-top-2 pathable-border-1"><span class="badge">.pathable-margin-top-2</span> Margin top</div>
+    <div class="pathable-bg-surface pathable-margin-bottom-4 pathable-border-1"><span class="badge">.pathable-margin-bottom-4</span> Margin bottom</div>
+  </section>
+
+  <!-- Display -->
+  <section>
+    <h2>Display</h2>
+    <div class="pathable-display-flex pathable-bg-base"><span class="badge">.pathable-display-flex</span> Flex container</div>
+    <div class="pathable-display-block pathable-bg-surface pathable-margin-top-1"><span class="badge">.pathable-display-block</span> Block</div>
+    <div class="pathable-display-inline pathable-bg-surface"><span class="badge">.pathable-display-inline</span> Inline</div>
+    <div class="pathable-display-none pathable-bg-surface"><span class="badge">.pathable-display-none</span> None (hidden)</div>
+  </section>
+
+  <!-- Font Family -->
+  <section>
+    <h2>Font Family</h2>
+    <p class="pathable-font-family-heading"><span class="badge">.pathable-font-family-heading</span> Heading font (Fredoka)</p>
+    <p class="pathable-font-family-body"><span class="badge">.pathable-font-family-body</span> Body font (Nunito)</p>
+    <p class="pathable-font-family-mono"><span class="badge">.pathable-font-family-mono</span> Monospace font</p>
+    <p class="pathable-font-family-alt"><span class="badge">.pathable-font-family-alt</span> Alt font (Montserrat)</p>
+  </section>
+
+  <!-- Font Weight -->
+  <section>
+    <h2>Font Weight</h2>
+    <p class="pathable-text-bold"><span class="badge">.pathable-text-bold</span> Bold text (700)</p>
+    <p class="pathable-text-semibold"><span class="badge">.pathable-text-semibold</span> Semibold text (600)</p>
+    <p class="pathable-text-normal"><span class="badge">.pathable-text-normal</span> Normal text (400)</p>
+  </section>
+
+  <!-- Border -->
+  <section>
+    <h2>Border</h2>
+    <div class="pathable-border-1 pathable-padding-1 pathable-margin-bottom-1"><span class="badge">.pathable-border-1</span> 1px</div>
+    <div class="pathable-border-2 pathable-padding-1 pathable-margin-bottom-1"><span class="badge">.pathable-border-2</span> 2px</div>
+  </section>
+
+  <!-- Border Radius -->
+  <section>
+    <h2>Border Radius</h2>
+    <div class="pathable-border-1 pathable-border-radius-sm pathable-padding-2 pathable-margin-bottom-1"><span class="badge">.pathable-border-radius-sm</span> Small</div>
+    <div class="pathable-border-1 pathable-border-radius-md pathable-padding-2 pathable-margin-bottom-1"><span class="badge">.pathable-border-radius-md</span> Medium</div>
+    <div class="pathable-border-1 pathable-border-radius-lg pathable-padding-2 pathable-margin-bottom-1"><span class="badge">.pathable-border-radius-lg</span> Large</div>
+  </section>
+
+  <!-- Flex Layout -->
+  <section>
+    <h2>Flex & Alignment</h2>
+    <div class="pathable-display-flex pathable-flex-align-center pathable-bg-base pathable-padding-2" style="height: 60px;">
+      <span class="pathable-bg-surface pathable-padding-1 pathable-border-radius-sm">.pathable-flex-align-center</span>
+    </div>
+    <div class="pathable-display-flex pathable-flex-justify-center pathable-bg-base pathable-padding-2 pathable-margin-top-1">
+      <span class="pathable-bg-surface pathable-padding-1 pathable-border-radius-sm">.pathable-flex-justify-center</span>
+    </div>
+  </section>
+
+  <!-- Width / Max Width -->
+  <section>
+    <h2>Width</h2>
+    <div class="pathable-width-full pathable-bg-accent pathable-padding-1 pathable-margin-bottom-1"><span class="badge">.pathable-width-full</span> Full width</div>
+    <div class="pathable-maxw-tablet pathable-bg-base pathable-padding-1"><span class="badge">.pathable-maxw-tablet</span> Max width tablet (640px)</div>
+  </section>
+
+  <!-- Text Align -->
+  <section>
+    <h2>Text Align</h2>
+    <p class="pathable-text-left"><span class="badge">.pathable-text-left</span> Left</p>
+    <p class="pathable-text-center"><span class="badge">.pathable-text-center</span> Center</p>
+    <p class="pathable-text-right"><span class="badge">.pathable-text-right</span> Right</p>
+  </section>
+
+  <!-- Responsive Variants -->
+  <section>
+    <h2>Responsive Variants</h2>
+    <div class="pathable-bg-base pathable-padding-1 tablet:pathable-padding-4 desktop:pathable-padding-8">
+      <span class="badge">.pathable-padding-1 .tablet\:pathable-padding-4 .desktop\:pathable-padding-8</span><br/>
+      Padding changes at 640px (tablet) and 1024px (desktop)
+    </div>
+    <p class="pathable-text-left desktop:pathable-text-center">
+      <span class="badge">.pathable-text-left .desktop\:pathable-text-center</span><br/>
+      Left-aligned on mobile, centered on desktop
+    </p>
+  </section>
+
+  <!-- State Variants -->
+  <section>
+    <h2>State Variants (hover)</h2>
+    <div class="pathable-bg-primary hover:pathable-bg-accent pathable-padding-2 pathable-margin-bottom-1" style="cursor: pointer;">
+      <span class="badge">.pathable-bg-primary .hover\:pathable-bg-accent</span><br/>
+      Hover to see accent background
+    </div>
+    <p class="pathable-text-primary hover:pathable-text-link pathable-font-family-body">
+      <span class="badge">.pathable-text-primary .hover\:pathable-text-link</span><br/>
+      Hover to change text color
+    </p>
+  </section>
+
+  <!-- CSS Custom Properties -->
+  <section>
+    <h2>CSS Custom Properties (Dual Naming)</h2>
+    <div class="pathable-padding-2" style="background-color: var(--pathable-bg-primary); color: var(--pathable-text-white);">
+      Uses <code>--pathable-bg-primary</code> and <code>--pathable-text-white</code>
+    </div>
+    <div class="pathable-padding-2 pathable-margin-top-1" style="background-color: var(--usa-bg-primary); color: var(--usa-text-white);">
+      Uses <code>--usa-bg-primary</code> and <code>--usa-text-white</code>
+    </div>
+  </section>
+</body>
+</html>
