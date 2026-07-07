@@ -183,7 +183,7 @@ This package wraps USWDS v3.x typography theme tokens. When creating or editing 
 
 ### Dual Naming Convention
 
-All typography CSS custom properties are emitted in two namespaces: `--pathable-font-*` and `--usa-font-*`, both resolving to identical values. The `--pathable-font-*` namespace is the source of truth.
+Most typography CSS custom properties are emitted in two namespaces: `--pathable-font-*` and `--usa-font-*`, both resolving to identical values. The `--pathable-font-*` namespace is the source of truth. PathAble-specific tokens (`--pathable-font-subheading`) that have no USWDS role equivalent are only emitted under the `--pathable-*` namespace.
 
 ### CSS Custom Property Categories
 
@@ -208,7 +208,7 @@ All typography CSS custom properties are emitted in two namespaces: `--pathable-
 | ---------- | -------------- | ----------------------------- | --------- |
 | Fredoka    | `"fredoka"`    | heading                       | serif     |
 | Nunito     | `"nunito"`     | body, ui                      | sans      |
-| Montserrat | `"montserrat"` | alt                           | sans      |
+| Montserrat | `"montserrat"` | alt                           | cond      |
 | Poppins    | `"poppins"`    | — (available for subheadings) | —         |
 
 ### Font File Distribution

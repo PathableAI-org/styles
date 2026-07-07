@@ -11,12 +11,12 @@
  * We only copy the latin subset for the specific weights each font is used at.
  */
 
-import { copyFileSync, existsSync, mkdirSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { copyFileSync, existsSync, mkdirSync } from 'fs'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageRoot = join(__dirname, '..');
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const packageRoot = join(__dirname, '..')
 
 const fontMappings = [
   {
@@ -44,29 +44,29 @@ const fontMappings = [
     sourceFile: 'montserrat-latin-700-normal.woff2',
     destFile: 'montserrat/Montserrat-Bold.woff2',
   },
-];
+]
 
-let copied = 0;
-let warnings = 0;
+let copied = 0
+let warnings = 0
 
 for (const { package: pkg, sourceFile, destFile } of fontMappings) {
-  const sourcePath = join(packageRoot, 'node_modules', pkg, 'files', sourceFile);
-  const destPath = join(packageRoot, 'fonts', destFile);
+  const sourcePath = join(packageRoot, 'node_modules', pkg, 'files', sourceFile)
+  const destPath = join(packageRoot, 'fonts', destFile)
 
   if (!existsSync(sourcePath)) {
-    console.warn(`[copy-fonts] WARNING: source not found: ${sourcePath}`);
-    warnings++;
-    continue;
+    console.warn(`[copy-fonts] WARNING: source not found: ${sourcePath}`)
+    warnings++
+    continue
   }
 
   // Ensure destination directory exists
-  mkdirSync(dirname(destPath), { recursive: true });
+  mkdirSync(dirname(destPath), { recursive: true })
 
-  copyFileSync(sourcePath, destPath);
-  copied++;
+  copyFileSync(sourcePath, destPath)
+  copied++
 }
 
-console.log(`[copy-fonts] Copied ${copied} font file(s)`);
+console.log(`[copy-fonts] Copied ${copied} font file(s)`)
 if (warnings > 0) {
-  console.log(`[copy-fonts] ${warnings} warning(s)`);
+  console.log(`[copy-fonts] ${warnings} warning(s)`)
 }

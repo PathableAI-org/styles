@@ -37,40 +37,58 @@ Tokens that carry meaning and map to interface roles.
 
 ## Typography
 
-Pathable typography tokens are available in two namespaces: `--pathable-font-*` (preferred) and `--usa-font-*` (USWDS-native). Both resolve to the same values.
+Pathable typography tokens are available in two namespaces: `--pathable-font-*` (preferred) and `--usa-font-*` (USWDS-native). Both resolve to the same values. PathAble-specific tokens with no USWDS role equivalent (e.g. `--pathable-font-subheading`) are only emitted under the `--pathable-*` namespace.
 
 ### Font families
 
-| Token (Pathable) | Token (USWDS) | Value | Usage |
-|---|---|---|---|
-| `--pathable-font-heading` | `--usa-font-heading` | Fredoka | Headings |
-| `--pathable-font-body` | `--usa-font-body` | Nunito | Body text |
-| `--pathable-font-mono` | `--usa-font-mono` | Monospace stack | Code |
-| `--pathable-font-alt` | `--usa-font-alt` | Montserrat Bold | Alternate headings |
+| Token (Pathable)             | Token (USWDS)        | Value           | Usage              |
+| ---------------------------- | -------------------- | --------------- | ------------------ |
+| `--pathable-font-heading`    | `--usa-font-heading` | Fredoka         | Headings           |
+| `--pathable-font-body`       | `--usa-font-body`    | Nunito          | Body text          |
+| `--pathable-font-mono`       | `--usa-font-mono`    | Monospace stack | Code               |
+| `--pathable-font-alt`        | `--usa-font-alt`     | Montserrat      | Alternate headings |
+| `--pathable-font-subheading` | —                    | Poppins         | Subheadings        |
 
 ### Font sizes
 
-| Token (Pathable) | Token (USWDS) | Value |
-|---|---|---|
-| `--pathable-font-size-body-md` | `--usa-font-size-body-md` | 16px |
+| Token (Pathable)                  | Token (USWDS)                | Value |
+| --------------------------------- | ---------------------------- | ----- |
+| `--pathable-font-size-display-lg` | `--usa-font-size-display-lg` | 32px  |
+| `--pathable-font-size-heading-lg` | `--usa-font-size-heading-lg` | 24px  |
+| `--pathable-font-size-heading-md` | `--usa-font-size-heading-md` | 20px  |
+| `--pathable-font-size-heading-sm` | `--usa-font-size-heading-sm` | 18px  |
+| `--pathable-font-size-body-lg`    | `--usa-font-size-body-lg`    | 18px  |
+| `--pathable-font-size-body-md`    | `--usa-font-size-body-md`    | 16px  |
+| `--pathable-font-size-body-sm`    | `--usa-font-size-body-sm`    | 14px  |
+| `--pathable-font-size-label-md`   | `--usa-font-size-label-md`   | 14px  |
+| `--pathable-font-size-label-sm`   | `--usa-font-size-label-sm`   | 12px  |
+| `--pathable-font-size-caption-md` | `--usa-font-size-caption-md` | 12px  |
 
 ### Font weights
 
-| Token (Pathable) | Token (USWDS) | Value |
-|---|---|---|
-| `--pathable-font-weight-normal` | `--usa-font-weight-normal` | 400 |
-| `--pathable-font-weight-bold` | `--usa-font-weight-bold` | 700 |
+| Token (Pathable)                  | Token (USWDS)                | Value |
+| --------------------------------- | ---------------------------- | ----- |
+| `--pathable-font-weight-normal`   | `--usa-font-weight-normal`   | 400   |
+| `--pathable-font-weight-semibold` | `--usa-font-weight-semibold` | 600   |
+| `--pathable-font-weight-bold`     | `--usa-font-weight-bold`     | 700   |
+
+### Line heights
+
+| Token (Pathable)                      | Token (USWDS)                    | Value |
+| ------------------------------------- | -------------------------------- | ----- |
+| `--pathable-font-line-height-heading` | `--usa-font-line-height-heading` | 1.25  |
+| `--pathable-font-line-height-body`    | `--usa-font-line-height-body`    | 1.5   |
 
 ### Brand typeface mapping
 
 Each brand font is registered as a custom USWDS typeface token:
 
-| Brand Font | Weight | USWDS Role | Custom Typeface Token |
-|---|---|---|---|
-| Fredoka | Regular (400) | heading | `fredoka` |
-| Nunito | Regular (400), SemiBold (600) | body, ui | `nunito` |
-| Poppins | Bold (700) | alt (subheading) | `poppins` |
-| Montserrat | Bold (700) | alt (alternate heading) | `montserrat` |
+| Brand Font | Weight                        | USWDS Role          | Custom Typeface Token |
+| ---------- | ----------------------------- | ------------------- | --------------------- |
+| Fredoka    | Regular (400)                 | heading             | `fredoka`             |
+| Nunito     | Regular (400), SemiBold (600) | body, ui            | `nunito`              |
+| Montserrat | Bold (700)                    | alt                 | `montserrat`          |
+| Poppins    | Bold (700)                    | — (subheading only) | `poppins`             |
 
 ## Spacing scale
 
@@ -120,9 +138,9 @@ USWDS generates utility classes for each theme color family. These are available
 
 ### When to use what
 
-| Situation                      | Recommended approach                                   |
-| ------------------------------ | ------------------------------------------------------ |
-| Custom component styling       | Use `--pathable-*` CSS custom properties               |
-| Quick prototyping / HTML demos | Use USWDS utility classes                              |
-| Color-based semantic states    | Use `--pathable-color-*` tokens                        |
+| Situation                      | Recommended approach                                                                                 |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Custom component styling       | Use `--pathable-*` CSS custom properties                                                             |
+| Quick prototyping / HTML demos | Use USWDS utility classes                                                                            |
+| Color-based semantic states    | Use `--pathable-color-*` tokens                                                                      |
 | Spacing, layout, typography    | Use `--pathable-spacing-*`, `--pathable-font-*` tokens (or `--usa-font-*` for USWDS-native contexts) |

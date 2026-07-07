@@ -18,6 +18,7 @@ $theme-font-path: '../fonts' !default;
   font-family: 'Fredoka';
   font-style: normal;
   font-weight: 400;
+  font-display: swap;
   src: url('#{$theme-font-path}/fredoka/Fredoka-Regular.woff2') format('woff2');
 }
 
@@ -26,6 +27,7 @@ $theme-font-path: '../fonts' !default;
   font-family: 'Nunito';
   font-style: normal;
   font-weight: 400;
+  font-display: swap;
   src: url('#{$theme-font-path}/nunito/Nunito-Regular.woff2') format('woff2');
 }
 
@@ -34,6 +36,7 @@ $theme-font-path: '../fonts' !default;
   font-family: 'Nunito';
   font-style: normal;
   font-weight: 600;
+  font-display: swap;
   src: url('#{$theme-font-path}/nunito/Nunito-SemiBold.woff2') format('woff2');
 }
 
@@ -42,6 +45,7 @@ $theme-font-path: '../fonts' !default;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 700;
+  font-display: swap;
   src: url('#{$theme-font-path}/poppins/Poppins-Bold.woff2') format('woff2');
 }
 
@@ -50,6 +54,7 @@ $theme-font-path: '../fonts' !default;
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
+  font-display: swap;
   src: url('#{$theme-font-path}/montserrat/Montserrat-Bold.woff2')
     format('woff2');
 }

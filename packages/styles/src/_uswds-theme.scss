@@ -173,7 +173,9 @@
   // Font types map to custom typeface token names from
   // $theme-typeface-tokens above. Roles map to font types.
   // This is the standard USWDS role → font type → typeface token chain.
-  $theme-font-type-cond: false,
+  // cond is repurposed here to carry the Montserrat alternate-heading font
+  // so that $theme-font-role-alt can point to it independently of sans.
+  $theme-font-type-cond: 'montserrat',
   $theme-font-type-icon: false,
   $theme-font-type-lang: false,
   $theme-font-type-mono: 'roboto-mono',
@@ -181,13 +183,13 @@
   $theme-font-type-serif: 'fredoka',
 
   // -------- Typography: Font Role Assignments (T004) --------
-  // Role values reference font type names (sans, serif, mono).
+  // Role values reference font type names (sans, serif, mono, cond).
   // The chain: role → font type → $theme-typeface-tokens[typeface-token].
   $theme-font-role-heading: 'serif',
   $theme-font-role-body: 'sans',
   $theme-font-role-ui: 'sans',
   $theme-font-role-code: 'mono',
-  $theme-font-role-alt: 'sans',
+  $theme-font-role-alt: 'cond',
 
   // -------- Typography: Body Settings (T005) --------
   $theme-body-font-family: 'body',

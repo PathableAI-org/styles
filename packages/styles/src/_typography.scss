@@ -1,7 +1,7 @@
 // Font Family Tokens
 $pathable-font-heading: 'Fredoka', system-ui, sans-serif;
-$pathable-font-alternate-heading: 'Montserrat Bold', system-ui, sans-serif;
-$pathable-font-subheading: 'Poppins Bold', system-ui, sans-serif;
+$pathable-font-alternate-heading: 'Montserrat', system-ui, sans-serif;
+$pathable-font-subheading: 'Poppins', system-ui, sans-serif;
 $pathable-font-body: 'Nunito', system-ui, serif;
 $pathable-font-mono:
   ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
@@ -111,9 +111,21 @@ $typography-tokens: (
   'font-body': $pathable-font-body,
   'font-mono': $pathable-font-mono,
   'font-alt': $pathable-font-alternate-heading,
+  'font-size-display-lg': $ui-display-lg,
+  'font-size-heading-lg': $ui-heading-lg,
+  'font-size-heading-md': $ui-heading-md,
+  'font-size-heading-sm': $ui-heading-sm,
+  'font-size-body-lg': $ui-body-lg,
   'font-size-body-md': $ui-body-md,
+  'font-size-body-sm': $ui-body-sm,
+  'font-size-label-md': $ui-label-md,
+  'font-size-label-sm': $ui-label-sm,
+  'font-size-caption-md': $ui-caption-md,
   'font-weight-normal': 400,
+  'font-weight-semibold': 600,
   'font-weight-bold': 700,
+  'font-line-height-heading': 1.25,
+  'font-line-height-body': 1.5,
 );
 
 :root {

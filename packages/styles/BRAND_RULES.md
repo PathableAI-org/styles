@@ -108,12 +108,14 @@ When brand expression and accessibility conflict, accessibility takes priority.
 
 ### Brand Typeface → USWDS Role Mapping
 
-| Brand Font | Weight                        | USWDS Role              | Custom Typeface Token | Font Stack                            |
-| ---------- | ----------------------------- | ----------------------- | --------------------- | ------------------------------------- |
-| Fredoka    | Regular (400)                 | heading                 | `fredoka`             | `'Fredoka', system-ui, sans-serif`    |
-| Nunito     | Regular (400), SemiBold (600) | body, ui                | `nunito`              | `'Nunito', system-ui, sans-serif`     |
-| Poppins    | Bold (700)                    | alt (subheading)        | `poppins`             | `'Poppins', system-ui, sans-serif`    |
-| Montserrat | Bold (700)                    | alt (alternate heading) | `montserrat`          | `'Montserrat', system-ui, sans-serif` |
+| Brand Font | Weight                        | USWDS Role          | Custom Typeface Token | Font Stack                            |
+| ---------- | ----------------------------- | ------------------- | --------------------- | ------------------------------------- |
+| Fredoka    | Regular (400)                 | heading             | `fredoka`             | `'Fredoka', system-ui, sans-serif`    |
+| Nunito     | Regular (400), SemiBold (600) | body, ui            | `nunito`              | `'Nunito', system-ui, sans-serif`     |
+| Montserrat | Bold (700)                    | alt                 | `montserrat`          | `'Montserrat', system-ui, sans-serif` |
+| Poppins    | Bold (700)                    | — (subheading only) | `poppins`             | `'Poppins', system-ui, sans-serif`    |
+
+> **Note:** USWDS supports a single `alt` role. Montserrat is assigned to that role via the `cond` font type. Poppins is available as a design token (`--pathable-font-subheading`) for subheading use but is not assigned to any USWDS role.
 
 ### Type Scale Mapping
 
