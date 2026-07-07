@@ -204,9 +204,9 @@ All typography CSS custom properties are emitted in two namespaces: `--pathable-
 
 ### Custom Typeface Token Documentation
 
-| Brand Font | Custom Token | USWDS Role | Font Type |
-|------------|-------------|------------|-----------|
-| Fredoka | `"fredoka"` | heading | serif |
-| Nunito | `"nunito"` | body, ui | sans |
-| Montserrat | `"montserrat"` | alt | sans |
-| Poppins | `"poppins"` | — (available for subheadings) | — |
+| Brand Font | Custom Token   | USWDS Role                    | Font Type |
+| ---------- | -------------- | ----------------------------- | --------- |
+| Fredoka    | `"fredoka"`    | heading                       | serif     |
+| Nunito     | `"nunito"`     | body, ui                      | sans      |
+| Montserrat | `"montserrat"` | alt                           | sans      |
+| Poppins    | `"poppins"`    | — (available for subheadings) | —         |
