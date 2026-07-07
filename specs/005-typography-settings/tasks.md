@@ -35,21 +35,21 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T001 Create `_fonts.scss` partial with `@font-face` rules for all four brand typefaces in `packages/styles/src/_fonts.scss`
+- [x] T001 Create `_fonts.scss` partial with `@font-face` rules for all four brand typefaces in `packages/styles/src/_fonts.scss`
   - Fredoka Regular (400), Nunito Regular (400) + SemiBold (600), Poppins Bold (700), Montserrat Bold (700)
   - Use `$theme-font-path` variable for the font path (defaults to `../fonts`)
   - Follow the exact pattern from research.md Decision D8
 
-- [ ] T002 [P] Update `index.scss` to forward `_fonts.scss` before `_uswds-theme.scss` in `packages/styles/src/index.scss`
+- [x] T002 [P] Update `index.scss` to forward `_fonts.scss` before `_uswds-theme.scss` in `packages/styles/src/index.scss`
   - Order: `@forward "fonts";` then `@forward "uswds-theme";` then existing forwards
   - `@font-face` rules must be available before USWDS core is configured
 
-- [ ] T003 [P] Add custom typeface token definitions to `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T003 [P] Add custom typeface token definitions to `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Add `$theme-typeface-tokens` map with entries for `fredoka`, `nunito`, `poppins`, `montserrat`
   - Each entry: `display-name`, `cap-height: 364px`, `stack` with full fallback chain
   - Follow research.md Decision D2 structure
 
-- [ ] T004 [P] Configure font family type assignments and role assignments in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T004 [P] Configure font family type assignments and role assignments in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Set `$theme-font-type-cond: false`, `$theme-font-type-icon: false`, `$theme-font-type-lang: false`
   - Set `$theme-font-type-mono: "roboto-mono"` (unchanged default)
   - Set `$theme-font-type-sans: "source-sans-pro"` (unchanged default — custom typefaces assigned via roles)
@@ -68,12 +68,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Configure body typography settings in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T005 [US1] Configure body typography settings in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Set `$theme-body-font-family: "body"`, `$theme-body-font-size: "sm"`, `$theme-body-line-height: 5`
   - Set `$theme-style-body-element: false` (preserve existing behavior)
   - Set `$theme-respect-user-font-size: true`
 
-- [ ] T006 [US1] Build the package and verify brand fonts appear in USWDS components in `packages/styles/`
+- [x] T006 [US1] Build the package and verify brand fonts appear in USWDS components in `packages/styles/`
   - Run `pnpm build` and verify `rg "Fredoka" dist/styles.css`, `rg "Nunito" dist/styles.css`
   - Verify `rg "font-family-heading" dist/styles.css` shows Fredoka stack
   - Verify `rg "font-family-body" dist/styles.css` shows Nunito stack
@@ -90,19 +90,19 @@
 
 ### Implementation for User Story 2
 
-- [ ] T007 [P] [US2] Configure type scale theme tokens in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T007 [P] [US2] Configure type scale theme tokens in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Set `$theme-type-scale-3xs: 1` (12px), `$theme-type-scale-2xs: 3` (14px), `$theme-type-scale-xs: 4` (15px)
   - Set `$theme-type-scale-sm: 5` (16px), `$theme-type-scale-md: 7` (18px)
   - Set `$theme-type-scale-lg: 10` (24px), `$theme-type-scale-xl: 12` (32px)
   - Set `$theme-type-scale-2xl: 14` (40px), `$theme-type-scale-3xl: 15` (48px)
   - Follow research.md Decision D3 exact values
 
-- [ ] T008 [P] [US2] Configure heading size tokens in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T008 [P] [US2] Configure heading size tokens in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Set `$theme-display-font-size: "xl"`, `$theme-h1-font-size: "lg"`, `$theme-h2-font-size: "md"`
   - Set `$theme-h3-font-size: "md"`, `$theme-h4-font-size: "sm"`, `$theme-h5-font-size: "2xs"`
   - Set `$theme-h6-font-size: "3xs"`, `$theme-body-font-size: "sm"`
 
-- [ ] T009 [US2] Configure line-height, heading, and prose settings in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T009 [US2] Configure line-height, heading, and prose settings in `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Set `$theme-heading-line-height: 3` (1.35), `$theme-body-line-height: 5` (1.62)
   - Set `$theme-lead-font-family: "heading"`, `$theme-lead-font-size: "lg"`, `$theme-lead-line-height: 6`, `$theme-lead-measure: 6`
   - Set `$theme-prose-font-family: "body"`
@@ -121,13 +121,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T010 [P] [US3] Add `$typography-tokens` map and dual `@each` loop to `_typography.scss` in `packages/styles/src/_typography.scss`
+- [x] T010 [P] [US3] Add `$typography-tokens` map and dual `@each` loop to `_typography.scss` in `packages/styles/src/_typography.scss`
   - Create a `$typography-tokens` map with entries for font-family, font-size, font-weight, and line-height tokens
   - Add an `@each` loop that emits both `--pathable-#{$name}` and `--usa-#{$name}` for each entry
   - Follow the contract defined in `contracts/scss-interface.md` Dual Naming Convention section
   - Ensure existing `--pathable-font-*` and `--ui-*` custom properties remain unchanged
 
-- [ ] T011 [US3] Build and verify dual CSS custom properties in compiled output in `packages/styles/`
+- [x] T011 [US3] Build and verify dual CSS custom properties in compiled output in `packages/styles/`
   - Run `pnpm build` and verify `rg "--pathable-font-heading" dist/styles.css`
   - Verify `rg "--usa-font-heading" dist/styles.css`
   - Verify both resolve to the same Fredoka font stack value
@@ -144,7 +144,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T012 [US4] Add upgrade documentation comments to `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
+- [x] T012 [US4] Add upgrade documentation comments to `_uswds-theme.scss` in `packages/styles/src/_uswds-theme.scss`
   - Add a header comment block documenting that ALL typography overrides are scoped in this file
   - Include upgrade instructions: "To upgrade USWDS: bump version in package.json, rebuild, verify no unexpected typography changes. Only this file needs review."
   - Follow the same pattern as the existing color settings header comments
@@ -157,15 +157,15 @@
 
 **Purpose**: Documentation and final verification
 
-- [ ] T013 [P] Update AGENTS.md with USWDS typography token usage rules in `packages/styles/AGENTS.md`
+- [x] T013 [P] Update AGENTS.md with USWDS typography token usage rules in `packages/styles/AGENTS.md`
   - Add section documenting the dual `--pathable-font-*` / `--usa-font-*` naming convention
   - Add rules for referencing typography tokens in SCSS
 
-- [ ] T014 [P] Update BRAND_RULES.md with USWDS typography token references in `packages/styles/BRAND_RULES.md`
+- [x] T014 [P] Update BRAND_RULES.md with USWDS typography token references in `packages/styles/BRAND_RULES.md`
   - Add a "USWDS Typography Token Mapping" table showing each brand typeface's USWDS role assignment and custom typeface token
   - Document the type scale mapping table
 
-- [ ] T015 [P] Final build and verification in `packages/styles/`
+- [x] T015 [P] Final build and verification in `packages/styles/`
   - Run `pnpm build` and verify no compilation errors
   - Verify `rg "Fredoka" dist/styles.css`, `rg "Nunito" dist/styles.css`, `rg "Poppins" dist/styles.css`, `rg "Montserrat" dist/styles.css`
   - Verify `rg "--pathable-font-" dist/styles.css`, `rg "--usa-font-" dist/styles.css`

@@ -1,0 +1,105 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S01-ui-01",
+  "task_type": "implementation",
+  "task_ids": [
+    "T001", "T002", "T003", "T004", "T005", "T006",
+    "T007", "T008", "T009", "T010", "T011", "T012"
+  ],
+  "completed_task_ids": [
+    "T001", "T002", "T003", "T004", "T005", "T006",
+    "T007", "T008", "T009", "T010", "T011", "T012"
+  ],
+  "changed_paths": [
+    "packages/styles/src/_fonts.scss",
+    "packages/styles/src/index.scss",
+    "packages/styles/src/_uswds-theme.scss",
+    "packages/styles/src/_typography.scss"
+  ],
+  "validation_evidence": {
+    "build": {
+      "exit_code": 0,
+      "warnings": [
+        "USWDS Sass deprecation warnings (if-function, global-builtin) — pre-existing, not introduced by this change"
+      ]
+    },
+    "font_face_verification": {
+      "fredoka": {
+        "command": "rg -F -- 'Fredoka' dist/styles.css",
+        "found": true,
+        "matches": [
+          "font-family: \"Fredoka\";",
+          "src: url(\"../fonts/fredoka/Fredoka-Regular.woff2\") format(\"woff2\");",
+          "--pathable-font-heading: Fredoka, system-ui, sans-serif;",
+          "--usa-font-heading: Fredoka, system-ui, sans-serif;"
+        ]
+      },
+      "nunito": {
+        "command": "rg -F -- 'Nunito' dist/styles.css",
+        "found": true,
+        "matches": [
+          "font-family: \"Nunito\"; (x2: Regular 400 + SemiBold 600)",
+          "src: url(\"../fonts/nunito/Nunito-Regular.woff2\") format(\"woff2\");",
+          "src: url(\"../fonts/nunito/Nunito-SemiBold.woff2\") format(\"woff2\");",
+          "--pathable-font-body: Nunito, system-ui, serif;",
+          "--usa-font-body: Nunito, system-ui, serif;"
+        ]
+      },
+      "poppins": {
+        "command": "rg -F -- 'Poppins' dist/styles.css",
+        "found": true,
+        "matches": [
+          "font-family: \"Poppins\";",
+          "src: url(\"../fonts/poppins/Poppins-Bold.woff2\") format(\"woff2\");"
+        ]
+      },
+      "montserrat": {
+        "command": "rg -F -- 'Montserrat' dist/styles.css",
+        "found": true,
+        "matches": [
+          "font-family: \"Montserrat\";",
+          "src: url(\"../fonts/montserrat/Montserrat-Bold.woff2\") format(\"woff2\");"
+        ]
+      }
+    },
+    "dual_css_custom_properties": {
+      "--pathable-font-heading": "Fredoka, system-ui, sans-serif",
+      "--usa-font-heading": "Fredoka, system-ui, sans-serif",
+      "--pathable-font-body": "Nunito, system-ui, serif",
+      "--usa-font-body": "Nunito, system-ui, serif",
+      "--pathable-font-mono": "ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace",
+      "--usa-font-mono": "ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace",
+      "--pathable-font-alt": "Montserrat Bold, system-ui, sans-serif",
+      "--usa-font-alt": "Montserrat Bold, system-ui, sans-serif",
+      "--pathable-font-size-body-md": "16px",
+      "--usa-font-size-body-md": "16px",
+      "--pathable-font-weight-normal": "400",
+      "--usa-font-weight-normal": "400",
+      "--pathable-font-weight-bold": "700",
+      "--usa-font-weight-bold": "700"
+    },
+    "existing_custom_properties_preserved": {
+      "--pathable-font-heading": true,
+      "--pathable-font-alternate-heading": true,
+      "--pathable-font-subheading": true,
+      "--pathable-font-body": true,
+      "--pathable-font-mono": true,
+      "--ui-display-lg": true,
+      "--ui-heading-lg": true,
+      "--ui-body-md": true
+    },
+    "consistency_repairs": [
+      {
+        "finding_id": "F001",
+        "reason": "Worker's initial implementation used $theme-font-role-* with direct typeface token names (fredoka, nunito, montserrat). This does not work in USWDS 3.13.0 because $theme-font-role-* values must be font type names (sans, serif, mono), not direct typeface token names. The role → font type → typeface token chain is: $theme-font-role-heading: 'serif' → $theme-font-type-serif: 'fredoka' → $theme-typeface-tokens['fredoka']. Core agent reverted to the correct USWDS indirection pattern and verified build (exit code 0) and dual CSS custom properties.",
+        "changed_paths": ["packages/styles/src/_uswds-theme.scss"],
+        "evidence": ["pnpm build exit code 0", "rg '--pathable-font-heading' dist/styles.css -> Fredoka stack", "rg '--usa-font-heading' dist/styles.css -> Fredoka stack", "rg '--pathable-font-alt' dist/styles.css -> Montserrat Bold stack", "rg '--usa-font-alt' dist/styles.css -> Montserrat Bold stack"]
+      }
+    ],
+    "notes": [
+      "font-family-heading and font-family-body USWDS utility classes not found in compiled CSS because $theme-global-content-styles is false (pre-existing setting). Brand fonts are correctly assigned via $theme-typeface-tokens → $theme-font-type-* → $theme-font-role-* chain.",
+      "$theme-font-role-* values use font type names (sans, serif, mono) per USWDS architecture — roles map to font types which map to typeface tokens in $theme-typeface-tokens.",
+      "Core agent repaired F001: reverted direct typeface token role assignments to USWDS indirection pattern (role → font type → typeface token). This is the correct USWDS 3.13.0 approach and compiles successfully."
+    ]
+  }
+}

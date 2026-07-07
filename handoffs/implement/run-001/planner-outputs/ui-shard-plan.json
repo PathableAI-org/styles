@@ -1,0 +1,29 @@
+{
+  "contract_type": "speckit.implement.shard-plan.v1",
+  "vertical_capability": "ui",
+  "planner_id": "ui-planner-001",
+  "shards": [
+    {
+      "shard_id": "S01-ui-01",
+      "task_ids": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012"],
+      "allowed_read_paths": [
+        "packages/styles/src/_uswds-theme.scss",
+        "packages/styles/src/_typography.scss",
+        "packages/styles/src/index.scss",
+        "specs/005-typography-settings/tasks.md",
+        "specs/005-typography-settings/research.md",
+        "specs/005-typography-settings/data-model.md",
+        "specs/005-typography-settings/contracts/scss-interface.md",
+        "specs/005-typography-settings/quickstart.md",
+        "handoffs/implement/run-001/context-index.json"
+      ],
+      "allowed_write_paths": [
+        "packages/styles/src/_fonts.scss",
+        "packages/styles/src/index.scss",
+        "packages/styles/src/_uswds-theme.scss",
+        "packages/styles/src/_typography.scss"
+      ],
+      "depends_on": []
+    }
+  ]
+}

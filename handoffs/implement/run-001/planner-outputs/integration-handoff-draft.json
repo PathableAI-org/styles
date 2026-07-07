@@ -1,0 +1,99 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S03-integration-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": {
+      "role": "planner",
+      "vertical_planner_only": true,
+      "may_execute_implementation": false,
+      "may_write_manifest": false,
+      "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor",
+      "single_handoff_only": true,
+      "may_dispatch_workers": false,
+      "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "worker_execution",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": [
+      "packages/styles/dist/styles.css"
+    ],
+    "depends_on": [
+      "S01-ui-01",
+      "S02-documentation-01"
+    ],
+    "must_not_touch": [
+      "packages/styles/src/",
+      "packages/styles/AGENTS.md",
+      "packages/styles/BRAND_RULES.md",
+      "specs/005-typography-settings/tasks.md"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-001/planner-outputs/integration-shard-plan.json",
+    "handoff_draft_path": "handoffs/implement/run-001/planner-outputs/integration-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-001/planner-outputs/integration-context-digest.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "integration-planner-001",
+    "handoff_draft_path": "handoffs/implement/run-001/planner-outputs/integration-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/run-001/planner-outputs/integration-context-digest.md"
+  },
+  "task_ids": ["T015"],
+  "task_type": "implementation",
+  "task_text": [
+    "- [ ] T015 [P] Final build and verification in `packages/styles/`",
+    "  - Run `pnpm build` and verify no compilation errors",
+    "  - Verify `rg \"Fredoka\" dist/styles.css`, `rg \"Nunito\" dist/styles.css`, `rg \"Poppins\" dist/styles.css`, `rg \"Montserrat\" dist/styles.css`",
+    "  - Verify `rg \"--pathable-font-\" dist/styles.css`, `rg \"--usa-font-\" dist/styles.css`",
+    "  - Verify that existing `--pathable-*` color tokens and `--ui-*` typography tokens are still present"
+  ],
+  "context_digest_path": "handoffs/implement/run-001/planner-outputs/integration-context-digest.md",
+  "context_index_path": "handoffs/implement/run-001/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/dist/styles.css",
+    "packages/styles/src/",
+    "handoffs/implement/run-001/context-index.json"
+  ],
+  "allowed_write_paths": [],
+  "context_gaps": [],
+  "validation_commands": [
+    "cd packages/styles && pnpm build",
+    "rg 'Fredoka' packages/styles/dist/styles.css",
+    "rg 'Nunito' packages/styles/dist/styles.css",
+    "rg 'Poppins' packages/styles/dist/styles.css",
+    "rg 'Montserrat' packages/styles/dist/styles.css",
+    "rg '--pathable-font-' packages/styles/dist/styles.css",
+    "rg '--usa-font-' packages/styles/dist/styles.css",
+    "rg '--pathable-blue' packages/styles/dist/styles.css",
+    "rg '--ui-display-lg' packages/styles/dist/styles.css"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-001/results/S03-integration-01-receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
+  },
+  "forbidden_actions": [
+    "Do not edit tasks.md",
+    "Do not dispatch workers",
+    "Do not create handoffs",
+    "Do not edit packages/styles/src/",
+    "Do not edit packages/styles/AGENTS.md",
+    "Do not edit packages/styles/BRAND_RULES.md"
+  ]
+}

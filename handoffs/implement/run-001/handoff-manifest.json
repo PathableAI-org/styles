@@ -1,106 +1,74 @@
 {
   "contract_type": "speckit.implement.manifest.v1",
   "run_id": "run-001",
-  "feature_path": "specs/001-brand-design-tokens",
-  "context_index_path": "specs/001-brand-design-tokens/context-index.json",
-  "execution_mode": "manual_fresh_worker_session",
+  "feature_path": "specs/005-typography-settings",
+  "context_index_path": "handoffs/implement/run-001/context-index.json",
+  "execution_mode": "isolated_subagent",
   "planner_outputs": [
     {
-      "vertical_capability": "documentation",
-      "planner_id": "planner-documentation-01",
-      "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-documentation-01/shard-plan.md",
+      "vertical_capability": "ui",
+      "planner_id": "ui-planner-001",
+      "shard_plan_path": "handoffs/implement/run-001/planner-outputs/ui-shard-plan.json",
       "handoff_draft_paths": [
-        "handoffs/implement/run-001/S01-documentation-01/handoff.json"
+        "handoffs/implement/run-001/planner-outputs/ui-handoff-draft.json"
       ],
       "context_digest_draft_paths": [
-        "handoffs/implement/run-001/S01-documentation-01/context-digest.md"
+        "handoffs/implement/run-001/planner-outputs/ui-context-digest.md"
       ]
     },
     {
-      "vertical_capability": "domain-model",
-      "planner_id": "planner-domain-model-01",
-      "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-domain-model-01/shard-plan.md",
+      "vertical_capability": "documentation",
+      "planner_id": "documentation-planner-001",
+      "shard_plan_path": "handoffs/implement/run-001/planner-outputs/documentation-shard-plan.json",
       "handoff_draft_paths": [
-        "handoffs/implement/run-001/S02-domain-model-01/handoff.json"
+        "handoffs/implement/run-001/planner-outputs/documentation-handoff-draft.json"
       ],
       "context_digest_draft_paths": [
-        "handoffs/implement/run-001/S02-domain-model-01/context-digest.md"
+        "handoffs/implement/run-001/planner-outputs/documentation-context-digest.md"
       ]
     },
     {
       "vertical_capability": "integration",
-      "planner_id": "planner-integration-01",
-      "shard_plan_path": "handoffs/implement/run-001/planner-outputs/planner-integration-01/shard-plan.md",
+      "planner_id": "integration-planner-001",
+      "shard_plan_path": "handoffs/implement/run-001/planner-outputs/integration-shard-plan.json",
       "handoff_draft_paths": [
-        "handoffs/implement/run-001/S04-integration-01/handoff.json"
+        "handoffs/implement/run-001/planner-outputs/integration-handoff-draft.json"
       ],
       "context_digest_draft_paths": [
-        "handoffs/implement/run-001/S04-integration-01/context-digest.md"
+        "handoffs/implement/run-001/planner-outputs/integration-context-digest.md"
       ]
     }
   ],
   "shards": [
     {
-      "shard_id": "S01-documentation-01",
-      "handoff_path": "handoffs/implement/run-001/S01-documentation-01/handoff.json",
-      "context_digest_path": "handoffs/implement/run-001/S01-documentation-01/context-digest.md",
-      "receipt_path": "handoffs/implement/run-001/S01-documentation-01/results/receipt.json",
-      "task_ids": ["T002", "T003", "T004"],
+      "shard_id": "S01-ui-01",
+      "handoff_path": "handoffs/implement/run-001/S01-ui-01-handoff.json",
+      "context_digest_path": "handoffs/implement/run-001/planner-outputs/ui-context-digest.md",
+      "receipt_path": "handoffs/implement/run-001/results/S01-ui-01-receipt.json",
+      "task_ids": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012"],
+      "vertical_capability": "ui"
+    },
+    {
+      "shard_id": "S02-documentation-01",
+      "handoff_path": "handoffs/implement/run-001/S02-documentation-01-handoff.json",
+      "context_digest_path": "handoffs/implement/run-001/planner-outputs/documentation-context-digest.md",
+      "receipt_path": "handoffs/implement/run-001/results/S02-documentation-01-receipt.json",
+      "task_ids": ["T013", "T014"],
       "vertical_capability": "documentation"
-    },
-    {
-      "shard_id": "S02-domain-model-01",
-      "handoff_path": "handoffs/implement/run-001/S02-domain-model-01/handoff.json",
-      "context_digest_path": "handoffs/implement/run-001/S02-domain-model-01/context-digest.md",
-      "receipt_path": "handoffs/implement/run-001/S02-domain-model-01/results/receipt.json",
-      "task_ids": [
-        "T001",
-        "T005",
-        "T006",
-        "T007",
-        "T008",
-        "T009",
-        "T010",
-        "T011",
-        "T012",
-        "T013",
-        "T014",
-        "T015",
-        "T016",
-        "T017",
-        "T018",
-        "T019",
-        "T020",
-        "T021",
-        "T022"
-      ],
-      "vertical_capability": "domain-model"
-    },
-    {
-      "shard_id": "S04-integration-01",
-      "handoff_path": "handoffs/implement/run-001/S04-integration-01/handoff.json",
-      "context_digest_path": "handoffs/implement/run-001/S04-integration-01/context-digest.md",
-      "receipt_path": "handoffs/implement/run-001/S04-integration-01/results/receipt.json",
-      "task_ids": ["T023", "T024", "T025", "T026"],
-      "vertical_capability": "integration"
     }
   ],
   "dependencies": [
     {
-      "shard_id": "S01-documentation-01",
+      "shard_id": "S01-ui-01",
       "depends_on": []
     },
     {
-      "shard_id": "S02-domain-model-01",
-      "depends_on": []
-    },
-    {
-      "shard_id": "S04-integration-01",
-      "depends_on": ["S01-documentation-01", "S02-domain-model-01"]
+      "shard_id": "S02-documentation-01",
+      "depends_on": ["S01-ui-01"]
     }
   ],
   "dispatch_order": [
-    ["S01-documentation-01", "S02-domain-model-01"],
-    ["S04-integration-01"]
+    ["S01-ui-01"],
+    ["S02-documentation-01"]
   ]
 }

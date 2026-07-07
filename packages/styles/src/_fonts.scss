@@ -1,0 +1,54 @@
+// ==========================================
+// Brand Typeface @font-face Declarations
+// ==========================================
+//
+// All brand typefaces are self-hosted as woff2 files. Font files are
+// served from the $theme-font-path directory (defaults to ../fonts
+// relative to the compiled CSS output).
+//
+// This file must be @forward'd before _uswds-theme.scss so that
+// @font-face rules are available when USWDS core is configured.
+//
+// ==========================================
+
+$theme-font-path: '../fonts' !default;
+
+// Fredoka Regular (400)
+@font-face {
+  font-family: 'Fredoka';
+  font-style: normal;
+  font-weight: 400;
+  src: url('#{$theme-font-path}/fredoka/Fredoka-Regular.woff2') format('woff2');
+}
+
+// Nunito Regular (400)
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: url('#{$theme-font-path}/nunito/Nunito-Regular.woff2') format('woff2');
+}
+
+// Nunito SemiBold (600)
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  src: url('#{$theme-font-path}/nunito/Nunito-SemiBold.woff2') format('woff2');
+}
+
+// Poppins Bold (700)
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  src: url('#{$theme-font-path}/poppins/Poppins-Bold.woff2') format('woff2');
+}
+
+// Montserrat Bold (700)
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: url('#{$theme-font-path}/montserrat/Montserrat-Bold.woff2') format('woff2');
+}
