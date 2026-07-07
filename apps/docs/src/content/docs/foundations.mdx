@@ -37,10 +37,40 @@ Tokens that carry meaning and map to interface roles.
 
 ## Typography
 
-| Token                     | Value   | Usage     |
-| ------------------------- | ------- | --------- |
-| `--pathable-font-heading` | Fredoka | Headings  |
-| `--pathable-font-body`    | Nunito  | Body text |
+Pathable typography tokens are available in two namespaces: `--pathable-font-*` (preferred) and `--usa-font-*` (USWDS-native). Both resolve to the same values.
+
+### Font families
+
+| Token (Pathable) | Token (USWDS) | Value | Usage |
+|---|---|---|---|
+| `--pathable-font-heading` | `--usa-font-heading` | Fredoka | Headings |
+| `--pathable-font-body` | `--usa-font-body` | Nunito | Body text |
+| `--pathable-font-mono` | `--usa-font-mono` | Monospace stack | Code |
+| `--pathable-font-alt` | `--usa-font-alt` | Montserrat Bold | Alternate headings |
+
+### Font sizes
+
+| Token (Pathable) | Token (USWDS) | Value |
+|---|---|---|
+| `--pathable-font-size-body-md` | `--usa-font-size-body-md` | 16px |
+
+### Font weights
+
+| Token (Pathable) | Token (USWDS) | Value |
+|---|---|---|
+| `--pathable-font-weight-normal` | `--usa-font-weight-normal` | 400 |
+| `--pathable-font-weight-bold` | `--usa-font-weight-bold` | 700 |
+
+### Brand typeface mapping
+
+Each brand font is registered as a custom USWDS typeface token:
+
+| Brand Font | Weight | USWDS Role | Custom Typeface Token |
+|---|---|---|---|
+| Fredoka | Regular (400) | heading | `fredoka` |
+| Nunito | Regular (400), SemiBold (600) | body, ui | `nunito` |
+| Poppins | Bold (700) | alt (subheading) | `poppins` |
+| Montserrat | Bold (700) | alt (alternate heading) | `montserrat` |
 
 ## Spacing scale
 
@@ -61,7 +91,7 @@ Box-shadow tokens for surface elevation (`--pathable-elevation-*`).
 
 ## USWDS integration
 
-`@pathable/styles` is built on top of the [U.S. Web Design System](https://designsystem.digital.gov/) (USWDS) v3.x. The Pathable brand colors are mapped to USWDS system color tokens using the `$theme-color-*` settings. This means you can use USWDS utility classes alongside Pathable design tokens.
+`@pathable/styles` is built on top of the [U.S. Web Design System](https://designsystem.digital.gov/) (USWDS) v3.x. The Pathable brand colors are mapped to USWDS system color tokens using the `$theme-color-*` settings, and brand fonts are mapped to USWDS typography tokens via `$theme-font-*` settings. This means you can use USWDS utility classes alongside Pathable design tokens.
 
 ### Available USWDS theme families
 
@@ -95,4 +125,4 @@ USWDS generates utility classes for each theme color family. These are available
 | Custom component styling       | Use `--pathable-*` CSS custom properties               |
 | Quick prototyping / HTML demos | Use USWDS utility classes                              |
 | Color-based semantic states    | Use `--pathable-color-*` tokens                        |
-| Spacing, layout, typography    | Use `--pathable-spacing-*`, `--pathable-font-*` tokens |
+| Spacing, layout, typography    | Use `--pathable-spacing-*`, `--pathable-font-*` tokens (or `--usa-font-*` for USWDS-native contexts) |

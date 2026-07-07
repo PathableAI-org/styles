@@ -22,7 +22,12 @@ These rules govern how AI coding agents should work with PathableAI styles.
 
 - **MUST** use `--pathable-font-heading` (Fredoka) for all heading elements.
 - **MUST** use `--pathable-font-body` (Nunito) for all body text.
+- **MUST** use `--pathable-font-mono` for code elements.
+- **MAY** use `--pathable-font-alt` (Montserrat Bold) for alternate heading styles.
+- **MUST** prefer `--pathable-font-*` tokens over `--usa-font-*` tokens when both are available — both resolve to the same values.
 - **MUST NOT** introduce new font families.
+- **MUST** keep all USWDS typography theme overrides scoped within `_uswds-theme.scss`.
+- **MUST** use `uswds-core` functions (e.g., `uswds.family('heading')`) to reference typography values in SCSS rather than `$theme-font-*` variables directly.
 
 ## Spacing and layout
 
@@ -33,5 +38,6 @@ These rules govern how AI coding agents should work with PathableAI styles.
 ## USWDS configuration
 
 - ALL USWDS theme color overrides **MUST** be scoped exclusively within `_uswds-theme.scss`.
-- Do **NOT** add `$theme-color-*` overrides to any other file.
-- When upgrading USWDS: bump the version in `package.json`, rebuild, and verify no unexpected color changes.
+- ALL USWDS theme typography overrides (typeface tokens, font role assignments, type scale, heading sizes, prose settings) **MUST** also be scoped within `_uswds-theme.scss`.
+- Do **NOT** add `$theme-color-*` or `$theme-font-*` overrides to any other file.
+- When upgrading USWDS: bump the version in `package.json`, rebuild, and verify no unexpected color or typography changes. Only `_uswds-theme.scss` needs review.

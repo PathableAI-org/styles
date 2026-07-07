@@ -210,3 +210,9 @@ All typography CSS custom properties are emitted in two namespaces: `--pathable-
 | Nunito     | `"nunito"`     | body, ui                      | sans      |
 | Montserrat | `"montserrat"` | alt                           | sans      |
 | Poppins    | `"poppins"`    | — (available for subheadings) | —         |
+
+### Font File Distribution
+
+Font files (`.woff2`) are bundled with the `@pathable/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script. The fonts are published in the `fonts/` directory and referenced by the compiled CSS at `../fonts/...` relative to `dist/styles.css`.
+
+Consuming projects do not need to manually place font files — they are distributed automatically with the package.
