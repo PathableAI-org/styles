@@ -24,7 +24,7 @@ export default defineConfig({
         {
           tag: 'link',
           attrs: {
-            href: 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap',
+            href: 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&family=Montserrat:wght@700&family=Poppins:wght@700&display=swap',
             rel: 'stylesheet',
           },
         },

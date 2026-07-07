@@ -6,10 +6,11 @@
     "BRAND_RULES.md",
     "AGENTS.md",
     "dist",
-    "src"
+    "src",
+    "fonts"
   ],
   "scripts": {
-    "build": "sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "build": "node scripts/copy-fonts.mjs && sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "watch": "sass --watch --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "lint:styles": "stylelint 'src/**/*.scss'"
   },
@@ -17,6 +18,10 @@
     "@uswds/uswds": "^3.0.0"
   },
   "devDependencies": {
+    "@fontsource/fredoka": "^5.2.10",
+    "@fontsource/montserrat": "^5.2.8",
+    "@fontsource/nunito": "^5.2.7",
+    "@fontsource/poppins": "^5.2.7",
     "sass": "^1.86.3"
   }
 }

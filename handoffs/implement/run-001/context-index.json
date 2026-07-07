@@ -1,0 +1,183 @@
+{
+  "contract_type": "speckit.implement.context-index.v1",
+  "run_id": "run-001",
+  "feature_path": "specs/005-typography-settings",
+  "feature_name": "USWDS Typography Settings",
+  "agent_runtime": "cursor-agent",
+  "execution_mode": "isolated_subagent",
+  "created": "2026-07-07T06:59:00-04:00",
+  "design_artifacts": [
+    {
+      "path": "specs/005-typography-settings/spec.md",
+      "type": "specification",
+      "purpose": "Feature specification with user stories, FR-001 through FR-012 requirements, success criteria, and assumptions",
+      "sections": [
+        "User Scenarios & Testing",
+        "Requirements",
+        "Success Criteria",
+        "Assumptions"
+      ]
+    },
+    {
+      "path": "specs/005-typography-settings/research.md",
+      "type": "research",
+      "purpose": "USWDS typography setting research with decisions D1 through D10 for font mapping, type scale, line-height, font weights, CSS custom property strategy, and @font-face strategy",
+      "sections": [
+        "Decision D1: Brand Typeface to USWDS Font Role Mapping",
+        "Decision D2: Custom Typeface Token Configuration",
+        "Decision D3: PathAble Type Scale to USWDS System Token Mapping",
+        "Decision D4: Line-Height Mapping",
+        "Decision D5: Font Weight Configuration",
+        "Decision D6: CSS Custom Property Duplication Strategy",
+        "Decision D7: Typography Settings Architecture",
+        "Decision D8: Custom Font @font-face Strategy",
+        "Decision D9: Body Typography and Prose Settings",
+        "Decision D10: Root Font Size"
+      ]
+    },
+    {
+      "path": "specs/005-typography-settings/data-model.md",
+      "type": "data-model",
+      "purpose": "Formal entity definitions for BrandTypeface, FontFamilyToken, RoleFontToken, TypeScaleMapping, FontWeightMapping, LineHeightMapping, TypographyCustomProperty",
+      "sections": [
+        "Entities: BrandTypeface, FontFamilyToken, RoleFontToken, TypeScaleMapping, FontWeightMapping, LineHeightMapping, TypographyCustomProperty",
+        "Validation Rules"
+      ]
+    },
+    {
+      "path": "specs/005-typography-settings/contracts/scss-interface.md",
+      "type": "contract",
+      "purpose": "SCSS interface contract defining public API, internal module interfaces, build contract, consumption contract, and dual naming convention",
+      "sections": [
+        "Public API (Guaranteed Stable)",
+        "Internal Module Interface: _uswds-theme.scss, _fonts.scss, _typography.scss, index.scss",
+        "Build Contract",
+        "Consumption Contract",
+        "Dual Naming Convention"
+      ]
+    },
+    {
+      "path": "specs/005-typography-settings/quickstart.md",
+      "type": "quickstart",
+      "purpose": "Usage guide with installation, CSS and SCSS examples, font self-hosting instructions, and verification commands",
+      "sections": [
+        "Installation",
+        "Usage (Compiled CSS)",
+        "Using Dual CSS Custom Properties",
+        "Usage (SCSS Customization)",
+        "Self-Hosting Font Files",
+        "Verifying Typography Output",
+        "Important Notes"
+      ]
+    },
+    {
+      "path": "specs/005-typography-settings/plan.md",
+      "type": "plan",
+      "purpose": "Implementation plan with technical context, constitution check, project structure, complexity tracking, and research/design phases",
+      "sections": [
+        "Summary",
+        "Technical Context",
+        "Constitution Check",
+        "Project Structure",
+        "Complexity Tracking",
+        "Phase 0: Research & Discovery",
+        "Phase 1: Design & Contracts"
+      ]
+    },
+    {
+      "path": "specs/005-typography-settings/tasks.md",
+      "type": "tasks",
+      "purpose": "Implementation tasks broken into phases: Foundational (T001-T004), US1 body typography (T005-T006), US2 type scale (T007-T009), US3 dual CSS props (T010-T011), US4 upgrade docs (T012), Polish (T013-T015)",
+      "sections": [
+        "Phase 2: Foundational (T001-T004)",
+        "Phase 3: User Story 1 (T005-T006)",
+        "Phase 4: User Story 2 (T007-T009)",
+        "Phase 5: User Story 3 (T010-T011)",
+        "Phase 6: User Story 4 (T012)",
+        "Phase 7: Polish (T013-T015)",
+        "Dependencies & Execution Order",
+        "Implementation Strategy"
+      ]
+    }
+  ],
+  "source_files": [
+    {
+      "path": "packages/styles/src/_uswds-theme.scss",
+      "purpose": "Existing USWDS theme color configuration file - MUST be extended with typography overrides. Single source of truth for @use 'uswds-core' with (...) block.",
+      "sections": [
+        "Color settings (existing)",
+        "Typography additions needed: $theme-typeface-tokens, $theme-font-role-*, $theme-type-scale-*, $theme-font-weight-*, $theme-h1-*-$theme-h6-*, $theme-body-*, $theme-heading-*, $theme-prose-*, $theme-lead-*"
+      ]
+    },
+    {
+      "path": "packages/styles/src/_typography.scss",
+      "purpose": "Existing PathAble typography variables and CSS custom properties. MUST be updated with dual --pathable-font-*/--usa-font-* @each loop.",
+      "sections": [
+        "SCSS variables: $pathable-font-*, $typography-scale, $ui-*",
+        "CSS custom properties: --pathable-font-*, --ui-*",
+        "Additions needed: $typography-tokens map, dual @each loop"
+      ]
+    },
+    {
+      "path": "packages/styles/src/index.scss",
+      "purpose": "Package entrypoint. MUST be updated to forward _fonts.scss before _uswds-theme.scss.",
+      "sections": [
+        "@forward statements for all partials",
+        "Order: fonts, uswds-theme, colors, typography, spacing, elevation, radius, semantic"
+      ]
+    },
+    {
+      "path": "packages/styles/AGENTS.md",
+      "purpose": "Agent instructions for PathAble styles. MUST be updated with USWDS typography token usage rules.",
+      "sections": [
+        "Typography Tokens (existing)",
+        "USWDS Token Usage (existing - color only, needs typography expansion)"
+      ]
+    },
+    {
+      "path": "packages/styles/BRAND_RULES.md",
+      "purpose": "Brand rules document. MUST be updated with USWDS typography token mapping table.",
+      "sections": [
+        "Color Palette (existing)",
+        "USWDS System Token Mapping (existing - color only)",
+        "Typography (existing - needs USWDS mapping table)"
+      ]
+    }
+  ],
+  "asset_bindings": {
+    "font_files": {
+      "description": "Font files referenced by @font-face rules in _fonts.scss. Not required for build (build completes without font files), but fonts won't load at runtime without them.",
+      "missing_aspect": "Font files are not yet committed to the repository. @font-face rules will compile successfully but font files must be placed at packages/styles/fonts/<font-name>/*.woff2 before runtime rendering.",
+      "required_paths": [
+        "packages/styles/fonts/fredoka/Fredoka-Regular.woff2",
+        "packages/styles/fonts/nunito/Nunito-Regular.woff2",
+        "packages/styles/fonts/nunito/Nunito-SemiBold.woff2",
+        "packages/styles/fonts/poppins/Poppins-Bold.woff2",
+        "packages/styles/fonts/montserrat/Montserrat-Bold.woff2"
+      ]
+    }
+  },
+  "context_gaps": [],
+  "validation_decisions": {
+    "research.md": {
+      "D2": "Use $theme-typeface-tokens with custom display-name, cap-height (364px), and stack for each brand font",
+      "D6": "Use SCSS @each loop over $typography-tokens map to emit both --pathable-* and --usa-* CSS custom properties",
+      "D7": "Add typography settings directly into existing _uswds-theme.scss (single @use ... with block)",
+      "D8": "Create _fonts.scss with manual @font-face rules (not USWDS custom-src system)",
+      "D3": "Customized $theme-type-scale-3xs through $theme-type-scale-3xl values",
+      "D5": "Enable $theme-font-weight-semibold: 600 for Nunito",
+      "D4": "Line-height settings: body=5 (1.62), heading=3 (1.35), lead=6 (1.75)",
+      "D9": "Body+prose configuration values",
+      "D10": "$theme-respect-user-font-size: true"
+    }
+  },
+  "quickstart_validation_commands": {
+    "build": "pnpm build",
+    "verify_fredoka": "rg 'Fredoka' dist/styles.css",
+    "verify_nunito": "rg 'Nunito' dist/styles.css",
+    "verify_pathable_font": "rg '--pathable-font-heading' dist/styles.css",
+    "verify_usa_font": "rg '--usa-font-heading' dist/styles.css",
+    "verify_font_family_heading": "rg 'font-family-heading' dist/styles.css",
+    "verify_font_family_body": "rg 'font-family-body' dist/styles.css"
+  }
+}

@@ -103,3 +103,4 @@ vite.config.ts.timestamp-*
 dist/
 apps/docs/dist/
 packages/styles/dist/
+packages/styles/fonts/

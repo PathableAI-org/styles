@@ -71,12 +71,13 @@ If your project uses SCSS and you want to extend the theme:
 }
 ```
 
-## Self-Hosting Font Files
+## Font File Distribution
 
-Place the brand font files in the appropriate directory so the `@font-face` rules can resolve them:
+Font files (`.woff2`) are bundled with the `@pathable/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script.
 
+The font files are published at:
 ```
-packages/styles/fonts/
+fonts/
 ├── fredoka/
 │   └── Fredoka-Regular.woff2
 ├── nunito/
@@ -88,7 +89,7 @@ packages/styles/fonts/
     └── Montserrat-Bold.woff2
 ```
 
-The font path is configured via `$theme-font-path` (defaults to `../fonts` relative to the compiled CSS).
+The font path is configured via `$theme-font-path` (defaults to `../fonts` relative to the compiled CSS). No additional setup is needed — consuming projects get fonts automatically when they install `@pathable/styles`.
 
 ## Verifying Typography Output
 
@@ -112,7 +113,7 @@ rg "font-family-body" dist/styles.css
 
 ## Important Notes
 
-- **Font files must be self-hosted**: The `@font-face` rules in `_fonts.scss` reference local font files. These must be placed at the expected paths before fonts will render.
+- **Font files are bundled**: The `@font-face` rules in `_fonts.scss` reference local font files in the `fonts/` directory. These are automatically included when you install `@pathable/styles`.
 - **Existing `--pathable-font-*` tokens continue to work**: No breaking changes to existing consumers.
 - **New `--usa-font-*` tokens**: Added alongside existing `--pathable-font-*` tokens for USWDS-native consumers.
 - **No USWDS component styles in output**: Only typography token settings are included. Add `@import 'uswds/dist/css/uswds.css'` separately if you need USWDS components.

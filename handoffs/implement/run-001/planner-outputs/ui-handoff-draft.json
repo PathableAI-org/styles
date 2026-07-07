@@ -1,0 +1,95 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S01-ui-01",
+  "lifecycle_stage": "worker_execution",
+  "vertical_capability": "ui",
+  "agent_topology": {
+    "parent_agent": "core_agent",
+    "sibling_agents": []
+  },
+  "capability_boundary": {
+    "vertical": "ui",
+    "coverage": "ALL SCSS source changes for the USWDS Typography Settings feature (T001–T012). Covers _fonts.scss creation, index.scss update, _uswds-theme.scss typography extensions, _typography.scss dual CSS custom properties, and build/verify steps.",
+    "excluded": [
+      "T013 (AGENTS.md update) — documentation capability",
+      "T014 (BRAND_RULES.md update) — documentation capability",
+      "T015 (final build and verification) — integration capability",
+      "Font file asset creation (fonts/*.woff2) — asset management, not SCSS"
+    ]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/run-001/planner-outputs/ui-shard-plan.json",
+    "context_digest_path": "handoffs/implement/run-001/planner-outputs/ui-context-digest.md"
+  },
+  "draft_source": "tasks.md, research.md, data-model.md, contracts/scss-interface.md, quickstart.md, context-index.json",
+  "task_ids": [
+    "T001",
+    "T002",
+    "T003",
+    "T004",
+    "T005",
+    "T006",
+    "T007",
+    "T008",
+    "T009",
+    "T010",
+    "T011",
+    "T012"
+  ],
+  "task_type": "implementation",
+  "task_text": {
+    "T001": "Create _fonts.scss partial with @font-face rules for all four brand typefaces in packages/styles/src/_fonts.scss. Fredoka Regular (400), Nunito Regular (400) + SemiBold (600), Poppins Bold (700), Montserrat Bold (700). Use $theme-font-path variable for the font path (defaults to ../fonts). Follow the exact pattern from research.md Decision D8.",
+    "T002": "Update index.scss to forward _fonts.scss before _uswds-theme.scss in packages/styles/src/index.scss. Order: @forward \"fonts\"; then @forward \"uswds-theme\"; then existing forwards. @font-face rules must be available before USWDS core is configured.",
+    "T003": "Add custom typeface token definitions to _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Add $theme-typeface-tokens map with entries for fredoka, nunito, poppins, montserrat. Each entry: display-name, cap-height: 364px, stack with full fallback chain. Follow research.md Decision D2 structure.",
+    "T004": "Configure font family type assignments and role assignments in _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Set $theme-font-type-cond: false, $theme-font-type-icon: false, $theme-font-type-lang: false. Set $theme-font-type-mono: \"roboto-mono\" (unchanged default). Set $theme-font-type-sans: \"source-sans-pro\" (unchanged default — custom typefaces assigned via roles). Set $theme-font-type-serif: false (not used). Set $theme-font-role-heading: \"fredoka\", $theme-font-role-body: \"nunito\", $theme-font-role-ui: \"nunito\", $theme-font-role-code: \"mono\", $theme-font-role-alt: \"montserrat\".",
+    "T005": "Configure body typography settings in _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Set $theme-body-font-family: \"body\", $theme-body-font-size: \"sm\", $theme-body-line-height: 5. Set $theme-style-body-element: false (preserve existing behavior). Set $theme-respect-user-font-size: true.",
+    "T006": "Build the package and verify brand fonts appear in USWDS components in packages/styles/. Run pnpm build and verify rg \"Fredoka\" dist/styles.css, rg \"Nunito\" dist/styles.css. Verify rg \"font-family-heading\" dist/styles.css shows Fredoka stack. Verify rg \"font-family-body\" dist/styles.css shows Nunito stack.",
+    "T007": "Configure type scale theme tokens in _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Set $theme-type-scale-3xs: 1 (12px), $theme-type-scale-2xs: 3 (14px), $theme-type-scale-xs: 4 (15px). Set $theme-type-scale-sm: 5 (16px), $theme-type-scale-md: 7 (18px). Set $theme-type-scale-lg: 10 (24px), $theme-type-scale-xl: 12 (32px). Set $theme-type-scale-2xl: 14 (40px), $theme-type-scale-3xl: 15 (48px). Follow research.md Decision D3 exact values.",
+    "T008": "Configure heading size tokens in _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Set $theme-display-font-size: \"xl\", $theme-h1-font-size: \"lg\", $theme-h2-font-size: \"md\". Set $theme-h3-font-size: \"md\", $theme-h4-font-size: \"sm\", $theme-h5-font-size: \"2xs\". Set $theme-h6-font-size: \"3xs\", $theme-body-font-size: \"sm\".",
+    "T009": "Configure line-height, heading, and prose settings in _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Set $theme-heading-line-height: 3 (1.35), $theme-body-line-height: 5 (1.62). Set $theme-lead-font-family: \"heading\", $theme-lead-font-size: \"lg\", $theme-lead-line-height: 6, $theme-lead-measure: 6. Set $theme-prose-font-family: \"body\". Set $theme-heading-margin-top: 1.5em, $theme-paragraph-margin-top: 1em. Set $theme-small-font-size: \"2xs\", $theme-display-font-size: \"xl\".",
+    "T010": "Add $typography-tokens map and dual @each loop to _typography.scss in packages/styles/src/_typography.scss. Create a $typography-tokens map with entries for font-family, font-size, font-weight, and line-height tokens. Add an @each loop that emits both --pathable-#{$name} and --usa-#{$name} for each entry. Follow the contract defined in contracts/scss-interface.md Dual Naming Convention section. Ensure existing --pathable-font-* and --ui-* custom properties remain unchanged.",
+    "T011": "Build and verify dual CSS custom properties in compiled output in packages/styles/. Run pnpm build and verify rg \"--pathable-font-heading\" dist/styles.css. Verify rg \"--usa-font-heading\" dist/styles.css. Verify both resolve to the same Fredoka font stack value.",
+    "T012": "Add upgrade documentation comments to _uswds-theme.scss in packages/styles/src/_uswds-theme.scss. Add a header comment block documenting that ALL typography overrides are scoped in this file. Include upgrade instructions: \"To upgrade USWDS: bump version in package.json, rebuild, verify no unexpected typography changes. Only this file needs review.\" Follow the same pattern as the existing color settings header comments."
+  },
+  "context_digest_path": "handoffs/implement/run-001/planner-outputs/ui-context-digest.md",
+  "context_index_path": "handoffs/implement/run-001/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/src/",
+    "specs/005-typography-settings/",
+    "handoffs/implement/run-001/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/src/_fonts.scss",
+    "packages/styles/src/index.scss",
+    "packages/styles/src/_uswds-theme.scss",
+    "packages/styles/src/_typography.scss"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "pnpm build",
+    "rg 'Fredoka' dist/styles.css",
+    "rg 'Nunito' dist/styles.css",
+    "rg '--pathable-font-heading' dist/styles.css",
+    "rg '--usa-font-heading' dist/styles.css",
+    "rg 'font-family-heading' dist/styles.css"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/run-001/results/S01-ui-01-receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
+  },
+  "forbidden_actions": [
+    "Do not edit tasks.md",
+    "Do not dispatch workers",
+    "Do not create handoffs"
+  ]
+}

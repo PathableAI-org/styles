@@ -11,6 +11,19 @@
 // unexpected color changes. Only this file needs review.
 //
 // ==========================================
+// USWDS Theme Typography Configuration
+// ==========================================
+//
+// ALL typography overrides are scoped exclusively within this file.
+// This includes custom typeface tokens, font role assignments, type
+// scale tokens, heading size tokens, line-height/prose settings, and
+// body typography settings.
+//
+// Upgrade Instructions:
+// To upgrade USWDS: bump version in package.json, rebuild, verify no
+// unexpected typography changes. Only this file needs review.
+//
+// ==========================================
 // Base Family (gray-cool) — Shilling Silver (#dde2e8)
 // ==========================================
 // Shilling Silver maps to gray-cool-10 (ΔE 2.79 — near-perfect match).
@@ -130,5 +143,89 @@
   $theme-color-accent-cool-lightest: false,
   $theme-color-accent-cool-darkest: false,
   $theme-color-accent-warm-lightest: false,
-  $theme-color-accent-warm-darkest: false
+  $theme-color-accent-warm-darkest: false,
+
+  // -------- Typography: Custom Typeface Tokens (T003) --------
+  $theme-typeface-tokens: (
+      'fredoka': (
+        'display-name': 'Fredoka',
+        'cap-height': 364px,
+        'stack': "'Fredoka', system-ui, sans-serif",
+      ),
+      'nunito': (
+        'display-name': 'Nunito',
+        'cap-height': 364px,
+        'stack': "'Nunito', system-ui, sans-serif",
+      ),
+      'poppins': (
+        'display-name': 'Poppins',
+        'cap-height': 364px,
+        'stack': "'Poppins', system-ui, sans-serif",
+      ),
+      'montserrat': (
+        'display-name': 'Montserrat',
+        'cap-height': 364px,
+        'stack': "'Montserrat', system-ui, sans-serif",
+      )
+    ),
+
+  // -------- Typography: Font Family Type Assignments (T004) --------
+  // Font types map to custom typeface token names from
+  // $theme-typeface-tokens above. Roles map to font types.
+  // This is the standard USWDS role → font type → typeface token chain.
+  // cond is repurposed here to carry the Montserrat alternate-heading font
+  // so that $theme-font-role-alt can point to it independently of sans.
+  $theme-font-type-cond: 'montserrat',
+  $theme-font-type-icon: false,
+  $theme-font-type-lang: false,
+  $theme-font-type-mono: 'roboto-mono',
+  $theme-font-type-sans: 'nunito',
+  $theme-font-type-serif: 'fredoka',
+
+  // -------- Typography: Font Role Assignments (T004) --------
+  // Role values reference font type names (sans, serif, mono, cond).
+  // The chain: role → font type → $theme-typeface-tokens[typeface-token].
+  $theme-font-role-heading: 'serif',
+  $theme-font-role-body: 'sans',
+  $theme-font-role-ui: 'sans',
+  $theme-font-role-code: 'mono',
+  $theme-font-role-alt: 'cond',
+
+  // -------- Typography: Body Settings (T005) --------
+  $theme-body-font-family: 'body',
+  $theme-body-font-size: 'sm',
+  $theme-style-body-element: false,
+  $theme-respect-user-font-size: true,
+
+  // -------- Typography: Type Scale Tokens (T007) --------
+  $theme-type-scale-3xs: 1,
+  $theme-type-scale-2xs: 3,
+  $theme-type-scale-xs: 4,
+  $theme-type-scale-sm: 5,
+  $theme-type-scale-md: 7,
+  $theme-type-scale-lg: 10,
+  $theme-type-scale-xl: 12,
+  $theme-type-scale-2xl: 14,
+  $theme-type-scale-3xl: 15,
+
+  // -------- Typography: Heading Size Tokens (T008) --------
+  $theme-display-font-size: 'xl',
+  $theme-h1-font-size: 'lg',
+  $theme-h2-font-size: 'md',
+  $theme-h3-font-size: 'md',
+  $theme-h4-font-size: 'sm',
+  $theme-h5-font-size: '2xs',
+  $theme-h6-font-size: '3xs',
+
+  // -------- Typography: Line Height / Prose Settings (T009) --------
+  $theme-heading-line-height: 3,
+  $theme-body-line-height: 5,
+  $theme-lead-font-family: 'heading',
+  $theme-lead-font-size: 'lg',
+  $theme-lead-line-height: 6,
+  $theme-lead-measure: 6,
+  $theme-prose-font-family: 'body',
+  $theme-heading-margin-top: 1.5em,
+  $theme-paragraph-margin-top: 1em,
+  $theme-small-font-size: '2xs'
 );

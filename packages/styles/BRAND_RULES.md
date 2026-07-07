@@ -104,6 +104,50 @@ When brand expression and accessibility conflict, accessibility takes priority.
 | Subheading        | `Poppins`    | `Bold`    |
 | Body Text         | `Nunito`     | `Regular` |
 
+## USWDS Typography Token Mapping
+
+### Brand Typeface → USWDS Role Mapping
+
+| Brand Font | Weight                        | USWDS Role          | Custom Typeface Token | Font Stack                            |
+| ---------- | ----------------------------- | ------------------- | --------------------- | ------------------------------------- |
+| Fredoka    | Regular (400)                 | heading             | `fredoka`             | `'Fredoka', system-ui, sans-serif`    |
+| Nunito     | Regular (400), SemiBold (600) | body, ui            | `nunito`              | `'Nunito', system-ui, sans-serif`     |
+| Montserrat | Bold (700)                    | alt                 | `montserrat`          | `'Montserrat', system-ui, sans-serif` |
+| Poppins    | Bold (700)                    | — (subheading only) | `poppins`             | `'Poppins', system-ui, sans-serif`    |
+
+> **Note:** USWDS supports a single `alt` role. Montserrat is assigned to that role via the `cond` font type. Poppins is available as a design token (`--pathable-font-subheading`) for subheading use but is not assigned to any USWDS role.
+
+### Type Scale Mapping
+
+| PathAble Token        | Size | USWDS System Token | USWDS Theme Token | Notes                                        |
+| --------------------- | ---- | ------------------ | ----------------- | -------------------------------------------- |
+| display-lg            | 32px | 12                 | xl                | Default — unchanged                          |
+| heading-lg            | 24px | 10                 | lg                | Customized from default 9 (22px)             |
+| heading-md            | 20px | 8                  | (none)            | No theme token — use system token 8 directly |
+| heading-sm / body-lg  | 18px | 7                  | md                | Customized from default 6 (17px)             |
+| body-md               | 16px | 5                  | sm                | Default — unchanged                          |
+| body-sm / label-md    | 14px | 3                  | 2xs               | Default — unchanged                          |
+| label-sm / caption-md | 12px | 1                  | 3xs               | Customized from default 2 (13px)             |
+
+### Heading Size Assignments
+
+| Element | USWDS Theme Token | Size |
+| ------- | ----------------- | ---- |
+| Display | xl                | 32px |
+| h1      | lg                | 24px |
+| h2      | md                | 18px |
+| h3      | md                | 18px |
+| h4      | sm                | 16px |
+| h5      | 2xs               | 14px |
+| h6      | 3xs               | 12px |
+| Body    | sm                | 16px |
+
+### Line-Height Settings
+
+- `$theme-body-line-height: 5` (1.62)
+- `$theme-heading-line-height: 3` (1.35)
+- `$theme-lead-line-height: 6` (1.75)
+
 ## Typography Hierarchy
 
 Headings should be the most prominent text element.

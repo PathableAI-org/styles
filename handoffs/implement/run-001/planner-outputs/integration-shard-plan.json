@@ -1,0 +1,18 @@
+{
+  "contract_type": "speckit.implement.shard-plan.v1",
+  "feature_path": "specs/005-typography-settings",
+  "feature_name": "USWDS Typography Settings",
+  "run_id": "run-001",
+  "vertical_capability": "integration",
+  "planner_id": "integration-planner-001",
+  "shards": [
+    {
+      "shard_id": "S03-integration-01",
+      "task_ids": ["T015"],
+      "depends_on": ["S01-ui-01", "S02-documentation-01"],
+      "vertical_capability": "integration",
+      "task_type": "verification",
+      "description": "Final build and verification of typography settings — compile with pnpm build, verify all four brand fonts (Fredoka, Nunito, Poppins, Montserrat) appear in dist/styles.css, verify --pathable-font-* and --usa-font-* CSS custom properties are present, and verify existing --pathable-* color tokens and --ui-* typography tokens are still intact."
+    }
+  ]
+}

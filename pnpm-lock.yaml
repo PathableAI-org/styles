@@ -36,6 +36,18 @@ importers:
         specifier: ^3.0.0
         version: 3.13.0
     devDependencies:
+      '@fontsource/fredoka':
+        specifier: ^5.2.10
+        version: 5.2.10
+      '@fontsource/montserrat':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource/nunito':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@fontsource/poppins':
+        specifier: ^5.2.7
+        version: 5.2.7
       sass:
         specifier: ^1.86.3
         version: 1.101.0
@@ -472,6 +484,18 @@ packages:
 
   '@expressive-code/plugin-text-markers@0.40.2':
     resolution: {integrity: sha512-/XoLjD67K9nfM4TgDlXAExzMJp6ewFKxNpfUw4F7q5Ecy+IU3/9zQQG/O70Zy+RxYTwKGw2MA9kd7yelsxnSmw==}
+
+  '@fontsource/fredoka@5.2.10':
+    resolution: {integrity: sha512-DyzPCmTf0PkBbAu+gNvnPzfD/dYIXlyp+Zcb76jEQyt/vmRKGZgkH8FFF9W2sICDaA5p+GLk1XGFjWh5PPX+lg==}
+
+  '@fontsource/montserrat@5.2.8':
+    resolution: {integrity: sha512-xTjLxSbSfCycDB0pwmNsfNvdfWPaDaRQ2LC6yt/ZI7SdvXG52zHnzNYC/09mzuAuWNJyShkteutfCoDgym56hQ==}
+
+  '@fontsource/nunito@5.2.7':
+    resolution: {integrity: sha512-pmtBq0H9ex9nk+RtJYEJOD9pag393iHETnl/PVKleF4i06cd0ttngK5ZCTgYb5eOqR3Xdlrjtev8m7bmgYprew==}
+
+  '@fontsource/poppins@5.2.7':
+    resolution: {integrity: sha512-6uQyPmseo4FgI97WIhA4yWRlNaoLk4vSDK/PyRwdqqZb5zAEuc+Kunt8JTMcsHYUEGYBtN15SNkMajMdqUSUmg==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -2987,6 +3011,14 @@ snapshots:
   '@expressive-code/plugin-text-markers@0.40.2':
     dependencies:
       '@expressive-code/core': 0.40.2
+
+  '@fontsource/fredoka@5.2.10': {}
+
+  '@fontsource/montserrat@5.2.8': {}
+
+  '@fontsource/nunito@5.2.7': {}
+
+  '@fontsource/poppins@5.2.7': {}
 
   '@img/colour@1.1.0':
     optional: true

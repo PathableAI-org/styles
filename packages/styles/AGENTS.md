@@ -176,3 +176,43 @@ $my-variable: uswds.color('blue-warm-80v');
 ```
 
 For CSS consumers, the compiled output contains resolved hex values via `--pathable-*` custom properties.
+
+## USWDS Typography Token Usage
+
+This package wraps USWDS v3.x typography theme tokens. When creating or editing SCSS that references typography values:
+
+### Dual Naming Convention
+
+Most typography CSS custom properties are emitted in two namespaces: `--pathable-font-*` and `--usa-font-*`, both resolving to identical values. The `--pathable-font-*` namespace is the source of truth. PathAble-specific tokens (`--pathable-font-subheading`) that have no USWDS role equivalent are only emitted under the `--pathable-*` namespace.
+
+### CSS Custom Property Categories
+
+- **Font role**: `--pathable-font-heading`, `--pathable-font-body`, `--pathable-font-mono`, `--pathable-font-alt` (and `--usa-font-heading`, `--usa-font-body`, `--usa-font-mono`, `--usa-font-alt` equivalents)
+- **Font size**: `--pathable-font-size-*` tokens (and `--usa-font-size-*` equivalents)
+- **Font weight**: `--pathable-font-weight-normal`, `--pathable-font-weight-semibold`, `--pathable-font-weight-bold` (and `--usa-font-weight-normal`, `--usa-font-weight-semibold`, `--usa-font-weight-bold` equivalents)
+- **Line height**: `--pathable-font-line-height-body` (and `--usa-font-line-height-body`, `--usa-font-line-height-heading` equivalents)
+
+### SCSS Typography Token Reference Rules
+
+- Agents MUST use `uswds-core` functions to reference typography theme tokens (e.g., `uswds.family('heading')`, `uswds.type-scale('lg')`)
+- Agents MUST NOT use `$theme-font-*` variables directly — those are USWDS internal configuration values
+- Agents MUST NOT edit `_uswds-theme.scss` to add new typography overrides without explicit instructions
+- Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss` per FR-011
+- Agents MAY reference the `--pathable-font-*` or `--usa-font-*` CSS custom properties from CSS
+- For SCSS consumers: `@use 'uswds-core' as uswds;` then `uswds.family('heading')`
+- For CSS consumers: the compiled output contains resolved values via `--pathable-font-*` and `--usa-font-*` custom properties
+
+### Custom Typeface Token Documentation
+
+| Brand Font | Custom Token   | USWDS Role                    | Font Type |
+| ---------- | -------------- | ----------------------------- | --------- |
+| Fredoka    | `"fredoka"`    | heading                       | serif     |
+| Nunito     | `"nunito"`     | body, ui                      | sans      |
+| Montserrat | `"montserrat"` | alt                           | cond      |
+| Poppins    | `"poppins"`    | — (available for subheadings) | —         |
+
+### Font File Distribution
+
+Font files (`.woff2`) are bundled with the `@pathable/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script. The fonts are published in the `fonts/` directory and referenced by the compiled CSS at `../fonts/...` relative to `dist/styles.css`.
+
+Consuming projects do not need to manually place font files — they are distributed automatically with the package.
