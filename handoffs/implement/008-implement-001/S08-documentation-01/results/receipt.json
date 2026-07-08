@@ -1,0 +1,21 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S08-documentation-01",
+  "task_ids": ["T048", "T049"],
+  "completed_task_ids": ["T048", "T049"],
+  "changed_paths": [
+    "packages/styles/.storybook/manager.js",
+    "packages/styles/.storybook/manager-head.html"
+  ],
+  "validation_evidence": [
+    "test -f packages/styles/.storybook/manager.js && echo 'manager.js exists' — PASS",
+    "test -f packages/styles/.storybook/manager-head.html && echo 'manager-head.html exists' — PASS",
+    "rg 'create' packages/styles/.storybook/manager.js — PASS",
+    "rg '#00365c' packages/styles/.storybook/manager.js — PASS",
+    "rg '#1cae96' packages/styles/.storybook/manager.js — PASS",
+    "rg 'Pathable Styles' packages/styles/.storybook/manager.js — PASS",
+    "rg 'fonts.googleapis.com' packages/styles/.storybook/manager-head.html — PASS",
+    "rg 'Fredoka' packages/styles/.storybook/manager-head.html — PASS",
+    "rg 'Nunito' packages/styles/.storybook/manager-head.html — PASS"
+  ]
+}

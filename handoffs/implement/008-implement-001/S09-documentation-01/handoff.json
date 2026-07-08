@@ -1,0 +1,74 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S09-documentation-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": {
+      "role": "planner", "vertical_planner_only": true,
+      "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor", "single_handoff_only": true,
+      "may_dispatch_workers": false, "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "polish",
+  "vertical_capability": "integration",
+  "capability_boundary": {
+    "owns": ["verification & polish tasks"],
+    "depends_on": ["S03-documentation-01", "S04-documentation-01", "S05-documentation-01", "S06-documentation-01", "S07-documentation-01", "S08-documentation-01"],
+    "must_not_touch": ["any .stories.js files", ".storybook/ config files", "SCSS source files", "package.json", "tasks.md"]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/008-implement-001/planner-outputs/integration-shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/008-implement-001/planner-outputs/integration-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/008-implement-001/planner-outputs/integration-context-digest-draft.md",
+    "vertical_capability": "integration"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-integration-01",
+    "handoff_draft_path": "handoffs/implement/008-implement-001/planner-outputs/integration-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/008-implement-001/planner-outputs/integration-context-digest-draft.md"
+  },
+  "task_ids": ["T050", "T051", "T052", "T053"],
+  "task_type": "implementation",
+  "task_text": [
+    "T050: Run `pnpm build` from packages/styles/ to ensure dist/styles.css compiles successfully",
+    "T051: Run `pnpm storybook` from packages/styles/ and verify Storybook starts on http://localhost:6006 without errors",
+    "T052: Verify no test-related addons or configurations exist — check packages/styles/.storybook/main.js addons array and packages/styles/package.json for test dependencies (FR-009 compliance check)",
+    "T053: Verify all component stories only reference pathable-* classes (no .usa-* class references) and JS-driven components include the USWDS JS dependency note (FR-012 compliance check)"
+  ],
+  "context_digest_path": "handoffs/implement/008-implement-001/S09-documentation-01/context-digest.md",
+  "context_index_path": "context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/package.json",
+    "packages/styles/.storybook/main.js",
+    "packages/styles/src/stories/",
+    "context-index.json"
+  ],
+  "allowed_write_paths": [
+    "handoffs/implement/008-implement-001/S09-documentation-01/results/"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "cd packages/styles && pnpm build",
+    "cd packages/styles && timeout 20 pnpm storybook --ci",
+    "grep -q 'addon-docs' packages/styles/.storybook/main.js && ! grep -q 'addon-interactions' packages/styles/.storybook/main.js",
+    "rg -l 'usa-' packages/styles/src/stories/ --type js | head -5"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/008-implement-001/S09-documentation-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": [
+    "edit tasks.md",
+    "edit any .stories.js files",
+    "edit .storybook/ config files",
+    "edit SCSS source files",
+    "edit package.json",
+    "dispatch workers"
+  ]
+}

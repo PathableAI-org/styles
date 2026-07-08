@@ -1,0 +1,28 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "planner_draft": true,
+  "vertical_capability": "documentation",
+  "planner_id": "planner-documentation-01",
+  "handoff_draft_paths": [
+    "handoffs/implement/008-implement-001/S01-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S02-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S03-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S04-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S05-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S06-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S07-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S08-documentation-01/handoff.json",
+    "handoffs/implement/008-implement-001/S09-documentation-01/handoff.json"
+  ],
+  "context_digest_draft_paths": [
+    "handoffs/implement/008-implement-001/S01-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S02-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S03-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S04-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S05-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S06-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S07-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S08-documentation-01/context-digest.md",
+    "handoffs/implement/008-implement-001/S09-documentation-01/context-digest.md"
+  ]
+}

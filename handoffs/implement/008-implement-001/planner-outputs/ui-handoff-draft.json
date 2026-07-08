@@ -1,0 +1,116 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "planner_draft": true,
+  "vertical_capability": "ui",
+  "planner_id": "ui-planner-008",
+  "agent_topology": {
+    "core_agent": {
+      "role": "orchestrator"
+    },
+    "vertical_planner_agent": {
+      "role": "planner",
+      "vertical_planner_only": true,
+      "may_execute_implementation": false,
+      "may_write_manifest": false,
+      "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor",
+      "single_handoff_only": true,
+      "may_dispatch_workers": false,
+      "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "worker_execution",
+  "draft_source": {
+    "vertical_planner_id": "ui-planner-008",
+    "handoff_draft_path": "handoffs/implement/008-implement-001/planner-outputs/ui-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/008-implement-001/planner-outputs/ui-context-digest-draft.md"
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/008-implement-001/planner-outputs/ui-shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/008-implement-001/planner-outputs/ui-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/008-implement-001/planner-outputs/ui-context-digest-draft.md"
+  },
+  "capability_boundary": {
+    "vertical": "ui",
+    "coverage": "Phase 5 US3 Theme only — T048 (manager.js) and T049 (manager-head.html). Covers Storybook manager chrome customization with PathAble brand colors and fonts.",
+    "owns": [
+      "packages/styles/.storybook/manager.js",
+      "packages/styles/.storybook/manager-head.html"
+    ],
+    "depends_on": [
+      "Phase 2 Foundational (T005, T006, T007) — main.js, preview.js, package.json scripts"
+    ],
+    "must_not_touch": [
+      "packages/styles/.storybook/main.js",
+      "packages/styles/.storybook/preview.js",
+      "packages/styles/package.json",
+      "packages/styles/src/",
+      "packages/styles/dist/",
+      "specs/008-storybook-documentation/tasks.md",
+      "handoffs/"
+    ]
+  },
+  "task_ids": [
+    "T048",
+    "T049"
+  ],
+  "task_type": "implementation",
+  "task_text": {
+    "T048": "Create packages/styles/.storybook/manager.js with custom PathAble theme using @storybook/theming create(). Import { addons } from '@storybook/manager-api' and { create } from '@storybook/theming'. Theme settings: brandTitle: 'Pathable Styles', brandUrl: 'https://github.com/pathableai-org/styles', colorPrimary: '#00365c', colorSecondary: '#1cae96', base: 'light', fontBase: \"'Nunito', system-ui, sans-serif\", fontCode: \"'ui-monospace', 'SFMono-Regular', monospace\", appBg: '#f8f9fa', appContentBg: '#ffffff', barBg: '#00365c', barTextColor: '#ffffff', textColor: '#1a1a1a', textMutedColor: '#6c757d'. Apply with addons.setConfig({ theme: customTheme }).",
+    "T049": "Create packages/styles/.storybook/manager-head.html with Google Fonts preconnect and stylesheet links. Include preconnect for https://fonts.googleapis.com and https://fonts.gstatic.com (for performance). Include stylesheet links for Fredoka (wght@400) and Nunito (wght@400;600) families. Preconnect links must appear before stylesheet links for optimal font loading.",
+    "T048_details": "manager.js theme values: brandTitle='Pathable Styles', brandUrl='https://github.com/pathableai-org/styles', colorPrimary='#00365c', colorSecondary='#1cae96', base='light', fontBase=\"'Nunito', system-ui, sans-serif\", fontCode=\"'ui-monospace', 'SFMono-Regular', monospace\", appBg='#f8f9fa', appContentBg='#ffffff', barBg='#00365c', barTextColor='#ffffff', textColor='#1a1a1a', textMutedColor='#6c757d'. Apply via addons.setConfig({ theme: myTheme }).",
+    "T049_details": "manager-head.html structure: two <link rel='preconnect' ...> tags followed by two <link rel='stylesheet' ...> tags. Preconnect: href='https://fonts.googleapis.com' crossorigin, href='https://fonts.gstatic.com' crossorigin. Stylesheets: https://fonts.googleapis.com/css2?family=Fredoka:wght@400&display=swap and https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap."
+  },
+  "context_digest_path": "handoffs/implement/008-implement-001/planner-outputs/ui-context-digest-draft.md",
+  "context_index_path": "handoffs/implement/008-implement-001/context-index.json",
+  "allowed_read_paths": [
+    "packages/styles/",
+    "packages/styles/.storybook/",
+    "specs/008-storybook-documentation/data-model.md",
+    "specs/008-storybook-documentation/research.md",
+    "specs/008-storybook-documentation/plan.md",
+    "specs/008-storybook-documentation/contracts/",
+    "handoffs/implement/008-implement-001/context-index.json"
+  ],
+  "allowed_write_paths": [
+    "packages/styles/.storybook/manager.js",
+    "packages/styles/.storybook/manager-head.html"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "test -f packages/styles/.storybook/manager.js && echo 'manager.js exists'",
+    "test -f packages/styles/.storybook/manager-head.html && echo 'manager-head.html exists'",
+    "rg 'create' packages/styles/.storybook/manager.js && echo 'create() used'",
+    "rg '#00365c' packages/styles/.storybook/manager.js && echo 'colorPrimary set'",
+    "rg '#1cae96' packages/styles/.storybook/manager.js && echo 'colorSecondary set'",
+    "rg 'Pathable Styles' packages/styles/.storybook/manager.js && echo 'brandTitle set'",
+    "rg 'fonts.googleapis.com' packages/styles/.storybook/manager-head.html && echo 'Google Fonts linked'",
+    "rg 'fonts.gstatic.com' packages/styles/.storybook/manager-head.html && echo 'preconnect present'",
+    "rg 'Fredoka' packages/styles/.storybook/manager-head.html && echo 'Fredoka loaded'",
+    "rg 'Nunito' packages/styles/.storybook/manager-head.html && echo 'Nunito loaded'"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/008-implement-001/results/S01-ui-01-receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": [
+      "contract_type",
+      "shard_id",
+      "task_ids",
+      "completed_task_ids",
+      "changed_paths",
+      "validation_evidence"
+    ]
+  },
+  "forbidden_actions": [
+    "Do not edit tasks.md",
+    "Do not dispatch workers",
+    "Do not create handoffs",
+    "Do not edit main.js or preview.js",
+    "Do not edit package.json",
+    "Do not edit src/ files"
+  ]
+}
