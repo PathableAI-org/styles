@@ -216,7 +216,7 @@ All tasks in this batch are [P] (each is an independent bundle file):
 - [x] T098 [P] Update `packages/styles/BRAND_RULES.md` with component wrapper naming convention section
 - [x] T099 [P] Verify AGENTS.md component wrapper section is complete (should have been updated in Phase 1)
 - [x] T100 Run final `rg '\.usa-'` across entire `apps/docs/src/` to confirm zero regressions (only comment references remain)
-- [ ] T101 Final visual regression check — verify docs site renders identically before/after refactoring
+- [ ] T101 Final visual regression check — verify docs site renders identically before/after refactoring (manual check — requires viewing docs site in browser)
 
 ---
 

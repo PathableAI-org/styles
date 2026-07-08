@@ -9,6 +9,7 @@
 
 @use 'usa-input-prefix-suffix/src/styles';
 
+.pathable-input-prefix-suffix,
 .pathable-input-group {
   @extend .usa-input-group;
 }
