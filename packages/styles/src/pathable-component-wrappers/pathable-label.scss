@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-label.scss
+//
+// Wraps usa-label component as pathable-label.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-label/src/styles';
+
+.pathable-label {
+  @extend .usa-label;
+}

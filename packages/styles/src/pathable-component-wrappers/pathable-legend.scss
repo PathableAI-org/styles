@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-legend.scss
+//
+// Wraps usa-legend component as pathable-legend.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-legend/src/styles';
+
+.pathable-legend {
+  @extend .usa-legend;
+}

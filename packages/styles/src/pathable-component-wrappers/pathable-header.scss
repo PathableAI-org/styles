@@ -1,0 +1,26 @@
+// packages/styles/src/pathable-component-wrappers/pathable-header.scss
+//
+// Wraps usa-header component as pathable-header.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — header JS selects .usa-header, .usa-nav, .usa-nav__link
+// Requires .usa-* on DOM: Yes — keep .usa-header for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-header/src/styles';
+
+.pathable-header {
+  @extend .usa-header;
+}
+
+.pathable-header--basic {
+  @extend .usa-header--basic;
+}
+
+.pathable-header--extended {
+  @extend .usa-header--extended;
+}
+
+.pathable-header--megamenu {
+  @extend .usa-header--megamenu;
+}

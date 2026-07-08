@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-prose.scss
+//
+// Wraps usa-prose component as pathable-prose.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-prose/src/styles';
+
+.pathable-prose {
+  @extend .usa-prose;
+}

@@ -1,0 +1,26 @@
+// packages/styles/src/pathable-component-wrappers/pathable-breadcrumb.scss
+//
+// Wraps usa-breadcrumb component as pathable-breadcrumb.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-breadcrumb/src/styles';
+
+.pathable-breadcrumb {
+  @extend .usa-breadcrumb;
+}
+
+.pathable-breadcrumb__list {
+  @extend .usa-breadcrumb__list;
+}
+
+.pathable-breadcrumb__list-item {
+  @extend .usa-breadcrumb__list-item;
+}
+
+.pathable-breadcrumb__link {
+  @extend .usa-breadcrumb__link;
+}

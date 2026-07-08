@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-range.scss
+//
+// Wraps usa-range component as pathable-range.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-range/src/styles';
+
+.pathable-range {
+  @extend .usa-range;
+}

@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-fieldset.scss
+//
+// Wraps usa-fieldset component as pathable-fieldset.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-fieldset/src/styles';
+
+.pathable-fieldset {
+  @extend .usa-fieldset;
+}

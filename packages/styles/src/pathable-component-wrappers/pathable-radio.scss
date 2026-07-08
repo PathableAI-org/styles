@@ -1,0 +1,25 @@
+// packages/styles/src/pathable-component-wrappers/pathable-radio.scss
+//
+// Wraps usa-radio component as pathable-radio.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-radio/src/styles';
+
+// No base .usa-radio class exists in USWDS source.
+// Only .usa-radio__input, .usa-radio__label, and .usa-radio__label-description are defined.
+
+.pathable-radio__input {
+  @extend .usa-radio__input;
+}
+
+.pathable-radio__label {
+  @extend .usa-radio__label;
+}
+
+.pathable-radio__label-description {
+  @extend .usa-radio__label-description;
+}

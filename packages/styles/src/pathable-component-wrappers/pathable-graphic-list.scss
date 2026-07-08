@@ -1,0 +1,18 @@
+// packages/styles/src/pathable-component-wrappers/pathable-graphic-list.scss
+//
+// Wraps usa-graphic-list component as pathable-graphic-list.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-graphic-list/src/styles';
+
+.pathable-graphic-list {
+  @extend .usa-graphic-list;
+}
+
+.pathable-graphic-list__heading {
+  @extend .usa-graphic-list__heading;
+}

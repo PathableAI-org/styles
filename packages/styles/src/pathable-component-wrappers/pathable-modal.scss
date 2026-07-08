@@ -1,0 +1,31 @@
+// packages/styles/src/pathable-component-wrappers/pathable-modal.scss
+//
+// Wraps usa-modal component as pathable-modal.
+// USWDS dependencies: uswds-fonts, usa-icon
+// JS-driven: Yes — modal JS selects .usa-modal, .usa-modal__close
+// Requires .usa-* on DOM: Yes — keep .usa-modal for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon';
+@use 'usa-modal/src/styles';
+
+.pathable-modal {
+  @extend .usa-modal;
+}
+
+.pathable-modal__content {
+  @extend .usa-modal__content;
+}
+
+.pathable-modal__heading {
+  @extend .usa-modal__heading;
+}
+
+.pathable-modal__footer {
+  @extend .usa-modal__footer;
+}
+
+.pathable-modal__close {
+  @extend .usa-modal__close;
+}

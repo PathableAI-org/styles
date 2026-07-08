@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-hint.scss
+//
+// Wraps usa-hint component as pathable-hint.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-hint/src/styles';
+
+.pathable-hint {
+  @extend .usa-hint;
+}

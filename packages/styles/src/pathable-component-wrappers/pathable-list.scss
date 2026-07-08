@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-list.scss
+//
+// Wraps usa-list component as pathable-list.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-list/src/styles';
+
+.pathable-list {
+  @extend .usa-list;
+}

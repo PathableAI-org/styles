@@ -11,3 +11,12 @@
 @forward '_semantic';
 // T011: Forward USWDS layout grid component to make grid-container, grid-row, grid-gap available
 @forward 'usa-layout-grid/src/styles';
+
+// Component-level CSS custom properties (dual --pathable-* / --usa-*)
+@forward 'components-custom-properties';
+
+// Component wrappers — forwards all individual component wrappers and bundle packages
+// Consumers can also import individual wrappers or bundles directly:
+//   @forward 'pathable-component-wrappers/pathable-button';
+//   @forward 'pathable-component-wrappers/pathable-form-controls';
+@forward 'pathable-component-wrappers';

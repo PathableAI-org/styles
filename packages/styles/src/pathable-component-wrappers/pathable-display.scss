@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-display.scss
+//
+// Wraps usa-display component as pathable-display.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-display/src/styles';
+
+.pathable-display {
+  @extend .usa-display;
+}

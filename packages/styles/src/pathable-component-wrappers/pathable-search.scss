@@ -1,0 +1,22 @@
+// packages/styles/src/pathable-component-wrappers/pathable-search.scss
+//
+// Wraps usa-search component as pathable-search.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — search JS may enhance search behavior
+// Requires .usa-* on DOM: Yes — keep .usa-search for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-search/src/styles';
+
+.pathable-search {
+  @extend .usa-search;
+}
+
+.pathable-search--big {
+  @extend .usa-search--big;
+}
+
+.pathable-search--small {
+  @extend .usa-search--small;
+}

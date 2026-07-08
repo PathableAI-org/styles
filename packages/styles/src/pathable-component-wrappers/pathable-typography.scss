@@ -1,0 +1,13 @@
+// packages/styles/src/pathable-component-wrappers/pathable-typography.scss
+//
+// Bundle package: all typography-related component wrappers.
+// Forwards individual component wrappers for selective import.
+
+@forward 'pathable-content';
+@forward 'pathable-dark-background';
+@forward 'pathable-display';
+@forward 'pathable-intro';
+@forward 'pathable-link';
+@forward 'pathable-list';
+@forward 'pathable-paragraph';
+@forward 'pathable-prose';

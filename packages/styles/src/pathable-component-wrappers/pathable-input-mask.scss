@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-input-mask.scss
+//
+// Wraps usa-input-mask component as pathable-input-mask.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — input-mask JS manages mask formatting
+// Requires .usa-* on DOM: Yes — keep .usa-input-mask for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-input-mask/src/styles';
+
+.pathable-input-mask {
+  @extend .usa-input-mask;
+}

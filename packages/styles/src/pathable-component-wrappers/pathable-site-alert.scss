@@ -1,0 +1,27 @@
+// packages/styles/src/pathable-component-wrappers/pathable-site-alert.scss
+//
+// Wraps usa-site-alert component as pathable-site-alert.
+// USWDS dependencies: uswds-fonts, usa-icon
+// JS-driven: Yes — site-alert JS may handle dismiss
+// Requires .usa-* on DOM: Yes — keep .usa-site-alert for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon';
+@use 'usa-site-alert/src/styles';
+
+.pathable-site-alert {
+  @extend .usa-site-alert;
+}
+
+.pathable-site-alert--info {
+  @extend .usa-site-alert--info;
+}
+
+.pathable-site-alert--emergency {
+  @extend .usa-site-alert--emergency;
+}
+
+.pathable-site-alert--slim {
+  @extend .usa-site-alert--slim;
+}

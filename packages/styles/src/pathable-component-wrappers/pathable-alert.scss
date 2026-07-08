@@ -1,0 +1,43 @@
+// packages/styles/src/pathable-component-wrappers/pathable-alert.scss
+//
+// Wraps usa-alert component as pathable-alert.
+// USWDS dependencies: uswds-fonts, usa-icon
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon';
+@use 'usa-alert/src/styles';
+
+.pathable-alert {
+  @extend .usa-alert;
+}
+
+.pathable-alert--info {
+  @extend .usa-alert--info;
+}
+
+.pathable-alert--warning {
+  @extend .usa-alert--warning;
+}
+
+.pathable-alert--error {
+  @extend .usa-alert--error;
+}
+
+.pathable-alert--success {
+  @extend .usa-alert--success;
+}
+
+.pathable-alert--emergency {
+  @extend .usa-alert--emergency;
+}
+
+.pathable-alert--slim {
+  @extend .usa-alert--slim;
+}
+
+.pathable-alert__body {
+  @extend .usa-alert__body;
+}

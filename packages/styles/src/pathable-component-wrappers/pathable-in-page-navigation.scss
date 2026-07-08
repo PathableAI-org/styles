@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-in-page-navigation.scss
+//
+// Wraps usa-in-page-navigation component as pathable-in-page-navigation.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — in-page-nav JS manages scroll tracking
+// Requires .usa-* on DOM: Yes — keep .usa-in-page-nav for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-in-page-navigation/src/styles';
+
+.pathable-in-page-navigation {
+  @extend .usa-in-page-nav;
+}

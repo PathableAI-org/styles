@@ -1,0 +1,30 @@
+// packages/styles/src/pathable-component-wrappers/pathable-nav.scss
+//
+// Wraps usa-nav component as pathable-nav.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — nav JS selects .usa-nav, .usa-nav__link
+// Requires .usa-* on DOM: Yes — keep .usa-nav for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-nav/src/styles';
+
+.pathable-nav {
+  @extend .usa-nav;
+}
+
+.pathable-nav__primary {
+  @extend .usa-nav__primary;
+}
+
+.pathable-nav__submenu {
+  @extend .usa-nav__submenu;
+}
+
+.pathable-nav__secondary {
+  @extend .usa-nav__secondary;
+}
+
+.pathable-nav__secondary-links {
+  @extend .usa-nav__secondary-links;
+}

@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-intro.scss
+//
+// Wraps usa-intro component as pathable-intro.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-intro/src/styles';
+
+.pathable-intro {
+  @extend .usa-intro;
+}

@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-combo-box.scss
+//
+// Wraps usa-combo-box component as pathable-combo-box.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — combo-box JS manages dropdown
+// Requires .usa-* on DOM: Yes — keep .usa-combo-box for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-combo-box/src/styles';
+
+.pathable-combo-box {
+  @extend .usa-combo-box;
+}

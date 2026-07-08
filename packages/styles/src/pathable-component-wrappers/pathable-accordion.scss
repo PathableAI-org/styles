@@ -1,0 +1,27 @@
+// packages/styles/src/pathable-component-wrappers/pathable-accordion.scss
+//
+// Wraps usa-accordion component as pathable-accordion.
+// USWDS dependencies: uswds-fonts, usa-icon
+// JS-driven: Yes — accordion JS selects .usa-accordion__button
+// Requires .usa-* on DOM: Yes — keep .usa-accordion for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon';
+@use 'usa-accordion/src/styles';
+
+.pathable-accordion {
+  @extend .usa-accordion;
+}
+
+.pathable-accordion__heading {
+  @extend .usa-accordion__heading;
+}
+
+.pathable-accordion__button {
+  @extend .usa-accordion__button;
+}
+
+.pathable-accordion__content {
+  @extend .usa-accordion__content;
+}

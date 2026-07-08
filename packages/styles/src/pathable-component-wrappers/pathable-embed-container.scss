@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-embed-container.scss
+//
+// Wraps usa-embed-container component as pathable-embed-container.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-embed-container/src/styles';
+
+.pathable-embed-container {
+  @extend .usa-embed-container;
+}

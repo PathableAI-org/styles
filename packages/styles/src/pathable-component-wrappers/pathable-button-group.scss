@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-button-group.scss
+//
+// Wraps usa-button-group component as pathable-button-group.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-button-group/src/styles';
+
+.pathable-button-group {
+  @extend .usa-button-group;
+}

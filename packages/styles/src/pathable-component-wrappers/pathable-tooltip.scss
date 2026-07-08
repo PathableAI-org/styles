@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-tooltip.scss
+//
+// Wraps usa-tooltip component as pathable-tooltip.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — tooltip JS selects .usa-tooltip
+// Requires .usa-* on DOM: Yes — keep .usa-tooltip for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-tooltip/src/styles';
+
+.pathable-tooltip {
+  @extend .usa-tooltip;
+}

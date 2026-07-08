@@ -1,0 +1,31 @@
+// packages/styles/src/pathable-component-wrappers/pathable-layout-grid.scss
+//
+// Wraps usa-layout-grid component as pathable-layout-grid.
+// Maps .grid-container, .grid-row, .grid-col, .grid-gap → .pathable-grid-* equivalents
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-layout-grid/src/styles';
+
+.pathable-grid-container {
+  @extend .grid-container;
+}
+
+.pathable-grid-row {
+  @extend .grid-row;
+}
+
+.pathable-grid-col {
+  @extend .grid-col;
+}
+
+.pathable-grid-gap {
+  @extend .grid-gap;
+}
+
+.pathable-grid-col-auto {
+  @extend .grid-col-auto;
+}

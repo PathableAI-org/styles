@@ -1,0 +1,18 @@
+// packages/styles/src/pathable-component-wrappers/pathable-tag.scss
+//
+// Wraps usa-tag component as pathable-tag.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-tag/src/styles';
+
+.pathable-tag {
+  @extend .usa-tag;
+}
+
+.pathable-tag--big {
+  @extend .usa-tag--big;
+}

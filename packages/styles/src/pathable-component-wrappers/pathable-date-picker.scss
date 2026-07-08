@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-date-picker.scss
+//
+// Wraps usa-date-picker component as pathable-date-picker.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — date-picker JS manages calendar
+// Requires .usa-* on DOM: Yes — keep .usa-date-picker for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-date-picker/src/styles';
+
+// No base .usa-date-picker class exists in USWDS source.
+// Only .usa-date-picker__wrapper, .usa-date-picker--active, and child elements are defined.
+// JS-driven component — keep .usa-date-picker on DOM for JS to find elements.

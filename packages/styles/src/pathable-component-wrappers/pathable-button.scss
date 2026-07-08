@@ -1,0 +1,46 @@
+// packages/styles/src/pathable-component-wrappers/pathable-button.scss
+//
+// Wraps usa-button component as pathable-button.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-button/src/styles';
+
+.pathable-button {
+  @extend .usa-button;
+}
+
+.pathable-button--accent-cool {
+  @extend .usa-button--accent-cool;
+}
+
+.pathable-button--accent-warm {
+  @extend .usa-button--accent-warm;
+}
+
+.pathable-button--outline {
+  @extend .usa-button--outline;
+}
+
+.pathable-button--inverse {
+  @extend .usa-button--inverse;
+}
+
+.pathable-button--base {
+  @extend .usa-button--base;
+}
+
+.pathable-button--secondary {
+  @extend .usa-button--secondary;
+}
+
+.pathable-button--big {
+  @extend .usa-button--big;
+}
+
+.pathable-button--unstyled {
+  @extend .usa-button--unstyled;
+}

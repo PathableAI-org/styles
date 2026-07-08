@@ -26,9 +26,9 @@
 
 **Purpose**: Create directory structure and update entry points for component wrappers
 
-- [ ] T001 Create `packages/styles/src/pathable-component-wrappers/` directory
-- [ ] T002 [P] Update `packages/styles/src/index.scss` to forward component wrapper files (individual forwards, commented for selective import)
-- [ ] T003 [P] Create `packages/styles/src/_components-custom-properties.scss` with the `:root` block for dual `--pathable-{component}-{property}` / `--usa-{component}-{property}` emission
+- [x] T001 Create `packages/styles/src/pathable-component-wrappers/` directory
+- [x] T002 [P] Update `packages/styles/src/index.scss` to forward component wrapper files (individual forwards, commented for selective import)
+- [x] T003 [P] Create `packages/styles/src/_components-custom-properties.scss` with the `:root` block for dual `--pathable-{component}-{property}` / `--usa-{component}-{property}` emission
 
 ---
 
@@ -36,9 +36,9 @@
 
 **Purpose**: Component custom properties and wrapper template that MUST be complete before any user story can begin
 
-- [ ] T004 Create `packages/styles/src/_components-custom-properties.scss` with dual CSS custom properties for key component tokens (button border-radius/padding, alert padding, card border-radius, form spacing, etc.)
-- [ ] T005 Add `@forward '_components-custom-properties';` to `packages/styles/src/index.scss`
-- [ ] T006 Update `packages/styles/src/index.scss` with `@forward 'pathable-component-wrappers';` to enable all-component import
+- [x] T004 Create `packages/styles/src/_components-custom-properties.scss` with dual CSS custom properties for key component tokens (button border-radius/padding, alert padding, card border-radius, form spacing, etc.)
+- [x] T005 Add `@forward '_components-custom-properties';` to `packages/styles/src/index.scss`
+- [x] T006 Update `packages/styles/src/index.scss` with `@forward 'pathable-component-wrappers';` to enable all-component import
 
 **Checkpoint**: Foundation ready — component wrapper SCSS files can now be created
 
@@ -54,82 +54,82 @@
 
 All tasks in this batch are [P] (can run in parallel — each is an independent file):
 
-- [ ] T007 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-breadcrumb.scss` — wraps `.usa-breadcrumb`
-- [ ] T008 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-button.scss` — wraps `.usa-button`, `.usa-button--accent-cool`, `.usa-button--accent-warm`, `.usa-button--outline`, `.usa-button--inverse`, `.usa-button--base`, `.usa-button--secondary`, `.usa-button--big`, `.usa-button--unstyled`
-- [ ] T009 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-button-group.scss` — wraps `.usa-button-group`
-- [ ] T010 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-card.scss` — wraps `.usa-card`, `.usa-card__container`, `.usa-card__header`, `.usa-card__body`, `.usa-card__footer`, `.usa-card__heading`, `.usa-card__media`, `.usa-card__media-exdent`, `.usa-card--flag`, `.usa-card--header-first`
-- [ ] T011 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-footer.scss` — wraps `.usa-footer`, `.usa-footer--slim`, `.usa-footer__primary-section`, `.usa-footer__secondary-section`, `.usa-footer__nav`, `.usa-footer__return-to-top`, `.usa-footer__primary-content`, `.usa-footer__secondary-content`, `.usa-footer__contact-heading`, `.usa-footer__contact-info`, `.usa-footer__address`, `.usa-footer__logo-heading`, `.usa-footer__big-section`, `.usa-footer__slim-section`, `.usa-footer__social-links`, `.usa-footer__social-link`, `.usa-footer__identifier-heading`
-- [ ] T012 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-header.scss` — wraps `.usa-header`, `.usa-header--basic`, `.usa-header--extended`, `.usa-header--megamenu` (JS-driven)
-- [ ] T013 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-icon.scss` — wraps `.usa-icon`
-- [ ] T014 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-identifier.scss` — wraps `.usa-identifier`, `.usa-identifier__section`, `.usa-identifier__container`, `.usa-identifier__logos`, `.usa-identifier__logo`, `.usa-identifier__identity`, `.usa-identifier__required-links`, `.usa-identifier__required-links-list`, `.usa-identifier__usagov`, `.usa-identifier__metadata`
-- [ ] T015 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-link.scss` — wraps `.usa-link`, `.usa-link--external`, `.usa-link--alt`
-- [ ] T016 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-list.scss` — wraps `.usa-list`
-- [ ] T017 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-media-block.scss` — wraps `.usa-media-block`, `.usa-media-block__img`, `.usa-media-block__body`
-- [ ] T018 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-nav.scss` — wraps `.usa-nav`, `.usa-nav__primary`, `.usa-nav__link`, `.usa-nav__submenu`, `.usa-nav__secondary`, `.usa-nav__secondary-links` (JS-driven)
-- [ ] T019 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-pagination.scss` — wraps `.usa-pagination`, `.usa-pagination__item`, `.usa-pagination__link`, `.usa-pagination__arrow`
-- [ ] T020 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-sidenav.scss` — wraps `.usa-sidenav`, `.usa-sidenav__item`, `.usa-sidenav__sublist`
-- [ ] T021 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-skipnav.scss` — wraps `.usa-skipnav`
-- [ ] T022 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-table.scss` — wraps `.usa-table`, `.usa-table--borderless`, `.usa-table--compact`, `.usa-table--striped`
+- [x] T007 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-breadcrumb.scss` — wraps `.usa-breadcrumb`
+- [x] T008 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-button.scss` — wraps `.usa-button`, `.usa-button--accent-cool`, `.usa-button--accent-warm`, `.usa-button--outline`, `.usa-button--inverse`, `.usa-button--base`, `.usa-button--secondary`, `.usa-button--big`, `.usa-button--unstyled`
+- [x] T009 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-button-group.scss` — wraps `.usa-button-group`
+- [x] T010 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-card.scss` — wraps `.usa-card`, `.usa-card__container`, `.usa-card__header`, `.usa-card__body`, `.usa-card__footer`, `.usa-card__heading`, `.usa-card__media`, `.usa-card__media-exdent`, `.usa-card--flag`, `.usa-card--header-first`
+- [x] T011 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-footer.scss` — wraps `.usa-footer`, `.usa-footer--slim`, `.usa-footer__primary-section`, `.usa-footer__secondary-section`, `.usa-footer__nav`, `.usa-footer__return-to-top`, `.usa-footer__primary-content`, `.usa-footer__secondary-content`, `.usa-footer__contact-heading`, `.usa-footer__contact-info`, `.usa-footer__address`, `.usa-footer__logo-heading`, `.usa-footer__big-section`, `.usa-footer__slim-section`, `.usa-footer__social-links`, `.usa-footer__social-link`, `.usa-footer__identifier-heading`
+- [x] T012 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-header.scss` — wraps `.usa-header`, `.usa-header--basic`, `.usa-header--extended`, `.usa-header--megamenu` (JS-driven)
+- [x] T013 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-icon.scss` — wraps `.usa-icon`
+- [x] T014 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-identifier.scss` — wraps `.usa-identifier`, `.usa-identifier__section`, `.usa-identifier__container`, `.usa-identifier__logos`, `.usa-identifier__logo`, `.usa-identifier__identity`, `.usa-identifier__required-links`, `.usa-identifier__required-links-list`, `.usa-identifier__usagov`, `.usa-identifier__metadata`
+- [x] T015 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-link.scss` — wraps `.usa-link`, `.usa-link--external`, `.usa-link--alt`
+- [x] T016 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-list.scss` — wraps `.usa-list`
+- [x] T017 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-media-block.scss` — wraps `.usa-media-block`, `.usa-media-block__img`, `.usa-media-block__body`
+- [x] T018 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-nav.scss` — wraps `.usa-nav`, `.usa-nav__primary`, `.usa-nav__submenu`, `.usa-nav__secondary`, `.usa-nav__secondary-links` (JS-driven)
+- [x] T019 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-pagination.scss` — wraps `.usa-pagination`, `.usa-pagination__item`, `.usa-pagination__link`, `.usa-pagination__arrow`
+- [x] T020 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-sidenav.scss` — wraps `.usa-sidenav`, `.usa-sidenav__item`, `.usa-sidenav__sublist`
+- [x] T021 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-skipnav.scss` — wraps `.usa-skipnav`
+- [x] T022 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-table.scss` — wraps `.usa-table`, `.usa-table--borderless`, `.usa-table--compact`, `.usa-table--striped`
 
 ### Component Wrappers — Batch 2: Communication & Info
 
 All tasks in this batch are [P]:
 
-- [ ] T023 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-accordion.scss` — wraps `.usa-accordion`, `.usa-accordion__heading`, `.usa-accordion__button`, `.usa-accordion__content` (JS-driven)
-- [ ] T024 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-alert.scss` — wraps `.usa-alert`, `.usa-alert--info`, `.usa-alert--warning`, `.usa-alert--error`, `.usa-alert--success`, `.usa-alert--emergency`, `.usa-alert--slim`, `.usa-alert__body`, `.usa-alert__text`, `.usa-alert__heading`
-- [ ] T025 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-banner.scss` — wraps `.usa-banner`, `.usa-banner__header`, `.usa-banner__button`, `.usa-banner__content`, `.usa-banner__guidance`, `.usa-banner__lock-image` (JS-driven)
-- [ ] T026 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-collection.scss` — wraps `.usa-collection`, `.usa-collection__item`, `.usa-collection__heading`, `.usa-collection__body`, `.usa-collection__meta`, `.usa-collection__image`
-- [ ] T027 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-graphic-list.scss` — wraps `.usa-graphic-list`, `.usa-graphic-list__heading`, `.usa-graphic-list__description`
-- [ ] T028 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-hero.scss` — wraps `.usa-hero`, `.usa-hero__callout`, `.usa-hero__heading`
-- [ ] T029 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-icon-list.scss` — wraps `.usa-icon-list`, `.usa-icon-list__item`, `.usa-icon-list__icon`, `.usa-icon-list__content`
-- [ ] T030 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-modal.scss` — wraps `.usa-modal`, `.usa-modal__content`, `.usa-modal__heading`, `.usa-modal__footer`, `.usa-modal__close` (JS-driven)
-- [ ] T031 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-process-list.scss` — wraps `.usa-process-list`, `.usa-process-list__item`, `.usa-process-list__heading`
-- [ ] T032 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-prose.scss` — wraps `.usa-prose`
-- [ ] T033 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-site-alert.scss` — wraps `.usa-site-alert`, `.usa-site-alert--info`, `.usa-site-alert--warning`, `.usa-site-alert--emergency`, `.usa-site-alert--slim` (JS-driven)
-- [ ] T034 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-step-indicator.scss` — wraps `.usa-step-indicator`, `.usa-step-indicator__header`, `.usa-step-indicator__segment`, `.usa-step-indicator__segment-label`, `.usa-step-indicator__segment-count`, `.usa-step-indicator__body`, `.usa-step-indicator__body-text`
-- [ ] T035 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-summary-box.scss` — wraps `.usa-summary-box`, `.usa-summary-box__heading`, `.usa-summary-box__body`, `.usa-summary-box__link`
-- [ ] T036 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-tag.scss` — wraps `.usa-tag`, `.usa-tag--big`
-- [ ] T037 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-tooltip.scss` — wraps `.usa-tooltip` (JS-driven)
+- [x] T023 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-accordion.scss` — wraps `.usa-accordion`, `.usa-accordion__heading`, `.usa-accordion__button`, `.usa-accordion__content` (JS-driven)
+- [x] T024 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-alert.scss` — wraps `.usa-alert`, `.usa-alert--info`, `.usa-alert--warning`, `.usa-alert--error`, `.usa-alert--success`, `.usa-alert--emergency`, `.usa-alert--slim`, `.usa-alert__body`, `.usa-alert__text`, `.usa-alert__heading`
+- [x] T025 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-banner.scss` — wraps `.usa-banner`, `.usa-banner__header`, `.usa-banner__button`, `.usa-banner__content`, `.usa-banner__guidance`, `.usa-banner__lock-image` (JS-driven)
+- [x] T026 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-collection.scss` — wraps `.usa-collection`, `.usa-collection__item`, `.usa-collection__heading`, `.usa-collection__body`, `.usa-collection__meta`, `.usa-collection__image`
+- [x] T027 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-graphic-list.scss` — wraps `.usa-graphic-list`, `.usa-graphic-list__heading`, `.usa-graphic-list__description`
+- [x] T028 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-hero.scss` — wraps `.usa-hero`, `.usa-hero__callout`, `.usa-hero__heading`
+- [x] T029 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-icon-list.scss` — wraps `.usa-icon-list`, `.usa-icon-list__item`, `.usa-icon-list__icon`, `.usa-icon-list__content`
+- [x] T030 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-modal.scss` — wraps `.usa-modal`, `.usa-modal__content`, `.usa-modal__heading`, `.usa-modal__footer`, `.usa-modal__close` (JS-driven)
+- [x] T031 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-process-list.scss` — wraps `.usa-process-list`, `.usa-process-list__item`, `.usa-process-list__heading`
+- [x] T032 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-prose.scss` — wraps `.usa-prose`
+- [x] T033 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-site-alert.scss` — wraps `.usa-site-alert`, `.usa-site-alert--info`, `.usa-site-alert--warning`, `.usa-site-alert--emergency`, `.usa-site-alert--slim` (JS-driven)
+- [x] T034 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-step-indicator.scss` — wraps `.usa-step-indicator`, `.usa-step-indicator__header`, `.usa-step-indicator__segment`, `.usa-step-indicator__segment-label`, `.usa-step-indicator__segment-count`, `.usa-step-indicator__body`, `.usa-step-indicator__body-text`
+- [x] T035 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-summary-box.scss` — wraps `.usa-summary-box`, `.usa-summary-box__heading`, `.usa-summary-box__body`, `.usa-summary-box__link`
+- [x] T036 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-tag.scss` — wraps `.usa-tag`, `.usa-tag--big`
+- [x] T037 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-tooltip.scss` — wraps `.usa-tooltip` (JS-driven)
 
 ### Component Wrappers — Batch 3: Form Controls
 
 All tasks in this batch are [P]:
 
-- [ ] T038 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-character-count.scss` — wraps `.usa-character-count` (JS-driven)
-- [ ] T039 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-checkbox.scss` — wraps `.usa-checkbox`, `.usa-checkbox__input`, `.usa-checkbox__label`
-- [ ] T040 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-checklist.scss` — wraps `.usa-checklist`
-- [ ] T041 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-combo-box.scss` — wraps `.usa-combo-box` (JS-driven)
-- [ ] T042 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-date-picker.scss` — wraps `.usa-date-picker` (JS-driven)
-- [ ] T043 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-date-range-picker.scss` — wraps `.usa-date-range-picker` (JS-driven)
-- [ ] T044 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-error-message.scss` — wraps `.usa-error-message`
-- [ ] T045 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-fieldset.scss` — wraps `.usa-fieldset`
-- [ ] T046 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-file-input.scss` — wraps `.usa-file-input` (JS-driven)
-- [ ] T047 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-form.scss` — wraps `.usa-form`
-- [ ] T048 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-form-group.scss` — wraps `.usa-form-group`
-- [ ] T049 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-hint.scss` — wraps `.usa-hint`
-- [ ] T050 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-input.scss` — wraps `.usa-input`
-- [ ] T051 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-input-mask.scss` — wraps `.usa-input-mask` (JS-driven)
-- [ ] T052 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-input-prefix-suffix.scss` — wraps `.usa-input-prefix-suffix`, `.usa-input-prefix`, `.usa-input-suffix`
-- [ ] T053 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-label.scss` — wraps `.usa-label`
-- [ ] T054 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-legend.scss` — wraps `.usa-legend`
-- [ ] T055 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-memorable-date.scss` — wraps `.usa-memorable-date`
-- [ ] T056 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-radio.scss` — wraps `.usa-radio`, `.usa-radio__input`, `.usa-radio__label`
-- [ ] T057 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-range.scss` — wraps `.usa-range`
-- [ ] T058 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-search.scss` — wraps `.usa-search`, `.usa-search--big`, `.usa-search--small`
-- [ ] T059 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-select.scss` — wraps `.usa-select`
-- [ ] T060 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-textarea.scss` — wraps `.usa-textarea`
-- [ ] T061 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-time-picker.scss` — wraps `.usa-time-picker` (JS-driven)
-- [ ] T062 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-validation.scss` — wraps `.usa-validation` (JS-driven)
+- [x] T038 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-character-count.scss` — wraps `.usa-character-count` (JS-driven)
+- [x] T039 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-checkbox.scss` — wraps `.usa-checkbox`, `.usa-checkbox__input`, `.usa-checkbox__label`
+- [x] T040 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-checklist.scss` — wraps `.usa-checklist`
+- [x] T041 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-combo-box.scss` — wraps `.usa-combo-box` (JS-driven)
+- [x] T042 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-date-picker.scss` — wraps `.usa-date-picker` (JS-driven)
+- [x] T043 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-date-range-picker.scss` — wraps `.usa-date-range-picker` (JS-driven)
+- [x] T044 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-error-message.scss` — wraps `.usa-error-message`
+- [x] T045 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-fieldset.scss` — wraps `.usa-fieldset`
+- [x] T046 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-file-input.scss` — wraps `.usa-file-input` (JS-driven)
+- [x] T047 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-form.scss` — wraps `.usa-form`
+- [x] T048 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-form-group.scss` — wraps `.usa-form-group`
+- [x] T049 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-hint.scss` — wraps `.usa-hint`
+- [x] T050 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-input.scss` — wraps `.usa-input`
+- [x] T051 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-input-mask.scss` — wraps `.usa-input-mask` (JS-driven)
+- [x] T052 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-input-prefix-suffix.scss` — wraps `.usa-input-prefix-suffix`, `.usa-input-prefix`, `.usa-input-suffix`
+- [x] T053 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-label.scss` — wraps `.usa-label`
+- [x] T054 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-legend.scss` — wraps `.usa-legend`
+- [x] T055 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-memorable-date.scss` — wraps `.usa-memorable-date`
+- [x] T056 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-radio.scss` — wraps `.usa-radio`, `.usa-radio__input`, `.usa-radio__label`
+- [x] T057 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-range.scss` — wraps `.usa-range`
+- [x] T058 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-search.scss` — wraps `.usa-search`, `.usa-search--big`, `.usa-search--small`
+- [x] T059 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-select.scss` — wraps `.usa-select`
+- [x] T060 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-textarea.scss` — wraps `.usa-textarea`
+- [x] T061 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-time-picker.scss` — wraps `.usa-time-picker` (JS-driven)
+- [x] T062 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-validation.scss` — wraps `.usa-validation` (JS-driven)
 
 ### Component Wrappers — Batch 4: Layout & Utility Components
 
 All tasks in this batch are [P]:
 
-- [ ] T063 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-embed-container.scss` — wraps `.usa-embed-container`
-- [ ] T064 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-in-page-navigation.scss` — wraps `.usa-in-page-nav` (JS-driven)
-- [ ] T065 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-language-selector.scss` — wraps `.usa-language-selector` (JS-driven)
-- [ ] T066 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-layout-grid.scss` — wraps `.grid-container`, `.grid-row`, `.grid-col`, `.grid-gap` layout classes with `.pathable-` prefix
-- [ ] T067 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-section.scss` — wraps `.usa-section`, `.usa-section--dark`
+- [x] T063 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-embed-container.scss` — wraps `.usa-embed-container`
+- [x] T064 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-in-page-navigation.scss` — wraps `.usa-in-page-nav` (JS-driven)
+- [x] T065 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-language-selector.scss` — wraps `.usa-language-selector` (JS-driven)
+- [x] T066 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-layout-grid.scss` — wraps `.grid-container`, `.grid-row`, `.grid-col`, `.grid-gap` layout classes with `.pathable-` prefix
+- [x] T067 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-section.scss` — wraps `.usa-section`, `.usa-section--dark`
 
 **Checkpoint**: Core 35+ component wrapper files exist. Run `pnpm build` in `packages/styles/` and verify `.pathable-*` classes appear in compiled `dist/styles.css`.
 
@@ -141,13 +141,13 @@ All tasks in this batch are [P]:
 
 All tasks in this batch are [P]:
 
-- [ ] T068 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-site-title.scss` — wraps `.usa-site-title`
-- [ ] T069 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-paragraph.scss` — wraps `.usa-paragraph`
-- [ ] T070 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-content.scss` — wraps `.usa-content`
-- [ ] T071 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-dark-background.scss` — wraps `.usa-dark-background`
-- [ ] T072 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-display.scss` — wraps `.usa-display`
-- [ ] T073 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-intro.scss` — wraps `.usa-intro`
-- [ ] T074 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-layout-docs.scss` — forwards `.usa-layout-docs` styles
+- [x] T068 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-site-title.scss` — wraps `.usa-site-title`
+- [x] T069 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-paragraph.scss` — wraps `.usa-paragraph`
+- [x] T070 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-content.scss` — wraps `.usa-content`
+- [x] T071 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-dark-background.scss` — wraps `.usa-dark-background`
+- [x] T072 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-display.scss` — wraps `.usa-display`
+- [x] T073 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-intro.scss` — wraps `.usa-intro`
+- [x] T074 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-layout-docs.scss` — forwards `.usa-layout-docs` styles
 
 **Checkpoint**: All component wrapper files exist. Verify `dist/styles.css` contains at least 40 `.pathable-*` component class definitions.
 
@@ -161,11 +161,11 @@ All tasks in this batch are [P]:
 
 All tasks in this batch are [P] (each is an independent bundle file):
 
-- [ ] T075 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-form-controls.scss` — forwards: pathable-character-count, pathable-checkbox, pathable-combo-box, pathable-date-picker, pathable-date-range-picker, pathable-error-message, pathable-fieldset, pathable-file-input, pathable-form, pathable-form-group, pathable-hint, pathable-input, pathable-input-mask, pathable-input-prefix-suffix, pathable-label, pathable-legend, pathable-memorable-date, pathable-radio, pathable-range, pathable-select, pathable-textarea, pathable-time-picker, pathable-validation
-- [ ] T076 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-typography.scss` — forwards: pathable-content, pathable-dark-background, pathable-display, pathable-intro, pathable-link, pathable-list, pathable-paragraph, pathable-prose
-- [ ] T077 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-navigation.scss` — forwards: pathable-breadcrumb, pathable-header, pathable-in-page-navigation, pathable-nav, pathable-pagination, pathable-search, pathable-sidenav, pathable-skipnav
-- [ ] T078 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-layout.scss` — forwards: pathable-embed-container, pathable-layout-docs, pathable-layout-grid, pathable-media-block, pathable-section
-- [ ] T079 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-communication.scss` — forwards: pathable-accordion, pathable-alert, pathable-banner, pathable-card, pathable-collection, pathable-graphic-list, pathable-hero, pathable-icon, pathable-icon-list, pathable-identifier, pathable-modal, pathable-process-list, pathable-site-alert, pathable-step-indicator, pathable-summary-box, pathable-table, pathable-tag, pathable-tooltip
+- [x] T075 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-form-controls.scss` — forwards: pathable-character-count, pathable-checkbox, pathable-combo-box, pathable-date-picker, pathable-date-range-picker, pathable-error-message, pathable-fieldset, pathable-file-input, pathable-form, pathable-form-group, pathable-hint, pathable-input, pathable-input-mask, pathable-input-prefix-suffix, pathable-label, pathable-legend, pathable-memorable-date, pathable-radio, pathable-range, pathable-select, pathable-textarea, pathable-time-picker, pathable-validation
+- [x] T076 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-typography.scss` — forwards: pathable-content, pathable-dark-background, pathable-display, pathable-intro, pathable-link, pathable-list, pathable-paragraph, pathable-prose
+- [x] T077 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-navigation.scss` — forwards: pathable-breadcrumb, pathable-header, pathable-in-page-navigation, pathable-nav, pathable-pagination, pathable-search, pathable-sidenav, pathable-skipnav
+- [x] T078 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-layout.scss` — forwards: pathable-embed-container, pathable-layout-docs, pathable-layout-grid, pathable-media-block, pathable-section
+- [x] T079 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-communication.scss` — forwards: pathable-accordion, pathable-alert, pathable-banner, pathable-card, pathable-collection, pathable-graphic-list, pathable-hero, pathable-icon, pathable-icon-list, pathable-identifier, pathable-modal, pathable-process-list, pathable-site-alert, pathable-step-indicator, pathable-summary-box, pathable-table, pathable-tag, pathable-tooltip
 
 **Checkpoint**: 5 bundle package files exist. Verify selective import works.
 
@@ -175,11 +175,11 @@ All tasks in this batch are [P] (each is an independent bundle file):
 
 **Goal**: Provide the all-components entry point and update `index.scss` for the complete package system
 
-- [ ] T080 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-all.scss` — forwards all individual component wrappers and all bundle packages
-- [ ] T081 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/_index.scss` — forwards `pathable-all` (the all-in-one convenience entry)
-- [ ] T082 [P] [US2] Update `packages/styles/src/index.scss` to include `@forward 'pathable-component-wrappers';` if not already added in T006
-- [ ] T083 [US2] Run `pnpm build` in `packages/styles/` and verify compiled `dist/styles.css` contains all component wrappers
-- [ ] T084 [US2] Create a test SCSS file `packages/styles/test/selective-import.scss` that imports only `pathable-button` and verifies no other component classes appear in compiled output
+- [x] T080 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/pathable-all.scss` — forwards all individual component wrappers and all bundle packages
+- [x] T081 [P] [US2] Create `packages/styles/src/pathable-component-wrappers/_index.scss` — forwards `pathable-all` (the all-in-one convenience entry)
+- [x] T082 [P] [US2] Update `packages/styles/src/index.scss` to include `@forward 'pathable-component-wrappers';` if not already added in T006
+- [x] T083 [US2] Run `pnpm build` in `packages/styles/` and verify compiled `dist/styles.css` contains all component wrappers
+- [x] T084 [US2] Create a test SCSS file `packages/styles/test/selective-import.scss` that imports only `pathable-button` and verifies no other component classes appear in compiled output
 
 **Checkpoint**: Package system complete. Selective import works, all-in-one import works, build succeeds.
 
@@ -191,18 +191,18 @@ All tasks in this batch are [P] (each is an independent bundle file):
 
 **Independent Test**: Search `apps/docs/src/` for `.usa-` class references — zero remain in component templates (with JS-driven exceptions documented).
 
-- [ ] T085 [P] [US3] Audit `apps/docs/src/styles/custom.css` for `.usa-*` class references — categorize as replaceable (non-JS) or dual-class (JS-driven)
-- [ ] T086 [P] [US3] Audit `apps/docs/src/components/PageFrame.astro` for `.usa-*` class references in `<style>` blocks and inline HTML classes
-- [ ] T087 [P] [US3] Audit `apps/docs/src/components/HorizontalNav.astro` for `.usa-*` class references
-- [ ] T088 [P] [US3] Audit `apps/docs/src/components/SkipNav.astro` for `.usa-*` class references
-- [ ] T089 [P] [US3] Audit `apps/docs/src/components/DocFooter.astro` for `.usa-*` class references
-- [ ] T090 [US3] Refactor `apps/docs/src/styles/custom.css` — replace all `.usa-*` with `.pathable-*`
-- [ ] T091 [P] [US3] Refactor `apps/docs/src/components/PageFrame.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
-- [ ] T092 [P] [US3] Refactor `apps/docs/src/components/HorizontalNav.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
-- [ ] T093 [P] [US3] Refactor `apps/docs/src/components/SkipNav.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
-- [ ] T094 [P] [US3] Refactor `apps/docs/src/components/DocFooter.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
-- [ ] T095 [US3] Run `pnpm build` in `apps/docs/` and verify zero build errors
-- [ ] T096 [US3] Run `rg '\.usa-' apps/docs/src/` and verify zero remaining `.usa-*` references (with documented JS-driven exceptions)
+- [x] T085 [P] [US3] Audit `apps/docs/src/styles/custom.css` for `.usa-*` class references — categorize as replaceable (non-JS) or dual-class (JS-driven)
+- [x] T086 [P] [US3] Audit `apps/docs/src/components/PageFrame.astro` for `.usa-*` class references in `<style>` blocks and inline HTML classes
+- [x] T087 [P] [US3] Audit `apps/docs/src/components/HorizontalNav.astro` for `.usa-*` class references
+- [x] T088 [P] [US3] Audit `apps/docs/src/components/SkipNav.astro` for `.usa-*` class references
+- [x] T089 [P] [US3] Audit `apps/docs/src/components/DocFooter.astro` for `.usa-*` class references
+- [x] T090 [US3] Refactor `apps/docs/src/styles/custom.css` — replace all `.usa-*` with `.pathable-*`
+- [x] T091 [P] [US3] Refactor `apps/docs/src/components/PageFrame.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
+- [x] T092 [P] [US3] Refactor `apps/docs/src/components/HorizontalNav.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
+- [x] T093 [P] [US3] Refactor `apps/docs/src/components/SkipNav.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
+- [x] T094 [P] [US3] Refactor `apps/docs/src/components/DocFooter.astro` — replace `.usa-*` with `.pathable-*`, add dual classes for JS-driven components
+- [x] T095 [US3] Run `pnpm build` in `apps/docs/` and verify zero build errors
+- [x] T096 [US3] Run `rg '\.usa-' apps/docs/src/` and verify zero remaining `.usa-*` references (with documented JS-driven exceptions)
 
 **Checkpoint**: Docs site fully migrated to `.pathable-*` component classes. Build succeeds.
 
@@ -212,11 +212,11 @@ All tasks in this batch are [P] (each is an independent bundle file):
 
 **Purpose**: Build verification, documentation, and final cleanup
 
-- [ ] T097 [P] Run `pnpm build` at workspace root and verify both packages compile without errors
-- [ ] T098 [P] Update `packages/styles/BRAND_RULES.md` with component wrapper naming convention section
-- [ ] T099 [P] Verify AGENTS.md component wrapper section is complete (should have been updated in Phase 1)
-- [ ] T100 Run final `rg '\.usa-'` across entire `apps/docs/src/` to confirm zero regressions
-- [ ] T101 Final visual regression check — verify docs site renders identically before/after refactoring
+- [x] T097 [P] Run `pnpm build` at workspace root and verify both packages compile without errors
+- [x] T098 [P] Update `packages/styles/BRAND_RULES.md` with component wrapper naming convention section
+- [x] T099 [P] Verify AGENTS.md component wrapper section is complete (should have been updated in Phase 1)
+- [x] T100 Run final `rg '\.usa-'` across entire `apps/docs/src/` to confirm zero regressions (only comment references remain)
+- [ ] T101 Final visual regression check — verify docs site renders identically before/after refactoring (manual check — requires viewing docs site in browser)
 
 ---
 

@@ -1,0 +1,34 @@
+// packages/styles/src/pathable-component-wrappers/pathable-collection.scss
+//
+// Wraps usa-collection component as pathable-collection.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-collection/src/styles';
+
+.pathable-collection {
+  @extend .usa-collection;
+}
+
+.pathable-collection__item {
+  @extend .usa-collection__item;
+}
+
+.pathable-collection__heading {
+  @extend .usa-collection__heading;
+}
+
+.pathable-collection__body {
+  @extend .usa-collection__body;
+}
+
+.pathable-collection__meta {
+  @extend .usa-collection__meta;
+}
+
+.pathable-collection__img {
+  @extend .usa-collection__img;
+}

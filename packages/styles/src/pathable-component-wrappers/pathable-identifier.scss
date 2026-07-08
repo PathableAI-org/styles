@@ -1,0 +1,42 @@
+// packages/styles/src/pathable-component-wrappers/pathable-identifier.scss
+//
+// Wraps usa-identifier component as pathable-identifier.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-identifier/src/styles';
+
+.pathable-identifier {
+  @extend .usa-identifier;
+}
+
+.pathable-identifier__section {
+  @extend .usa-identifier__section;
+}
+
+.pathable-identifier__container {
+  @extend .usa-identifier__container;
+}
+
+.pathable-identifier__logos {
+  @extend .usa-identifier__logos;
+}
+
+.pathable-identifier__logo {
+  @extend .usa-identifier__logo;
+}
+
+.pathable-identifier__identity {
+  @extend .usa-identifier__identity;
+}
+
+.pathable-identifier__required-links-list {
+  @extend .usa-identifier__required-links-list;
+}
+
+.pathable-identifier__usagov-description {
+  @extend .usa-identifier__usagov-description;
+}

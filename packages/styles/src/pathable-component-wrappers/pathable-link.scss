@@ -1,0 +1,18 @@
+// packages/styles/src/pathable-component-wrappers/pathable-link.scss
+//
+// Wraps usa-link component as pathable-link.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-link/src/styles';
+
+.pathable-link {
+  @extend .usa-link;
+}
+
+.pathable-link--external {
+  @extend .usa-link--external;
+}

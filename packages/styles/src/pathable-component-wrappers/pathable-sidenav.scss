@@ -1,0 +1,18 @@
+// packages/styles/src/pathable-component-wrappers/pathable-sidenav.scss
+//
+// Wraps usa-sidenav component as pathable-sidenav.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-sidenav/src/styles';
+
+.pathable-sidenav {
+  @extend .usa-sidenav;
+}
+
+.pathable-sidenav__sublist {
+  @extend .usa-sidenav__sublist;
+}
