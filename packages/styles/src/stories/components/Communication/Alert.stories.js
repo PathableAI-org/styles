@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Communication/Alert',
   tags: ['autodocs'],
-};
+}
 
 export const Info = {
   render: () => `
@@ -12,7 +12,7 @@ export const Info = {
       </div>
     </div>
   `,
-};
+}
 
 export const Warning = {
   render: () => `
@@ -23,7 +23,7 @@ export const Warning = {
       </div>
     </div>
   `,
-};
+}
 
 export const Error = {
   render: () => `
@@ -34,7 +34,7 @@ export const Error = {
       </div>
     </div>
   `,
-};
+}
 
 export const Success = {
   render: () => `
@@ -45,7 +45,7 @@ export const Success = {
       </div>
     </div>
   `,
-};
+}
 
 export const Emergency = {
   render: () => `
@@ -56,7 +56,7 @@ export const Emergency = {
       </div>
     </div>
   `,
-};
+}
 
 export const Slim = {
   render: () => `
@@ -66,4 +66,4 @@ export const Slim = {
       </div>
     </div>
   `,
-};
+}

@@ -1,0 +1,25 @@
+{
+  "contract_type": "speckit.implement.receipt.v1",
+  "shard_id": "S04-documentation-01",
+  "task_ids": ["T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022", "T037", "T038"],
+  "completed_task_ids": ["T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022", "T037", "T038"],
+  "changed_paths": [
+    "packages/styles/src/stories/components/FormControls/Checkbox.stories.js",
+    "packages/styles/src/stories/components/FormControls/ComboBox.stories.js",
+    "packages/styles/src/stories/components/FormControls/DatePicker.stories.js",
+    "packages/styles/src/stories/components/FormControls/DateRangePicker.stories.js",
+    "packages/styles/src/stories/components/FormControls/Input.stories.js",
+    "packages/styles/src/stories/components/FormControls/Radio.stories.js",
+    "packages/styles/src/stories/components/FormControls/Select.stories.js",
+    "packages/styles/src/stories/components/FormControls/Textarea.stories.js",
+    "packages/styles/src/stories/components/Layout/Icon.stories.js",
+    "packages/styles/src/stories/components/Layout/MediaBlock.stories.js"
+  ],
+  "validation_evidence": [
+    "PASS: Checkbox exists",
+    "PASS: Icon exists",
+    "PASS: ComboBox USWDS note",
+    "PASS: DatePicker USWDS note",
+    "PASS: DateRangePicker USWDS note"
+  ]
+}

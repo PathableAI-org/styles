@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Layout/Media Block',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -22,4 +22,4 @@ export const Default = {
   </div>
 </div>
   `,
-};
+}

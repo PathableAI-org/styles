@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Navigation/Sidenav',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -35,4 +35,4 @@ export const Default = {
   </ul>
 </aside>
   `,
-};
+}

@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Communication/Step Indicator',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -20,4 +20,4 @@ export const Default = {
       </li>
     </ol>
   `,
-};
+}

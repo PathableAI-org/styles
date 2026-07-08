@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Form Controls/Select',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -12,7 +12,7 @@ export const Default = {
   <option>Option 3</option>
 </select>
   `,
-};
+}
 
 export const Multiple = {
   render: () => `
@@ -24,4 +24,4 @@ export const Multiple = {
   <option>Option 4</option>
 </select>
   `,
-};
+}

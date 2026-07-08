@@ -1,4 +1,4 @@
-import '../dist/styles.css';
+import '../dist/styles.css'
 
 export const parameters = {
   controls: {
@@ -7,4 +7,4 @@ export const parameters = {
       date: /Date$/i,
     },
   },
-};
+}

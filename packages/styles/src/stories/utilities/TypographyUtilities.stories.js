@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Typography',
   tags: ['autodocs'],
-};
+}
 
 export const FontFamilies = {
   render: () => `
@@ -39,7 +39,7 @@ export const FontFamilies = {
       </div>
     </div>
   `,
-};
+}
 
 export const FontWeights = {
   render: () => `
@@ -67,4 +67,4 @@ export const FontWeights = {
       </div>
     </div>
   `,
-};
+}

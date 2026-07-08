@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Flex & Alignment',
   tags: ['autodocs'],
-};
+}
 
 export const FlexDirection = {
   render: () => `
@@ -43,7 +43,7 @@ export const FlexDirection = {
       </div>
     </div>
   `,
-};
+}
 
 export const AlignItems = {
   render: () => `
@@ -59,7 +59,9 @@ export const AlignItems = {
           { name: 'End', class: 'pathable-flex-align-end' },
           { name: 'Stretch', class: 'pathable-flex-align-stretch' },
           { name: 'Baseline', class: 'pathable-flex-align-baseline' },
-        ].map(({ name, class: cls }) => `
+        ]
+          .map(
+            ({ name, class: cls }) => `
           <div>
             <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">${name}</div>
             <div class="${cls}" style="display: flex; align-items: stretch; background: #f0f0f0; padding: 0.5rem; gap: 0.5rem; border: 1px solid #ccc; min-height: 80px;">
@@ -69,11 +71,13 @@ export const AlignItems = {
             </div>
             <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.${cls}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `,
-};
+}
 
 export const JustifyContent = {
   render: () => `
@@ -88,7 +92,9 @@ export const JustifyContent = {
           { name: 'Between', class: 'pathable-flex-justify-between' },
           { name: 'End', class: 'pathable-flex-justify-end' },
           { name: 'Around', class: 'pathable-flex-justify-around' },
-        ].map(({ name, class: cls }) => `
+        ]
+          .map(
+            ({ name, class: cls }) => `
           <div>
             <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">${name}</div>
             <div class="${cls}" style="display: flex; background: #f0f0f0; padding: 0.5rem; gap: 0.5rem; border: 1px solid #ccc;">
@@ -98,8 +104,10 @@ export const JustifyContent = {
             </div>
             <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.${cls}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `,
-};
+}

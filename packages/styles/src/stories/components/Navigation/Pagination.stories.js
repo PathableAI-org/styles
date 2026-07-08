@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Navigation/Pagination',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -38,4 +38,4 @@ export const Default = {
   </ul>
 </nav>
   `,
-};
+}

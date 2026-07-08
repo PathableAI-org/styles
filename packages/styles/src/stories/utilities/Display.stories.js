@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Display',
   tags: ['autodocs'],
-};
+}
 
 const displayValues = [
   { name: 'Flex', class: 'pathable-display-flex' },
@@ -9,7 +9,7 @@ const displayValues = [
   { name: 'Inline', class: 'pathable-display-inline' },
   { name: 'Inline Block', class: 'pathable-display-inline-block' },
   { name: 'None', class: 'pathable-display-none' },
-];
+]
 
 export const AllValues = {
   render: () => `
@@ -19,7 +19,9 @@ export const AllValues = {
         Classes: <code>.pathable-display-flex</code>, <code>.pathable-display-block</code>, etc.
       </p>
       <div style="display: flex; flex-direction: column; gap: 1rem;">
-        ${displayValues.map(({ name, class: cls }) => `
+        ${displayValues
+          .map(
+            ({ name, class: cls }) => `
           <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
             <span style="width: 120px; font-weight: 600; font-size: 0.875rem;">${name}</span>
             <div class="${cls}" style="background: #dde2e8; padding: 0.5rem; border: 1px dashed #00365c; ${cls === 'pathable-display-flex' ? 'gap: 0.5rem;' : ''}">
@@ -28,11 +30,13 @@ export const AllValues = {
             </div>
             <span style="font-family: monospace; font-size: 0.7rem; color: #999; margin-left: auto;">.${cls}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `,
-};
+}
 
 export const ResponsiveVariants = {
   render: () => `
@@ -60,4 +64,4 @@ export const ResponsiveVariants = {
       </p>
     </div>
   `,
-};
+}

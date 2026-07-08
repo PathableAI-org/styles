@@ -4,11 +4,12 @@ export default {
   parameters: {
     docs: {
       description: {
-        story: '**Note:** This component requires USWDS JavaScript for full interactivity. The examples below show static CSS styling only.',
+        story:
+          '**Note:** This component requires USWDS JavaScript for full interactivity. The examples below show static CSS styling only.',
       },
     },
   },
-};
+}
 
 export const Default = {
   render: () => `
@@ -20,4 +21,4 @@ export const Default = {
   </select>
 </div>
   `,
-};
+}

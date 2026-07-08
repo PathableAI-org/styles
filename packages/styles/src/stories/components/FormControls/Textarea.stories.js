@@ -1,14 +1,14 @@
 export default {
   title: 'Components/Form Controls/Textarea',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
 <label class="pathable-label" for="textarea-default">Textarea</label>
 <textarea id="textarea-default" class="pathable-textarea" rows="4" cols="40" placeholder="Enter text…"></textarea>
   `,
-};
+}
 
 export const InForm = {
   render: () => `
@@ -23,4 +23,4 @@ export const InForm = {
   </div>
 </form>
   `,
-};
+}

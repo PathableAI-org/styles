@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Button Group',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -11,7 +11,7 @@ export const Default = {
       <button class="pathable-button pathable-button--outline">Option Three</button>
     </div>
   `,
-};
+}
 
 export const Segmented = {
   render: () => `
@@ -21,4 +21,4 @@ export const Segmented = {
       <button class="pathable-button pathable-button--outline">Option Three</button>
     </div>
   `,
-};
+}

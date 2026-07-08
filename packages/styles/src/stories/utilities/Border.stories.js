@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Border',
   tags: ['autodocs'],
-};
+}
 
 export const BorderWidths = {
   render: () => `
@@ -11,18 +11,22 @@ export const BorderWidths = {
         Classes: <code>.pathable-border-{0-5}</code>
       </p>
       <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-        ${[0, 1, 2, 3, 4, 5].map(n => `
+        ${[0, 1, 2, 3, 4, 5]
+          .map(
+            (n) => `
           <div style="text-align: center;">
             <div class="pathable-border-${n}" style="border-color: #00365c; border-style: solid; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: #fff;">
               <span style="font-size: 0.75rem; font-weight: 600;">${n}</span>
             </div>
             <div style="margin-top: 0.5rem; font-family: monospace; font-size: 0.7rem; color: #666;">border-${n}</div>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `,
-};
+}
 
 export const BorderRadius = {
   render: () => `
@@ -53,4 +57,4 @@ export const BorderRadius = {
       </div>
     </div>
   `,
-};
+}

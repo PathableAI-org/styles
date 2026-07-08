@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Table',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -32,7 +32,7 @@ export const Default = {
       </tbody>
     </table>
   `,
-};
+}
 
 export const Borderless = {
   render: () => `
@@ -63,7 +63,7 @@ export const Borderless = {
       </tbody>
     </table>
   `,
-};
+}
 
 export const Compact = {
   render: () => `
@@ -94,7 +94,7 @@ export const Compact = {
       </tbody>
     </table>
   `,
-};
+}
 
 export const Striped = {
   render: () => `
@@ -125,4 +125,4 @@ export const Striped = {
       </tbody>
     </table>
   `,
-};
+}

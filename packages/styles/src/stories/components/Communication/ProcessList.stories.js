@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Communication/Process List',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -28,4 +28,4 @@ export const Default = {
       </li>
     </ol>
   `,
-};
+}

@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Form Controls/Radio',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -14,7 +14,7 @@ export const Default = {
   <span class="pathable-radio__label">Radio label</span>
 </label>
   `,
-};
+}
 
 export const Tile = {
   render: () => `
@@ -27,4 +27,4 @@ export const Tile = {
   <span class="pathable-radio__label">Tile radio label</span>
 </label>
   `,
-};
+}

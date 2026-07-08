@@ -1,7 +1,7 @@
 export default {
   title: 'Components/List',
   tags: ['autodocs'],
-};
+}
 
 export const Unordered = {
   render: () => `
@@ -11,7 +11,7 @@ export const Unordered = {
       <li>Unordered list item three</li>
     </ul>
   `,
-};
+}
 
 export const Ordered = {
   render: () => `
@@ -21,7 +21,7 @@ export const Ordered = {
       <li>Ordered list item three</li>
     </ol>
   `,
-};
+}
 
 export const Unstyled = {
   render: () => `
@@ -31,4 +31,4 @@ export const Unstyled = {
       <li>Unstyled list item three</li>
     </ul>
   `,
-};
+}

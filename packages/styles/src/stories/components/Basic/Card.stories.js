@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Card',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -12,7 +12,7 @@ export const Default = {
       </div>
     </div>
   `,
-};
+}
 
 export const MediaCard = {
   render: () => `
@@ -26,7 +26,7 @@ export const MediaCard = {
       </div>
     </div>
   `,
-};
+}
 
 export const CardWithVariants = {
   render: () => `
@@ -37,4 +37,4 @@ export const CardWithVariants = {
       </div>
     </div>
   `,
-};
+}

@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Navigation/Search',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -19,7 +19,7 @@ export const Default = {
   </button>
 </form>
   `,
-};
+}
 
 export const Big = {
   render: () => `
@@ -37,4 +37,4 @@ export const Big = {
   </button>
 </form>
   `,
-};
+}

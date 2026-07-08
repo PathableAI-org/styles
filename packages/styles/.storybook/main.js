@@ -3,4 +3,4 @@ export default {
   stories: ['../src/stories/**/*.stories.js'],
   addons: ['@storybook/addon-docs'],
   docs: { autodocs: true },
-};
+}

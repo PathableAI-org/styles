@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Spacing',
   tags: ['autodocs'],
-};
+}
 
 export const PaddingScale = {
   render: () => `
@@ -11,7 +11,9 @@ export const PaddingScale = {
         Classes: <code>.pathable-padding-{0-10, 15}</code> &mdash; applies padding on all sides.
       </p>
       <div style="display: flex; flex-direction: column; gap: 1rem;">
-        ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15].map(n => `
+        ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15]
+          .map(
+            (n) => `
           <div style="display: flex; align-items: center; gap: 1rem;">
             <span style="width: 120px; font-family: monospace; font-size: 0.8rem; color: #888;">padding-${n}</span>
             <div style="background: #f0f0f0; display: inline-block;">
@@ -21,11 +23,13 @@ export const PaddingScale = {
             </div>
             <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.pathable-padding-${n}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `,
-};
+}
 
 export const MarginScale = {
   render: () => `
@@ -35,7 +39,9 @@ export const MarginScale = {
         Classes: <code>.pathable-margin-{0-10, 15}</code> &mdash; applies margin on all sides.
       </p>
       <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-        ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15].map(n => `
+        ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15]
+          .map(
+            (n) => `
           <div style="display: flex; align-items: center; gap: 1rem;">
             <span style="width: 120px; font-family: monospace; font-size: 0.8rem; color: #888;">margin-${n}</span>
             <div style="background: repeating-linear-gradient(45deg, #e8e8e8, #e8e8e8 4px, #f5f5f5 4px, #f5f5f5 8px); display: inline-block;">
@@ -45,11 +51,13 @@ export const MarginScale = {
             </div>
             <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.pathable-margin-${n}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `,
-};
+}
 
 export const ResponsiveVariants = {
   render: () => `
@@ -90,4 +98,4 @@ export const ResponsiveVariants = {
       </table>
     </div>
   `,
-};
+}

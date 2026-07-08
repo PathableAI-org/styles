@@ -1,0 +1,68 @@
+{
+  "contract_type": "speckit.implement.handoff.v2",
+  "shard_id": "S05-documentation-01",
+  "agent_topology": {
+    "core_agent": { "role": "orchestrator" },
+    "vertical_planner_agent": {
+      "role": "planner", "vertical_planner_only": true,
+      "may_execute_implementation": false, "may_write_manifest": false, "may_update_tasks_md": false
+    },
+    "worker_agent": {
+      "role": "executor", "single_handoff_only": true,
+      "may_dispatch_workers": false, "may_update_tasks_md": false
+    }
+  },
+  "lifecycle_stage": "us1_components",
+  "vertical_capability": "documentation",
+  "capability_boundary": {
+    "owns": ["packages/styles/src/stories/components/Navigation/"],
+    "depends_on": ["S02-documentation-01"],
+    "must_not_touch": ["packages/styles/src/ (SCSS)", ".storybook/", "tasks.md"]
+  },
+  "planner_outputs": {
+    "shard_plan_path": "handoffs/implement/008-implement-001/planner-outputs/documentation-shard-plan.md",
+    "handoff_draft_path": "handoffs/implement/008-implement-001/planner-outputs/documentation-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/008-implement-001/planner-outputs/documentation-context-digest-draft.md",
+    "vertical_capability": "documentation"
+  },
+  "draft_source": {
+    "vertical_planner_id": "planner-documentation-01",
+    "handoff_draft_path": "handoffs/implement/008-implement-001/planner-outputs/documentation-handoff-draft.json",
+    "context_digest_draft_path": "handoffs/implement/008-implement-001/planner-outputs/documentation-context-digest-draft.md"
+  },
+  "task_ids": ["T023", "T024", "T025", "T026", "T027", "T028"],
+  "task_type": "implementation",
+  "task_text": [
+    "T023: Create packages/styles/src/stories/components/Navigation/Breadcrumb.stories.js with Default breadcrumb wrapping example",
+    "T024: Create packages/styles/src/stories/components/Navigation/Header.stories.js with JS-driven note and basic header HTML",
+    "T025: Create packages/styles/src/stories/components/Navigation/Pagination.stories.js with Default pagination examples",
+    "T026: Create packages/styles/src/stories/components/Navigation/Search.stories.js with Default and Big search variants",
+    "T027: Create packages/styles/src/stories/components/Navigation/Sidenav.stories.js with Default side navigation structure",
+    "T028: Create packages/styles/src/stories/components/Navigation/Skipnav.stories.js with Default skipnav link"
+  ],
+  "context_digest_path": "handoffs/implement/008-implement-001/S05-documentation-01/context-digest.md",
+  "context_index_path": "context-index.json",
+  "allowed_read_paths": ["context-index.json", "specs/008-storybook-documentation/contracts/story-interface.md"],
+  "allowed_write_paths": [
+    "packages/styles/src/stories/components/Navigation/Breadcrumb.stories.js",
+    "packages/styles/src/stories/components/Navigation/Header.stories.js",
+    "packages/styles/src/stories/components/Navigation/Pagination.stories.js",
+    "packages/styles/src/stories/components/Navigation/Search.stories.js",
+    "packages/styles/src/stories/components/Navigation/Sidenav.stories.js",
+    "packages/styles/src/stories/components/Navigation/Skipnav.stories.js",
+    "handoffs/implement/008-implement-001/S05-documentation-01/results/"
+  ],
+  "context_gaps": [],
+  "validation_commands": [
+    "for f in Breadcrumb Header Pagination Search Sidenav Skipnav; do test -f \"packages/styles/src/stories/components/Navigation/${f}.stories.js\" && echo \"${f}_OK\"; done",
+    "grep -q 'USWDS JavaScript' packages/styles/src/stories/components/Navigation/Header.stories.js"
+  ],
+  "task_status_update": {
+    "mode": "receipt",
+    "receipt_path": "handoffs/implement/008-implement-001/S05-documentation-01/results/receipt.json",
+    "committer": "core_agent",
+    "contract_type": "speckit.implement.receipt.v1",
+    "required_fields": ["contract_type", "shard_id", "task_ids", "completed_task_ids", "changed_paths", "validation_evidence"]
+  },
+  "forbidden_actions": ["edit tasks.md", "edit SCSS source files", "edit .storybook/ config files", "dispatch workers"]
+}

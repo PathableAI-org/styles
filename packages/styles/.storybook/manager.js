@@ -1,5 +1,5 @@
-import { addons } from '@storybook/manager-api';
-import { create } from '@storybook/theming';
+import { addons } from '@storybook/manager-api'
+import { create } from '@storybook/theming'
 
 const pathableTheme = create({
   brandTitle: 'Pathable Styles',
@@ -15,6 +15,6 @@ const pathableTheme = create({
   barTextColor: '#ffffff',
   textColor: '#1a1a1a',
   textMutedColor: '#6c757d',
-});
+})
 
-addons.setConfig({ theme: pathableTheme });
+addons.setConfig({ theme: pathableTheme })

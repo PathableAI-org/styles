@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Layout/Icon',
   tags: ['autodocs'],
-};
+}
 
 export const AllIcons = {
   render: () => `
@@ -92,4 +92,4 @@ export const AllIcons = {
   </div>
 </div>
   `,
-};
+}

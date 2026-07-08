@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Form Controls/Checkbox',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -10,7 +10,7 @@ export const Default = {
   <span class="pathable-checkbox__label">Checkbox label</span>
 </label>
   `,
-};
+}
 
 export const Tile = {
   render: () => `
@@ -19,4 +19,4 @@ export const Tile = {
   <span class="pathable-checkbox__label">Tile checkbox label</span>
 </label>
   `,
-};
+}

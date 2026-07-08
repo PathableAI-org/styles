@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Navigation/Breadcrumb',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -22,4 +22,4 @@ export const Default = {
   </ol>
 </nav>
   `,
-};
+}

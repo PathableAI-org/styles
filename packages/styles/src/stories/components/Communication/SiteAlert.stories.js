@@ -4,11 +4,12 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: '**Note:** This component requires USWDS JavaScript for full interactivity (site alert dismiss, etc.). Only static CSS documentation is provided here. See the USWDS documentation for JS setup.',
+        component:
+          '**Note:** This component requires USWDS JavaScript for full interactivity (site alert dismiss, etc.). Only static CSS documentation is provided here. See the USWDS documentation for JS setup.',
       },
     },
   },
-};
+}
 
 export const Info = {
   render: () => `
@@ -19,7 +20,7 @@ export const Info = {
       </div>
     </div>
   `,
-};
+}
 
 export const Warning = {
   render: () => `
@@ -30,7 +31,7 @@ export const Warning = {
       </div>
     </div>
   `,
-};
+}
 
 export const Emergency = {
   render: () => `
@@ -41,7 +42,7 @@ export const Emergency = {
       </div>
     </div>
   `,
-};
+}
 
 export const Slim = {
   render: () => `
@@ -51,4 +52,4 @@ export const Slim = {
       </div>
     </div>
   `,
-};
+}

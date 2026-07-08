@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Form Controls/Input',
   tags: ['autodocs'],
-};
+}
 
 export const Text = {
   render: () => `
@@ -13,7 +13,7 @@ export const Text = {
   placeholder="Enter text"
 />
   `,
-};
+}
 
 export const Password = {
   render: () => `
@@ -25,7 +25,7 @@ export const Password = {
   placeholder="Enter password"
 />
   `,
-};
+}
 
 export const Email = {
   render: () => `
@@ -37,7 +37,7 @@ export const Email = {
   placeholder="you@example.com"
 />
   `,
-};
+}
 
 export const Search = {
   render: () => `
@@ -49,4 +49,4 @@ export const Search = {
   placeholder="Search…"
 />
   `,
-};
+}

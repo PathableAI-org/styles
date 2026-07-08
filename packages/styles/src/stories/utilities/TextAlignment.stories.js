@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Text Alignment',
   tags: ['autodocs'],
-};
+}
 
 export const AllValues = {
   render: () => `
@@ -35,7 +35,7 @@ export const AllValues = {
       </div>
     </div>
   `,
-};
+}
 
 export const ResponsiveVariants = {
   render: () => `
@@ -63,4 +63,4 @@ export const ResponsiveVariants = {
       </p>
     </div>
   `,
-};
+}

@@ -1,7 +1,7 @@
 export default {
   title: 'Components/Navigation/Skipnav',
   tags: ['autodocs'],
-};
+}
 
 export const Default = {
   render: () => `
@@ -9,4 +9,4 @@ export const Default = {
   Skip to main content
 </a>
   `,
-};
+}

@@ -1,7 +1,7 @@
 export default {
   title: 'Utilities/Background Colors',
   tags: ['autodocs'],
-};
+}
 
 const colors = [
   { name: 'Primary', class: 'pathable-bg-primary' },
@@ -13,12 +13,14 @@ const colors = [
   { name: 'Danger', class: 'pathable-bg-danger' },
   { name: 'Success', class: 'pathable-bg-success' },
   { name: 'Transparent', class: 'pathable-bg-transparent' },
-];
+]
 
 export const AllSwatches = {
   render: () => `
     <div style="display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem;">
-      ${colors.map(({ name, class: cls }) => `
+      ${colors
+        .map(
+          ({ name, class: cls }) => `
         <div style="flex: 0 0 160px; text-align: center; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
           <div class="${cls}" style="height: 80px; border-bottom: 1px solid rgba(0,0,0,0.1);"></div>
           <div style="padding: 0.5rem; background: #fff;">
@@ -26,7 +28,9 @@ export const AllSwatches = {
             <div style="color: #666; font-size: 0.75rem; font-family: monospace;">.${cls}</div>
           </div>
         </div>
-      `).join('')}
+      `,
+        )
+        .join('')}
     </div>
   `,
-};
+}

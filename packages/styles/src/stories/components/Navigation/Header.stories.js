@@ -4,11 +4,12 @@ export default {
   parameters: {
     docs: {
       description: {
-        story: '**Note:** This component requires USWDS JavaScript for full interactivity (header toggle, nav menu, etc.). Only static CSS documentation is provided here. See the USWDS documentation for JS setup.',
+        story:
+          '**Note:** This component requires USWDS JavaScript for full interactivity (header toggle, nav menu, etc.). Only static CSS documentation is provided here. See the USWDS documentation for JS setup.',
       },
     },
   },
-};
+}
 
 export const Default = {
   render: () => `
@@ -38,4 +39,4 @@ export const Default = {
   </div>
 </header>
   `,
-};
+}

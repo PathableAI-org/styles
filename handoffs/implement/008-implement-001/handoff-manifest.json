@@ -1,0 +1,122 @@
+{
+  "contract_type": "speckit.implement.manifest.v1",
+  "run_id": "008-implement-001",
+  "feature_path": "specs/008-storybook-documentation/",
+  "context_index_path": "context-index.json",
+  "execution_mode": "manual_fresh_worker_session",
+  "planner_outputs": [
+    {
+      "vertical_capability": "documentation",
+      "planner_id": "planner-documentation-01",
+      "shard_plan_path": "handoffs/implement/008-implement-001/planner-outputs/documentation-shard-plan.md",
+      "handoff_draft_paths": [
+        "handoffs/implement/008-implement-001/planner-outputs/documentation-handoff-draft.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/008-implement-001/planner-outputs/documentation-context-digest-draft.md"
+      ]
+    },
+    {
+      "vertical_capability": "ui",
+      "planner_id": "ui-planner-008",
+      "shard_plan_path": "handoffs/implement/008-implement-001/planner-outputs/ui-shard-plan.md",
+      "handoff_draft_paths": [
+        "handoffs/implement/008-implement-001/planner-outputs/ui-handoff-draft.json"
+      ],
+      "context_digest_draft_paths": [
+        "handoffs/implement/008-implement-001/planner-outputs/ui-context-digest-draft.md"
+      ]
+    }
+  ],
+  "shards": [
+    {
+      "shard_id": "S01-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S01-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S01-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S01-documentation-01/results/receipt.json",
+      "task_ids": ["T001", "T002", "T003", "T004"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S02-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S02-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S02-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S02-documentation-01/results/receipt.json",
+      "task_ids": ["T005", "T006", "T007"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S03-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S03-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S03-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S03-documentation-01/results/receipt.json",
+      "task_ids": ["T008", "T009", "T010", "T011", "T012", "T013", "T014"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S04-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S04-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S04-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S04-documentation-01/results/receipt.json",
+      "task_ids": ["T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022", "T037", "T038"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S05-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S05-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S05-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S05-documentation-01/results/receipt.json",
+      "task_ids": ["T023", "T024", "T025", "T026", "T027", "T028"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S06-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S06-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S06-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S06-documentation-01/results/receipt.json",
+      "task_ids": ["T029", "T030", "T031", "T032", "T033", "T034", "T035", "T036"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S07-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S07-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S07-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S07-documentation-01/results/receipt.json",
+      "task_ids": ["T039", "T040", "T041", "T042", "T043", "T044", "T045", "T046", "T047"],
+      "vertical_capability": "documentation"
+    },
+    {
+      "shard_id": "S08-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S08-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S08-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S08-documentation-01/results/receipt.json",
+      "task_ids": ["T048", "T049"],
+      "vertical_capability": "ui"
+    },
+    {
+      "shard_id": "S09-documentation-01",
+      "handoff_path": "handoffs/implement/008-implement-001/S09-documentation-01/handoff.json",
+      "context_digest_path": "handoffs/implement/008-implement-001/S09-documentation-01/context-digest.md",
+      "receipt_path": "handoffs/implement/008-implement-001/S09-documentation-01/results/receipt.json",
+      "task_ids": ["T050", "T051", "T052", "T053"],
+      "vertical_capability": "integration"
+    }
+  ],
+  "dependencies": [
+    { "shard_id": "S01-documentation-01", "depends_on": [] },
+    { "shard_id": "S02-documentation-01", "depends_on": ["S01-documentation-01"] },
+    { "shard_id": "S03-documentation-01", "depends_on": ["S02-documentation-01"] },
+    { "shard_id": "S04-documentation-01", "depends_on": ["S02-documentation-01"] },
+    { "shard_id": "S05-documentation-01", "depends_on": ["S02-documentation-01"] },
+    { "shard_id": "S06-documentation-01", "depends_on": ["S02-documentation-01"] },
+    { "shard_id": "S07-documentation-01", "depends_on": ["S02-documentation-01"] },
+    { "shard_id": "S08-documentation-01", "depends_on": ["S02-documentation-01"] },
+    { "shard_id": "S09-documentation-01", "depends_on": ["S03-documentation-01", "S04-documentation-01", "S05-documentation-01", "S06-documentation-01", "S07-documentation-01", "S08-documentation-01"] }
+  ],
+  "dispatch_order": [
+    ["S01-documentation-01"],
+    ["S02-documentation-01"],
+    ["S03-documentation-01", "S04-documentation-01", "S05-documentation-01", "S06-documentation-01", "S07-documentation-01", "S08-documentation-01"],
+    ["S09-documentation-01"]
+  ]
+}
