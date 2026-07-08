@@ -37,7 +37,10 @@ jobs:
         run: pnpm --filter @pathable/styles build
 
       - name: Build docs
-        run: pnpm --filter @pathable/docs build
+        run: pnpm --filter @pathable/storybook build-storybook
+
+      - name: Create .nojekyll
+        run: touch apps/storybook/storybook-static/.nojekyll
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
@@ -45,7 +48,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: apps/docs/dist
+          path: apps/storybook/storybook-static
 
   deploy:
     needs: build

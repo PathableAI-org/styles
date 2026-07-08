@@ -33,4 +33,4 @@ jobs:
         run: pnpm --filter @pathable/styles build
 
       - name: Build docs
-        run: pnpm --filter @pathable/docs build
+        run: pnpm --filter @pathable/storybook build-storybook

@@ -1,0 +1,22 @@
+{
+  "name": "@pathable/storybook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "build": "storybook build"
+  },
+  "dependencies": {
+    "@pathable/styles": "workspace:*"
+  },
+  "devDependencies": {
+    "@fontsource/fredoka": "^5.2.10",
+    "@fontsource/montserrat": "^5.2.8",
+    "@fontsource/nunito": "^5.2.7",
+    "@fontsource/poppins": "^5.2.7",
+    "@storybook/addon-docs": "^10.4.6",
+    "@storybook/html-vite": "^10.4.6",
+    "storybook": "^10.4.6"
+  }
+}

@@ -1,4 +1,4 @@
-import '../dist/styles.css'
+import '../node_modules/@pathable/styles/dist/styles.css'
 
 export const parameters = {
   controls: {
