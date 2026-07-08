@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-content.scss
+//
+// Wraps usa-content component as pathable-content.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-content/src/styles';
+
+.pathable-content {
+  @extend .usa-content;
+}

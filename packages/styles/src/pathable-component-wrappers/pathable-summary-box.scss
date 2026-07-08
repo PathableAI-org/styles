@@ -1,0 +1,26 @@
+// packages/styles/src/pathable-component-wrappers/pathable-summary-box.scss
+//
+// Wraps usa-summary-box component as pathable-summary-box.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-summary-box/src/styles';
+
+.pathable-summary-box {
+  @extend .usa-summary-box;
+}
+
+.pathable-summary-box__heading {
+  @extend .usa-summary-box__heading;
+}
+
+.pathable-summary-box__text {
+  @extend .usa-summary-box__text;
+}
+
+.pathable-summary-box__link {
+  @extend .usa-summary-box__link;
+}

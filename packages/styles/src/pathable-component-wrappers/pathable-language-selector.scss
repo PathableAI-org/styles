@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-language-selector.scss
+//
+// Wraps usa-language-selector component as pathable-language-selector.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — language-selector JS manages language switching
+// Requires .usa-* on DOM: Yes — keep .usa-language-selector for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-language-selector/src/styles';
+
+.pathable-language-selector {
+  @extend .usa-language;
+}

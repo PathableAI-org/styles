@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-checklist.scss
+//
+// Wraps usa-checklist component as pathable-checklist.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-checklist/src/styles';
+
+.pathable-checklist {
+  @extend .usa-checklist;
+}

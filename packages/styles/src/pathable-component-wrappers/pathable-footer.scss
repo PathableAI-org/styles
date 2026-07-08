@@ -1,0 +1,58 @@
+// packages/styles/src/pathable-component-wrappers/pathable-footer.scss
+//
+// Wraps usa-footer component as pathable-footer.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-footer/src/styles';
+
+.pathable-footer {
+  @extend .usa-footer;
+}
+
+.pathable-footer--slim {
+  @extend .usa-footer--slim;
+}
+
+.pathable-footer__primary-section {
+  @extend .usa-footer__primary-section;
+}
+
+.pathable-footer__secondary-section {
+  @extend .usa-footer__secondary-section;
+}
+
+.pathable-footer__nav {
+  @extend .usa-footer__nav;
+}
+
+.pathable-footer__return-to-top {
+  @extend .usa-footer__return-to-top;
+}
+
+.pathable-footer__primary-content {
+  @extend .usa-footer__primary-content;
+}
+
+.pathable-footer__contact-heading {
+  @extend .usa-footer__contact-heading;
+}
+
+.pathable-footer__contact-info {
+  @extend .usa-footer__contact-info;
+}
+
+.pathable-footer__address {
+  @extend .usa-footer__address;
+}
+
+.pathable-footer__logo-heading {
+  @extend .usa-footer__logo-heading;
+}
+
+.pathable-footer__social-links {
+  @extend .usa-footer__social-links;
+}

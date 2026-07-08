@@ -1,0 +1,22 @@
+// packages/styles/src/pathable-component-wrappers/pathable-media-block.scss
+//
+// Wraps usa-media-block component as pathable-media-block.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-media-block/src/styles';
+
+.pathable-media-block {
+  @extend .usa-media-block;
+}
+
+.pathable-media-block__img {
+  @extend .usa-media-block__img;
+}
+
+.pathable-media-block__body {
+  @extend .usa-media-block__body;
+}

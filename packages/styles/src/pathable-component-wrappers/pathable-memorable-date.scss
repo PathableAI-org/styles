@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-memorable-date.scss
+//
+// Wraps usa-memorable-date component as pathable-memorable-date.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-memorable-date/src/styles';
+
+.pathable-memorable-date {
+  @extend .usa-memorable-date;
+}

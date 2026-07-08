@@ -1,0 +1,23 @@
+// packages/styles/src/pathable-component-wrappers/pathable-communication.scss
+//
+// Bundle package: all communication/info-related component wrappers.
+// Forwards individual component wrappers for selective import.
+
+@forward 'pathable-accordion';
+@forward 'pathable-alert';
+@forward 'pathable-banner';
+@forward 'pathable-card';
+@forward 'pathable-collection';
+@forward 'pathable-graphic-list';
+@forward 'pathable-hero';
+@forward 'pathable-icon';
+@forward 'pathable-icon-list';
+@forward 'pathable-identifier';
+@forward 'pathable-modal';
+@forward 'pathable-process-list';
+@forward 'pathable-site-alert';
+@forward 'pathable-step-indicator';
+@forward 'pathable-summary-box';
+@forward 'pathable-table';
+@forward 'pathable-tag';
+@forward 'pathable-tooltip';

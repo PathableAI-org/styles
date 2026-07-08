@@ -232,3 +232,55 @@ Use breakpoint prefixes for responsive layouts:
 ```
 
 Breakpoints: `mobile-lg` (480px), `tablet` (640px), `desktop` (1024px).
+
+## USWDS Component Wrappers
+
+This package provides `.pathable-{component}` CSS class wrappers for all USWDS components. Each `.pathable-{component}` class resolves to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`.
+
+### Component Wrapper Naming Convention
+
+| Component      | PathAble Class             | USWDS Equivalent      |
+| -------------- | -------------------------- | --------------------- |
+| accordion      | `.pathable-accordion`      | `.usa-accordion`      |
+| alert          | `.pathable-alert`          | `.usa-alert`          |
+| banner         | `.pathable-banner`         | `.usa-banner`         |
+| breadcrumb     | `.pathable-breadcrumb`     | `.usa-breadcrumb`     |
+| button         | `.pathable-button`         | `.usa-button`         |
+| button-group   | `.pathable-button-group`   | `.usa-button-group`   |
+| card           | `.pathable-card`           | `.usa-card`           |
+| checkbox       | `.pathable-checkbox`       | `.usa-checkbox`       |
+| combo-box      | `.pathable-combo-box`      | `.usa-combo-box`      |
+| date-picker    | `.pathable-date-picker`    | `.usa-date-picker`    |
+| footer         | `.pathable-footer`         | `.usa-footer`         |
+| form           | `.pathable-form`           | `.usa-form`           |
+| header         | `.pathable-header`         | `.usa-header`         |
+| icon           | `.pathable-icon`           | `.usa-icon`           |
+| identifier     | `.pathable-identifier`     | `.usa-identifier`     |
+| input          | `.pathable-input`          | `.usa-input`          |
+| link           | `.pathable-link`           | `.usa-link`           |
+| list           | `.pathable-list`           | `.usa-list`           |
+| media-block    | `.pathable-media-block`    | `.usa-media-block`    |
+| modal          | `.pathable-modal`          | `.usa-modal`          |
+| nav            | `.pathable-nav`            | `.usa-nav`            |
+| pagination     | `.pathable-pagination`     | `.usa-pagination`     |
+| process-list   | `.pathable-process-list`   | `.usa-process-list`   |
+| prose          | `.pathable-prose`          | `.usa-prose`          |
+| radio          | `.pathable-radio`          | `.usa-radio`          |
+| search         | `.pathable-search`         | `.usa-search`         |
+| sidenav        | `.pathable-sidenav`        | `.usa-sidenav`        |
+| skipnav        | `.pathable-skipnav`        | `.usa-skipnav`        |
+| step-indicator | `.pathable-step-indicator` | `.usa-step-indicator` |
+| summary-box    | `.pathable-summary-box`    | `.usa-summary-box`    |
+| table          | `.pathable-table`          | `.usa-table`          |
+| tag            | `.pathable-tag`            | `.usa-tag`            |
+| textarea       | `.pathable-textarea`       | `.usa-textarea`       |
+| tooltip        | `.pathable-tooltip`        | `.usa-tooltip`        |
+| validation     | `.pathable-validation`     | `.usa-validation`     |
+
+### Component Wrapper Rules
+
+- Use `.pathable-{component}` classes in HTML/Astro templates instead of `.usa-{component}` classes when a wrapper exists.
+- Use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
+- Use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
+- For JS-driven components (accordion, banner, combo-box, date-picker, date-range-picker, file-input, header, in-page-navigation, input-mask, modal, nav, site-alert, time-picker, tooltip, validation), keep `.usa-{component}` on the DOM element AND add `.pathable-{component}` as an additional class — the USWDS JavaScript selects DOM nodes by `.usa-*` class names, and removing them would break interactivity.
+- Use `--pathable-{component}-{property}` and `--usa-{component}-{property}` CSS custom properties as alternatives to the class-based components.

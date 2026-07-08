@@ -1,0 +1,18 @@
+// packages/styles/src/pathable-component-wrappers/pathable-section.scss
+//
+// Wraps usa-section component as pathable-section.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-section/src/styles';
+
+.pathable-section {
+  @extend .usa-section;
+}
+
+.pathable-section--dark {
+  @extend .usa-section--dark;
+}

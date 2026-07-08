@@ -1,0 +1,4 @@
+// Selective import test: imports only pathable-button and verifies no other component classes appear.
+// Compile: sass --load-path=node_modules/@uswds/uswds/packages test/selective-import.scss test/selective-import.css
+
+@forward '../src/pathable-component-wrappers/pathable-button';

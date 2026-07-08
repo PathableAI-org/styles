@@ -1,0 +1,22 @@
+// packages/styles/src/pathable-component-wrappers/pathable-process-list.scss
+//
+// Wraps usa-process-list component as pathable-process-list.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-process-list/src/styles';
+
+.pathable-process-list {
+  @extend .usa-process-list;
+}
+
+.pathable-process-list__item {
+  @extend .usa-process-list__item;
+}
+
+.pathable-process-list__heading {
+  @extend .usa-process-list__heading;
+}

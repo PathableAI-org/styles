@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-character-count.scss
+//
+// Wraps usa-character-count component as pathable-character-count.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — character-count JS tracks character count
+// Requires .usa-* on DOM: Yes — keep .usa-character-count for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-character-count/src/styles';
+
+// No base .usa-character-count class exists in USWDS source.
+// Only .usa-character-count__status and __status--invalid are defined.
+// JS-driven component — keep .usa-character-count on DOM for JS to find elements.

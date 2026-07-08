@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-form.scss
+//
+// Wraps usa-form component as pathable-form.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-form/src/styles';
+
+.pathable-form {
+  @extend .usa-form;
+}

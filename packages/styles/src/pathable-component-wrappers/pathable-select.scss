@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-select.scss
+//
+// Wraps usa-select component as pathable-select.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-select/src/styles';
+
+.pathable-select {
+  @extend .usa-select;
+}

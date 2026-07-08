@@ -1,0 +1,27 @@
+// packages/styles/src/pathable-component-wrappers/pathable-icon-list.scss
+//
+// Wraps usa-icon-list component as pathable-icon-list.
+// USWDS dependencies: uswds-fonts, usa-icon
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon';
+@use 'usa-icon-list/src/styles';
+
+.pathable-icon-list {
+  @extend .usa-icon-list;
+}
+
+.pathable-icon-list__item {
+  @extend .usa-icon-list__item;
+}
+
+.pathable-icon-list__icon {
+  @extend .usa-icon-list__icon;
+}
+
+.pathable-icon-list__content {
+  @extend .usa-icon-list__content;
+}

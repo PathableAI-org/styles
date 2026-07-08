@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-time-picker.scss
+//
+// Wraps usa-time-picker component as pathable-time-picker.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — time-picker JS manages time select
+// Requires .usa-* on DOM: Yes — keep .usa-time-picker for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-time-picker/src/styles';
+
+.pathable-time-picker {
+  @extend .usa-time-picker;
+}

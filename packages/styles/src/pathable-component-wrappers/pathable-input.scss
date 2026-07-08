@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-input.scss
+//
+// Wraps usa-input component as pathable-input.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-input/src/styles';
+
+.pathable-input {
+  @extend .usa-input;
+}

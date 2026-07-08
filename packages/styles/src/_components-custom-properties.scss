@@ -1,0 +1,57 @@
+// Component-level CSS custom properties
+// Emitted as dual --pathable-{component}-{property} / --usa-{component}-{property}
+// for backward compatibility with existing USWDS token consumers.
+
+@use 'uswds-core' as *;
+
+:root {
+  // --- Button component tokens ---
+  --pathable-button-border-radius: #{radius($theme-button-border-radius)};
+  --pathable-button-padding-x: #{units(2.5)};
+  --pathable-button-padding-y: #{units(1.5)};
+  --usa-button-border-radius: #{radius($theme-button-border-radius)};
+  --usa-button-padding-x: #{units(2.5)};
+  --usa-button-padding-y: #{units(1.5)};
+
+  // --- Alert component tokens ---
+  --pathable-alert-padding-x: #{units(2)};
+  --pathable-alert-padding-y: #{units(1.5)};
+  --pathable-alert-font-size: #{type-scale('sm')};
+  --usa-alert-padding-x: #{units(2)};
+  --usa-alert-padding-y: #{units(1.5)};
+  --usa-alert-font-size: #{type-scale('sm')};
+
+  // --- Card component tokens ---
+  --pathable-card-border-radius: #{radius($theme-card-border-radius)};
+  --pathable-card-padding-x: #{units(2)};
+  --pathable-card-padding-y: #{units(2)};
+  --usa-card-border-radius: #{radius($theme-card-border-radius)};
+  --usa-card-padding-x: #{units(2)};
+  --usa-card-padding-y: #{units(2)};
+
+  // --- Form component tokens ---
+  --pathable-form-max-width: #{units('mobile')};
+  --pathable-input-padding-x: #{units(1)};
+  --pathable-input-padding-y: #{units(1)};
+  --usa-form-max-width: #{units('mobile')};
+  --usa-input-padding-x: #{units(1)};
+  --usa-input-padding-y: #{units(1)};
+
+  // --- Table component tokens ---
+  --pathable-table-cell-padding-x: #{units(1.5)};
+  --pathable-table-cell-padding-y: #{units(1)};
+  --usa-table-cell-padding-x: #{units(1.5)};
+  --usa-table-cell-padding-y: #{units(1)};
+
+  // --- Tag component tokens ---
+  --pathable-tag-padding-x: #{units(1)};
+  --pathable-tag-padding-y: #{units(0.5)};
+  --usa-tag-padding-x: #{units(1)};
+  --usa-tag-padding-y: #{units(0.5)};
+
+  // --- Footer component tokens ---
+  --pathable-footer-padding-x: #{units(4)};
+  --pathable-footer-padding-y: #{units(2)};
+  --usa-footer-padding-x: #{units(4)};
+  --usa-footer-padding-y: #{units(2)};
+}

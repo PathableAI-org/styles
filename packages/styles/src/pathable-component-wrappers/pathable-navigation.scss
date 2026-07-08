@@ -1,0 +1,13 @@
+// packages/styles/src/pathable-component-wrappers/pathable-navigation.scss
+//
+// Bundle package: all navigation-related component wrappers.
+// Forwards individual component wrappers for selective import.
+
+@forward 'pathable-breadcrumb';
+@forward 'pathable-header';
+@forward 'pathable-in-page-navigation';
+@forward 'pathable-nav';
+@forward 'pathable-pagination';
+@forward 'pathable-search';
+@forward 'pathable-sidenav';
+@forward 'pathable-skipnav';

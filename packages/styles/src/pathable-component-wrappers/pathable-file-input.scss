@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-file-input.scss
+//
+// Wraps usa-file-input component as pathable-file-input.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — file-input JS manages drag-drop
+// Requires .usa-* on DOM: Yes — keep .usa-file-input for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-file-input/src/styles';
+
+.pathable-file-input {
+  @extend .usa-file-input;
+}

@@ -1,0 +1,35 @@
+// packages/styles/src/pathable-component-wrappers/pathable-banner.scss
+//
+// Wraps usa-banner component as pathable-banner.
+// USWDS dependencies: uswds-fonts, usa-icon
+// JS-driven: Yes — banner JS selects .usa-banner__button, .usa-banner__content
+// Requires .usa-* on DOM: Yes — keep .usa-banner for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon';
+@use 'usa-banner/src/styles';
+
+.pathable-banner {
+  @extend .usa-banner;
+}
+
+.pathable-banner__header {
+  @extend .usa-banner__header;
+}
+
+.pathable-banner__button {
+  @extend .usa-banner__button;
+}
+
+.pathable-banner__content {
+  @extend .usa-banner__content;
+}
+
+.pathable-banner__guidance {
+  @extend .usa-banner__guidance;
+}
+
+.pathable-banner__lock-image {
+  @extend .usa-banner__lock-image;
+}

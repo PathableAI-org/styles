@@ -1,0 +1,10 @@
+// packages/styles/src/pathable-component-wrappers/pathable-layout.scss
+//
+// Bundle package: all layout-related component wrappers.
+// Forwards individual component wrappers for selective import.
+
+@forward 'pathable-embed-container';
+@forward 'pathable-layout-docs';
+@forward 'pathable-layout-grid';
+@forward 'pathable-media-block';
+@forward 'pathable-section';

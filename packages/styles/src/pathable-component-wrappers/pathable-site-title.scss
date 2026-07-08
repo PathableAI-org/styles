@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-site-title.scss
+//
+// Wraps usa-site-title component as pathable-site-title.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-site-title';
+
+// No base .usa-site-title class exists in USWDS source.
+// The usa-site-title package is a thin wrapper that forwards uswds-core
+// and uses .usa-logo / .usa-logo__text in its Twig template.

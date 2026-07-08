@@ -1,0 +1,50 @@
+// packages/styles/src/pathable-component-wrappers/pathable-card.scss
+//
+// Wraps usa-card component as pathable-card.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-card/src/styles';
+
+.pathable-card {
+  @extend .usa-card;
+}
+
+.pathable-card__container {
+  @extend .usa-card__container;
+}
+
+.pathable-card__header {
+  @extend .usa-card__header;
+}
+
+.pathable-card__body {
+  @extend .usa-card__body;
+}
+
+.pathable-card__footer {
+  @extend .usa-card__footer;
+}
+
+.pathable-card__heading {
+  @extend .usa-card__heading;
+}
+
+.pathable-card__media {
+  @extend .usa-card__media;
+}
+
+.pathable-card__media--exdent {
+  @extend .usa-card__media--exdent;
+}
+
+.pathable-card--flag {
+  @extend .usa-card--flag;
+}
+
+.pathable-card--header-first {
+  @extend .usa-card--header-first;
+}

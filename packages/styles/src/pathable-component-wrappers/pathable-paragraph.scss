@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-paragraph.scss
+//
+// Wraps usa-paragraph component as pathable-paragraph.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-paragraph/src/styles';
+
+.pathable-paragraph {
+  @extend .usa-paragraph;
+}

@@ -1,0 +1,30 @@
+// packages/styles/src/pathable-component-wrappers/pathable-step-indicator.scss
+//
+// Wraps usa-step-indicator component as pathable-step-indicator.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-step-indicator/src/styles';
+
+.pathable-step-indicator {
+  @extend .usa-step-indicator;
+}
+
+.pathable-step-indicator__header {
+  @extend .usa-step-indicator__header;
+}
+
+.pathable-step-indicator__segment {
+  @extend .usa-step-indicator__segment;
+}
+
+.pathable-step-indicator__segment-label {
+  @extend .usa-step-indicator__segment-label;
+}
+
+.pathable-step-indicator__total-steps {
+  @extend .usa-step-indicator__total-steps;
+}

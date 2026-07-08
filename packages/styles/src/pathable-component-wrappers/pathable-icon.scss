@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-icon.scss
+//
+// Wraps usa-icon component as pathable-icon.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-icon/src/styles';
+
+.pathable-icon {
+  @extend .usa-icon;
+}

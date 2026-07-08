@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-validation.scss
+//
+// Wraps usa-validation component as pathable-validation.
+// The usa-validation package is a bundle that forwards form-related
+// components (usa-form, usa-fieldset, usa-alert, etc.) but does not
+// define its own CSS class. This wrapper forwards the bundle so that
+// its dependencies are available when pathable-validation is imported.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — validation JS manages validation states
+// Requires .usa-* on DOM: Yes — keep .usa-validation for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-validation';

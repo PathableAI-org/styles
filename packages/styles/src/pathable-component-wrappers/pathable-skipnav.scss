@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-skipnav.scss
+//
+// Wraps usa-skipnav component as pathable-skipnav.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-skipnav/src/styles';
+
+.pathable-skipnav {
+  @extend .usa-skipnav;
+}

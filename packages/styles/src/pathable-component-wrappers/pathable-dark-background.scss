@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-dark-background.scss
+//
+// Wraps usa-dark-background component as pathable-dark-background.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-dark-background/src/styles';
+
+.pathable-dark-background {
+  @extend .usa-dark-background;
+}

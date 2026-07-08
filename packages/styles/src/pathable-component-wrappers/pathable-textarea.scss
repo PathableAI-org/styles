@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-textarea.scss
+//
+// Wraps usa-textarea component as pathable-textarea.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-textarea/src/styles';
+
+.pathable-textarea {
+  @extend .usa-textarea;
+}

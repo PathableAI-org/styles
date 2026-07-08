@@ -1,0 +1,22 @@
+// packages/styles/src/pathable-component-wrappers/pathable-hero.scss
+//
+// Wraps usa-hero component as pathable-hero.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-hero/src/styles';
+
+.pathable-hero {
+  @extend .usa-hero;
+}
+
+.pathable-hero__callout {
+  @extend .usa-hero__callout;
+}
+
+.pathable-hero__heading {
+  @extend .usa-hero__heading;
+}

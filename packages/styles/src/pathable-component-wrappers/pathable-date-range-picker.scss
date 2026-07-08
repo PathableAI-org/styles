@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-date-range-picker.scss
+//
+// Wraps usa-date-range-picker component as pathable-date-range-picker.
+// USWDS dependencies: uswds-fonts
+// JS-driven: Yes — date-range-picker extends date-picker JS
+// Requires .usa-* on DOM: Yes — keep .usa-date-range-picker for JS to find elements
+
+@use 'uswds-core' as *;
+
+@use 'usa-date-range-picker';
+
+// JS-driven component — no CSS class defined in USWDS source.
+// The usa-date-range-picker package forwards usa-date-picker styles,
+// so those are available when this wrapper is imported.

@@ -1,0 +1,26 @@
+// packages/styles/src/pathable-component-wrappers/pathable-pagination.scss
+//
+// Wraps usa-pagination component as pathable-pagination.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-pagination/src/styles';
+
+.pathable-pagination {
+  @extend .usa-pagination;
+}
+
+.pathable-pagination__item {
+  @extend .usa-pagination__item;
+}
+
+.pathable-pagination__link {
+  @extend .usa-pagination__link;
+}
+
+.pathable-pagination__arrow {
+  @extend .usa-pagination__arrow;
+}

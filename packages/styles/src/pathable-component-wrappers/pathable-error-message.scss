@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-error-message.scss
+//
+// Wraps usa-error-message component as pathable-error-message.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+
+@use 'uswds-core' as *;
+
+@use 'usa-error-message/src/styles';
+
+.pathable-error-message {
+  @extend .usa-error-message;
+}

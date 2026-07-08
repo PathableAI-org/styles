@@ -1,0 +1,11 @@
+// packages/styles/src/pathable-component-wrappers/pathable-layout-docs.scss
+//
+// Forwards usa-layout-docs styles.
+// USWDS dependencies: uswds-fonts
+// JS-driven: No
+// Requires .usa-* on DOM: No
+// Note: usa-layout-docs is a style-only package with no direct .usa-* class.
+
+@use 'uswds-core' as *;
+
+@use 'usa-layout-docs/src/styles';
