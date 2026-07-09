@@ -1,0 +1,22 @@
+// packages/styles/src/pathable-component-wrappers/_brand-opinion.scss
+//
+// Brand Opinion Layer
+// ===================
+// This partial documents the pattern for adding Pathable-specific brand
+// opinion layers on top of the existing USWDS @extend wrapper pattern.
+//
+// Pattern:
+//   1. @extend the .usa-* class to inherit USWDS base styles
+//   2. Add explicit CSS declarations using --pathable-* tokens to override
+//      specific properties with brand-approved values
+//   3. Reference tokens from _semantic.scss (exact brand hex values)
+//      rather than uswds.color() calls (USWDS approximations)
+//
+// Contrast requirements:
+//   - All brand color + foreground pairs must pass WCAG AA contrast
+//   - Primary CTA: PathAble Blue bg (#00365c) + white text (14.3:1)
+//   - Secondary action: Intelligent Jade bg (#1cae96) + PathAble Blue text (#00365c) (5.5:1)
+//   - Supportive/tertiary: Bright Blue Brooks bg (#4899e8) + dark text (~3.8:1, large text OK)
+//
+// This file is intentionally empty — it serves as a pattern reference.
+// Actual overrides live in each component's wrapper file.

@@ -10,17 +10,38 @@ export const Default = {
   `,
 }
 
-export const InForm = {
+export const WorkflowSessionNote = {
   render: () => `
 <form class="pathable-form">
-  <div class="pathable-form-group">
-    <label class="pathable-label" for="textarea-form-name">Name</label>
-    <input id="textarea-form-name" class="pathable-input pathable-input--text" type="text" placeholder="Your name" />
-  </div>
-  <div class="pathable-form-group">
-    <label class="pathable-label" for="textarea-form-message">Message</label>
-    <textarea id="textarea-form-message" class="pathable-textarea" rows="4" placeholder="Your message…"></textarea>
-  </div>
+  <label class="pathable-label" for="session-note">Session Note</label>
+  <span class="pathable-hint" id="session-note-hint">
+    Document the key observations, interventions, and progress from this session.
+  </span>
+  <textarea
+    id="session-note"
+    class="pathable-textarea"
+    aria-describedby="session-note-hint"
+    rows="6"
+    placeholder="Enter session notes..."
+  ></textarea>
+</form>
+  `,
+}
+
+export const WorkflowSupervisorComment = {
+  render: () => `
+<form class="pathable-form">
+  <label class="pathable-label" for="supervisor-comment">Supervisor Approval Comment</label>
+  <span class="pathable-hint" id="supervisor-comment-hint">
+    Add your supervisory comments and recommendations.
+  </span>
+  <textarea
+    id="supervisor-comment"
+    class="pathable-textarea"
+    aria-describedby="supervisor-comment-hint"
+    rows="4"
+    placeholder="Enter supervisory comments..."
+  ></textarea>
 </form>
   `,
 }

@@ -8,29 +8,30 @@ export const Default = {
 <aside class="pathable-sidenav">
   <ul class="pathable-sidenav__sublist">
     <li class="pathable-sidenav__item">
-      <a href="#">Parent link</a>
+      <a href="#" class="usa-current" aria-current="page">Today's Sessions</a>
+    </li>
+    <li class="pathable-sidenav__item">
+      <a href="#">Participants</a>
       <ul class="pathable-sidenav__sublist">
         <li class="pathable-sidenav__item">
-          <a href="#">Child link</a>
+          <a href="#">All Participants</a>
         </li>
         <li class="pathable-sidenav__item">
-          <a href="#">Child link</a>
-          <ul class="pathable-sidenav__sublist">
-            <li class="pathable-sidenav__item">
-              <a href="#">Grandchild link</a>
-            </li>
-            <li class="pathable-sidenav__item">
-              <a href="#">Grandchild link</a>
-            </li>
-          </ul>
-        </li>
-        <li class="pathable-sidenav__item">
-          <a href="#">Child link</a>
+          <a href="#">Add Participant</a>
         </li>
       </ul>
     </li>
     <li class="pathable-sidenav__item">
-      <a href="#">Parent link</a>
+      <a href="#">Approvals</a>
+    </li>
+    <li class="pathable-sidenav__item">
+      <a href="#">Reports</a>
+    </li>
+    <li class="pathable-sidenav__item">
+      <a href="#">Templates</a>
+    </li>
+    <li class="pathable-sidenav__item">
+      <a href="#">Settings</a>
     </li>
   </ul>
 </aside>

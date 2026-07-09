@@ -11,10 +11,20 @@
 
 .pathable-button {
   @extend .usa-button;
+  // Brand opinion: PathAble Blue primary CTA
+  background-color: var(--pathable-color-action-primary-bg);
+  color: var(--pathable-color-action-primary-text);
+}
+
+.pathable-button--primary {
+  @extend .pathable-button;
 }
 
 .pathable-button--accent-cool {
   @extend .usa-button--accent-cool;
+  // Brand opinion: Bright Blue Brooks for supportive/tertiary actions
+  background-color: var(--pathable-color-link);
+  color: var(--pathable-color-text);
 }
 
 .pathable-button--accent-warm {
@@ -31,10 +41,16 @@
 
 .pathable-button--base {
   @extend .usa-button--base;
+  // Brand opinion: Shilling Silver surface base
+  background-color: var(--pathable-color-bg);
+  color: var(--pathable-color-text);
 }
 
 .pathable-button--secondary {
   @extend .usa-button--secondary;
+  // Brand opinion: Intelligent Jade secondary action with dark text for contrast
+  background-color: var(--pathable-color-action-secondary-bg);
+  color: var(--pathable-color-action-secondary-text);
 }
 
 .pathable-button--big {

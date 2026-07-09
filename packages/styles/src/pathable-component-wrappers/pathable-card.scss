@@ -48,3 +48,50 @@
 .pathable-card--header-first {
   @extend .usa-card--header-first;
 }
+
+// Pathable Workflow Card Modifier
+// Brand opinion: Shilling Silver or white surface, PathAble Blue heading,
+// Intelligent Jade optional status, Bright Blue Brooks links, generous spacing
+.pathable-card--workflow {
+  background-color: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+}
+
+.pathable-card--workflow .pathable-card__container {
+  border: none;
+  box-shadow: none;
+}
+
+.pathable-card--workflow .pathable-card__heading {
+  color: var(--pathable-color-text);
+  font-family: var(--pathable-font-heading);
+}
+
+.pathable-card--workflow .pathable-card__body {
+  color: var(--pathable-color-text);
+}
+
+// Optional status signal (add class to card heading or a sibling element)
+.pathable-card--workflow .pathable-card__status {
+  color: var(--pathable-color-accent);
+  font-size: var(--usa-font-size-sm);
+  font-weight: var(--usa-font-weight-bold);
+}
+
+// Action link styling
+.pathable-card--workflow .pathable-card__action {
+  color: var(--pathable-color-link);
+  text-decoration: underline;
+}
+
+// Metadata row styling
+.pathable-card--workflow .pathable-card__meta {
+  color: var(--pathable-color-text-muted);
+  font-size: var(--usa-font-size-sm);
+}
+
+// Focus state for the entire card when any child is focused
+.pathable-card--workflow:focus-within {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: 2px;
+}

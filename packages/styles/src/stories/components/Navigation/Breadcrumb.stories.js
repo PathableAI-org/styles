@@ -11,13 +11,13 @@ export const Default = {
       <a class="pathable-breadcrumb__link" href="#">Home</a>
     </li>
     <li class="pathable-breadcrumb__list-item">
-      <a class="pathable-breadcrumb__link" href="#">Federal Contracting</a>
+      <a class="pathable-breadcrumb__link" href="#">Participants</a>
     </li>
     <li class="pathable-breadcrumb__list-item">
-      <a class="pathable-breadcrumb__link" href="#">Contracting Assistance Programs</a>
+      <a class="pathable-breadcrumb__link" href="#">J. Doe</a>
     </li>
     <li class="pathable-breadcrumb__list-item" aria-current="page">
-      Women-Owned Small Businesses
+      Session Notes
     </li>
   </ol>
 </nav>

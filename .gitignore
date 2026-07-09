@@ -88,6 +88,9 @@ specs/**/part*.md
 specs/**/merged*.md
 specs/**/handoffs/
 
+# Temporary feedback files
+FEEDBACK.md
+
 # Vite files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
