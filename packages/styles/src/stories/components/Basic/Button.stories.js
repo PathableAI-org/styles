@@ -54,8 +54,7 @@ export const Unstyled = {
 
 // Workflow-specific button stories
 export const WorkflowPrimaryCTA = {
-  render: () =>
-    '<button class="pathable-button">Save Session Note</button>',
+  render: () => '<button class="pathable-button">Save Session Note</button>',
 }
 
 export const WorkflowSecondaryAction = {
