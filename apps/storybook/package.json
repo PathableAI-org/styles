@@ -11,12 +11,10 @@
     "@pathable/styles": "workspace:*"
   },
   "devDependencies": {
-    "@fontsource/fredoka": "^5.2.10",
-    "@fontsource/montserrat": "^5.2.8",
-    "@fontsource/nunito": "^5.2.7",
-    "@fontsource/poppins": "^5.2.7",
+    "@storybook/addon-a11y": "^10.4.6",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/html-vite": "^10.4.6",
+    "sass": "^1.101.0",
     "storybook": "^10.4.6"
   }
 }

@@ -3,6 +3,8 @@
 // All-in-one entry point: forwards all individual component wrappers and bundle packages.
 // Consumers can import this to get all component wrappers at once.
 
+@forward 'pathable-button';
+@forward 'pathable-button-group';
 @forward 'pathable-form-controls';
 @forward 'pathable-typography';
 @forward 'pathable-navigation';
