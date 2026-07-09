@@ -4,9 +4,7 @@ export const parameters = {
   a11y: {
     element: '#storybook-root',
     config: {
-      rules: [
-        { id: 'color-contrast', enabled: true },
-      ],
+      rules: [{ id: 'color-contrast', enabled: true }],
     },
   },
   controls: {
