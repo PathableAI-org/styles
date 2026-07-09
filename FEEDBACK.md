@@ -6,12 +6,12 @@ The repo is headed in the right direction. It has the right architecture for the
 
 The strongest parts are:
 
-* Brand rules are explicitly documented.
-* USWDS mapping is centralized.
-* Fonts and brand colors are tokenized.
-* Storybook has the a11y addon enabled.
-* Component wrappers use `.pathable-*` instead of requiring consumers to write `.usa-*`.
-* The package is already thinking about JS-driven USWDS behavior and exports.
+- Brand rules are explicitly documented.
+- USWDS mapping is centralized.
+- Fonts and brand colors are tokenized.
+- Storybook has the a11y addon enabled.
+- Component wrappers use `.pathable-*` instead of requiring consumers to write `.usa-*`.
+- The package is already thinking about JS-driven USWDS behavior and exports.
 
 The biggest gap: most components currently inherit USWDS behavior almost directly via `@extend`. That is good for coverage and accessibility, but it means many components will still “feel like USWDS with Pathable colors” rather than “Pathable components backed by USWDS.”
 
@@ -23,12 +23,12 @@ The brand guidance is well encoded in the package docs. `BRAND_RULES.md` identif
 
 The color palette is captured clearly with the six named colors:
 
-* Intelligent Jade `#1cae96`
-* PathAble Blue `#00365c`
-* Bright Blue Brooks `#4899e8`
-* Tech Teal `#015a76`
-* Lived-In Lime `#d3ff66`
-* Shilling Silver `#dde2e8`
+- Intelligent Jade `#1cae96`
+- PathAble Blue `#00365c`
+- Bright Blue Brooks `#4899e8`
+- Tech Teal `#015a76`
+- Lived-In Lime `#d3ff66`
+- Shilling Silver `#dde2e8`
 
 The typography mapping is also clearly documented: Fredoka for headings, Montserrat for alternate headings, Poppins for subheadings, and Nunito for body text.
 
@@ -38,9 +38,9 @@ The SCSS implementation mostly matches that direction. `_typography.scss` define
 
 The actual theme does **not use the exact brand hex values** in most places. It maps the brand colors to the nearest USWDS system tokens. That is documented and intentional, but visually it matters. For example:
 
-* PathAble Blue `#00365c` maps to USWDS `blue-warm-80v`, rendered as `#162e51`.
-* Bright Blue Brooks `#4899e8` maps to `blue-30v`, rendered as `#58b4ff`.
-* Lived-In Lime `#d3ff66` maps to `green-warm-10v`, rendered as `#e7f434`, with the largest perceptual difference.
+- PathAble Blue `#00365c` maps to USWDS `blue-warm-80v`, rendered as `#162e51`.
+- Bright Blue Brooks `#4899e8` maps to `blue-30v`, rendered as `#58b4ff`.
+- Lived-In Lime `#d3ff66` maps to `green-warm-10v`, rendered as `#e7f434`, with the largest perceptual difference.
 
 That is probably acceptable for a USWDS-based application system, but the docs should be explicit about the tradeoff:
 
@@ -58,10 +58,10 @@ That is a good first version. It gives immediate coverage for primary, secondary
 
 The brand issue is that this is still mostly USWDS’ button language. I would add a Pathable-specific button opinion layer:
 
-* Primary button should use PathAble Blue with strong contrast.
-* Secondary button should use Intelligent Jade only where text contrast is verified.
-* Accent-cool / Bright Blue Brooks should probably be used for supportive or tertiary actions, not the main CTA.
-* Lived-In Lime should not be a button background for normal text unless explicitly contrast-tested.
+- Primary button should use PathAble Blue with strong contrast.
+- Secondary button should use Intelligent Jade only where text contrast is verified.
+- Accent-cool / Bright Blue Brooks should probably be used for supportive or tertiary actions, not the main CTA.
+- Lived-In Lime should not be a button background for normal text unless explicitly contrast-tested.
 
 This matters because the brand rules say the primary colors should be visually prominent, but secondary/accent colors should not dominate.
 
@@ -71,13 +71,13 @@ The form wrapper bundle is broad and includes checkbox, combo box, date picker, 
 
 This is one of the most important component areas for Pathable because CoachBridge-style workflows depend on quick capture, structured session guidance, notes, compliance artifacts, and approval flows. The forms should not just demonstrate USWDS controls. They should show Pathable-specific workflow examples:
 
-* session note field
-* participant goal selector
-* intervention checklist
-* progress signal picker
-* required compliance field
-* supervisor approval comment
-* error state with human-readable recovery guidance
+- session note field
+- participant goal selector
+- intervention checklist
+- progress signal picker
+- required compliance field
+- supervisor approval comment
+- error state with human-readable recovery guidance
 
 The brand book’s “clear, functional, accessible” guidance will be proven more by form flows than by standalone controls.
 
@@ -87,14 +87,14 @@ The card wrapper is also a direct USWDS wrapper. It maps `.pathable-card`, conta
 
 Cards are a key place to express Pathable’s brand. Right now, if the visual result is mostly USWDS cards, it may feel too governmental/default. I would define a Pathable “workflow card” pattern:
 
-* subtle Shilling Silver or white surface
-* PathAble Blue heading
-* optional Intelligent Jade status signal
-* restrained Bright Blue Brooks link/action
-* clear metadata row
-* generous spacing
-* strong focus state
-* no decorative color unless it communicates state or hierarchy
+- subtle Shilling Silver or white surface
+- PathAble Blue heading
+- optional Intelligent Jade status signal
+- restrained Bright Blue Brooks link/action
+- clear metadata row
+- generous spacing
+- strong focus state
+- no decorative color unless it communicates state or hierarchy
 
 This would align well with the brand’s preferred high-legibility pairing: Shilling Silver background with PathAble Blue foreground.
 
@@ -104,12 +104,12 @@ The communication bundle includes alert, banner, card, hero, modal, process list
 
 This is the right coverage, but these components need stronger semantic examples. For Pathable, alerts and summary boxes should distinguish:
 
-* compliance blocking issue
-* missing required evidence
-* draft note not submitted
-* supervisor approval needed
-* successful artifact generation
-* sync/connectivity warning
+- compliance blocking issue
+- missing required evidence
+- draft note not submitted
+- supervisor approval needed
+- successful artifact generation
+- sync/connectivity warning
 
 The brand rule “accessibility takes priority” is especially relevant here.
 
@@ -121,12 +121,12 @@ The navigation bundle covers breadcrumb, header, in-page navigation, nav, pagina
 
 This is a good base. For Pathable’s product direction, I would add navigation stories that reflect actual staff workflows rather than generic site navigation:
 
-* “Today’s sessions”
-* “Participants”
-* “Approvals”
-* “Reports”
-* “Templates”
-* “Settings”
+- “Today’s sessions”
+- “Participants”
+- “Approvals”
+- “Reports”
+- “Templates”
+- “Settings”
 
 This would quickly reveal whether the brand system works for an operational staff product, not just a documentation site.
 
@@ -157,18 +157,18 @@ These are emitted in `_semantic.scss`.
 
 However, I would expand semantic tokens before going much further with components. The current set is too small for real app UI. Add role-based tokens such as:
 
-* `--pathable-color-action-primary-bg`
-* `--pathable-color-action-primary-text`
-* `--pathable-color-action-secondary-bg`
-* `--pathable-color-status-success-bg`
-* `--pathable-color-status-success-text`
-* `--pathable-color-status-warning-bg`
-* `--pathable-color-status-warning-text`
-* `--pathable-color-status-danger-bg`
-* `--pathable-color-status-danger-text`
-* `--pathable-color-workflow-active`
-* `--pathable-color-workflow-complete`
-* `--pathable-color-workflow-blocked`
+- `--pathable-color-action-primary-bg`
+- `--pathable-color-action-primary-text`
+- `--pathable-color-action-secondary-bg`
+- `--pathable-color-status-success-bg`
+- `--pathable-color-status-success-text`
+- `--pathable-color-status-warning-bg`
+- `--pathable-color-status-warning-text`
+- `--pathable-color-status-danger-bg`
+- `--pathable-color-status-danger-text`
+- `--pathable-color-workflow-active`
+- `--pathable-color-workflow-complete`
+- `--pathable-color-workflow-blocked`
 
 This matters because a workflow-first product needs semantic state, not just brand color aliases.
 
@@ -184,34 +184,34 @@ I would add these Storybook sections:
 
 1. **Brand / Color Usage**
 
-   * exact brand colors
-   * USWDS mapped colors
-   * semantic tokens
-   * approved pairings
-   * failed pairings / “do not use”
+   - exact brand colors
+   - USWDS mapped colors
+   - semantic tokens
+   - approved pairings
+   - failed pairings / “do not use”
 
 2. **Brand / Typography**
 
-   * heading, alternate heading, subheading, body
-   * long text examples
-   * violation examples
+   - heading, alternate heading, subheading, body
+   - long text examples
+   - violation examples
 
 3. **Patterns / Staff Workflow**
 
-   * session card
-   * session note form
-   * approval queue item
-   * compliance alert
-   * generated summary preview
+   - session card
+   - session note form
+   - approval queue item
+   - compliance alert
+   - generated summary preview
 
 4. **Accessibility**
 
-   * focus states
-   * keyboard navigation expectations
-   * high contrast candidates
-   * reduced motion / low-end device considerations
+   - focus states
+   - keyboard navigation expectations
+   - high contrast candidates
+   - reduced motion / low-end device considerations
 
-The current docs say agents must prefer semantic tokens, avoid hardcoded colors, preserve color names, check contrast, and prioritize accessibility.   Storybook should visibly demonstrate those rules.
+The current docs say agents must prefer semantic tokens, avoid hardcoded colors, preserve color names, check contrast, and prioritize accessibility. Storybook should visibly demonstrate those rules.
 
 ## Highest-priority fixes
 
@@ -221,8 +221,8 @@ Right now, the code says “USWDS wrappers.” That is fine for an alpha, but th
 
 Suggested framing:
 
-* **Alpha:** Pathable-branded USWDS wrapper library.
-* **Later:** Pathable workflow component system built on USWDS-compatible tokens and accessibility conventions.
+- **Alpha:** Pathable-branded USWDS wrapper library.
+- **Later:** Pathable workflow component system built on USWDS-compatible tokens and accessibility conventions.
 
 ### 2. Add visual brand delta documentation
 
@@ -237,11 +237,11 @@ This is already in `BRAND_RULES.md`; it should be visible in Storybook.
 
 Especially test:
 
-* Intelligent Jade with white text
-* Bright Blue Brooks with white text
-* Lived-In Lime on light backgrounds
-* muted text over Shilling Silver
-* link color over white and silver
+- Intelligent Jade with white text
+- Bright Blue Brooks with white text
+- Lived-In Lime on light backgrounds
+- muted text over Shilling Silver
+- link color over white and silver
 
 The docs already warn that small text needs high contrast and that Lived-In Lime is risky for small web text.
 
@@ -266,14 +266,14 @@ The root README is currently just `# styles`.
 
 That should be replaced with a real entrypoint:
 
-* package purpose
-* install/build commands
-* design principles
-* token import examples
-* Storybook link
-* relationship to USWDS
-* status: alpha / experimental
-* guidance for future Vue/React packages
+- package purpose
+- install/build commands
+- design principles
+- token import examples
+- Storybook link
+- relationship to USWDS
+- status: alpha / experimental
+- guidance for future Vue/React packages
 
 ## Bottom line
 
