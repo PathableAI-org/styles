@@ -5,8 +5,5 @@ alwaysApply: true
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/009-storybook-standalone-workspace/plan.md
-
-For additional context about the Figma component library, read the spec
-at specs/011-figma-component-library/plan.md
+at specs/010-brand-color-fidelity/plan.md
 <!-- SPECKIT END -->
