@@ -33,12 +33,8 @@ const sourceDir = join(
 const destDir = join(appRoot, 'storybook-static', 'img', 'usa-icons')
 
 if (!existsSync(sourceDir)) {
-  console.warn(
-    `[copy-icons] WARNING: source directory not found: ${sourceDir}`,
-  )
-  console.warn(
-    '[copy-icons] Make sure @pathable/styles has been built first.',
-  )
+  console.warn(`[copy-icons] WARNING: source directory not found: ${sourceDir}`)
+  console.warn('[copy-icons] Make sure @pathable/styles has been built first.')
   process.exit(0)
 }
 

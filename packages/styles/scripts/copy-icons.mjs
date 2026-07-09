@@ -14,14 +14,33 @@ const packageRoot = join(__dirname, '..')
 
 // Icons referenced by the compiled CSS
 const requiredIcons = [
-  'add.svg', 'arrow_back.svg', 'calendar_today.svg', 'check_circle.svg',
-  'close.svg', 'error.svg', 'expand_less.svg', 'expand_more.svg',
-  'info.svg', 'navigate_before.svg', 'navigate_far_before.svg',
-  'navigate_far_next.svg', 'navigate_next.svg', 'remove.svg',
-  'search.svg', 'unfold_more.svg', 'warning.svg',
+  'add.svg',
+  'arrow_back.svg',
+  'calendar_today.svg',
+  'check_circle.svg',
+  'close.svg',
+  'error.svg',
+  'expand_less.svg',
+  'expand_more.svg',
+  'info.svg',
+  'navigate_before.svg',
+  'navigate_far_before.svg',
+  'navigate_far_next.svg',
+  'navigate_next.svg',
+  'remove.svg',
+  'search.svg',
+  'unfold_more.svg',
+  'warning.svg',
 ]
 
-const sourceDir = join(packageRoot, 'node_modules', '@uswds/uswds', 'dist', 'img', 'usa-icons')
+const sourceDir = join(
+  packageRoot,
+  'node_modules',
+  '@uswds/uswds',
+  'dist',
+  'img',
+  'usa-icons',
+)
 const destDir = join(packageRoot, 'dist', 'img', 'usa-icons')
 
 let copied = 0
