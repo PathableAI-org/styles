@@ -45,6 +45,8 @@ export const FlexDirection = {
   `,
 }
 
+export const Default = FlexDirection
+
 export const AlignItems = {
   render: () => `
     <div style="padding: 1rem;">

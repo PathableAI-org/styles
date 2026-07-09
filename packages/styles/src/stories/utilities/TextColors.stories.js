@@ -34,6 +34,8 @@ export const OnLightBackground = {
   `,
 }
 
+export const Default = OnLightBackground
+
 export const OnDarkBackground = {
   render: () => `
     <div class="pathable-bg-primary" style="padding: 1.5rem; border-radius: 4px;">

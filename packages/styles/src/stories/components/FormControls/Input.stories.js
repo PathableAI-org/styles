@@ -15,6 +15,8 @@ export const Text = {
   `,
 }
 
+export const Default = Text
+
 export const Password = {
   render: () => `
 <label class="pathable-label" for="input-password">Password</label>

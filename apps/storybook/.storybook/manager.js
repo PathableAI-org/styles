@@ -17,4 +17,7 @@ const pathableTheme = create({
   textMutedColor: '#6c757d',
 })
 
-addons.setConfig({ theme: pathableTheme })
+addons.setConfig({
+  theme: pathableTheme,
+  ariaLabel: 'Storybook',
+})

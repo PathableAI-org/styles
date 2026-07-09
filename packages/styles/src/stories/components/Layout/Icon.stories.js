@@ -93,3 +93,5 @@ export const AllIcons = {
 </div>
   `,
 }
+
+export const Default = AllIcons

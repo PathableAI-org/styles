@@ -28,6 +28,8 @@ export const BorderWidths = {
   `,
 }
 
+export const Default = BorderWidths
+
 export const BorderRadius = {
   render: () => `
     <div style="padding: 1rem;">

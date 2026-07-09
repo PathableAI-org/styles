@@ -31,6 +31,8 @@ export const PaddingScale = {
   `,
 }
 
+export const Default = PaddingScale
+
 export const MarginScale = {
   render: () => `
     <div style="padding: 1rem;">
