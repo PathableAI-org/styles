@@ -163,24 +163,31 @@ const typographyViolations = [
     description: 'Using heading typeface (Fredoka) for long passages of text',
     rule: 'Do not use the heading typeface for long sections of text',
     sample: `Fredoka is a friendly rounded sans-serif typeface designed for short, impactful headings. When used for long paragraphs like this one, it becomes visually tiring and reduces readability. The rounded letterforms that work well at large sizes feel crowded and informal at body text length, making sustained reading more difficult. Headings should be reserved for short, prominent statements — anything longer than one sentence should use body text styling with Nunito.`,
-    violatingStyle: 'font-family: Fredoka, system-ui, sans-serif; font-size: 16px; line-height: 1.5; font-weight: 400;',
-    correctStyle: 'font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5; font-weight: 400;',
+    violatingStyle:
+      'font-family: Fredoka, system-ui, sans-serif; font-size: 16px; line-height: 1.5; font-weight: 400;',
+    correctStyle:
+      'font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5; font-weight: 400;',
   },
   {
     name: 'centered-long-body',
     description: 'Centering body text blocks longer than 3 lines',
     rule: 'Do not center sections of body text longer than 3 lines',
     sample: `This is a long body text paragraph that has been center-aligned. Centered text is harder to read for extended passages because the eye struggles to find the start of each line. The uneven line lengths create a ragged appearance that disrupts reading flow. For body text longer than three lines, left alignment is the standard for readability in left-to-right languages. Center alignment should be reserved for short labels, callouts, and decorative text.`,
-    violatingStyle: 'text-align: center; font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
-    correctStyle: 'text-align: left; font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
+    violatingStyle:
+      'text-align: center; font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
+    correctStyle:
+      'text-align: left; font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
   },
   {
     name: 'body-all-caps',
     description: 'Formatting body text in all capital letters',
     rule: 'Do not format body text in all caps',
-    sample: 'ALL CAPS TEXT REDUCES READABILITY BECAUSE WORDS LOSE THEIR DISTINCTIVE SHAPES. READERS RELY ON THE ASCENDERS AND DESCENDERS OF LOWERCASE LETTERS TO RECOGNIZE WORDS QUICKLY. WHEN EVERYTHING IS THE SAME HEIGHT, READING SPEED DECREASES AND EYE FATIGUE INCREASES. ALL CAPS SHOULD BE RESERVED FOR SHORT ACRONYMS, LOGOS, AND OCCASIONAL LABELS — NEVER FOR BODY TEXT OR LONG PHRASES.',
-    violatingStyle: 'text-transform: uppercase; font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
-    correctStyle: 'font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
+    sample:
+      'ALL CAPS TEXT REDUCES READABILITY BECAUSE WORDS LOSE THEIR DISTINCTIVE SHAPES. READERS RELY ON THE ASCENDERS AND DESCENDERS OF LOWERCASE LETTERS TO RECOGNIZE WORDS QUICKLY. WHEN EVERYTHING IS THE SAME HEIGHT, READING SPEED DECREASES AND EYE FATIGUE INCREASES. ALL CAPS SHOULD BE RESERVED FOR SHORT ACRONYMS, LOGOS, AND OCCASIONAL LABELS — NEVER FOR BODY TEXT OR LONG PHRASES.',
+    violatingStyle:
+      'text-transform: uppercase; font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
+    correctStyle:
+      'font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5;',
   },
 ]
 
@@ -220,9 +227,11 @@ export const Default = {
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
                   <span style="background: #162e51; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">${r.typeface}</span>
                   <span style="background: #00687d; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">${r.weightName}</span>
-                  ${r.uswdsRole
-                    ? `<span style="background: #4899e8; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">USWDS: ${r.uswdsRole}</span>`
-                    : `<span style="background: #888; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`}
+                  ${
+                    r.uswdsRole
+                      ? `<span style="background: #4899e8; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">USWDS: ${r.uswdsRole}</span>`
+                      : `<span style="background: #888; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
+                  }
                 </div>
                 <div style="font-family: monospace; font-size: 0.7rem; color: #888; margin-bottom: 0.375rem;">
                   <span style="font-weight: 600; color: #555;">Token:</span> ${r.cssToken}
