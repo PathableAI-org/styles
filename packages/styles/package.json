@@ -12,7 +12,8 @@
   "exports": {
     ".": "./dist/styles.css",
     "./js": "./dist/pathable.js",
-    "./js/init": "./dist/pathable-init.js"
+    "./js/init": "./dist/pathable-init.js",
+    "./src/*": "./src/*"
   },
   "scripts": {
     "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node scripts/build-js.mjs && sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
