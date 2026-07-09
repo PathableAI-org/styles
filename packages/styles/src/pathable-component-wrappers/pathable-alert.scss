@@ -18,16 +18,40 @@
   @extend .usa-alert--info;
 }
 
+.pathable-alert--success {
+  @extend .usa-alert--success;
+  background-color: var(--pathable-color-status-success-bg);
+  color: var(--pathable-color-status-success-text);
+}
+
+.pathable-alert--success .pathable-alert__body,
+.pathable-alert--success .pathable-alert__heading,
+.pathable-alert--success .pathable-alert__text {
+  color: var(--pathable-color-status-success-text);
+}
+
 .pathable-alert--warning {
   @extend .usa-alert--warning;
+  background-color: var(--pathable-color-status-warning-bg);
+  color: var(--pathable-color-status-warning-text);
+}
+
+.pathable-alert--warning .pathable-alert__body,
+.pathable-alert--warning .pathable-alert__heading,
+.pathable-alert--warning .pathable-alert__text {
+  color: var(--pathable-color-status-warning-text);
 }
 
 .pathable-alert--error {
   @extend .usa-alert--error;
+  background-color: var(--pathable-color-status-danger-bg);
+  color: var(--pathable-color-status-danger-text);
 }
 
-.pathable-alert--success {
-  @extend .usa-alert--success;
+.pathable-alert--error .pathable-alert__body,
+.pathable-alert--error .pathable-alert__heading,
+.pathable-alert--error .pathable-alert__text {
+  color: var(--pathable-color-status-danger-text);
 }
 
 .pathable-alert--emergency {

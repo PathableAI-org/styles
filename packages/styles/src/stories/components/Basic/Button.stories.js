@@ -7,6 +7,11 @@ export const Default = {
   render: () => '<button class="pathable-button">Default Button</button>',
 }
 
+export const Primary = {
+  render: () =>
+    '<button class="pathable-button pathable-button--primary">Primary Button</button>',
+}
+
 export const AccentCool = {
   render: () =>
     '<button class="pathable-button pathable-button--accent-cool">Accent Cool</button>',
@@ -45,4 +50,19 @@ export const Big = {
 export const Unstyled = {
   render: () =>
     '<button class="pathable-button pathable-button--unstyled">Unstyled</button>',
+}
+
+// Workflow-specific button stories
+export const WorkflowPrimaryCTA = {
+  render: () => '<button class="pathable-button">Save Coaching Note</button>',
+}
+
+export const WorkflowSecondaryAction = {
+  render: () =>
+    '<button class="pathable-button pathable-button--secondary">Add Support Activity</button>',
+}
+
+export const WorkflowTertiaryAction = {
+  render: () =>
+    '<button class="pathable-button pathable-button--accent-cool">View Details</button>',
 }

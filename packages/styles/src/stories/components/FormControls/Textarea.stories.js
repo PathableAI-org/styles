@@ -24,3 +24,39 @@ export const InForm = {
 </form>
   `,
 }
+
+export const WorkflowSessionNote = {
+  render: () => `
+<form class="pathable-form">
+  <label class="pathable-label" for="session-note">Job Coaching Session Note</label>
+  <span class="pathable-hint" id="session-note-hint">
+    Document key observations, supports provided, and employment goal progress from this session.
+  </span>
+  <textarea
+    id="session-note"
+    class="pathable-textarea"
+    aria-describedby="session-note-hint"
+    rows="6"
+    placeholder="Enter session notes..."
+  ></textarea>
+</form>
+  `,
+}
+
+export const WorkflowSupervisorComment = {
+  render: () => `
+<form class="pathable-form">
+  <label class="pathable-label" for="supervisor-comment">Supervisor Approval Comment</label>
+  <span class="pathable-hint" id="supervisor-comment-hint">
+    Add your supervisory comments and recommendations.
+  </span>
+  <textarea
+    id="supervisor-comment"
+    class="pathable-textarea"
+    aria-describedby="supervisor-comment-hint"
+    rows="4"
+    placeholder="Enter supervisory comments..."
+  ></textarea>
+</form>
+  `,
+}

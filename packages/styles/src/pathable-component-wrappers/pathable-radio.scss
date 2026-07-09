@@ -12,6 +12,10 @@
 // No base .usa-radio class exists in USWDS source.
 // Only .usa-radio__input, .usa-radio__label, and .usa-radio__label-description are defined.
 
+.pathable-radio__list {
+  // No .usa-radio__list in USWDS source — this is a semantic container
+}
+
 .pathable-radio__input {
   @extend .usa-radio__input;
 }

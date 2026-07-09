@@ -12,6 +12,10 @@
 // No base .usa-checkbox class exists in USWDS source.
 // Only .usa-checkbox__input, .usa-checkbox__label, and .usa-checkbox__label-description are defined.
 
+.pathable-checkbox__list {
+  // No .usa-checkbox__list in USWDS source — this is a semantic container
+}
+
 .pathable-checkbox__input {
   @extend .usa-checkbox__input;
 }

@@ -25,3 +25,22 @@ export const Multiple = {
 </select>
   `,
 }
+
+export const WorkflowParticipantGoal = {
+  render: () => `
+<form class="pathable-form">
+  <label class="pathable-label" for="participant-goal">Employment Goal</label>
+  <span class="pathable-hint" id="participant-goal-hint">
+    Select the primary employment goal for this session.
+  </span>
+  <select id="participant-goal" class="pathable-select" aria-describedby="participant-goal-hint">
+    <option value>- Select a goal -</option>
+    <option value="job-search">Job search skills</option>
+    <option value="interview">Interview preparation</option>
+    <option value="workplace">Workplace communication</option>
+    <option value="transportation">Transportation planning</option>
+    <option value="accommodation">Workplace accommodation discussion</option>
+  </select>
+</form>
+  `,
+}

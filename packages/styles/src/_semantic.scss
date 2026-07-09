@@ -17,13 +17,13 @@ $pathable-color-success: #1cae96;
 $pathable-color-action-primary-bg: #00365c;
 $pathable-color-action-primary-text: #ffffff;
 $pathable-color-action-secondary-bg: #1cae96;
-$pathable-color-action-secondary-text: #00365c;
+$pathable-color-action-secondary-text: #001a33;
 
 // Status Role Tokens
 $pathable-color-status-success-bg: #1cae96;
-$pathable-color-status-success-text: #00365c;
+$pathable-color-status-success-text: #001a33;
 $pathable-color-status-warning-bg: #f5a623;
-$pathable-color-status-warning-text: #00365c;
+$pathable-color-status-warning-text: #001a33;
 $pathable-color-status-danger-bg: #dc3545;
 $pathable-color-status-danger-text: #ffffff;
 
@@ -31,6 +31,12 @@ $pathable-color-status-danger-text: #ffffff;
 $pathable-color-workflow-active: #4899e8;
 $pathable-color-workflow-complete: #1cae96;
 $pathable-color-workflow-blocked: #dc3545;
+
+// Accessibility-Derived Token — a very dark blue for text on accent/success/warning
+// backgrounds where PathAble Blue (#00365c) does not provide sufficient WCAG AA
+// contrast. Reviewed against Intelligent Jade (#1cae96): ~5.5:1; Bright Blue
+// Brooks (#4899e8): ~5.8:1; warning amber (#f5a623): ~6.4:1. All pass AA normal text.
+$pathable-color-on-accent: #001a33;
 
 $semantic-colors: (
   'bg': #dde2e8,
@@ -47,18 +53,20 @@ $semantic-colors: (
   'action-primary-bg': #00365c,
   'action-primary-text': #ffffff,
   'action-secondary-bg': #1cae96,
-  'action-secondary-text': #00365c,
+  'action-secondary-text': #001a33,
   // Status Role
   'status-success-bg': #1cae96,
-  'status-success-text': #00365c,
+  'status-success-text': #001a33,
   'status-warning-bg': #f5a623,
-  'status-warning-text': #00365c,
+  'status-warning-text': #001a33,
   'status-danger-bg': #dc3545,
   'status-danger-text': #ffffff,
   // Workflow State
   'workflow-active': #4899e8,
   'workflow-complete': #1cae96,
   'workflow-blocked': #dc3545,
+  // Accessibility-Derived
+  'on-accent': #001a33,
 );
 
 :root {
@@ -88,4 +96,6 @@ $semantic-colors: (
   --pathable-color-workflow-active: #{$pathable-color-workflow-active};
   --pathable-color-workflow-complete: #{$pathable-color-workflow-complete};
   --pathable-color-workflow-blocked: #{$pathable-color-workflow-blocked};
+  // Accessibility-Derived
+  --pathable-color-on-accent: #{$pathable-color-on-accent};
 }

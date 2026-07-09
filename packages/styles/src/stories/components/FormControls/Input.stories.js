@@ -52,3 +52,26 @@ export const Search = {
 />
   `,
 }
+
+export const WorkflowRequiredComplianceField = {
+  render: () => `
+<form class="pathable-form">
+  <label class="pathable-label" for="compliance-field">Funding Authorization Number <span class="pathable-hint">(required)</span></label>
+  <span class="pathable-hint" id="compliance-field-hint">
+    Enter the participant's funding authorization identifier.
+  </span>
+  <input
+    id="compliance-field"
+    name="compliance-field"
+    class="pathable-input pathable-input--error"
+    type="text"
+    aria-describedby="compliance-field-hint compliance-field-error"
+    aria-invalid="true"
+    placeholder="Enter authorization number"
+  />
+  <span class="pathable-error-message" id="compliance-field-error" role="alert">
+    Funding authorization number is required. Please enter a valid identifier.
+  </span>
+</form>
+  `,
+}
