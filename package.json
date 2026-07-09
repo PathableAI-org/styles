@@ -5,7 +5,7 @@
     "build": "pnpm -r build",
     "check:format": "prettier --check .",
     "format": "prettier --write .",
-    "docs": "pnpm --filter @pathable/storybook storybook",
+    "docs": "pnpm --filter @pathable/styles build && pnpm --filter @pathable/storybook storybook",
     "build:docs": "pnpm --filter @pathable/storybook build-storybook",
     "lint:styles": "pnpm -r run lint:styles"
   },

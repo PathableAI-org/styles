@@ -139,3 +139,13 @@ index 01739551a1682d04d96ef45332b8c751b0c4be2b..bb1e86f488cb3861c3b11cb6d9a82f3c
 -  prefix: "usa",
 +  prefix: "pathable",
  };
+diff --git a/packages/uswds-core/src/js/start.js b/packages/uswds-core/src/js/start.js
+index 83152af0d5caef4f117da7d53aebdbbed20c9dc2..49423287799e65b1939cc293e6d6d6ff0148b8bf 100755
+--- a/packages/uswds-core/src/js/start.js
++++ b/packages/uswds-core/src/js/start.js
+@@ -1,4 +1,4 @@
+-window.uswdsPresent = true; // GLOBAL variable to indicate that the uswds.js has loaded in the DOM.
++window.pathableJsLoaded = true; // GLOBAL variable to indicate that the uswds.js has loaded in the DOM.
+ 
+ const uswds = require("./config");
+ 
