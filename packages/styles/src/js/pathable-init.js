@@ -1,16 +1,20 @@
 ;(function () {
   'use strict'
-  var loadingClass = 'pathable-js-loading'
+  var loadingClasses = ['pathable-js-loading', 'usa-js-loading']
   var fallback
-  document.documentElement.classList.add(loadingClass)
-  function revertClass() {
-    document.documentElement.classList.remove(loadingClass)
+  loadingClasses.forEach(function (c) {
+    document.documentElement.classList.add(c)
+  })
+  function revertClasses() {
+    loadingClasses.forEach(function (c) {
+      document.documentElement.classList.remove(c)
+    })
   }
-  fallback = setTimeout(revertClass, 8000)
+  fallback = setTimeout(revertClasses, 8000)
   function verifyLoaded() {
     if (window.pathableJsLoaded) {
       clearTimeout(fallback)
-      revertClass()
+      revertClasses()
       window.removeEventListener('load', verifyLoaded, true)
     }
   }
