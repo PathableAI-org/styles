@@ -12,6 +12,25 @@ $pathable-color-focus-ring: uswds.color('blue-40v');
 $pathable-color-danger: #dc3545;
 $pathable-color-success: uswds.color('mint-cool-30v');
 
+// Action Role Tokens
+$pathable-color-action-primary-bg: uswds.color('blue-warm-80v');
+$pathable-color-action-primary-text: #ffffff;
+$pathable-color-action-secondary-bg: uswds.color('mint-cool-30v');
+$pathable-color-action-secondary-text: uswds.color('blue-warm-80v');
+
+// Status Role Tokens
+$pathable-color-status-success-bg: uswds.color('mint-cool-30v');
+$pathable-color-status-success-text: uswds.color('blue-warm-80v');
+$pathable-color-status-warning-bg: #f5a623;
+$pathable-color-status-warning-text: uswds.color('blue-warm-80v');
+$pathable-color-status-danger-bg: #dc3545;
+$pathable-color-status-danger-text: #ffffff;
+
+// Workflow State Tokens
+$pathable-color-workflow-active: uswds.color('blue-30v');
+$pathable-color-workflow-complete: uswds.color('mint-cool-30v');
+$pathable-color-workflow-blocked: #dc3545;
+
 $semantic-colors: (
   'bg': uswds.color('gray-cool-10'),
   'surface': #ffffff,
@@ -23,6 +42,22 @@ $semantic-colors: (
   'focus-ring': uswds.color('blue-40v'),
   'danger': #dc3545,
   'success': uswds.color('mint-cool-30v'),
+  // Action Role
+  'action-primary-bg': uswds.color('blue-warm-80v'),
+  'action-primary-text': #ffffff,
+  'action-secondary-bg': uswds.color('mint-cool-30v'),
+  'action-secondary-text': uswds.color('blue-warm-80v'),
+  // Status Role
+  'status-success-bg': uswds.color('mint-cool-30v'),
+  'status-success-text': uswds.color('blue-warm-80v'),
+  'status-warning-bg': #f5a623,
+  'status-warning-text': uswds.color('blue-warm-80v'),
+  'status-danger-bg': #dc3545,
+  'status-danger-text': #ffffff,
+  // Workflow State
+  'workflow-active': uswds.color('blue-30v'),
+  'workflow-complete': uswds.color('mint-cool-30v'),
+  'workflow-blocked': #dc3545,
 );
 
 :root {
@@ -36,4 +71,20 @@ $semantic-colors: (
   --pathable-color-focus-ring: #{$pathable-color-focus-ring};
   --pathable-color-danger: #{$pathable-color-danger};
   --pathable-color-success: #{$pathable-color-success};
+  // Action Role
+  --pathable-color-action-primary-bg: #{$pathable-color-action-primary-bg};
+  --pathable-color-action-primary-text: #{$pathable-color-action-primary-text};
+  --pathable-color-action-secondary-bg: #{$pathable-color-action-secondary-bg};
+  --pathable-color-action-secondary-text: #{$pathable-color-action-secondary-text};
+  // Status Role
+  --pathable-color-status-success-bg: #{$pathable-color-status-success-bg};
+  --pathable-color-status-success-text: #{$pathable-color-status-success-text};
+  --pathable-color-status-warning-bg: #{$pathable-color-status-warning-bg};
+  --pathable-color-status-warning-text: #{$pathable-color-status-warning-text};
+  --pathable-color-status-danger-bg: #{$pathable-color-status-danger-bg};
+  --pathable-color-status-danger-text: #{$pathable-color-status-danger-text};
+  // Workflow State
+  --pathable-color-workflow-active: #{$pathable-color-workflow-active};
+  --pathable-color-workflow-complete: #{$pathable-color-workflow-complete};
+  --pathable-color-workflow-blocked: #{$pathable-color-workflow-blocked};
 }

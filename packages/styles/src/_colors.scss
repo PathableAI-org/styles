@@ -8,6 +8,14 @@ $tech-teal: uswds.color('cyan-60v');
 $lived-in-lime: uswds.color('green-warm-10v');
 $shilling-silver: uswds.color('gray-cool-10');
 
+// Exact brand hex values (from BRAND_RULES.md)
+$pathable-brand-pathable-blue: #00365c;
+$intelligent-jade-brand: #1cae96;
+$bright-blue-brooks-brand: #4899e8;
+$tech-teal-brand: #015a76;
+$lived-in-lime-brand: #d3ff66;
+$shilling-silver-brand: #dde2e8;
+
 $brand-colors: (
   'pathable-blue': uswds.color('blue-warm-80v'),
   'intelligent-jade': uswds.color('mint-cool-30v'),
@@ -17,6 +25,15 @@ $brand-colors: (
   'shilling-silver': uswds.color('gray-cool-10'),
 );
 
+$brand-exact-colors: (
+  'pathable-blue': #00365c,
+  'intelligent-jade': #1cae96,
+  'bright-blue-brooks': #4899e8,
+  'tech-teal': #015a76,
+  'lived-in-lime': #d3ff66,
+  'shilling-silver': #dde2e8,
+);
+
 :root {
   --pathable-blue: #{$pathable-blue};
   --intelligent-jade: #{$intelligent-jade};
@@ -24,4 +41,10 @@ $brand-colors: (
   --tech-teal: #{$tech-teal};
   --lived-in-lime: #{$lived-in-lime};
   --shilling-silver: #{$shilling-silver};
+  --pathable-brand-pathable-blue: #00365c;
+  --pathable-brand-intelligent-jade: #1cae96;
+  --pathable-brand-bright-blue-brooks: #4899e8;
+  --pathable-brand-tech-teal: #015a76;
+  --pathable-brand-lived-in-lime: #d3ff66;
+  --pathable-brand-shilling-silver: #dde2e8;
 }
