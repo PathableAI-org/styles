@@ -1,4 +1,5 @@
 import '@pathable/styles/src/index.scss'
+import '@pathable/styles/js'
 
 export const parameters = {
   a11y: {

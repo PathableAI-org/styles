@@ -1,0 +1,141 @@
+diff --git a/packages/usa-button/src/index.js b/packages/usa-button/src/index.js
+index 2bdf7f50d11d1da74051a11b6e8fc8273d144220..8e4fe638dd8ada3b530bacc3cfaa70b5ec134b1c 100644
+--- a/packages/usa-button/src/index.js
++++ b/packages/usa-button/src/index.js
+@@ -1,7 +1,7 @@
+ const keymap = require("receptor/keymap");
+ const behavior = require("../../uswds-core/src/js/utils/behavior");
+ 
+-const ANCHOR_BUTTON = `a[class*="usa-button"]`;
++const ANCHOR_BUTTON = `a[class*="pathable-button"]`;
+ 
+ const toggleButton = (event) => {
+   event.preventDefault();
+diff --git a/packages/usa-character-count/src/index.js b/packages/usa-character-count/src/index.js
+index 8662aa52e5a5871ee7d0f1043abdcd2c4f0d872e..af97e5c491c6cbc747277d81e3c53e52fa7c89a8 100644
+--- a/packages/usa-character-count/src/index.js
++++ b/packages/usa-character-count/src/index.js
+@@ -77,10 +77,10 @@ const createStatusMessages = (characterCountEl) => {
+   const maxLength = characterCountEl.dataset.maxlength;
+   const defaultMessage = `${maxLength} ${DEFAULT_STATUS_LABEL}`;
+ 
+-  statusMessage.classList.add(`${STATUS_MESSAGE_CLASS}`, "usa-hint");
++  statusMessage.classList.add(`${STATUS_MESSAGE_CLASS}`, "pathable-hint");
+   srStatusMessage.classList.add(
+     `${STATUS_MESSAGE_SR_ONLY_CLASS}`,
+-    "usa-sr-only",
++    "pathable-sr-only",
+   );
+ 
+   statusMessage.setAttribute("aria-hidden", true);
+@@ -185,7 +185,7 @@ const enhanceCharacterCount = (inputEl) => {
+   const { characterCountEl, messageEl } = getCharacterCountElements(inputEl);
+ 
+   // Hide hint and remove aria-live for backwards compatibility
+-  messageEl.classList.add("usa-sr-only");
++  messageEl.classList.add("pathable-sr-only");
+   messageEl.removeAttribute("aria-live");
+ 
+   setDataLength(inputEl);
+diff --git a/packages/usa-combo-box/src/index.js b/packages/usa-combo-box/src/index.js
+index dacdf97d3103613eadfb51702f15557900ff1838..f3a704ad0dd3fd63fdfb49696d4a19951b5ed923 100644
+--- a/packages/usa-combo-box/src/index.js
++++ b/packages/usa-combo-box/src/index.js
+@@ -207,7 +207,7 @@ const enhanceComboBox = (_comboBoxEl) => {
+   selectLabel.setAttribute("id", listIdLabel);
+   selectEl.setAttribute("aria-hidden", "true");
+   selectEl.setAttribute("tabindex", "-1");
+-  selectEl.classList.add("usa-sr-only", SELECT_CLASS);
++  selectEl.classList.add("pathable-sr-only", SELECT_CLASS);
+   selectEl.id = "";
+   selectEl.value = "";
+ 
+@@ -258,7 +258,7 @@ const enhanceComboBox = (_comboBoxEl) => {
+         aria-labelledby="${listIdLabel}"
+         hidden>
+       </ul>
+-      <div class="${STATUS_CLASS} usa-sr-only" role="status"></div>`,
++      <div class="${STATUS_CLASS} pathable-sr-only" role="status"></div>`,
+   );
+ 
+   if (selectedOption) {
+diff --git a/packages/usa-date-picker/src/index.js b/packages/usa-date-picker/src/index.js
+index 2888468a12d347736beaffd26fdf6c7bff8b11f8..7204323b8dce7e179066d4d700c8a42d9b31c459 100644
+--- a/packages/usa-date-picker/src/index.js
++++ b/packages/usa-date-picker/src/index.js
+@@ -935,7 +935,7 @@ const enhanceDatePicker = (el) => {
+     Sanitizer.escapeHTML`
+     <button type="button" class="${DATE_PICKER_BUTTON_CLASS}" aria-haspopup="true" aria-label="Toggle calendar"></button>
+     <div class="${DATE_PICKER_CALENDAR_CLASS}" role="application" hidden></div>
+-    <div class="usa-sr-only ${DATE_PICKER_STATUS_CLASS}" role="status" aria-live="polite"></div>`,
++    <div class="pathable-sr-only ${DATE_PICKER_STATUS_CLASS}" role="status" aria-live="polite"></div>`,
+   );
+ 
+   internalInputEl.setAttribute("aria-hidden", "true");
+diff --git a/packages/usa-file-input/src/index.js b/packages/usa-file-input/src/index.js
+index e7cd301373ff5af5dc8927ce35ee2cec33b95830..fca39f3723474a4d13216c3125861ec8fbce2490 100644
+--- a/packages/usa-file-input/src/index.js
++++ b/packages/usa-file-input/src/index.js
+@@ -335,10 +335,10 @@ const addPreviewHeading = (fileInputEl, fileNames) => {
+   let previewHeadingText = "";
+ 
+   if (fileNames.length === 1) {
+-    previewHeadingText = Sanitizer.escapeHTML`Selected file <span class="usa-file-input__choose">${changeItemText}</span>`;
++    previewHeadingText = Sanitizer.escapeHTML`Selected file <span class="${CHOOSE_CLASS}">${changeItemText}</span>`;
+   } else if (fileNames.length > 1) {
+     changeItemText = "Change files";
+-    previewHeadingText = Sanitizer.escapeHTML`${fileNames.length} files selected <span class="usa-file-input__choose">${changeItemText}</span>`;
++    previewHeadingText = Sanitizer.escapeHTML`${fileNames.length} files selected <span class="${CHOOSE_CLASS}">${changeItemText}</span>`;
+   }
+ 
+   // Hides null state content and sets preview heading
+diff --git a/packages/usa-header/src/index.js b/packages/usa-header/src/index.js
+index 6d45346c62ba2bcda4a8cbf1d461afeca1f2ac12..76d8da7e8fa0022a564e675b84fe1733e34754ac 100755
+--- a/packages/usa-header/src/index.js
++++ b/packages/usa-header/src/index.js
+@@ -26,7 +26,7 @@ const TOGGLES = [NAV, OVERLAY].join(", ");
+ const NON_NAV_ELEMENTS = `body *:not(${HEADER}, ${NAV_CONTAINER}, ${NAV}, ${NAV} *):not([aria-hidden])`;
+ const NON_NAV_HIDDEN = `[${NON_NAV_HIDDEN_ATTRIBUTE}]`;
+ 
+-const ACTIVE_CLASS = "usa-js-mobile-nav--active";
++const ACTIVE_CLASS = "pathable-js-mobile-nav--active";
+ const VISIBLE_CLASS = "is-visible";
+ 
+ let navigation;
+diff --git a/packages/usa-modal/src/index.js b/packages/usa-modal/src/index.js
+index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb921d991f8 100644
+--- a/packages/usa-modal/src/index.js
++++ b/packages/usa-modal/src/index.js
+@@ -20,8 +20,8 @@ const CLOSERS = `${CLOSE_BUTTON}, .${OVERLAY_CLASSNAME}:not([${FORCE_ACTION_ATTR
+ const NON_MODALS = `body > *:not(.${WRAPPER_CLASSNAME}):not([aria-hidden])`;
+ const NON_MODALS_HIDDEN = `[${NON_MODAL_HIDDEN_ATTRIBUTE}]`;
+ 
+-const ACTIVE_CLASS = "usa-js-modal--active";
+-const PREVENT_CLICK_CLASS = "usa-js-no-click";
++const ACTIVE_CLASS = "pathable-js-modal--active";
++const PREVENT_CLICK_CLASS = "pathable-js-no-click";
+ const VISIBLE_CLASS = "is-visible";
+ const HIDDEN_CLASS = "is-hidden";
+ 
+diff --git a/packages/usa-validation/src/index.js b/packages/usa-validation/src/index.js
+index 5c1bd48532558f825f5e86d3e02dbbe477f73a52..1d5136d0baa2ab6ef81aa95467c3ccc47bb7e9ce 100755
+--- a/packages/usa-validation/src/index.js
++++ b/packages/usa-validation/src/index.js
+@@ -20,7 +20,7 @@ const createStatusElement = (input) => {
+   const statusSummaryContainer = document.createElement("span");
+ 
+   statusSummaryContainer.setAttribute("data-validation-status", "");
+-  statusSummaryContainer.classList.add("usa-sr-only");
++  statusSummaryContainer.classList.add("pathable-sr-only");
+   statusSummaryContainer.setAttribute("aria-live", "polite");
+   statusSummaryContainer.setAttribute("aria-atomic", true);
+   statusSummaryContainer.setAttribute("id", statusSummaryID);
+diff --git a/packages/uswds-core/src/js/config.js b/packages/uswds-core/src/js/config.js
+index 01739551a1682d04d96ef45332b8c751b0c4be2b..bb1e86f488cb3861c3b11cb6d9a82f3c14ae35a0 100755
+--- a/packages/uswds-core/src/js/config.js
++++ b/packages/uswds-core/src/js/config.js
+@@ -1,3 +1,3 @@
+ module.exports = {
+-  prefix: "usa",
++  prefix: "pathable",
+ };
