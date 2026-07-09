@@ -1,0 +1,13 @@
+// packages/styles/src/pathable-component-wrappers/pathable-sr-only.scss
+//
+// Wraps usa-sr-only utility as pathable-sr-only.
+// JS-driven: Yes — USWDS components use this class for screen-reader-only text
+// Requires .usa-* on DOM: No — pathable-sr-only extends usa-sr-only in CSS
+
+@use 'uswds-core' as *;
+
+@use 'uswds-helpers/src/styles/usa-sr-only';
+
+.pathable-sr-only {
+  @extend .usa-sr-only;
+}

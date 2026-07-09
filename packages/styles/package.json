@@ -9,8 +9,15 @@
     "src",
     "fonts"
   ],
+  "exports": {
+    ".": "./dist/styles.css",
+    "./js": "./dist/pathable.js",
+    "./js/init": "./dist/pathable-init.js",
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*"
+  },
   "scripts": {
-    "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node scripts/build-js.mjs && sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "watch": "sass --watch --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "lint:styles": "stylelint 'src/**/*.scss'"
   },
@@ -22,6 +29,7 @@
     "@fontsource/montserrat": "^5.2.8",
     "@fontsource/nunito": "^5.2.7",
     "@fontsource/poppins": "^5.2.7",
-    "sass": "^1.86.3"
+    "sass": "^1.86.3",
+    "esbuild": "^0.25.12"
   }
 }

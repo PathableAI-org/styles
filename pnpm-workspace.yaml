@@ -5,3 +5,5 @@ allowBuilds:
   '@parcel/watcher': true
   esbuild: true
   sharp: true
+patchedDependencies:
+  '@uswds/uswds@3.13.0': patches/@uswds__uswds@3.13.0.patch
