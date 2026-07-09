@@ -1,20 +1,71 @@
 @use 'uswds-core' as uswds;
 
-// Brand Color Tokens
-$pathable-blue: uswds.color('blue-warm-80v');
-$intelligent-jade: uswds.color('mint-cool-30v');
-$bright-blue-brooks: uswds.color('blue-30v');
-$tech-teal: uswds.color('cyan-60v');
-$lived-in-lime: uswds.color('green-warm-10v');
-$shilling-silver: uswds.color('gray-cool-10');
+// Brand Color Tokens — Exact Brand Hex Values (from BRAND_RULES.md)
+$pathable-blue: #00365c;
+$intelligent-jade: #1cae96;
+$bright-blue-brooks: #4899e8;
+$tech-teal: #015a76;
+$lived-in-lime: #d3ff66;
+$shilling-silver: #dde2e8;
+
+// Brand Primitive Tokens (aliases for exact brand hex, same values as above)
+$pathable-brand-pathable-blue: #00365c;
+$pathable-brand-intelligent-jade: #1cae96;
+$pathable-brand-bright-blue-brooks: #4899e8;
+$pathable-brand-tech-teal: #015a76;
+$pathable-brand-lived-in-lime: #d3ff66;
+$pathable-brand-shilling-silver: #dde2e8;
+
+// USWDS Color Approximations — for documentation/mapping only
+// These are the closest USWDS v3.x system tokens to each brand color.
+// See _uswds-theme.scss for the USWDS theme configuration source of truth.
+$pathable-uswds-pathable-blue-approx: uswds.color('blue-warm-80v');
+$pathable-uswds-intelligent-jade-approx: uswds.color('mint-cool-30v');
+$pathable-uswds-bright-blue-brooks-approx: uswds.color('blue-30v');
+$pathable-uswds-tech-teal-approx: uswds.color('cyan-60v');
+$pathable-uswds-lived-in-lime-approx: uswds.color('green-warm-10v');
+$pathable-uswds-shilling-silver-approx: uswds.color('gray-cool-10');
 
 $brand-colors: (
-  'pathable-blue': uswds.color('blue-warm-80v'),
-  'intelligent-jade': uswds.color('mint-cool-30v'),
-  'bright-blue-brooks': uswds.color('blue-30v'),
-  'tech-teal': uswds.color('cyan-60v'),
-  'lived-in-lime': uswds.color('green-warm-10v'),
-  'shilling-silver': uswds.color('gray-cool-10'),
+  'pathable-blue': #00365c,
+  'intelligent-jade': #1cae96,
+  'bright-blue-brooks': #4899e8,
+  'tech-teal': #015a76,
+  'lived-in-lime': #d3ff66,
+  'shilling-silver': #dde2e8,
+);
+
+$brand-uswds-color-mappings: (
+  'pathable-blue': (
+    'exact': #00365c,
+    'uswds-token': 'blue-warm-80v',
+    'uswds-hex': uswds.color('blue-warm-80v'),
+  ),
+  'intelligent-jade': (
+    'exact': #1cae96,
+    'uswds-token': 'mint-cool-30v',
+    'uswds-hex': uswds.color('mint-cool-30v'),
+  ),
+  'bright-blue-brooks': (
+    'exact': #4899e8,
+    'uswds-token': 'blue-30v',
+    'uswds-hex': uswds.color('blue-30v'),
+  ),
+  'tech-teal': (
+    'exact': #015a76,
+    'uswds-token': 'cyan-60v',
+    'uswds-hex': uswds.color('cyan-60v'),
+  ),
+  'lived-in-lime': (
+    'exact': #d3ff66,
+    'uswds-token': 'green-warm-10v',
+    'uswds-hex': uswds.color('green-warm-10v'),
+  ),
+  'shilling-silver': (
+    'exact': #dde2e8,
+    'uswds-token': 'gray-cool-10',
+    'uswds-hex': uswds.color('gray-cool-10'),
+  ),
 );
 
 :root {
@@ -24,4 +75,10 @@ $brand-colors: (
   --tech-teal: #{$tech-teal};
   --lived-in-lime: #{$lived-in-lime};
   --shilling-silver: #{$shilling-silver};
+  --pathable-brand-pathable-blue: #{$pathable-brand-pathable-blue};
+  --pathable-brand-intelligent-jade: #{$pathable-brand-intelligent-jade};
+  --pathable-brand-bright-blue-brooks: #{$pathable-brand-bright-blue-brooks};
+  --pathable-brand-tech-teal: #{$pathable-brand-tech-teal};
+  --pathable-brand-lived-in-lime: #{$pathable-brand-lived-in-lime};
+  --pathable-brand-shilling-silver: #{$pathable-brand-shilling-silver};
 }

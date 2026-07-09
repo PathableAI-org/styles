@@ -1,28 +1,64 @@
-@use 'uswds-core' as uswds;
-
 // Semantic Color Tokens
-$pathable-color-bg: uswds.color('gray-cool-10');
+// All tokens reference Pathable brand primitives (exact brand hex values) or
+// direct hex values. No uswds.color() calls here — that is the responsibility
+// of the USWDS adapter layer (_uswds-theme.scss).
+$pathable-color-bg: #dde2e8;
 $pathable-color-surface: #ffffff;
-$pathable-color-text: uswds.color('blue-warm-80v');
-$pathable-color-text-muted: uswds.color('cyan-60v');
-$pathable-color-border: uswds.color('gray-cool-10');
-$pathable-color-link: uswds.color('blue-30v');
-$pathable-color-accent: uswds.color('mint-cool-30v');
-$pathable-color-focus-ring: uswds.color('blue-40v');
+$pathable-color-text: #00365c;
+$pathable-color-text-muted: #015a76;
+$pathable-color-border: #dde2e8;
+$pathable-color-link: #4899e8;
+$pathable-color-accent: #1cae96;
+$pathable-color-focus-ring: #4497f5;
 $pathable-color-danger: #dc3545;
-$pathable-color-success: uswds.color('mint-cool-30v');
+$pathable-color-success: #1cae96;
+
+// Action Role Tokens
+$pathable-color-action-primary-bg: #00365c;
+$pathable-color-action-primary-text: #ffffff;
+$pathable-color-action-secondary-bg: #1cae96;
+$pathable-color-action-secondary-text: #00365c;
+
+// Status Role Tokens
+$pathable-color-status-success-bg: #1cae96;
+$pathable-color-status-success-text: #00365c;
+$pathable-color-status-warning-bg: #f5a623;
+$pathable-color-status-warning-text: #00365c;
+$pathable-color-status-danger-bg: #dc3545;
+$pathable-color-status-danger-text: #ffffff;
+
+// Workflow State Tokens
+$pathable-color-workflow-active: #4899e8;
+$pathable-color-workflow-complete: #1cae96;
+$pathable-color-workflow-blocked: #dc3545;
 
 $semantic-colors: (
-  'bg': uswds.color('gray-cool-10'),
+  'bg': #dde2e8,
   'surface': #ffffff,
-  'text': uswds.color('blue-warm-80v'),
-  'text-muted': uswds.color('cyan-60v'),
-  'border': uswds.color('gray-cool-10'),
-  'link': uswds.color('blue-30v'),
-  'accent': uswds.color('mint-cool-30v'),
-  'focus-ring': uswds.color('blue-40v'),
+  'text': #00365c,
+  'text-muted': #015a76,
+  'border': #dde2e8,
+  'link': #4899e8,
+  'accent': #1cae96,
+  'focus-ring': #4497f5,
   'danger': #dc3545,
-  'success': uswds.color('mint-cool-30v'),
+  'success': #1cae96,
+  // Action Role
+  'action-primary-bg': #00365c,
+  'action-primary-text': #ffffff,
+  'action-secondary-bg': #1cae96,
+  'action-secondary-text': #00365c,
+  // Status Role
+  'status-success-bg': #1cae96,
+  'status-success-text': #00365c,
+  'status-warning-bg': #f5a623,
+  'status-warning-text': #00365c,
+  'status-danger-bg': #dc3545,
+  'status-danger-text': #ffffff,
+  // Workflow State
+  'workflow-active': #4899e8,
+  'workflow-complete': #1cae96,
+  'workflow-blocked': #dc3545,
 );
 
 :root {
@@ -36,4 +72,20 @@ $semantic-colors: (
   --pathable-color-focus-ring: #{$pathable-color-focus-ring};
   --pathable-color-danger: #{$pathable-color-danger};
   --pathable-color-success: #{$pathable-color-success};
+  // Action Role
+  --pathable-color-action-primary-bg: #{$pathable-color-action-primary-bg};
+  --pathable-color-action-primary-text: #{$pathable-color-action-primary-text};
+  --pathable-color-action-secondary-bg: #{$pathable-color-action-secondary-bg};
+  --pathable-color-action-secondary-text: #{$pathable-color-action-secondary-text};
+  // Status Role
+  --pathable-color-status-success-bg: #{$pathable-color-status-success-bg};
+  --pathable-color-status-success-text: #{$pathable-color-status-success-text};
+  --pathable-color-status-warning-bg: #{$pathable-color-status-warning-bg};
+  --pathable-color-status-warning-text: #{$pathable-color-status-warning-text};
+  --pathable-color-status-danger-bg: #{$pathable-color-status-danger-bg};
+  --pathable-color-status-danger-text: #{$pathable-color-status-danger-text};
+  // Workflow State
+  --pathable-color-workflow-active: #{$pathable-color-workflow-active};
+  --pathable-color-workflow-complete: #{$pathable-color-workflow-complete};
+  --pathable-color-workflow-blocked: #{$pathable-color-workflow-blocked};
 }
