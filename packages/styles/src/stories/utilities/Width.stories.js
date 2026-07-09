@@ -28,6 +28,8 @@ export const WidthUtilities = {
   `,
 }
 
+export const Default = WidthUtilities
+
 export const MaxWidthUtilities = {
   render: () => `
     <div style="padding: 1rem;">

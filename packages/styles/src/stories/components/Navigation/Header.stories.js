@@ -13,7 +13,7 @@ export default {
 
 export const Default = {
   render: () => `
-<header class="pathable-header pathable-header--basic">
+<header class="pathable-header pathable-header--basic usa-header usa-header--basic">
   <div class="pathable-nav-container">
     <div class="pathable-navbar">
       <div class="pathable-logo" id="basic-logo">
@@ -23,16 +23,16 @@ export const Default = {
       </div>
       <button class="pathable-menu-btn">Menu</button>
     </div>
-    <nav class="pathable-nav" aria-label="Primary navigation">
+    <nav class="pathable-nav usa-nav" aria-label="Primary navigation">
       <ul class="pathable-nav__primary">
         <li class="pathable-nav__primary-item">
-          <a class="pathable-nav__link" href="#"><span>Nav Item 1</span></a>
+          <a href="#"><span>Nav Item 1</span></a>
         </li>
         <li class="pathable-nav__primary-item">
-          <a class="pathable-nav__link" href="#"><span>Nav Item 2</span></a>
+          <a href="#"><span>Nav Item 2</span></a>
         </li>
         <li class="pathable-nav__primary-item">
-          <a class="pathable-nav__link" href="#"><span>Nav Item 3</span></a>
+          <a href="#"><span>Nav Item 3</span></a>
         </li>
       </ul>
     </nav>

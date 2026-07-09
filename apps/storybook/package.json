@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "build": "storybook build"
+    "build-storybook": "storybook build && node scripts/copy-icons.mjs",
+    "build": "storybook build && node scripts/copy-icons.mjs"
   },
   "dependencies": {
     "@pathable/styles": "workspace:*"

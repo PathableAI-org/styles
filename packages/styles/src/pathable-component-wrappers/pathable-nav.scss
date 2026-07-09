@@ -28,3 +28,8 @@
 .pathable-nav__secondary-links {
   @extend .usa-nav__secondary-links;
 }
+
+// No standalone .usa-nav__primary-item, .usa-nav__link classes exist in USWDS
+// These are nested selectors inside .usa-nav__primary, not top-level standalone classes.
+// The nav items and links are styled via .usa-nav__primary > .usa-nav__primary-item > a
+// which is inherited through the .pathable-nav__primary extension.

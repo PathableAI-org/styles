@@ -13,6 +13,8 @@ export const Unordered = {
   `,
 }
 
+export const Default = Unordered
+
 export const Ordered = {
   render: () => `
     <ol class="pathable-list pathable-list--ordered">

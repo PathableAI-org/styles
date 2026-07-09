@@ -34,3 +34,5 @@ export const AllSwatches = {
     </div>
   `,
 }
+
+export const Default = AllSwatches

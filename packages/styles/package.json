@@ -10,7 +10,7 @@
     "fonts"
   ],
   "scripts": {
-    "build": "node scripts/copy-fonts.mjs && sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "watch": "sass --watch --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "lint:styles": "stylelint 'src/**/*.scss'"
   },

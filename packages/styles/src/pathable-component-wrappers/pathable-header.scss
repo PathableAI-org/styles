@@ -24,3 +24,24 @@
 .pathable-header--megamenu {
   @extend .usa-header--megamenu;
 }
+
+// Header sub-element wrappers
+.pathable-nav-container {
+  @extend .usa-nav-container;
+}
+
+.pathable-navbar {
+  @extend .usa-navbar;
+}
+
+.pathable-logo {
+  @extend .usa-logo;
+}
+
+.pathable-logo__text {
+  @extend .usa-logo__text;
+}
+
+.pathable-menu-btn {
+  @extend .usa-menu-btn;
+}

@@ -14,6 +14,8 @@ export const Info = {
   `,
 }
 
+export const Default = Info
+
 export const Warning = {
   render: () => `
     <div class="pathable-alert pathable-alert--warning" role="alert">

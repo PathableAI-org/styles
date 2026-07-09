@@ -37,6 +37,8 @@ export const AllValues = {
   `,
 }
 
+export const Default = AllValues
+
 export const ResponsiveVariants = {
   render: () => `
     <div style="padding: 1rem;">

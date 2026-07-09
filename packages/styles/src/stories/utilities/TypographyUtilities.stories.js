@@ -41,6 +41,8 @@ export const FontFamilies = {
   `,
 }
 
+export const Default = FontFamilies
+
 export const FontWeights = {
   render: () => `
     <div style="padding: 1rem;">
