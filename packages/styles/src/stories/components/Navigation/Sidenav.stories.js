@@ -8,7 +8,7 @@ export const Default = {
 <aside class="pathable-sidenav">
   <ul class="pathable-sidenav__sublist">
     <li class="pathable-sidenav__item">
-      <a href="#" class="usa-current" aria-current="page">Today's Sessions</a>
+      <a href="#" class="pathable-current" aria-current="page">Today's Sessions</a>
     </li>
     <li class="pathable-sidenav__item">
       <a href="#">Participants</a>

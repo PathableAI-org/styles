@@ -70,7 +70,6 @@ export const Slim = {
   `,
 }
 
-// Workflow-specific semantic alert patterns
 export const WorkflowComplianceBlocking = {
   render: () => `
     <div class="pathable-alert pathable-alert--error" role="alert">
@@ -109,7 +108,7 @@ export const WorkflowSupervisorApproval = {
     <div class="pathable-alert pathable-alert--info" role="alert">
       <div class="pathable-alert__body">
         <h3 class="pathable-alert__heading">Supervisor Approval Needed</h3>
-        <p class="pathable-alert__text">Session note #1023 is ready for supervisor review. Approvals pending: 2.</p>
+        <p class="pathable-alert__text">Coaching note #1023 is ready for supervisor review. Approvals pending: 2.</p>
       </div>
     </div>
   `,
@@ -120,7 +119,7 @@ export const WorkflowGenerationSuccess = {
     <div class="pathable-alert pathable-alert--success" role="alert">
       <div class="pathable-alert__body">
         <h3 class="pathable-alert__heading">Successful Artifact Generation</h3>
-        <p class="pathable-alert__text">Progress note for participant K. Smith has been generated and saved successfully.</p>
+        <p class="pathable-alert__text">Employment progress note for participant K. Smith has been generated and saved successfully.</p>
       </div>
     </div>
   `,

@@ -15,8 +15,11 @@
 // Contrast requirements:
 //   - All brand color + foreground pairs must pass WCAG AA contrast
 //   - Primary CTA: PathAble Blue bg (#00365c) + white text (14.3:1)
-//   - Secondary action: Intelligent Jade bg (#1cae96) + PathAble Blue text (#00365c) (5.5:1)
-//   - Supportive/tertiary: Bright Blue Brooks bg (#4899e8) + dark text (~3.8:1, large text OK)
+//   - Secondary action: Intelligent Jade bg (#1cae96) + dark accent text (#001a33) (~5.5:1)
+//   - Supportive/tertiary: Bright Blue Brooks bg (#4899e8) + dark accent text (#001a33) (~5.8:1)
+//   - Warning: Amber bg (#f5a623) + dark accent text (#001a33) (~6.4:1)
+//   - Where PathAble Blue (#00365c) does not provide AA on colored surfaces, the
+//     accessibility-derived token --pathable-color-on-accent (#001a33) is used instead.
 //
 // This file is intentionally empty — it serves as a pattern reference.
 // Actual overrides live in each component's wrapper file.

@@ -13,6 +13,10 @@
   @extend .usa-sidenav;
 }
 
+.pathable-current {
+  @extend .usa-current;
+}
+
 .pathable-sidenav__sublist {
   @extend .usa-sidenav__sublist;
 }

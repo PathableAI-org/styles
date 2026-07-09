@@ -23,8 +23,9 @@
 .pathable-button--accent-cool {
   @extend .usa-button--accent-cool;
   // Brand opinion: Bright Blue Brooks for supportive/tertiary actions
+  // Uses --pathable-color-on-accent for WCAG AA normal text contrast (~5.8:1)
   background-color: var(--pathable-color-link);
-  color: var(--pathable-color-text);
+  color: var(--pathable-color-on-accent);
 }
 
 .pathable-button--accent-warm {
