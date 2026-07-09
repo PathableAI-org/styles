@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Note:** This component requires USWDS JavaScript for full interactivity (header toggle, nav menu, etc.). Only static CSS documentation is provided here. See the USWDS documentation for JS setup.',
+          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathable/styles/js` to enable interactive behavior.',
       },
     },
   },
