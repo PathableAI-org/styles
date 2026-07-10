@@ -22,8 +22,9 @@
 .pathable-surface {
   position: relative;
   border-radius: var(--pathable-surface-border-radius, var(--radius-md));
-  transition: box-shadow var(--pathable-surface-transition-duration, 0.2s),
-              border-color var(--pathable-surface-transition-duration, 0.2s);
+  transition:
+    box-shadow var(--pathable-surface-transition-duration, 0.2s),
+    border-color var(--pathable-surface-transition-duration, 0.2s);
 }
 
 // Variant: base — subtle boundary only
@@ -74,13 +75,13 @@
 }
 
 .pathable-surface--interactive:disabled,
-.pathable-surface--interactive[aria-disabled="true"] {
+.pathable-surface--interactive[aria-disabled='true'] {
   opacity: 0.5;
   cursor: default;
 }
 
 .pathable-surface--interactive:disabled:hover,
-.pathable-surface--interactive[aria-disabled="true"]:hover {
+.pathable-surface--interactive[aria-disabled='true']:hover {
   box-shadow: var(--elevation-sm);
 }
 

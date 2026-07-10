@@ -15,7 +15,10 @@
 
 .pathable-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--pathable-card-grid-min-width, 300px)), 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, var(--pathable-card-grid-min-width, 300px)), 1fr)
+  );
   gap: var(--pathable-card-grid-gap, var(--space-24));
 }
 

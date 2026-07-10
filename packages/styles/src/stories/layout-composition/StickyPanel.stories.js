@@ -19,7 +19,7 @@ export const WithSidebarLayout = {
       Scroll this container to see the sticky behavior. On viewports shorter than 600px,
       the panel becomes static.
     </p>
-    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dde2e8; border-radius: 8px; padding: 1rem;">
+    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dde2e8; border-radius: 8px; padding: 1rem;" tabindex="0" role="region" aria-label="Scrollable content demonstrating sticky panel behavior">
       <div class="pathable-sidebar-layout">
         <div class="pathable-stack" style="gap: 1rem;">
           <div class="pathable-surface pathable-surface--raised" style="padding: 2rem;">
