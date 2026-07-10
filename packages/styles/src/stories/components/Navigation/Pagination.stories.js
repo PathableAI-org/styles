@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Navigation/Pagination',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '**Interaction Model**: CSS-only\n**App State to Manage**: current page number\n**Consumers must**: Provide state management for current page number in application framework.',
+      },
+    },
+  },
 }
 
 export const Default = {

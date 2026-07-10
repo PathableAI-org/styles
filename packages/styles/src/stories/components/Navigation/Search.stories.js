@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Navigation/Search',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: form submission, keyboard navigation\n**Consumers must**: Import `@pathable/styles/js` to enable interactive behavior.',
+      },
+    },
+  },
 }
 
 export const Default = {

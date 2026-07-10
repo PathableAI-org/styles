@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Form Controls/Checkbox',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Interaction Model**: CSS-only\n**App State to Manage**: checked/unchecked state, validation errors\n**Consumers must**: Provide checked state and validation logic in application framework.',
+      },
+    },
+  },
 }
 
 export const Default = {

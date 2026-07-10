@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathable/styles/js` to enable interactive behavior.',
+          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathable/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Dismiss, keyboard navigation\n**Consumers must**: Import `@pathable/styles/js` to enable interactive behavior.',
       },
     },
   },

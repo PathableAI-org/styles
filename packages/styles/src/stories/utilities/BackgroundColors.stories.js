@@ -1,6 +1,14 @@
 export default {
   title: 'Utilities/Background Colors',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.',
+      },
+    },
+  },
 }
 
 const colors = [
