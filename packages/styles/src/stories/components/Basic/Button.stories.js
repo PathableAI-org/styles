@@ -76,21 +76,26 @@ export const WorkflowTertiaryAction = {
 }
 
 export const WorkflowSave = {
-  render: () => '<button class="pathable-button pathable-button--save">Save Coaching Note</button>',
+  render: () =>
+    '<button class="pathable-button pathable-button--save">Save Coaching Note</button>',
 }
 
 export const WorkflowContinue = {
-  render: () => '<button class="pathable-button pathable-button--continue">Continue to Review</button>',
+  render: () =>
+    '<button class="pathable-button pathable-button--continue">Continue to Review</button>',
 }
 
 export const WorkflowReview = {
-  render: () => '<button class="pathable-button pathable-button--review">Review Compliance</button>',
+  render: () =>
+    '<button class="pathable-button pathable-button--review">Review Compliance</button>',
 }
 
 export const WorkflowDestructive = {
-  render: () => '<button class="pathable-button pathable-button--destructive">Delete Activity</button>',
+  render: () =>
+    '<button class="pathable-button pathable-button--destructive">Delete Activity</button>',
 }
 
 export const WorkflowLowEmphasis = {
-  render: () => '<button class="pathable-button pathable-button--low-emphasis">Cancel</button>',
+  render: () =>
+    '<button class="pathable-button pathable-button--low-emphasis">Cancel</button>',
 }
