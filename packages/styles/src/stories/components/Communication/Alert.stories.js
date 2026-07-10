@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Communication/Alert',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.',
+      },
+    },
+  },
 }
 
 export const Info = {

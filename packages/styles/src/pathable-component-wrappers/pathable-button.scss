@@ -61,3 +61,26 @@
 .pathable-button--unstyled {
   @extend .usa-button--unstyled;
 }
+
+// Workflow-intent variant classes (T016-T020)
+.pathable-button--save {
+  @extend .pathable-button--secondary;
+}
+
+.pathable-button--continue {
+  @extend .pathable-button--primary;
+}
+
+.pathable-button--review {
+  @extend .pathable-button--accent-cool;
+}
+
+.pathable-button--destructive {
+  @extend .usa-button;
+  background-color: var(--pathable-color-danger);
+  color: #ffffff;
+}
+
+.pathable-button--low-emphasis {
+  @extend .pathable-button--base;
+}

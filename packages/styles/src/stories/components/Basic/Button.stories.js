@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Button',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.',
+      },
+    },
+  },
 }
 
 export const Default = {
@@ -65,4 +73,24 @@ export const WorkflowSecondaryAction = {
 export const WorkflowTertiaryAction = {
   render: () =>
     '<button class="pathable-button pathable-button--accent-cool">View Details</button>',
+}
+
+export const WorkflowSave = {
+  render: () => '<button class="pathable-button pathable-button--save">Save Coaching Note</button>',
+}
+
+export const WorkflowContinue = {
+  render: () => '<button class="pathable-button pathable-button--continue">Continue to Review</button>',
+}
+
+export const WorkflowReview = {
+  render: () => '<button class="pathable-button pathable-button--review">Review Compliance</button>',
+}
+
+export const WorkflowDestructive = {
+  render: () => '<button class="pathable-button pathable-button--destructive">Delete Activity</button>',
+}
+
+export const WorkflowLowEmphasis = {
+  render: () => '<button class="pathable-button pathable-button--low-emphasis">Cancel</button>',
 }

@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Navigation/Sidenav',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '**Interaction Model**: CSS-only\n**App State to Manage**: active navigation item\n**Consumers must**: Provide state management for active navigation item in application framework.',
+      },
+    },
+  },
 }
 
 export const Default = {

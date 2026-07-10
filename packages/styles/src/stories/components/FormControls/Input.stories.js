@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Form Controls/Input',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Interaction Model**: CSS-only\n**App State to Manage**: value, validation errors\n**Consumers must**: Provide value and validation logic in application framework.',
+      },
+    },
+  },
 }
 
 export const Text = {

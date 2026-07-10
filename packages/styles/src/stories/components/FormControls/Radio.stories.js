@@ -1,6 +1,14 @@
 export default {
   title: 'Components/Form Controls/Radio',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Interaction Model**: CSS-only\n**App State to Manage**: selected option, validation errors\n**Consumers must**: Provide group selection and validation logic in application framework.',
+      },
+    },
+  },
 }
 
 export const Default = {
