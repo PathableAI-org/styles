@@ -68,19 +68,7 @@ $brand-uswds-color-mappings: (
   ),
 );
 
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  DEPRECATION NOTICE                                          ║
-// ║  The following custom properties use the old short-name      ║
-// ║  convention. They will be removed in a future major version. ║
-// ║  Please migrate to the --pathable-brand-* equivalents.        ║
-// ╚══════════════════════════════════════════════════════════════╝
 :root {
-  --pathable-blue: #{$pathable-blue}; // DEPRECATED: use --pathable-brand-pathable-blue instead
-  --intelligent-jade: #{$intelligent-jade}; // DEPRECATED: use --pathable-brand-intelligent-jade instead
-  --bright-blue-brooks: #{$bright-blue-brooks}; // DEPRECATED: use --pathable-brand-bright-blue-brooks instead
-  --tech-teal: #{$tech-teal}; // DEPRECATED: use --pathable-brand-tech-teal instead
-  --lived-in-lime: #{$lived-in-lime}; // DEPRECATED: use --pathable-brand-lived-in-lime instead
-  --shilling-silver: #{$shilling-silver}; // DEPRECATED: use --pathable-brand-shilling-silver instead
   --pathable-brand-pathable-blue: #{$pathable-brand-pathable-blue};
   --pathable-brand-intelligent-jade: #{$pathable-brand-intelligent-jade};
   --pathable-brand-bright-blue-brooks: #{$pathable-brand-bright-blue-brooks};

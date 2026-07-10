@@ -61,13 +61,13 @@ In the Storybook Button story, check for these workflow-intent variants:
 | `.pathable-button--destructive` | "Delete Activity" | Danger Red (#b50909) |
 | `.pathable-button--low-emphasis` | "Cancel" | Shilling Silver (#dde2e8) |
 
-### 6. Verify Deprecation Annotations
+### 6. Verify Legacy Short Names Removed
 
 ```bash
-rg 'DEPRECATED' packages/styles/src/_colors.scss
+rg '--pathable-brand-' packages/styles/src/_colors.scss
 ```
 
-Confirm each legacy property has a deprecation comment pointing to the replacement.
+Confirm only the 6 canonical `--pathable-brand-*` properties exist. The short names (`--pathable-blue`, `--intelligent-jade`, etc.) should be absent.
 
 ### 7. Build Verification
 
@@ -91,6 +91,6 @@ Should pass without new errors (existing lint issues unrelated to this feature a
 - [ ] Interaction model annotations added to all stories
 - [ ] `$pathable-font-body` fallback changed to `sans-serif`
 - [ ] 5 workflow-intent button variants implemented and visible in Storybook
-- [ ] Deprecation annotations added for legacy brand custom properties
+- [ ] Legacy short-name brand custom properties removed (`--pathable-brand-*` canonicals remain)
 - [ ] `pnpm build` succeeds
 - [ ] `pnpm stylelint` passes

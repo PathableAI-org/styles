@@ -101,15 +101,15 @@ Both approaches produce equivalent output. The former is preferred for variants 
 
 ---
 
-## 3. Deprecation API Surface: Brand CSS Custom Properties
+## 3. Legacy Short Name Removal: Brand CSS Custom Properties
 
 ### Current Dual-Naming Issue
 
-`_colors.scss` currently emits both naming conventions:
+`_colors.scss` previously emitted both naming conventions:
 
 ```scss
 :root {
-  // Short names (legacy, to be deprecated)
+  // Short names (legacy, removed)
   --pathable-blue: #00365c;
   --intelligent-jade: #1cae96;
   --bright-blue-brooks: #4899e8;
@@ -137,7 +137,7 @@ Both approaches produce equivalent output. The former is preferred for variants 
 - `--pathable-brand-lived-in-lime`
 - `--pathable-brand-shilling-silver`
 
-**Deprecated aliases** (keep for backward compatibility, annotate):
+**Removed legacy aliases**:
 - `--pathable-blue` → use `--pathable-brand-pathable-blue`
 - `--intelligent-jade` → use `--pathable-brand-intelligent-jade`
 - `--bright-blue-brooks` → use `--pathable-brand-bright-blue-brooks`
@@ -145,30 +145,13 @@ Both approaches produce equivalent output. The former is preferred for variants 
 - `--lived-in-lime` → use `--pathable-brand-lived-in-lime`
 - `--shilling-silver` → use `--pathable-brand-shilling-silver`
 
-### Deprecation Annotation Format
-
-Each deprecated property in `_colors.scss` will receive an inline comment:
-
-```scss
---pathable-blue: #{$pathable-blue}; // DEPRECATED: use --pathable-brand-pathable-blue instead
-```
-
-And a block comment at the top of the `:root` section:
-
-```scss
-// ⚠️ DEPRECATION NOTICE
-// The following custom properties use the old short-name convention.
-// They will be removed in a future major version.
-// Please migrate to the --pathable-brand-* equivalents listed below.
-```
-
 ### Consumer Migration
 
-Existing consumers using short names will continue to work. The migration path is:
+Consumers using short names must migrate:
 1. Replace `var(--pathable-blue)` with `var(--pathable-brand-pathable-blue)` in CSS
-2. Replace `$pathable-blue` with `$pathable-brand-pathable-blue` in SCSS (these are Sass variables, not custom properties — they are not deprecated)
+2. Replace `$pathable-blue` with `$pathable-brand-pathable-blue` in SCSS (these are Sass variables, not custom properties — they remain valid)
 3. Run `pnpm build` and verify output
 
 ### Versioning Impact
 
-This is a **minor** change (addition of deprecation warnings, no removal). Removal of the deprecated aliases would be a **major** change in a future release.
+This is a **minor** change (removal of CSS custom property aliases, no breaking change since no consumers reference the short names).

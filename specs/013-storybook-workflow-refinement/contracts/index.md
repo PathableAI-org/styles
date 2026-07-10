@@ -54,21 +54,20 @@ Every Storybook story MUST include the following annotation in its `parameters.d
 
 ---
 
-## 3. Brand CSS Custom Property Deprecation Map
+## 3. Brand CSS Custom Property — Removed Legacy Short Names
 
-| Deprecated Name | Replacement | Status |
+| Removed Name | Canonical Replacement |
 |---|---|
-| `--pathable-blue` | `--pathable-brand-pathable-blue` | Deprecated, kept for compatibility |
-| `--intelligent-jade` | `--pathable-brand-intelligent-jade` | Deprecated, kept for compatibility |
-| `--bright-blue-brooks` | `--pathable-brand-bright-blue-brooks` | Deprecated, kept for compatibility |
-| `--tech-teal` | `--pathable-brand-tech-teal` | Deprecated, kept for compatibility |
-| `--lived-in-lime` | `--pathable-brand-lived-in-lime` | Deprecated, kept for compatibility |
-| `--shilling-silver` | `--pathable-brand-shilling-silver` | Deprecated, kept for compatibility |
+| `--pathable-blue` | `--pathable-brand-pathable-blue` |
+| `--intelligent-jade` | `--pathable-brand-intelligent-jade` |
+| `--bright-blue-brooks` | `--pathable-brand-bright-blue-brooks` |
+| `--tech-teal` | `--pathable-brand-tech-teal` |
+| `--lived-in-lime` | `--pathable-brand-lived-in-lime` |
+| `--shilling-silver` | `--pathable-brand-shilling-silver` |
 
 **Notes**:
-- The Sass variables (`$pathable-blue`, `$intelligent-jade`, etc.) are internal to the package and are NOT deprecated. They remain valid for use within package SCSS.
-- Only the CSS custom property output (`:root { --intelligent-jade: ... }`) is deprecated.
-- Removal of deprecated properties requires a major version bump.
+- The Sass variables (`$pathable-blue`, `$intelligent-jade`, etc.) are internal to the package and remain valid for use within package SCSS.
+- Only the CSS custom property output (`:root { --intelligent-jade: ... }`) was removed. Consumers must migrate to `--pathable-brand-*` equivalents.
 
 ---
 

@@ -72,15 +72,15 @@ Changes produce the same build output contract (`dist/` CSS, SCSS source files).
 
 ### Principle VI — Token Naming Must Be Semantic and Stable
 
-**Status**: ✅ PASS with note
+**Status**: ✅ PASS
 
-Deprecation of short brand custom property names (`--pathable-blue`, `--intelligent-jade`, etc.) in favor of `--pathable-brand-*` names aligns with this principle. The migration path is documented via deprecation comments, and no token removal occurs without a major version bump.
+Removal of short brand custom property names (`--pathable-blue`, `--intelligent-jade`, etc.) in favor of `--pathable-brand-*` names aligns with this principle. The short names had no consumers, so removal is safe.
 
 ### Principle VII — Design Source Alignment Matters
 
 **Status**: ✅ PASS
 
-No color value changes are planned. The deprecation annotation work preserves all existing values while clarifying naming conventions.
+No color value changes occurred. The short-name removal preserves all existing values while clarifying the canonical naming convention.
 
 ### Principle VIII — Accessibility Is Part of Token Quality
 
@@ -178,16 +178,16 @@ Run `.specify/extensions/agent-context/scripts/bash/update-agent-context.sh` to 
 
 | Principle | Status | Note |
 |---|---|---|
-| I — CSS Custom Properties | ✅ | Only deprecation annotations; no property removal or value changes |
+| I — CSS Custom Properties | ✅ | Short-name properties removed; only `--pathable-brand-*` canonicals remain; no value changes |
 | II — SCSS Authoring Layer | ✅ | All new button classes use `@extend` pattern; font fix is variable change |
 | III — pnpm Workspaces | ✅ | All changes within existing `packages/styles/src/` |
 | IV — First Slice Narrow | ✅ | Iterative refinement — not applicable |
 | V — Published Artifacts | ✅ | Build verification in quickstart.md |
-| VI — Semantic Token Naming | ✅ | Deprecation map in contracts/index.md; Sass variables preserved |
-| VII — Design Source Alignment | ✅ | No color value changes planned |
+| VI — Semantic Token Naming | ✅ | Short names removed; Sass variables preserved |
+| VII — Design Source Alignment | ✅ | No color value changes |
 | VIII — Accessibility | ✅ | All button variants have verified WCAG AA ratios (>5.8:1) in research.md |
 | IX — Framework Independence | ✅ | No framework code added; interaction model classification clarifies JS boundary |
 | X — Documentation | ✅ | Entire feature improves Storybook documentation |
-| XI — Versioning & Release | ✅ | Deprecation is minor change; no breaking changes introduced |
+| XI — Versioning & Release | ✅ | Removal is minor change; no breaking changes since zero consumers |
 
 **No violations found. Complexity Tracking section remains empty.**

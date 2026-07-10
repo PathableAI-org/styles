@@ -40,10 +40,10 @@ A CSS custom property defined in `_colors.scss`.
 |---|---|---|
 | `name` | String | Property name (e.g., `--intelligent-jade`) |
 | `value` | Hex | Color value (e.g., `#1cae96`) |
-| `namespace` | Enum | `short` (legacy), `brand-prefixed` (canonical) |
-| `canonicalName` | String | The replacement property if deprecated |
-| `status` | Enum | `active`, `deprecated` |
-| `deprecationNotice` | String | Migration instruction for consumers |
+| `namespace` | Enum | `short` (removed), `brand-prefixed` (canonical) |
+| `canonicalName` | String | The replacement property name |
+| `status` | Enum | `active`, `removed` |
+| `migrationNotice` | String | Migration instruction for consumers |
 
 ### InteractionModel
 

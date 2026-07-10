@@ -128,16 +128,10 @@
 
 ### Implementation for User Story 5
 
-- [x] T023 [US5] Add deprecation block comment at the top of the `:root` section
-- [x] T024 [P] [US5] Add `// DEPRECATED: use --pathable-brand-pathable-blue instead` comment
-- [x] T025 [P] [US5] Add `// DEPRECATED: use --pathable-brand-intelligent-jade instead` comment
-- [x] T026 [P] [US5] Add `// DEPRECATED: use --pathable-brand-bright-blue-brooks instead` comment
-- [x] T027 [P] [US5] Add `// DEPRECATED: use --pathable-brand-tech-teal instead` comment
-- [x] T028 [P] [US5] Add `// DEPRECATED: use --pathable-brand-lived-in-lime instead` comment
-- [x] T029 [P] [US5] Add `// DEPRECATED: use --pathable-brand-shilling-silver instead` comment
+- [x] T023 [US5] Remove legacy short-name brand CSS custom properties from `:root` in `_colors.scss` (`--pathable-blue`, `--intelligent-jade`, `--bright-blue-brooks`, `--tech-teal`, `--lived-in-lime`, `--shilling-silver`) — keep only canonical `--pathable-brand-*` equivalents
 - [x] T030 [US5] Run `pnpm build` and verify no compilation errors
 
-**Checkpoint**: At this point, User Story 5 is complete. Run `rg 'DEPRECATED' packages/styles/src/_colors.scss` to verify all six annotations. Run `pnpm build` to confirm compilation succeeds.
+**Checkpoint**: At this point, User Story 5 is complete. `rg '--pathable-brand-' packages/styles/src/_colors.scss` should show only the 6 canonical properties. `pnpm build` must succeed.
 
 ---
 
