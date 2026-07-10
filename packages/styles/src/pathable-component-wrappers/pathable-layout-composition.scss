@@ -1,0 +1,14 @@
+// packages/styles/src/pathable-component-wrappers/pathable-layout-composition.scss
+//
+// Bundle package: compositional layout primitives and semantic surface styles.
+// Forwards individual primitive files for selective import.
+// These are pure CSS composition patterns, not USWDS wrappers.
+
+@forward 'pathable-container';
+@forward 'pathable-stack';
+@forward 'pathable-cluster';
+@forward 'pathable-split';
+@forward 'pathable-card-grid';
+@forward 'pathable-sidebar-layout';
+@forward 'pathable-sticky-panel';
+@forward 'pathable-surface';

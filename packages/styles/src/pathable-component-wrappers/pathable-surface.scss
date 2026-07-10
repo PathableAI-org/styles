@@ -1,0 +1,133 @@
+// packages/styles/src/pathable-component-wrappers/pathable-surface.scss
+//
+// Semantic visual container styles that convey depth through token-driven
+// backgrounds, borders, border-radius, and elevation.
+// Layout responsibility: establishes visual hierarchy via semantic surface variants
+// without hardcoded color values.
+//
+// CSS custom properties:
+//   --pathable-surface-border-radius      (default: var(--radius-md)) — border radius
+//   --pathable-surface-transition-duration (default: 0.2s) — transition duration
+//
+// Variant classes:
+//   .pathable-surface--base        — transparent bg, border, no elevation
+//   .pathable-surface--raised      — surface bg, md elevation shadow
+//   .pathable-surface--inset       — bg fill, inset elevation shadow
+//   .pathable-surface--interactive — surface bg, transparent border, sm elev, hover focus
+//   .pathable-surface--brand       — accent bg, md elevation shadow
+//   .pathable-surface--inverse     — text bg (dark), md elevation shadow
+//
+// Interactive states (--interactive only): hover, focus-visible, focus-within, active, disabled
+
+.pathable-surface {
+  position: relative;
+  border-radius: var(--pathable-surface-border-radius, var(--radius-md));
+  transition: box-shadow var(--pathable-surface-transition-duration, 0.2s),
+              border-color var(--pathable-surface-transition-duration, 0.2s);
+}
+
+// Variant: base — subtle boundary only
+.pathable-surface--base {
+  background: transparent;
+  border: 1px solid var(--pathable-color-border);
+  box-shadow: none;
+}
+
+// Variant: raised — elevated card/panel
+.pathable-surface--raised {
+  background: var(--pathable-color-surface);
+  border: none;
+  box-shadow: var(--elevation-md);
+}
+
+// Variant: inset — recessed area
+.pathable-surface--inset {
+  background: var(--pathable-color-bg);
+  border: none;
+  box-shadow: inset var(--elevation-sm);
+}
+
+// Variant: interactive — clickable with hover/focus states
+.pathable-surface--interactive {
+  background: var(--pathable-color-surface);
+  border: 2px solid transparent;
+  box-shadow: var(--elevation-sm);
+  cursor: pointer;
+}
+
+.pathable-surface--interactive:hover {
+  box-shadow: var(--elevation-md);
+}
+
+.pathable-surface--interactive:focus-visible {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.pathable-surface--interactive:focus-within {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.pathable-surface--interactive:active {
+  box-shadow: var(--elevation-sm);
+}
+
+.pathable-surface--interactive:disabled,
+.pathable-surface--interactive[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.pathable-surface--interactive:disabled:hover,
+.pathable-surface--interactive[aria-disabled="true"]:hover {
+  box-shadow: var(--elevation-sm);
+}
+
+// Variant: brand — promotional accent
+.pathable-surface--brand {
+  background: var(--pathable-color-accent);
+  border: none;
+  box-shadow: var(--elevation-md);
+}
+
+// Variant: inverse — dark contrasting section
+.pathable-surface--inverse {
+  background: var(--pathable-color-text);
+  border: none;
+  box-shadow: var(--elevation-md);
+}
+
+// Accessibility: forced-colors / high-contrast mode
+@media (forced-colors: active) {
+  .pathable-surface--base {
+    outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--raised {
+    outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--inset {
+    outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--interactive {
+    outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--brand {
+    outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--inverse {
+    outline: 2px solid CanvasText;
+  }
+}
+
+// Accessibility: reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .pathable-surface {
+    transition: none;
+  }
+}

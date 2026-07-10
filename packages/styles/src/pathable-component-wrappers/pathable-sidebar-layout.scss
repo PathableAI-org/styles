@@ -1,0 +1,46 @@
+// packages/styles/src/pathable-component-wrappers/pathable-sidebar-layout.scss
+//
+// Two-region content-plus-sidebar layout that collapses on small screens.
+// Layout responsibility: positions primary content alongside a secondary sidebar
+// on large screens, stacking sidebar below content on small screens while
+// preserving DOM reading order.
+//
+// CSS custom properties:
+//   --pathable-sidebar-ratio  (default: 3fr 1fr) — ratio of primary to sidebar columns
+//   --pathable-sidebar-gap    (default: var(--space-24)) — gap between regions
+//
+// Modifier classes:
+//   Ratio:        --ratio-3-1, --ratio-2-1, --ratio-4-1
+//   Orientation:  --sidebar-first (sidebar on left on desktop, top on mobile)
+
+.pathable-sidebar-layout {
+  display: grid;
+  grid-template-columns: var(--pathable-sidebar-ratio, 3fr 1fr);
+  gap: var(--pathable-sidebar-gap, var(--space-24));
+}
+
+// Ratio modifiers
+.pathable-sidebar-layout--ratio-3-1 {
+  --pathable-sidebar-ratio: 3fr 1fr;
+}
+
+.pathable-sidebar-layout--ratio-2-1 {
+  --pathable-sidebar-ratio: 2fr 1fr;
+}
+
+.pathable-sidebar-layout--ratio-4-1 {
+  --pathable-sidebar-ratio: 4fr 1fr;
+}
+
+// Sidebar-first modifier: sidebar on the left, content on the right
+.pathable-sidebar-layout--sidebar-first {
+  grid-template-columns: 1fr var(--pathable-sidebar-ratio, 3fr);
+}
+
+// Responsive: collapse to single column below desktop breakpoint
+@media (max-width: 1023px) {
+  .pathable-sidebar-layout,
+  .pathable-sidebar-layout--sidebar-first {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,36 @@
+// packages/styles/src/pathable-component-wrappers/pathable-stack.scss
+//
+// Vertical flow layout that adds consistent spacing between adjacent children.
+// Layout responsibility: controls vertical flow between sibling elements using
+// token-based spacing, eliminating ad hoc margin declarations.
+//
+// CSS custom properties:
+//   --pathable-stack-gap  (default: var(--space-16)) — vertical gap between children
+//
+// Modifier classes:
+//   .pathable-stack--gap-sm  — gap var(--space-8)
+//   .pathable-stack--gap-md  — gap var(--space-16) (default)
+//   .pathable-stack--gap-lg  — gap var(--space-24)
+//   .pathable-stack--gap-xl  — gap var(--space-32)
+
+.pathable-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-stack-gap, var(--space-16));
+}
+
+.pathable-stack--gap-sm {
+  --pathable-stack-gap: var(--space-8);
+}
+
+.pathable-stack--gap-md {
+  --pathable-stack-gap: var(--space-16);
+}
+
+.pathable-stack--gap-lg {
+  --pathable-stack-gap: var(--space-24);
+}
+
+.pathable-stack--gap-xl {
+  --pathable-stack-gap: var(--space-32);
+}

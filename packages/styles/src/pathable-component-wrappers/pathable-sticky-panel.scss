@@ -1,0 +1,27 @@
+// packages/styles/src/pathable-component-wrappers/pathable-sticky-panel.scss
+//
+// Optional sticky container that safely becomes static on short viewports.
+// Layout responsibility: sticks on large viewports for persistent secondary content
+// and becomes static when the viewport is too short, preventing content obscuring.
+//
+// CSS custom properties:
+//   --pathable-sticky-panel-top  (default: var(--space-24)) — offset from viewport top
+//
+// Modifier classes:
+//   .pathable-sticky-panel--static  — forces static positioning (opts out of sticky)
+
+.pathable-sticky-panel {
+  position: sticky;
+  top: var(--pathable-sticky-panel-top, var(--space-24));
+}
+
+.pathable-sticky-panel--static {
+  position: static;
+}
+
+// Disable sticky on short viewports to prevent content obscuring
+@media (max-height: 599px) {
+  .pathable-sticky-panel {
+    position: static;
+  }
+}
