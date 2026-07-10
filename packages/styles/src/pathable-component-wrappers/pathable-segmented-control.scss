@@ -1,0 +1,103 @@
+// packages/styles/src/pathable-component-wrappers/pathable-segmented-control.scss
+//
+// Compact option group for presenting short sets of mutually exclusive (single-select)
+// or independently toggleable (multi-select) options.
+//
+// Layout responsibility: groups 2-5 related controls into a contiguous strip using
+// ARIA radiogroup (single-select) or group + aria-pressed (multi-select) semantics.
+//
+// CSS custom properties:
+//   --pathable-segmented-control-radius      (default: var(--radius-md)) — container radius
+//   --pathable-segmented-control-gap         (default: var(--space-2))  — gap between segments
+//
+// Variant classes:
+//   .pathable-segmented-control                         — base class (single-select, horizontal)
+//   .pathable-segmented-control--multi                  — multi-select toggle mode
+//   .pathable-segmented-control--vertical               — vertical orientation
+//   .pathable-segmented-control__option                 — individual segment
+//   .pathable-segmented-control__option--selected       — selected state
+//
+// Accessibility:
+// - Single-select: role="radiogroup" on container, role="radio" + aria-checked on options
+// - Multi-select: role="group" on container, aria-pressed on options
+// - Keyboard: Arrow keys for single-select, Tab for multi-select
+
+@use 'pathable-interaction-states' as states;
+
+// --- Base: single-select horizontal strip ---
+.pathable-segmented-control {
+  display: inline-flex;
+  gap: var(--pathable-segmented-control-gap, var(--space-2));
+  border-radius: var(--pathable-segmented-control-radius, var(--radius-md));
+  background: var(--pathable-color-bg);
+  padding: var(--space-2);
+}
+
+// --- Option segment ---
+.pathable-segmented-control__option {
+  @include states.state-hover;
+  @include states.state-focus;
+  @include states.state-disabled;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-4);
+  border-radius: calc(
+    var(--pathable-segmented-control-radius, var(--radius-md)) - var(--space-2)
+  );
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--pathable-color-text);
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    font-weight 0.2s;
+}
+
+// --- Selected state ---
+.pathable-segmented-control__option--selected {
+  background: var(--pathable-color-surface);
+  border-color: var(--pathable-color-border);
+  font-weight: 700;
+}
+
+// --- Variant: multi-select (same visual as single-select, semantic difference documented) ---
+// Uses @extend to inherit base container styles without duplicating declarations
+.pathable-segmented-control--multi {
+  display: inline-flex;
+  gap: var(--pathable-segmented-control-gap, var(--space-2));
+  border-radius: var(--pathable-segmented-control-radius, var(--radius-md));
+  background: var(--pathable-color-bg);
+  padding: var(--space-2);
+}
+
+// --- Variant: vertical orientation ---
+.pathable-segmented-control--vertical {
+  flex-direction: column;
+}
+.pathable-segmented-control--vertical .pathable-segmented-control__option {
+  width: 100%;
+}
+
+// --- Accessibility: forced colors ---
+@media (forced-colors: active) {
+  .pathable-segmented-control__option--selected {
+    border: 2px solid Highlight;
+  }
+  .pathable-segmented-control__option:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+// --- Accessibility: reduced motion ---
+@media (prefers-reduced-motion: reduce) {
+  .pathable-segmented-control__option {
+    transition: none;
+  }
+}

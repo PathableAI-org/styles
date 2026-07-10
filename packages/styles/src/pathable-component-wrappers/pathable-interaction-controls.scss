@@ -1,0 +1,10 @@
+// packages/styles/src/pathable-component-wrappers/pathable-interaction-controls.scss
+//
+// Bundle package: reusable interaction states, icon conventions, and compact controls.
+// Forwards individual pattern files for selective import.
+// These are pure CSS patterns (no USWDS dependency).
+
+@forward 'pathable-interaction-states';
+@forward 'pathable-icon-button';
+@forward 'pathable-segmented-control';
+@forward 'pathable-icon-tile';

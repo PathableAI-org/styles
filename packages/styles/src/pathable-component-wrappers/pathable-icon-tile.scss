@@ -1,0 +1,74 @@
+// packages/styles/src/pathable-component-wrappers/pathable-icon-tile.scss
+//
+// Square and circular icon container with consistent padding and centering.
+// Layout responsibility: provides a fixed-size tile for decorative and status
+// icons with consistent alignment, sizing, and semantic token application.
+//
+// CSS custom properties:
+//   --pathable-icon-tile-size      (default: 44px) — tile dimensions
+//   --pathable-icon-tile-icon-size (default: 20px) — inner icon size
+//
+// Modifier classes:
+//   .pathable-icon-tile--circle    — circular shape
+//   .pathable-icon-tile--compact   — 32px tile
+//   .pathable-icon-tile--large     — 52px tile
+//   .pathable-icon-tile--success   — success/green status
+//   .pathable-icon-tile--error     — error/danger status
+//   .pathable-icon-tile--warning   — warning/amber status
+//   .pathable-icon-tile--info      — info/link status
+//
+// Accessibility:
+// - Decorative icons: add `aria-hidden="true"` to the icon tile element.
+// - Meaningful icons (status): set `role="img"` on the SVG with `aria-label`.
+
+.pathable-icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--pathable-icon-tile-size, 44px);
+  height: var(--pathable-icon-tile-size, 44px);
+  border-radius: var(--radius-sm);
+  background: var(--pathable-color-bg);
+  color: var(--pathable-color-text);
+}
+
+// Inner icon sizing
+.pathable-icon-tile .pathable-icon,
+.pathable-icon-tile svg {
+  width: var(--pathable-icon-tile-icon-size, 20px);
+  height: var(--pathable-icon-tile-icon-size, 20px);
+}
+
+// Modifier: circle — fully rounded
+.pathable-icon-tile--circle {
+  border-radius: 50%;
+}
+
+// Modifier: compact — 32px tile, 16px icon
+.pathable-icon-tile--compact {
+  --pathable-icon-tile-size: 32px;
+  --pathable-icon-tile-icon-size: 16px;
+}
+
+// Modifier: large — 52px tile, 24px icon
+.pathable-icon-tile--large {
+  --pathable-icon-tile-size: 52px;
+  --pathable-icon-tile-icon-size: 24px;
+}
+
+// Status color variants
+.pathable-icon-tile--success {
+  color: var(--pathable-color-success);
+}
+
+.pathable-icon-tile--error {
+  color: var(--pathable-color-danger);
+}
+
+.pathable-icon-tile--warning {
+  color: var(--pathable-color-status-warning-text);
+}
+
+.pathable-icon-tile--info {
+  color: var(--pathable-color-link);
+}
