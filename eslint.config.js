@@ -58,6 +58,7 @@ export default [
       react: { version: 'detect' },
     },
     rules: {
+      'react/jsx-uses-react': 'error',
       'react/prop-types': 'off',
       'no-unused-vars': [
         'warn',

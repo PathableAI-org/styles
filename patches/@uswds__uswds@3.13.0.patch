@@ -149,3 +149,109 @@ index 83152af0d5caef4f117da7d53aebdbbed20c9dc2..49423287799e65b1939cc293e6d6d6ff
  
  const uswds = require("./config");
  
+diff --git a/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss b/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss
+index d11385d25d71efee2016d1e33dcb5ff622f97b75..b14efbe2939201a54ed883bbb09790b5f72fd7c7 100644
+--- a/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss
++++ b/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss
+@@ -11,7 +11,7 @@ queries
+ @use "sass:math";
+ 
+ @function rem-to-user-em($grid-in-rem) {
+-  @if unit($grid-in-rem) != "rem" {
++  @if math.unit($grid-in-rem) != "rem" {
+     @error 'This value must be in rem';
+   }
+   $rem-to-user-em: (math.div($grid-in-rem, 1rem)) * 1em;
+diff --git a/packages/uswds-core/src/styles/mixins/general/layout-grid.scss b/packages/uswds-core/src/styles/mixins/general/layout-grid.scss
+index 528a7e3d18ba7651b90b07e4a1ae258b499be9d1..528e069ed85fe0c3138471ef06ca39ca0ab56a56 100644
+--- a/packages/uswds-core/src/styles/mixins/general/layout-grid.scss
++++ b/packages/uswds-core/src/styles/mixins/general/layout-grid.scss
+@@ -1,5 +1,6 @@
+ @use "sass:list";
+ @use "sass:map";
++@use "sass:string";
+ @use "../layout-grid" as *;
+ @use "../../functions" as *;
+ @use "../../mixins/helpers" as *;
+@@ -29,7 +30,7 @@
+   }
+ 
+   @include u-margin-x(
+-    unquote("#{$neg-prefix}-#{calc-gap-offset($gap-mobile)}")
++    string.unquote("#{$neg-prefix}-#{calc-gap-offset($gap-mobile)}")
+   );
+ 
+   > * {
+@@ -39,7 +40,7 @@
+ 
+   @include at-media("desktop") {
+     @include u-margin-x(
+-      unquote("#{$neg-prefix}-#{calc-gap-offset($gap-desktop)}")
++      string.unquote("#{$neg-prefix}-#{calc-gap-offset($gap-desktop)}")
+     );
+ 
+     > * {
+@@ -51,7 +52,7 @@
+ 
+ @mixin grid-gap($props...) {
+   $props: unpack($props);
+-  @if length($props) == 0 {
++  @if list.length($props) == 0 {
+     @include grid-gap-responsive;
+   } @else {
+     $gap: smart-quote(list.nth($props, 1));
+@@ -69,10 +70,10 @@
+         $gap: map.get($system-column-gaps, $gap);
+       }
+       @include u-margin-x(
+-        append-important(
+-          $props,
+-          unquote("#{$neg-prefix}-#{calc-gap-offset($gap)}")
+-        )
++append-important(
++        $props,
++        string.unquote("#{$neg-prefix}-#{calc-gap-offset($gap)}")
++      )
+       );
+       > * {
+         @include this-border-box-sizing;
+@@ -86,7 +87,7 @@
+   $props: unpack($props);
+   @include this-border-box-sizing;
+ 
+-  @if length($props) == 0 {
++  @if list.length($props) == 0 {
+     @include u-flex(fill);
+     @include u-width(auto);
+   } @else {
+@@ -107,7 +108,7 @@
+       @include u-maxw($maxw);
+       min-width: 1px; // IE 11
+     } @else if not map.has-key($system-layout-grid-widths, $col) {
+-      @error '#{$col} is not a valid layout grid width. Valid width are #{map-keys($system-layout-grid-widths)}';
++      @error '#{$col} is not a valid layout grid width. Valid width are #{map.keys($system-layout-grid-widths)}';
+     } @else {
+       $flex: append-important($props, auto);
+       $width: append-important(
+@@ -127,7 +128,7 @@
+     $width: append-important($props, 0);
+     @include u-margin-left(override, $width);
+   } @else if not map.has-key($system-layout-grid-widths, $offset) {
+-    @error '#{$offset} is not a valid layout grid width. Valid width are #{map-keys($system-layout-grid-widths)}';
++    @error '#{$offset} is not a valid layout grid width. Valid width are #{map.keys($system-layout-grid-widths)}';
+   } @else {
+     $width: append-important(
+       $props,
+diff --git a/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss b/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss
+index 066ee1809415be75adb7c66a394f03143c6cea00..bbec86a9dc5b3d2d08dd0b4ef5ad40dc03d0f67f 100644
+--- a/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss
++++ b/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss
+@@ -7,7 +7,7 @@
+ @use "../../mixins/helpers" as *;
+ 
+ @mixin grid-container($props...) {
+-  @if length($props) == 0 {
++  @if list.length($props) == 0 {
+     @include u-margin-x(auto);
+     @include u-maxw($theme-grid-container-max-width);
+   } @else {
