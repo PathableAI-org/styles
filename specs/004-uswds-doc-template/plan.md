@@ -23,6 +23,7 @@ The Astro docs site in `apps/docs` (powered by Starlight) currently uses a plain
 **Language/Version**: Astro 5.x, `@astrojs/starlight` ^0.32.0, TypeScript (Astro frontmatter/scripts)
 
 **Primary Dependencies**:
+
 - `@pathable/styles` (workspace:*) — provides `--pathable-*` CSS custom properties for colors, typography, spacing, elevation, radius
 - `astro` ^5.0.0 — static site framework
 - `@astrojs/starlight` ^0.32.0 — documentation theme with component override system
@@ -39,6 +40,7 @@ The Astro docs site in `apps/docs` (powered by Starlight) currently uses a plain
 **Performance Goals**: Static site generation — build times under 30s, zero runtime performance concerns
 
 **Constraints**:
+
 - All custom styling MUST use `--pathable-*` CSS custom properties (no hardcoded colors, spacing, fonts)
 - `.usa-*` classes MAY be used only where `--pathable-*` equivalents do not yet exist
 - Government-specific USWDS elements (`.usa-banner`, `.usa-identifier`) are excluded
@@ -55,7 +57,7 @@ The Astro docs site in `apps/docs` (powered by Starlight) currently uses a plain
 ### Applicable Principles
 
 | Principle | Relevance | Compliance |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | **I. CSS Custom Properties Are the Runtime Contract** | The docs site consumes `--pathable-*` tokens as its primary styling mechanism. | ✅ COMPLIANT — All custom components use `--pathable-*` custom properties per FR-010. |
 | **III. pnpm Workspaces Structure the Repository** | `apps/docs` already uses `"@pathable/styles": "workspace:*"`. | ✅ COMPLIANT — Workspace boundary respected, no token duplication. |
 | **VI. Token Naming Must Be Semantic and Stable** | The docs site uses semantic tokens like `--pathable-color-bg`, `--pathable-font-heading`. | ✅ COMPLIANT |
@@ -66,7 +68,7 @@ The Astro docs site in `apps/docs` (powered by Starlight) currently uses a plain
 ### Gate Evaluation
 
 | Gate | Status |
-|------|--------|
+| ------ | -------- |
 | No unjustified constitution violations | ✅ All principles are complied with or not applicable |
 | All [NEEDS CLARIFICATION] markers resolved | ✅ Spec has zero markers |
 | Feature spec is internally consistent | ✅ Verified |
@@ -126,7 +128,7 @@ No constitution violations identified. All principles are complied with.
 ### Design Decisions
 
 | Decision | Rationale | Alternatives Considered |
-|----------|-----------|------------------------|
+| ---------- | ----------- | ------------------------ |
 | Astro component approach | Starlight's component override system allows replacing `PageFrame` while keeping content/sidebar/TOC slots. This is the idiomatic Astro/Starlight approach. | Forking Starlight, rebuilding from scratch |
 | `--pathable-*` tokens as primary styling | Spec FR-010 requirement; serves as visual test surface for the styles package. | Using USWDS component CSS directly (would not test styles package) |
 | Preserve Starlight sidebar slot | Starlight already generates the hierarchical sidebar from the content collection. Wrapping it in USWDS-inspired styles is more maintainable than rebuilding it. | Building a custom sidebar from scratch |
@@ -161,7 +163,7 @@ Extract the concrete layout regions from the USWDS template HTML:
 Map each layout region to the `--pathable-*` tokens it should use:
 
 | Layout Region | Token | USWDS Equivalent |
-|---|---|---|
+| --- | --- | --- |
 | Page background | `--pathable-color-bg` | `bg-base-lightest` |
 | Header/surface | `--pathable-color-surface` | `bg-white` |
 | Body text | `--pathable-color-text` | `text-base-darkest` |
@@ -200,6 +202,7 @@ See `research.md` for complete findings from all research tasks.
 #### 1. data-model.md
 
 Formal entity definitions for:
+
 - **PageFrame** — layout container with header, sidebar, content, footer regions
 - **HorizontalNav** — top navigation with brand logo and section links
 - **Sidebar** — hierarchical navigation tree (Starlight-generated content, custom-styled)
@@ -214,6 +217,7 @@ Token usage contract documenting which `--pathable-*` CSS custom properties map 
 #### 3. quickstart.md
 
 Validation guide covering:
+
 - Build and dev workflow (`pnpm build`, `pnpm dev` from `apps/docs/`)
 - Visual verification checklist for each layout region
 - Token compliance inspection via browser DevTools
@@ -226,6 +230,7 @@ Run the agent context update script to register the new layout architecture and 
 ### Post-Design Constitution Re-Check
 
 *After Phase 1 artifacts are generated, verify:*
+
 - [ ] No design decision contradicts ratified principles
 - [ ] data-model.md does not duplicate constitution text
 - [ ] Complexity Tracking justifications remain valid

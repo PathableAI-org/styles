@@ -7,18 +7,20 @@
 A pnpm workspace package that wraps `@pathable/styles` components as idiomatic React components.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | `name` | string | `@pathable/react` |
 | `path` | path | `packages/react/` |
 | `packageManager` | pnpm | Workspace protocol `workspace:*` for `@pathable/styles` |
 | `entrypoint` | `dist/index.js` (or equivalent) | Compiled React component library |
 
 **Validation rules**:
+
 - Must declare `@pathable/styles` as a dependency (not devDependency)
 - Must declare `react` and `react-dom` as peerDependencies
 - Must export `Button` from its main entry point
 
 **Relationships**:
+
 - Consumes: `@pathable/styles` (compiled CSS dependency)
 - Consumed by: Consumer React applications
 
@@ -27,19 +29,21 @@ A pnpm workspace package that wraps `@pathable/styles` components as idiomatic R
 A static React component wrapping the `pathable-button` CSS class.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | name | `Button` | React component name |
 | element | `<button>` | Native HTML button element |
 | props | `{ children: ReactNode }` | Only accepts children text |
 | css_class | `pathable-button` | The CSS class applied to the rendered element |
 
 **Validation rules**:
+
 - MUST render a native `<button>` element (FR-004)
 - MUST apply the `pathable-button` CSS class (FR-005)
 - MUST accept only `children` prop (FR-006)
 - MUST NOT accept `variant`, `onClick`, `disabled`, `type`, `className`, or `style` props (FR-007)
 
 **Relationships**:
+
 - Uses: `@pathable/styles` CSS (the `pathable-button` class)
 
 ### React Storybook (`apps/storybook-react`)
@@ -47,13 +51,14 @@ A static React component wrapping the `pathable-button` CSS class.
 A standalone Storybook instance for developing and browsing React components.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | name | `@pathable/react-storybook` | Storybook workspace package |
 | path | `apps/storybook-react/` | Location in repository |
 | framework | `@storybook/react-vite` | Storybook framework |
 | port | 6007 | Standalone port (distinct from main Storybook's 6006) |
 
 **Relationships**:
+
 - Composes stories from: `packages/react/src/stories/`
 - Composed by: Main Storybook (`apps/storybook`) via refs configuration
 
@@ -62,7 +67,7 @@ A standalone Storybook instance for developing and browsing React components.
 The mechanism in Storybook's `main.js` `refs` configuration that allows one Storybook to include stories from another Storybook instance.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | ref_name | `react` | The key used in the main Storybook's `refs` config |
 | target_url | `http://localhost:6007` | URL of the React Storybook instance |
 | fallback_behavior | Show as unavailable | What happens when the composed Storybook is not running |
@@ -72,7 +77,7 @@ The mechanism in Storybook's `main.js` `refs` configuration that allows one Stor
 A Storybook story that demonstrates the default Button component.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | name | Default | Story name |
 | component | Button | The component being demonstrated |
 | args | `{ children: "Click Me" }` | Story arguments |

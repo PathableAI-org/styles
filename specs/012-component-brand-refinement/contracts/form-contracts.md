@@ -9,7 +9,7 @@ Form workflow patterns are Storybook-exclusive content additions. No new CSS cla
 ### CSS Classes Used (all existing)
 
 | Class | Pattern Examples |
-|-------|-----------------|
+| ------- | ----------------- |
 | `.pathable-form` | All form patterns |
 | `.pathable-input` | Compliance field, goal selector |
 | `.pathable-textarea` | Session note, supervisor comment |

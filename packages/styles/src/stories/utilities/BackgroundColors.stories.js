@@ -33,7 +33,7 @@ export const AllSwatches = {
           <div class="${cls}" style="height: 80px; border-bottom: 1px solid rgba(0,0,0,0.1);"></div>
           <div style="padding: 0.5rem; background: #fff;">
             <div style="font-weight: 600; font-size: 0.875rem;">${name}</div>
-            <div style="color: #666; font-size: 0.75rem; font-family: monospace;">.${cls}</div>
+            <div style="color: #444; font-size: 0.75rem; font-family: monospace;">.${cls}</div>
           </div>
         </div>
       `,

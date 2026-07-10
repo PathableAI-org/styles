@@ -7,7 +7,7 @@
 All technology choices were explicitly specified in the feature description and spec. No ambiguities required research.
 
 | Decision | Chosen | Rationale |
-|----------|--------|-----------|
+| ---------- | -------- | ----------- |
 | Static site framework | Astro | Specified requirement; works well with Starlight |
 | Documentation theme | Starlight (@astrojs/starlight) | Specified requirement; designed for docs sites |
 | Package manager | pnpm (monorepo) | Existing project standard |

@@ -44,7 +44,7 @@ Import groups of related components:
 Available bundles:
 
 | Bundle | Included Components |
-|--------|-------------------|
+| -------- | ------------------- |
 | `pathable-form-controls` | character-count, checkbox, combo-box, date-picker, date-range-picker, error-message, fieldset, file-input, form, form-group, hint, input, input-mask, input-prefix-suffix, label, legend, memorable-date, radio, range, select, textarea, time-picker, validation |
 | `pathable-typography` | link, list, prose (plus style-only deps: content, dark-background, display, intro, paragraph) |
 | `pathable-navigation` | breadcrumb, header, in-page-navigation, nav, pagination, search, sidenav, skipnav |
@@ -161,7 +161,7 @@ For components where USWDS JavaScript queries DOM elements by `.usa-*` class nam
 **Components requiring `.usa-*` retention:**
 
 | Component | CSS Class(es) to Keep |
-|-----------|----------------------|
+| ----------- | ---------------------- |
 | Accordion | `.usa-accordion`, `.usa-accordion__button` |
 | Banner | `.usa-banner`, `.usa-banner__button` |
 | Combo Box | `.usa-combo-box` |
@@ -192,7 +192,7 @@ Component-level styling values are available as dual-named CSS custom properties
 ## Component-to-Class Mapping Reference
 
 | Component | Main Class | Modifier Classes |
-|-----------|-----------|-----------------|
+| ----------- | ----------- | ----------------- |
 | accordion | `.pathable-accordion` | (bordered, multiselectable) |
 | alert | `.pathable-alert` | `--info`, `--warning`, `--error`, `--success`, `--emergency`, `--slim` |
 | banner | `.pathable-banner` | — |

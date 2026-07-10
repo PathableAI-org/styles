@@ -6,7 +6,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "the USWDS website has a template for documentation pages: https://designsystem.digital.gov/templates/documentation-page/ our packages/styles package wraps uswds and we should be able to use all the uswds components. I want the astro docs in apps/docs to end up looking like this page. That does not mean use the template exactly, instead look at the template and its html and think about how to idomatically implement the same result in astro. You MUST use styles from our package/styles both for consistency and because that is how we will test the styles package. You MAY use usa-* classes if pathable-* equivalents are not yet exposed."
+**Input**: User description: "the USWDS website has a template for documentation pages: <https://designsystem.digital.gov/templates/documentation-page/> our packages/styles package wraps uswds and we should be able to use all the uswds components. I want the astro docs in apps/docs to end up looking like this page. That does not mean use the template exactly, instead look at the template and its html and think about how to idomatically implement the same result in astro. You MUST use styles from our package/styles both for consistency and because that is how we will test the styles package. You MAY use usa-*classes if pathable-* equivalents are not yet exposed."
 
 ## Table of Contents
 

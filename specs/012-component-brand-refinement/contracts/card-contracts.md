@@ -9,7 +9,7 @@ The card component exposes a new `.pathable-card--workflow` modifier for Pathabl
 ### CSS Classes
 
 | Class | Purpose | Status |
-|-------|---------|--------|
+| ------- | --------- | -------- |
 | `.pathable-card` | Base card (USWDS default) | EXISTING |
 | `.pathable-card__container` | Card inner container | EXISTING |
 | `.pathable-card__header` | Card header | EXISTING |
@@ -66,7 +66,7 @@ The card component exposes a new `.pathable-card--workflow` modifier for Pathabl
 ### Visual Contract
 
 | Element | Token | Value | Notes |
-|---------|-------|-------|-------|
+| --------- | ------- | ------- | ------- |
 | Surface bg | `--pathable-color-surface` | #ffffff | White card surface |
 | Border | `--pathable-color-border` | #dde2e8 | Subtle border |
 | Heading | `--pathable-color-text` | #00365c | PathAble Blue |

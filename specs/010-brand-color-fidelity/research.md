@@ -7,7 +7,7 @@
 ### Action Role Tokens
 
 | Token | Value | Source | Rationale |
-|-------|-------|--------|-----------|
+| ------- | ------- | -------- | ----------- |
 | `--pathable-color-action-primary-bg` | `#162e51` | `blue-warm-80v` (PathAble Blue mapped) | Strong brand identity, high contrast with white text (13.60:1) |
 | `--pathable-color-action-primary-text` | `#ffffff` | White | Maximum contrast for legibility |
 | `--pathable-color-action-secondary-bg` | `#1dc2ae` | `mint-cool-30v` (Intelligent Jade mapped) | Supporting brand color, good contrast with dark text (6.08:1 with PathAble Blue) |
@@ -18,7 +18,7 @@
 ### Status Role Tokens
 
 | Token | Value | Source | Rationale |
-|-------|-------|--------|-----------|
+| ------- | ------- | -------- | ----------- |
 | `--pathable-color-status-success-bg` | `#1dc2ae` | `mint-cool-30v` (Intelligent Jade mapped) | Success = green semantic |
 | `--pathable-color-status-success-text` | `#162e51` | PathAble Blue mapped | 6.08:1 contrast on Jade (PASS AA) |
 | `--pathable-color-status-warning-bg` | `#f5a623` | `gold-20v` (USWDS warning) | Standard warning color |
@@ -31,7 +31,7 @@
 ### Workflow State Tokens
 
 | Token | Value | Source | Rationale |
-|-------|-------|--------|-----------|
+| ------- | ------- | -------- | ----------- |
 | `--pathable-color-workflow-active` | `#58b4ff` | `blue-30v` (Bright Blue Brooks mapped) | Bright, attention-getting blue |
 | `--pathable-color-workflow-complete` | `#1dc2ae` | `mint-cool-30v` (Intelligent Jade mapped) | Positive completion |
 | `--pathable-color-workflow-blocked` | `#dc3545` | `red-60v` (existing danger) | Error/blocked semantic |
@@ -43,7 +43,7 @@
 ### Key Findings (Exact Brand Hex Values)
 
 | Pairing | Ratio | WCAG AA (Normal Text) | WCAG AA (Large Text) | Status |
-|---------|-------|----------------------|----------------------|--------|
+| --------- | ------- | ---------------------- | ---------------------- | -------- |
 | White on PathAble Blue `#00365c` | 12.48:1 | PASS | PASS | ✅ Approved |
 | Shilling Silver on PathAble Blue | 9.58:1 | PASS | PASS | ✅ Approved |
 | White on Tech Teal `#015a76` | 7.71:1 | PASS | PASS | ✅ Approved |
@@ -55,7 +55,7 @@
 ### Key Findings (USWDS Mapped Values)
 
 | Pairing | Ratio | WCAG AA (Normal Text) | Status |
-|---------|-------|----------------------|--------|
+| --------- | ------- | ---------------------- | -------- |
 | White on PathAble Blue (mapped) `#162e51` | 13.60:1 | PASS | ✅ Approved |
 | White on Tech Teal (mapped) `#00687d` | 6.41:1 | PASS | ✅ Approved |
 | White on Intelligent Jade (mapped) `#1dc2ae` | 2.24:1 | FAIL | ❌ Do not use for text |
@@ -75,9 +75,10 @@
 
 **Rationale**: All existing stories use inline HTML strings in `.stories.js` files. Using a separate HTML template would be inconsistent with the codebase pattern. The page will be a single story with multiple sections (exact brand colors, USWDS mapping, semantic tokens, approved pairings, failed pairings), rendered as a single HTML template with CSS styling for the documentation layout.
 
-**Approach**: 
+**Approach**:
+
 - New file at `packages/styles/src/stories/brand/ColorUsage.stories.js`
-- Single default export with `title: 'Brand/Color Usage'` 
+- Single default export with `title: 'Brand/Color Usage'`
 - Uses inline HTML with inline styles for the documentation layout (color swatches, tables)
 - The page is a single "story" that renders the full documentation page
 - Follows the existing pattern of `BackgroundColors.stories.js` for swatch rendering

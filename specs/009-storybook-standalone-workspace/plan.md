@@ -47,7 +47,7 @@ Extract the Storybook documentation site from `packages/styles` into its own pnp
 ### Principle Review
 
 | Principle | Relevance | Assessment |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | I. CSS Custom Properties Are the Runtime Contract | Low | This feature does not modify the token package |
 | II. SCSS Is an Authoring and Extension Layer | Low | No SCSS changes planned |
 | III. pnpm Workspaces Structure the Repository | **High** | Adding `apps/storybook` to `pnpm-workspace.yaml` and creating a new workspace protocol dependency follows this principle |
@@ -63,7 +63,7 @@ Extract the Storybook documentation site from `packages/styles` into its own pnp
 ### Stack & Dependency Constraint Check
 
 | Constraint | Status |
-|------------|--------|
+| ------------ | -------- |
 | pnpm as package manager | ✅ Followed — workspace protocol `workspace:*` used |
 | Dart Sass via `sass` npm package | ✅ Unchanged in `packages/styles` |
 | Runtime dependencies | ✅ Storybook deps are devDependencies in the docs workspace |
@@ -148,6 +148,7 @@ See [quickstart.md](./quickstart.md) for getting started guide.
 ### Contracts
 
 The contracts directory contains:
+
 - GitHub Actions workflow definitions for CI and deployment
 - Root package.json script interfaces
 - Workspace dependency contract between `apps/storybook` and `packages/styles`

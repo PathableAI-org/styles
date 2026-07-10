@@ -45,7 +45,7 @@ Create a minimal "hello world" Astro + Starlight documentation site at `apps/doc
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 | Principle | Compliance | Notes |
-|-----------|-----------|-------|
+| ----------- | ----------- | ------- |
 | III. pnpm Workspaces | ✅ | Adding `apps/*` to workspace.yaml extends the existing pattern |
 | IV. First Slice Narrow | ✅ | Docs PoC only — no React, Vue, Storybook, or component catalog |
 | IX. Framework Independence | ✅ | Astro/Starlight consume styles via CSS import, not framework coupling |

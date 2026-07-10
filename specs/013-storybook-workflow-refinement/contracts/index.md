@@ -45,7 +45,7 @@ Every Storybook story MUST include the following annotation in its `parameters.d
 ## 2. Workflow-Intent Button Variant Mapping
 
 | Intent Class | Implementation | Background | Text Color | WCAG AA |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `.pathable-button--save` | `@extend .pathable-button--secondary` | `--pathable-color-action-secondary-bg` (#1cae96) | `--pathable-color-on-accent` (#001a33) | 5.8:1 |
 | `.pathable-button--continue` | `@extend .pathable-button--primary` | `--pathable-color-action-primary-bg` (#00365c) | White | > 7:1 |
 | `.pathable-button--review` | `@extend .pathable-button--accent-cool` | `--pathable-color-link` (#4899e8) | `--pathable-color-on-accent` (#001a33) | 5.8:1 |
@@ -57,7 +57,7 @@ Every Storybook story MUST include the following annotation in its `parameters.d
 ## 3. Brand CSS Custom Property — Removed Legacy Short Names
 
 | Removed Name | Canonical Replacement |
-|---|---|
+| --- | --- |
 | `--pathable-blue` | `--pathable-brand-pathable-blue` |
 | `--intelligent-jade` | `--pathable-brand-intelligent-jade` |
 | `--bright-blue-brooks` | `--pathable-brand-bright-blue-brooks` |
@@ -66,6 +66,7 @@ Every Storybook story MUST include the following annotation in its `parameters.d
 | `--shilling-silver` | `--pathable-brand-shilling-silver` |
 
 **Notes**:
+
 - The Sass variables (`$pathable-blue`, `$intelligent-jade`, etc.) are internal to the package and remain valid for use within package SCSS.
 - Only the CSS custom property output (`:root { --intelligent-jade: ... }`) was removed. Consumers must migrate to `--pathable-brand-*` equivalents.
 
@@ -76,6 +77,7 @@ Every Storybook story MUST include the following annotation in its `parameters.d
 ### Header
 
 Replace navigation labels:
+
 - `"Site Title"` → `"PathAble"` or `"CoachBridge"`
 - `"Nav Item 1"` → `"Participants"`
 - `"Nav Item 2"` → `"Coaching Sessions"`
@@ -84,12 +86,14 @@ Replace navigation labels:
 ### Banner
 
 Replace government copy with Pathable-relevant contexts:
+
 - "This is an official government website" → coaching session reminder, compliance notification, or goal milestone announcement
 - Update "Learn more" link text appropriately
 
 ### Combo Box
 
 Replace generic options with realistic data:
+
 - `"Option 1"` → `"Goal Setting"`
 - `"Option 2"` → `"Skills Assessment"`
 - `"Option 3"` → `"Job Placement"`
@@ -98,6 +102,7 @@ Replace generic options with realistic data:
 ### Modal
 
 Replace generic copy with workflow copy:
+
 - `"Modal Title"` → `"Add Support Activity"` or `"Confirm Goal Approval"`
 - Body text → relevant workflow description
 - `"Confirm"` / `"Cancel"` → Intent-specific labels
@@ -105,6 +110,7 @@ Replace generic copy with workflow copy:
 ### Button (workflow variants)
 
 Add new story examples for workflow-intent variants:
+
 - `.pathable-button--save` → `"Save Coaching Note"`
 - `.pathable-button--continue` → `"Continue to Review"`
 - `.pathable-button--review` → `"Review Compliance"`

@@ -23,6 +23,7 @@ Create a new pnpm workspace package `@pathable/react` at `packages/react/` that 
 **Language/Version**: JavaScript/TypeScript (JSX) using React 18/19
 
 **Primary Dependencies**:
+
 - `@pathable/styles` (workspace dependency — provides compiled CSS and `pathable-button` class)
 - `react` + `react-dom` (peer dependencies, consumer-provided)
 - `storybook` + `@storybook/react-vite` (dev, for React Storybook)
@@ -38,6 +39,7 @@ Create a new pnpm workspace package `@pathable/react` at `packages/react/` that 
 **Performance Goals**: N/A — proof-of-concept, no performance targets
 
 **Constraints**:
+
 - Zero additional CSS/Sass compilation required from consumers — bundled CSS from `@pathable/styles` is sufficient
 - No runtime dependencies beyond `@pathable/styles`
 - Button is static proof-of-concept: only `children` prop, no variants, no click handlers, no className forwarding
@@ -49,33 +51,43 @@ Create a new pnpm workspace package `@pathable/react` at `packages/react/` that 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 ### Principle III — pnpm Workspaces Structure the Repository
+
 **Compliant**: The new package `packages/react` is registered in the existing `pnpm-workspace.yaml` under the `packages/*` glob. Consumes `@pathable/styles` via `workspace:*` protocol.
 
 ### Principle IV — First Implementation Slice Is Narrow
+
 **Compliant**: This feature is explicitly scoped to creating the React package workspace and a single static Button component. No Vue, React components beyond Button, Tailwind presets, or full docs site.
 
 ### Principle V — Published Artifacts Must Be Reliable
+
 **Compliant**: The React package will declare `package.json` entrypoints (`main`/`exports`) for the built output. Build is a pnpm script.
 
 ### Principle VI — Token Naming Must Be Semantic and Stable
+
 **Compliant**: The React Button applies the existing `pathable-button` CSS class from `@pathable/styles`. No new tokens or naming.
 
 ### Principle VII — Design Source Alignment Matters
+
 **Compliant**: No new Figma design source for this setup — the Button reuses existing styles.
 
 ### Principle VIII — Accessibility Is Part of Token Quality
+
 **Compliant**: The Button renders a native `<button>` element which inherits existing accessibility from `@pathable/styles` styling. No custom ARIA or behavior that could introduce accessibility traps.
 
 ### Principle IX — Framework Independence Comes First
+
 **Compliant**: `@pathable/styles` remains framework-independent. The React package is a downstream consumer — it does not embed or redefine token definitions.
 
 ### Principle X — Documentation Is a First-Class Package Concern
+
 **Compliant**: README documentation for `packages/react` will be included.
 
 ### Principle XI — Versioning and Release Discipline
+
 **Compliant**: Semantic versioning applies. Initial release is effectively a new package, starting at 0.1.0 or similar.
 
 ### Change Scope Granularity
+
 - **M** (Module/Capability): `@pathable/react` package workspace + React Storybook + Storybook composition
 - **U** (Unit/Design Object): Button component, Button story, React Storybook config, main Storybook composition ref
 

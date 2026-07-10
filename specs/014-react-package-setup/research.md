@@ -11,6 +11,7 @@
 **Alternatives considered**: Importing stories directly via a shared stories glob was rejected because the React stories require a React framework (`@storybook/react-vite`) while the main Storybook uses `@storybook/html-vite`. Composition allows each Storybook to use its own framework.
 
 **Required case coverage**:
+
 - S-005: Main Storybook composes React stories (positive, CC-013)
 - S-006: Graceful degradation when React Storybook is unavailable (negative, CC-014)
 

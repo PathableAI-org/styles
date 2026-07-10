@@ -117,7 +117,7 @@ All source paths are relative to the repository root at `/Users/jake/Documents/G
 All tasks within a single US phase target the same file (`Typography.stories.js`). Data constants tasks are marked [P] and can be done independently, but the render template tasks must follow after data is available.
 
 | Phase | Tasks | Can Parallelize? |
-|-------|-------|-----------------|
+| ------- | ------- | ----------------- |
 | Phase 1 (Setup) | T001 | Single task |
 | Phase 2 (US1) | T002-T007 | T002 first (create file), then T003/T005/T007 in parallel, then T004/T006 in parallel |
 | Phase 3 (US2) | T008-T009 | T008 then T009 (sequential within same file) |
@@ -170,6 +170,7 @@ Task: "Implement type scale table section in render template"
 ### Single-File Strategy
 
 All three user stories modify the same file (`Typography.stories.js`). Implement sequentially within each story:
+
 - First add data constants (the arrays of typography role/scale/violation objects)
 - Then add the render template section that uses them
 - This ensures each story's section is self-contained and independently testable

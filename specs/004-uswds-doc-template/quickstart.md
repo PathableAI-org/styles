@@ -38,7 +38,7 @@ pnpm build          # Rebuilds dist/styles.css with USWDS theme tokens
 ### 3. Key files to edit
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `apps/docs/astro.config.mjs` | Starlight config, component overrides |
 | `apps/docs/src/components/PageFrame.astro` | Main layout frame (header + nav + sidebar + content + footer) |
 | `apps/docs/src/components/HorizontalNav.astro` | Primary navigation bar |

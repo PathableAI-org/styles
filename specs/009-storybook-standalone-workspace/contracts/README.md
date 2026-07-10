@@ -7,7 +7,7 @@
 ### `pnpm docs`
 
 | Property | Value |
-|----------|-------|
+| ---------- | ------- |
 | Script | `pnpm --filter @pathable/storybook storybook` |
 | Effect | Starts Storybook dev server on port 6006 |
 | Prerequisite | `@pathable/styles` must be built (`pnpm --filter @pathable/styles build`) |
@@ -16,7 +16,7 @@
 ### `pnpm build:docs`
 
 | Property | Value |
-|----------|-------|
+| ---------- | ------- |
 | Script | `pnpm --filter @pathable/storybook build-storybook` |
 | Effect | Builds static Storybook site to `storybook-static/` |
 | Prerequisite | `@pathable/styles` must be built |
@@ -27,7 +27,7 @@
 ### `apps/storybook` ← `packages/styles`
 
 | Property | Value |
-|----------|-------|
+| ---------- | ------- |
 | Dependency type | `dependencies` (or `devDependencies`) |
 | Package spec | `"@pathable/styles": "workspace:*"` |
 | Required output | `dist/styles.css` (compiled CSS imported in preview.js) |

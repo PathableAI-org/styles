@@ -35,7 +35,7 @@ Additionally, the `$typography-scale` map in `_typography.scss` aggregates font-
 **Decision**: No new tokens are needed. The existing `--pathable-font-*` namespace already provides semantic role-based coverage:
 
 | Role | Existing Token | Status |
-|------|---------------|--------|
+| ------ | --------------- | -------- |
 | Heading font family | `--pathable-font-heading` | ✅ Already exists |
 | Body font family | `--pathable-font-body` | ✅ Already exists |
 | Alternate heading font | `--pathable-font-alt` | ✅ Already exists |
@@ -48,6 +48,7 @@ The `--pathable-font-*` prefix is already a semantic naming convention. Adding a
 ### Alternative Considered
 
 Creating a new `--pathable-typography-*` token namespace:
+
 - **Rejected because**: The existing `--pathable-font-*` tokens already serve the semantic role. Adding a parallel namespace would create confusion about which set is authoritative. The spec's FR-008 uses an "if missing" conditional — the existing tokens are not missing.
 
 ---
@@ -61,7 +62,7 @@ Creating a new `--pathable-typography-*` token namespace:
 ### Pattern Summary
 
 | Aspect | Pattern |
-|--------|---------|
+| -------- | --------- |
 | **File location** | `packages/styles/src/stories/brand/` |
 | **Export default** | `{ title: 'Brand/Color Usage', tags: ['autodocs'] }` |
 | **Story export** | Single `Default` export with `render: () => \`...\`` |
@@ -85,6 +86,7 @@ Creating a new `--pathable-typography-*` token namespace:
 ### Application to Typography Story
 
 The Typography story will follow the exact same pattern:
+
 - `export default { title: 'Brand/Typography', tags: ['autodocs'] }`
 - Single `Default` export with `render` returning HTML string
 - Data-driven sections for font roles, type scale, long-text examples, and violations
@@ -106,6 +108,7 @@ Use `git rm FEEDBACK.md` to remove the file from both the working tree and the g
 ### Alternative Considered
 
 Adding `FEEDBACK.md` to `.gitignore` without removing it from the index:
+
 - **Rejected because**: The file would still be tracked by git (`.gitignore` only affects untracked files). A `git rm --cached` would be needed, which is equivalent to the chosen approach but leaves the file on disk. Since the file is temporary and its content has been captured, complete removal is cleaner.
 
 ---
@@ -113,7 +116,7 @@ Adding `FEEDBACK.md` to `.gitignore` without removing it from the index:
 ## Consolidated Decisions
 
 | Topic | Decision | Rationale |
-|-------|----------|-----------|
+| ------- | ---------- | ----------- |
 | New semantic typography tokens | Not needed | Existing `--pathable-font-*` tokens already cover all roles |
 | Typography story pattern | Follow `ColorUsage.stories.js` | Same brand category, same rendering approach, same conventions |
 | FEEDBACK.md | `git rm FEEDBACK.md` | Temporary file, content captured in spec, no ongoing value |

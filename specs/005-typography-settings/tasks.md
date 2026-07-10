@@ -113,7 +113,7 @@
 
 ---
 
-## Phase 5: User Story 3 - Consumers reference --pathable-font-* and --usa-font-* CSS custom properties (Priority: P2)
+## Phase 5: User Story 3 - Consumers reference --pathable-font-*and --usa-font-* CSS custom properties (Priority: P2)
 
 **Goal**: Dual `--pathable-font-*` and `--usa-font-*` CSS custom properties are available in compiled output, resolving to identical values.
 

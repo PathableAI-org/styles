@@ -9,7 +9,7 @@ The button component exposes SCSS classes and CSS custom properties that consume
 ### CSS Classes (unchanged)
 
 | Class | Purpose | Status |
-|-------|---------|--------|
+| ------- | --------- | -------- |
 | `.pathable-button` | Base button | EXISTING |
 | `.pathable-button--primary` | Primary CTA | NEW (alias for default) |
 | `.pathable-button--secondary` | Secondary action | EXISTING, BRANDED |
@@ -33,7 +33,7 @@ The button component exposes SCSS classes and CSS custom properties that consume
 ### CSS Custom Properties Consumed
 
 | Property | Used By | Source |
-|----------|---------|--------|
+| ---------- | --------- | -------- |
 | `--pathable-color-action-primary-bg` | Primary button bg | `_semantic.scss` |
 | `--pathable-color-action-primary-text` | Primary button text | `_semantic.scss` |
 | `--pathable-color-action-secondary-bg` | Secondary button bg | `_semantic.scss` |
@@ -42,7 +42,7 @@ The button component exposes SCSS classes and CSS custom properties that consume
 ### Contrast Contract
 
 | Variant | Foreground | Background | Ratio | AA Normal | AA Large |
-|---------|-----------|-----------|-------|-----------|----------|
+| --------- | ----------- | ----------- | ------- | ----------- | ---------- |
 | Primary | white (#ffffff) | PathAble Blue (#162e51 USWDS) | 13.2:1 | PASS | PASS |
 | Secondary | PathAble Blue (#00365c) | Intelligent Jade (#1cae96) | 5.5:1 | PASS | PASS |
 | Accent-cool | PathAble Blue (#00365c) | Bright Blue Brooks (#58b4ff USWDS) | ~3.8:1 | FAIL | PASS |

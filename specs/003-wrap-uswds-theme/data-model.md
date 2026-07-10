@@ -7,7 +7,7 @@
 Represents one of the six PathAble brand colors with its USWDS system token mapping.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | name | string | Canonical brand color name (e.g., "PathAble Blue") |
 | scssVariable | string | SCSS variable name (e.g., "$pathable-blue") |
 | cssCustomProperty | string | CSS custom property name (e.g., "--pathable-blue") |
@@ -21,7 +21,7 @@ Represents one of the six PathAble brand colors with its USWDS system token mapp
 **Instances**:
 
 | Name | $var | --prop | Hex | USWDS Token | Family | ΔE | Alias |
-|------|------|--------|-----|-------------|--------|----|-------|
+| ------ | ------ | -------- | ----- | ------------- | -------- | ---- | ------- |
 | PathAble Blue | $pathable-blue | --pathable-blue | #00365c | blue-warm-80v | primary | 5.56 | MUST |
 | Intelligent Jade | $intelligent-jade | --intelligent-jade | #1cae96 | mint-cool-30v | secondary | 7.84 | MUST |
 | Bright Blue Brooks | $bright-blue-brooks | --bright-blue-brooks | #4899e8 | blue-30v | accent-cool | 10.70 | MUST |
@@ -34,7 +34,7 @@ Represents one of the six PathAble brand colors with its USWDS system token mapp
 Represents a single grade within a USWDS theme color family.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | family | enum | One of: base, primary, secondary, accent-warm, accent-cool |
 | grade | enum | One of: lightest, lighter, light, base (default), vivid, dark, darker, darkest, ink |
 | uswdsSystemToken | string or false | USWDS system token name, or false if unused |
@@ -48,7 +48,7 @@ Represents a single grade within a USWDS theme color family.
 Represents a USWDS state/utility color token.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | stateName | string | State name (error, warning, success, info, disabled, visited) |
 | baseToken | string | USWDS system token for the base grade |
 | darkToken | string | USWDS system token for the dark grade |
@@ -57,7 +57,7 @@ Represents a USWDS state/utility color token.
 **Instances**:
 
 | State | Base | Dark | Lighter |
-|-------|------|------|---------|
+| ------- | ------ | ------ | --------- |
 | error | red-60v | red-70v | red-10 |
 | warning | gold-20v | gold-30v | gold-5 |
 | success | mint-cool-30v | mint-cool-40v | mint-cool-5 |
@@ -69,7 +69,7 @@ Represents a USWDS state/utility color token.
 Represents an existing $pathable-color-* semantic token and its alias status.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | name | string | SCSS variable name (e.g., "$pathable-color-danger") |
 | cssCustomProperty | string | CSS custom property name (e.g., "--pathable-color-danger") |
 | currentHex | string | Current hardcoded hex value |
@@ -79,7 +79,7 @@ Represents an existing $pathable-color-* semantic token and its alias status.
 **Instances**:
 
 | Token | Current Hex | Alias Status | USWDS Token |
-|-------|-------------|-------------|-------------|
+| ------- | ------------- | ------------- | ------------- |
 | $pathable-color-bg | #dde2e8 | SHOULD | gray-cool-10 |
 | $pathable-color-surface | #ffffff | MAY remain | (none — pure white) |
 | $pathable-color-text | #00365c | MUST | blue-warm-80v |

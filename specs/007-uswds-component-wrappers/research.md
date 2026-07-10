@@ -32,6 +32,7 @@ The `.pathable-*` component wrappers will use SCSS `@extend` to alias each `.usa
 ```
 
 **Rationale**: SCSS `@extend` compiles to comma-separated selectors (e.g., `.pathable-button, .usa-button { ... }`). This means:
+
 - Zero CSS duplication — both class names share the same rule block
 - 100% style fidelity — `.pathable-button` is guaranteed to render identically to `.usa-button`
 - Automatic maintenance — when USWDS updates component styles, the `pnpm build` picks them up without wrapper changes
@@ -40,7 +41,7 @@ The `.pathable-*` component wrappers will use SCSS `@extend` to alias each `.usa
 ### Alternatives Considered
 
 | Option | Verdict | Reason |
-|--------|---------|--------|
+| -------- | --------- | -------- |
 | CSS copy (duplicating rules) | Rejected | Massive duplication, violates FR-002, drifts from USWDS updates |
 | SCSS mixin pattern | Rejected | Adds unnecessary complexity — FR-002 requires identical styles, not customization. Mixin pattern would be useful for a future customization API but is not needed for the wrapper layer |
 | `@extend only` | ✅ Selected | Minimal output, automatic sync, simplest code. |
@@ -54,7 +55,7 @@ The USWDS packages directory (`node_modules/@uswds/uswds/packages/`) contains th
 **Individual Component Packages (need `.pathable-*` wrappers):**
 
 | # | USWDS Package | Main `.usa-*` Class(es) | JS-Driven? | PathAble Wrapper |
-|---|--------------|------------------------|------------|-----------------|
+| --- | -------------- | ------------------------ | ------------ | ----------------- |
 | 1 | usa-accordion | `.usa-accordion`, `.usa-accordion__button`, `.usa-accordion__content` | Yes — JS toggles expand/collapse | `pathable-accordion.scss` |
 | 2 | usa-alert | `.usa-alert`, `.usa-alert--info`, `.usa-alert--warning`, etc. | No | `pathable-alert.scss` |
 | 3 | usa-banner | `.usa-banner` | Yes — JS toggles banner content | `pathable-banner.scss` |
@@ -118,6 +119,7 @@ The USWDS packages directory (`node_modules/@uswds/uswds/packages/`) contains th
 | 61 | usa-validation | `.usa-validation` | Yes — JS manages validation | `pathable-validation.scss` |
 
 **Style-only packages (no `.usa-*` class wrappers but forwarded for compilation):**
+
 - `usa-content` — content width styles, forwarded via uswds-typography
 - `usa-dark-background` — dark background utility styles
 - `usa-display` — display heading styles
@@ -130,6 +132,7 @@ The USWDS packages directory (`node_modules/@uswds/uswds/packages/`) contains th
 - `usa-fonts` — font face declarations (forwarded by uswds-fonts)
 
 **Infrastructure packages (forwarded but no `.pathable-*` class):**
+
 - `uswds-core` — functions, mixins, tokens
 - `uswds-elements` — base element styles
 - `uswds-fonts` — font face declarations
@@ -154,7 +157,7 @@ packages/styles/src/pathable-component-wrappers/
 **Bundle membership:**
 
 | Bundle | Components |
-|--------|-----------|
+| -------- | ----------- |
 | **pathable-form-controls** | character-count, checkbox, combo-box, date-picker, date-range-picker, error-message, fieldset, file-input, form, form-group, hint, input, input-mask, input-prefix-suffix, label, legend, memorable-date, radio, range, select, textarea, time-picker, validation |
 | **pathable-typography** | content (fwd), dark-background (fwd), display (fwd), intro (fwd), link, list, paragraph (fwd), prose |
 | **pathable-navigation** | breadcrumb, header, in-page-navigation, nav, pagination, search, sidenav, skipnav |

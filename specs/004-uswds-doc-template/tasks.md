@@ -183,6 +183,7 @@ Three sections:
 3. **Secondary section**: Pathable Styles branding, copyright year, and "Powered by USWDS" attribution
 
 All styling uses `--pathable-*` tokens:
+
 - Background: `--pathable-color-surface`
 - Text: `--pathable-color-text`, `--pathable-color-text-muted` for secondary text
 - Borders: `--pathable-color-border` for dividers between sections
@@ -232,7 +233,7 @@ All styling uses `--pathable-*` tokens:
 **Action**: Run the docs dev server and inspect each layout region in browser DevTools. Verify computed style values match the expected token values from the token-usage contract.
 
 | Region | Token | Expected Value | Actual |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Page background | `--pathable-color-bg` | `#dfe1e2` | `[ ] verify` |
 | Header background | `--pathable-color-surface` | `#ffffff` | `[ ] verify` |
 | Body text | `--pathable-color-text` | `#162e51` | `[ ] verify` |
@@ -402,7 +403,7 @@ pnpm build
 ### Parallel Opportunities
 
 | Phase | Tasks | Parallel Opportunities |
-|---|---|---|
+| --- | --- | --- |
 | Phase 1 | T001, T002 | T001 and T002 can run in parallel (different concerns) |
 | Phase 2 | T003 | Single file — serial |
 | Phase 3 | T004-T008 | T004, T005, T008 can run in parallel (new files, different components). T006 (PageFrame) depends on T005 and T008 being available. T007 can run in parallel with all. |

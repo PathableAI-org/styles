@@ -30,7 +30,7 @@
 ## Case Coverage Matrix
 
 | Case ID | Story/Capability | Case Type | Status | Source | Notes |
-|---------|------------------|-----------|--------|--------|-------|
+| --------- | ------------------ | ----------- | -------- | -------- | ------- |
 | CC-001 | US-1: Single dependency install | positive | Required | Spec §US-1 Scenarios 1-3 | Core value proposition |
 | CC-002 | US-1: Single dependency install | negative | Required | Spec §Edge Cases | CSS not loaded scenario |
 | CC-003 | US-1: Single dependency install | boundary | Not Applicable | — | Dependency resolution has no meaningful boundary condition |
@@ -121,7 +121,7 @@
 The following rows correct the old US-2 entries (CC-007 through CC-012) which were written against the previous spec where the Button had variant/props. The corrected rows below reflect the clarified static proof-of-concept Button:
 
 | Case ID | Story/Capability | Case Type | Status | Source | Notes |
-|---------|------------------|-----------|--------|--------|-------|
+| --------- | ------------------ | ----------- | -------- | -------- | ------- |
 | CC-025 | US-2: Static proof-of-concept Button | positive | Required | Spec §US-2 Scenarios 1-2 | Renders children text + pathable-button class |
 | CC-026 | US-2: Static proof-of-concept Button | negative | Not Applicable | Spec §FR-007 | No variant, no onClick, no disabled — no negative behavior to test |
 | CC-027 | US-2: Static proof-of-concept Button | boundary | Required | Gap | Empty children string edge case — what does the component render? |

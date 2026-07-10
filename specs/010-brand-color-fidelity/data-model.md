@@ -5,7 +5,7 @@
 All tokens follow the established pattern: `--pathable-{namespace}-{category}-{role}-{property}`
 
 | Namespace | Category | Pattern | Examples |
-|-----------|----------|---------|---------|
+| ----------- | ---------- | --------- | --------- |
 | `--pathable-brand-` | (flat) | `--pathable-brand-{name}` | `--pathable-brand-pathable-blue`, `--pathable-brand-intelligent-jade` |
 | `--pathable-color-` | `action` | `--pathable-color-action-{role}-{property}` | `--pathable-color-action-primary-bg`, `--pathable-color-action-primary-text` |
 | `--pathable-color-` | `status` | `--pathable-color-status-{name}-{property}` | `--pathable-color-status-success-bg`, `--pathable-color-status-danger-text` |
@@ -16,7 +16,7 @@ All tokens follow the established pattern: `--pathable-{namespace}-{category}-{r
 Represents the exact brand hex values, distinguished from USWDS-mapped values.
 
 | Field | Token Name | Value | Type |
-|-------|-----------|-------|------|
+| ------- | ----------- | ------- | ------ |
 | PathAble Blue | `--pathable-brand-pathable-blue` | `#00365c` | hex color |
 | Intelligent Jade | `--pathable-brand-intelligent-jade` | `#1cae96` | hex color |
 | Bright Blue Brooks | `--pathable-brand-bright-blue-brooks` | `#4899e8` | hex color |
@@ -30,7 +30,7 @@ Represents the exact brand hex values, distinguished from USWDS-mapped values.
 ## Entity: Action Role Tokens
 
 | Field | Token Name | Value | Source |
-|-------|-----------|-------|--------|
+| ------- | ----------- | ------- | -------- |
 | Primary action background | `--pathable-color-action-primary-bg` | `#162e51` | `blue-warm-80v` (PathAble Blue mapped) |
 | Primary action text | `--pathable-color-action-primary-text` | `#ffffff` | White |
 | Secondary action background | `--pathable-color-action-secondary-bg` | `#1dc2ae` | `mint-cool-30v` (Intelligent Jade mapped) |
@@ -41,7 +41,7 @@ Represents the exact brand hex values, distinguished from USWDS-mapped values.
 ## Entity: Status Role Tokens
 
 | Field | Token Name | Value | Source |
-|-------|-----------|-------|--------|
+| ------- | ----------- | ------- | -------- |
 | Success background | `--pathable-color-status-success-bg` | `#1dc2ae` | `mint-cool-30v` (Intelligent Jade mapped) |
 | Success text | `--pathable-color-status-success-text` | `#162e51` | PathAble Blue mapped |
 | Warning background | `--pathable-color-status-warning-bg` | `#f5a623` | `gold-20v` |
@@ -54,7 +54,7 @@ Represents the exact brand hex values, distinguished from USWDS-mapped values.
 ## Entity: Workflow State Tokens
 
 | Field | Token Name | Value | Source |
-|-------|-----------|-------|--------|
+| ------- | ----------- | ------- | -------- |
 | Active state | `--pathable-color-workflow-active` | `#58b4ff` | `blue-30v` (Bright Blue Brooks mapped) |
 | Complete state | `--pathable-color-workflow-complete` | `#1dc2ae` | `mint-cool-30v` (Intelligent Jade mapped) |
 | Blocked state | `--pathable-color-workflow-blocked` | `#dc3545` | `red-60v` (existing) |

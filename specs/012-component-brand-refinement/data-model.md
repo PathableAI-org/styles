@@ -7,7 +7,7 @@
 A specific visual treatment of the button component with defined brand colors.
 
 | Field | Type | Values | Description |
-|-------|------|--------|-------------|
+| ------- | ------ | -------- | ------------- |
 | name | string | primary, secondary, accent-cool, accent-warm, outline, inverse, base, big, unstyled | USWDS variant name |
 | brandColor | string | PathAble Blue, Intelligent Jade, Bright Blue Brooks, Tech Teal, Lived-In Lime, Shilling Silver | Pathable brand color |
 | semanticToken | string | `--pathable-color-action-primary-bg`, `--pathable-color-action-secondary-bg`, etc. | CSS custom property |
@@ -23,7 +23,7 @@ A specific visual treatment of the button component with defined brand colors.
 A Pathable-specific card pattern for staff workflow presentation.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | surfaceToken | string | `--pathable-color-surface` (#ffffff) or `--pathable-color-bg` (#dde2e8) |
 | headingColor | string | `--pathable-color-text` (#00365c, PathAble Blue) |
 | statusToken | string (optional) | `--pathable-color-accent` or `--pathable-color-success` (#1cae96, Intelligent Jade) |
@@ -39,7 +39,7 @@ A Pathable-specific card pattern for staff workflow presentation.
 An alert component with Pathable-specific semantic meaning.
 
 | Field | Type | Values | Description |
-|-------|------|--------|-------------|
+| ------- | ------ | -------- | ------------- |
 | type | string | success, warning, error, info, emergency | USWDS alert type |
 | semanticContext | string | compliance-block, missing-evidence, draft-not-submitted, supervisor-approval, generation-success, connectivity-warning | Pathable workflow context |
 | backgroundToken | string | `--pathable-color-status-*-bg` | Background color |
@@ -51,7 +51,7 @@ An alert component with Pathable-specific semantic meaning.
 A Storybook example demonstrating a component in a Pathable staff workflow context.
 
 | Field | Type | Values | Description |
-|-------|------|--------|-------------|
+| ------- | ------ | -------- | ------------- |
 | name | string | session-note, participant-goal, intervention-checklist, progress-signal, compliance-field, supervisor-comment | Pattern identifier |
 | primaryComponent | string | textarea, select, checkbox, radio/range, input, textarea | Main form component |
 | relatedComponents | string[] | form, label, hint, error-message, validation, fieldset, legend | Supporting components |
@@ -63,7 +63,7 @@ A Storybook example demonstrating a component in a Pathable staff workflow conte
 A Pathable staff workflow navigation label used in navigation component stories.
 
 | Field | Type | Values | Description |
-|-------|------|--------|-------------|
+| ------- | ------ | -------- | ------------- |
 | label | string | Today's Sessions, Participants, Approvals, Reports, Templates, Settings | Display text |
 | section | string | primary, secondary, tertiary | Navigation section |
 | icon | string (optional) | — | Icon identifier if applicable |

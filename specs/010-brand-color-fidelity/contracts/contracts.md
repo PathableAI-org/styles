@@ -66,7 +66,7 @@ The `@pathable/styles` package exposes the following new CSS custom properties i
 ### Approved Pairings (WCAG AA Compliant)
 
 | Foreground | Background | Ratio | Level |
-|-----------|-----------|-------|-------|
+| ----------- | ----------- | ------- | ------- |
 | White (`#ffffff`) | PathAble Blue (`#162e51`) | 13.60:1 | AAA |
 | White (`#ffffff`) | Tech Teal (`#00687d`) | 6.41:1 | AA |
 | PathAble Blue (`#162e51`) | Intelligent Jade (`#1dc2ae`) | 6.08:1 | AA |
@@ -77,7 +77,7 @@ The `@pathable/styles` package exposes the following new CSS custom properties i
 ### Failed Pairings (Do Not Use for Small Text)
 
 | Foreground | Background | Ratio | Issue |
-|-----------|-----------|-------|-------|
+| ----------- | ----------- | ------- | ------- |
 | White (`#ffffff`) | Intelligent Jade (`#1dc2ae`) | 2.24:1 | Fails AA (needs 4.5:1) |
 | White (`#ffffff`) | Bright Blue Brooks (`#58b4ff`) | 2.24:1 | Fails AA (needs 4.5:1) |
 | Lived-In Lime (`#e7f434`) | White (`#ffffff`) | 1.21:1 | Fails all thresholds |

@@ -11,7 +11,7 @@
 A `.stories.js` file under `packages/styles/src/stories/` that documents a USWDS component or utility in the PathAble styles package.
 
 | Field | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `path` | String | Relative path from `packages/styles/src/stories/` |
 | `componentName` | String | Human-readable component name (e.g., "Header", "Banner") |
 | `category` | Enum | `brand`, `basic`, `communication`, `form-controls`, `layout`, `navigation`, `utilities` |
@@ -25,7 +25,7 @@ A `.stories.js` file under `packages/styles/src/stories/` that documents a USWDS
 A CSS class extending `.usa-button` with a PathAble brand opinion.
 
 | Field | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `className` | String | CSS class name (e.g., `.pathable-button--save`) |
 | `baseVariant` | String | USWDS variant it extends (e.g., `--secondary`, `--primary`) |
 | `semanticToken` | String | Brand semantic token used for background (e.g., `--pathable-color-danger`) |
@@ -37,7 +37,7 @@ A CSS class extending `.usa-button` with a PathAble brand opinion.
 A CSS custom property defined in `_colors.scss`.
 
 | Field | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `name` | String | Property name (e.g., `--intelligent-jade`) |
 | `value` | Hex | Color value (e.g., `#1cae96`) |
 | `namespace` | Enum | `short` (removed), `brand-prefixed` (canonical) |
@@ -50,7 +50,7 @@ A CSS custom property defined in `_colors.scss`.
 A standardized annotation describing how much behavior a component wrapper provides.
 
 | Value | Description |
-|---|---|
+| --- | --- |
 | `css-only` | Visual styling works without JavaScript. No interactive behavior. |
 | `requires-uswds-js` | USWDS JavaScript (`@pathable/styles/js`) needed for interactivity. |
 | `requires-app-state` | Consuming app must manage state (open/close, values, validation). |

@@ -7,7 +7,7 @@
 Represents one of the PathAble brand typefaces with its USWDS typeface token configuration.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | name | string | Canonical typeface name (e.g., "Fredoka") |
 | role | enum | One of: heading, body, ui, code, alt, subheading |
 | weights | array of int | Available font weight values (e.g., [400, 600]) |
@@ -20,7 +20,7 @@ Represents one of the PathAble brand typefaces with its USWDS typeface token con
 **Instances**:
 
 | Name | Role | Weights | Typeface Token | Font Stack |
-|------|------|---------|---------------|------------|
+| ------ | ------ | --------- | --------------- | ------------ |
 | Fredoka | heading | [400] | fredoka | 'Fredoka', system-ui, sans-serif |
 | Nunito | body, ui | [400, 600] | nunito | 'Nunito', system-ui, sans-serif |
 | Poppins | subheading | [700] | poppins | 'Poppins', system-ui, sans-serif |
@@ -31,7 +31,7 @@ Represents one of the PathAble brand typefaces with its USWDS typeface token con
 Represents a USWDS type-based font family token (e.g., 'sans', 'serif', 'mono').
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | typeName | enum | One of: cond, icon, lang, mono, sans, serif |
 | defaultTypeface | string | Built-in USWDS typeface token (e.g., 'source-sans-pro', 'merriweather', 'roboto-mono') |
 | customTypeface | string or null | Custom typeface token name if overridden (e.g., 'fredoka') |
@@ -41,7 +41,7 @@ Represents a USWDS type-based font family token (e.g., 'sans', 'serif', 'mono').
 **Instances**:
 
 | Type | Default | Custom Override | Enabled |
-|------|---------|----------------|---------|
+| ------ | --------- | ---------------- | --------- |
 | sans | source-sans-pro | (handled via typeface tokens and manual @font-face) | true |
 | serif | merriweather | (none — unused) | false |
 | mono | roboto-mono | (none — use default) | true |
@@ -54,7 +54,7 @@ Represents a USWDS type-based font family token (e.g., 'sans', 'serif', 'mono').
 Represents a USWDS role-based font token (e.g., 'heading', 'body', 'ui', 'code', 'alt').
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | roleName | enum | One of: heading, body, ui, code, alt |
 | typefaceTokenRef | string | Reference to the typeface token (custom or built-in) |
 | brandTypeface | Reference to BrandTypeface | Associated PathAble brand typeface |
@@ -63,7 +63,7 @@ Represents a USWDS role-based font token (e.g., 'heading', 'body', 'ui', 'code',
 **Instances**:
 
 | Role | Typeface Token Ref | Brand Typeface | Default |
-|------|-------------------|----------------|---------|
+| ------ | ------------------- | ---------------- | --------- |
 | heading | fredoka | Fredoka | serif |
 | body | nunito | Nunito | sans |
 | ui | nunito | Nunito | sans |
@@ -75,7 +75,7 @@ Represents a USWDS role-based font token (e.g., 'heading', 'body', 'ui', 'code',
 Represents a mapping from a PathAble typography size to a USWDS type scale token.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | pathableToken | string | PathAble token name (e.g., "display-lg", "body-md") |
 | pathablePx | int | Target pixel size |
 | uswdsSystemToken | int | USWDS system token number (e.g., 5, 10, 12) |
@@ -85,7 +85,7 @@ Represents a mapping from a PathAble typography size to a USWDS type scale token
 **Instances**:
 
 | PathAble Token | Px | USWDS System | USWDS Theme | Custom? |
-|----------------|----|-------------|-------------|---------|
+| ---------------- | ---- | ------------- | ------------- | --------- |
 | display-lg | 32px | 12 | xl | No (default 12 = 32px) |
 | heading-lg | 24px | 10 | lg | Yes (default 9 = 22px) |
 | heading-md | 20px | 8 | (none) | N/A — use system token directly |
@@ -99,7 +99,7 @@ Represents a mapping from a PathAble typography size to a USWDS type scale token
 Represents a mapping from a PathAble font weight to a USWDS font weight token.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | pathableWeightName | string | PathAble weight name (e.g., "normal", "semibold", "bold") |
 | pathableWeightValue | int | Numeric weight value (e.g., 400, 600, 700) |
 | uswdsWeightToken | string | USWDS weight token name (e.g., "$theme-font-weight-normal") |
@@ -108,7 +108,7 @@ Represents a mapping from a PathAble font weight to a USWDS font weight token.
 **Instances**:
 
 | PathAble Name | Value | USWDS Token | Custom? |
-|---------------|-------|-------------|---------|
+| --------------- | ------- | ------------- | --------- |
 | thin | (unused) | $theme-font-weight-thin | false (default) |
 | light | (unused) | $theme-font-weight-light | 300 (default) |
 | normal | 400 | $theme-font-weight-normal | 400 (default) |
@@ -122,7 +122,7 @@ Represents a mapping from a PathAble font weight to a USWDS font weight token.
 Represents a mapping from a PathAble line-height to a USWDS line-height token.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | pathableContext | string | PathAble context (e.g., "body-md", "heading-lg") |
 | pathableLineHeight | px | PathAble line-height in pixels |
 | pathableRatio | float | PathAble line-height ratio (unitless) |
@@ -132,7 +132,7 @@ Represents a mapping from a PathAble line-height to a USWDS line-height token.
 **Instances**:
 
 | Context | Px | Ratio | USWDS Token | USWDS Target |
-|---------|-----|-------|-------------|--------------|
+| --------- | ----- | ------- | ------------- | -------------- |
 | display (32px) | 40px | 1.25 | 3 | 1.35 |
 | heading-lg (24px) | 32px | 1.333 | 3 | 1.35 |
 | heading-md (20px) | 28px | 1.4 | 3 | 1.35 |
@@ -146,7 +146,7 @@ Represents a mapping from a PathAble line-height to a USWDS line-height token.
 Represents a dual-named CSS custom property that exposes a typography value.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | pathableName | string | CSS custom property name under --pathable-* namespace |
 | usaName | string | CSS custom property name under --usa-* namespace |
 | value | string | Resolved value (font family, size, weight, line-height) |
@@ -156,7 +156,7 @@ Represents a dual-named CSS custom property that exposes a typography value.
 **Instances**:
 
 | --pathable-* | --usa-* | Value | Source | Category |
-|-------------|---------|-------|--------|----------|
+| ------------- | --------- | ------- | -------- | ---------- |
 | --pathable-font-heading | --usa-font-heading | Fredoka font stack | $pathable-font-heading | font-family |
 | --pathable-font-body | --usa-font-body | Nunito font stack | $pathable-font-body | font-family |
 | --pathable-font-mono | --usa-font-mono | mono font stack | $pathable-font-mono | font-family |

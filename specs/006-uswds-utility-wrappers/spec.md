@@ -6,7 +6,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "create wrappers for the utility classes from uswds (https://designsystem.digital.gov/utilities/) and update apps/docs to use these classes where appropriate. there should be --pathable* versions of all the --usa* and unprefixed utility classes should should be prefixed with pathable*"
+**Input**: User description: "create wrappers for the utility classes from uswds (<https://designsystem.digital.gov/utilities/>) and update apps/docs to use these classes where appropriate. there should be --pathable*versions of all the --usa* and unprefixed utility classes should should be prefixed with pathable*"
 
 ## Table of Contents
 

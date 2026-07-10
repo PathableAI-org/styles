@@ -11,6 +11,7 @@
 **Decision**: Use `@storybook/html-vite`.
 
 **Rationale**:
+
 - `@storybook/html-vite` is the lightest-weight Storybook framework, requiring no React, Vue, Lit, or other frontend framework dependency.
 - Stories are simple JavaScript functions that return HTML template strings, which maps directly to our use case of rendering `<div class="pathable-button">...</div>` etc.
 - Vite provides fast dev server startup and hot module replacement.
@@ -20,7 +21,7 @@
 **Alternatives considered**:
 
 | Option | Decision | Reason for rejection |
-|--------|----------|---------------------|
+| -------- | ---------- | --------------------- |
 | `@storybook/web-components-vite` | Rejected | Adds Lit dependency; over-engineered for CSS class documentation |
 | `@storybook/react-vite` | Rejected | Adds React dependency; misleading since components aren't React-based |
 | `@storybook/html-webpack5` | Rejected | Webpack is slower than Vite and adds unnecessary complexity |
@@ -32,6 +33,7 @@
 **Decision**: Import `dist/styles.css` directly in `preview.js`.
 
 **Rationale**:
+
 - `import '../dist/styles.css'` in `preview.js` is the standard Storybook pattern for global CSS.
 - Vite processes the CSS import seamlessly as part of its module pipeline.
 - The developer runs `pnpm build` before `pnpm storybook` (at least once, or as part of the storybook script).
@@ -42,7 +44,7 @@
 **Alternatives considered**:
 
 | Option | Decision | Reason for rejection |
-|--------|----------|---------------------|
+| -------- | ---------- | --------------------- |
 | `preview-head.html` link tag | Rejected | Non-standard; Vite serves static files but import is cleaner |
 | Build-before-start custom script | Rejected | `pnpm build` as a separate step or combined command is simpler |
 
@@ -53,6 +55,7 @@
 **Decision**: Use Storybook's title-based category system with two top-level groups: Components and Utilities.
 
 **Rationale**:
+
 - Storybook's natural grouping via `title: 'Category/Subcategory/Name'` is intuitive.
 - Two top-level categories (Components, Utilities) match the package's own organizational structure.
 - Components are further sub-grouped into functional areas: Basic, Form Controls, Navigation, Communication, and Layout.
@@ -120,6 +123,7 @@ Utilities
 **Decision**: Enable autodocs globally in `main.js`.
 
 **Rationale**:
+
 - `docs: { autodocs: true }` in `main.js` enables the Docs tab for all stories by default.
 - The Docs tab shows the rendered HTML, the source code (via `@storybook/addon-docs`), and any description from story parameters.
 - Individual story files can opt out with `tags: ['!autodocs']` if needed.
@@ -132,6 +136,7 @@ Utilities
 **Decision**: Use `@storybook/manager-api` to create a custom theme object in `manager.js`, and add Google Fonts links in `manager-head.html`.
 
 **Rationale**:
+
 - `@storybook/manager-api` provides `create` and `themes.createFrom` for building custom themes.
 - The theme object sets brand colors, fonts, and UI chrome colors.
 - PathAble brand tokens map to Storybook theme fields:
@@ -147,7 +152,7 @@ Utilities
 **Alternatives considered**:
 
 | Option | Decision | Reason for rejection |
-|--------|----------|---------------------|
+| -------- | ---------- | --------------------- |
 | Inline CSS overrides in `preview-head.html` | Rejected | Fragile, doesn't use Storybook's theming API |
 | `@storybook/addon-themes` | Rejected | Addon is for theme switching within stories, not manager chrome |
 
@@ -158,6 +163,7 @@ Utilities
 **Decision**: Use the CSF (Component Story Format) 3 standard with functions returning HTML strings.
 
 **Rationale**:
+
 - CSF 3 is the current Storybook standard.
 - Each story exports a default object with `title`, `tags`, and named story exports.
 - Stories are functions that return HTML strings via the `render` property.

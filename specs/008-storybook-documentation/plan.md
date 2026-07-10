@@ -25,6 +25,7 @@ Set up Storybook in the `packages/styles` package to provide browsable, local do
 **Language/Version**: JavaScript (ES modules), Storybook 8.x (`@storybook/html-vite`)
 
 **Primary Dependencies**:
+
 - `@storybook/html-vite` ^8.x — Storybook framework for rendering plain HTML stories
 - `@storybook/addon-docs` ^8.x — Autodocs for automatic documentation page generation
 - `storybook` ^8.x — Storybook core
@@ -41,6 +42,7 @@ Set up Storybook in the `packages/styles` package to provide browsable, local do
 **Performance Goals**: Storybook dev server starts within 30 seconds on modern hardware (SC-001). Storybook build (for potential future deployment) should complete within 60 seconds.
 
 **Constraints**:
+
 - Storybook configuration must live within `packages/styles/` and not affect `apps/docs/` (FR-011)
 - No test runners or test-related addons may be installed or configured (FR-009)
 - Stories must only document `pathable-*` classes, not underlying `usa-*` classes
@@ -57,7 +59,7 @@ Set up Storybook in the `packages/styles` package to provide browsable, local do
 ### Applicable Principles
 
 | Principle | Relevance | Compliance |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | **I. CSS Custom Properties Are the Runtime Contract** | Storybook loads compiled `dist/styles.css` which contains all `--pathable-*` and `--usa-*` CSS custom properties. Component examples demonstrate these tokens in use. | ✅ COMPLIANT — The compiled CSS is the contract, and Storybook renders examples using it directly. |
 | **II. SCSS Is an Authoring and Extension Layer** | Storybook consumes the compiled CSS output, not SCSS source. No SCSS changes are needed for Storybook configuration. | ✅ COMPLIANT — SCSS remains the authoring layer; Storybook works from the compiled output. |
 | **III. pnpm Workspaces** | Storybook is added as dev dependencies to `packages/styles/package.json`. The existing `pnpm build` and `pnpm storybook` commands coexist. | ✅ COMPLIANT — Changes are scoped to `packages/styles`, respecting workspace boundaries. |
@@ -73,7 +75,7 @@ Set up Storybook in the `packages/styles` package to provide browsable, local do
 ### Gate Evaluation
 
 | Gate | Status |
-|------|--------|
+| ------ | -------- |
 | No unjustified constitution violations | ✅ All principles in compliance — see table above |
 | All [NEEDS CLARIFICATION] markers resolved | ✅ No markers in spec |
 | Feature spec is internally consistent | ✅ Verified |
@@ -164,7 +166,7 @@ Determine the appropriate Storybook framework for documenting CSS-only component
 **Options evaluated**:
 
 | Option | Description | Pros | Cons |
-|--------|-------------|------|------|
+| -------- | ------------- | ------ | ------ |
 | A: `@storybook/html-vite` | Storybook framework that renders plain HTML templates | No framework dependency, lightweight, fast Vite-based dev server, ES module stories | Limited interactivity compared to React/Web components |
 | B: `@storybook/web-components-vite` | Uses Lit/web components for rendering | Framework-agnostic rendering, real DOM elements | Over-engineered for CSS class documentation; adds Lit dependency |
 | C: `@storybook/react-vite` | Uses React components for rendering | Most common Storybook setup, rich ecosystem of addons | Adds React dependency to a CSS-only package; misleading since components aren't React |
@@ -178,7 +180,7 @@ Determine how to load the compiled `dist/styles.css` in Storybook so all example
 **Options evaluated**:
 
 | Option | Description | Pros | Cons |
-|--------|-------------|------|------|
+| -------- | ------------- | ------ | ------ |
 | A: Import in `preview.js` | `import '../dist/styles.css'` in preview.js | Simple, standard Storybook pattern, CSS processed by Vite | Requires build step before Storybook startup |
 | B: Import in `preview-head.html` | `<link rel="stylesheet" href="/dist/styles.css">` via Storybook `previewHead` | No import needed | Non-standard, relies on Vite serving static files |
 | C: Build-before-start script | Custom script that runs `pnpm build` then starts Storybook | Guarantees CSS is fresh | Slower startup, more complex |
@@ -199,6 +201,7 @@ Determine how to organize component and utility stories into meaningful Storyboo
 Determine how to configure Storybook's autodocs for the CSS-only HTML setup.
 
 **Decision**: Enable autodocs globally in `main.js` via `docs: { autodocs: true }`. Each story file can opt out with `tags: ['!autodocs']` if needed. The Docs tab will display:
+
 - The story's rendered HTML output
 - The source HTML template (via story source addon)
 - Description from the story's parameters
@@ -208,6 +211,7 @@ Determine how to configure Storybook's autodocs for the CSS-only HTML setup.
 Determine how to customize the Storybook UI chrome with PathAble brand colors and typography.
 
 **Decision**: Use `@storybook/manager-api` to create a custom theme object in `manager.js`. The theme sets:
+
 - `brandTitle`: 'Pathable Styles'
 - `brandUrl`: URL to the GitHub repo or docs site
 - `colorPrimary`: `#00365c` (PathAble Blue)
@@ -298,6 +302,7 @@ Define the entity relationships for Storybook stories, organized in two categori
 #### 2. contracts/story-interface.md
 
 Define the contract for story files:
+
 - Required exports per story file
 - HTML rendering conventions
 - CSS class naming expectations
@@ -307,6 +312,7 @@ Define the contract for story files:
 #### 3. quickstart.md
 
 Usage guide covering:
+
 - Installing Storybook dependencies
 - Starting the Storybook dev server
 - Building the styles before Storybook

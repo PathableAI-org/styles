@@ -83,6 +83,7 @@ cd specs/010-brand-color-fidelity
 ## Token Value Reference
 
 For a complete reference of all new token values, see:
+
 - [research.md](./research.md) — token value decisions and contrast calculations
 - [data-model.md](./data-model.md) — token data model with validation rules
 - [contracts/contracts.md](./contracts/contracts.md) — contract guarantees and approved pairings

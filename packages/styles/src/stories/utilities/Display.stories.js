@@ -23,7 +23,7 @@ export const AllValues = {
   render: () => `
     <div style="padding: 1rem;">
       <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Display Utility Classes</h3>
-      <p style="color: #666; font-size: 0.875rem; margin: 0 0 1.5rem;">
+      <p style="color: #444; font-size: 0.875rem; margin: 0 0 1.5rem;">
         Classes: <code>.pathable-display-flex</code>, <code>.pathable-display-block</code>, etc.
       </p>
       <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -36,7 +36,7 @@ export const AllValues = {
               <span style="background: #00365c; color: #fff; padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 2px;">Item 1</span>
               <span style="background: #00365c; color: #fff; padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 2px;">Item 2</span>
             </div>
-            <span style="font-family: monospace; font-size: 0.7rem; color: #999; margin-left: auto;">.${cls}</span>
+            <span style="font-family: monospace; font-size: 0.7rem; color: #555; margin-left: auto;">.${cls}</span>
           </div>
         `,
           )
@@ -52,24 +52,24 @@ export const ResponsiveVariants = {
   render: () => `
     <div style="padding: 1rem;">
       <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Responsive Display Variants</h3>
-      <p style="color: #666; font-size: 0.875rem; margin: 0 0 1rem;">
+      <p style="color: #444; font-size: 0.875rem; margin: 0 0 1rem;">
         Display utilities support responsive breakpoints. Format:
       </p>
       <div style="display: flex; flex-direction: column; gap: 0.75rem;">
         <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
           <code style="font-size: 0.875rem;">.mobile-lg\\:pathable-display-flex</code>
-          <span style="color: #666; font-size: 0.8rem; margin-left: 0.5rem;">&mdash; flex at 480px+</span>
+          <span style="color: #444; font-size: 0.8rem; margin-left: 0.5rem;">&mdash; flex at 480px+</span>
         </div>
         <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
           <code style="font-size: 0.875rem;">.tablet\\:pathable-display-none</code>
-          <span style="color: #666; font-size: 0.8rem; margin-left: 0.5rem;">&mdash; hidden at 640px+</span>
+          <span style="color: #444; font-size: 0.8rem; margin-left: 0.5rem;">&mdash; hidden at 640px+</span>
         </div>
         <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
           <code style="font-size: 0.875rem;">.desktop\\:pathable-display-block</code>
-          <span style="color: #666; font-size: 0.8rem; margin-left: 0.5rem;">&mdash; block at 1024px+</span>
+          <span style="color: #444; font-size: 0.8rem; margin-left: 0.5rem;">&mdash; block at 1024px+</span>
         </div>
       </div>
-      <p style="color: #666; font-size: 0.875rem; margin: 1rem 0 0;">
+      <p style="color: #444; font-size: 0.875rem; margin: 1rem 0 0;">
         Available breakpoints: <code>mobile-lg</code> (480px), <code>tablet</code> (640px), <code>desktop</code> (1024px)
       </p>
     </div>

@@ -23,6 +23,7 @@ The `@pathable/styles` package currently provides CSS custom properties (tokens)
 **Language/Version**: SCSS via Dart Sass (`sass` ^1.86.3 already in use), USWDS v3.x (already a dependency from 003-wrap-uswds-theme)
 
 **Primary Dependencies**:
+
 - `uswds` v3.x (existing runtime dependency, utility `@use` `uswds-core` with theme config already present)
 - `sass` (existing dev dependency)
 
@@ -37,6 +38,7 @@ The `@pathable/styles` package currently provides CSS custom properties (tokens)
 **Performance Goals**: Compiled utility output under 50 KB gzip added to the existing `dist/styles.css`. Each individual utility module's output should be no larger than what USWDS itself would generate for the same set of enabled tokens.
 
 **Constraints**:
+
 - Compiled `dist/styles.css` MUST continue to NOT include USWDS component styles (only token configurations and now utility classes)
 - Zero additional runtime JS dependencies
 - All existing `--pathable-*`, `--usa-*`, `--space-*`, `--elevation-*`, `--radius-*` CSS custom properties MUST remain backward compatible
@@ -53,7 +55,7 @@ The `@pathable/styles` package currently provides CSS custom properties (tokens)
 ### Applicable Principles
 
 | Principle | Relevance | Compliance |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | **I. CSS Custom Properties Are the Runtime Contract** | The feature emits dual `--pathable-*` / `--usa-*` CSS custom properties alongside utility classes. | ✅ COMPLIANT — Both the utility classes and the dual CSS custom properties provide the runtime CSS contract. No SCSS dependency for consumers. |
 | **II. SCSS Is an Authoring and Extension Layer** | Utility classes are generated via SCSS maps and loops in a dedicated partial. | ✅ COMPLIANT — SCSS is used only as the generation mechanism. The output is compiled CSS. |
 | **III. pnpm Workspaces** | Changes scoped to `packages/styles` and `apps/docs`. | ✅ COMPLIANT |
@@ -67,7 +69,7 @@ The `@pathable/styles` package currently provides CSS custom properties (tokens)
 ### Gate Evaluation
 
 | Gate | Status |
-|------|--------|
+| ------ | -------- |
 | No unjustified constitution violations | ✅ All principles in compliance — see table above |
 | All [NEEDS CLARIFICATION] markers resolved | ✅ No markers in spec |
 | Feature spec is internally consistent | ✅ Verified |
@@ -127,7 +129,7 @@ apps/docs/
 ## Complexity Tracking
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
+| ----------- | ------------ | ------------------------------------- |
 | Dual naming (`.pathable-*` classes + `--pathable-*` / `--usa-*` custom properties) | Supports both utility-first consumers (using classes) and token-first consumers (using CSS custom properties), consistent with the existing typography dual-naming convention. | Single namespace would be simpler but would not support the dual PathAble/USWDS naming convention already established. |
 | Utility generation loop over USWDS module maps | The utility classes need to resolve USWDS theme tokens (spacing, color, font tokens) to concrete values, which requires consuming USWDS SCSS functions within the generation logic. | Manually writing each utility class would be simpler but would not scale to 15+ modules and would diverge from the theme configuration. |
 | Docs site refactoring spans 4-5 files | FR-005 requires 80% ad-hoc CSS replacement. Multiple component files need updates to avoid partial refactoring. | Refactoring only one file would leave 80% of ad-hoc CSS in place, failing the requirement. |
@@ -139,6 +141,7 @@ The spec has no [NEEDS CLARIFICATION] markers and the technical context is well-
 ### Research Task R0-1: USWDS Utility Module SCSS API
 
 Determine how to access USWDS utility module values from SCSS. Key questions:
+
 - Does USWDS expose utility values via functions like `spacing(2)`, `color('primary')` that can be called from outside the utility module system?
 - How does `uswds-core` expose spacing units, color values, and font tokens as SCSS functions?
 - How do existing USWDS utility modules generate their classes internally?
@@ -150,7 +153,7 @@ Determine how to access USWDS utility module values from SCSS. Key questions:
 Map each required utility module (FR-001) to its USWDS class base and identify the PathAble prefix:
 
 | USWDS Utility Module | USWDS Class Base | PathAble Class Base | Example PathAble Class |
-|---------------------|-------------------|---------------------|----------------------|
+| --------------------- | ------------------- | --------------------- | ---------------------- |
 | background-color | `.bg-` | `.pathable-bg-` | `.pathable-bg-primary` |
 | color | `.text-` | `.pathable-text-` | `.pathable-text-base` |
 | padding | `.padding-` | `.pathable-padding-` | `.pathable-padding-4` |
@@ -170,7 +173,8 @@ Map each required utility module (FR-001) to its USWDS class base and identify t
 ### Research Task R0-3: Value Token Resolution
 
 Determine how each utility module resolves its values from the PathAble theme:
-- Color utilities → resolve via `uswds.color('token-name')` 
+
+- Color utilities → resolve via `uswds.color('token-name')`
 - Spacing utilities → resolve via `uswds.spacing('token-name')` or direct unit values
 - Font utilities → resolve from `$theme-typeface-tokens` or compiled `--pathable-font-*` values
 - Border utilities → resolve via USWDS border token functions
@@ -178,6 +182,7 @@ Determine how each utility module resolves its values from the PathAble theme:
 ### Research Task R0-4: Responsive and State Variant Strategy
 
 Research the USWDS responsive class naming convention (e.g., `.tablet:padding-2`) and state variants (e.g., `.hover:bg-primary`). Determine:
+
 - Which breakpoints are enabled in the current theme config
 - Which state variants are available for each utility module
 - How to generate prefixed variants (e.g., `.tablet\:pathable-padding-2`)
@@ -185,6 +190,7 @@ Research the USWDS responsive class naming convention (e.g., `.tablet:padding-2`
 ### Research Task R0-5: Dual CSS Custom Property Emission Strategy
 
 Determine the best approach for emitting dual `--pathable-*` / `--usa-*` CSS custom properties for utility values. Three options exist, matching the established typography pattern:
+
 - Option A: Emit in `_utilities.scss` alongside utility class definitions
 - Option B: Emit in a separate block within `_utilities.scss`
 - Option C: Emit in the existing `:root` block via a shared map pattern
@@ -196,6 +202,7 @@ Determine the best approach for emitting dual `--pathable-*` / `--usa-*` CSS cus
 #### 1. data-model.md
 
 Formal entity definitions for:
+
 - `UtilityModule` — name, USWDS class base, PathAble class prefix, value tokens, responsive/state settings
 - `UtilityValueToken` — token name, resolved CSS value, USWDS function for resolution
 - `DualCSSProperty` — `--pathable-{name}`, `--usa-{name}`, resolved value
@@ -205,6 +212,7 @@ Formal entity definitions for:
 #### 2. contracts/scss-interface.md
 
 SCSS interface contract defining:
+
 - What the `_utilities.scss` partial generates (utility classes + dual CSS custom properties)
 - The SCSS pattern for adding a new utility module (map entry + loop pattern)
 - The guaranteed public API (`.pathable-*` classes, `--pathable-*` / `--usa-*` custom properties)
@@ -214,6 +222,7 @@ SCSS interface contract defining:
 #### 3. quickstart.md
 
 Usage guide covering:
+
 - Basic CSS import usage with `.pathable-*` utility class examples
 - Complete utility module reference table
 - Responsive utility usage (e.g., `.tablet\:pathable-padding-4`)

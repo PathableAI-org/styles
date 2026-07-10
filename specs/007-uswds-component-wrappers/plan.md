@@ -25,6 +25,7 @@ The wrapping uses SCSS `@extend` — `.pathable-button { @extend .usa-button; }`
 **Language/Version**: SCSS via Dart Sass (`sass` ^1.86.3), USWDS v3.x
 
 **Primary Dependencies**:
+
 - `uswds` v3.x (existing runtime dependency from 003-wrap-uswds-theme)
 - `sass` (existing dev dependency)
 
@@ -39,6 +40,7 @@ The wrapping uses SCSS `@extend` — `.pathable-button { @extend .usa-button; }`
 **Performance Goals**: The all-components entry point adds under 100 KB gzip to `dist/styles.css` (matching USWDS all-components output efficiency). Individual component imports add under 20 KB gzip each.
 
 **Constraints**:
+
 - Compiled `dist/styles.css` MUST include only components that are explicitly @forwarded
 - Zero additional runtime JS dependencies
 - `.pathable-*` classes MUST resolve to the same computed styles as `.usa-*` equivalents
@@ -56,7 +58,7 @@ The wrapping uses SCSS `@extend` — `.pathable-button { @extend .usa-button; }`
 ### Applicable Principles
 
 | Principle | Relevance | Compliance |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | **I. CSS Custom Properties Are the Runtime Contract** | The feature emits dual `--pathable-{component}-{property}` / `--usa-{component}-{property}` CSS custom properties alongside component classes. | ✅ COMPLIANT — Both the component classes and the dual CSS custom properties provide the runtime CSS contract. No SCSS dependency for consumers. |
 | **II. SCSS Is an Authoring and Extension Layer** | Component wrappers are generated via SCSS `@extend` and `@forward` in dedicated partials. | ✅ COMPLIANT — SCSS is used only as the wrapping mechanism. The output is compiled CSS. |
 | **III. pnpm Workspaces** | Changes scoped to `packages/styles` and `apps/docs`. | ✅ COMPLIANT |
@@ -70,7 +72,7 @@ The wrapping uses SCSS `@extend` — `.pathable-button { @extend .usa-button; }`
 ### Gate Evaluation
 
 | Gate | Status |
-|------|--------|
+| ------ | -------- |
 | No unjustified constitution violations | ✅ All principles in compliance — see table above |
 | All [NEEDS CLARIFICATION] markers resolved | ✅ No markers in spec |
 | Feature spec is internally consistent | ✅ Verified |
@@ -141,7 +143,7 @@ apps/docs/
 ## Complexity Tracking
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
+| ----------- | ------------ | ------------------------------------- |
 | One SCSS wrapper file per component (~47 files) | Each component needs its own `@forward` of the USWDS dependency chain plus `@extend` of the `.usa-*` class. | A single monolithic `_component-wrappers.scss` would be simpler but would prevent selective imports, violating FR-003 (package system with individual component import). |
 | Dual naming (`.pathable-` classes + `--pathable-*` / `--usa-*` custom properties) | Supports both utility-first consumers (using classes) and token-first consumers (using CSS custom properties), consistent with the existing pattern. | Single namespace would be simpler but would not support the dual PathAble/USWDS naming convention already established. |
 | Docs site refactoring across 4+ component files | FR-009 requires 80%+ `.usa-*` replacement across docs templates. Multiple component files need updates. | Refactoring only one file would leave 80% of `.usa-*` references in place, failing the requirement. |
@@ -158,7 +160,7 @@ Determine the optimal SCSS technique for creating `.pathable-*` wrappers that pr
 **Options evaluated**:
 
 | Option | Description | Pros | Cons |
-|--------|-------------|------|------|
+| -------- | ------------- | ------ | ------ |
 | A: `@extend` | `.pathable-button { @extend .usa-button; }` | Minimal output (selector grouping), 100% style fidelity, no maintenance burden if USWDS styles change | Requires `.usa-*` classes to be compiled in the same CSS output; `@extend` may produce longer selector lists |
 | B: CSS copy | Manually duplicate `.usa-button` rules under `.pathable-button` | No dependency on USWDS source structure | Massive duplication, diverges from USWDS updates, violates FR-002 |
 | C: `@mixin` wrap | Create SCSS mixins for wrapping | More flexible for customization | Adds complexity, not needed since FR-002 requires identical styles, not customization |
@@ -186,7 +188,7 @@ The USWDS components directory at `node_modules/@uswds/uswds/packages/` contains
 Define the bundle packages that consumers can import for groups of related components:
 
 | Bundle | Components |
-|--------|-----------|
+| -------- | ----------- |
 | `pathable-form-controls` | character-count, checkbox, combo-box, date-picker, date-range-picker, error-message, fieldset, file-input, form, form-group, hint, input, input-mask, input-prefix-suffix, label, legend, memorable-date, radio, range, select, textarea, time-picker |
 | `pathable-typography` | content, dark-background, display, intro, link, list, paragraph, prose |
 | `pathable-navigation` | breadcrumb, header, in-page-navigation, nav, pagination, search, sidenav, skipnav |
@@ -207,6 +209,7 @@ Determine how to emit dual `--pathable-{component}-{property}` / `--usa-{compone
 #### 1. data-model.md
 
 Formal entity definitions for:
+
 - `ComponentWrapper` — name, USWDS package name, PathAble class name, SCSS wrapper file, dependency chain
 - `ComponentPackage` — importable SCSS entry point, list of forwarded component wrappers
 - `BundlePackage` — named collection of component packages
@@ -217,6 +220,7 @@ Formal entity definitions for:
 #### 2. contracts/scss-interface.md
 
 SCSS interface contract defining:
+
 - Component wrapper file format (SCSS partial pattern: import USWDS source + `@extend` class)
 - Package entry point forward structure
 - How shared dependencies deduplicate via SCSS module system
@@ -226,6 +230,7 @@ SCSS interface contract defining:
 #### 3. quickstart.md
 
 Usage guide covering:
+
 - Basic CSS import usage with `.pathable-*` component classes
 - Selective import via individual component packages
 - Bundle package usage

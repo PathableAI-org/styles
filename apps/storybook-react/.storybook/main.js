@@ -4,7 +4,7 @@ export default {
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   docs: { autodocs: true },
   async viteFinal(config, { configType }) {
-    if (configType === 'PRODUCTION') {
+    if (configType === 'PRODUCTION' && process.env.STORYBOOK_BUILD === 'true') {
       config.base = '/styles/react/'
     }
     return config

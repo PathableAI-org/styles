@@ -110,8 +110,9 @@ Use breakpoint prefixes for responsive variants:
 ```
 
 Available breakpoints (matching USWDS configuration):
+
 | Breakpoint | Min Width |
-|-----------|-----------|
+| ----------- | ----------- |
 | `mobile-lg` | 480px |
 | `tablet` | 640px |
 | `desktop` | 1024px |
@@ -151,7 +152,7 @@ All utility token values are also available as CSS custom properties under both 
 ## Utility Module Reference
 
 | Module | Class Prefix | Tokens Available |
-|--------|-------------|-----------------|
+| -------- | ------------- | ----------------- |
 | background-color | `.pathable-bg-` | primary, base, surface, accent, link, focus-ring, danger, success, transparent |
 | color | `.pathable-text-` | base, primary, muted, accent, link, white |
 | padding | `.pathable-padding-` | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 |
@@ -183,6 +184,7 @@ When replacing ad-hoc CSS with utility classes in `apps/docs`:
 3. **Remove** the now-unnecessary CSS rule from the `<style>` block or `custom.css`
 
 **Before:**
+
 ```astro
 <div class="card">
   <style>
@@ -197,6 +199,7 @@ When replacing ad-hoc CSS with utility classes in `apps/docs`:
 ```
 
 **After:**
+
 ```astro
 <div class="pathable-padding-4 pathable-bg-surface pathable-border-radius-sm pathable-font-family-body">
 </div>
@@ -222,7 +225,7 @@ cd apps/docs && pnpm dev
 ## Troubleshooting
 
 | Problem | Likely Cause | Solution |
-|---------|-------------|----------|
+| --------- | ------------- | ---------- |
 | Utility class not in compiled CSS | USWDS theme token set to `false` | Check `_uswds-theme.scss` for the token's enabled status |
 | Wrong hex value in utility class | USWDS color token misconfigured | Verify color mapping in `_uswds-theme.scss` |
 | Responsive variant not working | Breakpoint not enabled in theme | Check `$theme-utility-breakpoints` in config |

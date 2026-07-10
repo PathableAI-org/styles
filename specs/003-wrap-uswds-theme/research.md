@@ -7,7 +7,7 @@
 Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x system palette (569 tokens across 24 color families) via the CivicActions USWDS Color Tool.
 
 | Brand Color | Hex | Theme Family | Base Token | ΔE | Notes |
-|-------------|-----|-------------|------------|----|-------|
+| ------------- | ----- | ------------- | ------------ | ---- | ------- |
 | PathAble Blue | #00365c | Primary | blue-warm-80v | 5.56 | Same token as USWDS default primary-darker |
 | Intelligent Jade | #1cae96 | Secondary | mint-cool-30v | 7.84 | Slightly more saturated teal-green |
 | Bright Blue Brooks | #4899e8 | Accent-cool | blue-30v | 10.70 | Slightly brighter, more saturated |
@@ -20,8 +20,9 @@ Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x s
 ### Decision D2: Full Grade Mapping Per Family
 
 **Primary family** (blue-warm tokens):
+
 | Grade | USWDS Token | Hex |
-|-------|-------------|-----|
+| ------- | ------------- | ----- |
 | primary-lighter | blue-warm-10 | #e1e7f1 |
 | primary-light | blue-warm-20 | #bbcae4 |
 | primary | blue-warm-80v | #162e51 |
@@ -30,8 +31,9 @@ Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x s
 | primary-darker | blue-warm-90 | #13171f |
 
 **Secondary family** (mint-cool tokens):
+
 | Grade | USWDS Token | Hex |
-|-------|-------------|-----|
+| ------- | ------------- | ----- |
 | secondary-lighter | mint-cool-10 | #c4eeeb |
 | secondary-light | mint-cool-20 | #9bd4cf |
 | secondary | mint-cool-30v | #1dc2ae |
@@ -40,8 +42,9 @@ Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x s
 | secondary-darker | mint-cool-90 | #111818 |
 
 **Accent-cool family** (blue tokens):
+
 | Grade | USWDS Token | Hex |
-|-------|-------------|-----|
+| ------- | ------------- | ----- |
 | accent-cool-lighter | blue-10 | #d9e8f6 |
 | accent-cool-light | blue-20 | #aacdec |
 | accent-cool | blue-30v | #58b4ff |
@@ -50,8 +53,9 @@ Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x s
 | accent-cool-darker | blue-90 | #11181d |
 
 **Accent-warm family** (green-warm tokens):
+
 | Grade | USWDS Token | Hex |
-|-------|-------------|-----|
+| ------- | ------------- | ----- |
 | accent-warm-lighter | green-warm-10 | #e7eab7 |
 | accent-warm-light | green-warm-20 | #cbd17a |
 | accent-warm | green-warm-10v | #e7f434 |
@@ -60,8 +64,9 @@ Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x s
 | accent-warm-darker | green-warm-90 | #171712 |
 
 **Base family** (gray-cool tokens):
+
 | Grade | USWDS Token | Hex |
-|-------|-------------|-----|
+| ------- | ------------- | ----- |
 | base-lightest | gray-cool-5 | #edeff0 |
 | base-lighter | gray-cool-2 | #f7f9fa |
 | base-light | gray-cool-3 | #f5f6f7 |
@@ -82,10 +87,12 @@ Used CIE76 (deltaE 1976) perceptual color distance against the full USWDS v3.x s
 Build command: `sass --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css`
 
 **Resolving theme tokens to hex values in _colors.scss**:
+
 ```scss
 @use "uswds-core" as uswds;
 $pathable-blue: uswds.color("blue-warm-80v");
 ```
+
 Do NOT do `$pathable-blue: $theme-color-primary` — that yields the string `"blue-warm-80v"`, not a hex color.
 
 **Token-only output**: Only forward `uswds-core` via the settings file. Do not `@forward "uswds"`.
@@ -93,6 +100,7 @@ Do NOT do `$pathable-blue: $theme-color-primary` — that yields the string `"bl
 ### Decision D4: State Token Configuration
 
 USWDS state tokens configured in `_uswds-theme.scss`:
+
 - `$theme-color-error`: `"red-60v"` and dark/lighter variants
 - `$theme-color-success`: `"mint-cool-30v"` (same as secondary base — Intelligent Jade)
 - `$theme-color-warning`: `"gold-20v"`
@@ -104,7 +112,7 @@ USWDS state tokens configured in `_uswds-theme.scss`:
 ### Decision D5: Unused Grades Set to false
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | `$theme-color-primary-lightest` | `false` |
 | `$theme-color-primary-darkest` | `false` |
 | `$theme-color-secondary-lightest` | `false` |
@@ -117,7 +125,7 @@ USWDS state tokens configured in `_uswds-theme.scss`:
 ## Alternatives Considered
 
 | Alternative | Rejected Because |
-|-------------|-----------------|
+| ------------- | ----------------- |
 | Forking USWDS to emit CSS custom properties | Maintenance burden, defeats upgradeability |
 | Keeping all $pathable-* as hardcoded hex separate from USWDS | Two diverging sources of truth |
 | Embedding @use ... with block directly in index.scss | Violates FR-008 (single settings file) |
