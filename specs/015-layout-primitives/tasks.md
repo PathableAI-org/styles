@@ -17,7 +17,7 @@
 ## Path Conventions
 
 - All SCSS files under `packages/styles/src/pathable-component-wrappers/`
-- All story files under `apps/storybook/src/stories/layout-composition/`
+- All story files under `packages/styles/src/stories/layout-composition/`
 
 ## Table of Contents
 
@@ -53,10 +53,10 @@
 - [ ] T004 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-stack.scss` with `.pathable-stack` base class (flex column, gap via `--pathable-stack-gap` defaulting to `var(--space-16)`) plus gap modifier classes: `--gap-sm` (var(--space-8)), `--gap-md` (var(--space-16)), `--gap-lg` (var(--space-24)), `--gap-xl` (var(--space-32)). Expose `--pathable-stack-gap` CSS custom property.
 - [ ] T005 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-cluster.scss` with `.pathable-cluster` base class (flex wrap, gap via `--pathable-cluster-gap` defaulting to `var(--space-8)`, align-items via `--pathable-cluster-align` defaulting to center) plus gap and align modifier classes. Gap: `--gap-sm` (var(--space-4)), `--gap-md` (var(--space-8)), `--gap-lg` (var(--space-16)). Align: `--align-start`, `--align-center`, `--align-end`, `--align-stretch`.
 - [ ] T006 [P] [US1] Create `packages/styles/src/pathable-component-wrappers/pathable-card-grid.scss` with `.pathable-card-grid` base class (CSS Grid with `repeat(auto-fill, minmax(min(100%, var(--pathable-card-grid-min-width, 300px)), 1fr))`, gap via `--pathable-card-grid-gap` defaulting to `var(--space-24)`) plus gap modifier classes: `--gap-sm` (var(--space-16)), `--gap-md` (var(--space-24)), `--gap-lg` (var(--space-32)). Expose `--pathable-card-grid-min-width` and `--pathable-card-grid-gap` CSS custom properties.
-- [ ] T007 [P] [US1] Create Storybook story at `apps/storybook/src/stories/layout-composition/Container.stories.js` showing `.pathable-container` with all three width variants (standard, wide, full) and nested content demonstrating centered behavior at both desktop and mobile widths.
-- [ ] T008 [P] [US1] Create Storybook story at `apps/storybook/src/stories/layout-composition/Stack.stories.js` showing `.pathable-stack` with all gap variants, nested elements demonstrating consistent spacing, and a single-child edge case.
-- [ ] T009 [P] [US1] Create Storybook story at `apps/storybook/src/stories/layout-composition/Cluster.stories.js` showing `.pathable-cluster` with gap and align variants, tags/buttons as children, and an overflow wrap demonstration.
-- [ ] T010 [P] [US1] Create Storybook story at `apps/storybook/src/stories/layout-composition/CardGrid.stories.js` showing `.pathable-card-grid` with 3, 5, and 1 card items demonstrating auto-fill column calculation and single-row alignment. Include gap variants. Verify cards never go narrower than 300px.
+- [ ] T007 [P] [US1] Create Storybook story at `packages/styles/src/stories/layout-composition/Container.stories.js` showing `.pathable-container` with all three width variants (standard, wide, full) and nested content demonstrating centered behavior at both desktop and mobile widths.
+- [ ] T008 [P] [US1] Create Storybook story at `packages/styles/src/stories/layout-composition/Stack.stories.js` showing `.pathable-stack` with all gap variants, nested elements demonstrating consistent spacing, and a single-child edge case.
+- [ ] T009 [P] [US1] Create Storybook story at `packages/styles/src/stories/layout-composition/Cluster.stories.js` showing `.pathable-cluster` with gap and align variants, tags/buttons as children, and an overflow wrap demonstration.
+- [ ] T010 [P] [US1] Create Storybook story at `packages/styles/src/stories/layout-composition/CardGrid.stories.js` showing `.pathable-card-grid` with 3, 5, and 1 card items demonstrating auto-fill column calculation and single-row alignment. Include gap variants. Verify cards never go narrower than 300px.
 
 **Checkpoint**: At this point, container, stack, cluster, and card-grid primitives exist as SCSS files with Storybook verification. A consumer can build a basic page layout. Compilation with `pnpm build` should succeed.
 
@@ -79,7 +79,7 @@
   - `.pathable-surface--inverse`: `var(--pathable-color-text)` background, `var(--elevation-md)` box-shadow
 - [ ] T012 [US2] Add interactive states to `pathable-surface.scss`: implement `:hover` (elevation increases to `var(--elevation-md)` on `--interactive`), `:focus-visible` (`outline: 2px solid var(--pathable-color-focus-ring)` with `outline-offset: 2px`), `:focus-within` (same focus ring), `:active` (elevation drops), and `:disabled` / `[aria-disabled="true"]` (reduced opacity, no hover change) selectors.
 - [ ] T013 [US2] Add accessibility media queries to `pathable-surface.scss`: `@media (forced-colors: active)` block adding outline to all surface variants for boundary visibility, and `@media (prefers-reduced-motion: reduce)` block removing transition on all surfaces (hover/focus state changes are considered essential and preserved).
-- [ ] T014 [P] [US2] Create Storybook story at `apps/storybook/src/stories/layout-composition/Surface.stories.js` showing all six surface variants side by side, interactive surface in all states (rest, hover, focus-visible, active, disabled), and a forced-colors mode note.
+- [ ] T014 [P] [US2] Create Storybook story at `packages/styles/src/stories/layout-composition/Surface.stories.js` showing all six surface variants side by side, interactive surface in all states (rest, hover, focus-visible, active, disabled), and a forced-colors mode note.
 
 **Checkpoint**: All six surface variants work with interactive states and accessibility support. Storybook demonstrates each variant visually.
 
@@ -95,8 +95,8 @@
 
 - [ ] T015 [P] [US3] Create `packages/styles/src/pathable-component-wrappers/pathable-split.scss` with `.pathable-split` base class (CSS Grid, two-column via `--pathable-split-ratio` defaulting to `1fr 1fr`, gap via `--pathable-split-gap` defaulting to `var(--space-24)`, align-items via `--pathable-split-align` defaulting to center). Implement ratio modifier classes: `--ratio-1-1`, `--ratio-1-2`, `--ratio-2-1`, `--ratio-1-3`. Implement align modifier classes: `--align-start`, `--align-center`, `--align-end`, `--align-stretch`. Add `@media (max-width: 1023px)` block collapsing to single column. Expose `--pathable-split-ratio`, `--pathable-split-gap`, `--pathable-split-align` CSS custom properties.
 - [ ] T016 [P] [US3] Create `packages/styles/src/pathable-component-wrappers/pathable-sidebar-layout.scss` with `.pathable-sidebar-layout` base class (CSS Grid, two-column via `--pathable-sidebar-ratio` defaulting to `3fr 1fr`, gap via `--pathable-sidebar-gap` defaulting to `var(--space-24)`). Implement ratio modifier classes: `--ratio-3-1`, `--ratio-2-1`, `--ratio-4-1`. Implement `.pathable-sidebar-layout--sidebar-first` modifier (reverses column order to `1fr 3fr`). Add `@media (max-width: 1023px)` block collapsing both variants to single column, preserving DOM reading order. Expose `--pathable-sidebar-ratio` and `--pathable-sidebar-gap` CSS custom properties.
-- [ ] T017 [P] [US3] Create Storybook story at `apps/storybook/src/stories/layout-composition/Split.stories.js` showing all ratio and align variants, desktop vs mobile states via viewport resizing, and an empty-region edge case.
-- [ ] T018 [P] [US3] Create Storybook story at `apps/storybook/src/stories/layout-composition/SidebarLayout.stories.js` showing both default and sidebar-first variants, content with realistic layout (main text + sidebar widget), and responsive collapse behavior.
+- [ ] T017 [P] [US3] Create Storybook story at `packages/styles/src/stories/layout-composition/Split.stories.js` showing all ratio and align variants, desktop vs mobile states via viewport resizing, and an empty-region edge case.
+- [ ] T018 [P] [US3] Create Storybook story at `packages/styles/src/stories/layout-composition/SidebarLayout.stories.js` showing both default and sidebar-first variants, content with realistic layout (main text + sidebar widget), and responsive collapse behavior.
 
 **Checkpoint**: Split and sidebar-layout primitives exist with responsive behavior verified in Storybook. DOM reading order is preserved on collapse.
 
@@ -111,7 +111,7 @@
 ### Implementation for User Story 4
 
 - [ ] T019 Create `packages/styles/src/pathable-component-wrappers/pathable-sticky-panel.scss` with `.pathable-sticky-panel` base class (`position: sticky`, `top: var(--pathable-sticky-panel-top, var(--space-24))`). Implement `.pathable-sticky-panel--static` modifier (`position: static`). Add `@media (max-height: 599px)` block disabling sticky (position: static). Expose `--pathable-sticky-panel-top` CSS custom property.
-- [ ] T020 Create Storybook story at `apps/storybook/src/stories/layout-composition/StickyPanel.stories.js` showing sticky panel inside a sidebar-layout with tall viewport (scroll container to demonstrate stickiness) and a short viewport note. Include the `--static` modifier variant.
+- [ ] T020 Create Storybook story at `packages/styles/src/stories/layout-composition/StickyPanel.stories.js` showing sticky panel inside a sidebar-layout with tall viewport (scroll container to demonstrate stickiness) and a short viewport note. Include the `--static` modifier variant.
 
 **Checkpoint**: Sticky-panel works at tall viewports and safely falls back to static at short viewports.
 
@@ -125,7 +125,7 @@
 
 ### Implementation for User Story 5
 
-- [ ] T021 [P] [US5] Create Storybook story at `apps/storybook/src/stories/layout-composition/NestedComposition.stories.js` showing a complete page composition using all primitives: container → stack → (split + sidebar-layout + card-grid). Inside the composition, demonstrate nested surfaces: raised card inside inset sidebar, interactive surface inside raised card. Verify at both desktop and mobile widths.
+- [ ] T021 [P] [US5] Create Storybook story at `packages/styles/src/stories/layout-composition/NestedComposition.stories.js` showing a complete page composition using all primitives: container → stack → (split + sidebar-layout + card-grid). Inside the composition, demonstrate nested surfaces: raised card inside inset sidebar, interactive surface inside raised card. Verify at both desktop and mobile widths.
 
 **Note**: User Story 5 validation is primarily visual/compositional. The core surface SCSS already handles nesting correctly via the implementations in Phase 3 (transparent backgrounds, cumulative shadows handled by independent elevation values). The Storybook story provides visual proof.
 

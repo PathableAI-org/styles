@@ -95,6 +95,7 @@
 // Variant: inverse — dark contrasting section
 .pathable-surface--inverse {
   background: var(--pathable-color-text);
+  color: var(--pathable-color-surface);
   border: none;
   box-shadow: var(--elevation-md);
 }
@@ -115,6 +116,12 @@
 
   .pathable-surface--interactive {
     outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--interactive:focus-visible,
+  .pathable-surface--interactive:focus-within {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
   }
 
   .pathable-surface--brand {

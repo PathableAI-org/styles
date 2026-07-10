@@ -13,6 +13,10 @@
 .pathable-sticky-panel {
   position: sticky;
   top: var(--pathable-sticky-panel-top, var(--space-24));
+  // Prevents the sticky panel from stretching to full grid row height,
+  // which would prevent the sticky behavior from working in grid layouts
+  // like .pathable-sidebar-layout.
+  align-self: start;
 }
 
 .pathable-sticky-panel--static {

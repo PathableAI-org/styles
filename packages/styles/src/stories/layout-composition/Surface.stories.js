@@ -47,7 +47,7 @@ export const InteractiveStates = {
         <div style="font-size: 0.875rem; font-weight: 600;">Rest</div>
         <div style="font-size: 0.75rem; margin-top: 0.25rem;">Tab to focus me</div>
       </div>
-      <div class="pathable-surface pathable-surface--interactive" style="padding: 1.5rem; max-width: 200px; opacity: 0.5; cursor: default;">
+      <div class="pathable-surface pathable-surface--interactive" aria-disabled="true" style="padding: 1.5rem; max-width: 200px; opacity: 0.5; cursor: default;">
         <div style="font-size: 0.875rem; font-weight: 600;">Disabled</div>
         <div style="font-size: 0.75rem; margin-top: 0.25rem;">aria-disabled</div>
       </div>

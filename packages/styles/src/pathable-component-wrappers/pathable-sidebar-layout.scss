@@ -32,9 +32,23 @@
   --pathable-sidebar-ratio: 4fr 1fr;
 }
 
-// Sidebar-first modifier: sidebar on the left, content on the right
+// Sidebar-first modifier: sidebar on the left, content on the right.
+// Sets the ratio directly in swapped order so consumers don't need to
+// provide a reversed ratio value.
 .pathable-sidebar-layout--sidebar-first {
-  grid-template-columns: 1fr var(--pathable-sidebar-ratio, 3fr);
+  --pathable-sidebar-ratio: 1fr 3fr;
+}
+
+.pathable-sidebar-layout--ratio-3-1.pathable-sidebar-layout--sidebar-first {
+  --pathable-sidebar-ratio: 1fr 3fr;
+}
+
+.pathable-sidebar-layout--ratio-2-1.pathable-sidebar-layout--sidebar-first {
+  --pathable-sidebar-ratio: 1fr 2fr;
+}
+
+.pathable-sidebar-layout--ratio-4-1.pathable-sidebar-layout--sidebar-first {
+  --pathable-sidebar-ratio: 1fr 4fr;
 }
 
 // Responsive: collapse to single column below desktop breakpoint

@@ -131,7 +131,7 @@ packages/styles/src/pathable-component-wrappers/
 packages/styles/src/
 └── index.scss                                # Existing — no changes needed (already forwards pathable-component-wrappers/)
 
-apps/storybook/src/stories/
+packages/styles/src/stories/
 └── layout-composition/                       # NEW story directory
     ├── Container.stories.js
     ├── Stack.stories.js
@@ -141,7 +141,9 @@ apps/storybook/src/stories/
     ├── SidebarLayout.stories.js
     ├── StickyPanel.stories.js
     ├── Surface.stories.js
-    └── NestedComposition.stories.js           # Integration story showing multiple primitives together
+    └── NestedComposition.stories.js           # Integration story showing multiple primitives together (`pathable-layout-composition.scss`) rather than being added to the existing `pathable-layout.scss` bundle. The existing layout bundle contains USWDS-extending wrappers (grid, section, media-block, embed-container, layout-docs). The new primitives are pure CSS composition patterns, not USWDS wrappers. Keeping them separate makes selective imports clearer and maintains backward compatibility.
+
+> **Note**: The Storybook instance at `apps/storybook` is configured to load stories from `packages/styles/src/stories/**/*.stories.js`. The story files are authored under `packages/styles/src/stories/layout-composition/`, not `apps/storybook/src/stories/`. Updated to reflect the actual repo structure.
 ```
 
 **Structure Decision**: New primitives get their own bundle package (`pathable-layout-composition.scss`) rather than being added to the existing `pathable-layout.scss` bundle. The existing layout bundle contains USWDS-extending wrappers (grid, section, media-block, embed-container, layout-docs). The new primitives are pure CSS composition patterns, not USWDS wrappers. Keeping them separate makes selective imports clearer and maintains backward compatibility.

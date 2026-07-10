@@ -34,12 +34,12 @@
 
 ### U3: Sticky Panel Viewport Height Threshold
 
-**Decision**: Disable sticky positioning when the viewport height is less than 600px OR when the sticky panel height exceeds 80% of the viewport height. Implement via `@media (min-height: 600px)` combined with a CSS comparison.
+**Decision**: Disable sticky positioning when the viewport height is less than 600px. Implement via `@media (max-height: 599px)` setting `position: static`. The 80% height rule described in the contract is not implementable in pure CSS (it requires knowledge of the element's rendered height), so stickiness is disabled on all viewports shorter than 600px as the practical safe fallback.
 
 **Rationale**:
 - WCAG SC 2.4.12 (Focus Not Obscured) requires that keyboard-focusable elements are not hidden by sticky content.
 - WCAG SC 1.4.12 (Text Spacing) means sticky content must not overlap when text is resized — a 600px minimum height ensures reasonable space.
-- The 80% rule prevents sticky panels that are nearly as tall as the viewport itself — they have nowhere to "stick" to.
+- The 80% rule is not implementable in pure CSS (it requires knowledge of the element's rendered height), but disabling sticky on all viewports shorter than 600px provides equivalent practical protection — on those viewports, any sticky panel would occupy a significant portion of the viewport.
 - Many common web patterns (e.g., USWDS sticky sidenav) disable stickiness below 600px.
 - This can be refined later if specific consumer feedback indicates a need for a different threshold.
 
