@@ -1,0 +1,163 @@
+// packages/styles/src/pathable-component-wrappers/pathable-icon-button.scss
+//
+// Compact icon button component for single-action SVG icon triggers (close, save,
+// menu, notification, overflow). Uses shared interaction-state mixins for
+// hover, focus, active, disabled, and loading behavior.
+//
+// Layout responsibility: provides a square/circular touch target for icon-only
+// actions with consistent sizing and accessible focus indicators.
+//
+// CSS custom properties:
+//   --pathable-icon-button-size      (default: 44px) — target width/height
+//   --pathable-icon-button-icon-size (default: 20px) — SVG icon dimensions
+//
+// Variant classes:
+//   .pathable-icon-button            — base class (default size, square)
+//   .pathable-icon-button--bare      — transparent bg, no border
+//   .pathable-icon-button--subtle    — light background (pathable-color-bg)
+//   .pathable-icon-button--bordered  — transparent bg with border
+//   .pathable-icon-button--inverse   — dark background for dark surfaces
+//   .pathable-icon-button--destructive — danger signaling
+//   .pathable-icon-button--compact   — 32px target
+//   .pathable-icon-button--large     — 52px target
+//   .pathable-icon-button--circle    — circular shape (border-radius: 50%)
+//
+// States: hover, focus-visible, focus-within, active, disabled, loading
+//   (via @include interaction-states in pathable-interaction-states.scss)
+//
+// Accessibility:
+// - Icon-only controls MUST have an accessible name (aria-label, aria-labelledby, or title)
+// - Decorative icons within the button should use aria-hidden="true" on the SVG
+// - Focus ring remains visible on all surface types (base, brand, inverse)
+
+@use 'pathable-interaction-states' as states;
+
+.pathable-icon-button {
+  // Shared interaction states
+  @include states.interaction-states;
+
+  // Base dimensions
+  width: var(--pathable-icon-button-size, 44px);
+  height: var(--pathable-icon-button-size, 44px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  // Default appearance (subtle border for visibility on any bg)
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--pathable-color-text);
+  cursor: pointer;
+  padding: 0;
+
+  // Transition
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    color 0.2s;
+
+  // Inner icon sizing
+  svg {
+    width: var(--pathable-icon-button-icon-size, 20px);
+    height: var(--pathable-icon-button-icon-size, 20px);
+    pointer-events: none;
+  }
+}
+
+// --- Size variants ---
+
+.pathable-icon-button--compact {
+  --pathable-icon-button-size: 32px;
+  --pathable-icon-button-icon-size: 16px;
+}
+
+.pathable-icon-button--large {
+  --pathable-icon-button-size: 52px;
+  --pathable-icon-button-icon-size: 24px;
+}
+
+// --- Shape variant ---
+
+.pathable-icon-button--circle {
+  border-radius: 50%;
+}
+
+// --- Appearance variants ---
+
+// Bare: no visible background, icon only
+.pathable-icon-button--bare {
+  background: transparent;
+}
+
+.pathable-icon-button--bare:hover {
+  background: var(--pathable-color-bg);
+}
+
+// Subtle: light background fill
+.pathable-icon-button--subtle {
+  background: var(--pathable-color-bg);
+}
+
+.pathable-icon-button--subtle:hover {
+  background: var(--pathable-color-border);
+}
+
+// Bordered: transparent with visible border
+.pathable-icon-button--bordered {
+  background: transparent;
+  border: 1px solid var(--pathable-color-border);
+}
+
+.pathable-icon-button--bordered:hover {
+  border-color: var(--pathable-color-text);
+}
+
+// Inverse: dark background for use on dark surfaces
+.pathable-icon-button--inverse {
+  background: var(--pathable-color-text);
+  color: var(--pathable-color-surface);
+}
+
+.pathable-icon-button--inverse:hover {
+  opacity: 0.9;
+}
+
+// Destructive: danger signaling
+.pathable-icon-button--destructive {
+  color: var(--pathable-color-danger);
+}
+
+.pathable-icon-button--destructive:hover {
+  background: var(--pathable-color-danger);
+  color: #ffffff;
+}
+
+// --- Accessibility media queries ---
+
+@media (forced-colors: active) {
+  .pathable-icon-button {
+    &:focus-visible,
+    &:focus-within {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
+
+  // Ensure all appearance variants retain visible boundaries
+  .pathable-icon-button--bordered {
+    border-color: CanvasText;
+  }
+
+  .pathable-icon-button--inverse {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-icon-button {
+    transition: none;
+  }
+}

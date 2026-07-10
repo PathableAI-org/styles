@@ -1,0 +1,177 @@
+// packages/styles/src/pathable-component-wrappers/pathable-interaction-states.scss
+//
+// Reusable SCSS mixins for interactive element states: hover, focus-visible,
+// focus-within, active, selected, pressed, disabled, and loading.
+// Layout responsibility: provides consistent interaction feedback via
+// elevation, outline, background, and cursor changes.
+//
+// These mixins are framework-neutral and emit standard CSS pseudo-classes
+// and attribute selectors. Consumers @include the desired mixins within
+// their own component selectors.
+//
+// CSS custom properties consumed:
+//   --elevation-sm, --elevation-md         — box-shadow elevation levels
+//   --pathable-color-focus-ring            — focus outline color
+//   --pathable-color-bg                    — hover/disabled background
+//   --pathable-color-surface               — selected/resting background
+//   --pathable-color-border                — selected/pressed border color
+//
+// Available mixins:
+//   state-hover            — &:hover elevation increase + background shift
+//   state-focus            — &:focus-visible & &:focus-within outline ring
+//   state-active           — &:active elevation drop to none
+//   state-pressed          — &:active inset shadow + border shift (alt to active)
+//   state-selected         — &.is-selected, &[aria-selected="true"]
+//   state-disabled         — &:disabled, &[aria-disabled="true"]
+//   state-loading          — &.is-loading with CSS-only border spinner
+//   interaction-states     — combined: hover, focus, active, selected, disabled, loading
+//
+// Demo class (for documentation):
+//   .pathable-interaction-states-demo  — card with all states applied
+
+// Hover: elevation increase + background shift
+@mixin state-hover {
+  &:hover {
+    box-shadow: var(--elevation-md);
+    background: var(--pathable-color-bg);
+  }
+}
+
+// Focus: visible outline ring for keyboard and focus-within
+@mixin state-focus {
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+// Active: momentary elevation drop (no shadow)
+@mixin state-active {
+  &:active {
+    box-shadow: var(--elevation-none);
+  }
+}
+
+// Pressed: momentary inset shadow + border color shift (alternative to active)
+@mixin state-pressed {
+  &:active {
+    box-shadow: inset var(--elevation-sm);
+    border-color: var(--pathable-color-border);
+  }
+}
+
+// Selected: persistent border, background tint, and increased weight
+@mixin state-selected {
+  &.is-selected,
+  &[aria-selected='true'] {
+    border: 2px solid var(--pathable-color-border);
+    background: var(--pathable-color-surface);
+    font-weight: 700;
+  }
+}
+
+// Disabled: reduced opacity, suppressed hover/focus/active responses
+@mixin state-disabled {
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: default;
+    box-shadow: none;
+    outline: none;
+    background: var(--pathable-color-bg);
+  }
+
+  &:disabled:hover,
+  &[aria-disabled='true']:hover {
+    box-shadow: none;
+    background: var(--pathable-color-bg);
+  }
+
+  &:disabled:focus-visible,
+  &[aria-disabled='true']:focus-visible,
+  &:disabled:focus-within,
+  &[aria-disabled='true']:focus-within {
+    outline: none;
+  }
+
+  &:disabled:active,
+  &[aria-disabled='true']:active {
+    box-shadow: none;
+  }
+}
+
+// Loading: suppressed interaction + CSS-only border spinner pseudo-element
+@mixin state-loading {
+  &.is-loading {
+    pointer-events: none;
+    cursor: wait;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid var(--pathable-color-border);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: pathable-spin 0.6s linear infinite;
+    }
+  }
+}
+
+// Spin keyframes for loading spinner
+@keyframes pathable-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Combined mixin: emits all individual state mixins (excludes state-pressed
+// since it conflicts with state-active on &:active)
+@mixin interaction-states {
+  @include state-hover;
+  @include state-focus;
+  @include state-active;
+  @include state-selected;
+  @include state-disabled;
+  @include state-loading;
+}
+
+// Demo class for Storybook documentation
+.pathable-interaction-states-demo {
+  @include interaction-states;
+  padding: 1.5rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  box-shadow: var(--elevation-sm);
+  background: var(--pathable-color-surface);
+  border-radius: var(--radius-md);
+  user-select: none;
+}
+
+// Accessibility: forced-colors / high-contrast mode
+// Replaces outline-color with system Highlight for focus indicators
+@media (forced-colors: active) {
+  .pathable-interaction-states-demo:focus-visible,
+  .pathable-interaction-states-demo:focus-within {
+    outline-color: Highlight;
+  }
+}
+
+// Accessibility: reduced motion — remove loading spinner animation
+@media (prefers-reduced-motion: reduce) {
+  .pathable-interaction-states-demo.is-loading::after {
+    animation: none;
+  }
+}
