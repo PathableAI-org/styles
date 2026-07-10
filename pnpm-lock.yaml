@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@uswds/uswds@3.13.0': 23734d1ebd63a577e5d9280607735ea2ac5f44ea8b38c00c57f693b7d0224d7f
+  '@uswds/uswds@3.13.0': cbafb6f3d592cd4acac0716f4d647ba78ba0458324b2d4871d7dc0732fd768b4
 
 importers:
 
@@ -142,7 +142,7 @@ importers:
     dependencies:
       '@uswds/uswds':
         specifier: ^3.0.0
-        version: 3.13.0(patch_hash=23734d1ebd63a577e5d9280607735ea2ac5f44ea8b38c00c57f693b7d0224d7f)
+        version: 3.13.0(patch_hash=cbafb6f3d592cd4acac0716f4d647ba78ba0458324b2d4871d7dc0732fd768b4)
     devDependencies:
       '@fontsource/fredoka':
         specifier: ^5.2.10
@@ -6761,7 +6761,7 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
 
-  '@uswds/uswds@3.13.0(patch_hash=23734d1ebd63a577e5d9280607735ea2ac5f44ea8b38c00c57f693b7d0224d7f)':
+  '@uswds/uswds@3.13.0(patch_hash=cbafb6f3d592cd4acac0716f4d647ba78ba0458324b2d4871d7dc0732fd768b4)':
     dependencies:
       lit: 3.3.3
       receptor: 1.0.0

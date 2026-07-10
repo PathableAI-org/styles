@@ -126,8 +126,11 @@
   $theme-color-disabled-dark: 'gray-30',
 
   // -------- Link colors --------
-  $theme-link-color: 'blue-30v',
-  $theme-link-visited-color: 'blue-30v',
+  // blue-60v (#005ea2) chosen over blue-30v because blue-30v fails
+  // WCAG AA contrast on light backgrounds (white, base-lightest,
+  // success/warning/error/info-lighter). blue-60v passes AA on all of them.
+  $theme-link-color: 'blue-60v',
+  $theme-link-visited-color: 'blue-60v',
 
   // -------- Focus color --------
   $theme-focus-color: 'blue-40v',
