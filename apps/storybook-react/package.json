@@ -5,7 +5,8 @@
   "scripts": {
     "storybook": "storybook dev -p 6007 --host 127.0.0.1",
     "build-storybook": "storybook build",
-    "build": "storybook build"
+    "build": "storybook build",
+    "test-storybook": "test-storybook"
   },
   "dependencies": {
     "@pathable/react": "workspace:*",
@@ -15,8 +16,10 @@
     "@storybook/addon-a11y": "^10.5.0",
     "@storybook/addon-docs": "^10.5.0",
     "@storybook/react-vite": "^10.5.0",
-    "storybook": "^10.5.0",
+    "@storybook/test-runner": "^0.24.4",
+    "axe-playwright": "^2.2.2",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "storybook": "^10.5.0"
   }
 }

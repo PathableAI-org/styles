@@ -1,0 +1,25 @@
+node_modules
+dist
+.specify
+.cursor
+specs
+handoffs
+
+# Agent transcripts
+agent-transcripts
+
+# CI/workflow files
+.github
+
+# Temporary feedback files
+FEEDBACK.md
+
+# Build outputs
+storybook-static
+.pnpm-store
+.astro
+.vite
+.cache
+
+# Lock files
+pnpm-lock.yaml
