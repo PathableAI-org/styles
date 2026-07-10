@@ -50,8 +50,23 @@ jobs:
       - name: Test HTML Storybook
         run: |
           npx serve -n -l 6006 apps/storybook/storybook-static &
-          sleep 3
+          SERVE_PID=$!
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:6006/ 2>/dev/null; then
+              echo "Server ready after ${i}s"
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "Server failed to start"
+              kill $SERVE_PID 2>/dev/null || true
+              exit 1
+            fi
+            sleep 1
+          done
           pnpm --filter @pathable/storybook test-storybook --index-json --url http://127.0.0.1:6006
+          TEST_EXIT=$?
+          kill $SERVE_PID 2>/dev/null || true
+          exit $TEST_EXIT
 
       - name: Build React Storybook
         run: pnpm --filter @pathable/storybook-react build-storybook
@@ -59,5 +74,20 @@ jobs:
       - name: Test React Storybook
         run: |
           npx serve -n -l 6007 apps/storybook-react/storybook-static &
-          sleep 3
+          SERVE_PID=$!
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:6007/ 2>/dev/null; then
+              echo "Server ready after ${i}s"
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "Server failed to start"
+              kill $SERVE_PID 2>/dev/null || true
+              exit 1
+            fi
+            sleep 1
+          done
           pnpm --filter @pathable/storybook-react test-storybook --index-json --url http://127.0.0.1:6007
+          TEST_EXIT=$?
+          kill $SERVE_PID 2>/dev/null || true
+          exit $TEST_EXIT
