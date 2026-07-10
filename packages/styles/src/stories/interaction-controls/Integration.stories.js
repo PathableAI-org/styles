@@ -20,8 +20,8 @@ const iconButton = (modifiers, label, iconContent) => `
 `
 
 const iconTile = (modifiers, label, iconContent) => `
-  <span class="pathable-icon-tile ${modifiers}" title="${label}">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <span class="pathable-icon-tile ${modifiers}" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       ${iconContent}
     </svg>
   </span>
@@ -122,20 +122,20 @@ export const ViewSwitcher = {
     <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
       <div class="pathable-cluster" style="align-items: center; justify-content: space-between;">
         <span style="font-size: 0.875rem; font-weight: 600;">Documents</span>
-        <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode" style="display: inline-flex; gap: var(--space-2, 4px); border-radius: var(--radius-md, 4px); background: var(--pathable-color-bg, #f0f0f0); padding: var(--space-2, 4px);">
-          <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: var(--space-2, 4px) var(--space-4, 8px); border-radius: calc(var(--radius-md, 4px) - var(--space-2, 4px)); border: 2px solid transparent; background: var(--pathable-color-surface, #fff); cursor: pointer; font-size: 0.8rem;">
+        <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
+          <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.list}
             </svg>
             List
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: var(--space-2, 4px) var(--space-4, 8px); border-radius: calc(var(--radius-md, 4px) - var(--space-2, 4px)); border: 2px solid transparent; background: transparent; cursor: pointer; font-size: 0.8rem;">
+          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.grid}
             </svg>
             Grid
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: var(--space-2, 4px) var(--space-4, 8px); border-radius: calc(var(--radius-md, 4px) - var(--space-2, 4px)); border: 2px solid transparent; background: transparent; cursor: pointer; font-size: 0.8rem;">
+          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.eye}
             </svg>
@@ -166,20 +166,20 @@ export const FullComposition = {
           <span style="font-size: 1rem; font-weight: 600;">Training Records</span>
         </div>
 
-        <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode" style="display: inline-flex; gap: var(--space-2, 4px); border-radius: var(--radius-md, 4px); background: var(--pathable-color-bg, #f0f0f0); padding: var(--space-2, 4px);">
-          <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: var(--space-2, 4px) var(--space-4, 8px); border-radius: calc(var(--radius-md, 4px) - var(--space-2, 4px)); border: 2px solid transparent; background: var(--pathable-color-surface, #fff); cursor: pointer; font-size: 0.8rem;">
+        <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
+          <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.list}
             </svg>
             List
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: var(--space-2, 4px) var(--space-4, 8px); border-radius: calc(var(--radius-md, 4px) - var(--space-2, 4px)); border: 2px solid transparent; background: transparent; cursor: pointer; font-size: 0.8rem;">
+          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.grid}
             </svg>
             Grid
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: var(--space-2, 4px) var(--space-4, 8px); border-radius: calc(var(--radius-md, 4px) - var(--space-2, 4px)); border: 2px solid transparent; background: transparent; cursor: pointer; font-size: 0.8rem;">
+          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.eye}
             </svg>

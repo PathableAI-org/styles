@@ -22,6 +22,8 @@
 // - Multi-select: role="group" on container, aria-pressed on options
 // - Keyboard: Arrow keys for single-select, Tab for multi-select
 
+@use 'pathable-interaction-states' as states;
+
 // --- Base: single-select horizontal strip ---
 .pathable-segmented-control {
   display: inline-flex;
@@ -33,6 +35,10 @@
 
 // --- Option segment ---
 .pathable-segmented-control__option {
+  @include states.state-hover;
+  @include states.state-focus;
+  @include states.state-disabled;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;

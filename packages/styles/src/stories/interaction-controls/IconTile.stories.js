@@ -11,18 +11,18 @@ export default {
   },
 }
 
-const iconTile = (modifiers, label) => `
-  <span class="pathable-icon-tile ${modifiers}" title="${label}">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+const iconTile = (modifiers, label, meaningful) => `
+  <span class="pathable-icon-tile ${modifiers}"${meaningful ? '' : ' aria-hidden="true"'}>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"${meaningful ? ' role="img" aria-label="' + label + '"' : ' aria-hidden="true"'}>
       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
       <path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </svg>
   </span>
 `
 
-const iconTileWithText = (modifiers, label, text) => `
+const iconTileWithText = (modifiers, label, text, meaningful) => `
   <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
-    ${iconTile(modifiers, label)}
+    ${iconTile(modifiers, label, meaningful)}
     <span style="font-size: 0.875rem;">${text}</span>
   </span>
 `
@@ -70,18 +70,18 @@ export const StatusVariants = {
       Foreground color tokens for status indicators. Use with meaningful icons: add <code>role="img"</code> and <code>aria-label</code> on the SVG.
     </p>
     <div class="pathable-cluster" style="align-items: center;">
-      ${iconTileWithText('', 'default icon', 'Default')}
-      ${iconTileWithText('pathable-icon-tile--success', 'success icon', 'Success')}
-      ${iconTileWithText('pathable-icon-tile--error', 'error icon', 'Error')}
-      ${iconTileWithText('pathable-icon-tile--warning', 'warning icon', 'Warning')}
-      ${iconTileWithText('pathable-icon-tile--info', 'info icon', 'Info')}
+      ${iconTileWithText('', 'default icon', 'Default', undefined)}
+      ${iconTileWithText('pathable-icon-tile--success', 'success icon', 'Success', true)}
+      ${iconTileWithText('pathable-icon-tile--error', 'error icon', 'Error', true)}
+      ${iconTileWithText('pathable-icon-tile--warning', 'warning icon', 'Warning', true)}
+      ${iconTileWithText('pathable-icon-tile--info', 'info icon', 'Info', true)}
     </div>
     <div class="pathable-cluster" style="align-items: center; margin-top: 0.5rem;">
-      ${iconTileWithText('pathable-icon-tile--circle', 'default circle', 'Default')}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--success', 'success circle', 'Success')}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--error', 'error circle', 'Error')}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--warning', 'warning circle', 'Warning')}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--info', 'info circle', 'Info')}
+      ${iconTileWithText('pathable-icon-tile--circle', 'default circle', 'Default', undefined)}
+      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--success', 'success circle', 'Success', true)}
+      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--error', 'error circle', 'Error', true)}
+      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--warning', 'warning circle', 'Warning', true)}
+      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--info', 'info circle', 'Info', true)}
     </div>
   `,
 }

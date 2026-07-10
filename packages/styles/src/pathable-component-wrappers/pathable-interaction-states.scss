@@ -48,12 +48,20 @@
     outline: 2px solid var(--pathable-color-focus-ring);
     outline-offset: 2px;
   }
+
+  // forced-colors: use system Highlight for focus indicators
+  @media (forced-colors: active) {
+    &:focus-visible,
+    &:focus-within {
+      outline-color: Highlight;
+    }
+  }
 }
 
 // Active: momentary elevation drop (no shadow)
 @mixin state-active {
   &:active {
-    box-shadow: var(--elevation-none);
+    box-shadow: none;
   }
 }
 
@@ -124,6 +132,13 @@
       border-radius: 50%;
       animation: pathable-spin 0.6s linear infinite;
     }
+
+    // reduced motion: disable spinner animation
+    @media (prefers-reduced-motion: reduce) {
+      &::after {
+        animation: none;
+      }
+    }
   }
 }
 
@@ -160,18 +175,3 @@
   user-select: none;
 }
 
-// Accessibility: forced-colors / high-contrast mode
-// Replaces outline-color with system Highlight for focus indicators
-@media (forced-colors: active) {
-  .pathable-interaction-states-demo:focus-visible,
-  .pathable-interaction-states-demo:focus-within {
-    outline-color: Highlight;
-  }
-}
-
-// Accessibility: reduced motion — remove loading spinner animation
-@media (prefers-reduced-motion: reduce) {
-  .pathable-interaction-states-demo.is-loading::after {
-    animation: none;
-  }
-}
