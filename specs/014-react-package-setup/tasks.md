@@ -34,8 +34,8 @@ specs/014-react-package-setup/quickstart.md  # used for validation
 
 **Purpose**: Create the directory structures for both new workspace packages
 
-- [ ] T001 Create `packages/react/` directory structure with `src/components/Button/`, `src/stories/`, `src/stories/components/Basic/` subdirectories
-- [ ] T002 [P] Create `apps/storybook-react/` directory structure with `.storybook/` subdirectory
+- [x] T001 Create `packages/react/` directory structure with `src/components/Button/`, `src/stories/`, `src/stories/components/Basic/` subdirectories
+- [x] T002 [P] Create `apps/storybook-react/` directory structure with `.storybook/` subdirectory
 
 **Checkpoint**: Both workspace directories exist and are ready for configuration files.
 
@@ -49,12 +49,12 @@ specs/014-react-package-setup/quickstart.md  # used for validation
 
 ### Implementation for US-1 + US-2
 
-- [ ] T003 [US1] Create `packages/react/package.json` with name `@pathable/react`, `@pathable/styles` as a dependency, `react` and `react-dom` as peer dependencies, and a `build` script
-- [ ] T004 [P] [US1] Configure the React package build system — add a `vite.config.js` (or use esbuild config) at `packages/react/vite.config.js` for library mode JSX compilation
-- [ ] T005 [P] [US2] Implement the Button component at `packages/react/src/components/Button/Button.jsx` — renders a native `<button>` with the `pathable-button` CSS class, accepts only `children` prop
-- [ ] T006 [US2] Create the package entry point at `packages/react/src/index.js` that imports `@pathable/styles/dist/styles.css` and re-exports `Button` from `./components/Button/Button`
-- [ ] T007 [US1] Build the `@pathable/react` package — run `pnpm --filter @pathable/react build` and verify the `dist/` output includes the compiled JS and the imported CSS
-- [ ] T008 [US1] Verify the dependency chain — confirm `@pathable/styles` appears in `packages/react/node_modules` after install and is a runtime (not dev) dependency
+- [x] T003 [US1] Create `packages/react/package.json` with name `@pathable/react`, `@pathable/styles` as a dependency, `react` and `react-dom` as peer dependencies, and a `build` script
+- [x] T004 [P] [US1] Configure the React package build system — add a `vite.config.js` (or use esbuild config) at `packages/react/vite.config.js` for library mode JSX compilation
+- [x] T005 [P] [US2] Implement the Button component at `packages/react/src/components/Button/Button.jsx` — renders a native `<button>` with the `pathable-button` CSS class, accepts only `children` prop
+- [x] T006 [US2] Create the package entry point at `packages/react/src/index.js` that imports `@pathable/styles/dist/styles.css` and re-exports `Button` from `./components/Button/Button`
+- [x] T007 [US1] Build the `@pathable/react` package — run `pnpm --filter @pathable/react build` and verify the `dist/` output includes the compiled JS and the imported CSS
+- [x] T008 [US1] Verify the dependency chain — confirm `@pathable/styles` appears in `packages/react/node_modules` after install and is a runtime (not dev) dependency
 
 **Checkpoint**: `@pathable/react` builds successfully. A consumer project can install it and render a Button with `pathable-button` class.
 
@@ -68,11 +68,11 @@ specs/014-react-package-setup/quickstart.md  # used for validation
 
 ### Implementation for US-4
 
-- [ ] T009 [US4] Create `apps/storybook-react/package.json` with name `@pathable/storybook-react`, `@storybook/react-vite` as a dev dependency, `@pathable/react` as a dependency, and `storybook` script
-- [ ] T010 [US4] Create `apps/storybook-react/.storybook/main.js` with `@storybook/react-vite` framework and stories glob pointing to `../../../packages/react/src/stories/**/*.stories.jsx`
-- [ ] T011 [P] [US4] Create `apps/storybook-react/.storybook/preview.js` that imports the compiled CSS from `@pathable/styles/dist/styles.css` (or from `@pathable/react`'s entry point) so stories render with styles
-- [ ] T012 [US4] Create the Button story at `packages/react/src/stories/components/Basic/Button.stories.jsx` with a single default story that renders `<Button>Click Me</Button>`
-- [ ] T013 [US4] Start the React Storybook and verify it runs on port 6007 with the Button story rendering correctly
+- [x] T009 [US4] Create `apps/storybook-react/package.json` with name `@pathable/storybook-react`, `@storybook/react-vite` as a dev dependency, `@pathable/react` as a dependency, and `storybook` script
+- [x] T010 [US4] Create `apps/storybook-react/.storybook/main.js` with `@storybook/react-vite` framework and stories glob pointing to `../../../packages/react/src/stories/**/*.stories.jsx`
+- [x] T011 [P] [US4] Create `apps/storybook-react/.storybook/preview.js` that imports the compiled CSS from `@pathable/styles/dist/styles.css` (or from `@pathable/react`'s entry point) so stories render with styles
+- [x] T012 [US4] Create the Button story at `packages/react/src/stories/components/Basic/Button.stories.jsx` with a single default story that renders `<Button>Click Me</Button>`
+- [x] T013 [US4] Start the React Storybook and verify it runs on port 6007 with the Button story rendering correctly
 
 **Checkpoint**: The standalone React Storybook is accessible on port 6007 and displays the Button story with PathAble styling.
 
@@ -86,9 +86,9 @@ specs/014-react-package-setup/quickstart.md  # used for validation
 
 ### Implementation for US-3
 
-- [ ] T014 [US3] Update `apps/storybook/.storybook/main.js` to add a `refs` configuration pointing to `http://localhost:6007` for the React Storybook
-- [ ] T015 [US3] Start both Storybooks and verify the main Storybook sidebar includes a "React" section with the Button story
-- [ ] T016 [US3] With the React Storybook stopped, verify the main Storybook sidebar shows "React" as unavailable and the main Storybook does not crash or produce console errors
+- [x] T014 [US3] Update `apps/storybook/.storybook/main.js` to add a `refs` configuration pointing to `http://localhost:6007` for the React Storybook
+- [x] T015 [US3] Start both Storybooks and verify the main Storybook sidebar includes a "React" section with the Button story
+- [x] T016 [US3] With the React Storybook stopped, verify the main Storybook sidebar shows "React" as unavailable and the main Storybook does not crash or produce console errors
 
 **Checkpoint**: Storybook composition works — React stories appear in the main Storybook, with graceful degradation when the composed instance is unavailable.
 
@@ -98,8 +98,8 @@ specs/014-react-package-setup/quickstart.md  # used for validation
 
 **Purpose**: Documentation and final validation
 
-- [ ] T017 [P] Create `packages/react/README.md` with installation and usage instructions for consuming applications
-- [ ] T018 Run all validation paths from `specs/014-react-package-setup/quickstart.md` to verify the feature end-to-end
+- [x] T017 [P] Create `packages/react/README.md` with installation and usage instructions for consuming applications
+- [x] T018 Run all validation paths from `specs/014-react-package-setup/quickstart.md` to verify the feature end-to-end
 
 ---
 
