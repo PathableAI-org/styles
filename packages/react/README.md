@@ -7,9 +7,6 @@ React components for the PathAble design system, wrapping `@pathable/styles` wit
 ```bash
 # In a pnpm workspace
 pnpm add @pathable/react
-
-# Or from npm
-npm install @pathable/react
 ```
 
 No separate installation of `@pathable/styles` is required — styles are included automatically as a dependency.

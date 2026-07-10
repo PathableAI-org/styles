@@ -1,3 +1,6 @@
+import '@pathable/styles/dist/styles.css'
+import '@pathable/styles/js'
+
 export const parameters = {
   a11y: {
     element: '#storybook-root',
