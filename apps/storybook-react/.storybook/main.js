@@ -5,7 +5,7 @@ export default {
   docs: { autodocs: true },
   async viteFinal(config, { configType }) {
     if (configType === 'PRODUCTION') {
-      config.base = '/react/'
+      config.base = '/styles/react/'
     }
     return config
   },

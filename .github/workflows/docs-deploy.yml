@@ -36,8 +36,14 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathable/styles build
 
-      - name: Build docs
-        run: pnpm --filter @pathable/storybook build-storybook
+      - name: Build main docs
+        run: STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
+
+      - name: Build React docs
+        run: |
+          pnpm --filter @pathable/storybook-react build-storybook
+          mkdir -p apps/storybook/storybook-static/react
+          cp -r apps/storybook-react/storybook-static/* apps/storybook/storybook-static/react/
 
       - name: Create .nojekyll
         run: touch apps/storybook/storybook-static/.nojekyll

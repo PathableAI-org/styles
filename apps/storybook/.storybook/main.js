@@ -3,6 +3,9 @@ import path from 'path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+const isBuild = process.env.STORYBOOK_BUILD === 'true'
+const reactUrl = isBuild ? '/styles/react/' : 'http://localhost:6007'
+
 export default {
   framework: '@storybook/html-vite',
   stories: ['../../../packages/styles/src/stories/**/*.stories.js'],
@@ -11,7 +14,7 @@ export default {
   refs: {
     react: {
       title: 'React',
-      url: 'http://localhost:6007',
+      url: reactUrl,
     },
   },
   async viteFinal(config, { configType }) {
