@@ -20,7 +20,7 @@ starlight({
 **PageFrame slot contract** (from `virtual:starlight/components/PageFrame`):
 
 | Slot | Description | When Available |
-|---|---|---|
+| --- | --- | --- |
 | `slot="header"` | Top header bar (brand, search, theme toggle, mobile menu button) | Always |
 | `slot="sidebar"` | Left sidebar with page navigation tree | When `hasSidebar` is true |
 | Default `slot` | Main content area | Always |
@@ -92,10 +92,10 @@ The USWDS documentation page template has the following structure:
 </body>
 ```
 
-### Key USWDS CSS classes for mapping:
+### Key USWDS CSS classes for mapping
 
 | Class | Purpose | Token Strategy |
-|---|---|---|
+| --- | --- | --- |
 | `.usa-header--basic` | Fixed top header | Component-scoped CSS with `--pathable-*` tokens |
 | `.usa-logo` / `.usa-logo__text` | Brand/logo display | Component-scoped CSS |
 | `.usa-nav__primary` | Top-level nav list | Component-scoped CSS (existing HorizontalNav) |
@@ -119,7 +119,7 @@ Use USWDS layout grid classes (`.grid-container`, `.grid-row`, `.grid-gap`) for 
 ### Complete Token Map
 
 | Layout Region | CSS Property | `--pathable-*` Token | Notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Page body background | `background-color` | `var(--pathable-color-bg)` | |
 | Header background | `background-color` | `var(--pathable-color-surface)` | |
 | Header text | `color` | `var(--pathable-color-text)` | |
@@ -156,7 +156,7 @@ The existing `custom.css` defines `--pathable-font-heading: Fredoka` and `--path
 ### Options
 
 | Option | Effort | Pros | Cons |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Google Fonts link in `<head>` | Low (add link tag) | Simple, CDN-hosted | External dependency, privacy |
 | Self-hosted `@font-face` | Medium | No external dependency, offline-friendly | Need font files, more config |
 | Astro integration (e.g., `@astrojs/google-fonts`) | Low | Clean integration | External dependency |
@@ -194,7 +194,7 @@ The footer will be a single `DocFooter.astro` Astro component with scoped `<styl
 ## Summary of Decisions
 
 | # | Decision | Rationale |
-|---|----------|-----------|
+| --- | ---------- | ----------- |
 | D1 | Use PageFrame override as main entry point | Starlight's documented extension mechanism |
 | D2 | Keep Starlight sidebar slot as-is | Content generation is complex; wrapping is simpler |
 | D3 | Use USWDS grid classes for layout | Already available via transitive dependency; matches template |

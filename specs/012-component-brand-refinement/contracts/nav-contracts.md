@@ -9,7 +9,7 @@ Navigation workflow patterns are Storybook-exclusive content additions. No new C
 ### CSS Classes Used (all existing)
 
 | Class | Component | Used By |
-|-------|-----------|---------|
+| ------- | ----------- | --------- |
 | `.pathable-sidenav` | Side navigation | Sidenav story |
 | `.pathable-sidenav__item` | Side nav item | Sidenav story |
 | `.pathable-sidenav__sublist` | Nested nav items | Sidenav story |
@@ -25,7 +25,7 @@ Navigation workflow patterns are Storybook-exclusive content additions. No new C
 The following Pathable staff workflow labels replace generic navigation labels in Storybook examples:
 
 | Label | Section | Component Story to Modify |
-|-------|---------|--------------------------|
+| ------- | --------- | -------------------------- |
 | Today's Sessions | Primary | Sidenav, Nav |
 | Participants | Primary | Sidenav, Nav |
 | Approvals | Primary | Sidenav, Nav |

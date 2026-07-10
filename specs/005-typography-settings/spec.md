@@ -6,7 +6,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "We have previously set the uswds color setting and now want to turn to the topography settings here: https://designsystem.digital.gov/documentation/settings/#typography-settings This should follow the same style as our color settings where we are exposing --pathable* and --usa* variables to support either case. The values of these settings should follow our brand guide"
+**Input**: User description: "We have previously set the uswds color setting and now want to turn to the topography settings here: <https://designsystem.digital.gov/documentation/settings/#typography-settings> This should follow the same style as our color settings where we are exposing --pathable*and --usa* variables to support either case. The values of these settings should follow our brand guide"
 
 ## Table of Contents
 
@@ -50,7 +50,7 @@ A designer inspects a page built with USWDS components and confirms that heading
 
 ---
 
-### User Story 3 - Consumers reference --pathable-font-* and --usa-font-* CSS custom properties (Priority: P2)
+### User Story 3 - Consumers reference --pathable-font-*and --usa-font-* CSS custom properties (Priority: P2)
 
 A developer or designer working outside of SCSS wants to apply PathAble brand typography to a non-USWDS element. They should be able to use CSS custom properties to access the font family, size, and line-height values.
 
@@ -91,7 +91,7 @@ When the USWDS dependency is updated, the project's compiled styles should still
 
 ### Functional Requirements
 
-- **FR-001**: The `packages/styles` package MUST add a typography settings layer that configures USWDS typography theme settings (`$theme-font-*`, `$theme-type-scale-*`, `$theme-font-weight-*`, `$theme-body-*`, `$theme-h1-*` through `$theme-h6-*`, `$theme-heading-*`, and related typography tokens listed at https://designsystem.digital.gov/documentation/settings/#typography-settings) using values derived from the PathAble brand guide.
+- **FR-001**: The `packages/styles` package MUST add a typography settings layer that configures USWDS typography theme settings (`$theme-font-*`, `$theme-type-scale-*`, `$theme-font-weight-*`, `$theme-body-*`, `$theme-h1-*` through `$theme-h6-*`, `$theme-heading-*`, and related typography tokens listed at <https://designsystem.digital.gov/documentation/settings/#typography-settings>) using values derived from the PathAble brand guide.
 
 - **FR-002**: The following USWDS role-based font families MUST be configured to match PathAble brand fonts:
   - **body** role → Nunito (or the closest available USWDS sans family)

@@ -20,6 +20,7 @@ pnpm add -D storybook @storybook/html-vite @storybook/addon-docs @storybook/mana
 ```
 
 This installs:
+
 - `storybook` — Storybook core
 - `@storybook/html-vite` — HTML framework adapter (Vite-based)
 - `@storybook/addon-docs` — Autodocs for automatic documentation page generation
@@ -139,6 +140,7 @@ pnpm storybook  # Starts Storybook (uses existing dist/styles.css)
 ### Expected Output
 
 Storybook starts at `http://localhost:6006` with:
+
 - PathAble-themed sidebar and toolbar
 - Components section with all documented component wrappers
 - Utilities section with all documented utility class groups
@@ -177,7 +179,7 @@ export const Unstyled = {
 };
 ```
 
-3. Storybook automatically detects the new file (no config changes needed).
+1. Storybook automatically detects the new file (no config changes needed).
 
 ## Adding a New Utility Story
 
@@ -213,7 +215,7 @@ export const AllColors = {
 The following components require USWDS JavaScript for full interactivity:
 
 | Component | USWDS JS Class Selectors |
-|-----------|-------------------------|
+| ----------- | ------------------------- |
 | Accordion | `.usa-accordion__button` |
 | Banner | `.usa-banner__button` |
 | Combo Box | `.usa-combo-box` |

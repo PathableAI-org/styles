@@ -25,7 +25,7 @@ This starts Storybook on `http://localhost:6006` by default.
 Open each of these stories and verify the copy reflects PathAble/CoachBridge workflows:
 
 | Story | Location | What to Check |
-|---|---|---|
+| --- | --- | --- |
 | Header | Components > Navigation > Header | Nav items use product-specific labels |
 | Banner | Components > Communication > Banner | Copy reflects coaching/compliance context |
 | Combo Box | Components > Form Controls > Combo Box | Options use realistic activity/participant data |
@@ -54,7 +54,7 @@ Confirm the output shows `sans-serif` (not `serif`) as the fallback for the body
 In the Storybook Button story, check for these workflow-intent variants:
 
 | Variant | Example Label | Expected Color |
-|---|---|---|
+| --- | --- | --- |
 | `.pathable-button--save` | "Save Coaching Note" | Intelligent Jade (#1cae96) |
 | `.pathable-button--continue` | "Continue to Review" | PathAble Blue (#00365c) |
 | `.pathable-button--review` | "Review Compliance" | Bright Blue Brooks (#4899e8) |

@@ -120,6 +120,7 @@ $pathable-font-weight-semibold       // 600 (for Nunito labels)
 **Consumed by**: `index.scss` via `@forward "uswds-theme"`
 
 **Additions**:
+
 - `$theme-typeface-tokens` — custom typeface token definitions for Fredoka, Nunito, Poppins, Montserrat
 - `$theme-font-type-sans` — set to the primary custom typeface (or kept as reference)
 - `$theme-font-role-heading` → `"fredoka"` (custom typeface token)
@@ -139,6 +140,7 @@ $pathable-font-weight-semibold       // 600 (for Nunito labels)
 - `$theme-respect-user-font-size`: `true`
 
 **Does NOT contain**:
+
 - `@font-face` rules (those go in `_fonts.scss`)
 - Any component styles
 
@@ -149,6 +151,7 @@ $pathable-font-weight-semibold       // 600 (for Nunito labels)
 **Consumed by**: `index.scss` via `@forward "fonts"` (must be forwarded before `_uswds-theme`)
 
 **Contains**:
+
 - `@font-face` for Fredoka Regular (400)
 - `@font-face` for Nunito Regular (400)
 - `@font-face` for Nunito SemiBold (600)
@@ -162,6 +165,7 @@ $pathable-font-weight-semibold       // 600 (for Nunito labels)
 **Role**: Defines PathAble typography SCSS variables, typography scale, and CSS custom properties.
 
 **Changes**:
+
 - Existing `$pathable-font-*` variables and `--pathable-font-*` CSS custom properties preserved
 - NEW: `$typography-tokens` map added as single source of truth for dual-named CSS custom properties
 - NEW: `--usa-font-*` CSS custom properties added alongside existing `--pathable-font-*` ones
@@ -174,6 +178,7 @@ $pathable-font-weight-semibold       // 600 (for Nunito labels)
 **Role**: Package entrypoint — forwards all partials to compose the compiled output.
 
 **Changes**:
+
 - Before: `@forward "uswds-theme"; @forward "colors"; @forward "typography"; ...`
 - After: `@forward "fonts"; @forward "uswds-theme"; @forward "colors"; @forward "typography"; ...`
 
@@ -222,6 +227,7 @@ $typography-tokens: (
 ```
 
 This ensures that:
+
 1. The two namespaces always resolve to identical values
 2. Adding a new token requires editing only one map entry
 3. The `--usa-*` namespace is derived from the `--pathable-*` source of truth

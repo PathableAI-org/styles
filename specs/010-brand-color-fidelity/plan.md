@@ -43,6 +43,7 @@ This feature addresses three areas identified in the FEEDBACK.md assessment of t
 **Performance Goals**: No specific performance targets — token additions are pure CSS custom properties with negligible runtime cost
 
 **Constraints**:
+
 - All existing semantic tokens (`--pathable-color-bg`, `--pathable-color-surface`, `--pathable-color-text`, etc.) MUST retain their names and values (backward compatibility)
 - Brand color name aliases (e.g., `--pathable-blue`, `--intelligent-jade`) MUST be preserved
 - The `_colors.scss` and `_semantic.scss` file structure MUST be preserved — new tokens added to existing files
@@ -59,7 +60,7 @@ This feature addresses three areas identified in the FEEDBACK.md assessment of t
 ### Principle Review
 
 | Principle | Relevance | Assessment |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | I. CSS Custom Properties Are the Runtime Contract | **High** | This feature directly adds new CSS custom properties (`--pathable-brand-*`, `--pathable-color-action-*`, `--pathable-color-status-*`, `--pathable-color-workflow-*`). All new tokens are emitted as CSS variables in the published `dist` output. ✅ |
 | II. SCSS Is an Authoring and Extension Layer | **High** | New tokens are added to existing SCSS partials (`_colors.scss`, `_semantic.scss`). Every Sass variable produces a corresponding CSS custom property. ✅ |
 | III. pnpm Workspaces Structure the Repository | Low | No workspace structure changes. |
@@ -75,7 +76,7 @@ This feature addresses three areas identified in the FEEDBACK.md assessment of t
 ### Stack & Dependency Constraint Check
 
 | Constraint | Status |
-|------------|--------|
+| ------------ | -------- |
 | pnpm as package manager | ✅ Followed — no changes to workspace structure |
 | Dart Sass via `sass` npm package | ✅ Unchanged — `sass` ^1.86.3 remains in `packages/styles` |
 | Zero runtime dependencies | ✅ New tokens are pure CSS custom properties; no runtime dependencies added |
@@ -96,7 +97,7 @@ No constitution violations. The feature aligns with the CSS custom properties co
 All Phase 1 design artifacts (research.md, data-model.md, contracts/contracts.md, quickstart.md) have been generated and comply with the constitution:
 
 | Principle | Status | Evidence |
-|-----------|--------|----------|
+| ----------- | -------- | ---------- |
 | I. CSS Custom Properties Are the Runtime Contract | ✅ | All new tokens emit CSS custom properties in `:root` blocks |
 | II. SCSS Is an Authoring and Extension Layer | ✅ | SCSS variables in `_colors.scss` and `_semantic.scss` produce corresponding CSS custom properties |
 | III. pnpm Workspaces | ✅ | No workspace structure changes |
@@ -168,6 +169,7 @@ See [quickstart.md](./quickstart.md) for getting started guide.
 ### Contracts
 
 The contracts directory contains:
+
 - CSS custom property naming conventions and patterns
 - Contrast ratio documentation for approved and failed pairings
 - Token value assignments for all new semantic tokens

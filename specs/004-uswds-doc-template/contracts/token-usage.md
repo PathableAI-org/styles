@@ -11,7 +11,7 @@ This contract documents the mapping between `@pathable/styles` CSS custom proper
 ### Color Tokens
 
 | Token | Value (resolved) | Layout Usage | CSS Property | Components |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `--pathable-color-bg` | `#dfe1e2` (Shilling Silver) | Page body background | `background-color` | PageFrame (body), ContentProse |
 | `--pathable-color-surface` | `#ffffff` (White) | Header, sidebar, footer backgrounds | `background-color` | PageFrame (.header), Sidebar wrapper, Footer |
 | `--pathable-color-text` | `#162e51` (PathAble Blue) | Body and navigation text | `color` | HorizontalNav, Sidebar, ContentProse, Footer |
@@ -26,14 +26,14 @@ This contract documents the mapping between `@pathable/styles` CSS custom proper
 ### Typography Tokens
 
 | Token | Value | Layout Usage | CSS Property | Components |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `--pathable-font-heading` | Fredoka | All headings (h1-h6) | `font-family` | ContentProse (h1-h6), HorizontalNav (site title) |
 | `--pathable-font-body` | Nunito | Body text and navigation | `font-family` | ContentProse (p, li, etc.), HorizontalNav, Sidebar, Footer |
 
 ### Spacing Tokens
 
 | Token | Value | Layout Usage | CSS Property |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `--space-4` | 4px | Tiny gaps | `gap`, `margin`, `padding` |
 | `--space-8` | 8px | Compact spacing | `padding`, `gap` |
 | `--space-12` | 12px | Small spacing | `padding`, `margin` |
@@ -45,7 +45,7 @@ This contract documents the mapping between `@pathable/styles` CSS custom proper
 ### Elevation Tokens
 
 | Token | Value | Layout Usage | CSS Property |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `--elevation-sm` | `0px 1px 2px 0px rgba(0, 54, 92, 0.12)` | Subtle shadows | `box-shadow` |
 | `--elevation-md` | `0px 4px 8px 0px rgba(0, 54, 92, 0.16)` | Navigation elevation | `box-shadow` |
 

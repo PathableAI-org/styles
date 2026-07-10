@@ -45,7 +45,7 @@ jobs:
         run: pnpm --filter @pathable/styles build
 
       - name: Build HTML Storybook
-        run: STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
+        run: pnpm --filter @pathable/storybook build-storybook
 
       - name: Test HTML Storybook
         run: |

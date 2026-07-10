@@ -18,7 +18,7 @@ export default {
     },
   },
   async viteFinal(config, { configType }) {
-    if (configType === 'PRODUCTION') {
+    if (configType === 'PRODUCTION' && isBuild) {
       config.base = '/styles/'
     }
 

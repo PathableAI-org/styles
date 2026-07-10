@@ -23,6 +23,7 @@ The `@pathable/styles` package currently defines 6 brand colors and 10 semantic 
 **Language/Version**: SCSS via Dart Sass (`sass` ^1.86.3 already in use), USWDS v3.x (latest stable)
 
 **Primary Dependencies**:
+
 - `uswds` v3.x (new runtime dependency)
 - `sass` (existing dev dependency)
 
@@ -37,6 +38,7 @@ The `@pathable/styles` package currently defines 6 brand colors and 10 semantic 
 **Performance Goals**: Minimal compiled output increase (~50-100KB from USWDS system tokens only)
 
 **Constraints**:
+
 - Compiled `dist/styles.css` MUST NOT include USWDS component styles
 - Zero additional runtime JS dependencies
 - Existing `$pathable-*` and `--pathable-*` public API MUST remain backward compatible
@@ -51,7 +53,7 @@ The `@pathable/styles` package currently defines 6 brand colors and 10 semantic 
 ### Applicable Principles
 
 | Principle | Relevance | Compliance |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | **I. CSS Custom Properties Are the Runtime Contract** | The package's public contract is compiled CSS. USWDS theme tokens are SCSS variables ($-prefixed) resolved at compile time, not CSS custom properties. | ✅ COMPLIANT — `--pathable-*` custom properties preserved. USWDS tokens are internal SCSS config baked into compiled values. |
 | **II. SCSS Is an Authoring and Extension Layer** | USWDS theme tokens ($theme-color-*) do not emit `--theme-color-*` CSS custom properties. | ⚠️ Documented in Complexity Tracking — acceptable because the `--pathable-*` CSS custom property contract is preserved. |
 | **III. pnpm Workspaces** | USWDS added as a dependency of `packages/styles`. | ✅ COMPLIANT |
@@ -63,7 +65,7 @@ The `@pathable/styles` package currently defines 6 brand colors and 10 semantic 
 ### Gate Evaluation
 
 | Gate | Status |
-|------|--------|
+| ------ | -------- |
 | No unjustified constitution violations | ⚠️ Two potential violations — see Complexity Tracking for justification |
 | All [NEEDS CLARIFICATION] markers resolved | ✅ All 5 clarifications from `/speckit-clarify` resolved |
 | Feature spec is internally consistent | ✅ Verified |
@@ -122,7 +124,7 @@ packages/styles/
 ## Complexity Tracking
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
+| ----------- | ------------ | ------------------------------------- |
 | USWDS theme tokens ($theme-color-*) are SCSS variables, not CSS custom properties (Principle I/II) | USWDS uses SCSS variables for theme token configuration at compile time. The `--pathable-*` CSS custom property contract is preserved unchanged. | Forking USWDS to emit CSS custom properties is a maintenance burden. CSS output consumers get resolved color values; SCSS consumers can reference `$theme-color-*` directly. |
 | Brand color values may shift when mapped to closest USWDS system tokens (Principle XI) | USWDS system tokens may not have exact hex matches. Minor perceptual differences (<5 delta E) are acceptable per spec Assumptions. | Keeping hardcoded hex values alongside USWDS tokens creates two diverging sources of truth. Documenting the delta in the settings file is the pragmatic approach. |
 
@@ -130,10 +132,10 @@ packages/styles/
 
 ### Research Task R1: Brand Color to USWDS System Token Mapping
 
-Use the CivicActions USWDS Color Tool (https://civicactions.github.io/uswds-color-tool) to find the closest USWDS system token for each brand color:
+Use the CivicActions USWDS Color Tool (<https://civicactions.github.io/uswds-color-tool>) to find the closest USWDS system token for each brand color:
 
 | Brand Color | Hex | Target Theme Family | Closest USWDS System Token |
-|-------------|-----|---------------------|---------------------------|
+| ------------- | ----- | --------------------- | --------------------------- |
 | PathAble Blue | `#00365c` | Primary | TBD |
 | Intelligent Jade | `#1cae96` | Secondary | TBD |
 | Bright Blue Brooks | `#4899e8` | Accent-cool | TBD |
@@ -156,6 +158,7 @@ Investigate the exact SCSS pattern for configuring theme tokens:
 ```
 
 Specific questions:
+
 - How to set unused grades to `false`
 - How to configure state tokens (`error`, `success`, etc.)
 - Whether `@forward` works alongside `@use ... with`
@@ -164,6 +167,7 @@ Specific questions:
 ### Research Task R3: Integration Pattern Verification
 
 Verify:
+
 - Dart Sass compatibility with USWDS v3.x `@use` syntax (confirmed: USWDS requires Dart Sass >=1.42.1, we have ^1.86.3)
 - Whether `$pathable-blue: $theme-color-primary` resolves correctly when `$theme-color-primary` references a system token string (e.g., `"blue-warm-60v"`) resolved by USWDS's internal `color()` function
 - Build order: theme config -> token definition -> aliased usage
@@ -171,6 +175,7 @@ Verify:
 ### Research Task R4: Custom Settings File Architecture
 
 Determine correct SCSS architecture:
+
 - Should `@use 'uswds-core' with (...)` live in `index.scss` or a separate file?
 - Does USWDS support `@use ... with` in a separate file forwarded to the main entrypoint?
 - How to make theme token values accessible in other partials (`_colors.scss`, `_semantic.scss`)
@@ -182,6 +187,7 @@ Determine correct SCSS architecture:
 #### 1. data-model.md
 
 Formal entity definitions for:
+
 - `BrandColor` — hex, USWDS system token equivalent, theme family assignment
 - `ThemeColorGrade` — grade name, USWDS system token, brand color
 - `StateToken` — error, warning, success, info, disabled, visited
@@ -190,6 +196,7 @@ Formal entity definitions for:
 #### 2. contracts/scss-interface.md
 
 SCSS interface contract defining:
+
 - What `_uswds-theme.scss` exports
 - How `_colors.scss` consumes theme token values
 - The guaranteed public API (`$pathable-*`, `--pathable-*` tokens)
@@ -197,6 +204,7 @@ SCSS interface contract defining:
 #### 3. quickstart.md
 
 Usage guide covering:
+
 - Installation: `pnpm add @pathable/styles uswds`
 - Basic compiled CSS import usage
 - SCSS customization path
@@ -209,6 +217,7 @@ Run agent context update script to register USWDS and new theme mapping knowledg
 ### Post-Design Constitution Re-Check
 
 *After Phase 1 artifacts are generated, verify:*
+
 - [ ] No design decision contradicts ratified principles
 - [ ] data-model.md does not duplicate constitution text
 - [ ] contracts/scss-interface.md complies with SCSS-as-authoring-layer principle

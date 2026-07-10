@@ -9,13 +9,14 @@
 The top-level layout container that wraps the entire page. It arranges header, navigation, sidebar, content, and footer regions.
 
 | Field | Type | Description | Source |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `hasSidebar` | `boolean` | Whether sidebar content exists for this page | `Astro.locals.starlightRoute.hasSidebar` |
 | `headerSlot` | `slot` | Starlight header content | Starlight internals |
 | `sidebarSlot` | `slot` | Starlight sidebar content | Starlight internals |
 | `defaultSlot` | `slot` | Main page content | Starlight internals |
 
 **Layout structure** (top to bottom):
+
 1. SkipNav (always)
 2. Header slot (Starlight — brand, search, theme toggle)
 3. HorizontalNav (always — primary section links)
@@ -31,7 +32,7 @@ The top-level layout container that wraps the entire page. It arranges header, n
 The primary navigation bar appearing below the header, styled like the USWDS basic header pattern.
 
 | Field | Type | Description | Source |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `primaryNavItems` | `Array<{label, href}>` | Top-level section links | Defined in component |
 | `currentPath` | `string` | Current page URL path | `Astro.url.pathname` |
 | `isCurrent(href)` | `function` | Whether a nav item matches current page | Comparison logic |
@@ -45,7 +46,7 @@ The primary navigation bar appearing below the header, styled like the USWDS bas
 The hierarchical page navigation tree, displayed as a left column on desktop and hidden behind a menu toggle on mobile.
 
 | Field | Type | Description | Source |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `navContent` | `slot` | Pre-rendered Starlight sidebar HTML | Starlight internals |
 | `isVisible` | `boolean` | Whether sidebar is visible (desktop always; mobile toggled) | CSS media query + JS toggle |
 
@@ -70,7 +71,7 @@ The main content area where documentation markdown is rendered.
 The site footer with links and branding, styled like the USWDS medium footer.
 
 | Field | Type | Description | Source |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `primaryLinks` | `Array<{label, href}>` | Navigation links | Defined in component |
 | `brandName` | `string` | Site name for branding | Hardcoded in component |
 | `currentYear` | `number` | Copyright year | `new Date().getFullYear()` |
@@ -84,7 +85,7 @@ The site footer with links and branding, styled like the USWDS medium footer.
 An accessibility link that becomes visible on focus, allowing keyboard users to skip directly to the main content.
 
 | Field | Type | Description | Source |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `targetId` | `string` | ID of the main content element | `"main-content"` |
 | `label` | `string` | Link text | "Skip to main content" |
 
@@ -110,7 +111,7 @@ PageFrame
 ## States
 
 | State | Sidebar | Content Width | Trigger |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Desktop with sidebar | Visible, left column (3/12 width) | Right column (9/12 width) | Viewport >= 1024px + hasSidebar |
 | Desktop no sidebar | Hidden | Full width | Viewport >= 1024px + !hasSidebar |
 | Mobile | Hidden, togglable via menu button | Full width | Viewport < 1024px |

@@ -6,7 +6,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "Initialize the packages/react workspace, which will provide react components of all our components in packages/styles. A client application should only have to require / depend on the react package, not both. For our first version, we are just working on the initial package setup by including only the default Button component. We want to include the react package in the storybook (look at https://storybook.js.org/docs/sharing/storybook-composition )"
+**Input**: User description: "Initialize the packages/react workspace, which will provide react components of all our components in packages/styles. A client application should only have to require / depend on the react package, not both. For our first version, we are just working on the initial package setup by including only the default Button component. We want to include the react package in the storybook (look at <https://storybook.js.org/docs/sharing/storybook-composition> )"
 
 ## Clarifications
 

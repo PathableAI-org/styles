@@ -7,7 +7,7 @@ const config = {
   },
   async postVisit(page) {
     await checkA11y(page, 'body', {
-      detailedReport: false,
+      detailedReport: true,
       detailedReportOptions: { html: true },
       axeOptions: {
         runOnly: {

@@ -41,6 +41,7 @@ All utility classes are prefixed with `.pathable-`. Each class sets exactly one 
 **State pattern**: `.{state}\:pathable-{module-base}-{value-name}`
 
 **Example output**:
+
 ```css
 .pathable-bg-primary {
   background-color: #00365c;
@@ -75,7 +76,7 @@ Each utility value token is emitted as both `--pathable-*` and `--usa-*`:
 The following utility modules MUST be available:
 
 | Module | Class Pattern | CSS Property |
-|--------|--------------|--------------|
+| -------- | -------------- | -------------- |
 | background-color | `.pathable-bg-{value}` | `background-color` |
 | color | `.pathable-text-{value}` | `color` |
 | padding | `.pathable-padding-{n}` | `padding` |

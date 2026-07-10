@@ -84,7 +84,7 @@ This document describes how to verify the implementation of the Component Brand 
 ## Success Criteria Checklist
 
 | Criterion | Verification Method | Status |
-|-----------|-------------------|--------|
+| ----------- | ------------------- | -------- |
 | SC-001: Buttons use brand colors, pass AA | Storybook visual + a11y addon | [ ] |
 | SC-002: Workflow card has all 7 properties | Storybook visual inspection | [ ] |
 | SC-003: 6 form workflow examples exist | Storybook visual | [ ] |
@@ -95,7 +95,7 @@ This document describes how to verify the implementation of the Component Brand 
 
 ## Troubleshooting
 
-- **Build errors after modifying wrapper SCSS**: Verify `@use` paths are correct. The wrapper files import from USWDS source packages (`@use 'usa-button/src/styles'`). 
+- **Build errors after modifying wrapper SCSS**: Verify `@use` paths are correct. The wrapper files import from USWDS source packages (`@use 'usa-button/src/styles'`).
 - **Storybook doesn't reflect SCSS changes**: The storybook imports SCSS directly from `packages/styles/src/index.scss`. Rebuild with `pnpm build` then restart storybook with `pnpm storybook`.
 - **Contrast violations in a11y addon**: Check that the correct foreground/background token pair is used. Reference the contrast table in `research.md` for approved pairings.
 - **Workflow card modifier not appearing**: The `.pathable-card--workflow` modifier must be added to `pathable-card.scss` and the card story must use the modifier class.

@@ -51,6 +51,7 @@ echo $?
 ### Step 5: Verify Nav Sections
 
 Open `apps/docs/dist/index.html` (or dev server) and confirm:
+
 - Four nav sections: Getting Started, Foundations, For Agents, Roadmap
 - Homepage states this is a proof of concept
 - Custom properties from `@pathable/styles` are applied
@@ -58,6 +59,7 @@ Open `apps/docs/dist/index.html` (or dev server) and confirm:
 ### Step 6: CI Validation (PR)
 
 Push a branch and open a PR. Verify:
+
 - GitHub Actions workflow `docs-ci.yml` runs
 - Steps: install → build styles → build docs
 - Check passes (green)
@@ -65,6 +67,7 @@ Push a branch and open a PR. Verify:
 ### Step 7: Deploy Validation (main)
 
 Merge to `main`. Verify:
+
 - GitHub Actions workflow `docs-deploy.yml` runs
 - Steps: install → build styles → build docs → configure-pages → upload artifact → deploy
 - GitHub Pages URL serves the live site

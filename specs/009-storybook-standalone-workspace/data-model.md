@@ -9,7 +9,7 @@
 Represents a pnpm workspace package.json for `apps/storybook`.
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
+| ------- | ------ | ---------- | ------------- |
 | `name` | string | Y | Package name: `@pathable/storybook` |
 | `private` | boolean | Y | `true` — this is not published to npm |
 | `type` | string | Y | `"module"` — ESM module format |
@@ -23,7 +23,7 @@ Represents a pnpm workspace package.json for `apps/storybook`.
 Represents the `.storybook/main.js` configuration file.
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
+| ------- | ------ | ---------- | ------------- |
 | `framework` | string | Y | `"@storybook/html-vite"` |
 | `stories` | array | Y | Glob patterns referencing `packages/styles/src/stories/` |
 | `addons` | array | Y | `["@storybook/addon-docs"]` |
@@ -46,7 +46,7 @@ Represents the scripts added to the root `package.json`.
 Represents the GitHub Actions workflow for deploying docs to GitHub Pages.
 
 | Property | Current Value (apps/docs) | New Value (apps/storybook) |
-|----------|--------------------------|---------------------------|
+| ---------- | -------------------------- | --------------------------- |
 | Trigger | push to main | push to main (unchanged) |
 | Build command | `pnpm --filter @pathable/docs build` | `pnpm --filter @pathable/storybook build-storybook` |
 | Upload path | `apps/docs/dist` | `./packages/styles/node_modules/.cache/storybook-static` or `storybook-static` |

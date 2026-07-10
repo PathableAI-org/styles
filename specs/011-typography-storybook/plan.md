@@ -29,6 +29,7 @@ This is a documentation and token-cleanup feature — no new USWDS theme configu
 **Language/SCSS**: Dart Sass (modern-compiler API) via `sass` npm package. Storybook stories use `@storybook/html-vite` with JS-based `.stories.js` files that render HTML template strings.
 
 **Primary Dependencies**:
+
 - `@storybook/html-vite` — Storybook framework
 - `@storybook/addon-a11y` — accessibility checks
 - `@storybook/addon-docs` — autodocs generation
@@ -49,7 +50,7 @@ This is a documentation and token-cleanup feature — no new USWDS theme configu
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 | Principle | Compliance | Notes |
-|-----------|-----------|-------|
+| ----------- | ----------- | ------- |
 | **I. CSS Custom Properties Are the Runtime Contract** | ✅ Pass | The typography tokens are already emitted as `--pathable-*` and `--usa-*` CSS custom properties in `_typography.scss`. The new Storybook story reads from these values. Any new semantic tokens added (FR-008) will follow the same pattern. |
 | **II. SCSS Is an Authoring and Extension Layer** | ✅ Pass | Token definitions remain in SCSS maps and variables; CSS custom properties are emitted from them. The Storybook story is a consumer of the compiled CSS output, not SCSS. |
 | **III. pnpm Workspaces Structure the Repository** | ✅ Pass | No workspace changes. All changes are within `packages/styles` or root-level cleanup. |

@@ -23,6 +23,7 @@ The `@pathable/styles` package has existing typography tokens (`$pathable-font-*
 **Language/Version**: SCSS via Dart Sass (`sass` ^1.86.3 already in use), USWDS v3.x (already a dependency from 003-wrap-uswds-theme)
 
 **Primary Dependencies**:
+
 - `uswds` v3.x (existing runtime dependency from color settings work)
 - `sass` (existing dev dependency)
 
@@ -37,6 +38,7 @@ The `@pathable/styles` package has existing typography tokens (`$pathable-font-*
 **Performance Goals**: Minimal compiled output increase (~5-15KB for @font-face rules and type scale variables)
 
 **Constraints**:
+
 - Compiled `dist/styles.css` MUST NOT include USWDS component styles (only token configurations)
 - Zero additional runtime JS dependencies
 - Existing `$pathable-font-*` and `--pathable-font-*` public API MUST remain backward compatible
@@ -51,7 +53,7 @@ The `@pathable/styles` package has existing typography tokens (`$pathable-font-*
 ### Applicable Principles
 
 | Principle | Relevance | Compliance |
-|-----------|-----------|------------|
+| ----------- | ----------- | ------------ |
 | **I. CSS Custom Properties Are the Runtime Contract** | FR-008 requires dual `--pathable-font-*` and `--usa-font-*` CSS custom properties. USWDS typography tokens are SCSS variables resolved at compile time. | ✅ COMPLIANT — FR-008 explicitly requires the CSS custom properties as the runtime contract. Both naming conventions satisfy Principle I. |
 | **II. SCSS Is an Authoring and Extension Layer** | USWDS `$theme-font-*` tokens are SCSS variables that do not emit `--theme-font-*` CSS custom properties. | ✅ COMPLIANT — The dual `--pathable-font-*` / `--usa-font-*` custom properties provide the runtime CSS contract. SCSS is used as the authoring layer to generate these. |
 | **III. pnpm Workspaces** | Changes scoped to `packages/styles`. | ✅ COMPLIANT |
@@ -65,7 +67,7 @@ The `@pathable/styles` package has existing typography tokens (`$pathable-font-*
 ### Gate Evaluation
 
 | Gate | Status |
-|------|--------|
+| ------ | -------- |
 | No unjustified constitution violations | ✅ All principles in compliance — see table above |
 | All [NEEDS CLARIFICATION] markers resolved | ✅ No markers in spec |
 | Feature spec is internally consistent | ✅ Verified |
@@ -134,14 +136,15 @@ packages/styles/
 Map each PathAble brand typeface to its closest USWDS family token and determine the correct custom source configuration:
 
 | Brand Font | Weight | USWDS Role | Custom Font Stack Config Required? |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Fredoka | Regular (400) | heading | Yes — not a built-in USWDS font |
 | Montserrat | Bold (700) | alt | Yes — not a built-in USWDS font |
-| Poppins | Bold (700) | _(subheading — may map to ui or alt role)_ | Yes — not a built-in USWDS font |
+| Poppins | Bold (700) | *(subheading — may map to ui or alt role)* | Yes — not a built-in USWDS font |
 | Nunito | Regular (400), SemiBold (600) | body, ui | Yes — not a built-in USWDS font |
 | ui-monospace, SFMono, etc. | — | code | No — falls back to USWDS Mono |
 
 Determine:
+
 - How to register custom typeface tokens via `$theme-typeface-tokens`
 - How to configure `$theme-font-*-custom-src` for @font-face generation
 - Whether Fredoka, Nunito, Montserrat, and Poppins can share a single `sans` family typeface token or need separate custom tokens
@@ -151,7 +154,7 @@ Determine:
 Determine the closest USWDS type scale token (`$theme-type-scale-*`) for each PathAble size:
 
 | PathAble Token | Size | Closest USWDS Scale Token | USWDS px Equivalent |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | display-lg | 32px | TBD | TBD |
 | heading-lg | 24px | TBD | TBD |
 | heading-md | 20px | TBD | TBD |
@@ -161,8 +164,9 @@ Determine the closest USWDS type scale token (`$theme-type-scale-*`) for each Pa
 | label-sm / caption-md | 12px | TBD | TBD |
 
 Also map line-height values:
+
 | PathAble Context | Line-Height | Closest USWDS Line-Height Token |
-|---|---|---|
+| --- | --- | --- |
 | display (32px) | 40px (1.25) | TBD |
 | heading-lg (24px) | 32px (1.333) | TBD |
 | body-lg (18px) | 28px (1.555) | TBD |
@@ -174,7 +178,7 @@ Also map line-height values:
 Determine available USWDS weight tokens and whether custom weights need to be added:
 
 | Brand Font | Required Weights | USWDS Weight Token | Custom? |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Fredoka | 400 (Regular) | `$theme-font-weight-normal` | No — 400 is standard |
 | Nunito | 400 (Regular) | `$theme-font-weight-normal` | No |
 | Nunito | 600 (SemiBold) for labels | `$theme-font-weight-semibold` or custom | TBD |
@@ -184,6 +188,7 @@ Determine available USWDS weight tokens and whether custom weights need to be ad
 ### Research Task R4: CSS Custom Property Duplication Strategy
 
 Determine the best approach to emitting dual `--pathable-font-*` and `--usa-font-*` CSS custom properties:
+
 - Option A: Duplicate declarations in `_typography.scss` (one set for `--pathable-*`, one for `--usa-*`)
 - Option B: Use SCSS @each loop over a combined map to emit both sets
 - Option C: `@extend` or `//# sourceMappingURL` approach
@@ -195,6 +200,7 @@ Determine the best approach to emitting dual `--pathable-font-*` and `--usa-font
 #### 1. data-model.md
 
 Formal entity definitions for:
+
 - `BrandTypeface` — name, weight variants, USWDS family token assignment, custom source config
 - `RoleFontToken` — role name (heading/body/ui/code/alt), backreference to BrandTypeface
 - `TypeScaleMapping` — size name, px value, closest USWDS type-scale token
@@ -204,6 +210,7 @@ Formal entity definitions for:
 #### 2. contracts/scss-interface.md
 
 SCSS interface contract defining:
+
 - What the typography settings in `_uswds-theme.scss` configure
 - How `_typography.scss` exports the dual CSS custom properties
 - The guaranteed public API (`$pathable-font-*`, `--pathable-font-*`, `--usa-font-*` tokens)
@@ -212,6 +219,7 @@ SCSS interface contract defining:
 #### 3. quickstart.md
 
 Usage guide covering:
+
 - Font self-hosting: where to place font files and how to configure `$theme-font-path`
 - Basic CSS import usage with `--pathable-font-*` and `--usa-font-*` examples
 - SCSS customization path for advanced consumers
@@ -224,6 +232,7 @@ Run agent context update script to register USWDS typography token knowledge and
 ### Post-Design Constitution Re-Check
 
 *After Phase 1 artifacts are generated, verify:*
+
 - [ ] No design decision contradicts ratified principles
 - [ ] data-model.md does not duplicate constitution text
 - [ ] contracts/scss-interface.md complies with SCSS-as-authoring-layer principle

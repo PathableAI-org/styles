@@ -164,6 +164,7 @@ No unknowns require external research. All technical context is derivable from t
 ### Phase 1: Design & Contracts
 
 Outputs:
+
 - `data-model.md` — Entity definitions for story files, button variants, CSS custom properties
 - `contracts/` — Interaction model classification table, button variant mapping, deprecation map
 - `quickstart.md` — Validation steps for verifying each requirement
@@ -177,7 +178,7 @@ Run `.specify/extensions/agent-context/scripts/bash/update-agent-context.sh` to 
 **Results**: ✅ ALL GATES REMAIN PASSED after detailed design.
 
 | Principle | Status | Note |
-|---|---|---|
+| --- | --- | --- |
 | I — CSS Custom Properties | ✅ | Short-name properties removed; only `--pathable-brand-*` canonicals remain; no value changes |
 | II — SCSS Authoring Layer | ✅ | All new button classes use `@extend` pattern; font fix is variable change |
 | III — pnpm Workspaces | ✅ | All changes within existing `packages/styles/src/` |

@@ -15,13 +15,14 @@ This research investigates how USWDS v3.x provides utility classes and SCSS func
 **Rationale**: USWDS exposes all the building blocks needed:
 
 | Function | Purpose | Returns | Example |
-|----------|---------|---------|---------|
+| ---------- | --------- | --------- | --------- |
 | `color('token-name')` | Resolve USWDS color token to hex | Hex string | `color('blue-warm-80v')` → `#00365c` |
 | `units(n)` | Resolve spacing multiple to CSS length | CSS length | `units(2)` → `1rem` |
 | `spacing-multiple(n)` | Same as units() | CSS length | `spacing-multiple(4)` → `2rem` |
 | `get-font-stack('role')` | Resolve font role to CSS font-family | Font stack string | `get-font-stack('heading')` → font-family declaration |
 
 **Alternatives considered**:
+
 - **Re-importing full USWDS utilities output**: Rejected because it would include all USWDS default classes, not just those scoped to the PathAble theme configuration. The compiled CSS would be unnecessarily large.
 - **Manual class writing**: Rejected because it doesn't scale and would diverge from the theme configuration.
 
@@ -32,6 +33,7 @@ This research investigates how USWDS v3.x provides utility classes and SCSS func
 **Rationale**: The `.pathable-` prefix clearly namespaces the utilities to PathAble, avoiding collisions with any `.usa-` classes that might be imported. Responsive/state variant syntax mirrors USWDS's `:` separator convention.
 
 **Alternatives considered**:
+
 - **No prefix**: Rejected because utility class names like `.bg-primary` are too generic and could conflict with other frameworks (Tailwind, Bootstrap, etc.)
 - **`.pa-` short prefix**: Rejected because it's less recognizable and less consistent with the `--pathable-*` CSS custom property namespace
 
@@ -40,7 +42,7 @@ This research investigates how USWDS v3.x provides utility classes and SCSS func
 **Decision**: Each utility module resolves its values as follows:
 
 | Utility Module | Value Source | SCSS Resolution |
-|----------------|-------------|-----------------|
+| ---------------- | ------------- | ----------------- |
 | background-color | USWDS color tokens | `color($token)` |
 | color | USWDS color tokens | `color($token)` |
 | padding | USWDS spacing tokens | `units($n)` |
@@ -62,6 +64,7 @@ This research investigates how USWDS v3.x provides utility classes and SCSS func
 ### R0-4: Responsive and State Variant Strategy
 
 **Decision**:
+
 - Responsive variants will be generated at breakpoints already configured in `_uswds-theme.scss` (`mobile-lg: 480px`, `tablet: 640px`, `desktop: 1024px`)
 - State variants will be generated for hover and focus where the underlying USWDS module supports them
 - Variant syntax: `.{breakpoint}\:pathable-{base}-{value}` and `.{state}\:pathable-{base}-{value}`
@@ -69,6 +72,7 @@ This research investigates how USWDS v3.x provides utility classes and SCSS func
 **Rationale**: The theme config in `_uswds-theme.scss` sets `$theme-utility-breakpoints` which controls which breakpoints USWDS generates. Matching this ensures consistency. Hover and focus are the most commonly needed state variants for the docs site.
 
 **Alternatives considered**:
+
 - **No responsive/state variants**: Rejected because FR-006 and FR-007 explicitly require them.
 - **All breakpoints enabled**: Rejected to keep output size manageable. Only breakpoints enabled in the theme config will be used.
 

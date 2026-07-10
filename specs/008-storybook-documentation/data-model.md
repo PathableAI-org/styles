@@ -9,7 +9,7 @@
 Maps a `pathable-*` component wrapper to a `.stories.js` file that documents its usage.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | `title` | String | Storybook sidebar path, e.g., `"Components/Basic/Button"` |
 | `fileName` | String | Relative path from `src/stories/`, e.g., `"components/Button.stories.js"` |
 | `componentClass` | String | The primary CSS class, e.g., `"pathable-button"` |
@@ -26,7 +26,7 @@ Maps a `pathable-*` component wrapper to a `.stories.js` file that documents its
 Enumeration of functional categories for component grouping.
 
 | Value | Description | Example Components |
-|-------|-------------|-------------------|
+| ------- | ------------- | ------------------- |
 | `Basic` | Simple, standalone components | Button, Card, Link, List, Tag, Table |
 | `FormControls` | Input and form-related components | Checkbox, Input, Radio, Select, Textarea, Combo Box, Date Picker |
 | `Navigation` | Navigation and wayfinding components | Breadcrumb, Header, Pagination, Search, Sidenav, Skipnav |
@@ -38,7 +38,7 @@ Enumeration of functional categories for component grouping.
 A named story export that renders a specific variant or state of a component.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | `name` | String | Export name, e.g., `"Default"`, `"AccentCool"`, `"Outline"` |
 | `displayName` | String | Human-readable name shown in Storybook sidebar |
 | `description` | String | Optional description text shown in the Docs tab |
@@ -51,7 +51,7 @@ A named story export that renders a specific variant or state of a component.
 Maps a utility module group to a `.stories.js` file.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | `title` | String | Storybook sidebar path, e.g., `"Utilities/Background Colors"` |
 | `fileName` | String | Relative path from `src/stories/`, e.g., `"utilities/BackgroundColors.stories.js"` |
 | `classPattern` | String | The CSS class pattern, e.g., `".pathable-bg-{value}"` |
@@ -66,7 +66,7 @@ Maps a utility module group to a `.stories.js` file.
 A single value within a utility module.
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | `name` | String | The value name, e.g., `"primary"`, `"4"`, `"flex"` |
 | `class` | String | The full class, e.g., `"pathable-bg-primary"`, `"pathable-padding-4"` |
 | `cssValue` | String | The resolved CSS value, e.g., `"#00365c"`, `"2rem"` |
@@ -77,7 +77,7 @@ A single value within a utility module.
 The Storybook configuration files in `packages/styles/.storybook/`.
 
 | File | Purpose |
-|------|---------|
+| ------ | --------- |
 | `main.js` | Framework selection (`@storybook/html-vite`), stories glob pattern, addons, autodocs config |
 | `preview.js` | Global CSS import (`dist/styles.css`), global decorators, global parameters |
 | `manager.js` | Custom theme using `@storybook/manager-api`, brand colors and fonts |
@@ -87,7 +87,7 @@ The Storybook configuration files in `packages/styles/.storybook/`.
 The custom PathAble theme for the Storybook manager UI.
 
 | Field | Value | Source |
-|-------|-------|--------|
+| ------- | ------- | -------- |
 | `brandTitle` | `"Pathable Styles"` | Package name |
 | `brandUrl` | `"https://pathableai-org.github.io/styles"` or GitHub repo URL | Docs site |
 | `colorPrimary` | `#00365c` | PathAble Blue (`--pathable-blue`) |

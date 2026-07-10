@@ -124,7 +124,7 @@
 ### User Story Dependencies
 
 | Dependency | Description |
-|---|---|
+| --- | --- |
 | Phase 1 → Phase 2 | Workspace must be registered before Starlight can be configured |
 | Phase 2 → Phase 3,4 | Starlight skeleton must exist before pages and styles can be added |
 | Phase 2 → Phase 5,6 | Docs workspace must exist before CI/CD can reference it |

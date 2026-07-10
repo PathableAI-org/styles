@@ -6,13 +6,9 @@ PORT="${2:-6006}"
 
 cd "$(git rev-parse --show-toplevel)"
 
-# Build storybook
+# Build storybook (without STORYBOOK_BUILD so base path stays at / for local serving)
 echo "=== Building $STORYBOOK_DIR ==="
-if [ "$STORYBOOK_DIR" = "apps/storybook" ]; then
-  STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
-else
-  pnpm --filter @pathable/storybook-react build-storybook
-fi
+pnpm --filter @pathable/storybook build-storybook
 
 # Serve static build in background
 echo "=== Serving $STORYBOOK_DIR on port $PORT ==="

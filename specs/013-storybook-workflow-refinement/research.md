@@ -17,7 +17,7 @@ This document captures research findings for the Storybook workflow-context refi
 The `pathable-button.scss` wrapper provides these USWDS-backed variants:
 
 | Variant Class | Background | Text Color | Visual Role |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `.pathable-button` (base) | `--pathable-color-action-primary-bg` (#00365c) | White | Primary CTA |
 | `.pathable-button--primary` | (same as base) | (same) | (explicit primary) |
 | `.pathable-button--secondary` | `--pathable-color-action-secondary-bg` (#1cae96) | `--pathable-color-on-accent` (#001a33) | Supportive action |
@@ -32,7 +32,7 @@ The `pathable-button.scss` wrapper provides these USWDS-backed variants:
 ### Proposed Mapping
 
 | Workflow Intent | Maps To | Rationale | WCAG AA |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `.pathable-button--save` | `--secondary` (Intelligent Jade) | Positive confirmatory action — green-ish tone signals success/completion | ✅ 5.8:1 on `--on-accent` |
 | `.pathable-button--continue` | `--primary` (PathAble Blue) | Primary forward navigation — highest prominence | ✅ White on #00365c > 7:1 |
 | `.pathable-button--review` | `--accent-cool` (Bright Blue Brooks) | Review/inspection action — moderate prominence, blue is trustworthy | ✅ 5.8:1 on `--on-accent` |
@@ -44,6 +44,7 @@ The `pathable-button.scss` wrapper provides these USWDS-backed variants:
 ### Implementation Approach
 
 Each workflow-intent alias will be a new CSS class in `pathable-button.scss` that either:
+
 - `@extend` an existing `.pathable-button--{variant}` and re-export under the intent name, OR
 - `@extend .usa-button` directly and apply the branded semantic token
 
@@ -56,7 +57,7 @@ Both approaches produce equivalent output. The former is preferred for variants 
 ### Classification Guide
 
 | Classification | Definition | Consumer Must |
-|---|---|---|
+| --- | --- | --- |
 | **CSS-only** | All visual styling works without JavaScript. No interactive behavior is expected. | Import the CSS. That's it. |
 | **Requires USWDS JS** | The component uses USWDS JavaScript for interactivity (open/close, expand/collapse, filtering, etc.). | Import `@pathable/styles/js` to enable USWDS JS behaviors, or provide equivalent behavior. |
 | **Requires app-owned state** | The component wrapper provides styling only; the consuming application must manage state (selected values, open/closed, validation errors, etc.). | Implement state management in the application framework (Vue, React, etc.). |
@@ -65,7 +66,7 @@ Both approaches produce equivalent output. The former is preferred for variants 
 ### Component Classification Table
 
 | Component | Classification | Details |
-|---|---|---|
+| --- | --- | --- |
 | **Accordion** | Requires USWDS JS | Expand/collapse via USWDS JS |
 | **Alert** | CSS-only | Static notification display |
 | **Banner** | Requires USWDS JS | Dismissible banner via USWDS JS |
@@ -130,6 +131,7 @@ Both approaches produce equivalent output. The former is preferred for variants 
 ### Recommended Canonical API
 
 **Canonical (preferred)**: `--pathable-brand-{name}` — the fully namespaced version
+
 - `--pathable-brand-pathable-blue`
 - `--pathable-brand-intelligent-jade`
 - `--pathable-brand-bright-blue-brooks`
@@ -138,6 +140,7 @@ Both approaches produce equivalent output. The former is preferred for variants 
 - `--pathable-brand-shilling-silver`
 
 **Removed legacy aliases**:
+
 - `--pathable-blue` → use `--pathable-brand-pathable-blue`
 - `--intelligent-jade` → use `--pathable-brand-intelligent-jade`
 - `--bright-blue-brooks` → use `--pathable-brand-bright-blue-brooks`
@@ -148,6 +151,7 @@ Both approaches produce equivalent output. The former is preferred for variants 
 ### Consumer Migration
 
 Consumers using short names must migrate:
+
 1. Replace `var(--pathable-blue)` with `var(--pathable-brand-pathable-blue)` in CSS
 2. Replace `$pathable-blue` with `$pathable-brand-pathable-blue` in SCSS (these are Sass variables, not custom properties — they remain valid)
 3. Run `pnpm build` and verify output

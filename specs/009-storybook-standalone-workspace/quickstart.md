@@ -35,6 +35,7 @@ pnpm build:docs
 ## CI Deployment
 
 After merging to `main`, verify:
+
 - [ ] GitHub Actions `docs-deploy.yml` triggers and completes successfully
 - [ ] GitHub Pages site at `https://pathableai-org.github.io/styles` shows Storybook
 - [ ] All stories render correctly on the deployed site

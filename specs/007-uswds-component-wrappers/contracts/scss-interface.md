@@ -219,7 +219,7 @@ Components rendered with `.pathable-*` classes will have the same CSS appearance
 The following USWDS packages are forwarded as infrastructure dependencies but have NO `.pathable-*` class wrappers:
 
 | Package | Reason |
-|---------|--------|
+| --------- | -------- |
 | `uswds-core` | Functions, mixins, tokens — no CSS classes output |
 | `uswds-elements` | Base element styles (h1-h6, body, etc.) — no `.usa-` classes |
 | `uswds-fonts` | Font face `@font-face` declarations — no `.usa-` classes |

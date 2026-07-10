@@ -59,6 +59,7 @@ $pathable-color-success     // Success/positive
 **Consumed by**: `index.scss` via `@forward "uswds-theme"`
 
 **Contains**:
+
 - Single `@use "uswds-core" with (...)` block
 - All `$theme-color-*` overrides for base, primary, secondary, accent-warm, accent-cool families
 - All state token overrides (error, warning, success, info, disabled)
@@ -66,6 +67,7 @@ $pathable-color-success     // Success/positive
 - Unused grades set to `false`
 
 **Does NOT contain**:
+
 - Any component styles
 - Any `@forward "uswds"` calls
 
@@ -74,6 +76,7 @@ $pathable-color-success     // Success/positive
 **Role**: Defines brand color SCSS variables and CSS custom properties.
 
 **Changes**:
+
 - Was: `$pathable-blue: #00365c;`
 - Now: `$pathable-blue: uswds.color("blue-warm-80v");`
 
@@ -84,7 +87,8 @@ $pathable-color-success     // Success/positive
 **Role**: Defines semantic/functional color SCSS variables and CSS custom properties.
 
 **Changes**:
-- Tokens with `aliasStatus: MUST` now reference `uswds.color(...)` 
+
+- Tokens with `aliasStatus: MUST` now reference `uswds.color(...)`
 - Tokens with `aliasStatus: SHOULD` may reference `uswds.color(...)` or remain hardcoded
 - Tokens with `aliasStatus: MAY remain` keep their hardcoded hex values
 
@@ -93,6 +97,7 @@ $pathable-color-success     // Success/positive
 **Role**: Package entrypoint — forwards all partials to compose the compiled output.
 
 **Changes**:
+
 - Was: `@forward "colors"; @forward "typography"; ...`
 - Now: `@forward "uswds-theme";` then existing forwards, no `@forward "uswds"`
 

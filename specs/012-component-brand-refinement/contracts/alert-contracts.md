@@ -9,7 +9,7 @@ The alert component uses existing USWDS alert variants augmented with Pathable s
 ### CSS Classes (unchanged)
 
 | Class | Purpose | Status |
-|-------|---------|--------|
+| ------- | --------- | -------- |
 | `.pathable-alert` | Base alert | EXISTING |
 | `.pathable-alert--info` | Informational | EXISTING |
 | `.pathable-alert--warning` | Warning | EXISTING |
@@ -23,7 +23,7 @@ The alert component uses existing USWDS alert variants augmented with Pathable s
 The new Storybook examples demonstrate these semantic contexts using existing alert types:
 
 | Story Example | Alert Type | Semantic Context | Content |
-|--------------|-----------|-----------------|---------|
+| -------------- | ----------- | ----------------- | --------- |
 | Compliance Blocking Issue | `--error` | compliance-block | "This participant's documentation is incomplete. Please review the missing items before proceeding." |
 | Missing Required Evidence | `--warning` | missing-evidence | "Required evidence for session #482 has not been submitted. 3 items are overdue." |
 | Draft Note Not Submitted | `--warning` | draft-not-submitted | "You have an unsaved draft note for participant J. Doe. Would you like to continue editing?" |
@@ -34,7 +34,7 @@ The new Storybook examples demonstrate these semantic contexts using existing al
 ### Token Usage Contract
 
 | Alert Type | Background Token | Foreground Token | Ratio | AA Normal | AA Large |
-|-----------|-----------------|-----------------|-------|-----------|----------|
+| ----------- | ----------------- | ----------------- | ------- | ----------- | ---------- |
 | success | `--pathable-color-status-success-bg` (#1cae96) | `--pathable-color-status-success-text` (#00365c) | 5.5:1 | PASS | PASS |
 | warning | `--pathable-color-status-warning-bg` (#f5a623) | `--pathable-color-status-warning-text` (#00365c) | ~5.8:1 | PASS | PASS |
 | error | `--pathable-color-status-danger-bg` (#dc3545) | `--pathable-color-status-danger-text` (#ffffff) | ~4.6:1 | PASS | PASS |

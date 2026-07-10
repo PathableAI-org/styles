@@ -19,7 +19,7 @@ Define the contract for all `.stories.js` files in the `packages/styles/src/stor
 Every story file MUST export a default object with:
 
 | Field | Required | Type | Description |
-|-------|----------|------|-------------|
+| ------- | ---------- | ------ | ------------- |
 | `title` | Yes | String | Storybook sidebar path. Format: `"Components/{Category}/{Name}"` or `"Utilities/{Name}"` |
 | `tags` | Yes | String[] | Must include `'autodocs'` for auto-generated documentation pages |
 | `render` | No | Function | Only if the file has a single, default story (otherwise use named exports with individual `render` functions) |
@@ -29,7 +29,7 @@ Every story file MUST export a default object with:
 Each named export is a story object. Every story object MUST have:
 
 | Field | Required | Type | Description |
-|-------|----------|------|-------------|
+| ------- | ---------- | ------ | ------------- |
 | `render` | Yes | Function | Returns an HTML string. Signature: `() => string` or `(args) => string` |
 | `args` | No | Object | Only for component stories that benefit from interactive controls. NOT for utility stories. |
 | `argTypes` | No | Object | Only for component stories that use `args` |
@@ -51,6 +51,7 @@ Each named export is a story object. Every story object MUST have:
 4. **HTML rendering**: Stories return HTML template strings. All CSS classes use the `pathable-*` prefix. No `.usa-*` classes.
 
 5. **JS-driven components**: When `isJsDriven` is true, the first story or the default export's `parameters` MUST include a docs description noting the JavaScript dependency. Format:
+
    ```js
    parameters: {
      docs: {

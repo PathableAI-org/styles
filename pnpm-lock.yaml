@@ -72,8 +72,8 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(esbuild@0.27.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.4)(react@19.2.7))(vite@6.4.3(@types/node@24.13.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
       '@storybook/test-runner':
-        specifier: ^0.24.4
-        version: 0.24.4(@types/node@24.13.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.4)(react@19.2.7))
+        specifier: 0.24.5-next.0
+        version: 0.24.5-next.0(@types/node@24.13.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.4)(react@19.2.7))
       axe-playwright:
         specifier: ^2.2.2
         version: 2.2.2(playwright@1.61.1)
@@ -103,8 +103,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0(@types/react@19.2.17)(esbuild@0.27.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.62.2)(storybook@10.5.0(@types/react@19.2.17)(prettier@3.9.4)(react@18.3.1))(typescript@7.0.2)(vite@6.4.3(@types/node@24.13.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
       '@storybook/test-runner':
-        specifier: ^0.24.4
-        version: 0.24.4(@types/node@24.13.2)(storybook@10.5.0(@types/react@19.2.17)(prettier@3.9.4)(react@18.3.1))
+        specifier: 0.24.5-next.0
+        version: 0.24.5-next.0(@types/node@24.13.2)(storybook@10.5.0(@types/react@19.2.17)(prettier@3.9.4)(react@18.3.1))
       axe-playwright:
         specifier: ^2.2.2
         version: 2.2.2(playwright@1.61.1)
@@ -1705,8 +1705,8 @@ packages:
       typescript:
         optional: true
 
-  '@storybook/test-runner@0.24.4':
-    resolution: {integrity: sha512-xm04bba5N7QyHHc+wD4xmPZx0vKK/PIpmTFypy445HrWOj0nFK4pYg5dE6H4ppqMt7qZAnb5GfHTvBwJtywJ4A==}
+  '@storybook/test-runner@0.24.5-next.0':
+    resolution: {integrity: sha512-Hxz1Wep+T+XajuLQbYGU7dYJ6lj9OXfANUxJo4Y3BRFwzECKrbvHKJxc6HvxAKUC2GVFEnwXOlJtPUtmMCMpog==}
     engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
@@ -6482,7 +6482,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/test-runner@0.24.4(@types/node@24.13.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.4)(react@19.2.7))':
+  '@storybook/test-runner@0.24.5-next.0(@types/node@24.13.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.4)(react@19.2.7))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7
@@ -6516,7 +6516,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@storybook/test-runner@0.24.4(@types/node@24.13.2)(storybook@10.5.0(@types/react@19.2.17)(prettier@3.9.4)(react@18.3.1))':
+  '@storybook/test-runner@0.24.5-next.0(@types/node@24.13.2)(storybook@10.5.0(@types/react@19.2.17)(prettier@3.9.4)(react@18.3.1))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7

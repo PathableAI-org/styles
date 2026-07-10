@@ -76,6 +76,7 @@ If your project uses SCSS and you want to extend the theme:
 Font files (`.woff2`) are bundled with the `@pathable/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script.
 
 The font files are published at:
+
 ```
 fonts/
 ├── fredoka/

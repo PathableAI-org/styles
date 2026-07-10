@@ -5,7 +5,7 @@
 ## Entity: Docs Workspace (`apps/docs`)
 
 | Field | Value |
-|-------|-------|
+| ------- | ------- |
 | Package name | `@pathable/docs` |
 | Visibility | `private: true` |
 | Type | Static site (Astro + Starlight) |
@@ -14,7 +14,7 @@
 ## Entity: Docs Page
 
 | Field | Description |
-|-------|-------------|
+| ------- | ------------- |
 | Location | `apps/docs/src/content/docs/` |
 | Format | MDX |
 | Pages | `index.mdx`, `getting-started/index.mdx`, `foundations/index.mdx`, `for-agents/index.mdx`, `roadmap/index.mdx` |
@@ -22,7 +22,7 @@
 ## Entity: GitHub Actions Workflow
 
 | Field | Description |
-|-------|-------------|
+| ------- | ------------- |
 | PR workflow | `.github/workflows/docs-ci.yml` — validate build only |
 | Deploy workflow | `.github/workflows/docs-deploy.yml` — validate + deploy to Pages |
 | Permissions | `contents: read`, `pages: write`, `id-token: write` |
