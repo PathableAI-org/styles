@@ -23,14 +23,14 @@
 
 | Mixin | Selectors Generated | CSS Custom Properties Consumed |
 |---|---|---|
-| `interaction-states` | `&:hover`, `&:focus-visible`, `&:focus-within`, `&:active`, `&.is-selected`, `&:disabled`, `&[aria-disabled="true"]`, `&.is-loading` | `--pathable-color-focus-ring`, `--elevation-sm`, `--elevation-md`, `--pathable-color-surface`, `--pathable-color-bg` |
-| `state-hover` | `&:hover` | `--elevation-md` |
+| `interaction-states` | `&:hover`, `&:focus-visible`, `&:focus-within`, `&:active`, `&.is-selected`, `&:disabled`, `&[aria-disabled="true"]`, `&.is-loading` | `--pathable-color-focus-ring`, `--elevation-md`, `--pathable-color-surface`, `--pathable-color-bg`, `--pathable-color-border` |
+| `state-hover` | `&:hover` | `--elevation-md`, `--pathable-color-bg` |
 | `state-focus` | `&:focus-visible`, `&:focus-within` | `--pathable-color-focus-ring` |
-| `state-active` | `&:active` | `--elevation-sm` |
+| `state-active` | `&:active` | none (uses `box-shadow: none`) |
 | `state-selected` | `&.is-selected`, `&[aria-selected="true"]` | `--pathable-color-surface`, `--pathable-color-border` |
-| `state-pressed` | `&:active` (alt style) | `--elevation-none` |
-| `state-disabled` | `&:disabled`, `&[aria-disabled="true"]`, `&[aria-busy="true"]` | none (opacity/pointer-events) |
-| `state-loading` | `&.is-loading` | none (pseudo-element spinner) |
+| `state-pressed` | `&:active` (alt style) | `--elevation-sm` (inset), `--pathable-color-border` |
+| `state-disabled` | `&:disabled`, `&[aria-disabled="true"]` | none (opacity/cursor/box-shadow/background) |
+| `state-loading` | `&.is-loading` | `--pathable-color-border` (spinner border) |
 
 ### 2. Icon Button Classes
 
@@ -56,7 +56,6 @@
 |---|---|---|
 | `--pathable-icon-button-size` | `44px` | Target size (width/height) |
 | `--pathable-icon-button-icon-size` | `20px` | SVG icon dimensions |
-| `--pathable-icon-button-padding` | `calc((var(--pathable-icon-button-size) - var(--pathable-icon-button-icon-size)) / 2)` | Internal padding |
 
 ### 3. Segmented Control Classes
 
@@ -98,7 +97,6 @@
 |---|---|---|
 | `--pathable-icon-tile-size` | `44px` | Tile dimensions |
 | `--pathable-icon-tile-icon-size` | `20px` | Inner icon size |
-| `--pathable-icon-tile-padding` | `calc((var(--pathable-icon-tile-size) - var(--pathable-icon-tile-icon-size)) / 2)` | Internal padding |
 
 ## Accessibility Contract
 

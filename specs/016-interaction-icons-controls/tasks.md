@@ -44,7 +44,7 @@
 
 **Goal**: Consumers can apply shared interaction-state mixins (hover, focus-visible, focus-within, active, selected, pressed, disabled, loading) to any custom element without reimplementing focus rings, pressed shadows, or disabled styling.
 
-**Independent Test**: Apply the `interaction-states` mixin to a plain `<div>` with cursor:pointer. Verify all eight states (rest, hover, focus-visible, focus-within, active, selected, pressed, disabled, loading) are each visually distinct and match existing button/surface conventions.
+**Independent Test**: Apply the `interaction-states` mixin to a plain `<div>` with cursor:pointer. Verify all states (rest, hover, focus-visible, focus-within, active, selected, pressed, disabled, loading) are each visually distinct and match existing button/surface conventions.
 
 ### Implementation for User Story 1
 

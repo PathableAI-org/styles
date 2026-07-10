@@ -166,7 +166,7 @@
 // Demo class for Storybook documentation
 .pathable-interaction-states-demo {
   @include interaction-states;
-  padding: 1.5rem;
+  padding: var(--space-24, 1.5rem);
   border: 2px solid transparent;
   cursor: pointer;
   box-shadow: var(--elevation-sm);

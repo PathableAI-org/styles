@@ -66,7 +66,8 @@
   font-weight: 700;
 }
 
-// --- Variant: multi-select (same visual as base, semantic difference documented) ---
+// --- Variant: multi-select (same visual as single-select, semantic difference documented) ---
+// Uses @extend to inherit base container styles without duplicating declarations
 .pathable-segmented-control--multi {
   display: inline-flex;
   gap: var(--pathable-segmented-control-gap, var(--space-2));

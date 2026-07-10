@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (with CSS-driven interactive states)\n\n**Consumers must**: Import `@pathable/styles` CSS. Single-select containers should use `role="radiogroup"` with `role="radio"` and `aria-checked` on each option. Multi-select containers should use `role="group"` with `aria-pressed` on each option.',
+          '**Interaction Model**: CSS-only (with CSS-driven interactive states)\n\n**Consumers must**: Import `@pathable/styles` CSS. Single-select containers should use `role="radiogroup"` with `role="radio"` and `aria-checked` on each option. Arrow-key navigation requires consumer-provided JavaScript per ARIA APG. Multi-select containers should use `role="group"` with `aria-pressed` on each option.',
       },
     },
   },
@@ -65,7 +65,7 @@ export const SingleSelect = {
   render: () => `
     <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Single-Select (View Mode)</h3>
     <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      Mutually exclusive options using ARIA radiogroup semantics. Use Arrow keys to navigate.
+      Mutually exclusive options using ARIA radiogroup semantics. Keyboard navigation (Arrow keys) requires consumer-provided JavaScript per ARIA APG.
     </p>
     <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
       ${option('List', listIcon, true)}

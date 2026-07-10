@@ -11,8 +11,8 @@ export default {
   },
 }
 
-const demoCard = (state, label, extraAttrs = '') => `
-  <div class="pathable-interaction-states-demo" ${extraAttrs} style="min-width: 200px;">
+const demoCard = (state, label, extraClasses = '', extraAttrs = '') => `
+  <div class="pathable-interaction-states-demo${extraClasses ? ' ' + extraClasses : ''}" ${extraAttrs} style="min-width: 200px;">
     <div style="font-size: 0.875rem; font-weight: 600;">${label}</div>
     <div style="font-size: 0.75rem; margin-top: 0.25rem; opacity: 0.7;">${state}</div>
   </div>
@@ -26,9 +26,9 @@ export const AllStates = {
       Selected and disabled states are shown below.
     </p>
     <div class="pathable-cluster" style="align-items: stretch;">
-      ${demoCard('Rest', 'Rest (hover/focus me)', 'tabindex="0"')}
-      ${demoCard('Selected', 'Selected', 'class="is-selected" tabindex="0"')}
-      ${demoCard('Disabled', 'Disabled', 'aria-disabled="true"')}
+      ${demoCard('Rest', 'Rest (hover/focus me)', '', 'tabindex="0"')}
+      ${demoCard('Selected', 'Selected', 'is-selected', 'tabindex="0"')}
+      ${demoCard('Disabled', 'Disabled', '', 'aria-disabled="true"')}
     </div>
   `,
 }
