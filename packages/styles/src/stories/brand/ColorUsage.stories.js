@@ -267,25 +267,25 @@ export const Default = {
                 <div style="font-weight: 700; font-size: 0.875rem; margin-bottom: 0.375rem;">${c.name}</div>
                 <div style="display: flex; gap: 0.75rem; font-size: 0.7rem; font-family: monospace; margin-bottom: 0.5rem;">
                   <div>
-                    <div style="color: #888; margin-bottom: 0.125rem;">Exact</div>
+                    <div style="color: #555; margin-bottom: 0.125rem;">Exact</div>
                     <div style="display: flex; align-items: center; gap: 0.25rem;">
                       <span style="display: inline-block; width: 12px; height: 12px; border-radius: 2px; background: ${c.exact}; border: 1px solid rgba(0,0,0,0.1);"></span>
                       ${c.exact}
                     </div>
                   </div>
                   <div>
-                    <div style="color: #888; margin-bottom: 0.125rem;">Mapped</div>
+                    <div style="color: #555; margin-bottom: 0.125rem;">Mapped</div>
                     <div style="display: flex; align-items: center; gap: 0.25rem;">
                       <span style="display: inline-block; width: 12px; height: 12px; border-radius: 2px; background: ${c.mapped}; border: 1px solid rgba(0,0,0,0.1);"></span>
                       ${c.mapped}
                     </div>
                   </div>
                   <div>
-                    <div style="color: #888; margin-bottom: 0.125rem;">ΔE</div>
+                    <div style="color: #555; margin-bottom: 0.125rem;">ΔE</div>
                     <div style="font-weight: 600;">${c.deltaE}</div>
                   </div>
                 </div>
-                <div style="font-size: 0.7rem; color: #666;">${c.use}</div>
+                <div style="font-size: 0.7rem; color: #444;">${c.use}</div>
               </div>
             </div>
           `,
@@ -353,7 +353,7 @@ export const Default = {
               <div style="height: 48px; background-color: ${t.value}; ${['#ffffff', '#dde2e8', '#dfe1e2', '#e7f434'].includes(t.value) ? 'border-bottom: 1px solid #ddd;' : ''}"></div>
               <div style="padding: 0.5rem;">
                 <div style="font-weight: 600; font-size: 0.7rem; margin-bottom: 0.125rem;">${t.name}</div>
-                <div style="font-family: monospace; font-size: 0.6rem; color: #888;">${t.value}</div>
+                <div style="font-family: monospace; font-size: 0.6rem; color: #555;">${t.value}</div>
               </div>
             </div>
           `,
@@ -371,7 +371,7 @@ export const Default = {
               <div style="height: 48px; background-color: ${t.value};"></div>
               <div style="padding: 0.5rem;">
                 <div style="font-weight: 600; font-size: 0.7rem; margin-bottom: 0.125rem;">${t.name}</div>
-                <div style="font-family: monospace; font-size: 0.6rem; color: #888;">${t.value}</div>
+                <div style="font-family: monospace; font-size: 0.6rem; color: #555;">${t.value}</div>
               </div>
             </div>
           `,

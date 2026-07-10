@@ -15,7 +15,7 @@ export const FlexDirection = {
   render: () => `
     <div style="padding: 1rem;">
       <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Flex Direction</h3>
-      <p style="color: #666; font-size: 0.875rem; margin: 0 0 1.5rem;">
+      <p style="color: #444; font-size: 0.875rem; margin: 0 0 1.5rem;">
         Classes: <code>.pathable-flex-row</code>, <code>.pathable-flex-column</code>, <code>.pathable-flex-wrap</code>
       </p>
       <div style="display: flex; flex-direction: column; gap: 2rem;">
@@ -26,7 +26,7 @@ export const FlexDirection = {
             <span style="background: #00365c; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 2</span>
             <span style="background: #00365c; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 3</span>
           </div>
-          <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.pathable-flex-row</span>
+          <span style="font-family: monospace; font-size: 0.7rem; color: #555;">.pathable-flex-row</span>
         </div>
         <div>
           <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem;">Column</div>
@@ -35,7 +35,7 @@ export const FlexDirection = {
             <span style="background: #00365c; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 2</span>
             <span style="background: #00365c; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 3</span>
           </div>
-          <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.pathable-flex-column</span>
+          <span style="font-family: monospace; font-size: 0.7rem; color: #555;">.pathable-flex-column</span>
         </div>
         <div>
           <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem;">Wrap</div>
@@ -46,7 +46,7 @@ export const FlexDirection = {
             <span style="background: #00365c; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 4</span>
             <span style="background: #00365c; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 5</span>
           </div>
-          <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.pathable-flex-wrap</span>
+          <span style="font-family: monospace; font-size: 0.7rem; color: #555;">.pathable-flex-wrap</span>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@ export const AlignItems = {
   render: () => `
     <div style="padding: 1rem;">
       <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Align Items</h3>
-      <p style="color: #666; font-size: 0.875rem; margin: 0 0 1.5rem;">
+      <p style="color: #444; font-size: 0.875rem; margin: 0 0 1.5rem;">
         Classes: <code>.pathable-flex-align-start</code>, <code>.pathable-flex-align-center</code>, <code>.pathable-flex-align-end</code>, <code>.pathable-flex-align-stretch</code>, <code>.pathable-flex-align-baseline</code>
       </p>
       <div style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -79,7 +79,7 @@ export const AlignItems = {
               <span style="background: #4899e8; color: #fff; padding: 1rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">Medium</span>
               <span style="background: #015a76; color: #fff; padding: 1.5rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">Tall Item</span>
             </div>
-            <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.${cls}</span>
+            <span style="font-family: monospace; font-size: 0.7rem; color: #555;">.${cls}</span>
           </div>
         `,
           )
@@ -93,7 +93,7 @@ export const JustifyContent = {
   render: () => `
     <div style="padding: 1rem;">
       <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Justify Content</h3>
-      <p style="color: #666; font-size: 0.875rem; margin: 0 0 1.5rem;">
+      <p style="color: #444; font-size: 0.875rem; margin: 0 0 1.5rem;">
         Classes: <code>.pathable-flex-justify-center</code>, <code>.pathable-flex-justify-between</code>, <code>.pathable-flex-justify-end</code>, <code>.pathable-flex-justify-around</code>
       </p>
       <div style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -112,7 +112,7 @@ export const JustifyContent = {
               <span style="background: #4899e8; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 2</span>
               <span style="background: #015a76; color: #fff; padding: 0.5rem 1rem; border-radius: 4px;">Item 3</span>
             </div>
-            <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.${cls}</span>
+            <span style="font-family: monospace; font-size: 0.7rem; color: #555;">.${cls}</span>
           </div>
         `,
           )

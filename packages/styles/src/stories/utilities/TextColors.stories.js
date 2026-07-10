@@ -30,9 +30,9 @@ export const OnLightBackground = {
           .map(
             ({ name, class: cls }) => `
           <div style="display: flex; align-items: center; gap: 1rem;">
-            <span style="width: 80px; font-size: 0.75rem; color: #888;">${name}</span>
+            <span style="width: 80px; font-size: 0.75rem; color: #555;">${name}</span>
             <span class="${cls}" style="font-size: 1.125rem;">The quick brown fox jumps over the lazy dog.</span>
-            <span style="font-family: monospace; font-size: 0.7rem; color: #999;">.${cls}</span>
+            <span style="font-family: monospace; font-size: 0.7rem; color: #555;">.${cls}</span>
           </div>
         `,
           )

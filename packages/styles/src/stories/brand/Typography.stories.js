@@ -241,16 +241,16 @@ export const Default = {
                       : `<span style="background: #888; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
                   }
                 </div>
-                <div style="font-family: monospace; font-size: 0.7rem; color: #888; margin-bottom: 0.375rem;">
+                <div style="font-family: monospace; font-size: 0.7rem; color: #555; margin-bottom: 0.375rem;">
                   <span style="font-weight: 600; color: #555;">Token:</span> ${r.cssToken}
                 </div>
-                <div style="font-family: monospace; font-size: 0.7rem; color: #888; margin-bottom: 0.375rem;">
+                <div style="font-family: monospace; font-size: 0.7rem; color: #555; margin-bottom: 0.375rem;">
                   <span style="font-weight: 600; color: #555;">Stack:</span> ${r.fontStack}
                 </div>
-                <div style="font-family: monospace; font-size: 0.7rem; color: #888; margin-bottom: 0.5rem;">
+                <div style="font-family: monospace; font-size: 0.7rem; color: #555; margin-bottom: 0.5rem;">
                   <span style="font-weight: 600; color: #555;">Fallback:</span> ${r.fallback}
                 </div>
-                <div style="font-size: 0.75rem; color: #666; border-top: 1px solid #eee; padding-top: 0.5rem;">
+                <div style="font-size: 0.75rem; color: #444; border-top: 1px solid #eee; padding-top: 0.5rem;">
                   ${r.usage}
                 </div>
               </div>
@@ -312,7 +312,7 @@ export const Default = {
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
             <span style="font-weight: 600; font-size: 0.8rem; color: #162e51;">Body Medium</span>
             <span style="background: #1cae96; color: #00365c; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">16px / 1.5</span>
-            <span style="font-family: monospace; font-size: 0.65rem; color: #888;">--pathable-font-size-body-md</span>
+            <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-md</span>
           </div>
           <p style="font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
             PathAble is a workflow-first platform designed for staff who deliver guided behavioral health services. Every session, note, compliance signal, and approval artifact must be captured quickly and accurately. The typography system supports this mission by providing clear, readable body text that reduces eye strain during extended documentation sessions. Nunito was chosen for body text because its open letterforms and generous x-height maintain readability at small sizes, even on lower-resolution displays or when users are working under time pressure.
@@ -323,7 +323,7 @@ export const Default = {
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
             <span style="font-weight: 600; font-size: 0.8rem; color: #162e51;">Body Large</span>
             <span style="background: #4899e8; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">18px / 1.5</span>
-            <span style="font-family: monospace; font-size: 0.65rem; color: #888;">--pathable-font-size-body-lg</span>
+            <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-lg</span>
           </div>
           <p style="font-family: Nunito, system-ui, serif; font-size: 18px; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
             For longer reading sessions, such as reviewing session notes, composing compliance documentation, or reading through participant history, the body large size provides additional comfort. The increased font size reduces the cognitive load of tracking lines of text, while the 1.5 line-height ensures adequate vertical rhythm. This size is particularly useful for primary content areas where users spend extended periods reading or writing, such as the session note editor, participant summary view, and report generation interfaces.
