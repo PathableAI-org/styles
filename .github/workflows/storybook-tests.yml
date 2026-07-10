@@ -49,6 +49,7 @@ jobs:
 
       - name: Test HTML Storybook
         run: |
+          set +e
           npx serve -n -l 6006 apps/storybook/storybook-static &
           SERVE_PID=$!
           for i in $(seq 1 30); do
@@ -73,6 +74,7 @@ jobs:
 
       - name: Test React Storybook
         run: |
+          set +e
           npx serve -n -l 6007 apps/storybook-react/storybook-static &
           SERVE_PID=$!
           for i in $(seq 1 30); do
