@@ -1,0 +1,62 @@
+// packages/styles/src/pathable-component-wrappers/pathable-split.scss
+//
+// Responsive two-region layout with configurable ratio, alignment, and collapse.
+// Layout responsibility: arranges two content areas side by side on large screens
+// and stacks vertically on small screens, preserving DOM reading order.
+//
+// CSS custom properties:
+//   --pathable-split-ratio  (default: 1fr 1fr) — grid-template-columns value on desktop
+//   --pathable-split-align  (default: center) — align-items value
+//   --pathable-split-gap    (default: var(--space-24)) — gap between regions
+//
+// Modifier classes:
+//   Ratio: --ratio-1-1, --ratio-1-2, --ratio-2-1, --ratio-1-3
+//   Align: --align-start, --align-center, --align-end, --align-stretch
+
+.pathable-split {
+  display: grid;
+  grid-template-columns: var(--pathable-split-ratio, 1fr 1fr);
+  gap: var(--pathable-split-gap, var(--space-24));
+  align-items: var(--pathable-split-align, center);
+}
+
+// Ratio modifiers
+.pathable-split--ratio-1-1 {
+  --pathable-split-ratio: 1fr 1fr;
+}
+
+.pathable-split--ratio-1-2 {
+  --pathable-split-ratio: 1fr 2fr;
+}
+
+.pathable-split--ratio-2-1 {
+  --pathable-split-ratio: 2fr 1fr;
+}
+
+.pathable-split--ratio-1-3 {
+  --pathable-split-ratio: 1fr 3fr;
+}
+
+// Align modifiers
+.pathable-split--align-start {
+  --pathable-split-align: flex-start;
+}
+
+.pathable-split--align-center {
+  --pathable-split-align: center;
+}
+
+.pathable-split--align-end {
+  --pathable-split-align: flex-end;
+}
+
+.pathable-split--align-stretch {
+  --pathable-split-align: stretch;
+}
+
+// Responsive: collapse to single column below desktop breakpoint
+@media (max-width: 1023px) {
+  .pathable-split {
+    grid-template-columns: 1fr;
+  }
+}

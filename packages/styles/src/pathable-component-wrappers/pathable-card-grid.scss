@@ -1,0 +1,35 @@
+// packages/styles/src/pathable-component-wrappers/pathable-card-grid.scss
+//
+// Auto-fitting grid layout for cards and tiles.
+// Layout responsibility: distributes items into columns that automatically adjust
+// count based on available container width, never producing unreasonably narrow cards.
+//
+// CSS custom properties:
+//   --pathable-card-grid-min-width  (default: 300px) — minimum column width
+//   --pathable-card-grid-gap        (default: var(--space-24)) — gap between cards
+//
+// Modifier classes:
+//   .pathable-card-grid--gap-sm  — gap var(--space-16)
+//   .pathable-card-grid--gap-md  — gap var(--space-24) (default)
+//   .pathable-card-grid--gap-lg  — gap var(--space-32)
+
+.pathable-card-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, var(--pathable-card-grid-min-width, 300px)), 1fr)
+  );
+  gap: var(--pathable-card-grid-gap, var(--space-24));
+}
+
+.pathable-card-grid--gap-sm {
+  --pathable-card-grid-gap: var(--space-16);
+}
+
+.pathable-card-grid--gap-md {
+  --pathable-card-grid-gap: var(--space-24);
+}
+
+.pathable-card-grid--gap-lg {
+  --pathable-card-grid-gap: var(--space-32);
+}

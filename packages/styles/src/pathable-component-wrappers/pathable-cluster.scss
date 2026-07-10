@@ -1,0 +1,50 @@
+// packages/styles/src/pathable-component-wrappers/pathable-cluster.scss
+//
+// Wrapping horizontal layout for grouping related items (tags, buttons, controls).
+// Layout responsibility: provides even wrapping horizontal spacing between items
+// without manual margin resets.
+//
+// CSS custom properties:
+//   --pathable-cluster-gap    (default: var(--space-8)) — horizontal and vertical gap
+//   --pathable-cluster-align  (default: center) — align-items value
+//
+// Modifier classes:
+//   Gap:  --gap-sm (var(--space-4)), --gap-md (var(--space-8)), --gap-lg (var(--space-16))
+//   Align: --align-start, --align-center, --align-end, --align-stretch
+
+.pathable-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-cluster-gap, var(--space-8));
+  align-items: var(--pathable-cluster-align, center);
+}
+
+// Gap modifiers
+.pathable-cluster--gap-sm {
+  --pathable-cluster-gap: var(--space-4);
+}
+
+.pathable-cluster--gap-md {
+  --pathable-cluster-gap: var(--space-8);
+}
+
+.pathable-cluster--gap-lg {
+  --pathable-cluster-gap: var(--space-16);
+}
+
+// Align modifiers
+.pathable-cluster--align-start {
+  --pathable-cluster-align: flex-start;
+}
+
+.pathable-cluster--align-center {
+  --pathable-cluster-align: center;
+}
+
+.pathable-cluster--align-end {
+  --pathable-cluster-align: flex-end;
+}
+
+.pathable-cluster--align-stretch {
+  --pathable-cluster-align: stretch;
+}
