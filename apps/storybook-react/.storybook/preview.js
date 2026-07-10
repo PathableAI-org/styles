@@ -1,0 +1,17 @@
+import '@pathable/styles/dist/styles.css'
+import '@pathable/styles/js'
+
+export const parameters = {
+  a11y: {
+    element: '#storybook-root',
+    config: {
+      rules: [{ id: 'color-contrast', enabled: true }],
+    },
+  },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/i,
+    },
+  },
+}

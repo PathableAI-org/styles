@@ -8,6 +8,12 @@ export default {
   stories: ['../../../packages/styles/src/stories/**/*.stories.js'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   docs: { autodocs: true },
+  refs: {
+    react: {
+      title: 'React',
+      url: 'http://localhost:6007',
+    },
+  },
   async viteFinal(config, { configType }) {
     if (configType === 'PRODUCTION') {
       config.base = '/styles/'

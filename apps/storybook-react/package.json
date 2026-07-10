@@ -1,0 +1,22 @@
+{
+  "name": "@pathable/storybook-react",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6007 --host 127.0.0.1",
+    "build-storybook": "storybook build",
+    "build": "storybook build"
+  },
+  "dependencies": {
+    "@pathable/react": "workspace:*",
+    "@pathable/styles": "workspace:*"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^10.5.0",
+    "@storybook/addon-docs": "^10.5.0",
+    "@storybook/react-vite": "^10.5.0",
+    "storybook": "^10.5.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
