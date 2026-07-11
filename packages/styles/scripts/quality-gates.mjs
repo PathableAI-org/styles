@@ -192,6 +192,11 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
         'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
     },
     {
+      selector: '.pathable-dashboard-header__breadcrumb a',
+      reason:
+        'Breadcrumb nav links render at text line-height on mobile. These are secondary navigation cues, not primary action targets. Tracked for future refinement.',
+    },
+    {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Enhanced).',
@@ -228,8 +233,11 @@ function startServer() {
       const pathname = url.pathname.slice(1) || 'index.html'
       const filePath = resolve(STATIC_DIR, pathname)
 
-      // Prevent directory traversal
-      if (!filePath.startsWith(STATIC_DIR)) {
+      // Prevent directory traversal.  Resolve the absolute path and then
+      // enforce that it stays inside STATIC_DIR by checking for a trailing
+      // path separator, not just a string prefix.
+      const dir = STATIC_DIR + '/'
+      if (!filePath.startsWith(dir) && filePath !== STATIC_DIR) {
         res.writeHead(403)
         res.end('Forbidden')
         return
@@ -244,7 +252,16 @@ function startServer() {
         })
         res.end(data)
       } catch {
-        // SPA fallback: serve index.html for story routes
+        // Only apply SPA fallback for routes without a recognised file
+        // extension.  Missing JS/CSS/font assets return 404 so broken
+        // builds are not masked by accidentally serving index.html with
+        // the wrong Content-Type.
+        const ext = extname(filePath).toLowerCase()
+        if (ext && MIME_TYPES[ext]) {
+          res.writeHead(404)
+          res.end('Not found')
+          return
+        }
         try {
           const fallback = resolve(STATIC_DIR, 'index.html')
           const data = await readFile(fallback)
@@ -304,103 +321,156 @@ async function checkStoryIndex() {
 // Story-level DOM audits (runs inside Playwright page context)
 // ---------------------------------------------------------------------------
 
-function buildAuditScript() {
-  /* Stringified so allowlists are available inside the page. */
-  return function auditStory() {
-    const results = []
-    const clientWidth = document.documentElement.clientWidth
-    const scrollWidth = document.documentElement.scrollWidth
+/**
+ * DOM audit function.  Executed inside the browser via page.evaluate so
+ * that CSS selector matching (el.matches()) works on live DOM nodes.
+ *
+ * All inputs are passed as separate arguments to page.evaluate():
+ *   unnamedSelectors – CSS selector strings for the unnamed-controls allowlist
+ *   touchSelectors   – CSS selector strings for the touch-target allowlist
+ */
+const auditScript = function auditStory(opts) {
+  const unnamedSelectors = opts.unnamed || []
+  const touchSelectors = opts.touch || []
+  const viewportName = opts.viewport || 'desktop'
+  const failures = []
 
-    // ---- horizontal overflow ------------------------------------------------
+  const interactiveSelector = [
+    'button',
+    'a[href]',
+    'input:not([type="hidden"])',
+    'select',
+    'textarea',
+    '[role="button"]',
+    '[role="link"]',
+    '[role="checkbox"]',
+    '[role="radio"]',
+    '[role="combobox"]',
+    '[role="listbox"]',
+    '[role="menuitem"]',
+    '[role="option"]',
+    '[role="switch"]',
+    '[role="tab"]',
+    '[role="treeitem"]',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(',')
 
-    results.push({
-      _key: 'scrollWidth',
-      scrollWidth,
-      clientWidth,
+  /** Returns true if el matches any of the given CSS selectors. */
+  function matchesAnySelector(el, selectors) {
+    if (!selectors || selectors.length === 0) return false
+    return selectors.some((sel) => {
+      try {
+        return el.matches(sel)
+      } catch {
+        return false
+      }
     })
-
-    // ---- interactive controls -----------------------------------------------
-
-    const interactiveSelector = [
-      'button',
-      'a[href]',
-      'input:not([type="hidden"])',
-      'select',
-      'textarea',
-      '[role="button"]',
-      '[role="link"]',
-      '[role="checkbox"]',
-      '[role="radio"]',
-      '[role="combobox"]',
-      '[role="listbox"]',
-      '[role="menuitem"]',
-      '[role="option"]',
-      '[role="switch"]',
-      '[role="tab"]',
-      '[role="treeitem"]',
-      '[tabindex]:not([tabindex="-1"])',
-    ].join(',')
-
-    const controls = Array.from(document.querySelectorAll(interactiveSelector))
-      .map((el) => {
-        const rect = el.getBoundingClientRect()
-        if (rect.width <= 0 || rect.height <= 0) return null
-
-        const tag = el.tagName.toLowerCase()
-        const elClass =
-          typeof el.className === 'string'
-            ? el.className
-            : el.getAttribute('class') || ''
-
-        // Accessible name computation (simplified)
-        const accessibleName =
-          el.getAttribute('aria-label')?.trim() ||
-          el.getAttribute('title')?.trim() ||
-          (tag === 'input' && el.getAttribute('placeholder')?.trim()) ||
-          ''
-
-        const textContent = (el.textContent || '')
-          .replace(/\s+/g, ' ')
-          .trim()
-          .slice(0, 80)
-
-        // Check for associated <label>
-        let hasLabel = false
-        if (el.id) {
-          hasLabel = !!document.querySelector(
-            `label[for="${CSS.escape(el.id)}"]`,
-          )
-        }
-        if (!hasLabel) {
-          hasLabel = el.closest('label') !== null
-        }
-
-        return {
-          tag,
-          className: elClass.slice(0, 120),
-          accessibleName: accessibleName.slice(0, 80),
-          textContent,
-          hasLabel,
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-          isActionControl:
-            tag === 'button' ||
-            tag === 'a' ||
-            tag === 'select' ||
-            ['button', 'link', 'menuitem', 'option', 'tab'].includes(
-              el.getAttribute('role') || '',
-            ),
-        }
-      })
-      .filter(Boolean)
-
-    results.push({
-      _key: 'controls',
-      controls,
-    })
-
-    return results
   }
+
+  const controls = Array.from(document.querySelectorAll(interactiveSelector))
+    .map((el) => {
+      const rect = el.getBoundingClientRect()
+      if (rect.width <= 0 || rect.height <= 0) return null
+
+      const tag = el.tagName.toLowerCase()
+      const elClass =
+        typeof el.className === 'string'
+          ? el.className
+          : el.getAttribute('class') || ''
+
+      // Accessible name computation (simplified).
+      // Placeholder is NOT an accessible name (per WCAG); it is
+      // supplementary hint text only.  Rely on aria-label,
+      // aria-labelledby, or associated <label> elements.
+      const accessibleName =
+        el.getAttribute('aria-label')?.trim() ||
+        el.getAttribute('title')?.trim() ||
+        ''
+
+      const textContent = (el.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 80)
+
+      // Check for associated <label>
+      let hasLabel = false
+      if (el.id) {
+        hasLabel = !!document.querySelector(`label[for="${CSS.escape(el.id)}"]`)
+      }
+      if (!hasLabel) {
+        hasLabel = el.closest('label') !== null
+      }
+
+      const hasName = Boolean(accessibleName || textContent || hasLabel)
+
+      const w = Math.round(rect.width)
+      const h = Math.round(rect.height)
+      const isActionControl =
+        tag === 'button' ||
+        tag === 'a' ||
+        tag === 'select' ||
+        ['button', 'link', 'menuitem', 'option', 'tab'].includes(
+          el.getAttribute('role') || '',
+        )
+
+      return {
+        tag,
+        className: elClass.slice(0, 120),
+        accessibleName: accessibleName.slice(0, 80),
+        textContent,
+        hasName,
+        width: w,
+        height: h,
+        isActionControl,
+        // Allowlist checks (using real CSS selector matching)
+        unnamedAllowed: hasName
+          ? true
+          : matchesAnySelector(el, unnamedSelectors),
+        touchAllowed: matchesAnySelector(el, touchSelectors),
+      }
+    })
+    .filter(Boolean)
+
+  for (const ctrl of controls) {
+    // --- unnamed controls ---
+    if (!ctrl.hasName && !ctrl.unnamedAllowed) {
+      failures.push({
+        type: 'unnamed-control',
+        tag: ctrl.tag,
+        className: ctrl.className,
+        width: ctrl.width,
+        height: ctrl.height,
+        message:
+          `Unnamed interactive control: <${ctrl.tag}${ctrl.className ? ` class="${ctrl.className.slice(0, 60)}"` : ''}> ` +
+          `(${ctrl.width}×${ctrl.height} px) has no accessible name. ` +
+          'Add aria-label, title, or visible text content.',
+      })
+    }
+
+    // --- small touch targets (mobile only) ---
+    if (viewportName !== 'mobile') continue
+    if (ctrl.touchAllowed) continue
+    if (ctrl.width >= 44 && ctrl.height >= 44) continue
+
+    // Only flag action controls or elements where BOTH dimensions are <44.
+    const isSevere =
+      ctrl.isActionControl || (ctrl.width < 44 && ctrl.height < 44)
+    if (!isSevere) continue
+
+    const label = ctrl.accessibleName || ctrl.textContent || '(no label)'
+
+    failures.push({
+      type: 'small-touch-target',
+      tag: ctrl.tag,
+      className: ctrl.className,
+      width: ctrl.width,
+      height: ctrl.height,
+      label,
+      message: `Small touch target: <${ctrl.tag}> (${ctrl.width}×${ctrl.height} px) is under 44 px minimum. Label: "${label}".`,
+    })
+  }
+
+  return failures
 }
 
 // ---------------------------------------------------------------------------
@@ -461,103 +531,56 @@ async function checkStory(page, storyId, viewportName) {
     ]
   }
 
-  // Run DOM audits
-  const auditData = await page.evaluate(buildAuditScript())
+  // Run DOM audits with allowlists injected into the page context
+  // so that CSS selector matching (el.matches()) works correctly.
+  const unnamedSelectors = UNNAMED_CONTROLS_ALLOWLIST[storyId] || []
+  const unnamedSelectorList = Array.isArray(unnamedSelectors)
+    ? unnamedSelectors.map((e) => e.selector)
+    : []
+
+  const touchSelectors = SMALL_TOUCH_TARGETS_ALLOWLIST[storyId] || []
+  const touchSelectorList = Array.isArray(touchSelectors)
+    ? touchSelectors.map((e) => e.selector)
+    : []
+
+  const domFailures = await page.evaluate(auditScript, {
+    unnamed: unnamedSelectorList,
+    touch: touchSelectorList,
+    viewport: viewportName,
+  })
+
+  // --- horizontal overflow (checked outside page.evaluate so we can
+  //     use the HORIZONTAL_OVERFLOW_ALLOWLIST which is structured
+  //     differently) ---
+  const scrollInfo = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }))
+
   const failures = []
 
-  // --- horizontal overflow ---
-  const scrollData = auditData.find((d) => d._key === 'scrollWidth')
-  if (scrollData) {
+  if (scrollInfo.scrollWidth > scrollInfo.clientWidth + 2) {
     const overflowAllowed =
       HORIZONTAL_OVERFLOW_ALLOWLIST[storyId]?.[viewportName]
-    if (
-      scrollData.scrollWidth > scrollData.clientWidth + 2 &&
-      !overflowAllowed
-    ) {
+    if (!overflowAllowed) {
       failures.push({
         type: 'horizontal-overflow',
         storyId,
         viewport: viewportName,
-        scrollWidth: scrollData.scrollWidth,
-        clientWidth: scrollData.clientWidth,
-        excess: scrollData.scrollWidth - scrollData.clientWidth,
-        message: `Horizontal overflow: scrollWidth ${scrollData.scrollWidth} > clientWidth ${scrollData.clientWidth} (excess: ${scrollData.scrollWidth - scrollData.clientWidth} px).`,
+        scrollWidth: scrollInfo.scrollWidth,
+        clientWidth: scrollInfo.clientWidth,
+        excess: scrollInfo.scrollWidth - scrollInfo.clientWidth,
+        message: `Horizontal overflow: scrollWidth ${scrollInfo.scrollWidth} > clientWidth ${scrollInfo.clientWidth} (excess: ${scrollInfo.scrollWidth - scrollInfo.clientWidth} px).`,
       })
     }
   }
 
-  // --- unnamed controls ---
-  const controlsData = auditData.find((d) => d._key === 'controls')
-  if (controlsData) {
-    const storyAllowlist = UNNAMED_CONTROLS_ALLOWLIST[storyId] || []
-
-    for (const ctrl of controlsData.controls) {
-      const hasName = Boolean(
-        ctrl.accessibleName || ctrl.textContent || ctrl.hasLabel,
-      )
-      if (hasName) continue
-
-      const isAllowed = storyAllowlist.some((entry) => {
-        // We can't run matches() outside the page, so approximate by tag/class
-        return (
-          entry.selector.includes(ctrl.tag) ||
-          (ctrl.className &&
-            entry.selector.includes(ctrl.className.split(' ')[0]))
-        )
-      })
-      if (isAllowed) continue
-
-      failures.push({
-        type: 'unnamed-control',
-        storyId,
-        viewport: viewportName,
-        tag: ctrl.tag,
-        className: ctrl.className,
-        width: ctrl.width,
-        height: ctrl.height,
-        message: `Unnamed interactive control: <${ctrl.tag}${ctrl.className ? ` class="${ctrl.className.slice(0, 60)}"` : ''}> (${ctrl.width}×${ctrl.height} px) has no accessible name. Add aria-label, title, or visible text content.`,
-      })
-    }
-
-    // --- small touch targets (mobile only) ---
-    if (viewportName === 'mobile') {
-      const touchAllowlist = SMALL_TOUCH_TARGETS_ALLOWLIST[storyId] || []
-
-      for (const ctrl of controlsData.controls) {
-        if (ctrl.width >= 44 && ctrl.height >= 44) continue
-
-        // Check allowlist
-        const isAllowed = touchAllowlist.some((entry) => {
-          return (
-            entry.selector.includes(ctrl.tag) ||
-            (ctrl.className &&
-              entry.selector.includes(ctrl.className.split(' ')[0]))
-          )
-        })
-        if (isAllowed) continue
-
-        // Only flag action controls (buttons, links, selects, role=button/link/etc.)
-        // or elements where BOTH dimensions are under 44.
-        const isSevere =
-          ctrl.isActionControl || (ctrl.width < 44 && ctrl.height < 44)
-        if (!isSevere) continue
-
-        const label = ctrl.accessibleName || ctrl.textContent || '(no label)'
-
-        failures.push({
-          type: 'small-touch-target',
-          storyId,
-          viewport: viewportName,
-          tag: ctrl.tag,
-          className: ctrl.className,
-          width: ctrl.width,
-          height: ctrl.height,
-          label,
-          message: `Small touch target: <${ctrl.tag}> (${ctrl.width}×${ctrl.height} px) is under 44 px minimum. Label: "${label}".`,
-        })
-      }
-    }
+  // Annotate DOM-originated failures with story/viewport metadata
+  for (const f of domFailures) {
+    f.storyId = storyId
+    f.viewport = viewportName
   }
+  failures.push(...domFailures)
 
   return failures
 }
@@ -659,23 +682,30 @@ async function main() {
   }
 
   // 5. Report
+  // Count all tracked failures (including missing-index).
   const actionFailures = allFailures.filter((f) => f.type !== 'missing-index')
+  const criticalFailures = allFailures.filter((f) => f.type === 'missing-index')
 
   console.log('\n=== Results ===')
   console.log(`   Stories checked: ${storiesChecked}`)
   console.log(`   Passed:          ${storiesPassed}`)
   console.log(`   Failed:          ${storiesChecked - storiesPassed}`)
 
-  if (actionFailures.length === 0) {
+  if (actionFailures.length === 0 && criticalFailures.length === 0) {
     console.log('\n✓ All quality gates passed')
     process.exit(0)
   }
 
-  console.log(`\n✗ ${actionFailures.length} total failure(s)`)
+  const total = actionFailures.length + criticalFailures.length
+  console.log(`\n✗ ${total} total failure(s)`)
 
   // Group by type for summary
   const byType = {}
   for (const f of actionFailures) {
+    if (!byType[f.type]) byType[f.type] = []
+    byType[f.type].push(f)
+  }
+  for (const f of criticalFailures) {
     if (!byType[f.type]) byType[f.type] = []
     byType[f.type].push(f)
   }
