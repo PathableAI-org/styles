@@ -1,0 +1,182 @@
+// packages/styles/src/pathable-component-wrappers/pathable-workflow-panel.scss
+//
+// Workflow/session panel composition: context header, objective, current activity,
+// prompt/instruction, observation/note input, progress/save-status, and completion actions.
+// Built from layout primitives — no USWDS component wrapper equivalent.
+//
+// CSS custom properties:
+//   --pathable-workflow-panel-max-width  (default: var(--space-mobile))
+//   --pathable-workflow-panel-gap        (default: var(--space-12))
+//   --pathable-workflow-panel-prompt-bg  (default: gray-5)
+//
+// State modifiers:
+//   --loading, --saving, --saved, --offline, --validation-error, --completed
+
+@use 'uswds-core' as *;
+
+.pathable-workflow-panel {
+  max-width: var(--pathable-workflow-panel-max-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-workflow-panel-gap);
+}
+
+// --- Internal regions ---
+
+.pathable-workflow-panel__context-header {
+  font-size: type-scale('sm');
+  color: color('ink');
+  font-weight: var(--pathable-font-weight-semibold);
+}
+
+.pathable-workflow-panel__objective {
+  font-size: type-scale('md');
+  font-weight: var(--pathable-font-weight-bold);
+  color: color('primary');
+}
+
+.pathable-workflow-panel__current-activity {
+  font-size: type-scale('sm');
+  color: color('gray-30');
+  font-weight: var(--pathable-font-weight-normal);
+}
+
+// Prompt/instruction region — visually distinct from user input
+.pathable-workflow-panel__prompt {
+  background-color: var(--pathable-workflow-panel-prompt-bg);
+  padding: units(1.5);
+  border-radius: radius('sm');
+  font-size: type-scale('sm');
+  line-height: var(--pathable-font-line-height-body);
+  overflow-y: auto;
+  max-height: 20rem;
+}
+
+// Observation/note input region — standard surface treatment
+.pathable-workflow-panel__input {
+  // Consuming application provides the actual textarea/input element
+  // This region wraps the input for layout spacing
+}
+
+// Progress/save-status region
+.pathable-workflow-panel__status {
+  font-size: type-scale('sm');
+}
+
+// Completion action buttons
+.pathable-workflow-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: units(1);
+  align-items: center;
+
+  // Ensure minimum touch-target size
+  .pathable-button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// --- State modifier classes ---
+
+// Loading state
+.pathable-workflow-panel--loading {
+  .pathable-workflow-panel__status::before {
+    content: 'Loading…';
+    display: inline-flex;
+    align-items: center;
+    gap: units(0.5);
+  }
+}
+
+// Saving state
+.pathable-workflow-panel--saving {
+  .pathable-workflow-panel__status::before {
+    content: 'Saving…';
+    display: inline-flex;
+    align-items: center;
+    gap: units(0.5);
+  }
+}
+
+// Saved confirmation state
+.pathable-workflow-panel--saved {
+  .pathable-workflow-panel__status::before {
+    content: '✓ Saved';
+    display: inline-flex;
+    align-items: center;
+    gap: units(0.5);
+    color: color('success');
+  }
+}
+
+// Offline state
+.pathable-workflow-panel--offline {
+  .pathable-workflow-panel__status::before {
+    content: "⚠ You're offline. Changes will sync when connected.";
+    display: block;
+    padding: units(1);
+    background-color: color('warning-lighter');
+    border-radius: radius('sm');
+    color: color('warning-darker');
+    font-size: type-scale('sm');
+  }
+
+  .pathable-workflow-panel__actions .pathable-button--primary {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+// Validation error state
+.pathable-workflow-panel--validation-error {
+  .pathable-workflow-panel__status::before {
+    content: '⚠ Please fix errors before continuing.';
+    display: block;
+    padding: units(1);
+    background-color: color('error-lighter');
+    border-radius: radius('sm');
+    color: color('error-darker');
+    font-size: type-scale('sm');
+  }
+}
+
+// Completed state
+.pathable-workflow-panel--completed {
+  .pathable-workflow-panel__prompt,
+  .pathable-workflow-panel__input {
+    display: none;
+  }
+
+  .pathable-workflow-panel__status::before {
+    content: '✓ Completed';
+    display: inline-flex;
+    align-items: center;
+    gap: units(0.5);
+    font-size: type-scale('md');
+    font-weight: var(--pathable-font-weight-bold);
+    color: color('success');
+  }
+}
+
+// --- Empty region handling ---
+// Hide objective and current-activity regions when they have no content
+.pathable-workflow-panel__objective:empty,
+.pathable-workflow-panel__current-activity:empty {
+  display: none;
+}
+
+// --- Mobile ---
+@include at-media-max('tablet') {
+  .pathable-workflow-panel__actions {
+    position: sticky;
+    bottom: 0;
+    background: color('white');
+    padding: units(1.5) 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+}

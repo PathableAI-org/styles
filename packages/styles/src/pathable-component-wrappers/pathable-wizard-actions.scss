@@ -1,0 +1,78 @@
+// packages/styles/src/pathable-component-wrappers/pathable-wizard-actions.scss
+//
+// Wizard action footer: persistent footer with navigation and submission buttons.
+// Uses existing pathable-button variants for consistent styling.
+//
+// Action positions (left to right):
+//   1. Save & Exit (low emphasis, always visible)
+//   2. Back (base/secondary, hidden on first step)
+//   3. Continue (primary, visible on non-final steps)
+//   4. Submit (primary, visible only on final step, replaces Continue)
+
+@use 'uswds-core' as *;
+
+.pathable-wizard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: units(1);
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: var(--pathable-wizard-gap);
+  border-top: 1px solid color('gray-20');
+}
+
+// Push Continue and Submit to the right
+.pathable-wizard__actions .pathable-button--continue,
+.pathable-wizard__actions .pathable-button--submit,
+.pathable-wizard__actions :nth-last-child(1 of .pathable-button) {
+  margin-inline-start: auto;
+}
+
+// Hide the Back button on the first step
+.pathable-wizard__actions .pathable-button--back {
+  // Visible by default; consuming application hides via modifier or conditional class
+}
+
+// On mobile, use a 2-column sticky footer layout
+// Back on the left, Continue/Submit on the right (full-height)
+@include at-media-max('tablet') {
+  .pathable-wizard__actions {
+    position: sticky;
+    bottom: 0;
+    background: color('white');
+    padding: units(1.5) units(1);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: units(1);
+  }
+
+  .pathable-wizard__actions .pathable-button--back {
+    justify-self: start;
+  }
+
+  .pathable-wizard__actions .pathable-button--continue,
+  .pathable-wizard__actions .pathable-button--submit,
+  .pathable-wizard__actions :nth-last-child(1 of .pathable-button) {
+    justify-self: end;
+    margin-inline-start: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  // Ensure minimum touch-target size (44x44 CSS pixels)
+  .pathable-wizard__actions .pathable-button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Save & Exit takes full width top row when on mobile
+  .pathable-wizard__actions .pathable-button--save {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+}

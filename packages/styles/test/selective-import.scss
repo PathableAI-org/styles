@@ -2,3 +2,10 @@
 // Compile: sass --load-path=node_modules/@uswds/uswds/packages test/selective-import.scss test/selective-import.css
 
 @forward '../src/pathable-component-wrappers/pathable-button';
+
+// Selective import tests for structured workflow components:
+// Import each new composition individually to verify they compile without pulling in unrelated classes.
+// @forward '../src/pathable-component-wrappers/pathable-wizard';
+// @forward '../src/pathable-component-wrappers/pathable-wizard-actions';
+// @forward '../src/pathable-component-wrappers/pathable-workflow-panel';
+// @forward '../src/pathable-component-wrappers/pathable-save-status';

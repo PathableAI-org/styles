@@ -1,0 +1,105 @@
+// packages/styles/src/pathable-component-wrappers/pathable-save-status.scss
+//
+// Standalone save-status indicator. Reusable outside the workflow panel context
+// (e.g., in form wizards, settings pages).
+//
+// States: --loading, --saving, --saved, --offline, --error, --idle
+// Each state displays both a text label and a visual indicator.
+//
+// CSS custom properties:
+//   --pathable-save-status-font-size  (default: type-scale('sm'))
+//   --pathable-save-status-icon-size  (default: 1em)
+
+@use 'uswds-core' as *;
+
+.pathable-save-status {
+  display: inline-flex;
+  align-items: center;
+  gap: units(0.5);
+  font-size: var(--pathable-save-status-font-size);
+}
+
+// Idle — hidden by default
+.pathable-save-status--idle {
+  display: none;
+}
+
+// Loading
+.pathable-save-status--loading::before {
+  content: '';
+  display: inline-block;
+  width: var(--pathable-save-status-icon-size);
+  height: var(--pathable-save-status-icon-size);
+  border: 2px solid color('gray-20');
+  border-top-color: color('primary');
+  border-radius: 50%;
+  animation: pathable-spin 0.6s linear infinite;
+}
+
+.pathable-save-status--loading::after {
+  content: 'Loading…';
+}
+
+// Saving
+.pathable-save-status--saving::before {
+  content: '';
+  display: inline-block;
+  width: var(--pathable-save-status-icon-size);
+  height: var(--pathable-save-status-icon-size);
+  border: 2px solid color('gray-20');
+  border-top-color: color('primary');
+  border-radius: 50%;
+  animation: pathable-spin 0.6s linear infinite;
+}
+
+.pathable-save-status--saving::after {
+  content: 'Saving…';
+}
+
+// Saved
+.pathable-save-status--saved {
+  color: color('success');
+}
+
+.pathable-save-status--saved::before {
+  content: '✓';
+  font-weight: var(--pathable-font-weight-bold);
+}
+
+.pathable-save-status--saved::after {
+  content: 'Saved';
+}
+
+// Offline
+.pathable-save-status--offline {
+  color: color('warning');
+}
+
+.pathable-save-status--offline::before {
+  content: '⚠';
+}
+
+.pathable-save-status--offline::after {
+  content: 'Offline';
+}
+
+// Error
+.pathable-save-status--error {
+  color: color('error');
+}
+
+.pathable-save-status--error::before {
+  content: '✗';
+  font-weight: var(--pathable-font-weight-bold);
+}
+
+.pathable-save-status--error::after {
+  content: 'Save failed';
+}
+
+// Spin animation for loading/saving states
+@keyframes pathable-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

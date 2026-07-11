@@ -1,0 +1,73 @@
+// packages/styles/src/pathable-component-wrappers/pathable-wizard.scss
+//
+// Wizard page layout composition: multi-step form flow with step context,
+// page heading, content/form region, validation summary, and mobile compact summary.
+// Reuses pathable-step-indicator for the step context region.
+//
+// CSS custom properties:
+//   --pathable-wizard-max-width  (default: var(--space-desktop)) — max-width of the wizard
+//   --pathable-wizard-gap        (default: var(--space-16)) — gap between wizard regions
+
+@use 'uswds-core' as *;
+
+.pathable-wizard {
+  max-width: var(--pathable-wizard-max-width);
+  margin-inline: auto;
+
+  > * + * {
+    margin-top: var(--pathable-wizard-gap);
+  }
+}
+
+// Semantic page heading for the current step
+.pathable-wizard__heading {
+  margin: 0;
+  font-size: type-scale('lg');
+  font-weight: var(--pathable-font-weight-bold);
+}
+
+// Content/form region for the current step's form controls
+.pathable-wizard__content {
+  // Content is provided by the consuming application
+}
+
+// Validation summary region — hidden by default, visible when errors are present
+.pathable-wizard__validation {
+  display: none;
+}
+
+.pathable-wizard__validation--visible {
+  display: block;
+}
+
+// Mobile compact step summary — hidden on desktop, visible <768px
+.pathable-wizard__mobile-summary {
+  display: none;
+  font-size: type-scale('sm');
+  font-weight: var(--pathable-font-weight-semibold);
+  color: color('ink');
+}
+
+@include at-media-max('tablet') {
+  .pathable-wizard__mobile-summary {
+    display: block;
+  }
+}
+
+// Section heading for long-form sectioning within a wizard step
+.pathable-wizard__section {
+  margin: 0;
+  padding-top: var(--pathable-wizard-gap);
+  font-size: type-scale('md');
+  font-weight: var(--pathable-font-weight-bold);
+  border-bottom: 1px solid color('gray-20');
+  padding-bottom: units(1);
+  margin-bottom: units(1);
+}
+
+// Long prompts and notes must not overflow
+.pathable-wizard__prompt,
+.pathable-wizard__note {
+  overflow-y: auto;
+  max-height: 20rem;
+}
