@@ -23,7 +23,7 @@ export const Default = {
       </div>
       <div class="pathable-workflow-panel__input">
         <label for="default-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="default-notes" rows="4" placeholder="Enter your observations and notes here..." style="width: 100%;">Jamie has 3 years of retail experience and expresses interest in healthcare roles. Primary barrier identified is lack of reliable transportation. Recommended: connect with transportation assistance program.</textarea>
+        <textarea class="pathable-textarea" id="default-notes" rows="4" aria-label="Assessment notes" placeholder="Enter your observations and notes here..." style="width: 100%;">Jamie has 3 years of retail experience and expresses interest in healthcare roles. Primary barrier identified is lack of reliable transportation. Recommended: connect with transportation assistance program.</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
@@ -68,7 +68,7 @@ export const Saving = {
       <div class="pathable-workflow-panel__prompt"><strong>Assessment prompt:</strong> Review the participant's background...</div>
       <div class="pathable-workflow-panel__input">
         <label for="saving-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="saving-notes" rows="3" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
+        <textarea class="pathable-textarea" id="saving-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
@@ -95,7 +95,7 @@ export const Saved = {
       <div class="pathable-workflow-panel__prompt"><strong>Assessment prompt:</strong> Review the participant's background...</div>
       <div class="pathable-workflow-panel__input">
         <label for="saved-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="saved-notes" rows="3" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
+        <textarea class="pathable-textarea" id="saved-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
@@ -122,7 +122,7 @@ export const Offline = {
       <div class="pathable-workflow-panel__prompt"><strong>Assessment prompt:</strong> Review the participant's background...</div>
       <div class="pathable-workflow-panel__input">
         <label for="offline-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="offline-notes" rows="3" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
+        <textarea class="pathable-textarea" id="offline-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
@@ -150,7 +150,7 @@ export const ValidationError = {
       <div class="pathable-workflow-panel__prompt"><strong>Assessment prompt:</strong> Review the participant's background...</div>
       <div class="pathable-workflow-panel__input">
         <label for="ve-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="ve-notes" rows="3" style="width: 100%;"></textarea>
+        <textarea class="pathable-textarea" id="ve-notes" rows="3" aria-label="Assessment notes" style="width: 100%;"></textarea>
         <span class="usa-error-message" role="alert">Assessment notes are required before continuing.</span>
       </div>
       <div class="pathable-workflow-panel__status"></div>
@@ -178,7 +178,7 @@ export const Completed = {
       <div class="pathable-workflow-panel__prompt"><strong>Assessment prompt:</strong> Review the participant's background...</div>
       <div class="pathable-workflow-panel__input">
         <label for="completed-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="completed-notes" rows="3" style="width: 100%;">Assessment completed. Jamie enrolled in Employment Pathways program.</textarea>
+        <textarea class="pathable-textarea" id="completed-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Assessment completed. Jamie enrolled in Employment Pathways program.</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
@@ -222,7 +222,7 @@ export const LongPrompt = {
       </div>
       <div class="pathable-workflow-panel__input">
         <label for="lp-notes" class="usa-sr-only">Comprehensive assessment notes</label>
-        <textarea class="pathable-textarea" id="lp-notes" rows="6" placeholder="Enter your comprehensive assessment notes here..." style="width: 100%;">Casey has 8+ years of experience in customer service and retail management. Strong communication skills identified. Expresses interest in transitioning to healthcare administration. Completed some college coursework in business administration. Primary barriers: lack of healthcare industry connections and need for additional certification.</textarea>
+        <textarea class="pathable-textarea" id="lp-notes" rows="6" aria-label="Comprehensive assessment notes" placeholder="Enter your comprehensive assessment notes here..." style="width: 100%;">Casey has 8+ years of experience in customer service and retail management. Strong communication skills identified. Expresses interest in transitioning to healthcare administration. Completed some college coursework in business administration. Primary barriers: lack of healthcare industry connections and need for additional certification.</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
@@ -254,7 +254,7 @@ export const Mobile = {
       </div>
       <div class="pathable-workflow-panel__input">
         <label for="mobile-notes" class="usa-sr-only">Assessment notes</label>
-        <textarea class="pathable-textarea" id="mobile-notes" rows="4" placeholder="Enter your observations..." style="width: 100%;">Initial assessment in progress...</textarea>
+        <textarea class="pathable-textarea" id="mobile-notes" rows="4" aria-label="Assessment notes" placeholder="Enter your observations..." style="width: 100%;">Initial assessment in progress...</textarea>
       </div>
       <div class="pathable-workflow-panel__status"></div>
       <div class="pathable-workflow-panel__actions">
