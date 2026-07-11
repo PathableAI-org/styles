@@ -35,7 +35,8 @@ All classes are prefixed with `pathable-` following project-wide convention.
 | `.pathable-bento-tile--featured` | Featured / hero tile | Same tile element |
 | `.pathable-bento-tile--standard` | Standard equal tile | Same tile element |
 | `.pathable-bento-tile--metric` | Metric (number+label) tile | Same tile element |
-| `.pathable-bento-tile--image` | Image-emphasis tile | Same tile element |
+| `.pathable-bento-tile--image` | First image-emphasis tile | Same tile element |
+| `.pathable-bento-tile--image2` | Second image-emphasis tile | Same tile element |
 
 ### Chip Rail
 
@@ -64,7 +65,8 @@ Dual naming: each property has a `--pathable-` (primary) and `--usa-` (backward-
 
 | Custom Property | Default | Description |
 |----------------|---------|-------------|
-| `--pathable-decorative-bg-gradient` | via `color('primary-lighter')` + `color('primary-lightest')` | Gradient endpoint colors |
+| `--pathable-decorative-bg-gradient-start` | via `color('primary-lighter')` | Gradient start color |
+| `--pathable-decorative-bg-gradient-end` | via `color('primary-light')` | Gradient end color |
 | `--pathable-decorative-bg-glow-color` | via `color('primary-light')` | Glow color |
 | `--pathable-decorative-bg-glow-size` | via `units('mobile')` | Glow radial size |
 | `--pathable-decorative-bg-organic-color` | via `color('primary-lighter')` | Organic shape fill color |
@@ -76,7 +78,6 @@ Dual naming: each property has a `--pathable-` (primary) and `--usa-` (backward-
 | Custom Property | Default | Description |
 |----------------|---------|-------------|
 | `--pathable-screenshot-frame-radius` | `radius('md')` | Frame border-radius |
-| `--pathable-screenshot-frame-shadow` | Custom box-shadow | Frame elevation |
 | `--pathable-screenshot-frame-hover-lift` | `-4px` | Hover translateY offset |
 
 ### Bento Grid
@@ -103,7 +104,7 @@ Dual naming: each property has a `--pathable-` (primary) and `--usa-` (backward-
 |----------------|---------|-------------|
 | `--pathable-text-highlight-marker-color` | `color('primary-lighter')` | Marker highlight color |
 | `--pathable-text-highlight-underline-color` | `color('primary')` | Underline accent color |
-| `--pathable-text-highlight-soft-bg-color` | `color('primary-lightest')` | Soft background color |
+| `--pathable-text-highlight-soft-bg-color` | `color('primary-light')` | Soft background color |
 | `--pathable-text-highlight-underline-height` | `2px` | Underline thickness |
 
 ---

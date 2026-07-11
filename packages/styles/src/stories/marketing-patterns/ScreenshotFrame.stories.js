@@ -114,9 +114,11 @@ export const InteractiveFrame = {
     },
   },
   render: () => `
-    <a href="#" class="pathable-screenshot-frame" style="max-width: 400px; display: block;">
-      ${placeholderImg('Interactive Demo')}
+    <figure class="pathable-screenshot-frame" style="max-width: 400px;">
+      <a href="#" style="display: block; text-decoration: none; color: inherit;">
+        ${placeholderImg('Interactive Demo')}
+      </a>
       <figcaption class="pathable-screenshot-frame__caption">Click to view full size (interactive)</figcaption>
-    </a>
+    </figure>
   `,
 }

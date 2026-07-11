@@ -77,14 +77,14 @@
 
   // --- Decorative background tokens ---
   --pathable-decorative-bg-gradient-start: #{color('primary-lighter')};
-  --pathable-decorative-bg-gradient-end: #{color('primary-lighter')};
+  --pathable-decorative-bg-gradient-end: #{color('primary-light')};
   --pathable-decorative-bg-glow-color: #{color('primary-light')};
   --pathable-decorative-bg-glow-size: #{units('mobile')};
   --pathable-decorative-bg-organic-color: #{color('primary-lighter')};
   --pathable-decorative-bg-organic-size: 300px;
   --pathable-decorative-bg-opacity: 0.15;
   --usa-decorative-bg-gradient-start: #{color('primary-lighter')};
-  --usa-decorative-bg-gradient-end: #{color('primary-lighter')};
+  --usa-decorative-bg-gradient-end: #{color('primary-light')};
   --usa-decorative-bg-glow-color: #{color('primary-light')};
   --usa-decorative-bg-glow-size: #{units('mobile')};
   --usa-decorative-bg-organic-color: #{color('primary-lighter')};
@@ -120,10 +120,10 @@
   // --- Text highlight tokens ---
   --pathable-text-highlight-marker-color: #{color('primary-lighter')};
   --pathable-text-highlight-underline-color: #{color('primary')};
-  --pathable-text-highlight-soft-bg-color: #{color('primary-lighter')};
+  --pathable-text-highlight-soft-bg-color: #{color('primary-light')};
   --pathable-text-highlight-underline-height: 2px;
   --usa-text-highlight-marker-color: #{color('primary-lighter')};
   --usa-text-highlight-underline-color: #{color('primary')};
-  --usa-text-highlight-soft-bg-color: #{color('primary-lighter')};
+  --usa-text-highlight-soft-bg-color: #{color('primary-light')};
   --usa-text-highlight-underline-height: 2px;
 }

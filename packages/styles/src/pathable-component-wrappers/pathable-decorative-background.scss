@@ -43,10 +43,11 @@
       --pathable-decorative-bg-gradient-start,
       var(--usa-decorative-bg-gradient-start, #{color('primary-lighter')})
     ),
+    // Gradient end uses a slightly deeper tone for visual contrast
     var(
-      --pathable-decorative-bg-gradient-end,
-      var(--usa-decorative-bg-gradient-end, #{color('primary-lighter')})
-    )
+        --pathable-decorative-bg-gradient-end,
+        var(--usa-decorative-bg-gradient-end, #{color('primary-light')})
+      )
   );
 }
 

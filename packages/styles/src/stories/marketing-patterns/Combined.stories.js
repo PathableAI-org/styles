@@ -89,7 +89,7 @@ export const FeatureShowcase = {
         <div class="pathable-bento-tile pathable-bento-tile--image" style="min-height: 180px;">
           <img src="https://placehold.co/400x300/primary/white?text=Analytics" alt="Analytics dashboard screenshot" />
         </div>
-        <div class="pathable-bento-tile pathable-bento-tile--image" style="min-height: 180px;">
+        <div class="pathable-bento-tile pathable-bento-tile--image2" style="min-height: 180px;">
           <img src="https://placehold.co/400x300/primary-lighter/333?text=Reports" alt="Reports dashboard screenshot" />
         </div>
       </div>

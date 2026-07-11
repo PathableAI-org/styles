@@ -39,7 +39,7 @@ export const MixedLayout = {
       <div class="pathable-bento-tile pathable-bento-tile--image" style="min-height: 180px;">
         <img src="https://placehold.co/400x300/primary/white?text=Image" alt="Feature screenshot" />
       </div>
-      <div class="pathable-bento-tile pathable-bento-tile--image" style="min-height: 180px;" id="bento-image-2">
+      <div class="pathable-bento-tile pathable-bento-tile--image2" style="min-height: 180px;" id="bento-image-2">
         <img src="https://placehold.co/400x300/primary-lighter/333?text=Analytics" alt="Analytics screenshot" />
       </div>
     </div>

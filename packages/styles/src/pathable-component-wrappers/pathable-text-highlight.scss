@@ -49,7 +49,7 @@
 .pathable-text-highlight--soft-bg {
   background-color: var(
     --pathable-text-highlight-soft-bg-color,
-    var(--usa-text-highlight-soft-bg-color, #{color('primary-lighter')})
+    var(--usa-text-highlight-soft-bg-color, #{color('primary-light')})
   );
   padding: 0.15em 0.3em;
   margin-left: -0.15em;

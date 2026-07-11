@@ -36,7 +36,7 @@ export const Static = {
   },
   render: () => `
     <div style="max-width: 600px;">
-      <div class="pathable-chip-rail">
+      <div class="pathable-chip-rail" tabindex="0">
         ${chipElements}
       </div>
     </div>
@@ -75,7 +75,7 @@ export const FewChips = {
     },
   },
   render: () => `
-    <div class="pathable-chip-rail">
+    <div class="pathable-chip-rail" tabindex="0">
       <span class="pathable-chip-rail__chip">New</span>
       <span class="pathable-chip-rail__chip">Popular</span>
       <span class="pathable-chip-rail__chip">Featured</span>
