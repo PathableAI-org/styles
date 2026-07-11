@@ -54,4 +54,24 @@
   --pathable-footer-padding-y: #{units(2)};
   --usa-footer-padding-x: #{units(4)};
   --usa-footer-padding-y: #{units(2)};
+
+  // --- Wizard composition tokens ---
+  --pathable-wizard-max-width: #{units('desktop')};
+  --pathable-wizard-gap: #{units(2)};
+  --usa-wizard-max-width: #{units('desktop')};
+  --usa-wizard-gap: #{units(2)};
+
+  // --- Workflow panel tokens ---
+  --pathable-workflow-panel-max-width: #{units('mobile')};
+  --pathable-workflow-panel-gap: #{units(1.5)};
+  --pathable-workflow-panel-prompt-bg: #{color('gray-5')};
+  --usa-workflow-panel-max-width: #{units('mobile')};
+  --usa-workflow-panel-gap: #{units(1.5)};
+  --usa-workflow-panel-prompt-bg: #{color('gray-5')};
+
+  // --- Save-status tokens ---
+  --pathable-save-status-font-size: #{type-scale('sm')};
+  --pathable-save-status-icon-size: 1em;
+  --usa-save-status-font-size: #{type-scale('sm')};
+  --usa-save-status-icon-size: 1em;
 }

@@ -1,0 +1,10 @@
+// packages/styles/src/pathable-component-wrappers/pathable-structured-workflow.scss
+//
+// Bundle package: structured workflow compositions
+// (wizard layout, wizard actions, workflow panel, save-status indicator).
+// Forwards individual partials for selective import.
+
+@forward 'pathable-wizard';
+@forward 'pathable-wizard-actions';
+@forward 'pathable-workflow-panel';
+@forward 'pathable-save-status';
