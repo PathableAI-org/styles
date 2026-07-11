@@ -22,9 +22,10 @@
 }
 
 // Push Continue and Submit to the right
+// Right-align the primary action and last button in the footer
 .pathable-wizard__actions .pathable-button--continue,
 .pathable-wizard__actions .pathable-button--submit,
-.pathable-wizard__actions :nth-last-child(1 of .pathable-button) {
+.pathable-wizard__actions .pathable-button:last-child {
   margin-inline-start: auto;
 }
 
@@ -54,7 +55,7 @@
 
   .pathable-wizard__actions .pathable-button--continue,
   .pathable-wizard__actions .pathable-button--submit,
-  .pathable-wizard__actions :nth-last-child(1 of .pathable-button) {
+  .pathable-wizard__actions .pathable-button:last-child {
     justify-self: end;
     margin-inline-start: 0;
     width: 100%;

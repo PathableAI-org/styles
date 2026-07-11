@@ -66,8 +66,4 @@
 }
 
 // Long prompts and notes must not overflow
-.pathable-wizard__prompt,
-.pathable-wizard__note {
-  overflow-y: auto;
-  max-height: 20rem;
-}
+// (Reserved for future use when documented in contract)

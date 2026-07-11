@@ -15,17 +15,17 @@ export const Default = {
   render: () => `
     <div class="pathable-wizard">
       <ol class="pathable-step-indicator">
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-          <span class="pathable-step-indicator__step-label">Step 1: Create Account</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+          <span class="pathable-step-indicator__segment-label">Step 1: Create Account</span>
         </li>
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--current">
-          <span class="pathable-step-indicator__step-label">Step 2: Participant Intake</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--current">
+          <span class="pathable-step-indicator__segment-label">Step 2: Participant Intake</span>
         </li>
-        <li class="pathable-step-indicator__step">
-          <span class="pathable-step-indicator__step-label">Step 3: Program Selection</span>
+        <li class="pathable-step-indicator__segment">
+          <span class="pathable-step-indicator__segment-label">Step 3: Program Selection</span>
         </li>
-        <li class="pathable-step-indicator__step">
-          <span class="pathable-step-indicator__step-label">Step 4: Review & Submit</span>
+        <li class="pathable-step-indicator__segment">
+          <span class="pathable-step-indicator__segment-label">Step 4: Review & Submit</span>
         </li>
       </ol>
 
@@ -109,17 +109,17 @@ export const ValidationError = {
   render: () => `
     <div class="pathable-wizard">
       <ol class="pathable-step-indicator">
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-          <span class="pathable-step-indicator__step-label">Step 1: Create Account</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+          <span class="pathable-step-indicator__segment-label">Step 1: Create Account</span>
         </li>
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--current">
-          <span class="pathable-step-indicator__step-label">Step 2: Participant Intake</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--current">
+          <span class="pathable-step-indicator__segment-label">Step 2: Participant Intake</span>
         </li>
-        <li class="pathable-step-indicator__step">
-          <span class="pathable-step-indicator__step-label">Step 3: Program Selection</span>
+        <li class="pathable-step-indicator__segment">
+          <span class="pathable-step-indicator__segment-label">Step 3: Program Selection</span>
         </li>
-        <li class="pathable-step-indicator__step">
-          <span class="pathable-step-indicator__step-label">Step 4: Review & Submit</span>
+        <li class="pathable-step-indicator__segment">
+          <span class="pathable-step-indicator__segment-label">Step 4: Review & Submit</span>
         </li>
       </ol>
 
@@ -179,17 +179,17 @@ export const FinalStep = {
   render: () => `
     <div class="pathable-wizard">
       <ol class="pathable-step-indicator">
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-          <span class="pathable-step-indicator__step-label">Step 1: Create Account</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+          <span class="pathable-step-indicator__segment-label">Step 1: Create Account</span>
         </li>
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-          <span class="pathable-step-indicator__step-label">Step 2: Participant Intake</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+          <span class="pathable-step-indicator__segment-label">Step 2: Participant Intake</span>
         </li>
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-          <span class="pathable-step-indicator__step-label">Step 3: Program Selection</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+          <span class="pathable-step-indicator__segment-label">Step 3: Program Selection</span>
         </li>
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--current">
-          <span class="pathable-step-indicator__step-label">Step 4: Review & Submit</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--current">
+          <span class="pathable-step-indicator__segment-label">Step 4: Review & Submit</span>
         </li>
       </ol>
 
@@ -263,11 +263,11 @@ export const WizardLongForm = {
   render: () => `
     <div class="pathable-wizard">
       <ol class="pathable-step-indicator">
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-          <span class="pathable-step-indicator__step-label">Step 1: Account</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+          <span class="pathable-step-indicator__segment-label">Step 1: Account</span>
         </li>
-        <li class="pathable-step-indicator__step pathable-step-indicator__step--current">
-          <span class="pathable-step-indicator__step-label">Step 2: Participant Profile</span>
+        <li class="pathable-step-indicator__segment pathable-step-indicator__segment--current">
+          <span class="pathable-step-indicator__segment-label">Step 2: Participant Profile</span>
         </li>
       </ol>
 
