@@ -1,0 +1,248 @@
+// packages/styles/src/pathable-component-wrappers/pathable-resource-card.scss
+//
+// Resource card — a self-contained presentation unit for a single resource.
+// Supports grid layout (media above content) and list layout (media beside content).
+//
+// CSS custom properties:
+//   --pathable-resource-card-summary-lines  (default: 3) — max lines for description
+//   --pathable-resource-card-media-width    (default: 160px) — media width in list layout
+//   --pathable-resource-card-media-height   (default: 120px) — media height in grid layout
+//
+// Modifier classes:
+//   .pathable-resource-card--grid          — media above content (default)
+//   .pathable-resource-card--list          — media beside content
+//   .pathable-resource-card--interactive   — hover/focus-within emphasis
+//   .pathable-resource-card--has-action    — secondary action present
+//   .pathable-resource-card--no-image      — fallback icon-only media
+
+@use 'uswds-core' as *;
+
+// --- Base card container ---
+
+.pathable-resource-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-2);
+  padding: var(--pathable-space-4);
+  border-radius: var(--radius-md);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  position: relative;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+// --- Interactive (hover/focus-within emphasis) ---
+
+.pathable-resource-card--interactive {
+  box-shadow: var(--elevation-sm);
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: var(--elevation-md);
+    background: var(--pathable-color-bg);
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    &:hover {
+      outline: 2px solid CanvasText;
+    }
+    &:focus-within {
+      outline-color: Highlight;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// --- Layout variants ---
+
+// Grid: media above content (default)
+.pathable-resource-card--grid {
+  .pathable-resource-card__media {
+    width: 100%;
+    height: var(--pathable-resource-card-media-height, 120px);
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+}
+
+// List: media beside content
+.pathable-resource-card--list {
+  flex-direction: row;
+  gap: var(--pathable-space-4);
+
+  .pathable-resource-card__media {
+    flex-shrink: 0;
+    width: var(--pathable-resource-card-media-width, 160px);
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .pathable-resource-card__body {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// --- Regions ---
+
+.pathable-resource-card__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pathable-color-bg);
+  color: var(--pathable-color-text-muted);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// No-image fallback
+.pathable-resource-card--no-image {
+  .pathable-resource-card__media {
+    min-height: 3rem;
+    font-size: var(--pathable-font-size-heading-lg);
+    opacity: 0.5;
+  }
+}
+
+.pathable-resource-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-1);
+  min-width: 0;
+}
+
+.pathable-resource-card__title {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-sm);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  margin: 0;
+}
+
+.pathable-resource-card__provider {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+}
+
+.pathable-resource-card__summary {
+  font-size: var(--pathable-font-size-body-sm);
+  line-height: var(--pathable-font-line-height-body);
+  color: var(--pathable-color-text);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: var(--pathable-resource-card-summary-lines, 3);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pathable-resource-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-1);
+  margin-block-start: var(--pathable-space-1);
+}
+
+.pathable-resource-card__metadata {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+}
+
+.pathable-resource-card__rating {
+  font-size: var(--pathable-font-size-body-sm);
+  color: var(--pathable-color-accent);
+  margin: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.pathable-resource-card__source {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+// Primary link
+.pathable-resource-card__link {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// Secondary action — sibling of link, independent focus
+.pathable-resource-card__action {
+  position: absolute;
+  inset-block-start: var(--pathable-space-2);
+  inset-inline-end: var(--pathable-space-2);
+  z-index: 1;
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// Has-action: adjust padding so content does not overlap the action button
+.pathable-resource-card--has-action {
+  padding-block-start: var(--pathable-space-7);
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-resource-card {
+    border: 2px solid CanvasText;
+  }
+}
+
+// --- Accessibility: reduced motion ---
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-resource-card--interactive {
+    transition: none;
+  }
+}

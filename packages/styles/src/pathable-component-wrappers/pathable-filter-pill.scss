@@ -1,0 +1,77 @@
+// packages/styles/src/pathable-component-wrappers/pathable-filter-pill.scss
+//
+// Active-filter pill — removable chip representing a currently applied filter.
+// Each pill has a label and an accessible dismiss button.
+
+@use 'uswds-core' as *;
+
+.pathable-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  padding: var(--pathable-space-1) var(--pathable-space-2);
+  border-radius: var(--radius-pill, 9999px);
+  background: var(--pathable-color-bg);
+  border: 1px solid var(--pathable-color-border);
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.pathable-filter-pill__label {
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 12rem;
+}
+
+.pathable-filter-pill__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--pathable-color-text-muted);
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--pathable-color-text);
+    background: var(--pathable-color-border);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// Ensure minimum touch target for dismiss button
+@media (pointer: coarse) {
+  .pathable-filter-pill__dismiss {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-filter-pill {
+    border: 1px solid CanvasText;
+  }
+}

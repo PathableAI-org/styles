@@ -1,0 +1,9 @@
+// packages/styles/src/pathable-component-wrappers/pathable-discovery.scss
+//
+// Bundle package: resource discovery patterns (resource cards, filter bar,
+// filter pills, guided wayfinder).
+
+@forward 'pathable-resource-card';
+@forward 'pathable-filter-bar';
+@forward 'pathable-filter-pill';
+@forward 'pathable-wayfinder';

@@ -1,0 +1,199 @@
+// packages/styles/src/pathable-component-wrappers/pathable-filter-bar.scss
+//
+// Composite filter bar — search input, facet controls, sort control, result count,
+// active-filter pills, clear-all action, and optional mobile drawer trigger.
+// Controls wrap or stack on narrow screens without horizontal overflow.
+//
+// Modifier classes:
+//   .pathable-filter-bar--has-filters      — at least one filter active
+//   .pathable-filter-bar--drawer-mode      — show drawer trigger on narrow screens
+
+@use 'uswds-core' as *;
+
+.pathable-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pathable-space-2);
+  padding: var(--pathable-space-3) var(--pathable-space-4);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  border-radius: var(--radius-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Search input region
+.pathable-filter-bar__search {
+  flex: 1 1 15rem;
+  min-width: 10rem;
+  padding: var(--pathable-space-1) var(--pathable-space-2);
+  border: 1px solid var(--pathable-color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--pathable-font-body);
+  font-size: var(--pathable-font-size-body-sm);
+  background: var(--pathable-color-bg);
+  color: var(--pathable-color-text);
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+// Facet control group
+.pathable-filter-bar__facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-1);
+  align-items: center;
+}
+
+// Sort control
+.pathable-filter-bar__sort {
+  select {
+    padding: var(--pathable-space-1) var(--pathable-space-2);
+    border: 1px solid var(--pathable-color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--pathable-font-body);
+    font-size: var(--pathable-font-size-body-xs);
+    background: var(--pathable-color-bg);
+    color: var(--pathable-color-text);
+
+    &:focus-visible {
+      outline: 2px solid var(--pathable-color-focus-ring);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Result count
+.pathable-filter-bar__count {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  white-space: nowrap;
+}
+
+// Active-filter pills container
+.pathable-filter-bar__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-1);
+  align-items: center;
+  width: 100%;
+  order: 1;
+
+  .pathable-filter-bar--has-filters & {
+    margin-block-start: var(--pathable-space-1);
+    padding-block-start: var(--pathable-space-1);
+    border-block-start: 1px solid var(--pathable-color-border);
+  }
+}
+
+// Clear-all action
+.pathable-filter-bar__clear {
+  padding: var(--pathable-space-1) var(--pathable-space-2);
+  border: none;
+  background: transparent;
+  color: var(--pathable-color-link);
+  font-size: var(--pathable-font-size-body-xs);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// Drawer trigger (mobile)
+.pathable-filter-bar__drawer-trigger {
+  display: none;
+  padding: var(--pathable-space-1) var(--pathable-space-3);
+  border: 1px solid var(--pathable-color-border);
+  border-radius: var(--radius-sm);
+  background: var(--pathable-color-bg);
+  color: var(--pathable-color-text);
+  font-size: var(--pathable-font-size-body-sm);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// --- Drawer mode: show trigger, hide facets/sort on narrow screens ---
+
+.pathable-filter-bar--drawer-mode {
+  @media (max-width: 1024px) {
+    .pathable-filter-bar__facets,
+    .pathable-filter-bar__sort {
+      display: none;
+    }
+
+    .pathable-filter-bar__drawer-trigger {
+      display: inline-flex;
+    }
+  }
+}
+
+// --- Narrow screens (< 1024px): stack controls ---
+
+@media (max-width: 1024px) {
+  .pathable-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pathable-filter-bar__search {
+    flex: 1 1 auto;
+  }
+
+  .pathable-filter-bar__facets,
+  .pathable-filter-bar__sort {
+    width: 100%;
+  }
+
+  .pathable-filter-bar__count {
+    order: 0;
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-filter-bar {
+    border: 2px solid CanvasText;
+  }
+
+  .pathable-filter-bar__search,
+  .pathable-filter-bar__sort select {
+    border: 1px solid CanvasText;
+  }
+}
+
+// --- Accessibility: reduced motion ---
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-filter-bar {
+    transition: none;
+  }
+}
