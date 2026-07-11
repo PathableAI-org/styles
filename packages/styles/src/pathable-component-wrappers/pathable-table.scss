@@ -39,7 +39,7 @@
 // --- Sortable column headers ---
 
 .pathable-table--sortable {
-  th {
+  th[aria-sort] {
     cursor: pointer;
     user-select: none;
     padding-inline-end: 1.5rem;
@@ -58,8 +58,7 @@
       transform: translateY(-50%);
     }
 
-    // Default: unsorted (both arrows faint)
-    &:not([aria-sort])::after,
+    // Unsorted (both arrows faint)
     &[aria-sort='none']::after {
       border-left: 0.3rem solid transparent;
       border-right: 0.3rem solid transparent;
@@ -228,7 +227,6 @@
         rgba(0, 0, 0, 0.05) 100%
       );
       pointer-events: none;
-      display: none;
     }
   }
 }

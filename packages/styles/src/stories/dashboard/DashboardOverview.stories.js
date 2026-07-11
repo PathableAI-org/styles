@@ -67,9 +67,7 @@ export const Populated = {
       <div class="pathable-activity-list">
         <h3 class="pathable-activity-list__group-heading">Today</h3>
         <div class="pathable-activity-row">
-          <div class="pathable-activity-row__status" data-status="completed" role="img" aria-label="completed">
-            <span class="pathable-activity-row__status-text pathable-sr-only">completed</span>
-          </div>
+          <div class="pathable-activity-row__status" data-status="completed" role="img" aria-label="completed"></div>
           <div class="pathable-activity-row__body">
             <p class="pathable-activity-row__title">Intake assessment completed</p>
             <p class="pathable-activity-row__context">Participant: Maria Gonzalez</p>
@@ -78,9 +76,7 @@ export const Populated = {
           <span class="pathable-activity-row__owner">You</span>
         </div>
         <div class="pathable-activity-row">
-          <div class="pathable-activity-row__status" data-status="in-progress" role="img" aria-label="in progress">
-            <span class="pathable-activity-row__status-text pathable-sr-only">in progress</span>
-          </div>
+          <div class="pathable-activity-row__status" data-status="in-progress" role="img" aria-label="in progress"></div>
           <div class="pathable-activity-row__body">
             <p class="pathable-activity-row__title">Follow-up call scheduled</p>
             <p class="pathable-activity-row__context">Provider: Cascade Resources</p>

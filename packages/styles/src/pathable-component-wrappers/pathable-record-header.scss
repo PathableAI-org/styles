@@ -9,8 +9,8 @@
 //   --pathable-record-header-gap          (default: var(--pathable-space-4)) — spacing
 //
 // Modifier classes:
-//   .pathable-record-header--with-image  — image/avatar present
-//   .pathable-record-header--centered    — center-aligned content
+//   .pathable-record-header--no-image   — icon-only fallback media
+//   .pathable-record-header--centered   — center-aligned content
 
 @use 'uswds-core' as *;
 

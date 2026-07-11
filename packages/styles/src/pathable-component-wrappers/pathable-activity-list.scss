@@ -68,19 +68,27 @@
 
   // Semantic status colors — paired with text for non-color differentiation
   &[data-status='completed'] {
-    background: var(--pathable-color-success, #1cae96);
+    background: var(--pathable-color-success);
   }
 
   &[data-status='in-progress'] {
-    background: var(--pathable-color-status-warning, #ddaa01);
+    border-radius: 0;
+    background: var(--pathable-color-status-warning-bg);
   }
 
   &[data-status='pending'] {
-    background: var(--pathable-color-text-muted);
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 2px solid var(--pathable-color-text-muted);
+    background: transparent;
+    border-radius: 50%;
   }
 
   &[data-status='cancelled'] {
-    background: var(--pathable-color-status-error-text, #b50909);
+    width: 0.625rem;
+    height: 0.25rem;
+    border-radius: 0;
+    background: var(--pathable-color-danger);
   }
 
   // Text label for non-color differentiation
@@ -232,11 +240,25 @@
   }
 
   .pathable-activity-row__status {
-    &[data-status='completed'],
-    &[data-status='in-progress'],
-    &[data-status='pending'],
+    &[data-status='completed'] {
+      background: CanvasText;
+      border-radius: 0;
+      border: none;
+    }
+    &[data-status='in-progress'] {
+      background: CanvasText;
+      border-radius: 0;
+      border: none;
+    }
+    &[data-status='pending'] {
+      background: transparent;
+      border: 2px solid CanvasText;
+    }
     &[data-status='cancelled'] {
       background: CanvasText;
+      border-radius: 0;
+      border: none;
+      height: 0.25rem;
     }
   }
 }

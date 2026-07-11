@@ -165,7 +165,7 @@ export const Empty = {
 
 export const Scrollable = {
   render: () => `
-    <div class="pathable-table--scrollable" style="max-width: 450px;">
+    <div class="pathable-table--scrollable" tabindex="0" style="max-width: 450px;" role="region" aria-label="Scrollable table">
       <table class="pathable-table pathable-table--borderless pathable-table--sortable">
         <thead>
           <tr>

@@ -13,9 +13,7 @@ export default {
 
 const activityRow = (title, context, date, owner, status, actions) => `
   <div class="pathable-activity-row">
-    <div class="pathable-activity-row__status" data-status="${status}" role="img" aria-label="${status}">
-      <span class="pathable-activity-row__status-text pathable-sr-only">${status}</span>
-    </div>
+    <div class="pathable-activity-row__status" data-status="${status}" role="img" aria-label="${status}"></div>
     <div class="pathable-activity-row__body">
       <p class="pathable-activity-row__title">${title}</p>
       <p class="pathable-activity-row__context">${context}</p>

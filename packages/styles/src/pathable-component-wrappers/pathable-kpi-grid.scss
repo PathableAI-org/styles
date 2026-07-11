@@ -127,31 +127,22 @@
 
   // Semantic trend cues — always include text/icon in addition to color
   &[data-trend='up'] {
-    color: var(--pathable-color-success, #1cae96);
+    color: var(--pathable-color-success);
 
     &::before {
       border-left: 0.35rem solid transparent;
       border-right: 0.35rem solid transparent;
       border-bottom: 0.45rem solid currentColor;
     }
-
-    // Text cue for non-color differentiation
-    &::after {
-      content: attr(data-trend-label, 'Up');
-    }
   }
 
   &[data-trend='down'] {
-    color: var(--pathable-color-status-error-text, #b50909);
+    color: var(--pathable-color-danger);
 
     &::before {
       border-left: 0.35rem solid transparent;
       border-right: 0.35rem solid transparent;
       border-top: 0.45rem solid currentColor;
-    }
-
-    &::after {
-      content: attr(data-trend-label, 'Down');
     }
   }
 
@@ -164,10 +155,6 @@
       border-top: 0.2rem solid currentColor;
       border-bottom: 0.2rem solid currentColor;
       height: 0.1rem;
-    }
-
-    &::after {
-      content: attr(data-trend-label, 'No change');
     }
   }
 }

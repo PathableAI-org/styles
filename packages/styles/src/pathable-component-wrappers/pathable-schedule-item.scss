@@ -150,7 +150,7 @@
 .pathable-schedule-item--completed {
   .pathable-schedule-item__status {
     background: var(--pathable-color-bg);
-    color: var(--pathable-color-success, #1cae96);
+    color: var(--pathable-color-success);
   }
 }
 
@@ -164,7 +164,7 @@
 
   .pathable-schedule-item__status {
     background: var(--pathable-color-bg);
-    color: var(--pathable-color-status-warning-text, #936f02);
+    color: var(--pathable-color-status-warning-text);
   }
 }
 
