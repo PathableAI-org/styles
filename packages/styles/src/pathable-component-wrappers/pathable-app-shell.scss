@@ -1,0 +1,8 @@
+// packages/styles/src/pathable-component-wrappers/pathable-app-shell.scss
+//
+// Bundle package: responsive application shell pattern.
+// Forwards individual app shell files for selective import.
+// These are pure CSS layout patterns (no USWDS dependency).
+
+@forward 'pathable-app-shell-layout';
+@forward 'pathable-bottom-navigation';
