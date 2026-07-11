@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes participant context, step indicator, objective/prompt, form entry area, save status, validation summary, navigation actions, and completed state from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for guided multi-step processes or form-based workflows. Optional patterns include save status indicators, validation summaries, and record headers. See the structured workflow documentation for detailed usage.',
+          '**Interaction Model**: CSS-only (no JavaScript required)\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes participant context, step indicator, objective/prompt, form entry area, save status, validation summary, navigation actions, and completed state from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for guided multi-step processes or form-based workflows. Optional patterns include save status indicators, validation summaries, and record headers. See the structured workflow documentation for detailed usage.',
       },
     },
   },
@@ -30,7 +30,7 @@ const inProgressHtml = `
 
   <div class="pathable-record-header" style="margin-bottom: 1.5rem;">
     <div class="pathable-record-header__media">
-      <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent, #00365c);">
+      <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent);">
         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
       </svg>
     </div>
@@ -101,7 +101,7 @@ const inProgressHtml = `
           <h3 class="pathable-summary-box__heading">Validation Summary</h3>
           <p class="pathable-summary-box__text">Employment status is required. Please select from the dropdown above.</p>
         </div>
-        <div style="display: flex; justify-content: flex-end; font-size: 0.875rem; color: #888;">
+        <div style="display: flex; justify-content: flex-end; font-size: 0.875rem; color: var(--pathable-color-text-muted);">
           <span class="pathable-workflow-panel__status">Draft saved · 2:45 PM</span>
         </div>
       </div>
@@ -138,12 +138,12 @@ const completedHtml = `
   </ol>
 
   <div class="pathable-workflow-panel pathable-workflow-panel--completed" style="text-align: center; padding: 3rem 2rem; margin-bottom: 1.5rem;">
-    <svg aria-hidden="true" width="64" height="64" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent, #1cae96); margin-bottom: 1rem;">
+    <svg aria-hidden="true" width="64" height="64" viewBox="0 0 24 24" style="fill: var(--pathable-color-success); margin-bottom: 1rem;">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
     </svg>
     <h2 class="pathable-workflow-panel__objective" style="font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem;">Intake Complete</h2>
     <p style="margin: 0 0 0.25rem; font-size: 1rem;">Initial assessment for <strong>Jamie Rivera</strong> has been completed and submitted.</p>
-    <p style="margin: 0 0 2rem; font-size: 0.875rem; color: #666;">Reference #: ASMT-2026-0042</p>
+    <p style="margin: 0 0 2rem; font-size: 0.875rem; color: var(--pathable-color-text-muted);">Reference #: ASMT-2026-0042</p>
     <div class="pathable-cluster pathable-cluster--gap-sm" style="justify-content: center;">
       <a href="#" class="pathable-button">Start new assessment</a>
       <a href="#" class="pathable-button pathable-button--outline">View summary</a>
@@ -154,7 +154,7 @@ const completedHtml = `
 
 const mobileHtml = `
 <div style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
-  <div style="font-size: 0.875rem; color: #666; margin-bottom: 1rem;">Step 2 of 4: Assessment</div>
+  <div style="font-size: 0.875rem; color: var(--pathable-color-text-muted); margin-bottom: 1rem;">Step 2 of 4: Assessment</div>
 
   <div class="pathable-record-header pathable-record-header--no-image" style="margin-bottom: 1rem;">
     <div class="pathable-record-header__body">

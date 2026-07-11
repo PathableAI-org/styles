@@ -14,7 +14,7 @@ export default {
 const sidebarHtml = `
 <aside class="pathable-app-shell__sidebar">
   <div class="pathable-app-shell__brand" style="padding: 0.5rem 0;">
-    <strong style="font-size: 1.125rem; color: var(--pathable-color-accent, #00365c);">PathAble</strong>
+    <strong style="font-size: 1.125rem; color: var(--pathable-color-accent);">PathAble</strong>
   </div>
   <nav class="pathable-app-shell__nav">
     <a href="#" class="pathable-app-shell__nav-item pathable-app-shell__nav-item--active" aria-current="page">Dashboard</a>
@@ -24,7 +24,7 @@ const sidebarHtml = `
     <a href="#" class="pathable-app-shell__nav-item">Settings</a>
   </nav>
   <div class="pathable-app-shell__account" style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--pathable-color-border);">
-    <span style="font-size: 0.875rem; color: var(--pathable-color-text-muted, #666);">Signed in as <strong>admin@org.gov</strong></span>
+    <span style="font-size: 0.875rem; color: var(--pathable-color-text-muted);">Signed in as <strong>admin@org.gov</strong></span>
   </div>
 </aside>
 `
@@ -347,7 +347,7 @@ const emptyContent = `
   </div>
 </div>
 <div class="pathable-empty-state pathable-empty-state--no-data">
-  <svg class="pathable-empty-state__icon" aria-hidden="true" viewBox="0 0 24 24" width="48" height="48" style="fill: #999;">
+  <svg class="pathable-empty-state__icon" aria-hidden="true" viewBox="0 0 24 24" width="48" height="48" style="fill: var(--pathable-color-text-muted);">
     <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
   </svg>
   <h2 class="pathable-empty-state__heading">No data yet</h2>

@@ -40,7 +40,8 @@ Compositions MUST:
 Compositions MUST NOT:
 - Contain raw hex color values, arbitrary spacing numbers, or one-off custom CSS
 - Use inline `style` attributes for layout/spacing (only for specific placeholder content)
-- Import USWDS classes directly — go through the `--pathable-*` / `--usa-*` namespaced wrappers
+
+Compositions SHOULD prefer `.pathable-*` namespaced wrappers over `.usa-*` classes. An exception applies to **JS-driven components** (header, banner, combo-box, modal, nav, tooltip, etc.) where the `.usa-{component}` class MUST remain on the DOM element because USWDS JavaScript selects by `.usa-*` class names — remove those classes would break interactivity. In these cases, add both `.pathable-{component}` and `.usa-{component}` on the same element.
 
 ### Bundle Contracts Per Archetype
 

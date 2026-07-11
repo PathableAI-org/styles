@@ -5,18 +5,18 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes search-led hero, guided wayfinder, filter bar, active-filter pills, result count, sorting, resource-card grid, empty-results fallback, and pagination from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for browsable collections of resources with filters and search. Optional patterns include wayfinder guided discovery and empty-state fallbacks. See the discovery pattern documentation for detailed usage.',
+          '**Interaction Model**: CSS-only (no JavaScript required)\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes search-led hero, guided wayfinder, filter bar, active-filter pills, result count, sorting, resource-card grid, empty-results fallback, and pagination from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for browsable collections of resources with filters and search. Optional patterns include wayfinder guided discovery and empty-state fallbacks. See the discovery pattern documentation for detailed usage.',
       },
     },
   },
 }
 
 const searchHeroHtml = `
-<section style="padding: 3rem 1rem; background: var(--pathable-color-surface, #f8f9fa);">
+<section style="padding: 3rem 1rem;">
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-stack pathable-stack--gap-md" style="align-items: center; text-align: center;">
       <h1 style="margin: 0; font-size: 2rem; font-weight: 700;">Find the right resource</h1>
-      <p style="margin: 0; font-size: 1.125rem; color: #555; max-width: 480px;">Browse our curated collection of tools, guides, and training materials.</p>
+      <p style="margin: 0; font-size: 1.125rem; color: var(--pathable-color-text-muted); max-width: 480px;">Browse our curated collection of tools, guides, and training materials.</p>
       <form class="pathable-search pathable-search--big" role="search" style="max-width: 500px; width: 100%;">
         <label class="pathable-sr-only" for="dir-search">Search resources</label>
         <input class="pathable-input" id="dir-search" type="search" name="search" placeholder="Search resources...">
@@ -36,7 +36,7 @@ const wayfinderHtml = `
 <section style="padding: 2rem 1rem;">
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-wayfinder pathable-wayfinder--raised" role="region" aria-label="Find the right resource">
-      <svg class="pathable-wayfinder__icon" aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent, #00365c);">
+      <svg class="pathable-wayfinder__icon" aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent);">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
       </svg>
       <h2 class="pathable-wayfinder__heading">What are you looking for?</h2>
@@ -106,7 +106,6 @@ const resourceCards = [
     provider: 'National Workforce Association',
     summary:
       'A comprehensive guide to conducting effective participant intake sessions.',
-    category: 'Case Management',
     image: 'https://placehold.co/400x250/e0e0e0/666666?text=Intake+Guide',
     tags: ['Guide', 'Beginner'],
     updated: '2 days ago',
@@ -117,7 +116,6 @@ const resourceCards = [
     provider: 'Dept. of Labor',
     summary:
       'Interactive checklist for ensuring compliance with federal reporting requirements.',
-    category: 'Compliance',
     image: 'https://placehold.co/400x250/e0e0e0/666666?text=Compliance+Tool',
     tags: ['Tool', 'Advanced'],
     updated: '1 week ago',
@@ -128,7 +126,6 @@ const resourceCards = [
     provider: 'PathAble Learning Center',
     summary:
       'Learn how to set up and customize outcome tracking for your programs.',
-    category: 'Reporting',
     image: 'https://placehold.co/400x250/e0e0e0/666666?text=Outcomes+Dashboard',
     tags: ['Training', 'Intermediate'],
     updated: '3 days ago',
@@ -139,7 +136,6 @@ const resourceCards = [
     provider: 'Workforce Innovation Network',
     summary:
       'Evidence-based strategies for improving participant engagement and retention.',
-    category: 'Case Management',
     image:
       'https://placehold.co/400x250/e0e0e0/666666?text=Engagement+Strategies',
     tags: ['Guide', 'Intermediate'],
@@ -151,7 +147,6 @@ const resourceCards = [
     provider: 'Federal Programs Office',
     summary:
       'Pre-formatted template for quarterly program performance reports.',
-    category: 'Reporting',
     image: 'https://placehold.co/400x250/e0e0e0/666666?text=Reporting+Template',
     tags: ['Tool', 'All Levels'],
     updated: '2 weeks ago',
@@ -162,7 +157,6 @@ const resourceCards = [
     provider: 'PathAble Learning Center',
     summary:
       'Self-paced training course covering the fundamentals of case management.',
-    category: 'Training',
     image:
       'https://placehold.co/400x250/e0e0e0/666666?text=Onboarding+Training',
     tags: ['Training', 'Beginner'],
@@ -244,7 +238,7 @@ const emptyResultsHtml = `
 <section style="padding: 3rem 1rem;">
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-empty-state pathable-empty-state--no-results">
-      <svg class="pathable-empty-state__icon" aria-hidden="true" viewBox="0 0 24 24" width="48" height="48" style="fill: #999;">
+      <svg class="pathable-empty-state__icon" aria-hidden="true" viewBox="0 0 24 24" width="48" height="48" style="fill: var(--pathable-color-text-muted);">
         <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
       </svg>
       <h2 class="pathable-empty-state__heading">No matching resources</h2>
@@ -291,7 +285,7 @@ const mobilePopulatedPage = `
   ${searchHeroHtml}
   <section style="padding: 2rem 1rem;">
     <div class="pathable-wayfinder pathable-wayfinder--raised" role="region" aria-label="Find the right resource">
-      <svg class="pathable-wayfinder__icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent, #00365c);">
+      <svg class="pathable-wayfinder__icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" style="fill: var(--pathable-color-accent);">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
       </svg>
       <h2 class="pathable-wayfinder__heading">What are you looking for?</h2>
