@@ -1,0 +1,196 @@
+// packages/styles/src/pathable-component-wrappers/pathable-record-header.scss
+//
+// Record header — presents the identity of a person, organization, service,
+// or resource. Supports image/avatar/logo/category-icon with fallback,
+// primary identity, secondary metadata, status badges, and actions.
+//
+// CSS custom properties:
+//   --pathable-record-header-avatar-size  (default: 4rem) — avatar/icon size
+//   --pathable-record-header-gap          (default: var(--pathable-space-4)) — spacing
+//
+// Modifier classes:
+//   .pathable-record-header--with-image  — image/avatar present
+//   .pathable-record-header--centered    — center-aligned content
+
+@use 'uswds-core' as *;
+
+// --- Base container ---
+
+.pathable-record-header {
+  display: flex;
+  gap: var(--pathable-record-header-gap, var(--pathable-space-4));
+  align-items: flex-start;
+  padding: var(--pathable-space-4);
+  border-radius: var(--radius-md);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// --- Media: image, avatar, logo, or icon ---
+
+.pathable-record-header__media {
+  flex-shrink: 0;
+  width: var(--pathable-record-header-avatar-size, 4rem);
+  height: var(--pathable-record-header-avatar-size, 4rem);
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--pathable-color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pathable-color-text-muted);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Fallback icon
+  svg {
+    width: 50%;
+    height: 50%;
+  }
+}
+
+// --- Body: identity, metadata, badges ---
+
+.pathable-record-header__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-1);
+}
+
+// --- Identity: name / title ---
+
+.pathable-record-header__identity {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-md);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  margin: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+// --- Metadata row ---
+
+.pathable-record-header__metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-2);
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+  list-style: none;
+  padding: 0;
+
+  > * + *::before {
+    content: '\00B7';
+    margin-inline-end: var(--pathable-space-2);
+    color: var(--pathable-color-border);
+  }
+}
+
+// --- Status badges ---
+
+.pathable-record-header__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-1);
+  margin-block-start: var(--pathable-space-1);
+}
+
+// --- Actions region ---
+
+.pathable-record-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pathable-space-2);
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+// --- Overflow actions slot ---
+
+.pathable-record-header__overflow {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+// --- Centered modifier ---
+
+.pathable-record-header--centered {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .pathable-record-header__body {
+    align-items: center;
+  }
+
+  .pathable-record-header__metadata {
+    justify-content: center;
+  }
+
+  .pathable-record-header__badges {
+    justify-content: center;
+  }
+
+  .pathable-record-header__actions {
+    margin-inline-start: 0;
+    justify-content: center;
+  }
+}
+
+// --- Narrow screen: stack vertically ---
+
+@media (max-width: 640px) {
+  .pathable-record-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pathable-record-header__media {
+    margin-block-end: var(--pathable-space-2);
+  }
+
+  .pathable-record-header__actions {
+    margin-inline-start: 0;
+    width: 100%;
+
+    > * {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+// --- No-image fallback ---
+
+.pathable-record-header--no-image {
+  .pathable-record-header__media {
+    // Use a decorative color for icon-only fallback
+    background: var(--pathable-color-accent);
+    color: var(--pathable-color-surface);
+    opacity: 0.8;
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-record-header {
+    border: 2px solid CanvasText;
+  }
+
+  .pathable-record-header__media {
+    border: 1px solid CanvasText;
+  }
+}

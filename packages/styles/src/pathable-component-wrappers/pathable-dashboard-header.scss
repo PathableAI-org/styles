@@ -1,0 +1,150 @@
+// packages/styles/src/pathable-component-wrappers/pathable-dashboard-header.scss
+//
+// Dashboard page header — combines page title, description, optional breadcrumb,
+// context/status indicator, and primary/secondary action regions.
+// Actions sit beside the heading on large screens and stack below on narrow screens.
+//
+// CSS custom properties:
+//   --pathable-dashboard-header-gap        (default: var(--pathable-space-4)) — spacing
+//   --pathable-dashboard-header-max-width  (default: none) — max-width constraint
+//
+// Modifier classes:
+//   .pathable-dashboard-header--stacked   — force actions below title
+//   .pathable-dashboard-header--compact   — reduced padding variant
+
+@use 'uswds-core' as *;
+
+// --- Base container ---
+
+.pathable-dashboard-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-3);
+  padding: var(--pathable-space-6) 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// --- Breadcrumb region ---
+
+.pathable-dashboard-header__breadcrumb {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+
+  // Breadcrumb separator
+  > * + *::before {
+    content: '/';
+    margin: 0 var(--pathable-space-1);
+    color: var(--pathable-color-text-muted);
+    opacity: 0.5;
+  }
+
+  @media (max-width: 640px) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// --- Title row: title + context/status + actions ---
+
+.pathable-dashboard-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pathable-space-3);
+}
+
+// --- Title ---
+
+.pathable-dashboard-header__title {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-xl);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+// --- Context / status indicator ---
+
+.pathable-dashboard-header__context {
+  font-size: var(--pathable-font-size-body-sm);
+  color: var(--pathable-color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// --- Description ---
+
+.pathable-dashboard-header__description {
+  font-size: var(--pathable-font-size-body-sm);
+  line-height: var(--pathable-font-line-height-body);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+  max-width: 40rem;
+}
+
+// --- Action regions ---
+
+.pathable-dashboard-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pathable-space-2);
+  flex-shrink: 0;
+}
+
+// --- Narrow screen: actions stack ---
+
+@media (max-width: 640px) {
+  .pathable-dashboard-header {
+    padding: var(--pathable-space-4) 0;
+  }
+
+  .pathable-dashboard-header__row {
+    flex-direction: column;
+  }
+
+  .pathable-dashboard-header__title {
+    font-size: var(--pathable-font-size-heading-lg);
+  }
+
+  .pathable-dashboard-header__actions {
+    width: 100%;
+
+    > * {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+// --- Stacked modifier ---
+
+.pathable-dashboard-header--stacked {
+  .pathable-dashboard-header__row {
+    flex-direction: column;
+  }
+}
+
+// --- Compact modifier ---
+
+.pathable-dashboard-header--compact {
+  padding: var(--pathable-space-4) 0;
+  gap: var(--pathable-space-2);
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-dashboard-header {
+    border-bottom: 1px solid CanvasText;
+    padding-bottom: var(--pathable-space-4);
+  }
+}

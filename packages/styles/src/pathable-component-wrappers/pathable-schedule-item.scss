@@ -1,0 +1,258 @@
+// packages/styles/src/pathable-component-wrappers/pathable-schedule-item.scss
+//
+// Schedule / appointment item — date/time, title, context, location, time zone,
+// status, and action regions. Supports distinct visual states for cancelled,
+// completed, tentative, and upcoming — always using icon/text in addition to color.
+//
+// Modifier classes (on .pathable-schedule-item):
+//   --cancelled   — cancelled appointment
+//   --completed   — completed appointment
+//   --tentative   — tentative/pending confirmation
+//   --upcoming    — upcoming event (default treatment)
+
+@use 'uswds-core' as *;
+
+// --- Base item ---
+
+.pathable-schedule-item {
+  display: flex;
+  gap: var(--pathable-space-3);
+  padding: var(--pathable-space-3);
+  border-radius: var(--radius-sm);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  width: 100%;
+  box-sizing: border-box;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--pathable-color-bg);
+  }
+}
+
+// --- Date/time region ---
+
+.pathable-schedule-item__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.pathable-schedule-item__date-month {
+  font-size: var(--pathable-font-size-body-xs);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text-muted);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.pathable-schedule-item__date-day {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-lg);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  line-height: 1.2;
+}
+
+.pathable-schedule-item__date-time {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  line-height: 1;
+  margin-block-start: var(--pathable-space-1);
+}
+
+// --- Body: title, context, location, time zone ---
+
+.pathable-schedule-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-1);
+}
+
+.pathable-schedule-item__title {
+  font-size: var(--pathable-font-size-body-sm);
+  font-weight: var(--pathable-font-weight-semibold);
+  color: var(--pathable-color-text);
+  margin: 0;
+}
+
+.pathable-schedule-item__context {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+}
+
+.pathable-schedule-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-2);
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > * {
+    display: flex;
+    align-items: center;
+    gap: var(--pathable-space-1);
+  }
+}
+
+// --- Status indicator ---
+
+.pathable-schedule-item__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  font-size: var(--pathable-font-size-body-xs);
+  font-weight: var(--pathable-font-weight-semibold);
+  padding: var(--pathable-space-0) var(--pathable-space-1);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+
+  // Status text is always visible — never rely on color alone
+  .pathable-schedule-item__status-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .pathable-schedule-item__status-label {
+    display: inline;
+  }
+}
+
+// --- Status variants ---
+
+// Cancelled: struck-through text, muted
+.pathable-schedule-item--cancelled {
+  opacity: 0.6;
+
+  .pathable-schedule-item__title {
+    text-decoration: line-through;
+    color: var(--pathable-color-text-muted);
+  }
+
+  .pathable-schedule-item__status {
+    background: var(--pathable-color-bg);
+    color: var(--pathable-color-text-muted);
+  }
+}
+
+// Completed: subtle success treatment
+.pathable-schedule-item--completed {
+  .pathable-schedule-item__status {
+    background: var(--pathable-color-bg);
+    color: var(--pathable-color-success, #1cae96);
+  }
+}
+
+// Tentative: dashed border, italic
+.pathable-schedule-item--tentative {
+  border-style: dashed;
+
+  .pathable-schedule-item__title {
+    font-style: italic;
+  }
+
+  .pathable-schedule-item__status {
+    background: var(--pathable-color-bg);
+    color: var(--pathable-color-status-warning-text, #936f02);
+  }
+}
+
+// Upcoming: default (no extra changes)
+.pathable-schedule-item--upcoming {
+  .pathable-schedule-item__status {
+    background: var(--pathable-color-bg);
+    color: var(--pathable-color-accent);
+  }
+}
+
+// --- Actions region ---
+
+.pathable-schedule-item__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  flex-shrink: 0;
+
+  // Actions visible on row hover/focus
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .pathable-schedule-item:hover &,
+  .pathable-schedule-item:focus-within & {
+    opacity: 1;
+  }
+
+  @media (pointer: coarse) {
+    opacity: 1;
+  }
+}
+
+// --- List container ---
+
+.pathable-schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// --- Narrow screen ---
+
+@media (max-width: 640px) {
+  .pathable-schedule-item {
+    flex-wrap: wrap;
+  }
+
+  .pathable-schedule-item__date {
+    flex-direction: row;
+    gap: var(--pathable-space-1);
+    min-width: auto;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .pathable-schedule-item__actions {
+    opacity: 1;
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-schedule-item {
+    border: 2px solid CanvasText;
+
+    &.pathable-schedule-item--cancelled {
+      opacity: 1;
+    }
+
+    &.pathable-schedule-item--tentative {
+      border-style: dashed;
+    }
+  }
+
+  .pathable-schedule-item__status {
+    border: 1px solid CanvasText;
+  }
+}
+
+// --- Accessibility: reduced motion ---
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-schedule-item,
+  .pathable-schedule-item__actions {
+    transition: none;
+  }
+}
