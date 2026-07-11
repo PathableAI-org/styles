@@ -65,7 +65,7 @@ export const Populated = {
       </div>
 
       <div class="pathable-activity-list">
-        <h3 class="pathable-activity-list__group-heading">Today</h3>
+        <h2 class="pathable-activity-list__group-heading">Today</h2>
         <div class="pathable-activity-row">
           <div class="pathable-activity-row__status" data-status="completed" role="img" aria-label="completed"></div>
           <div class="pathable-activity-row__body">
