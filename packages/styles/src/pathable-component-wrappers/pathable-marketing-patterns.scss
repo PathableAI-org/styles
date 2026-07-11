@@ -1,0 +1,11 @@
+// packages/styles/src/pathable-component-wrappers/pathable-marketing-patterns.scss
+//
+// Bundle package: expressive marketing and product-presentation patterns
+// (decorative backgrounds, screenshot frames, bento grids, chip rails, text highlights).
+// Forwards individual partials for selective import.
+
+@forward 'pathable-decorative-background';
+@forward 'pathable-screenshot-frame';
+@forward 'pathable-bento-grid';
+@forward 'pathable-chip-rail';
+@forward 'pathable-text-highlight';

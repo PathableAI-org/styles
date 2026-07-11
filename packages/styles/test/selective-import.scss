@@ -9,3 +9,10 @@
 @forward '../src/pathable-component-wrappers/pathable-wizard-actions';
 @forward '../src/pathable-component-wrappers/pathable-workflow-panel';
 @forward '../src/pathable-component-wrappers/pathable-save-status';
+
+// Selective import tests for marketing patterns:
+@forward '../src/pathable-component-wrappers/pathable-decorative-background';
+@forward '../src/pathable-component-wrappers/pathable-screenshot-frame';
+@forward '../src/pathable-component-wrappers/pathable-bento-grid';
+@forward '../src/pathable-component-wrappers/pathable-chip-rail';
+@forward '../src/pathable-component-wrappers/pathable-text-highlight';

@@ -1,0 +1,126 @@
+// packages/styles/src/pathable-component-wrappers/pathable-chip-rail.scss
+//
+// Chip rail: horizontal row of chip-style items. Default is static overflow;
+// marquee variant provides optional auto-scrolling with CSS animation.
+//
+// CSS custom properties:
+//   --pathable-chip-rail-gap, --pathable-chip-rail-chip-radius,
+//   --pathable-chip-rail-chip-padding-x, --pathable-chip-rail-chip-padding-y,
+//   --pathable-chip-rail-marquee-speed
+//
+// Modifiers:
+//   --marquee (opt-in auto-scroll animation)
+
+@use 'uswds-core' as *;
+
+.pathable-chip-rail {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--pathable-chip-rail-gap, var(--usa-chip-rail-gap, #{units(1)}));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: units(0.5) 0;
+  // Hide scrollbar by default
+  scrollbar-width: thin;
+
+  // Hide scrollbar on WebKit
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: color('gray-20');
+    border-radius: 2px;
+  }
+}
+
+.pathable-chip-rail__chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: var(
+      --pathable-chip-rail-chip-padding-y,
+      var(--usa-chip-rail-chip-padding-y, #{units(0.5)})
+    )
+    var(
+      --pathable-chip-rail-chip-padding-x,
+      var(--usa-chip-rail-chip-padding-x, #{units(1.5)})
+    );
+  border-radius: var(
+    --pathable-chip-rail-chip-radius,
+    var(--usa-chip-rail-chip-radius, #{radius('md')})
+  );
+  font-size: type-scale('sm');
+  background: color('gray-5');
+  color: color('ink');
+  text-decoration: none;
+  flex-shrink: 0;
+
+  &:hover {
+    background: color('gray-10');
+  }
+
+  // Interactive chips (links/buttons) get focus style
+  &:focus-visible {
+    outline: 2px solid color('primary');
+    outline-offset: 2px;
+  }
+}
+
+// --- Marquee variant ---
+.pathable-chip-rail--marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 2%,
+    black 98%,
+    transparent 100%
+  );
+
+  .pathable-chip-rail__track {
+    display: flex;
+    gap: var(--pathable-chip-rail-gap, var(--usa-chip-rail-gap, #{units(1)}));
+    animation: pathable-marquee
+      var(
+        --pathable-chip-rail-marquee-speed,
+        var(--usa-chip-rail-marquee-speed, 30s)
+      )
+      linear infinite;
+  }
+
+  // Pause on hover or focus within the rail
+  &:hover .pathable-chip-rail__track,
+  &:focus-within .pathable-chip-rail__track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes pathable-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// --- Reduced motion ---
+@media (prefers-reduced-motion: reduce) {
+  .pathable-chip-rail--marquee {
+    overflow-x: auto;
+
+    .pathable-chip-rail__track {
+      animation: none;
+    }
+
+    mask-image: none;
+  }
+}
+
+// --- Forced-colors fallback ---
+@media (forced-colors: active) {
+  .pathable-chip-rail__chip {
+    border: 1px solid ButtonText;
+  }
+}

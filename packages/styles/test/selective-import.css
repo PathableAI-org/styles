@@ -1,0 +1,2288 @@
+@charset "UTF-8";
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+GENERAL SETTINGS
+----------------------------------------
+Read more about settings and
+USWDS style tokens in the documentation:
+https://designsystem.digital.gov/design-tokens
+----------------------------------------
+*/
+/*
+----------------------------------------
+Image path
+----------------------------------------
+Relative image file path
+----------------------------------------
+*/
+/*
+----------------------------------------
+Show compile warnings
+----------------------------------------
+Show Sass warnings when functions and
+mixins use non-standard tokens.
+AND
+Show updates and notifications.
+----------------------------------------
+*/
+/*
+----------------------------------------
+Namespace
+----------------------------------------
+*/
+/*
+----------------------------------------
+Prefix separator
+----------------------------------------
+Set the character the separates
+responsive and state prefixes from the
+main class name.
+The default (":") needs to be preceded
+by two backslashes to be properly
+escaped.
+----------------------------------------
+*/
+/*
+----------------------------------------
+Layout grid
+----------------------------------------
+Should the layout grid classes output
+with !important
+----------------------------------------
+*/
+/*
+----------------------------------------
+Border box sizing
+----------------------------------------
+When set to true, sets the box-sizing
+property of all site elements to
+`border-box`.
+----------------------------------------
+*/
+/*
+----------------------------------------
+Focus styles
+----------------------------------------
+*/
+/*
+----------------------------------------
+Icons
+----------------------------------------
+*/
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+TYPOGRAPHY SETTINGS
+----------------------------------------
+Read more about settings and
+USWDS typography tokens in the documentation:
+https://designsystem.digital.gov/design-tokens/typesetting/overview/
+----------------------------------------
+*/
+/*
+----------------------------------------
+Root font size
+----------------------------------------
+Setting $theme-respect-user-font-size to
+true sets the root font size to 100% and
+uses ems for media queries
+----------------------------------------
+$theme-root-font-size only applies when
+$theme-respect-user-font-size is set to
+false.
+
+This will set the root font size
+as a specific px value and use px values
+for media queries.
+
+Accepts true or false
+----------------------------------------
+*/
+/*
+----------------------------------------
+Global styles
+----------------------------------------
+Adds basic styling for the following
+unclassed elements:
+
+- paragraph: paragraph text
+- link: links
+- content: paragraph text, links,
+  headings, lists, and tables
+----------------------------------------
+*/
+/*
+----------------------------------------
+Browser compatibility mode
+----------------------------------------
+When true, outputs woff and ttf font 
+formats in addition to woff2
+----------------------------------------
+*/
+/*
+----------------------------------------
+Font path
+----------------------------------------
+Relative font file path
+----------------------------------------
+*/
+/*
+----------------------------------------
+Custom typeface tokens
+----------------------------------------
+Add a new custom typeface token if
+your project uses a typeface not already
+defined by USWDS.
+----------------------------------------
+USWDS defines the following tokens
+by default:
+----------------------------------------
+'georgia'
+'helvetica'
+'merriweather'
+'open-sans'
+'public-sans'
+'roboto-mono'
+'source-sans-pro'
+'system'
+'tahoma'
+'verdana'
+----------------------------------------
+Add as many new tokens as you have
+custom typefaces. Reference your new
+token(s) in the type-based font settings
+using the quoted name of the token.
+
+For example:
+
+$theme-font-type-cond: 'example-font-token';
+
+display-name:
+The display name of your font
+
+cap-height:
+The height of a 500px `N` in Sketch
+----------------------------------------
+You should change `example-[style]-token`
+names to something more descriptive.
+----------------------------------------
+*/
+/*
+----------------------------------------
+Type-based font settings
+----------------------------------------
+Set the type-based tokens for your
+project from the following tokens,
+or from any new font tokens you added in
+$theme-typeface-tokens.
+----------------------------------------
+'georgia'
+'helvetica'
+'merriweather'
+'open-sans'
+'public-sans'
+'roboto-mono'
+'source-sans-pro'
+'system'
+'tahoma'
+'verdana'
+----------------------------------------
+*/
+/*
+----------------------------------------
+Custom font stacks
+----------------------------------------
+Add custom font stacks to any of the
+type-based fonts. Any USWDS typeface
+token already has a default stack.
+
+Custom stacks don't need to include the
+font's display name. It will
+automatically appear at the start of
+the stack.
+----------------------------------------
+Example:
+$theme-font-type-sans: 'source-sans-pro';
+$theme-font-sans-custom-stack: "Helvetica Neue", Helvetica, Arial, sans;
+
+Output:
+font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans;
+----------------------------------------
+*/
+/*
+----------------------------------------
+Add any custom font source files
+----------------------------------------
+If you want USWDS to generate additional
+@font-face declarations, add your font
+data below, following the example that
+follows.
+----------------------------------------
+USWDS automatically generates @font-face
+declarations for the following
+
+'merriweather'
+'public-sans'
+'roboto-mono'
+'source-sans-pro'
+
+These typefaces not require custom
+source files.
+----------------------------------------
+EXAMPLE
+
+- dir:
+  Directory relative to $theme-font-path
+- This directory should include fonts saved as
+  .woff2
+  ExampleSerif-Normal.woff2
+
+$theme-font-serif-custom-src: (
+  dir: 'custom/example-serif',
+  roman: (
+    100: false,
+    200: false,
+    300: 'ExampleSerif-Light',
+    400: 'ExampleSerif-Normal',
+    500: false,
+    600: false,
+    700: 'ExampleSerif-Bold',
+    800: false,
+    900: false,
+  ),
+  italic: (
+    100: false,
+    200: false,
+    300: 'ExampleSerif-LightItalic',
+    400: 'ExampleSerif-Italic',
+    500: false,
+    600: false,
+    700: 'ExampleSerif-BoldItalic',
+    800: false,
+    900: false,
+  ),
+);
+----------------------------------------
+*/
+/*
+----------------------------------------
+Role-based font settings
+----------------------------------------
+Set the role-based tokens for your
+project from the following font-type
+tokens.
+----------------------------------------
+'cond'
+'icon'
+'lang'
+'mono'
+'sans'
+'serif'
+----------------------------------------
+*/
+/*
+----------------------------------------
+Type scale
+----------------------------------------
+Define your project's type scale using
+values from the USWDS system type scale
+
+1-20
+----------------------------------------
+*/
+/*
+----------------------------------------
+Font weights
+----------------------------------------
+Assign weights 100-900
+Or use `false` for unneeded weights.
+----------------------------------------
+*/
+/*
+----------------------------------------
+General typography settings
+----------------------------------------
+Type scale tokens
+----------------------------------------
+micro:      10px
+1:          12px
+2:          13px
+3:          14px
+4:          15px
+5:          16px
+6:          17px
+7:          18px
+8:          20px
+9:          22px
+10:         24px
+11:         28px
+12:         32px
+13:         36px
+14:         40px
+15:         48px
+16:         56px
+17:         64px
+18:         80px
+19:         120px
+20:         140px
+----------------------------------------
+Line height tokens
+----------------------------------------
+1:    1
+2:    1.15
+3:    1.35
+4:    1.5
+5:    1.62
+6:    1.75
+----------------------------------------
+Font role tokens
+----------------------------------------
+'ui'
+'heading'
+'body'
+'code'
+'alt'
+----------------------------------------
+Measure (max-width) tokens
+----------------------------------------
+1:       44ex
+2:       60ex
+3:       64ex
+4:       68ex
+5:       74ex
+6:       88ex
+none:    none
+----------------------------------------
+*/
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+COLOR SETTINGS
+----------------------------------------
+Read more about settings and
+USWDS color tokens in the documentation:
+https://designsystem.digital.gov/design-tokens/color
+----------------------------------------
+*/
+/*
+----------------------------------------
+Theme palette colors
+----------------------------------------
+*/
+/*
+----------------------------------------
+State palette colors
+----------------------------------------
+*/
+/*
+----------------------------------------
+General colors
+----------------------------------------
+*/
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+COMPONENT SETTINGS
+----------------------------------------
+Read more about settings and
+USWDS style tokens in the documentation:
+https://designsystem.digital.gov/design-tokens
+----------------------------------------
+*/
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+SPACING SETTINGS
+----------------------------------------
+Read more about settings and
+USWDS spacing units tokens in the
+documentation:
+https://designsystem.digital.gov/design-tokens/spacing-units
+----------------------------------------
+*/
+/*
+----------------------------------------
+Border radius
+----------------------------------------
+2px           2px
+0.5           4px
+1             8px
+1.5           12px
+2             16px
+2.5           20px
+3             24px
+4             32px
+5             40px
+6             48px
+7             56px
+8             64px
+9             72px
+----------------------------------------
+*/
+/*
+----------------------------------------
+Column gap
+----------------------------------------
+2px         2px
+0.5         4px
+1           8px
+2           16px
+3           24px
+4           32px
+5           40px
+6           48px
+----------------------------------------
+*/
+/*
+----------------------------------------
+Grid container max-width
+----------------------------------------
+mobile
+mobile-lg
+tablet
+tablet-lg
+desktop
+desktop-lg
+widescreen
+----------------------------------------
+*/
+/*
+----------------------------------------
+Site
+----------------------------------------
+*/
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+UTILITIES SETTINGS
+----------------------------------------
+Read more about settings and
+USWDS utilities in the documentation:
+https://designsystem.digital.gov/utilities
+----------------------------------------
+*/
+/*
+----------------------------------------
+map-collect()
+----------------------------------------
+Collect multiple maps into a single
+large map
+source: https://gist.github.com/bigglesrocks/d75091700f8f2be5abfe
+----------------------------------------
+*/
+/*
+----------------------------------------
+Utility breakpoints
+----------------------------------------
+Which breakpoints does your project
+need? Select as `true` any breakpoint
+used by utilities or layout grid
+----------------------------------------
+*/
+/*
+----------------------------------------
+Global colors
+----------------------------------------
+The following palettes will be added to
+- background-color
+- border-color
+- color
+- text-decoration-color
+----------------------------------------
+*/
+/*
+----------------------------------------
+Settings
+----------------------------------------
+*/
+/*
+----------------------------------------
+Values
+----------------------------------------
+*/
+/*
+----------------------------------------
+color()
+----------------------------------------
+Derive a color from a color shortcode
+----------------------------------------
+*/
+/*
+----------------------------------------
+append-important()
+----------------------------------------
+Append `!important` to a list
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-last()
+----------------------------------------
+Return the last item of a list,
+Return null if the value is null
+----------------------------------------
+*/
+/*
+----------------------------------------
+de-list()
+----------------------------------------
+Transform a one-element list or arglist
+into that single element.
+----------------------------------------
+(1) => 1
+((1)) => (1)
+----------------------------------------
+*/
+/*
+----------------------------------------
+error-not-token()
+----------------------------------------
+Returns a common not-a-token error.
+----------------------------------------
+*/
+/*
+----------------------------------------
+uswds-error()
+----------------------------------------
+Allow the system to pass an error as text
+to test error states in unit testing
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-default()
+----------------------------------------
+Returns the default value from a map
+of project defaults
+get-default("bg-color")
+> $theme-body-background-color
+----------------------------------------
+*/
+/*
+----------------------------------------
+has-important()
+----------------------------------------
+Check to see if `!important` is
+being passed in a mixin's props
+----------------------------------------
+*/
+/*
+----------------------------------------
+map-deep-get()
+----------------------------------------
+@author Hugo Giraudel
+@access public
+@param {Map} $map - Map
+@param {Arglist} $keys - Key chain
+@return {*} - Desired value
+----------------------------------------
+*/
+/*
+----------------------------------------
+multi-cat()
+----------------------------------------
+Concatenate two lists
+----------------------------------------
+*/
+/*
+----------------------------------------
+remove()
+----------------------------------------
+Remove a value from a list
+----------------------------------------
+*/
+/*
+----------------------------------------
+smart-quote()
+----------------------------------------
+Quotes strings
+Inspects `px`, `xs`, and `xl` numbers
+Leaves bools as is
+----------------------------------------
+*/
+/*
+----------------------------------------
+str-replace()
+----------------------------------------
+Replace any substring with another
+string
+----------------------------------------
+*/
+/*
+----------------------------------------
+str-split()
+----------------------------------------
+Split a string at a given separator
+and convert into a list of substrings
+----------------------------------------
+*/
+/*
+----------------------------------------
+strip-unit()
+----------------------------------------
+Remove the unit of a length
+@author Hugo Giraudel
+@param {Number} $number - Number to remove unit from
+@return {Number} - Unitless number
+----------------------------------------
+*/
+/*
+----------------------------------------
+base-to-map()
+@TODO: Deprecate and delete
+----------------------------------------
+Convert a single base to a USWDS
+value map.
+
+Candidate for deprecation if we remove
+isReadable
+----------------------------------------
+*/
+/*
+----------------------------------------
+to-number()
+----------------------------------------
+Casts a string into a number
+----------------------------------------
+@param {String | Number} $value - Value to be parsed
+@return {Number}
+----------------------------------------
+*/
+/*
+----------------------------------------
+unpack()
+----------------------------------------
+Create lists of single items from lists
+of lists.
+----------------------------------------
+(1, (2.1, 2.2), 3) -->
+(1, 2.1, 2.2, 3)
+----------------------------------------
+*/
+/*
+----------------------------------------
+color()
+----------------------------------------
+Derive a color from a color shortcode
+----------------------------------------
+*/
+/*
+----------------------------------------
+color()
+----------------------------------------
+Derive a color from a color shortcode
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-system-color()
+----------------------------------------
+Derive a system color from its
+family, value, and vivid or a passed
+variable that is, itself, a list
+----------------------------------------
+*/
+/*
+----------------------------------------
+color()
+----------------------------------------
+Derive a color from a color shortcode
+----------------------------------------
+*/
+/*
+----------------------------------------
+color()
+----------------------------------------
+Derive a color from a color shortcode
+----------------------------------------
+*/
+/*
+----------------------------------------
+color()
+----------------------------------------
+Derive a color from a color shortcode
+----------------------------------------
+*/
+/*
+----------------------------------------
+set-theme-color()
+----------------------------------------
+Derive a color from a system color token
+or a hex value
+----------------------------------------
+*/
+/*
+----------------------------------------
+px-to-rem()
+----------------------------------------
+Converts a value in px to a value in rem
+----------------------------------------
+*/
+/*
+----------------------------------------
+rem-to-user-em()
+----------------------------------------
+Converts a value in rem to a value in
+[user-settings] em for use in media
+queries
+----------------------------------------
+*/
+/*
+----------------------------------------
+px-to-user-em()
+----------------------------------------
+Converts a value in px to a value in em
+----------------------------------------
+*/
+/*
+----------------------------------------
+rem-to-px()
+----------------------------------------
+Converts a value in rem to a value in px
+----------------------------------------
+*/
+/*
+----------------------------------------
+spacing-multiple()
+----------------------------------------
+Converts a spacing unit multiple into
+the desired final units (currently rem)
+----------------------------------------
+*/
+/*
+----------------------------------------
+units()
+----------------------------------------
+Converts a spacing unit into
+the desired final units (currently rem)
+----------------------------------------
+*/
+/*
+----------------------------------------
+number-to-token()
+----------------------------------------
+Converts an integer or numeric value
+into a system value
+
+Ex: 0.5   --> '05'
+    -1px  --> 'neg-1px'
+----------------------------------------
+*/
+/*
+----------------------------------------
+Project fonts
+----------------------------------------
+Collects font settings in a map for
+looping.
+----------------------------------------
+*/
+/*
+----------------------------------------
+Luminance ranges
+----------------------------------------
+*/
+/*
+----------------------------------------
+ns()
+----------------------------------------
+Add a namesspace of $type if that
+namespace is set to output
+----------------------------------------
+*/
+/*
+----------------------------------------
+Line height
+----------------------------------------
+*/
+/*
+----------------------------------------
+Measure
+----------------------------------------
+*/
+/*
+----------------------------------------
+cap-height()
+----------------------------------------
+Get the cap height of a valid typeface
+----------------------------------------
+*/
+/*
+----------------------------------------
+validate-typeface-token()
+----------------------------------------
+Check to see if a typeface-token exists.
+Throw an error if a passed token does
+not exist in the typeface-token map.
+----------------------------------------
+*/
+/*
+----------------------------------------
+convert-to-font-type()
+----------------------------------------
+Converts a font-role token into a
+font-type token. Leaves font-type tokens
+unchanged.
+----------------------------------------
+*/
+/*
+----------------------------------------
+font-sources()
+----------------------------------------
+Outputs a list of font sources used in
+a @font-face declaration.
+
+$theme-font-browser-compatibility: true - output woff2, woff, ttf
+$theme-font-browser-compatibility: false - output woff2
+
+@param stem: string - [font path]/[custom-src.dir]/[custom-src.[style].[weight]]
+@output: string
+
+filetypes must be one of the filetypes set in variables/$project-font-face-filetypes (woff, woff2, ttf)
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-font-stack()
+----------------------------------------
+Get a font stack from a style- or
+role-based font token.
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-typeface-token()
+----------------------------------------
+Get a typeface token from a font-type or
+font-role token.
+----------------------------------------
+*/
+/*
+----------------------------------------
+normalize-type-scale()
+----------------------------------------
+Normalizes a specific face's optical size
+to a set target
+----------------------------------------
+*/
+/*
+----------------------------------------
+system-type-scale()
+----------------------------------------
+Get a value from the system type scale
+----------------------------------------
+*/
+/*
+----------------------------------------
+Easing
+----------------------------------------
+*/
+/*  deprecated.scss
+    ---
+    Occasionally the design system will deprecate
+    old variables or functionality. If we replace
+    the old functionality with something new, this is a
+    place to connect the old functionality to the
+    new functionality, in the service of better
+    continuity and backwards compatibility within a
+    major release cycle.
+
+    Note the USWDS version where we deprecated the
+    old functionality in a comment.
+
+    Be sure to update notifications.scss.
+
+    This file should started fresh at each
+    major version.
+*/
+/*
+----------------------------------------
+advanced-color()
+----------------------------------------
+Derive a color from a color triplet:
+[family], [grade], [variant]
+----------------------------------------
+*/
+/*
+----------------------------------------
+calculate-grade()
+----------------------------------------
+Derive the grade equivalent any color,
+even non-token colors
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-assignment()
+----------------------------------------
+Get the system token equivalent of any
+theme color token
+----------------------------------------
+*/
+/*
+----------------------------------------
+is-system-color-token()
+----------------------------------------
+Return whether a token is a system
+color token
+----------------------------------------
+*/
+/*
+----------------------------------------
+is-theme-color-token()
+----------------------------------------
+Return whether a token is a theme
+color token
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-family()
+----------------------------------------
+Returns the family of a color token.
+Returns: color-family
+color-token-family("accent-warm-vivid")
+> "accent-warm"
+color-token-family("red-50v")
+> "red"
+color-token-variant(("red", 50, "vivid"))
+> "red"
+----------------------------------------
+*/
+/*
+----------------------------------------
+decompose()
+----------------------------------------
+Convert a color token into into a list
+of form [family], [grade], [variant]
+Vivid variants return "vivid" as the
+variant.
+If neither grade nor variant exists,
+returns 'null'
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-family()
+----------------------------------------
+Returns the family of a color token.
+Returns: color-family
+color-token-family("accent-warm-vivid")
+> "accent-warm"
+color-token-family("red-50v")
+> "red"
+color-token-variant(("red", 50, "vivid"))
+> "red"
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-grade()
+----------------------------------------
+Returns the grade of a USWDS color token.
+Returns: color-grade
+color-token-grade("accent-warm")
+> "root"
+color-token-grade("accent-warm-vivid")
+> "root"
+color-token-grade("accent-warm-darker")
+> "darker"
+color-token-grade("red-50v")
+> 50
+color-token-variant(("red", 50, "vivid"))
+> 50
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-family()
+----------------------------------------
+Returns the family of a color token.
+Returns: color-family
+color-token-family("accent-warm-vivid")
+> "accent-warm"
+color-token-family("red-50v")
+> "red"
+color-token-variant(("red", 50, "vivid"))
+> "red"
+----------------------------------------
+*/
+/*
+----------------------------------------
+is-color-token()
+----------------------------------------
+Returns whether a given string is a
+USWDS color token.
+----------------------------------------
+*/
+/*
+----------------------------------------
+pow()
+----------------------------------------
+Raises a unitless number to the power
+of another unitless number
+Includes helper functions
+----------------------------------------
+*/
+/*
+----------------------------------------
+Helper functions
+----------------------------------------
+*/
+/* factorial()
+----------------------------------------
+*/
+/* summation()
+----------------------------------------
+*/
+/* exp-maclaurin()
+----------------------------------------
+*/
+/* ln()
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-type()
+----------------------------------------
+Returns the type of a color token.
+Returns: "system" | "theme"
+----------------------------------------
+*/
+/*
+----------------------------------------
+color-token-variant()
+----------------------------------------
+Returns the variant of color token.
+Returns: "vivid" | false
+color-token-variant("accent-warm")
+> false
+color-token-variant("accent-warm-vivid")
+> "vivid"
+color-token-variant("red-50v")
+> "vivid"
+color-token-variant(("red", 50, "vivid"))
+> "vivid"
+----------------------------------------
+*/
+/*
+----------------------------------------
+magic-number()
+----------------------------------------
+Returns the magic number of two color
+grades. Takes numbers or color tokens.
+magic-number(50, 10)
+return: 40
+magic-number("red-50", "red-10")
+return: 40
+----------------------------------------
+*/
+/*
+----------------------------------------
+is-accessible-magic-number()
+----------------------------------------
+Returns whether two grades achieve
+specified target color contrast
+Returns: true | false
+is-accessible-magic-number(10, 50, "AA")
+> false
+is-accessible-magic-number(10, 60, "AA")
+> true
+----------------------------------------
+*/
+/*
+----------------------------------------
+wcag-magic-number()
+----------------------------------------
+Returns the magic number of a specific
+wcag grade:
+"AA"
+"AA-Large"
+"AAA"
+wcag-magic-number("AA")
+> 50
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-link-tokens-from-bg()
+----------------------------------------
+Get accessible link colors for a given
+background color
+returns: link-token, hover-token
+get-link-tokens-from-bg(
+  "black",
+  "red-60",
+  "red-10",
+  "AA")
+> "red-10", "red-5"
+get-link-tokens-from-bg(
+  "black",
+  "red-60v",
+  "red-10v",
+  "AA-large")
+> "red-60v", "red-50v"
+get-link-tokens-from-bg(
+  "black",
+  "red-5v",
+  "red-60v",
+  "AA")
+> "red-5v", "white"
+get-link-tokens-from-bg(
+  "black",
+  "white",
+  "red-60v",
+  "AA")
+> "white", "white"
+----------------------------------------
+*/
+/*
+----------------------------------------
+next-token()
+----------------------------------------
+Returns next "darker" or "lighter" color
+token of the same token type and variant.
+Returns: color-token | false
+next-token("accent-warm", "lighter")
+> "accent-warm-light"
+next-token("gray-10", "lighter")
+> "gray-5"
+next-token("gray-5", "lighter")
+> "white"
+next-token("white", "lighter")
+> false
+next-token("red-50v", "darker")
+> "red-60v"
+next-token("red-50", "darker")
+> "red-60"
+next-token("red-80v", "darker")
+> "red-90"
+next-token("red-90", "darker")
+> "black"
+next-token("white", "darker")
+> "gray-5"
+next-token("black", "lighter")
+> "gray-90"
+----------------------------------------
+*/
+/*
+----------------------------------------
+test-colors()
+----------------------------------------
+Check to see if all system colors
+fall between the proper relative
+luminance range for their grade.
+Has a couple quirks, as the luminance()
+function returns slightly different
+results than expected.
+----------------------------------------
+*/
+/*
+----------------------------------------
+columns()
+----------------------------------------
+outputs a grid-col number based on
+the number of desired columns in the
+12-column grid
+
+Ex: columns(2) --> 6
+    grid-col(columns(2))
+----------------------------------------
+*/
+/*
+----------------------------------------
+USWDS Properties
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-uswds-value()
+----------------------------------------
+Finds and outputs a value from the
+USWDS standard values.
+
+Used to build other standard utility
+functions and mixins.
+----------------------------------------
+*/
+/*
+----------------------------------------
+get-standard-values()
+----------------------------------------
+Gets a map of USWDS standard values
+for a property
+----------------------------------------
+*/
+/*
+----------------------------------------
+border-radius()
+----------------------------------------
+Get a border-radius from the system
+border-radii
+----------------------------------------
+*/
+/*
+----------------------------------------
+font-weight()
+fw()
+----------------------------------------
+Get a font-weight value from the
+system font-weight
+----------------------------------------
+*/
+/*
+----------------------------------------
+feature()
+----------------------------------------
+Gets a valid USWDS font feature setting
+----------------------------------------
+*/
+/*
+----------------------------------------
+flex()
+----------------------------------------
+Gets a valid USWDS flex value
+----------------------------------------
+*/
+/*
+----------------------------------------
+font-family()
+family()
+----------------------------------------
+Get a font-family stack from a
+role-based or type-based font family
+----------------------------------------
+*/
+/*
+----------------------------------------
+letter-spacing()
+ls()
+----------------------------------------
+Get a letter-spacing value from the
+system letter-spacing
+----------------------------------------
+*/
+/*
+----------------------------------------
+measure()
+----------------------------------------
+Gets a valid USWDS reading line length
+----------------------------------------
+*/
+/*
+----------------------------------------
+opacity()
+----------------------------------------
+Get an opacity from the system
+opacities
+----------------------------------------
+*/
+/*
+----------------------------------------
+order()
+----------------------------------------
+Get an order value from the
+system orders
+----------------------------------------
+*/
+/*
+----------------------------------------
+radius()
+----------------------------------------
+Get a border-radius value from the
+system letter-spacing
+----------------------------------------
+*/
+/*
+----------------------------------------
+font-size()
+----------------------------------------
+Get type scale value from a [family] and
+[scale]
+----------------------------------------
+*/
+/*
+----------------------------------------
+z-index()
+z()
+----------------------------------------
+Get a z-index value from the
+system z-index
+----------------------------------------
+*/
+/*
+----------------------------------------
+utility-font()
+----------------------------------------
+Get a normalized font-size in rem from
+a family and a type size in either
+system scale or project scale
+----------------------------------------
+Not the public-facing function.
+Used for building the utilities and
+withholds certain errors.
+----------------------------------------
+*/
+/*
+----------------------------------------
+family()
+----------------------------------------
+Get a font-family stack
+----------------------------------------
+*/
+/*
+----------------------------------------
+size()
+----------------------------------------
+Get a normalized font-size in rem from
+a family and a type size in either
+system scale or project scale
+----------------------------------------
+*/
+/*
+----------------------------------------
+font()
+----------------------------------------
+Get a font-family stack
+AND
+Get a normalized font-size in rem from
+a family and a type size in either
+system scale or project scale
+----------------------------------------
+*/
+/*
+----------------------------------------
+typeset()
+----------------------------------------
+Sets:
+- family
+- size
+- line-height
+----------------------------------------
+*/
+/* stylelint-disable max-nesting-depth */
+/*
+----------------------------------------
+@render-pseudoclass
+----------------------------------------
+Build a pseucoclass utiliy from values
+calculated in the @render-utilities-in
+loop
+----------------------------------------
+*/
+/*
+----------------------------------------
+@render-utility
+----------------------------------------
+Build a utility from values calculated
+in the @render-utilities-in loop
+----------------------------------------
+TODO: Determine the proper use of
+unquote() in the following. Changed to
+account for a 'interpolation near
+operators will be simplified in a
+future version of Sass' warning.
+----------------------------------------
+*/
+/*
+----------------------------------------
+@render-utilities-in
+----------------------------------------
+The master loop that sets the building
+blocks of utilities from the values
+in individual rule settings and loops
+through all possible variants
+----------------------------------------
+*/
+/* stylelint-enable */
+/*  notifications.scss
+    ---
+    Adds a notification at the top of each USWDS
+    compile. Use this file for important notifications
+    and updates to the design system.
+
+    This file should started fresh at each
+    major version.
+
+*/
+/* prettier-ignore */
+/* prettier-ignore */
+.pathable-wizard {
+  max-width: var(--pathable-wizard-max-width);
+  margin-inline: auto;
+}
+.pathable-wizard > * + * {
+  margin-top: var(--pathable-wizard-gap);
+}
+
+.pathable-wizard__heading {
+  margin: 0;
+  font-size: type-scale('lg');
+  font-weight: var(--pathable-font-weight-bold);
+}
+
+.pathable-wizard__validation {
+  display: none;
+}
+
+.pathable-wizard__validation--visible {
+  display: block;
+}
+
+.pathable-wizard__mobile-summary {
+  display: none;
+  font-size: type-scale('sm');
+  font-weight: var(--pathable-font-weight-semibold);
+  color: #1b1b1b;
+}
+
+@media all and (max-width: 39.99em) {
+  .pathable-wizard__mobile-summary {
+    display: block;
+  }
+}
+.pathable-wizard__section {
+  margin: 0;
+  padding-top: var(--pathable-wizard-gap);
+  font-size: type-scale('md');
+  font-weight: var(--pathable-font-weight-bold);
+  border-bottom: 1px solid #c9c9c9;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pathable-wizard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: var(--pathable-wizard-gap);
+  border-top: 1px solid #c9c9c9;
+}
+
+.pathable-wizard__actions .pathable-button--continue,
+.pathable-wizard__actions .pathable-button--submit,
+.pathable-wizard__actions .pathable-button:last-child {
+  margin-inline-start: auto;
+}
+
+@media all and (max-width: 39.99em) {
+  .pathable-wizard__actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 0.75rem 0.5rem;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .pathable-wizard__actions .pathable-button--back {
+    justify-self: start;
+  }
+  .pathable-wizard__actions .pathable-button--continue,
+  .pathable-wizard__actions .pathable-button--submit,
+  .pathable-wizard__actions .pathable-button:last-child {
+    justify-self: end;
+    margin-inline-start: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .pathable-wizard__actions .pathable-button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pathable-wizard__actions .pathable-button--save {
+    grid-column: 1/-1;
+    justify-self: center;
+  }
+}
+.pathable-workflow-panel {
+  max-width: var(--pathable-workflow-panel-max-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-workflow-panel-gap);
+}
+
+.pathable-workflow-panel__context-header {
+  font-size: type-scale('sm');
+  color: #1b1b1b;
+  font-weight: var(--pathable-font-weight-semibold);
+}
+
+.pathable-workflow-panel__objective {
+  font-size: type-scale('md');
+  font-weight: var(--pathable-font-weight-bold);
+  color: #005ea2;
+}
+
+.pathable-workflow-panel__current-activity {
+  font-size: type-scale('sm');
+  color: #adadad;
+  font-weight: var(--pathable-font-weight-normal);
+}
+
+.pathable-workflow-panel__prompt {
+  background-color: var(--pathable-workflow-panel-prompt-bg);
+  padding: 0.75rem;
+  border-radius: 2px;
+  font-size: type-scale('sm');
+  line-height: var(--pathable-font-line-height-body);
+  overflow-y: auto;
+  max-height: 20rem;
+}
+
+.pathable-workflow-panel__status {
+  font-size: type-scale('sm');
+}
+
+.pathable-workflow-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.pathable-workflow-panel__actions .pathable-button {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pathable-workflow-panel--loading .pathable-workflow-panel__status::before {
+  content: 'Loading…';
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pathable-workflow-panel--saving .pathable-workflow-panel__status::before {
+  content: 'Saving…';
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pathable-workflow-panel--saved .pathable-workflow-panel__status::before {
+  content: '✓ Saved';
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #00a91c;
+}
+
+.pathable-workflow-panel--offline .pathable-workflow-panel__status::before {
+  content: "⚠ You're offline. Changes will sync when connected.";
+  display: block;
+  padding: 0.5rem;
+  background-color: #faf3d1;
+  border-radius: 2px;
+  color: #936f38;
+  font-size: type-scale('sm');
+}
+.pathable-workflow-panel--offline
+  .pathable-workflow-panel__actions
+  .pathable-button--continue {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.pathable-workflow-panel--validation-error
+  .pathable-workflow-panel__status::before {
+  content: '⚠ Please fix errors before continuing.';
+  display: block;
+  padding: 0.5rem;
+  background-color: #f4e3db;
+  border-radius: 2px;
+  color: #6f3331;
+  font-size: type-scale('sm');
+}
+
+.pathable-workflow-panel--completed .pathable-workflow-panel__prompt,
+.pathable-workflow-panel--completed .pathable-workflow-panel__input {
+  display: none;
+}
+.pathable-workflow-panel--completed .pathable-workflow-panel__status::before {
+  content: '✓ Completed';
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: type-scale('md');
+  font-weight: var(--pathable-font-weight-bold);
+  color: #00a91c;
+}
+
+.pathable-workflow-panel__objective:empty,
+.pathable-workflow-panel__current-activity:empty {
+  display: none;
+}
+
+@media all and (max-width: 39.99em) {
+  .pathable-workflow-panel__actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 0.75rem 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+}
+.pathable-save-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--pathable-save-status-font-size);
+}
+
+.pathable-save-status--idle {
+  display: none;
+}
+
+.pathable-save-status--loading::before {
+  content: '';
+  display: inline-block;
+  width: var(--pathable-save-status-icon-size);
+  height: var(--pathable-save-status-icon-size);
+  border: 2px solid #c9c9c9;
+  border-top-color: #005ea2;
+  border-radius: 50%;
+  animation: pathable-spin 0.6s linear infinite;
+}
+
+.pathable-save-status--loading::after {
+  content: 'Loading…';
+}
+
+.pathable-save-status--saving::before {
+  content: '';
+  display: inline-block;
+  width: var(--pathable-save-status-icon-size);
+  height: var(--pathable-save-status-icon-size);
+  border: 2px solid #c9c9c9;
+  border-top-color: #005ea2;
+  border-radius: 50%;
+  animation: pathable-spin 0.6s linear infinite;
+}
+
+.pathable-save-status--saving::after {
+  content: 'Saving…';
+}
+
+.pathable-save-status--saved {
+  color: #00a91c;
+}
+
+.pathable-save-status--saved::before {
+  content: '✓';
+  font-weight: var(--pathable-font-weight-bold);
+}
+
+.pathable-save-status--saved::after {
+  content: 'Saved';
+}
+
+.pathable-save-status--offline {
+  color: #ffbe2e;
+}
+
+.pathable-save-status--offline::before {
+  content: '⚠';
+}
+
+.pathable-save-status--offline::after {
+  content: 'Offline';
+}
+
+.pathable-save-status--error {
+  color: #d54309;
+}
+
+.pathable-save-status--error::before {
+  content: '✗';
+  font-weight: var(--pathable-font-weight-bold);
+}
+
+.pathable-save-status--error::after {
+  content: 'Save failed';
+}
+
+@keyframes pathable-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pathable-save-status--loading::before,
+  .pathable-save-status--saving::before {
+    animation: none;
+    border: 2px solid #c9c9c9;
+  }
+}
+.pathable-decorative-bg {
+  position: relative;
+}
+.pathable-decorative-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(
+    --pathable-decorative-bg-opacity,
+    var(--usa-decorative-bg-opacity, 0.15)
+  );
+  border-radius: inherit;
+}
+.pathable-decorative-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pathable-decorative-bg--gradient::before {
+  background: linear-gradient(
+    135deg,
+    var(
+      --pathable-decorative-bg-gradient-start,
+      var(--usa-decorative-bg-gradient-start, #d9e8f6)
+    ),
+    var(
+      --pathable-decorative-bg-gradient-end,
+      var(--usa-decorative-bg-gradient-end, #d9e8f6)
+    )
+  );
+}
+
+.pathable-decorative-bg--glow::before {
+  background: radial-gradient(
+    ellipse at center 20%,
+    var(
+        --pathable-decorative-bg-glow-color,
+        var(--usa-decorative-bg-glow-color, #73b3e7)
+      )
+      0%,
+    transparent
+      var(
+        --pathable-decorative-bg-glow-size,
+        var(--usa-decorative-bg-glow-size, 20rem)
+      )
+  );
+}
+
+.pathable-decorative-bg--texture::before {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  background-size: 4px 4px;
+}
+
+.pathable-decorative-bg--organic::before {
+  width: var(
+    --pathable-decorative-bg-organic-size,
+    var(--usa-decorative-bg-organic-size, 300px)
+  );
+  height: var(
+    --pathable-decorative-bg-organic-size,
+    var(--usa-decorative-bg-organic-size, 300px)
+  );
+  background: var(
+    --pathable-decorative-bg-organic-color,
+    var(--usa-decorative-bg-organic-color, #d9e8f6)
+  );
+  border-radius: 60% 40% 70% 30%/50% 60% 40% 50%;
+  top: -10%;
+  right: -10%;
+  left: auto;
+  bottom: auto;
+}
+
+.pathable-decorative-bg--animated::before {
+  animation: pathable-float 8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pathable-decorative-bg--animated::before {
+    animation: none;
+  }
+}
+
+@keyframes pathable-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(10px, -10px) rotate(2deg);
+  }
+  50% {
+    transform: translate(-5px, -15px) rotate(-1deg);
+  }
+  75% {
+    transform: translate(15px, -5px) rotate(1deg);
+  }
+}
+@media (forced-colors: active) {
+  .pathable-decorative-bg::before {
+    opacity: 0.05;
+  }
+}
+.pathable-screenshot-frame {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: var(
+    --pathable-screenshot-frame-radius,
+    var(--usa-screenshot-frame-radius, 0.25rem)
+  );
+  overflow: hidden;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pathable-screenshot-frame {
+    transition: none;
+  }
+}
+
+.pathable-screenshot-frame__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.pathable-screenshot-frame__caption {
+  padding: 0.75rem;
+  font-size: type-scale('sm');
+  color: #1b1b1b;
+  background: white;
+  text-align: center;
+}
+
+a.pathable-screenshot-frame,
+button.pathable-screenshot-frame {
+  cursor: pointer;
+  text-decoration: none;
+}
+a.pathable-screenshot-frame:hover,
+a.pathable-screenshot-frame:focus-visible,
+button.pathable-screenshot-frame:hover,
+button.pathable-screenshot-frame:focus-visible {
+  transform: translateY(
+    var(
+      --pathable-screenshot-frame-hover-lift,
+      var(--usa-screenshot-frame-hover-lift, -4px)
+    )
+  );
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+a.pathable-screenshot-frame:focus-visible,
+button.pathable-screenshot-frame:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
+
+.pathable-screenshot-frame--browser {
+  border-radius: 0.25rem 0.25rem 0 0;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.pathable-screenshot-frame--browser .pathable-screenshot-frame__image {
+  border-radius: 0;
+}
+.pathable-screenshot-frame--browser .pathable-screenshot-frame__browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #edeff0;
+  border-bottom: 1px solid #dfe1e2;
+}
+.pathable-screenshot-frame--browser .pathable-screenshot-frame__browser-dots {
+  display: flex;
+  gap: 6px;
+}
+.pathable-screenshot-frame--browser
+  .pathable-screenshot-frame__browser-dots
+  span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #adadad;
+}
+.pathable-screenshot-frame--browser .pathable-screenshot-frame__browser-url {
+  flex: 1;
+  font-size: type-scale('3xs');
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 2px;
+  color: #757575;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pathable-screenshot-frame--phone {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 3px solid #1b1b1b;
+  padding: 0.5rem;
+  max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+.pathable-screenshot-frame--phone .pathable-screenshot-frame__image {
+  border-radius: 0.5rem;
+}
+.pathable-screenshot-frame--phone .pathable-screenshot-frame__phone-notch {
+  width: 120px;
+  height: 24px;
+  background: #1b1b1b;
+  border-radius: 0 0 12px 12px;
+  margin-bottom: 0.5rem;
+}
+.pathable-screenshot-frame--phone .pathable-screenshot-frame__caption {
+  width: 100%;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.pathable-screenshot-frame--dashboard {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  background: #1c1d1f;
+  color: white;
+}
+.pathable-screenshot-frame--dashboard .pathable-screenshot-frame__image {
+  border-radius: 0.25rem 0.25rem 0 0;
+  opacity: 0.9;
+}
+.pathable-screenshot-frame--dashboard
+  .pathable-screenshot-frame__dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  opacity: 0.6;
+}
+.pathable-screenshot-frame--dashboard
+  .pathable-screenshot-frame__dashboard-grid
+  span {
+  height: 4px;
+  background: #757575;
+  border-radius: 2px;
+}
+.pathable-screenshot-frame--dashboard
+  .pathable-screenshot-frame__dashboard-grid
+  .dashboard-grid-wide {
+  grid-column: 1/-1;
+}
+.pathable-screenshot-frame--dashboard .pathable-screenshot-frame__caption {
+  background: transparent;
+  color: #e6e6e6;
+  padding: 0.5rem 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.pathable-screenshot-frame:hover,
+  button.pathable-screenshot-frame:hover {
+    transform: none;
+  }
+}
+@media (forced-colors: active) {
+  .pathable-screenshot-frame {
+    border: 1px solid CanvasText;
+  }
+  a.pathable-screenshot-frame:focus-visible,
+  button.pathable-screenshot-frame:focus-visible {
+    outline: 2px solid Highlight;
+  }
+}
+.pathable-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--pathable-bento-gap, var(--usa-bento-gap, 1rem));
+  grid-template-areas: 'featured featured standard' 'featured featured metric' 'image    standard2 image2';
+}
+@media all and (max-width: 39.99em) {
+  .pathable-bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'featured' 'standard' 'metric' 'image' 'image2';
+  }
+}
+
+.pathable-bento-tile {
+  padding: var(
+    --pathable-bento-tile-padding,
+    var(--usa-bento-tile-padding, 1.5rem)
+  );
+  border-radius: var(
+    --pathable-bento-tile-radius,
+    var(--usa-bento-tile-radius, 0.25rem)
+  );
+  background: white;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.pathable-bento-tile--featured {
+  grid-area: featured;
+  background: linear-gradient(135deg, #d9e8f6, #d9e8f6);
+}
+
+.pathable-bento-tile--standard {
+  grid-area: standard;
+}
+
+.pathable-bento-tile--metric {
+  grid-area: metric;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.pathable-bento-tile--metric .pathable-bento-tile__value {
+  font-size: type-scale('2xl');
+  font-weight: var(--pathable-font-weight-bold);
+  color: #005ea2;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.pathable-bento-tile--metric .pathable-bento-tile__label {
+  font-size: type-scale('sm');
+  color: #757575;
+}
+
+.pathable-bento-tile--image {
+  grid-area: image;
+  padding: 0;
+  overflow: hidden;
+}
+.pathable-bento-tile--image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media all and (max-width: 39.99em) {
+  .pathable-bento-tile--featured {
+    background: linear-gradient(135deg, #d9e8f6, #d9e8f6);
+  }
+  .pathable-bento-tile--metric .pathable-bento-tile__value {
+    font-size: type-scale('xl');
+  }
+}
+.pathable-bento-tile:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .pathable-bento-tile {
+    border: 1px solid CanvasText;
+  }
+  .pathable-bento-tile--featured {
+    border-width: 2px;
+  }
+}
+.pathable-chip-rail {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--pathable-chip-rail-gap, var(--usa-chip-rail-gap, 0.5rem));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.25rem 0;
+  scrollbar-width: thin;
+}
+.pathable-chip-rail::-webkit-scrollbar {
+  height: 4px;
+}
+.pathable-chip-rail::-webkit-scrollbar-thumb {
+  background: #c9c9c9;
+  border-radius: 2px;
+}
+
+.pathable-chip-rail__chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: var(
+      --pathable-chip-rail-chip-padding-y,
+      var(--usa-chip-rail-chip-padding-y, 0.25rem)
+    )
+    var(
+      --pathable-chip-rail-chip-padding-x,
+      var(--usa-chip-rail-chip-padding-x, 0.75rem)
+    );
+  border-radius: var(
+    --pathable-chip-rail-chip-radius,
+    var(--usa-chip-rail-chip-radius, 0.25rem)
+  );
+  font-size: type-scale('sm');
+  background: #f0f0f0;
+  color: #1b1b1b;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.pathable-chip-rail__chip:hover {
+  background: #e6e6e6;
+}
+.pathable-chip-rail__chip:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
+
+.pathable-chip-rail--marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 2%,
+    black 98%,
+    transparent 100%
+  );
+}
+.pathable-chip-rail--marquee .pathable-chip-rail__track {
+  display: flex;
+  gap: var(--pathable-chip-rail-gap, var(--usa-chip-rail-gap, 0.5rem));
+  animation: pathable-marquee
+    var(
+      --pathable-chip-rail-marquee-speed,
+      var(--usa-chip-rail-marquee-speed, 30s)
+    )
+    linear infinite;
+}
+.pathable-chip-rail--marquee:hover .pathable-chip-rail__track,
+.pathable-chip-rail--marquee:focus-within .pathable-chip-rail__track {
+  animation-play-state: paused;
+}
+
+@keyframes pathable-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pathable-chip-rail--marquee {
+    overflow-x: auto;
+  }
+  .pathable-chip-rail--marquee .pathable-chip-rail__track {
+    animation: none;
+  }
+  .pathable-chip-rail--marquee {
+    mask-image: none;
+  }
+}
+@media (forced-colors: active) {
+  .pathable-chip-rail__chip {
+    border: 1px solid ButtonText;
+  }
+}
+.pathable-text-highlight {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.pathable-text-highlight--marker {
+  background: linear-gradient(
+    to bottom,
+    transparent 60%,
+    var(
+        --pathable-text-highlight-marker-color,
+        var(--usa-text-highlight-marker-color, #d9e8f6)
+      )
+      60%
+  );
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.pathable-text-highlight--underline {
+  border-bottom: var(
+      --pathable-text-highlight-underline-height,
+      var(--usa-text-highlight-underline-height, 2px)
+    )
+    solid
+    var(
+      --pathable-text-highlight-underline-color,
+      var(--usa-text-highlight-underline-color, #005ea2)
+    );
+  padding-bottom: 0.1em;
+}
+
+.pathable-text-highlight--soft-bg {
+  background-color: var(
+    --pathable-text-highlight-soft-bg-color,
+    var(--usa-text-highlight-soft-bg-color, #d9e8f6)
+  );
+  padding: 0.15em 0.3em;
+  margin-left: -0.15em;
+  margin-right: -0.15em;
+}
+
+@media (forced-colors: active) {
+  .pathable-text-highlight--marker {
+    background: Highlight;
+    color: HighlightText;
+  }
+  .pathable-text-highlight--underline {
+    border-bottom-color: Highlight;
+  }
+  .pathable-text-highlight--soft-bg {
+    background: Highlight;
+    color: HighlightText;
+  }
+}
