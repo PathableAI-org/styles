@@ -43,7 +43,7 @@
   <div class="pathable-filter-bar__filters">
     <span class="pathable-filter-pill">
       <span class="pathable-filter-pill__label">Category: Training</span>
-      <button class="pathable-filter-pill__dismiss" aria-label="Remove filter">&times;</button>
+      <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Category: Training">&times;</button>
     </span>
   </div>
   <button class="pathable-filter-bar__clear">Clear all</button>

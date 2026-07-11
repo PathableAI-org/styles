@@ -15,11 +15,16 @@
   border: 1px solid var(--pathable-color-border);
   font-size: var(--pathable-font-size-body-xs);
   color: var(--pathable-color-text);
-  white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .pathable-filter-pill__label {
   line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 12rem;
 }
 
 .pathable-filter-pill__dismiss {

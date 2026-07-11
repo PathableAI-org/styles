@@ -91,23 +91,23 @@ export const Wrapped = {
       <div class="pathable-filter-bar__filters">
         <span class="pathable-filter-pill">
           <span class="pathable-filter-pill__label">Category: Training</span>
-          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter">&times;</button>
+          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Category: Training">&times;</button>
         </span>
         <span class="pathable-filter-pill">
           <span class="pathable-filter-pill__label">Status: Active</span>
-          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter">&times;</button>
+          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Status: Active">&times;</button>
         </span>
         <span class="pathable-filter-pill">
           <span class="pathable-filter-pill__label">Provider: PathAble</span>
-          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter">&times;</button>
+          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Provider: PathAble">&times;</button>
         </span>
         <span class="pathable-filter-pill">
           <span class="pathable-filter-pill__label">Level: Beginner</span>
-          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter">&times;</button>
+          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Level: Beginner">&times;</button>
         </span>
         <span class="pathable-filter-pill">
           <span class="pathable-filter-pill__label">Format: Video</span>
-          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter">&times;</button>
+          <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Format: Video">&times;</button>
         </span>
       </div>
       <button class="pathable-filter-bar__clear">Clear all</button>

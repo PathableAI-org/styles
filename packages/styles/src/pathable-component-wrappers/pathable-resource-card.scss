@@ -135,9 +135,6 @@
   font-weight: var(--pathable-font-weight-bold);
   color: var(--pathable-color-text);
   margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .pathable-resource-card__provider {

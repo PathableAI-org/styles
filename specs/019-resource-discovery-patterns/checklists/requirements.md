@@ -2,7 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-07-11
-**Feature**: [spec.md](/Users/jake/Documents/GitHub/styles/specs/019-resource-discovery-patterns/spec.md)
+**Feature**: [spec.md](../spec.md)
 
 ## Content Quality
 
