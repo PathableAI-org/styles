@@ -1,0 +1,134 @@
+// packages/styles/src/pathable-component-wrappers/pathable-decorative-background.scss
+//
+// Decorative background recipes: quiet gradient, radial glow, subtle texture,
+// and organic shape. Applied via BEM modifier classes on any container element.
+// Renders via CSS pseudo-elements — naturally excluded from accessibility tree.
+//
+// CSS custom properties:
+//   --pathable-decorative-bg-*-* (gradient, glow, organic, opacity)
+//
+// State modifiers:
+//   --gradient, --glow, --texture, --organic, --animated
+
+@use 'uswds-core' as *;
+
+.pathable-decorative-bg {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: var(
+      --pathable-decorative-bg-opacity,
+      var(--usa-decorative-bg-opacity, 0.15)
+    );
+    border-radius: inherit;
+  }
+
+  // Ensure content sits above the decorative layer
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// --- Variant: Quiet gradient ---
+.pathable-decorative-bg--gradient::before {
+  background: linear-gradient(
+    135deg,
+    var(
+      --pathable-decorative-bg-gradient-start,
+      var(--usa-decorative-bg-gradient-start, #{color('primary-lighter')})
+    ),
+    // Gradient end uses a slightly deeper tone for visual contrast
+    var(
+        --pathable-decorative-bg-gradient-end,
+        var(--usa-decorative-bg-gradient-end, #{color('primary-light')})
+      )
+  );
+}
+
+// --- Variant: Radial glow ---
+.pathable-decorative-bg--glow::before {
+  background: radial-gradient(
+    ellipse at center 20%,
+    var(
+        --pathable-decorative-bg-glow-color,
+        var(--usa-decorative-bg-glow-color, #{color('primary-light')})
+      )
+      0%,
+    transparent
+      var(
+        --pathable-decorative-bg-glow-size,
+        var(--usa-decorative-bg-glow-size, #{units('mobile')})
+      )
+  );
+}
+
+// --- Variant: Subtle texture ---
+.pathable-decorative-bg--texture::before {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  background-size: 4px 4px;
+}
+
+// --- Variant: Organic shape ---
+.pathable-decorative-bg--organic::before {
+  width: var(
+    --pathable-decorative-bg-organic-size,
+    var(--usa-decorative-bg-organic-size, 300px)
+  );
+  height: var(
+    --pathable-decorative-bg-organic-size,
+    var(--usa-decorative-bg-organic-size, 300px)
+  );
+  background: var(
+    --pathable-decorative-bg-organic-color,
+    var(--usa-decorative-bg-organic-color, #{color('primary-lighter')})
+  );
+  border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+  top: -10%;
+  right: -10%;
+  left: auto;
+  bottom: auto;
+}
+
+// --- Optional animation ---
+.pathable-decorative-bg--animated::before {
+  animation: pathable-float 8s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes pathable-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(10px, -10px) rotate(2deg);
+  }
+  50% {
+    transform: translate(-5px, -15px) rotate(-1deg);
+  }
+  75% {
+    transform: translate(15px, -5px) rotate(1deg);
+  }
+}
+
+// --- Forced-colors fallback ---
+@media (forced-colors: active) {
+  .pathable-decorative-bg::before {
+    opacity: 0.05;
+  }
+}

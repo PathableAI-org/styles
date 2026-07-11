@@ -109,4 +109,8 @@ packages/styles/dist/
 packages/styles/fonts/
 storybook-static/
 
+# Selective import test outputs
+packages/styles/test/selective-import.css
+packages/styles/test/selective-import.css.map
+
 handoffs/

@@ -1,0 +1,74 @@
+// packages/styles/src/pathable-component-wrappers/pathable-text-highlight.scss
+//
+// Text highlight treatments: marker, underline, and soft-background variants.
+// Uses box-decoration-break: clone for proper multi-line wrapping.
+//
+// CSS custom properties:
+//   --pathable-text-highlight-*-color, --pathable-text-highlight-underline-height
+//
+// Modifiers:
+//   --marker, --underline, --soft-bg
+
+@use 'uswds-core' as *;
+
+.pathable-text-highlight {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+// --- Variant: Marker / highlighter pen ---
+.pathable-text-highlight--marker {
+  background: linear-gradient(
+    to bottom,
+    transparent 60%,
+    var(
+        --pathable-text-highlight-marker-color,
+        var(--usa-text-highlight-marker-color, #{color('primary-lighter')})
+      )
+      60%
+  );
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+// --- Variant: Accent underline ---
+.pathable-text-highlight--underline {
+  border-bottom: var(
+      --pathable-text-highlight-underline-height,
+      var(--usa-text-highlight-underline-height, 2px)
+    )
+    solid
+    var(
+      --pathable-text-highlight-underline-color,
+      var(--usa-text-highlight-underline-color, #{color('primary')})
+    );
+  padding-bottom: 0.1em;
+}
+
+// --- Variant: Soft background fill ---
+.pathable-text-highlight--soft-bg {
+  background-color: var(
+    --pathable-text-highlight-soft-bg-color,
+    var(--usa-text-highlight-soft-bg-color, #{color('primary-light')})
+  );
+  padding: 0.15em 0.3em;
+  margin-left: -0.15em;
+  margin-right: -0.15em;
+}
+
+// --- Forced-colors fallback ---
+@media (forced-colors: active) {
+  .pathable-text-highlight--marker {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .pathable-text-highlight--underline {
+    border-bottom-color: Highlight;
+  }
+
+  .pathable-text-highlight--soft-bg {
+    background: Highlight;
+    color: HighlightText;
+  }
+}

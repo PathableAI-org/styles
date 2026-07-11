@@ -1,0 +1,205 @@
+// packages/styles/src/pathable-component-wrappers/pathable-screenshot-frame.scss
+//
+// Screenshot presentation frame: plain elevated, browser chrome, phone bezel,
+// and dashboard-frame variants. Uses figure/figcaption for semantic association.
+//
+// CSS custom properties:
+//   --pathable-screenshot-frame-radius, --pathable-screenshot-frame-hover-lift
+//
+// Modifiers:
+//   --browser, --phone, --dashboard (default: plain elevated)
+
+@use 'uswds-core' as *;
+
+.pathable-screenshot-frame {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: var(
+    --pathable-screenshot-frame-radius,
+    var(--usa-screenshot-frame-radius, #{radius('md')})
+  );
+  overflow: hidden;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.pathable-screenshot-frame__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.pathable-screenshot-frame__caption {
+  padding: units(1.5);
+  font-size: type-scale('sm');
+  color: color('ink');
+  background: color('white');
+  text-align: center;
+}
+
+// --- Hover lift (for interactive frames) ---
+a.pathable-screenshot-frame,
+button.pathable-screenshot-frame {
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(
+      var(
+        --pathable-screenshot-frame-hover-lift,
+        var(--usa-screenshot-frame-hover-lift, -4px)
+      )
+    );
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid color('primary');
+    outline-offset: 2px;
+  }
+}
+
+// --- Variant: Browser chrome ---
+.pathable-screenshot-frame--browser {
+  border-radius: radius('md') radius('md') 0 0;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .pathable-screenshot-frame__image {
+    border-radius: 0;
+  }
+
+  .pathable-screenshot-frame__browser-bar {
+    display: flex;
+    align-items: center;
+    gap: units(1);
+    padding: units(1) units(1.5);
+    background: color('gray-cool-5');
+    border-bottom: 1px solid color('gray-cool-10');
+  }
+
+  .pathable-screenshot-frame__browser-dots {
+    display: flex;
+    gap: 6px;
+
+    span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: color('gray-30');
+    }
+  }
+
+  .pathable-screenshot-frame__browser-url {
+    flex: 1;
+    font-size: type-scale('3xs');
+    background: color('white');
+    padding: units(0.5) units(1);
+    border-radius: radius('sm');
+    color: color('gray-50');
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// --- Variant: Phone bezel ---
+.pathable-screenshot-frame--phone {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: radius('lg');
+  border: 3px solid color('gray-90');
+  padding: units(1);
+  max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
+  .pathable-screenshot-frame__image {
+    border-radius: radius('lg');
+  }
+
+  .pathable-screenshot-frame__phone-notch {
+    width: 120px;
+    height: 24px;
+    background: color('gray-90');
+    border-radius: 0 0 12px 12px;
+    margin-bottom: units(1);
+  }
+
+  .pathable-screenshot-frame__caption {
+    width: 100%;
+    border-radius: 0 0 radius('lg') radius('lg');
+  }
+}
+
+// --- Variant: Dashboard frame ---
+.pathable-screenshot-frame--dashboard {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: radius('md');
+  background: color('gray-cool-90');
+  color: color('white');
+
+  .pathable-screenshot-frame__image {
+    border-radius: radius('md') radius('md') 0 0;
+    opacity: 0.9;
+  }
+
+  .pathable-screenshot-frame__dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: units(0.5);
+    padding: units(1);
+    opacity: 0.6;
+
+    span {
+      height: 4px;
+      background: color('gray-50');
+      border-radius: 2px;
+    }
+
+    .dashboard-grid-wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .pathable-screenshot-frame__caption {
+    background: transparent;
+    color: color('gray-10');
+    padding: units(1) units(2);
+  }
+}
+
+// --- Reduced motion ---
+@media (prefers-reduced-motion: reduce) {
+  a.pathable-screenshot-frame,
+  button.pathable-screenshot-frame {
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// --- Forced-colors fallback ---
+@media (forced-colors: active) {
+  .pathable-screenshot-frame {
+    border: 1px solid CanvasText;
+  }
+
+  a.pathable-screenshot-frame:focus-visible,
+  button.pathable-screenshot-frame:focus-visible {
+    outline: 2px solid Highlight;
+  }
+}
