@@ -201,7 +201,7 @@ export const LongPrompt = {
     <div class="pathable-workflow-panel">
       <div class="pathable-workflow-panel__context-header">Participant: Casey Morgan — Career Counseling</div>
       <div class="pathable-workflow-panel__objective">Comprehensive career assessment and goal planning session</div>
-      <div class="pathable-workflow-panel__prompt">
+      <div class="pathable-workflow-panel__prompt" tabindex="0">
         <strong>Extended prompt:</strong><br>
         This is a comprehensive career counseling session. Please review the following areas with the participant:<br><br>
         <strong>1. Employment History</strong><br>
