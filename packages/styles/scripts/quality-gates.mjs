@@ -23,7 +23,7 @@
 
 import { createServer } from 'node:http'
 import { readFile, access } from 'node:fs/promises'
-import { resolve, extname } from 'node:path'
+import { resolve, extname, sep } from 'node:path'
 import { constants } from 'node:fs'
 import { chromium } from 'playwright'
 
@@ -32,7 +32,7 @@ import { chromium } from 'playwright'
 // ---------------------------------------------------------------------------
 
 const STATIC_DIR = resolve('apps/storybook/storybook-static')
-const PORT = 6012
+const PORT = parseInt(process.env.QUALITY_GATES_PORT || '6012', 10)
 const BASE_URL = `http://127.0.0.1:${PORT}`
 
 /**
@@ -158,7 +158,7 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
     {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
-        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Enhanced) per G206.',
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
     },
   ],
   'structured-workflow-wizard--wizard-long-form': [
@@ -170,7 +170,7 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
     {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
-        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Enhanced).',
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
     },
   ],
   'discovery-wayfinder--default': [
@@ -182,7 +182,7 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
     {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
-        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Enhanced).',
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
     },
   ],
   'dashboard-dashboard-header--with-many-actions': [
@@ -199,7 +199,7 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
     {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
-        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Enhanced).',
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
     },
   ],
 }
@@ -229,14 +229,21 @@ const MIME_TYPES = {
 function startServer() {
   return new Promise((resolvePromise, reject) => {
     const server = createServer(async (req, res) => {
+      // req.url is optional in Node's IncomingMessage — guard against
+      // malformed requests that would cause URL parsing to throw.
+      if (!req.url) {
+        res.writeHead(400)
+        res.end('Bad request')
+        return
+      }
       const url = new URL(req.url, BASE_URL)
       const pathname = url.pathname.slice(1) || 'index.html'
       const filePath = resolve(STATIC_DIR, pathname)
 
       // Prevent directory traversal.  Resolve the absolute path and then
       // enforce that it stays inside STATIC_DIR by checking for a trailing
-      // path separator, not just a string prefix.
-      const dir = STATIC_DIR + '/'
+      // path separator (platform-aware), not just a string prefix.
+      const dir = STATIC_DIR + sep
       if (!filePath.startsWith(dir) && filePath !== STATIC_DIR) {
         res.writeHead(403)
         res.end('Forbidden')
@@ -382,10 +389,26 @@ const auditScript = function auditStory(opts) {
       // Placeholder is NOT an accessible name (per WCAG); it is
       // supplementary hint text only.  Rely on aria-label,
       // aria-labelledby, or associated <label> elements.
-      const accessibleName =
+      let accessibleName =
         el.getAttribute('aria-label')?.trim() ||
         el.getAttribute('title')?.trim() ||
         ''
+
+      // aria-labelledby references one or more element IDs whose
+      // text content forms the accessible name.
+      if (!accessibleName) {
+        const labelledBy = el.getAttribute('aria-labelledby')
+        if (labelledBy) {
+          const texts = labelledBy
+            .split(/\s+/)
+            .map((id) => {
+              const ref = document.getElementById(id)
+              return ref ? (ref.textContent || '').trim() : ''
+            })
+            .filter(Boolean)
+          if (texts.length > 0) accessibleName = texts.join(' ')
+        }
+      }
 
       const textContent = (el.textContent || '')
         .replace(/\s+/g, ' ')
@@ -393,11 +416,21 @@ const auditScript = function auditStory(opts) {
         .slice(0, 80)
 
       // Check for associated <label>
+      // Only labelable form elements get their accessible name from
+      // a wrapping <label>; buttons, links, and other elements do not.
+      const labelableTags = new Set([
+        'input',
+        'select',
+        'textarea',
+        'meter',
+        'output',
+        'progress',
+      ])
       let hasLabel = false
-      if (el.id) {
+      if (el.id && labelableTags.has(tag)) {
         hasLabel = !!document.querySelector(`label[for="${CSS.escape(el.id)}"]`)
       }
-      if (!hasLabel) {
+      if (!hasLabel && labelableTags.has(tag)) {
         hasLabel = el.closest('label') !== null
       }
 
@@ -607,6 +640,17 @@ async function main() {
   if (indexFailures.length > 0) {
     for (const f of indexFailures) {
       console.log(`   ✗ ${f.message}`)
+    }
+
+    // If the index itself is missing (not just a missing story entry),
+    // exit early — continuing would just produce a noisy cascade of
+    // follow-on failures from the Playwright checks.
+    const hasCriticalIndexFailure = indexFailures.some(
+      (f) => f.type === 'missing-index',
+    )
+    if (hasCriticalIndexFailure) {
+      console.error('\n✗ Critical index failure — aborting')
+      process.exit(1)
     }
   } else {
     console.log('   ✓ All expected stories present in index')
