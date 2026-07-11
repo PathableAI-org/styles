@@ -34,7 +34,7 @@
 // Heading
 .pathable-page-error__heading {
   font-family: var(--pathable-font-heading);
-  font-size: var(--pathable-font-size-lg);
+  font-size: var(--pathable-font-size-heading-md);
   font-weight: var(--pathable-font-weight-bold);
   color: var(--pathable-color-text);
   margin: 0;
@@ -42,7 +42,7 @@
 
 // Explanation body text
 .pathable-page-error__body {
-  font-size: var(--pathable-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
   line-height: var(--pathable-font-line-height-body);
   color: var(--pathable-color-text-muted);
   margin: 0;
@@ -57,7 +57,7 @@
 
 .pathable-page-error__nav {
   color: var(--pathable-color-link);
-  font-size: var(--pathable-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
   text-decoration: underline;
 
   &:hover {
@@ -81,7 +81,7 @@
 }
 
 .pathable-page-error--full-page .pathable-page-error__heading {
-  font-size: var(--pathable-font-size-xl);
+  font-size: var(--pathable-font-size-heading-lg);
 }
 
 .pathable-page-error--full-page .pathable-page-error__body {
@@ -114,7 +114,7 @@
   }
 
   .pathable-page-error--full-page .pathable-page-error__heading {
-    font-size: var(--pathable-font-size-lg);
+    font-size: var(--pathable-font-size-heading-md);
   }
 }
 

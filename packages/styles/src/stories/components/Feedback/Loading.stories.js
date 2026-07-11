@@ -22,7 +22,7 @@ export const Default = {
 
 export const SpinnerOnly = {
   render: () => `
-    <div class="pathable-loading" aria-live="polite" aria-label="Loading">
+    <div class="pathable-loading" role="status" aria-label="Loading">
       <span class="pathable-loading__spinner" aria-hidden="true"></span>
     </div>
   `,

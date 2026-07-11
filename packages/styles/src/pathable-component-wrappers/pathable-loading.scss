@@ -40,7 +40,7 @@
 
 // Status text
 .pathable-loading__text {
-  font-size: var(--pathable-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
   line-height: var(--pathable-font-line-height-body);
 }
 
@@ -57,7 +57,7 @@
 }
 
 .pathable-loading--large .pathable-loading__text {
-  font-size: var(--pathable-font-size-md);
+  font-size: var(--pathable-font-size-body-md);
 }
 
 // --- Accessibility: forced-colors ---

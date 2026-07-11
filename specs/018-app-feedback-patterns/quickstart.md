@@ -71,4 +71,4 @@ Manual checks:
 rg -n 'rgba|#[0-9a-fA-F]|px[^)]' packages/styles/src/pathable-component-wrappers/pathable-toast.scss packages/styles/src/pathable-component-wrappers/pathable-loading.scss packages/styles/src/pathable-component-wrappers/pathable-skeleton.scss packages/styles/src/pathable-component-wrappers/pathable-empty-state.scss packages/styles/src/pathable-component-wrappers/pathable-page-error.scss
 ```
 
-Expected: no matches (all values via `var(--pathable-*)` tokens).
+Expected: no matches (all values via `var(--pathable-*)` tokens). Geometry values (px, rem) are expected.

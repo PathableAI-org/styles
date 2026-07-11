@@ -76,7 +76,7 @@
 // Toast message body
 .pathable-toast__message {
   flex: 1;
-  font-size: var(--pathable-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
   line-height: var(--pathable-font-line-height-body);
   color: var(--pathable-color-text);
 }
@@ -85,7 +85,7 @@
 .pathable-toast__action {
   flex-shrink: 0;
   color: var(--pathable-color-link);
-  font-size: var(--pathable-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
   font-weight: var(--pathable-font-weight-bold);
   text-decoration: underline;
 
@@ -107,7 +107,7 @@
   background: transparent;
   color: var(--pathable-color-text-muted);
   cursor: pointer;
-  font-size: var(--pathable-font-size-lg);
+  font-size: var(--pathable-font-size-body-lg);
   line-height: 1;
   border-radius: var(--radius-sm);
 
@@ -170,6 +170,14 @@
   padding-inline-end: var(--pathable-space-2);
 }
 
+// --- Modifier: has-action (extra space when action link/button present) ---
+
+.pathable-toast--has-action {
+  .pathable-toast__action {
+    margin-inline-start: auto;
+  }
+}
+
 // --- Mobile responsive ---
 
 @media (max-width: 480px) {
@@ -180,7 +188,7 @@
 
   .pathable-toast {
     padding: var(--pathable-space-2);
-    font-size: var(--pathable-font-size-sm);
+    font-size: var(--pathable-font-size-body-sm);
   }
 }
 
@@ -197,7 +205,7 @@
   }
 
   .pathable-toast--success {
-    border-color: GreenText;
+    border-color: CanvasText;
   }
 
   .pathable-toast--warning {

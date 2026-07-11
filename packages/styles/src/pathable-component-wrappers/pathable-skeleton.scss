@@ -66,9 +66,25 @@
   height: 0.875rem;
   margin-block-end: var(--pathable-space-1);
 
-  // Multiple lines via CSS counter
-  &:nth-last-child(n + 2) {
-    width: calc(var(--pathable-skeleton-width, 100%) - 2rem);
+  // Repeated pseudo-element via box-shadow for multiple lines
+  &::before {
+    content: '';
+    display: block;
+    height: 0.875rem;
+    margin-block-end: var(--pathable-space-1);
+    box-shadow:
+      0 calc(0.875rem + var(--pathable-space-1)) 0 0 var(--pathable-color-bg),
+      0 calc((0.875rem + var(--pathable-space-1)) * 2) 0 0
+        var(--pathable-color-bg);
+    // Show lines up to --pathable-skeleton-lines (limit practical max)
+    clip-path: inset(
+      0 0
+        calc(
+          (3 - clamp(1, var(--pathable-skeleton-lines, 1), 6)) *
+            (0.875rem + var(--pathable-space-1))
+        )
+        0
+    );
   }
 }
 
