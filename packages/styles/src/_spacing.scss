@@ -8,6 +8,18 @@ $spacing-scale: (
   48: 48px,
 );
 
+$pathable-spacing-scale: (
+  0: 0,
+  1: 0.5rem,
+  2: 1rem,
+  3: 1.5rem,
+  4: 2rem,
+  5: 2.5rem,
+  6: 3rem,
+  7: 3.5rem,
+  8: 4rem,
+);
+
 :root {
   --space-4: 4px;
   --space-8: 8px;
@@ -16,4 +28,9 @@ $spacing-scale: (
   --space-24: 24px;
   --space-32: 32px;
   --space-48: 48px;
+
+  // Numeric PathAble spacing tokens mirror the generated spacing utilities.
+  @each $step, $value in $pathable-spacing-scale {
+    --pathable-space-#{$step}: #{$value};
+  }
 }
