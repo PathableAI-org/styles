@@ -1,0 +1,213 @@
+// packages/styles/src/pathable-component-wrappers/pathable-app-shell-layout.scss
+//
+// Responsive application shell layout — CSS Grid layout with persistent
+// sidebar on desktop and compact top bar on mobile.
+//
+// Layout responsibility: provides a framework-neutral app shell with
+// dedicated regions for sidebar, brand, primary navigation, account
+// context, mobile header, main content, and global notification layer.
+//
+// CSS custom properties:
+//   --pathable-app-shell-sidebar-width       (default: 280px) — sidebar width on desktop
+//   --pathable-app-shell-content-max-width   (default: 1024px) — standard content max-width
+//   --pathable-app-shell-content-max-width-wide (default: 1280px) — wide content max-width
+//   --pathable-app-shell-content-padding     (default: var(--space-24)) — content horizontal padding
+//   --pathable-app-shell-topbar-height       (default: 48px) — mobile top bar height
+//   --pathable-app-shell-sidebar-gap         (default: var(--space-8)) — gap between sidebar regions
+//   --pathable-app-shell-sidebar-padding     (default: var(--space-16)) — sidebar inner padding
+//   --pathable-app-shell-nav-item-padding-x  (default: var(--space-12)) — nav item horizontal padding
+//   --pathable-app-shell-nav-item-padding-y  (default: var(--space-8)) — nav item vertical padding
+//   --pathable-app-shell-nav-item-radius     (default: var(--radius-sm)) — nav item border radius
+//   --pathable-app-shell-active-indicator-width (default: 3px) — active nav indicator inset border
+//
+// Modifier classes:
+//   .pathable-app-shell__sidebar--fixed      — fixed positioning (default: sticky)
+//   .pathable-app-shell__content--standard   — standard max-width (default)
+//   .pathable-app-shell__content--wide       — wide max-width
+//
+// Usage:
+//   <div class="pathable-app-shell">
+//     <aside class="pathable-app-shell__sidebar">
+//       <div class="pathable-app-shell__brand">...</div>
+//       <nav class="pathable-app-shell__nav">
+//         <a class="pathable-app-shell__nav-item" href="/">Home</a>
+//         <a class="pathable-app-shell__nav-item pathable-app-shell__nav-item--active" aria-current="page" href="/tasks">Tasks</a>
+//       </nav>
+//       <div class="pathable-app-shell__account">...</div>
+//     </aside>
+//     <header class="pathable-app-shell__topbar">
+//       <span class="pathable-app-shell__topbar-title">App Name</span>
+//     </header>
+//     <main id="main-content" class="pathable-app-shell__content pathable-app-shell__content--standard">
+//       ...
+//     </main>
+//   </div>
+//
+// Accessibility:
+//   - Skip link targets #main-content — reuse pathable-skipnav
+//   - Focus order follows DOM order across all breakpoints
+//   - Active nav items use color + weight + border inset marker (not color alone)
+//   - Forced-colors mode preserves boundaries and active states
+
+// Desktop shell layout (1024px+)
+.pathable-app-shell {
+  display: grid;
+  grid-template-areas: 'sidebar main';
+  grid-template-columns: var(--pathable-app-shell-sidebar-width, 280px) 1fr;
+  grid-template-rows: 1fr;
+  min-height: 100dvh;
+}
+
+.pathable-app-shell__sidebar {
+  grid-area: sidebar;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-app-shell-sidebar-gap, var(--space-8));
+  padding: var(--pathable-app-shell-sidebar-padding, var(--space-16));
+  background: var(--pathable-color-surface);
+  border-right: 1px solid var(--pathable-color-border);
+}
+
+// Fixed sidebar modifier
+.pathable-app-shell__sidebar--fixed {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--pathable-app-shell-sidebar-width, 280px);
+  z-index: 10;
+}
+
+// Navigation items
+.pathable-app-shell__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pathable-app-shell__nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--pathable-app-shell-nav-item-padding-y, var(--space-8))
+    var(--pathable-app-shell-nav-item-padding-x, var(--space-12));
+  border-radius: var(--pathable-app-shell-nav-item-radius, var(--radius-sm));
+  text-decoration: none;
+  color: var(--pathable-color-text);
+  font-size: var(--pathable-font-size-sm, 0.875rem);
+  font-weight: 400;
+  border-left: var(--pathable-app-shell-active-indicator-width, 3px) solid
+    transparent;
+  transition:
+    background var(--pathable-surface-transition-duration, 0.2s),
+    border-color var(--pathable-surface-transition-duration, 0.2s);
+}
+
+.pathable-app-shell__nav-item:hover {
+  background: var(--pathable-color-bg);
+}
+
+.pathable-app-shell__nav-item:focus-visible {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.pathable-app-shell__nav-item--active,
+.pathable-app-shell__nav-item[aria-current='page'] {
+  font-weight: 700;
+  color: var(--pathable-color-accent);
+  border-left-color: var(--pathable-color-accent);
+  background: color-mix(in srgb, var(--pathable-color-accent) 8%, transparent);
+}
+
+// Mobile top bar
+.pathable-app-shell__topbar {
+  grid-area: topbar;
+  display: none; // hidden on desktop
+  height: var(--pathable-app-shell-topbar-height, 48px);
+  align-items: center;
+  padding-inline: var(--pathable-app-shell-content-padding, var(--space-24));
+  background: var(--pathable-color-surface);
+  border-bottom: 1px solid var(--pathable-color-border);
+}
+
+.pathable-app-shell__topbar-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+// Main content area
+.pathable-app-shell__content {
+  grid-area: main;
+  width: 100%;
+  max-width: var(--pathable-app-shell-content-max-width, 1024px);
+  margin-inline: auto;
+  padding: var(--pathable-app-shell-content-padding, var(--space-24));
+  overflow-y: auto;
+}
+
+.pathable-app-shell__content--wide {
+  --pathable-app-shell-content-max-width: var(
+    --pathable-app-shell-content-max-width-wide,
+    1280px
+  );
+}
+
+// Global notification / status layer
+.pathable-app-shell__notification {
+  position: relative;
+  z-index: 20;
+}
+
+// Mobile layout (< 1024px)
+@media (max-width: 1023px) {
+  .pathable-app-shell {
+    grid-template-areas:
+      'topbar'
+      'main'
+      'bottomnav';
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .pathable-app-shell__sidebar {
+    display: none; // hidden on mobile
+  }
+
+  .pathable-app-shell__topbar {
+    display: flex; // visible on mobile
+  }
+
+  .pathable-app-shell__content {
+    max-width: 100%; // full width on mobile
+  }
+}
+
+// Accessibility: forced-colors / high-contrast mode
+@media (forced-colors: active) {
+  .pathable-app-shell__sidebar {
+    border-right: 2px solid CanvasText;
+  }
+
+  .pathable-app-shell__nav-item--active,
+  .pathable-app-shell__nav-item[aria-current='page'] {
+    border-left-color: Highlight;
+    color: Highlight;
+    font-weight: 700;
+  }
+
+  .pathable-app-shell__nav-item:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+// Accessibility: reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .pathable-app-shell__nav-item {
+    transition: none;
+  }
+}

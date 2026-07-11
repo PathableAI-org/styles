@@ -1,0 +1,151 @@
+// packages/styles/src/pathable-component-wrappers/pathable-bottom-navigation.scss
+//
+// Mobile bottom navigation bar — up to five primary destinations displayed
+// as icon-and-label pairs, designed for compact mobile use.
+//
+// Layout responsibility: provides fixed bottom navigation for mobile viewports,
+// with safe-area padding for devices with home indicators.
+//
+// CSS custom properties:
+//   --pathable-bottom-navigation-bg              (default: var(--pathable-color-surface))
+//   --pathable-bottom-navigation-safe-area       (default: env(safe-area-inset-bottom, 0px))
+//   --pathable-bottom-navigation-item-gap        (default: var(--space-4))
+//   --pathable-bottom-navigation-active-color    (default: var(--pathable-color-accent))
+//   --pathable-bottom-navigation-active-indicator-width (default: 3px)
+//
+// Modifier classes:
+//   .pathable-bottom-navigation__item--active   — active navigation destination
+//   [aria-current="page"]                        — alternative active selector
+//
+// Usage:
+//   <nav class="pathable-bottom-navigation" aria-label="Primary">
+//     <a href="/" class="pathable-bottom-navigation__item pathable-bottom-navigation__item--active" aria-current="page">
+//       <svg class="pathable-icon" aria-hidden="true">...</svg>
+//       <span>Home</span>
+//     </a>
+//     <a href="/tasks" class="pathable-bottom-navigation__item">
+//       <svg class="pathable-icon" aria-hidden="true">...</svg>
+//       <span>Tasks</span>
+//     </a>
+//     <a href="/settings" class="pathable-bottom-navigation__item">
+//       <svg class="pathable-icon" aria-hidden="true">...</svg>
+//       <span>Settings</span>
+//     </a>
+//   </nav>
+//
+// Accessibility:
+//   - Container uses <nav> with aria-label for screen reader identification
+//   - Active items use aria-current="page" for screen reader support
+//   - Icon-only items require aria-label on the link
+//   - Forced-colors mode preserves active state boundaries
+
+// Hidden by default (desktop), visible on mobile via .pathable-app-shell grid
+.pathable-bottom-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: var(--pathable-bottom-navigation-item-gap, var(--space-4));
+  padding: var(--space-8) var(--space-16)
+    calc(
+      var(--space-8) +
+        var(
+          --pathable-bottom-navigation-safe-area,
+          env(safe-area-inset-bottom, 0px)
+        )
+    );
+  background: var(
+    --pathable-bottom-navigation-bg,
+    var(--pathable-color-surface)
+  );
+  border-top: 1px solid var(--pathable-color-border);
+  // Visible only on mobile via the app shell grid
+  // Consumers place this outside .pathable-app-shell; the shell grid controls visibility
+}
+
+.pathable-bottom-navigation__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-4) var(--space-8);
+  text-decoration: none;
+  color: var(--pathable-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  border-top: var(--pathable-bottom-navigation-active-indicator-width, 3px)
+    solid transparent;
+  transition:
+    color var(--pathable-surface-transition-duration, 0.2s),
+    border-color var(--pathable-surface-transition-duration, 0.2s);
+}
+
+// Icon inside bottom nav item — use .pathable-icon or direct SVG sizing
+.pathable-bottom-navigation__item .pathable-icon,
+.pathable-bottom-navigation__item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.pathable-bottom-navigation__item:hover {
+  color: var(--pathable-color-text);
+}
+
+.pathable-bottom-navigation__item:focus-visible {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+.pathable-bottom-navigation__item--active,
+.pathable-bottom-navigation__item[aria-current='page'] {
+  color: var(
+    --pathable-bottom-navigation-active-color,
+    var(--pathable-color-accent)
+  );
+  font-weight: 700;
+  border-top-color: var(
+    --pathable-bottom-navigation-active-color,
+    var(--pathable-color-accent)
+  );
+}
+
+// No empty bottom nav when zero items are provided
+.pathable-bottom-navigation:empty {
+  display: none;
+}
+
+// Visibility controlled by the app shell grid on mobile
+@media (min-width: 1024px) {
+  .pathable-bottom-navigation {
+    display: none; // hidden on desktop
+  }
+}
+
+// Accessibility: forced-colors / high-contrast mode
+@media (forced-colors: active) {
+  .pathable-bottom-navigation {
+    border-top: 2px solid CanvasText;
+  }
+
+  .pathable-bottom-navigation__item--active,
+  .pathable-bottom-navigation__item[aria-current='page'] {
+    border-top-color: Highlight;
+    color: Highlight;
+    font-weight: 700;
+  }
+
+  .pathable-bottom-navigation__item:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+// Accessibility: reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .pathable-bottom-navigation__item {
+    transition: none;
+  }
+}
