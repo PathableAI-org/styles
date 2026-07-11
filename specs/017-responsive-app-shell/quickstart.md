@@ -17,6 +17,17 @@ The application shell is included in the `@pathable/styles` package. Ensure your
 ### Desktop Application Shell
 
 ```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Shell Demo</title>
+</head>
+
+<!-- Skip link (must be the first focusable element) -->
+<a class="pathable-skipnav" href="#main-content">Skip to main content</a>
+
 <div class="pathable-app-shell">
   <aside class="pathable-app-shell__sidebar">
     <div class="pathable-app-shell__brand">
@@ -38,32 +49,29 @@ The application shell is included in the `@pathable/styles` package. Ensure your
     <h1>Dashboard</h1>
     <p>Main content goes here.</p>
   </main>
+
+  <!-- Mobile bottom navigation (optional, inside shell for grid placement) -->
+  <nav class="pathable-bottom-navigation" aria-label="Primary">
+    <a href="/" class="pathable-bottom-navigation__item pathable-bottom-navigation__item--active" aria-current="page">
+      <svg class="pathable-icon" aria-hidden="true" width="20" height="20">
+        <use href="#icon-home"></use>
+      </svg>
+      <span>Home</span>
+    </a>
+    <a href="/tasks" class="pathable-bottom-navigation__item">
+      <svg class="pathable-icon" aria-hidden="true" width="20" height="20">
+        <use href="#icon-tasks"></use>
+      </svg>
+      <span>Tasks</span>
+    </a>
+    <a href="/settings" class="pathable-bottom-navigation__item">
+      <svg class="pathable-icon" aria-hidden="true" width="20" height="20">
+        <use href="#icon-settings"></use>
+      </svg>
+      <span>Settings</span>
+    </a>
+  </nav>
 </div>
-
-<!-- Mobile bottom navigation (optional) -->
-<nav class="pathable-bottom-navigation" aria-label="Primary">
-  <a href="/" class="pathable-bottom-navigation__item pathable-bottom-navigation__item--active" aria-current="page">
-    <svg class="pathable-icon" aria-hidden="true" width="20" height="20">
-      <use href="#icon-home"></use>
-    </svg>
-    <span>Home</span>
-  </a>
-  <a href="/tasks" class="pathable-bottom-navigation__item">
-    <svg class="pathable-icon" aria-hidden="true" width="20" height="20">
-      <use href="#icon-tasks"></use>
-    </svg>
-    <span>Tasks</span>
-  </a>
-  <a href="/settings" class="pathable-bottom-navigation__item">
-    <svg class="pathable-icon" aria-hidden="true" width="20" height="20">
-      <use href="#icon-settings"></use>
-    </svg>
-    <span>Settings</span>
-  </a>
-</nav>
-
-<!-- Skip link (placed before the shell) -->
-<a class="pathable-skipnav" href="#main-content">Skip to main content</a>
 ```
 
 ## Key Principles
@@ -79,7 +87,7 @@ The application shell is included in the `@pathable/styles` package. Ensure your
 :root {
   --pathable-app-shell-sidebar-width: 240px;
   --pathable-app-shell-content-max-width: 1200px;
-  --pathable-app-shell-content-max-width--wide: 1440px;
+  --pathable-app-shell-content-max-width-wide: 1440px;
   --pathable-app-shell-topbar-height: 56px;
 }
 ```

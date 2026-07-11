@@ -29,23 +29,23 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
   <main id="main-content" class="pathable-app-shell__content pathable-app-shell__content--standard">
     ...
   </main>
-</div>
 
-<!-- Mobile bottom navigation (optional, mobile only) -->
-<nav class="pathable-bottom-navigation" aria-label="Primary">
-  <a href="/dashboard" class="pathable-bottom-navigation__item pathable-bottom-navigation__item--active" aria-current="page">
-    <svg class="pathable-icon" aria-hidden="true">...</svg>
-    <span>Dashboard</span>
-  </a>
-  <a href="/tasks" class="pathable-bottom-navigation__item">
-    <svg class="pathable-icon" aria-hidden="true">...</svg>
-    <span>Tasks</span>
-  </a>
-  <a href="/settings" class="pathable-bottom-navigation__item">
-    <svg class="pathable-icon" aria-hidden="true">...</svg>
-    <span>Settings</span>
-  </a>
-</nav>
+  <!-- Mobile bottom navigation (optional, inside shell for grid placement) -->
+  <nav class="pathable-bottom-navigation" aria-label="Primary">
+    <a href="/dashboard" class="pathable-bottom-navigation__item pathable-bottom-navigation__item--active" aria-current="page">
+      <svg class="pathable-icon" aria-hidden="true">...</svg>
+      <span>Dashboard</span>
+    </a>
+    <a href="/tasks" class="pathable-bottom-navigation__item">
+      <svg class="pathable-icon" aria-hidden="true">...</svg>
+      <span>Tasks</span>
+    </a>
+    <a href="/settings" class="pathable-bottom-navigation__item">
+      <svg class="pathable-icon" aria-hidden="true">...</svg>
+      <span>Settings</span>
+    </a>
+  </nav>
+</div>
 ```
 
 ### Shell Elements
@@ -91,13 +91,13 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
 | `--pathable-app-shell-sidebar-width` | `280px` | Sidebar width on desktop |
 | `--pathable-app-shell-topbar-height` | `48px` | Mobile top bar height |
 | `--pathable-app-shell-content-max-width` | `1024px` | Standard content max-width |
-| `--pathable-app-shell-content-max-width--wide` | `1280px` | Wide content max-width |
+| `--pathable-app-shell-content-max-width-wide` | `1280px` | Wide content max-width |
 | `--pathable-app-shell-content-padding` | `var(--space-24)` | Content area horizontal padding |
 | `--pathable-app-shell-sidebar-gap` | `var(--space-8)` | Gap between sidebar regions (brand, nav, account) |
 | `--pathable-app-shell-sidebar-padding` | `var(--space-16)` | Sidebar inner padding |
 | `--pathable-app-shell-nav-item-padding-x` | `var(--space-12)` | Navigation item horizontal padding |
 | `--pathable-app-shell-nav-item-padding-y` | `var(--space-8)` | Navigation item vertical padding |
-| `--pathable-app-shell-nav-item-indicator-width` | `3px` | Active indicator inset border width |
+| `--pathable-app-shell-active-indicator-width` | `3px` | Active indicator inset border width |
 | `--pathable-app-shell-nav-item-radius` | `var(--radius-sm)` | Navigation item border radius |
 
 ### Bottom Navigation
@@ -129,19 +129,19 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
 
 ```scss
 // Import only the app shell layout (no bottom navigation)
-@use 'packages/styles/src/pathable-component-wrappers/pathable-app-shell';
+@use '@pathable/styles/src/pathable-component-wrappers/pathable-app-shell-layout';
 ```
 
 ### Bundle Import
 
 ```scss
 // Import all navigation patterns including shell
-@use 'packages/styles/src/pathable-component-wrappers/pathable-navigation';
+@use '@pathable/styles/src/pathable-component-wrappers/pathable-navigation';
 ```
 
 ### All-in-one Import
 
 ```scss
 // Import everything
-@use 'packages/styles/src/pathable-component-wrappers/pathable-all';
+@use '@pathable/styles/src/pathable-component-wrappers/pathable-all';
 ```

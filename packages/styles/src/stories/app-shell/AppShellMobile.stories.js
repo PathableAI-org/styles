@@ -77,7 +77,7 @@ export const Default = {
     <div class="pathable-app-shell">
       ${topbar()}
       ${mainContent()}
+      ${bottomNav()}
     </div>
-    ${bottomNav()}
   `,
 }

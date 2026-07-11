@@ -13,6 +13,10 @@
 //   --pathable-bottom-navigation-active-color    (default: var(--pathable-color-accent))
 //   --pathable-bottom-navigation-active-indicator-width (default: 3px)
 //
+// The .pathable-bottom-navigation element should be placed inside the
+// .pathable-app-shell container so the shell grid controls its visibility
+// on the `bottomnav` grid area on mobile viewports.
+//
 // Modifier classes:
 //   .pathable-bottom-navigation__item--active   — active navigation destination
 //   [aria-current="page"]                        — alternative active selector
@@ -39,9 +43,11 @@
 //   - Icon-only items require aria-label on the link
 //   - Forced-colors mode preserves active state boundaries
 
-// Hidden by default (desktop), visible on mobile via .pathable-app-shell grid
+// Placed inside .pathable-app-shell so the shell grid controls visibility on mobile.
+// The shell layout assigns `bottomnav` as the grid area for this element.
 .pathable-bottom-navigation {
   display: flex;
+  grid-area: bottomnav;
   justify-content: space-around;
   align-items: flex-start;
   gap: var(--pathable-bottom-navigation-item-gap, var(--space-4));
@@ -72,7 +78,7 @@
   padding: var(--space-4) var(--space-8);
   text-decoration: none;
   color: var(--pathable-color-text-muted);
-  font-size: 0.75rem;
+  font-size: var(--pathable-font-size-label-sm, 0.75rem);
   font-weight: 400;
   border-top: var(--pathable-bottom-navigation-active-indicator-width, 3px)
     solid transparent;

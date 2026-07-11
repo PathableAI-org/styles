@@ -78,7 +78,7 @@
 
 ### 8. File Organization and Bundle Structure
 
-**Decision**: Create two new SCSS files (`pathable-app-shell.scss` for the shell layout, `pathable-bottom-navigation.scss` for the mobile bottom nav) plus a new bundle package `pathable-app-shell.scss` that forwards both. Update the navigation bundle (`pathable-navigation.scss`) to include the new shell files.
+**Decision**: Create two new SCSS files (`pathable-app-shell-layout.scss` for the shell layout, `pathable-bottom-navigation.scss` for the mobile bottom nav) plus a new bundle package `pathable-app-shell.scss` that forwards both. Update the navigation bundle (`pathable-navigation.scss`) to include the new shell files.
 
 **Rationale**: The Issue #31 suggested outputs align with the project's file-per-component pattern. The shell layout and bottom navigation have different responsibilities and may be independently imported. Adding them to the navigation bundle is logical since both are navigation/layout patterns. The all-in-one entry point (`pathable-all.scss`) picks them up automatically.
 
