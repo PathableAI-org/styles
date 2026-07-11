@@ -63,15 +63,15 @@ const audienceHtml = `
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-cluster pathable-cluster--gap-lg" style="justify-content: center; text-align: center;">
       <div class="pathable-surface pathable-surface--raised" style="padding: 2rem; flex: 1; min-width: 200px; max-width: 300px;">
-        <h3 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">Case Workers</h3>
+        <h2 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">Case Workers</h2>
         <p style="margin: 0; font-size: 0.875rem; line-height: 1.5; color: var(--pathable-color-text-muted);">Simplify documentation and focus on what matters — your participants.</p>
       </div>
       <div class="pathable-surface pathable-surface--raised" style="padding: 2rem; flex: 1; min-width: 200px; max-width: 300px;">
-        <h3 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">Program Managers</h3>
+        <h2 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">Program Managers</h2>
         <p style="margin: 0; font-size: 0.875rem; line-height: 1.5; color: var(--pathable-color-text-muted);">Get real-time visibility into outcomes, compliance, and team performance.</p>
       </div>
       <div class="pathable-surface pathable-surface--raised" style="padding: 2rem; flex: 1; min-width: 200px; max-width: 300px;">
-        <h3 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">Administrators</h3>
+        <h2 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">Administrators</h2>
         <p style="margin: 0; font-size: 0.875rem; line-height: 1.5; color: var(--pathable-color-text-muted);">Meet reporting requirements and demonstrate funder impact with confidence.</p>
       </div>
     </div>

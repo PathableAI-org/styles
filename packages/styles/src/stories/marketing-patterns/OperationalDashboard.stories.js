@@ -271,19 +271,19 @@ const dashboardContent = `
 </div>
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
   <div class="pathable-surface pathable-surface--raised" style="padding: 1.5rem;">
-    <h3 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Recent Activity</h3>
+    <h2 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Recent Activity</h2>
     <div class="pathable-activity-list">
       ${activities.map(buildActivityRow).join('')}
     </div>
   </div>
   <div class="pathable-surface pathable-surface--raised" style="padding: 1.5rem;">
-    <h3 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Upcoming Schedule</h3>
+    <h2 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Upcoming Schedule</h2>
     <div class="pathable-schedule-list">
       ${scheduleItems.map(buildScheduleItem).join('')}
     </div>
   </div>
   <div class="pathable-surface pathable-surface--raised" style="padding: 1.5rem;">
-    <h3 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Active Participants</h3>
+    <h2 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Active Participants</h2>
     <div class="pathable-table--scrollable">
       <table class="pathable-table pathable-table--borderless pathable-table--striped">
         <thead>
