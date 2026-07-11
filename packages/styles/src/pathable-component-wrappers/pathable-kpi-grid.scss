@@ -1,0 +1,270 @@
+// packages/styles/src/pathable-component-wrappers/pathable-kpi-grid.scss
+//
+// KPI (Key Performance Indicator) grid — metric cards in an auto-fitting grid.
+// Each card displays an emphasized value, a label explaining what it represents,
+// and optional comparison/trend, icon, loading, and unavailable states.
+// Trends include text or icon cues in addition to color.
+//
+// CSS custom properties:
+//   --pathable-kpi-grid-min-width  (default: 200px) — minimum column width
+//   --pathable-kpi-grid-gap        (default: var(--pathable-space-4)) — gap between cards
+//
+// Modifier classes:
+//   .pathable-kpi-grid--columns-2  — force 2 columns
+//   .pathable-kpi-grid--columns-3  — force 3 columns
+//   .pathable-kpi-grid--columns-4  — force 4 columns
+
+@use 'uswds-core' as *;
+
+// --- Grid container ---
+
+.pathable-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, var(--pathable-kpi-grid-min-width, 200px)), 1fr)
+  );
+  gap: var(--pathable-kpi-grid-gap, var(--pathable-space-4));
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// --- Fixed column modifiers ---
+
+.pathable-kpi-grid--columns-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.pathable-kpi-grid--columns-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.pathable-kpi-grid--columns-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+// --- Narrow screens: single column ---
+
+@media (max-width: 480px) {
+  .pathable-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// --- KPI card ---
+
+.pathable-kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-1);
+  padding: var(--pathable-space-4);
+  border-radius: var(--radius-md);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+// --- Icon region ---
+
+.pathable-kpi-card__icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--pathable-color-text-muted);
+  flex-shrink: 0;
+
+  // Icon alone at the top
+  margin-block-end: var(--pathable-space-1);
+
+  svg,
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// --- Value — emphasized metric ---
+
+.pathable-kpi-card__value {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-xl);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  line-height: 1.1;
+  margin: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+// --- Label — explains what the value represents ---
+
+.pathable-kpi-card__label {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  line-height: var(--pathable-font-line-height-body);
+  margin: 0;
+}
+
+// --- Comparison / trend indicator ---
+
+.pathable-kpi-card__trend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  font-size: var(--pathable-font-size-body-xs);
+  font-weight: var(--pathable-font-weight-semibold);
+  margin-block-start: var(--pathable-space-1);
+
+  // Trend direction icon (text fallback for non-color differentiation)
+  &::before {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    content: '';
+    flex-shrink: 0;
+  }
+
+  // Semantic trend cues — always include text/icon in addition to color
+  &[data-trend='up'] {
+    color: var(--pathable-color-success);
+
+    &::before {
+      border-left: 0.35rem solid transparent;
+      border-right: 0.35rem solid transparent;
+      border-bottom: 0.45rem solid currentColor;
+    }
+  }
+
+  &[data-trend='down'] {
+    color: var(--pathable-color-danger);
+
+    &::before {
+      border-left: 0.35rem solid transparent;
+      border-right: 0.35rem solid transparent;
+      border-top: 0.45rem solid currentColor;
+    }
+  }
+
+  &[data-trend='neutral'] {
+    color: var(--pathable-color-text-muted);
+
+    &::before {
+      border-left: 0.2rem solid transparent;
+      border-right: 0.2rem solid transparent;
+      border-top: 0.2rem solid currentColor;
+      border-bottom: 0.2rem solid currentColor;
+      height: 0.1rem;
+    }
+  }
+}
+
+// --- Trend with label (text cue instead of ::after pseudo) ---
+// Consumers may use a visible text label instead of the hidden pseudo content
+
+.pathable-kpi-card__trend-label {
+  display: inline;
+  font-size: var(--pathable-font-size-body-xs);
+  color: inherit;
+}
+
+// --- Loading state — skeleton placeholder ---
+
+.pathable-kpi-card--loading {
+  .pathable-kpi-card__value,
+  .pathable-kpi-card__label {
+    position: relative;
+    overflow: hidden;
+    background: var(--pathable-color-bg);
+    border-radius: var(--radius-sm);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--pathable-color-surface) 50%,
+        transparent 100%
+      );
+      animation: _kpi-shimmer 1.5s ease-in-out infinite;
+    }
+  }
+
+  .pathable-kpi-card__value {
+    height: 1.75rem;
+    width: 60%;
+    margin-block-end: var(--pathable-space-1);
+  }
+
+  .pathable-kpi-card__label {
+    height: 0.875rem;
+    width: 80%;
+  }
+
+  .pathable-kpi-card__icon,
+  .pathable-kpi-card__trend {
+    display: none;
+  }
+}
+
+@keyframes _kpi-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// --- Unavailable state (no data to display) ---
+
+.pathable-kpi-card--unavailable {
+  .pathable-kpi-card__value {
+    color: var(--pathable-color-text-muted);
+    font-size: var(--pathable-font-size-heading-lg);
+
+    // Show dash or placeholder
+    &::before {
+      content: '\2014';
+    }
+
+    // Hide actual value text
+    > * {
+      display: none;
+    }
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-kpi-card {
+    border: 2px solid CanvasText;
+  }
+
+  .pathable-kpi-card__trend {
+    &[data-trend='up'] {
+      color: CanvasText;
+    }
+    &[data-trend='down'] {
+      color: CanvasText;
+    }
+    &[data-trend='neutral'] {
+      color: CanvasText;
+    }
+  }
+}
+
+// --- Accessibility: reduced motion ---
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-kpi-card--loading {
+    .pathable-kpi-card__value::after,
+    .pathable-kpi-card__label::after {
+      animation: none;
+      display: none;
+    }
+  }
+}

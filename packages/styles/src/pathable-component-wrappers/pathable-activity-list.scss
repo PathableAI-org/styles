@@ -1,0 +1,273 @@
+// packages/styles/src/pathable-component-wrappers/pathable-activity-list.scss
+//
+// Activity / task list — scan-friendly rows showing status, title, context,
+// date/time, owner/participant, and optional trailing actions.
+// Supports grouping by date or status and compact/comfortable density.
+//
+// CSS custom properties:
+//   --pathable-activity-list-gap  (default: var(--pathable-space-2)) — row gap
+//
+// Modifier classes:
+//   .pathable-activity-list--compact     — tighter spacing
+//   .pathable-activity-list--comfortable — generous spacing
+
+@use 'uswds-core' as *;
+
+// --- List container ---
+
+.pathable-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-activity-list-gap, var(--pathable-space-2));
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// --- Group heading (date or status) ---
+
+.pathable-activity-list__group-heading {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-sm);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  margin: var(--pathable-space-4) 0 var(--pathable-space-2) 0;
+  padding: 0;
+
+  &:first-child {
+    margin-block-start: 0;
+  }
+}
+
+// --- Activity row ---
+
+.pathable-activity-row {
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-3);
+  padding: var(--pathable-space-3);
+  border-radius: var(--radius-sm);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  width: 100%;
+  box-sizing: border-box;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--pathable-color-bg);
+  }
+}
+
+// --- Status indicator ---
+
+.pathable-activity-row__status {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--pathable-color-border);
+
+  // Semantic status colors — paired with text for non-color differentiation
+  &[data-status='completed'] {
+    background: var(--pathable-color-success);
+  }
+
+  &[data-status='in-progress'] {
+    border-radius: 0;
+    background: var(--pathable-color-status-warning-bg);
+  }
+
+  &[data-status='pending'] {
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 2px solid var(--pathable-color-text-muted);
+    background: transparent;
+    border-radius: 50%;
+  }
+
+  &[data-status='cancelled'] {
+    width: 0.625rem;
+    height: 0.25rem;
+    border-radius: 0;
+    background: var(--pathable-color-danger);
+  }
+
+  // Text label for non-color differentiation
+  .pathable-activity-row__status-text {
+    display: none; /* consumers add pathable-sr-only for screen-reader-only text */
+  }
+}
+
+// --- Row body: title + context ---
+
+.pathable-activity-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-0);
+}
+
+.pathable-activity-row__title {
+  font-size: var(--pathable-font-size-body-sm);
+  font-weight: var(--pathable-font-weight-semibold);
+  color: var(--pathable-color-text);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pathable-activity-row__context {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Date/time ---
+
+.pathable-activity-row__date {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// --- Owner / participant ---
+
+.pathable-activity-row__owner {
+  font-size: var(--pathable-font-size-body-xs);
+  color: var(--pathable-color-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+}
+
+// --- Trailing actions ---
+
+.pathable-activity-row__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  flex-shrink: 0;
+
+  // Actions visible on row hover/focus
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .pathable-activity-row:hover &,
+  .pathable-activity-row:focus-within & {
+    opacity: 1;
+  }
+
+  // Always visible on touch devices
+  @media (pointer: coarse) {
+    opacity: 1;
+  }
+}
+
+// --- Density modifiers ---
+
+// Compact: tighter spacing
+.pathable-activity-list--compact {
+  .pathable-activity-row {
+    padding: var(--pathable-space-2);
+    gap: var(--pathable-space-2);
+  }
+
+  .pathable-activity-row__title {
+    font-size: var(--pathable-font-size-body-xs);
+  }
+}
+
+// Comfortable: generous spacing
+.pathable-activity-list--comfortable {
+  .pathable-activity-row {
+    padding: var(--pathable-space-4);
+    gap: var(--pathable-space-4);
+  }
+
+  .pathable-activity-row__title {
+    font-size: var(--pathable-font-size-body-md);
+  }
+}
+
+// --- Narrow screen ---
+
+@media (max-width: 640px) {
+  .pathable-activity-row {
+    flex-wrap: wrap;
+    gap: var(--pathable-space-2);
+  }
+
+  .pathable-activity-row__date {
+    width: 100%;
+    order: -1;
+  }
+
+  .pathable-activity-row__actions {
+    opacity: 1;
+  }
+}
+
+// --- Empty state ---
+
+.pathable-activity-list--empty {
+  .pathable-activity-list__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--pathable-space-8) var(--pathable-space-4);
+    color: var(--pathable-color-text-muted);
+    font-size: var(--pathable-font-size-body-sm);
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-activity-row {
+    border: 1px solid CanvasText;
+
+    &:hover {
+      outline: 1px solid CanvasText;
+    }
+  }
+
+  .pathable-activity-row__status {
+    &[data-status='completed'] {
+      background: CanvasText;
+      border-radius: 0;
+      border: none;
+    }
+    &[data-status='in-progress'] {
+      background: CanvasText;
+      border-radius: 0;
+      border: none;
+    }
+    &[data-status='pending'] {
+      background: transparent;
+      border: 2px solid CanvasText;
+    }
+    &[data-status='cancelled'] {
+      background: CanvasText;
+      border-radius: 0;
+      border: none;
+      height: 0.25rem;
+    }
+  }
+}
+
+// --- Accessibility: reduced motion ---
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-activity-row,
+  .pathable-activity-row__actions {
+    transition: none;
+  }
+}

@@ -4,6 +4,17 @@
 // USWDS dependencies: uswds-fonts
 // JS-driven: No
 // Requires .usa-* on DOM: No
+//
+// Application-oriented modifiers:
+//   .pathable-table--sortable        — sortable column headers with sort indicators
+//   .pathable-table--selected        — selected row styling
+//   .pathable-table--has-actions     — row action visibility on hover/focus
+//   .pathable-table--loading         — skeleton row placeholders
+//   .pathable-table--empty           — empty state message
+//   .pathable-table--scrollable      — horizontal scroll container with focus-safe overflow
+//
+// CSS custom properties:
+//   --pathable-table-sort-indicator  (default: arrow) — sort direction indicator content
 
 @use 'uswds-core' as *;
 
@@ -23,4 +34,238 @@
 
 .pathable-table--striped {
   @extend .usa-table--striped;
+}
+
+// --- Sortable column headers ---
+
+.pathable-table--sortable {
+  th[aria-sort] {
+    cursor: pointer;
+    user-select: none;
+    padding-inline-end: 1.5rem;
+    position: relative;
+
+    // Sort indicator arrow
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-inline-start: var(--pathable-space-1);
+      position: absolute;
+      inset-inline-end: 0.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    // Unsorted (both arrows faint)
+    &[aria-sort='none']::after {
+      border-left: 0.3rem solid transparent;
+      border-right: 0.3rem solid transparent;
+      border-top: 0.35rem solid var(--pathable-color-border);
+      border-bottom: none;
+    }
+
+    // Ascending: arrow up
+    &[aria-sort='ascending']::after {
+      border-left: 0.3rem solid transparent;
+      border-right: 0.3rem solid transparent;
+      border-bottom: 0.4rem solid var(--pathable-color-text);
+      border-top: none;
+    }
+
+    // Descending: arrow down
+    &[aria-sort='descending']::after {
+      border-left: 0.3rem solid transparent;
+      border-right: 0.3rem solid transparent;
+      border-top: 0.4rem solid var(--pathable-color-text);
+      border-bottom: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--pathable-color-focus-ring);
+      outline-offset: -2px;
+    }
+  }
+}
+
+// --- Selected row ---
+
+.pathable-table--selected {
+  tr.is-selected,
+  tr[aria-selected='true'] {
+    background: var(--pathable-color-surface);
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: -1px;
+  }
+}
+
+// --- Status cells ---
+
+.pathable-table__cell--status {
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+
+  // Always include text label alongside any color cue
+  .pathable-table__cell-status-text {
+    font-size: var(--pathable-font-size-body-xs);
+  }
+}
+
+// --- Row actions ---
+
+.pathable-table--has-actions {
+  tr {
+    &:hover,
+    &:focus-within {
+      .pathable-table__row-actions {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.pathable-table__row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-1);
+  opacity: 0;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+
+  // Always visible on touch devices
+  @media (pointer: coarse) {
+    opacity: 1;
+  }
+}
+
+// --- Loading rows (skeleton) ---
+
+.pathable-table--loading {
+  tbody tr {
+    opacity: 0.4;
+    pointer-events: none;
+
+    td {
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--pathable-color-surface) 50%,
+          transparent 100%
+        );
+        animation: _table-shimmer 1.5s ease-in-out infinite;
+      }
+    }
+  }
+}
+
+@keyframes _table-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// --- Empty state ---
+
+.pathable-table--empty {
+  tbody td {
+    text-align: center;
+    padding: var(--pathable-space-8) var(--pathable-space-4);
+    color: var(--pathable-color-text-muted);
+    font-size: var(--pathable-font-size-body-sm);
+  }
+}
+
+.pathable-table__empty-message {
+  display: block;
+  text-align: center;
+  padding: var(--pathable-space-8) var(--pathable-space-4);
+  color: var(--pathable-color-text-muted);
+  font-size: var(--pathable-font-size-body-sm);
+}
+
+// --- Scrollable container (responsive horizontal scroll) ---
+
+.pathable-table--scrollable {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  // Prevent focus outline clipping
+  padding: 2px;
+
+  table {
+    min-width: max-content;
+  }
+
+  // Ensure focus outlines are not clipped by the overflow container
+  :focus-visible {
+    outline-offset: 0;
+  }
+
+  // Scroll indicator at narrow widths
+  @media (max-width: 640px) {
+    &::after {
+      content: '';
+      position: sticky;
+      inset-inline-end: 0;
+      top: 0;
+      width: 1.5rem;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.05) 100%
+      );
+      pointer-events: none;
+    }
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-table--sortable {
+    th {
+      &[aria-sort='ascending']::after,
+      &[aria-sort='descending']::after {
+        border-top-color: CanvasText;
+        border-bottom-color: CanvasText;
+      }
+    }
+  }
+
+  .pathable-table--selected {
+    tr.is-selected,
+    tr[aria-selected='true'] {
+      outline: 2px solid Highlight;
+      outline-offset: -1px;
+    }
+  }
+
+  .pathable-table--scrollable {
+    border: 1px solid CanvasText;
+  }
+}
+
+// --- Accessibility: reduced motion ---
+
+@media (prefers-reduced-motion: reduce) {
+  .pathable-table--loading tbody tr td::after {
+    animation: none;
+    display: none;
+  }
+
+  .pathable-table__row-actions {
+    transition: none;
+  }
 }

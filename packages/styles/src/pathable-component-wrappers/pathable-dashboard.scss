@@ -1,0 +1,10 @@
+// packages/styles/src/pathable-component-wrappers/pathable-dashboard.scss
+//
+// Bundle package: dashboard overview and record-summary patterns
+// (dashboard header, KPI grid, record header, activity list, schedule item).
+
+@forward 'pathable-dashboard-header';
+@forward 'pathable-kpi-grid';
+@forward 'pathable-record-header';
+@forward 'pathable-activity-list';
+@forward 'pathable-schedule-item';
