@@ -1,0 +1,223 @@
+// packages/styles/src/pathable-component-wrappers/pathable-toast.scss
+//
+// Toast notification — transient feedback overlay pattern.
+// Five variants: informational, progress, success, warning, error.
+// Supports optional dismiss and action controls.
+// CSS-only: consumers manage visibility, queuing, and auto-dismiss.
+//
+// CSS custom properties:
+//   --pathable-toast-inset-block-start   (default: var(--pathable-space-4))
+//   --pathable-toast-inset-inline-end    (default: var(--pathable-space-4))
+//   --pathable-toast-max-width           (default: 28rem)
+//
+// Semantic role convention:
+//   role="status" — polite, non-urgent updates
+//   role="alert"  — urgent, time-sensitive messages
+
+@use 'uswds-core' as *;
+
+// --- Toast Region (overlay container) ---
+
+.pathable-toast__region {
+  position: fixed;
+  inset-block-start: var(
+    --pathable-toast-inset-block-start,
+    var(--pathable-space-4)
+  );
+  inset-inline-end: var(
+    --pathable-toast-inset-inline-end,
+    var(--pathable-space-4)
+  );
+  z-index: var(--z-index-overlay, 1000);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--pathable-space-2);
+  max-width: var(--pathable-toast-max-width, 28rem);
+  pointer-events: none;
+}
+
+// --- Individual Toast ---
+
+.pathable-toast {
+  display: flex;
+  gap: var(--pathable-space-2);
+  align-items: flex-start;
+  padding: var(--pathable-space-3);
+  border-radius: var(--radius-md);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  box-shadow: var(--elevation-lg);
+  pointer-events: auto;
+  animation: _toast-slide-in 0.3s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes _toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Toast icon slot
+.pathable-toast__icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+// Toast message body
+.pathable-toast__message {
+  flex: 1;
+  font-size: var(--pathable-font-size-body-sm);
+  line-height: var(--pathable-font-line-height-body);
+  color: var(--pathable-color-text);
+}
+
+// Toast action link/button slot
+.pathable-toast__action {
+  flex-shrink: 0;
+  color: var(--pathable-color-link);
+  font-size: var(--pathable-font-size-body-sm);
+  font-weight: var(--pathable-font-weight-bold);
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--pathable-color-accent);
+  }
+}
+
+// Toast dismiss button
+.pathable-toast__dismiss {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--pathable-color-text-muted);
+  cursor: pointer;
+  font-size: var(--pathable-font-size-body-lg);
+  line-height: 1;
+  border-radius: var(--radius-sm);
+
+  &:hover {
+    color: var(--pathable-color-text);
+    background: var(--pathable-color-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+// --- Variants ---
+
+.pathable-toast--info {
+  border-color: var(--pathable-color-link);
+}
+
+.pathable-toast--info .pathable-toast__icon {
+  color: var(--pathable-color-link);
+}
+
+.pathable-toast--progress {
+  border-color: var(--pathable-color-link);
+}
+
+.pathable-toast--progress .pathable-toast__icon {
+  color: var(--pathable-color-link);
+}
+
+.pathable-toast--success {
+  border-color: var(--pathable-color-status-success-bg);
+}
+
+.pathable-toast--success .pathable-toast__icon {
+  color: var(--pathable-color-status-success-text);
+}
+
+.pathable-toast--warning {
+  border-color: var(--pathable-color-status-warning-bg);
+}
+
+.pathable-toast--warning .pathable-toast__icon {
+  color: var(--pathable-color-status-warning-text);
+}
+
+.pathable-toast--error {
+  border-color: var(--pathable-color-status-danger-bg);
+}
+
+.pathable-toast--error .pathable-toast__icon {
+  color: var(--pathable-color-status-danger-text);
+}
+
+// --- Modifier: dismissible (extra padding-right when close button present) ---
+
+.pathable-toast--dismissible {
+  padding-inline-end: var(--pathable-space-2);
+}
+
+// --- Modifier: has-action (extra space when action link/button present) ---
+
+.pathable-toast--has-action {
+  .pathable-toast__action {
+    margin-inline-start: auto;
+  }
+}
+
+// --- Mobile responsive ---
+
+@media (max-width: 480px) {
+  .pathable-toast__region {
+    inset-inline: var(--pathable-space-2);
+    max-width: none;
+  }
+
+  .pathable-toast {
+    padding: var(--pathable-space-2);
+    font-size: var(--pathable-font-size-body-sm);
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-toast {
+    border: 2px solid CanvasText;
+  }
+
+  .pathable-toast--info,
+  .pathable-toast--progress {
+    border-color: Highlight;
+  }
+
+  .pathable-toast--success {
+    border-color: CanvasText;
+  }
+
+  .pathable-toast--warning {
+    border-color: Highlight;
+  }
+
+  .pathable-toast--error {
+    border-color: Mark;
+  }
+
+  .pathable-toast__dismiss {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+  }
+}

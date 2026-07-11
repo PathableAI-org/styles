@@ -1,0 +1,93 @@
+// packages/styles/src/pathable-component-wrappers/pathable-empty-state.scss
+//
+// Empty state — shown when a view has no content to display.
+// Variants: no-data, no-results, setup-required, completed.
+// Each variant provides a heading, explanation, and optional action slot.
+
+@use 'uswds-core' as *;
+
+.pathable-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--pathable-space-8) var(--pathable-space-4);
+  gap: var(--pathable-space-3);
+  color: var(--pathable-color-text-muted);
+}
+
+// Decorative icon — hidden from assistive technology
+.pathable-empty-state__icon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--pathable-color-text-muted);
+  opacity: 0.5;
+}
+
+// Heading
+.pathable-empty-state__heading {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-heading-md);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  margin: 0;
+}
+
+// Explanation body text
+.pathable-empty-state__body {
+  font-size: var(--pathable-font-size-body-sm);
+  line-height: var(--pathable-font-line-height-body);
+  max-width: 28rem;
+  margin: 0;
+}
+
+// Action slot (button or link)
+.pathable-empty-state__action {
+  margin-block-start: var(--pathable-space-2);
+}
+
+// --- Variants ---
+
+.pathable-empty-state--no-data {
+  .pathable-empty-state__icon {
+    color: var(--pathable-color-link);
+    opacity: 0.6;
+  }
+}
+
+.pathable-empty-state--no-results {
+  .pathable-empty-state__icon {
+    color: var(--pathable-color-status-warning-text);
+    opacity: 0.6;
+  }
+}
+
+.pathable-empty-state--setup-required {
+  .pathable-empty-state__icon {
+    color: var(--pathable-color-accent);
+    opacity: 0.6;
+  }
+}
+
+.pathable-empty-state--completed {
+  .pathable-empty-state__icon {
+    color: var(--pathable-color-success);
+    opacity: 0.6;
+  }
+}
+
+// --- Mobile responsive ---
+
+@media (max-width: 480px) {
+  .pathable-empty-state {
+    padding: var(--pathable-space-6) var(--pathable-space-2);
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-empty-state {
+    border: 1px solid CanvasText;
+  }
+}
