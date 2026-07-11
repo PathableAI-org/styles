@@ -71,26 +71,28 @@ const inProgressHtml = `
           </select>
         </div>
         <div class="pathable-form-group" style="margin-bottom: 1rem;">
-          <label class="pathable-label" for="support-needs">Primary Support Needs</label>
-          <span class="pathable-hint" id="support-hint">Select all that apply.</span>
-          <div class="pathable-checkbox__list" style="list-style: none; padding: 0; margin: 0;">
-            <li style="margin-bottom: 0.5rem;">
-              <input type="checkbox" id="need-job-search" class="pathable-checkbox" checked>
-              <label for="need-job-search">Job search assistance</label>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
-              <input type="checkbox" id="need-resume" class="pathable-checkbox" checked>
-              <label for="need-resume">Resume and interview preparation</label>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
-              <input type="checkbox" id="need-training" class="pathable-checkbox">
-              <label for="need-training">Skills training referral</label>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
-              <input type="checkbox" id="need-transport" class="pathable-checkbox">
-              <label for="need-transport">Transportation assistance</label>
-            </li>
-          </div>
+          <fieldset class="pathable-fieldset" style="border: none; padding: 0; margin: 0;">
+            <legend class="pathable-label" style="margin-bottom: 0.25rem;">Primary Support Needs</legend>
+            <span class="pathable-hint" id="support-hint">Select all that apply.</span>
+            <ul class="pathable-checkbox__list" style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 0.5rem;">
+                <input type="checkbox" id="need-job-search" class="pathable-checkbox" checked>
+                <label for="need-job-search">Job search assistance</label>
+              </li>
+              <li style="margin-bottom: 0.5rem;">
+                <input type="checkbox" id="need-resume" class="pathable-checkbox" checked>
+                <label for="need-resume">Resume and interview preparation</label>
+              </li>
+              <li style="margin-bottom: 0.5rem;">
+                <input type="checkbox" id="need-training" class="pathable-checkbox">
+                <label for="need-training">Skills training referral</label>
+              </li>
+              <li style="margin-bottom: 0.5rem;">
+                <input type="checkbox" id="need-transport" class="pathable-checkbox">
+                <label for="need-transport">Transportation assistance</label>
+              </li>
+            </ul>
+          </fieldset>
         </div>
         <div class="pathable-form-group" style="margin-bottom: 1rem;">
           <label class="pathable-label" for="assessment-notes">Assessment Notes</label>

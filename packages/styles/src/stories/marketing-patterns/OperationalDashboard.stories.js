@@ -317,7 +317,7 @@ const skeletonContent = `
     <div class="pathable-skeleton" aria-hidden="true"><div class="pathable-skeleton--text-heading" style="width: 120px;"></div></div>
   </div>
   <div class="pathable-dashboard-header__row">
-    <h1 class="pathable-dashboard-header__title"><div class="pathable-skeleton" aria-hidden="true"><div class="pathable-skeleton--text-heading" style="width: 200px;"></div></div></h1>
+    <h1 class="pathable-dashboard-header__title" aria-label="Loading program overview"><div class="pathable-skeleton" aria-hidden="true"><div class="pathable-skeleton--text-heading" style="width: 200px;"></div></div></h1>
   </div>
 </div>
 <div class="pathable-kpi-grid" style="margin: 1.5rem 0;">
