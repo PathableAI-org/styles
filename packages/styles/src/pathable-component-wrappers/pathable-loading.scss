@@ -1,0 +1,70 @@
+// packages/styles/src/pathable-component-wrappers/pathable-loading.scss
+//
+// Inline loading indicator — spinner plus visible status text
+// Default: 24px spinner; --large modifier: 40px spinner.
+// Preserves layout stability by occupying space in the content flow.
+//
+// aria-live="polite" on container so screen readers announce the status text.
+
+@use 'uswds-core' as *;
+
+.pathable-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--pathable-space-2);
+  color: var(--pathable-color-text-muted);
+}
+
+// Spinner element
+.pathable-loading__spinner {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: _loading-spin 0.6s linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+@keyframes _loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Status text
+.pathable-loading__text {
+  font-size: var(--pathable-font-size-sm);
+  line-height: var(--pathable-font-line-height-body);
+}
+
+// --- Large modifier ---
+
+.pathable-loading--large {
+  gap: var(--pathable-space-3);
+}
+
+.pathable-loading--large .pathable-loading__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 3px;
+}
+
+.pathable-loading--large .pathable-loading__text {
+  font-size: var(--pathable-font-size-md);
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-loading__spinner {
+    border-color: ButtonText;
+    border-top-color: transparent;
+  }
+}

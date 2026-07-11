@@ -1,0 +1,153 @@
+// packages/styles/src/pathable-component-wrappers/pathable-page-error.scss
+//
+// Page-level error patterns — compact panel and full-page layouts.
+// Variants: generic error, not-found (404), access-restricted (403).
+// Each variant provides heading, explanation, retry action, and/or navigation action.
+
+@use 'uswds-core' as *;
+
+// --- Compact Panel ---
+
+.pathable-page-error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pathable-space-2);
+  padding: var(--pathable-space-4);
+  border-radius: var(--radius-md);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+}
+
+.pathable-page-error--compact {
+  max-width: 36rem;
+}
+
+// Decorative icon — hidden from assistive technology
+.pathable-page-error__icon {
+  width: 4rem;
+  height: 4rem;
+  color: var(--pathable-color-text-muted);
+  opacity: 0.5;
+  margin-block-end: var(--pathable-space-1);
+}
+
+// Heading
+.pathable-page-error__heading {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-lg);
+  font-weight: var(--pathable-font-weight-bold);
+  color: var(--pathable-color-text);
+  margin: 0;
+}
+
+// Explanation body text
+.pathable-page-error__body {
+  font-size: var(--pathable-font-size-sm);
+  line-height: var(--pathable-font-line-height-body);
+  color: var(--pathable-color-text-muted);
+  margin: 0;
+}
+
+// Action row — retry button + navigation link
+.pathable-page-error__retry,
+.pathable-page-error__nav {
+  align-self: flex-start;
+  margin-block-start: var(--pathable-space-2);
+}
+
+.pathable-page-error__nav {
+  color: var(--pathable-color-link);
+  font-size: var(--pathable-font-size-sm);
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--pathable-color-accent);
+  }
+}
+
+// --- Full Page Layout ---
+
+.pathable-page-error--full-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--pathable-space-8) var(--pathable-space-4);
+  gap: var(--pathable-space-2);
+  border: none;
+  background: transparent;
+}
+
+.pathable-page-error--full-page .pathable-page-error__heading {
+  font-size: var(--pathable-font-size-xl);
+}
+
+.pathable-page-error--full-page .pathable-page-error__body {
+  max-width: 28rem;
+}
+
+.pathable-page-error--full-page .pathable-page-error__icon {
+  width: 6rem;
+  height: 6rem;
+}
+
+// --- Variants ---
+
+.pathable-page-error--not-found .pathable-page-error__icon {
+  color: var(--pathable-color-text-muted);
+  opacity: 0.4;
+}
+
+.pathable-page-error--access-restricted .pathable-page-error__icon {
+  color: var(--pathable-color-status-warning-text);
+  opacity: 0.6;
+}
+
+// --- Mobile responsive ---
+
+@media (max-width: 480px) {
+  .pathable-page-error--full-page {
+    padding: var(--pathable-space-6) var(--pathable-space-2);
+    min-height: 40vh;
+  }
+
+  .pathable-page-error--full-page .pathable-page-error__heading {
+    font-size: var(--pathable-font-size-lg);
+  }
+}
+
+// --- Accessibility: forced-colors ---
+
+@media (forced-colors: active) {
+  .pathable-page-error {
+    border: 2px solid CanvasText;
+  }
+
+  .pathable-page-error--full-page {
+    border: none;
+  }
+
+  .pathable-page-error__retry {
+    border: 1px solid ButtonText;
+  }
+
+  .pathable-page-error--access-restricted .pathable-page-error__icon {
+    color: Mark;
+    opacity: 1;
+  }
+}
+
+// --- 200% zoom ---
+
+@media (max-width: 320px) {
+  .pathable-page-error--full-page {
+    min-height: auto;
+    padding: var(--pathable-space-4) var(--pathable-space-2);
+  }
+
+  .pathable-page-error--compact {
+    max-width: 100%;
+  }
+}
