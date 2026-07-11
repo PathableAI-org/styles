@@ -109,6 +109,9 @@ packages/styles/dist/
 packages/styles/fonts/
 storybook-static/
 
+# Temporary / scratch files
+tmp/
+
 # Selective import test outputs
 packages/styles/test/selective-import.css
 packages/styles/test/selective-import.css.map
