@@ -288,11 +288,11 @@ const dashboardContent = `
       <table class="pathable-table pathable-table--borderless pathable-table--striped">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Program</th>
-            <th>Status</th>
-            <th>Last Activity</th>
-            <th>Case Worker</th>
+            <th scope="col">Name</th>
+            <th scope="col">Program</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last Activity</th>
+            <th scope="col">Case Worker</th>
           </tr>
         </thead>
         <tbody>
