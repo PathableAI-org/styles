@@ -13,6 +13,7 @@
     "lint:md": "markdownlint . --ignore-path .markdownlintignore",
     "lint": "pnpm lint:js && pnpm lint:styles && pnpm lint:md && pnpm check:format",
     "test:storybook": "pnpm --filter @pathable/styles build && bash scripts/test-storybook.sh apps/storybook 6006 && bash scripts/test-storybook.sh apps/storybook-react 6007",
+    "quality-gates": "pnpm --filter @pathable/styles build && pnpm --filter @pathable/storybook build-storybook && node packages/styles/scripts/quality-gates.mjs",
     "test": "pnpm lint && pnpm test:storybook",
     "prepare": "husky"
   },
