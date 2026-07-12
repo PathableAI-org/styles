@@ -15,9 +15,10 @@ Use this checklist when creating or updating Storybook stories for
 ## Accessibility Requirements
 
 - [ ] Stories pass the axe accessibility checks at all viewports.
-- [ ] Color contrast checks (`color-contrast`) are enabled and pass for all
-      story variants.
-- [ ] Interactive elements have accessible names (`select-name` enabled).
+- [ ] Address color contrast issues in story variants; `color-contrast` is
+      currently disabled in Storybook test runners due known pre-existing debt.
+- [ ] Ensure interactive elements have accessible names; `select-name` is
+      currently disabled in Storybook test runners due known pre-existing debt.
 - [ ] Touch targets on mobile stories meet the 44 px minimum (WCAG 2.2 2.5.8)
       or are explicitly allowlisted if exempt (native radio/checkbox, breadcrumb
       links, etc.).

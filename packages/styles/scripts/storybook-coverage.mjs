@@ -22,7 +22,7 @@ const RESULTS_DIR = resolve('apps/storybook/test-results')
 // ---------------------------------------------------------------------------
 
 const EXPECTED_COVERAGE = {
-  Brand: ['brand-colors--palette', 'brand-typography--display'],
+  Brand: ['brand-color-usage--default', 'brand-typography--default'],
   'Basic components': [
     'components-button--primary',
     'components-button-group--default',
@@ -33,37 +33,37 @@ const EXPECTED_COVERAGE = {
     'components-tag--default',
   ],
   'Form controls': [
-    'components-checkbox--default',
-    'components-combo-box--default',
-    'components-input--default',
-    'components-radio--default',
-    'components-select--default',
-    'components-textarea--default',
+    'components-form-controls-checkbox--default',
+    'components-form-controls-combo-box--default',
+    'components-form-controls-input--default',
+    'components-form-controls-radio--default',
+    'components-form-controls-select--default',
+    'components-form-controls-textarea--default',
   ],
   Navigation: [
-    'components-breadcrumb--default',
-    'components-header--default',
-    'components-pagination--default',
-    'components-search--default',
-    'components-sidenav--default',
+    'components-navigation-breadcrumb--default',
+    'components-navigation-header--default',
+    'components-navigation-pagination--default',
+    'components-navigation-search--default',
+    'components-navigation-sidenav--default',
   ],
   Feedback: [
-    'components-feedback-emptystate--default',
+    'components-feedback-emptystate--no-data',
     'components-feedback-loading--default',
     'components-feedback-pageerror--full-page',
-    'components-feedback-skeleton--default',
+    'components-feedback-skeleton--card',
     'components-feedback-toast--stacked',
   ],
   'Discovery / Resource Finder': [
-    'discovery-filterbar--default',
-    'discovery-filterpill--default',
+    'discovery-filter-bar--default',
+    'discovery-filter-pill--default',
     'discovery-resource-card--grid',
     'discovery-wayfinder--default',
   ],
   'Structured Workflow / Wizard': [
     'structured-workflow-wizard--wizard-long-form',
     'structured-workflow-wizard--mobile',
-    'structured-workflow-workflowpanel--default',
+    'structured-workflow-workflow-panel--default',
   ],
   Dashboard: [
     'dashboard-dashboard-overview--populated',

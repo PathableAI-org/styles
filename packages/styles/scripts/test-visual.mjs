@@ -10,7 +10,7 @@
  * For each story at each viewport:
  *   1. Navigate to iframe URL, wait for networkidle
  *   2. Assert story renders (no error text, non-blank DOM)
- *   3. Screenshot: mean pixel not near 0 (all black) or 255 (all white)
+ *   3. Screenshot: PNG payload size indicates non-blank render
  *   4. Document height > 20 px
  *   5. No horizontal overflow (scrollWidth <= clientWidth + 2)
  *   6. Save screenshot to test-results/visual-failures/ on failure
@@ -164,21 +164,14 @@ async function checkStory(page, storyId, viewportName) {
   // 2. Take screenshot and check it's not all black or all white
   try {
     const screenshot = await page.screenshot({ fullPage: false })
-    // Compute mean pixel value from PNG screenshot (skip header, compute approximate)
+    // Compressed-payload heuristic to catch likely blank renders.
     const stats = computeScreenshotStats(screenshot)
-    if (stats.meanPixel < 5) {
+    if (stats.isLikelyBlank) {
       failures.push({
         type: 'blank-screenshot',
         storyId,
         viewport: viewportName,
-        message: `Screenshot appears blank (all-black). Mean pixel: ${stats.meanPixel.toFixed(1)}`,
-      })
-    } else if (stats.meanPixel > 250) {
-      failures.push({
-        type: 'blank-screenshot',
-        storyId,
-        viewport: viewportName,
-        message: `Screenshot appears blank (all-white). Mean pixel: ${stats.meanPixel.toFixed(1)}`,
+        message: `Screenshot appears blank (PNG payload too small: ${stats.byteLength} bytes).`,
       })
     }
 
@@ -231,39 +224,16 @@ async function checkStory(page, storyId, viewportName) {
 // ---------------------------------------------------------------------------
 
 /**
- * Compute an approximate mean pixel value from a PNG screenshot.
- * Skips the PNG header and samples every 4th pixel for performance.
+ * Compute lightweight screenshot stats without decoding PNG pixels.
+ * PNG payload bytes are compressed; use size-based heuristics instead.
  */
 function computeScreenshotStats(buffer) {
-  // Find the start of IDAT data (simplified: use a fixed threshold)
-  // PNG pixel data starts after the header; we sample every 4 bytes (RGBA).
-  // We look for the PNG signature and skip to the IDAT chunk.
-  const pngSigIdx = buffer.indexOf(Buffer.from('IDAT'))
-
-  // Sample pixels from the raw data area. For simplicity, we start at
-  // a known offset and sample RGBA values.
-  // Most PNGs from Playwright screenshots have IDAT at a consistent offset.
-  let startIdx = 0
-  if (pngSigIdx > 0) {
-    // IDAT chunk: 4 bytes length + 'IDAT' + data starts
-    startIdx = pngSigIdx + 8
+  const byteLength = buffer.length
+  const minNonBlankPngBytes = 1800
+  return {
+    byteLength,
+    isLikelyBlank: byteLength < minNonBlankPngBytes,
   }
-
-  let totalLuminance = 0
-  let count = 0
-  const stride = 4 * 10 // sample every 10th pixel row-wise
-
-  for (let i = startIdx; i < buffer.length - 4; i += stride) {
-    const r = buffer[i]
-    const g = buffer[i + 1]
-    const b = buffer[i + 2]
-    // luminance approximation
-    totalLuminance += 0.299 * r + 0.587 * g + 0.114 * b
-    count++
-  }
-
-  const meanPixel = count > 0 ? totalLuminance / count : 0
-  return { meanPixel, samples: count }
 }
 
 // ---------------------------------------------------------------------------

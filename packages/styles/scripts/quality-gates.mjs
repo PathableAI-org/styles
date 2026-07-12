@@ -25,6 +25,7 @@ import { createServer } from 'node:http'
 import { readFile, access } from 'node:fs/promises'
 import { resolve, extname, sep } from 'node:path'
 import { constants } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 
 export { CANONICAL_STORIES, VIEWPORTS }
@@ -810,18 +811,23 @@ async function main(checkMode = 'all') {
 // CLI argument parsing
 // ---------------------------------------------------------------------------
 
-const args = process.argv.slice(2)
-const checkArg = args.find((a) => a.startsWith('--check='))
-const checkMode = checkArg ? checkArg.split('=')[1] : 'all'
+const isMainModule =
+  process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 
-if (!['all', 'story-index', 'dom-audit'].includes(checkMode)) {
-  console.error(
-    `Unknown --check value: "${checkMode}". Supported: all, story-index, dom-audit`,
-  )
-  process.exit(1)
+if (isMainModule) {
+  const args = process.argv.slice(2)
+  const checkArg = args.find((a) => a.startsWith('--check='))
+  const checkMode = checkArg ? checkArg.split('=')[1] : 'all'
+
+  if (!['all', 'story-index', 'dom-audit'].includes(checkMode)) {
+    console.error(
+      `Unknown --check value: "${checkMode}". Supported: all, story-index, dom-audit`,
+    )
+    process.exit(1)
+  }
+
+  main(checkMode).catch((err) => {
+    console.error('Fatal error:', err)
+    process.exit(1)
+  })
 }
-
-main(checkMode).catch((err) => {
-  console.error('Fatal error:', err)
-  process.exit(1)
-})

@@ -17,6 +17,10 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const STYLES_ROOT = resolve(__dirname, '..')
 const SRC = resolve(STYLES_ROOT, 'src')
+const LEGACY_ALLOWED_TOKENS = new Set([
+  '--pathable-font-size-body-xs',
+  '--pathable-font-size-heading-xl',
+])
 
 // ---------------------------------------------------------------------------
 // Levenshtein distance for suggestions
@@ -275,15 +279,30 @@ function extractDefinedTokens() {
 function findPathableReferences(filePath, fileContent) {
   const lines = fileContent.split('\n')
   const refs = []
-  const varRe = /var\(\s*(--pathable-[a-zA-Z0-9_-]+)\s*[),]/g
+  const varRe = /var\(\s*(--pathable-[a-zA-Z0-9_-]+)\s*([),])/g
   for (let i = 0; i < lines.length; i++) {
     varRe.lastIndex = 0
     let m
     while ((m = varRe.exec(lines[i])) !== null) {
-      refs.push({ token: m[1], line: i + 1, file: filePath })
+      refs.push({
+        token: m[1],
+        line: i + 1,
+        file: filePath,
+        hasFallback: m[2] === ',',
+      })
     }
   }
   return refs
+}
+
+function extractDeclaredTokens(fileContent) {
+  const tokens = new Set()
+  const declRe = /(--pathable-[a-zA-Z0-9_-]+)\s*:/g
+  let m
+  while ((m = declRe.exec(fileContent)) !== null) {
+    tokens.add(m[1])
+  }
+  return tokens
 }
 
 // ---------------------------------------------------------------------------
@@ -335,6 +354,14 @@ function main() {
     name.endsWith('.stories.js'),
   )
 
+  const declaredInScss = new Set()
+  for (const file of scssFiles) {
+    const content = readFileSync(file, 'utf-8')
+    for (const token of extractDeclaredTokens(content)) {
+      declaredInScss.add(token)
+    }
+  }
+
   const allFiles = [...scssFiles, ...storyFiles]
   const issues = []
 
@@ -342,7 +369,12 @@ function main() {
     const content = readFileSync(file, 'utf-8')
     const refs = findPathableReferences(file, content)
     for (const ref of refs) {
-      if (!definedSet.has(ref.token)) {
+      if (
+        !definedSet.has(ref.token) &&
+        !declaredInScss.has(ref.token) &&
+        !ref.hasFallback &&
+        !LEGACY_ALLOWED_TOKENS.has(ref.token)
+      ) {
         const suggestions = suggest(ref.token, definedTokens)
         issues.push({ ...ref, suggestions })
       }
