@@ -105,7 +105,7 @@ export const LongText = {
 }
 
 export const Mobile = {
-  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-toast__region" style="position:relative;inset:auto;max-width:none">
       <div class="pathable-toast pathable-toast--info pathable-toast--dismissible" role="status">

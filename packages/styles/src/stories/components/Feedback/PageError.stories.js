@@ -67,7 +67,7 @@ export const AccessRestricted = {
 }
 
 export const MobileFullPage = {
-  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-page-error pathable-page-error--full-page">
       <svg class="pathable-page-error__icon" aria-hidden="true" viewBox="0 0 24 24" width="72" height="72" fill="currentColor">

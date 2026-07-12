@@ -65,7 +65,7 @@ export const Completed = {
 }
 
 export const Mobile = {
-  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-empty-state pathable-empty-state--no-results">
       <svg class="pathable-empty-state__icon" aria-hidden="true" viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
