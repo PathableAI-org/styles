@@ -27,6 +27,8 @@ import { resolve, extname, sep } from 'node:path'
 import { constants } from 'node:fs'
 import { chromium } from 'playwright'
 
+export { CANONICAL_STORIES, VIEWPORTS }
+
 // ---------------------------------------------------------------------------
 // Configuration
 // ---------------------------------------------------------------------------
@@ -258,7 +260,7 @@ const MIME_TYPES = {
   '.txt': 'text/plain; charset=utf-8',
 }
 
-function startServer() {
+export function startServer() {
   return new Promise((resolvePromise, reject) => {
     const server = createServer(async (req, res) => {
       // req.url is optional in Node's IncomingMessage — guard against
@@ -324,7 +326,7 @@ function startServer() {
 // Story index check
 // ---------------------------------------------------------------------------
 
-async function checkStoryIndex() {
+export async function checkStoryIndex() {
   const indexPath = resolve(STATIC_DIR, 'index.json')
 
   let index
@@ -653,7 +655,7 @@ async function checkStory(page, storyId, viewportName) {
 // Main
 // ---------------------------------------------------------------------------
 
-async function main() {
+async function main(checkMode = 'all') {
   console.log('=== Storybook Quality Gates ===\n')
 
   // Verify the static build exists
@@ -665,34 +667,45 @@ async function main() {
     process.exit(1)
   }
 
-  // 1. Check story index
-  console.log('1. Story index check')
-  const indexFailures = await checkStoryIndex()
-  if (indexFailures.length > 0) {
-    for (const f of indexFailures) {
-      console.log(`   ✗ ${f.message}`)
-    }
+  const allFailures = []
 
-    // If the index itself is missing (not just a missing story entry),
-    // exit early — continuing would just produce a noisy cascade of
-    // follow-on failures from the Playwright checks.
-    const hasCriticalIndexFailure = indexFailures.some(
-      (f) => f.type === 'missing-index',
-    )
-    if (hasCriticalIndexFailure) {
-      console.error('\n✗ Critical index failure — aborting')
-      process.exit(1)
+  // 1. Check story index (for 'all' and 'story-index' modes)
+  if (checkMode === 'all' || checkMode === 'story-index') {
+    console.log('1. Story index check')
+    const indexFailures = await checkStoryIndex()
+    if (indexFailures.length > 0) {
+      for (const f of indexFailures) {
+        console.log(`   ✗ ${f.message}`)
+      }
+
+      const hasCriticalIndexFailure = indexFailures.some(
+        (f) => f.type === 'missing-index',
+      )
+      if (hasCriticalIndexFailure) {
+        console.error('\n✗ Critical index failure — aborting')
+        process.exit(1)
+      }
+      allFailures.push(...indexFailures)
+    } else {
+      console.log('   ✓ All expected stories present in index')
     }
-  } else {
-    console.log('   ✓ All expected stories present in index')
   }
 
-  // 2. Start local server
+  // If story-index-only mode, stop here
+  if (checkMode === 'story-index') {
+    if (allFailures.length === 0) {
+      console.log('\n✓ Story index check passed')
+      process.exit(0)
+    }
+    console.log(`\n✗ ${allFailures.length} story index failure(s)`)
+    process.exit(1)
+  }
+
+  // 2. Start local server (for 'all' and 'dom-audit')
   console.log(`\n2. Starting local server on port ${PORT}…`)
   const server = await startServer()
   console.log(`   Server ready at ${BASE_URL}`)
 
-  const allFailures = [...indexFailures]
   let browser
   let storiesChecked = 0
   let storiesPassed = 0
@@ -793,7 +806,22 @@ async function main() {
   process.exit(1)
 }
 
-main().catch((err) => {
+// ---------------------------------------------------------------------------
+// CLI argument parsing
+// ---------------------------------------------------------------------------
+
+const args = process.argv.slice(2)
+const checkArg = args.find((a) => a.startsWith('--check='))
+const checkMode = checkArg ? checkArg.split('=')[1] : 'all'
+
+if (!['all', 'story-index', 'dom-audit'].includes(checkMode)) {
+  console.error(
+    `Unknown --check value: "${checkMode}". Supported: all, story-index, dom-audit`,
+  )
+  process.exit(1)
+}
+
+main(checkMode).catch((err) => {
   console.error('Fatal error:', err)
   process.exit(1)
 })

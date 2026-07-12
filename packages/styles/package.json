@@ -19,7 +19,8 @@
   "scripts": {
     "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
-    "lint:styles": "stylelint 'src/**/*.scss'"
+    "lint:styles": "stylelint 'src/**/*.scss'",
+    "lint:tokens": "node scripts/lint-tokens.mjs"
   },
   "dependencies": {
     "@uswds/uswds": "^3.0.0"
