@@ -117,6 +117,15 @@
   }
 }
 
+@media (max-width: 39.99em), (pointer: coarse) {
+  .pathable-filter-bar__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+  }
+}
+
 // Drawer trigger (mobile)
 .pathable-filter-bar__drawer-trigger {
   display: none;

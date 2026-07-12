@@ -12,3 +12,10 @@
 .pathable-select {
   @extend .usa-select;
 }
+
+@media (max-width: 39.99em), (pointer: coarse) {
+  .pathable-select {
+    box-sizing: border-box;
+    min-height: 2.75rem;
+  }
+}

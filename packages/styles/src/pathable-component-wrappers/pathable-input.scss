@@ -11,4 +11,5 @@
 
 .pathable-input {
   @extend .usa-input;
+  box-sizing: border-box;
 }

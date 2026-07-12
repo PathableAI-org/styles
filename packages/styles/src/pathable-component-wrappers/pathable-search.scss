@@ -20,3 +20,20 @@
 .pathable-search--small {
   @extend .usa-search--small;
 }
+
+@media (max-width: 39.99em), (pointer: coarse) {
+  .pathable-search {
+    input,
+    button,
+    .pathable-input,
+    .pathable-button {
+      box-sizing: border-box;
+      min-height: 2.75rem;
+    }
+
+    button,
+    .pathable-button {
+      min-width: 2.75rem;
+    }
+  }
+}

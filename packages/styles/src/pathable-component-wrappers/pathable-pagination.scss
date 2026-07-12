@@ -24,3 +24,10 @@
 .pathable-pagination__arrow {
   @extend .usa-pagination__arrow;
 }
+
+@media (max-width: 39.99em), (pointer: coarse) {
+  .pathable-pagination__link {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
