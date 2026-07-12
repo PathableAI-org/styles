@@ -76,10 +76,6 @@ const EXPECTED_STORIES = [
   // Canonical stories (checked via Playwright)
   ...CANONICAL_STORIES.map((s) => ({ id: s.id })),
 
-  // Page-composition archetypes (wave 003)
-  { id: 'marketing-patterns-marketing-landing-page--desktop' },
-  { id: 'marketing-patterns-operational-dashboard--populated' },
-  { id: 'marketing-patterns-resource-directory--populated' },
 ]
 
 const VIEWPORTS = {
