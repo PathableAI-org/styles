@@ -14,17 +14,17 @@ export default {
 export const Default = {
   render: () => `
     <ol class="pathable-step-indicator">
-      <li class="pathable-step-indicator__step pathable-step-indicator__step--completed">
-        <span class="pathable-step-indicator__step-label">Step 1: Create Account</span>
+      <li class="pathable-step-indicator__segment pathable-step-indicator__segment--completed">
+        <span class="pathable-step-indicator__segment-label">Step 1: Create Account</span>
       </li>
-      <li class="pathable-step-indicator__step pathable-step-indicator__step--current">
-        <span class="pathable-step-indicator__step-label">Step 2: Verify Identity</span>
+      <li class="pathable-step-indicator__segment pathable-step-indicator__segment--current" aria-current="step">
+        <span class="pathable-step-indicator__segment-label">Step 2: Verify Identity</span>
       </li>
-      <li class="pathable-step-indicator__step">
-        <span class="pathable-step-indicator__step-label">Step 3: Set Up Profile</span>
+      <li class="pathable-step-indicator__segment">
+        <span class="pathable-step-indicator__segment-label">Step 3: Set Up Profile</span>
       </li>
-      <li class="pathable-step-indicator__step">
-        <span class="pathable-step-indicator__step-label">Step 4: Complete</span>
+      <li class="pathable-step-indicator__segment">
+        <span class="pathable-step-indicator__segment-label">Step 4: Complete</span>
       </li>
     </ol>
   `,

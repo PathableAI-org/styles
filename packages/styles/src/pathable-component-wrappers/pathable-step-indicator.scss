@@ -13,15 +13,79 @@
   @extend .usa-step-indicator;
 }
 
+// Compatibility for existing stories/consumers that use the list element as
+// the step-indicator root instead of nesting __segments inside a root div.
+ol.pathable-step-indicator {
+  @extend .usa-step-indicator__segments;
+}
+
+.pathable-step-indicator__segments {
+  @extend .usa-step-indicator__segments;
+}
+
 .pathable-step-indicator__header {
   @extend .usa-step-indicator__header;
+}
+
+.pathable-step-indicator__heading {
+  @extend .usa-step-indicator__heading;
+}
+
+.pathable-step-indicator__heading-counter {
+  @extend .usa-step-indicator__heading-counter;
+}
+
+.pathable-step-indicator__current-step {
+  @extend .usa-step-indicator__current-step;
+}
+
+.pathable-step-indicator__heading-text {
+  @extend .usa-step-indicator__heading-text;
 }
 
 .pathable-step-indicator__segment {
   @extend .usa-step-indicator__segment;
 }
 
+.pathable-step-indicator__segment--complete,
+.pathable-step-indicator__segment--completed {
+  @extend .usa-step-indicator__segment--complete;
+}
+
+.pathable-step-indicator__segment--current {
+  @extend .usa-step-indicator__segment--current;
+}
+
 .pathable-step-indicator__segment-label {
+  @extend .usa-step-indicator__segment-label;
+}
+
+.pathable-step-indicator__segment-count {
+  @extend .usa-step-indicator__segment-count !optional;
+}
+
+.pathable-step-indicator__body {
+  @extend .usa-step-indicator__body !optional;
+}
+
+.pathable-step-indicator__body-text {
+  @extend .usa-step-indicator__body-text !optional;
+}
+
+.pathable-step-indicator__step {
+  @extend .usa-step-indicator__segment;
+}
+
+.pathable-step-indicator__step--complete,
+.pathable-step-indicator__step--completed {
+  @extend .usa-step-indicator__segment--complete;
+}
+
+.pathable-step-indicator__step--current {
+  @extend .usa-step-indicator__segment--current;
+}
+
+.pathable-step-indicator__step-label {
   @extend .usa-step-indicator__segment-label;
 }
 

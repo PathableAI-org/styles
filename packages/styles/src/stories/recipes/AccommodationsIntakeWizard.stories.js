@@ -35,7 +35,8 @@ const stepIndicator = (current) => {
       let cls = 'pathable-step-indicator__segment'
       if (s.num < current) cls += ' pathable-step-indicator__segment--completed'
       if (s.num === current) cls += ' pathable-step-indicator__segment--current'
-      return `<li class="${cls}"><span class="pathable-step-indicator__segment-label">${s.label}</span></li>`
+      const currentAttr = s.num === current ? ' aria-current="step"' : ''
+      return `<li class="${cls}"${currentAttr}><span class="pathable-step-indicator__segment-label">${s.label}</span></li>`
     })
     .join('')}</ol>`
 }
