@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The filter bar uses `.pathable-filter-bar` with child regions. Active filters use `.pathable-filter-pill` inside the `.pathable-filter-bar__filters` region.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The filter bar uses `.pathable-filter-bar` with child regions. Native select controls inside `.pathable-filter-bar__facets` and `.pathable-filter-bar__sort` should use `.pathable-select`. Active filters use `.pathable-filter-pill` inside the `.pathable-filter-bar__filters` region.',
       },
     },
   },
@@ -16,7 +16,7 @@ export const Default = {
     <div class="pathable-filter-bar">
       <input class="pathable-filter-bar__search" type="search" placeholder="Search resources...">
       <div class="pathable-filter-bar__facets">
-        <select aria-label="Category">
+        <select class="pathable-select" aria-label="Category">
           <option>All categories</option>
           <option>Training</option>
           <option>Assessment</option>
@@ -24,7 +24,7 @@ export const Default = {
         </select>
       </div>
       <div class="pathable-filter-bar__sort">
-        <select aria-label="Sort by">
+        <select class="pathable-select" aria-label="Sort by">
           <option>Most relevant</option>
           <option>Newest</option>
           <option>Name A-Z</option>
@@ -40,13 +40,13 @@ export const HasFilters = {
     <div class="pathable-filter-bar pathable-filter-bar--has-filters">
       <input class="pathable-filter-bar__search" type="search" placeholder="Search resources...">
       <div class="pathable-filter-bar__facets">
-        <select aria-label="Category">
+        <select class="pathable-select" aria-label="Category">
           <option>All categories</option>
           <option selected>Training</option>
         </select>
       </div>
       <div class="pathable-filter-bar__sort">
-        <select aria-label="Sort by">
+        <select class="pathable-select" aria-label="Sort by">
           <option>Most relevant</option>
           <option>Newest</option>
         </select>
