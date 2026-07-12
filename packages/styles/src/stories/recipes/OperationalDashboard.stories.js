@@ -36,7 +36,7 @@ const sidebarHtml = `
     <a href="#" class="pathable-app-shell__nav-item">Settings</a>
   </nav>
   <div class="pathable-app-shell__account" style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--pathable-color-border);">
-    <span style="font-size:0.875rem;color:var(--pathable-color-text-muted);">Signed in as <strong>admin@org.gov</strong></span>
+    <span style="font-size:0.875rem;color:var(--pathable-color-text-muted);">Signed in as <strong>admin@example.gov</strong></span>
   </div>
 </aside>
 `
@@ -149,9 +149,17 @@ const activities = [
   },
 ]
 
-const buildActivityRow = (a) => `
+const buildActivityRow = (a) => {
+  const statusLabels = {
+    completed: 'Completed',
+    'in-progress': 'In progress',
+    pending: 'Pending',
+    cancelled: 'Cancelled',
+  }
+  const statusLabel = statusLabels[a.status] || a.status
+  return `
 <div class="pathable-activity-row">
-  <div class="pathable-activity-row__status" data-status="${a.status}" role="img" aria-label="${a.status}"></div>
+  <div class="pathable-activity-row__status" data-status="${a.status}" role="img" aria-label="Status: ${statusLabel}"></div>
   <div class="pathable-activity-row__body">
     <p class="pathable-activity-row__title">${a.title}</p>
     <p class="pathable-activity-row__context">${a.context}</p>
@@ -160,6 +168,7 @@ const buildActivityRow = (a) => `
   <span class="pathable-activity-row__owner">${a.owner}</span>
 </div>
 `
+}
 
 const activityListHtml = `
 <div class="pathable-surface pathable-surface--raised" style="padding:1.5rem;">

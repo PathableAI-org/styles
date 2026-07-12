@@ -29,7 +29,7 @@ const stepIndicatorHtml = (currentStep, totalSteps) => {
     if (i < currentStep) cls += ' pathable-step-indicator__segment--completed'
     if (i === currentStep) cls += ' pathable-step-indicator__segment--current'
     steps.push(
-      `<li class="${cls}"><span class="pathable-step-indicator__segment-label">Question ${i}</span></li>`,
+      `<li class="${cls}"${i === currentStep ? ' aria-current="step"' : ''}><span class="pathable-step-indicator__segment-label">Question ${i}</span></li>`,
     )
   }
   return `<ol class="pathable-step-indicator" style="margin-bottom:1.5rem;">${steps.join('')}</ol>`

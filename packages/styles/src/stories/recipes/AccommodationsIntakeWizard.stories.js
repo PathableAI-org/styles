@@ -81,7 +81,7 @@ const _step1Html = `
     </div>
     <div class="pathable-form-group" style="margin-bottom:1rem;">
       <label class="pathable-label" for="acc-email">Email Address</label>
-      <input type="email" id="acc-email" class="pathable-input" value="james.chen@email.com" style="width:100%;">
+      <input type="email" id="acc-email" class="pathable-input" value="james.chen@example.com" style="width:100%;">
     </div>
     <div style="display:flex;gap:1rem;flex-wrap:wrap;">
       <div class="pathable-form-group" style="flex:1;min-width:180px;margin-bottom:1rem;">
@@ -214,7 +214,7 @@ const _step4Html = `
   <div class="pathable-stack pathable-stack--gap-md">
     <div class="pathable-surface pathable-surface--inset" style="padding:1rem;">
       <h4 style="margin:0 0 0.5rem;font-size:0.875rem;font-weight:600;color:var(--pathable-color-text);">Participant</h4>
-      <p style="margin:0;font-size:0.875rem;color:var(--pathable-color-text-muted);"><strong>James Chen</strong> &middot; james.chen@email.com &middot; (555) 234-5678</p>
+      <p style="margin:0;font-size:0.875rem;color:var(--pathable-color-text-muted);"><strong>James Chen</strong> &middot; james.chen@example.com &middot; (555) 234-5678</p>
       <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--pathable-color-text-muted);">Administrative Assistant &middot; TechCorp Industries &middot; Building A, 3rd Floor</p>
     </div>
 
