@@ -28,19 +28,19 @@ ol.pathable-step-indicator {
 }
 
 .pathable-step-indicator__heading {
-  @extend .usa-step-indicator__heading;
+  @extend .usa-step-indicator__heading !optional;
 }
 
 .pathable-step-indicator__heading-counter {
-  @extend .usa-step-indicator__heading-counter;
+  @extend .usa-step-indicator__heading-counter !optional;
 }
 
 .pathable-step-indicator__current-step {
-  @extend .usa-step-indicator__current-step;
+  @extend .usa-step-indicator__current-step !optional;
 }
 
 .pathable-step-indicator__heading-text {
-  @extend .usa-step-indicator__heading-text;
+  @extend .usa-step-indicator__heading-text !optional;
 }
 
 .pathable-step-indicator__segment {
