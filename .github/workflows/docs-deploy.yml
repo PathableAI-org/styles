@@ -40,13 +40,7 @@ jobs:
         run: pnpm --filter @pathable/styles build
 
       - name: Build main docs
-        run: STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
-
-      - name: Build React docs
-        run: |
-          pnpm --filter @pathable/storybook-react build-storybook
-          mkdir -p apps/storybook/storybook-static/react
-          cp -r apps/storybook-react/storybook-static/* apps/storybook/storybook-static/react/
+        run: pnpm --filter @pathable/storybook build-storybook
 
       - name: Token custom property lint
         run: pnpm lint:tokens
@@ -78,6 +72,15 @@ jobs:
 
       - name: Visual smoke tests
         run: pnpm test:visual
+
+      - name: Rebuild main docs for Pages
+        run: STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
+
+      - name: Build React docs
+        run: |
+          pnpm --filter @pathable/storybook-react build-storybook
+          mkdir -p apps/storybook/storybook-static/react
+          cp -r apps/storybook-react/storybook-static/* apps/storybook/storybook-static/react/
 
       - name: Create .nojekyll
         run: touch apps/storybook/storybook-static/.nojekyll
