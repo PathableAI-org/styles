@@ -63,32 +63,19 @@ const CANONICAL_STORIES = [
   // Marketing patterns
   { id: 'marketing-patterns-combined--hero-section', mode: 'desktop' },
   { id: 'marketing-patterns-combined--feature-showcase', mode: 'desktop' },
+  // Page-composition archetypes (wave 003)
+  { id: 'marketing-patterns-marketing-landing-page--desktop', mode: 'desktop' },
+  { id: 'marketing-patterns-operational-dashboard--populated', mode: 'both' },
+  { id: 'marketing-patterns-resource-directory--populated', mode: 'both' },
 ]
 
 /**
  * Expected story IDs in the built Storybook index.json.
- *
- * Wave 003 stories (Marketing Landing Page, Operational Dashboard,
- * Resource Directory) are listed with enabled: false. When those stories
- * are published in wave 003, flip enabled to true.
  */
 const EXPECTED_STORIES = [
   // Canonical stories (checked via Playwright)
   ...CANONICAL_STORIES.map((s) => ({ id: s.id })),
 
-  // Wave 003 — not yet published; enable after wave 003:
-  {
-    id: 'marketing-patterns-marketing-landing-page--desktop',
-    enabled: false,
-  },
-  {
-    id: 'marketing-patterns-operational-dashboard--populated',
-    enabled: false,
-  },
-  {
-    id: 'marketing-patterns-resource-directory--populated',
-    enabled: false,
-  },
 ]
 
 const VIEWPORTS = {
@@ -121,6 +108,16 @@ const HORIZONTAL_OVERFLOW_ALLOWLIST = {
   'structured-workflow-wizard--mobile': {
     mobile:
       'Minor 2 px horizontal overflow at 375 px. Low severity; tracked for cleanup.',
+  },
+  'marketing-patterns-operational-dashboard--populated': {
+    desktop:
+      'P2 — App shell content padding / max-width math causes 32 px overflow at 1280 px. Same root cause as app-shell stories; tracked in tmp/storybook-brand-accessibility-review.md.',
+    mobile:
+      'P2 — App shell content overflows 375 px viewport by 32 px. Same root cause as app-shell-mobile stories; tracked in tmp/storybook-brand-accessibility-review.md.',
+  },
+  'marketing-patterns-resource-directory--populated': {
+    mobile:
+      'P2 — Content overflows 375 px viewport by 32 px due to container max-width math. Tracked in tmp/storybook-brand-accessibility-review.md.',
   },
 }
 
@@ -183,6 +180,65 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+  ],
+  'marketing-patterns-operational-dashboard--populated': [
+    {
+      selector: 'button.pathable-button',
+      reason:
+        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
+    },
+    {
+      selector: '.pathable-dashboard-header__breadcrumb a',
+      reason:
+        'Breadcrumb nav links render at text line-height on mobile. These are secondary navigation cues, not primary action targets. Tracked for future refinement.',
+    },
+    {
+      selector: 'button.pathable-toast__dismiss',
+      reason:
+        'Toast dismiss button renders at 24×24 px (icon-only action). Compact but within an established pattern. Tracked for refinement.',
+    },
+    {
+      selector: 'input[type="radio"], input[type="checkbox"]',
+      reason:
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+  ],
+  'marketing-patterns-resource-directory--populated': [
+    {
+      selector: 'button.pathable-button',
+      reason:
+        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
+    },
+    {
+      selector: 'input[type="radio"], input[type="checkbox"]',
+      reason:
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+    {
+      selector: 'button.pathable-filter-bar__clear',
+      reason:
+        'Filter bar clear button uses USWDS sizing. Tracked for refinement.',
+    },
+    {
+      selector: 'button.pathable-filter-pill__dismiss',
+      reason:
+        'Filter pill dismiss button is an inline icon-only control. Compact by design. Tracked for refinement.',
+    },
+    {
+      selector: '.pathable-resource-card__link',
+      reason:
+        'Resource card title links render at text line-height on mobile. Same pattern as breadcrumb links. Tracked for future refinement.',
+    },
+    {
+      selector: '.pathable-pagination__link',
+      reason:
+        'Pagination number links render at text sizing. Compact by design. Tracked for refinement.',
+    },
+    {
+      selector: 'select.pathable-select',
+      reason:
+        'USWDS select elements render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS select token changes. Tracked for a future wave.',
     },
   ],
   'dashboard-dashboard-header--with-many-actions': [
@@ -311,7 +367,6 @@ async function checkStoryIndex() {
   const failures = []
 
   for (const story of EXPECTED_STORIES) {
-    if (story.enabled === false) continue
     if (!entries[story.id]) {
       failures.push({
         type: 'missing-story',
