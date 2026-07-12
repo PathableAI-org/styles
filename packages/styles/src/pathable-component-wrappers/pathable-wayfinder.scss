@@ -92,6 +92,7 @@
     font-size: var(--pathable-font-size-body-sm);
     color: var(--pathable-color-text);
     cursor: pointer;
+    min-height: 44px;
     padding: var(--pathable-space-1) 0;
   }
 
@@ -121,6 +122,10 @@
   .pathable-wayfinder__action {
     width: 100%;
     text-align: center;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
