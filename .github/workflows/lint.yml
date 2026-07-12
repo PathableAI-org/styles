@@ -8,6 +8,7 @@ on:
       - '**/*.scss'
       - '**/*.sass'
       - '**/*.css'
+      - '**/*.mjs'
       - '.stylelintrc.json'
       - '**/.stylelintrc*'
       - 'package.json'
@@ -64,3 +65,6 @@ jobs:
 
       - name: Lint styles
         run: pnpm lint:styles
+
+      - name: Token custom property lint
+        run: pnpm lint:tokens

@@ -82,6 +82,12 @@ typings/
 # Screenshots
 screenshots/
 
+# Storybook test results
+apps/storybook/test-results/
+
+# Test artifacts
+artifacts/
+
 # Specs and handoffs
 specs/**/*.json
 specs/**/part*.md

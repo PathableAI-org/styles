@@ -15,6 +15,7 @@ export default [
       'specs/**',
       'handoffs/**',
       'patches/**',
+      'tmp/**',
     ],
   },
   js.configs.recommended,

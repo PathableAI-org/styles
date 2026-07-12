@@ -91,6 +91,7 @@ Use exported tokens instead of hardcoded colors or font names whenever possible.
 
 See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
+See STORY_AUTHORING.md for the story authoring checklist and PR requirements.
 Applications SHOULD consume semantic tokens like --pathable-color-text instead of directly using brand colors like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
 
