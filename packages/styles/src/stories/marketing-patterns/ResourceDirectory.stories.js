@@ -68,7 +68,7 @@ const wayfinderHtml = `
 const filterBarHtml = `
 <div class="pathable-container pathable-container--standard">
   <div class="pathable-filter-bar pathable-filter-bar--has-filters" style="margin: 1rem 0;">
-    <input class="pathable-filter-bar__search" type="search" placeholder="Filter results...">
+    <input class="pathable-filter-bar__search" type="search" placeholder="Filter results..." aria-label="Filter results">
     <div class="pathable-filter-bar__facets">
       <select class="pathable-select" aria-label="Category">
         <option value="">All categories</option>
@@ -265,7 +265,7 @@ const emptyPage = `
   ${wayfinderHtml}
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-filter-bar pathable-filter-bar--has-filters" style="margin: 1rem 0;">
-      <input class="pathable-filter-bar__search" type="search" placeholder="Filter results...">
+      <input class="pathable-filter-bar__search" type="search" placeholder="Filter results..." aria-label="Filter results">
       <div class="pathable-filter-bar__count" role="status" aria-live="polite">0 results</div>
       <div class="pathable-filter-bar__filters">
         <span class="pathable-filter-pill">
@@ -304,7 +304,7 @@ const mobilePopulatedPage = `
   </section>
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-filter-bar pathable-filter-bar--has-filters" style="margin: 1rem 0;">
-      <input class="pathable-filter-bar__search" type="search" placeholder="Filter results...">
+      <input class="pathable-filter-bar__search" type="search" placeholder="Filter results..." aria-label="Filter results">
       <div class="pathable-filter-bar__count" role="status" aria-live="polite">12 results</div>
     </div>
   </div>
