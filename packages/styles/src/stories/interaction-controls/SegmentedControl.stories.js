@@ -5,13 +5,13 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (with CSS-driven interactive states)\n\n**Consumers must**: Import `@pathable/styles` CSS. Single-select containers should use `role="radiogroup"` with `role="radio"` and `aria-checked` on each option. Arrow-key navigation requires consumer-provided JavaScript per ARIA APG. Multi-select containers should use `role="group"` with `aria-pressed` on each option.',
+          '**Interaction Model**: CSS-only (visual presentation; keyboard behavior requires application JavaScript)\n\n**Consumers must**: Import `@pathable/styles` CSS. **IMPORTANT — ARIA roles without JavaScript keyboard handling create an accessibility gap.** The CSS layer provides visual styling for `role="radiogroup"`, `role="radio"`, and `aria-pressed` states, but the ARIA Authoring Practices require arrow-key keyboard navigation that CSS cannot provide.\n\n**Single-select (role="radiogroup")**: Each option uses `role="radio"` and `aria-checked`. Consumers MUST implement arrow-key navigation (Left/Right for horizontal, Up/Down for vertical). Tab moves focus into the radiogroup; focus moves to the checked option on first entry. When focus is within the group, arrow keys move focus and selection to the previous/next option.\n\n**Multi-select (role="group")**: Each option uses `aria-pressed`. Consumers MUST implement Tab navigation between segments. Pressing Space or Enter toggles the pressed state. Unlike radiogroup, arrow keys do NOT move focus between options.\n\n**CSS-only story disclaimer**: The stories below demonstrate correct ARIA markup and visual states. Keyboard navigation is inert — `role="radio"` without keyboard handling does not provide a complete accessible experience. Copying this markup into a production page without adding JavaScript keyboard handlers will result in an accessibility violation.',
       },
     },
   },
 }
 
-const svgIcon = (d, label) =>
+const svgIcon = (d, _label) =>
   `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}"/></svg>`
 
 const listIcon = svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z', 'List')
@@ -62,6 +62,14 @@ const multiOption = (label, iconSvg, pressed = false) => {
 }
 
 export const SingleSelect = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Mutually exclusive options using ARIA radiogroup semantics. **Keyboard behavior**: Tab into the radiogroup (focus lands on checked option), then Left/Right Arrow keys move selection between options. This requires consumer JavaScript — CSS alone cannot implement arrow-key navigation.',
+      },
+    },
+  },
   render: () => `
     <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Single-Select (View Mode)</h3>
     <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">

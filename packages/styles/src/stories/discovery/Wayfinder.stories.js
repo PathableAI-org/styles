@@ -24,17 +24,17 @@ export const Default = {
         <fieldset class="pathable-wayfinder__question">
           <legend class="pathable-wayfinder__question-label">Who are you helping?</legend>
           <div class="pathable-wayfinder__question-controls">
-            <label><input type="radio" name="audience" value="self"> Myself</label>
-            <label><input type="radio" name="audience" value="team"> My team</label>
-            <label><input type="radio" name="audience" value="client"> A client</label>
+            <label for="aud-self"><input id="aud-self" type="radio" name="audience" value="self"> Myself</label>
+            <label for="aud-team"><input id="aud-team" type="radio" name="audience" value="team"> My team</label>
+            <label for="aud-client"><input id="aud-client" type="radio" name="audience" value="client"> A client</label>
           </div>
         </fieldset>
         <fieldset class="pathable-wayfinder__question">
           <legend class="pathable-wayfinder__question-label">What do you need?</legend>
           <div class="pathable-wayfinder__question-controls">
-            <label><input type="radio" name="need" value="learn"> Training & education</label>
-            <label><input type="radio" name="need" value="assess"> Assessment & tools</label>
-            <label><input type="radio" name="need" value="support"> Support & guidance</label>
+            <label for="need-learn"><input id="need-learn" type="radio" name="need" value="learn"> Training & education</label>
+            <label for="need-assess"><input id="need-assess" type="radio" name="need" value="assess"> Assessment & tools</label>
+            <label for="need-support"><input id="need-support" type="radio" name="need" value="support"> Support & guidance</label>
           </div>
         </fieldset>
       </div>
@@ -57,9 +57,9 @@ export const SingleQuestion = {
         <fieldset class="pathable-wayfinder__question">
           <legend class="pathable-wayfinder__question-label">What best describes your role?</legend>
           <div class="pathable-wayfinder__question-controls">
-            <label><input type="radio" name="role" value="educator"> Educator</label>
-            <label><input type="radio" name="role" value="developer"> Developer</label>
-            <label><input type="radio" name="role" value="administrator"> Administrator</label>
+            <label for="role-educator"><input id="role-educator" type="radio" name="role" value="educator"> Educator</label>
+            <label for="role-developer"><input id="role-developer" type="radio" name="role" value="developer"> Developer</label>
+            <label for="role-admin"><input id="role-admin" type="radio" name="role" value="administrator"> Administrator</label>
           </div>
         </fieldset>
       </div>

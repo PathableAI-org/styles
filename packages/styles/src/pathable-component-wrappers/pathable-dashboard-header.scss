@@ -98,6 +98,14 @@
   align-items: center;
   gap: var(--pathable-space-2);
   flex-shrink: 0;
+
+  .pathable-button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 // --- Narrow screen: actions stack ---

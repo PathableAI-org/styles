@@ -93,8 +93,8 @@ export const WithActions = {
           <td>Active</td>
           <td>
             <div class="pathable-table__row-actions">
-              <button class="pathable-button pathable-button--outline" style="padding: 0.125rem 0.375rem; font-size: 0.75rem;">Edit</button>
-              <button class="pathable-button pathable-button--outline" style="padding: 0.125rem 0.375rem; font-size: 0.75rem;">View</button>
+              <button class="pathable-button pathable-button--outline">Edit</button>
+              <button class="pathable-button pathable-button--outline">View</button>
             </div>
           </td>
         </tr>
@@ -103,8 +103,8 @@ export const WithActions = {
           <td>Completed</td>
           <td>
             <div class="pathable-table__row-actions">
-              <button class="pathable-button pathable-button--outline" style="padding: 0.125rem 0.375rem; font-size: 0.75rem;">Edit</button>
-              <button class="pathable-button pathable-button--outline" style="padding: 0.125rem 0.375rem; font-size: 0.75rem;">View</button>
+              <button class="pathable-button pathable-button--outline">Edit</button>
+              <button class="pathable-button pathable-button--outline">View</button>
             </div>
           </td>
         </tr>
@@ -113,8 +113,8 @@ export const WithActions = {
           <td>Active</td>
           <td>
             <div class="pathable-table__row-actions">
-              <button class="pathable-button pathable-button--outline" style="padding: 0.125rem 0.375rem; font-size: 0.75rem;">Edit</button>
-              <button class="pathable-button pathable-button--outline" style="padding: 0.125rem 0.375rem; font-size: 0.75rem;">View</button>
+              <button class="pathable-button pathable-button--outline">Edit</button>
+              <button class="pathable-button pathable-button--outline">View</button>
             </div>
           </td>
         </tr>

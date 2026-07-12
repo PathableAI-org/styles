@@ -75,7 +75,6 @@ const CANONICAL_STORIES = [
 const EXPECTED_STORIES = [
   // Canonical stories (checked via Playwright)
   ...CANONICAL_STORIES.map((s) => ({ id: s.id })),
-
 ]
 
 const VIEWPORTS = {
@@ -148,11 +147,6 @@ const UNNAMED_CONTROLS_ALLOWLIST = {
 const SMALL_TOUCH_TARGETS_ALLOWLIST = {
   'structured-workflow-wizard--mobile': [
     {
-      selector: 'button.pathable-button',
-      reason:
-        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
-    },
-    {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
@@ -172,11 +166,6 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
   ],
   'discovery-wayfinder--default': [
     {
-      selector: 'button.pathable-button',
-      reason:
-        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
-    },
-    {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
@@ -184,24 +173,39 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
   ],
   'marketing-patterns-operational-dashboard--populated': [
     {
-      selector: 'button.pathable-button',
-      reason:
-        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
-    },
-    {
       selector: '.pathable-dashboard-header__breadcrumb a',
       reason:
         'Breadcrumb nav links render at text line-height on mobile. These are secondary navigation cues, not primary action targets. Tracked for future refinement.',
     },
     {
-      selector: 'button.pathable-toast__dismiss',
-      reason:
-        'Toast dismiss button renders at 24×24 px (icon-only action). Compact but within an established pattern. Tracked for refinement.',
-    },
-    {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+    {
+      selector: 'button.pathable-filter-bar__clear',
+      reason:
+        'Filter bar clear button uses USWDS sizing. Tracked for refinement.',
+    },
+    {
+      selector: 'button.pathable-filter-pill__dismiss',
+      reason:
+        'Filter pill dismiss button is an inline icon-only control. Compact by design. Tracked for refinement.',
+    },
+    {
+      selector: '.pathable-resource-card__link',
+      reason:
+        'Resource card title links render at text line-height on mobile. Same pattern as breadcrumb links. Tracked for future refinement.',
+    },
+    {
+      selector: '.pathable-pagination__link',
+      reason:
+        'Pagination number links render at text sizing. Compact by design. Tracked for refinement.',
+    },
+    {
+      selector: 'select.pathable-select',
+      reason:
+        'USWDS select elements render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS select token changes. Tracked for a future wave.',
     },
   ],
   'marketing-patterns-resource-directory--populated': [
@@ -242,11 +246,6 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
     },
   ],
   'dashboard-dashboard-header--with-many-actions': [
-    {
-      selector: 'button.pathable-button',
-      reason:
-        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
-    },
     {
       selector: '.pathable-dashboard-header__breadcrumb a',
       reason:

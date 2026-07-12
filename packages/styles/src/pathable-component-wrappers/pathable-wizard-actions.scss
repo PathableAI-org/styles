@@ -19,6 +19,14 @@
   justify-content: flex-start;
   padding-top: var(--pathable-wizard-gap);
   border-top: 1px solid color('gray-20');
+
+  .pathable-button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 // Push Continue and Submit to the right
