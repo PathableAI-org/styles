@@ -80,9 +80,7 @@ export const Upcoming = {
 }
 
 export const Mobile = {
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
-  },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-schedule-list" style="max-width: 375px;">
       ${scheduleItem('MAR', '15', '10:00 AM', 'Initial Assessment', 'New participant intake', 'Main Office', 'upcoming', 'Upcoming')}

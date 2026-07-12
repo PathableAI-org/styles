@@ -86,9 +86,7 @@ export const Compact = {
 }
 
 export const Mobile = {
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
-  },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-dashboard-header" style="max-width: 375px;">
       <div class="pathable-dashboard-header__breadcrumb">

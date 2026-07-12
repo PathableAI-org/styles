@@ -60,8 +60,8 @@ export const Default = {
 }
 
 export const Mobile = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   parameters: {
-    viewport: { defaultViewport: 'mobile1' },
     docs: {
       description: {
         story:

@@ -220,6 +220,7 @@ export const Completed = {
 }
 
 export const Mobile = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   parameters: {
     docs: {
       description: {

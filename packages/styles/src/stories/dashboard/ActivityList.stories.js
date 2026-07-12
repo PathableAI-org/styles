@@ -69,9 +69,7 @@ export const WithMixedStatuses = {
 }
 
 export const Mobile = {
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
-  },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-activity-list" style="max-width: 375px;">
       ${activityRow('Intake completed', 'Maria Gonzalez', '2:30 PM', 'You', 'completed', '<button class="pathable-button pathable-button--outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">View</button>')}

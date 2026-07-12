@@ -71,7 +71,7 @@ export const RowWithAvatar = {
 }
 
 export const MobileCard = {
-  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-skeleton" aria-hidden="true">
       <div class="pathable-skeleton--card"></div>

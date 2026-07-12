@@ -104,9 +104,7 @@ export const Unavailable = {
 }
 
 export const Mobile = {
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
-  },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-kpi-grid" style="max-width: 375px;">
       ${kpiCard('1,247', 'Active Participants', 'up')}
