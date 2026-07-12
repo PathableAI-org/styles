@@ -19,24 +19,81 @@ const displayValues = [
   { name: 'None', class: 'pathable-display-none' },
 ]
 
+const sampleStyle =
+  'background: var(--pathable-color-bg, #dde2e8); color: var(--pathable-color-text, #00365c); padding: 0.5rem; border: 1px dashed var(--pathable-color-text, #00365c);'
+
+const chipStyle =
+  'background: var(--pathable-color-action-primary-bg, #00365c); color: var(--pathable-color-action-primary-text, #fff); padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 2px;'
+
+const markerStyle =
+  'background: var(--pathable-color-surface, #fff); color: var(--pathable-color-text-muted, #444); border: 1px solid var(--pathable-color-border, #dde2e8); padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 2px;'
+
+const renderPreview = (cls) => {
+  if (cls === 'pathable-display-flex') {
+    return `
+      <div class="${cls}" style="${sampleStyle} gap: 0.5rem;">
+        <span style="${chipStyle}">Item 1</span>
+        <span style="${chipStyle}">Item 2</span>
+        <span style="${chipStyle}">Item 3</span>
+      </div>
+    `
+  }
+
+  if (cls === 'pathable-display-block') {
+    return `
+      <div>
+        <span style="${markerStyle}">Before</span>
+        <span class="${cls}" style="${sampleStyle} margin: 0.375rem 0;">Item 1</span>
+        <span style="${markerStyle}">After</span>
+      </div>
+    `
+  }
+
+  if (cls === 'pathable-display-inline') {
+    return `
+      <p style="margin: 0; line-height: 2.2;">
+        <span style="${markerStyle}">Before text</span>
+        <span class="${cls}" style="${sampleStyle}">Item 1</span>
+        <span style="${markerStyle}">After text</span>
+      </p>
+    `
+  }
+
+  if (cls === 'pathable-display-inline-block') {
+    return `
+      <p style="margin: 0; line-height: 2.2;">
+        <span style="${markerStyle}">Before text</span>
+        <span class="${cls}" style="${sampleStyle} width: 7rem; height: 3rem; vertical-align: middle;">Item 1</span>
+        <span style="${markerStyle}">After text</span>
+      </p>
+    `
+  }
+
+  return `
+    <div>
+      <span style="${markerStyle}">Before</span>
+      <span class="${cls}" style="${sampleStyle}">Hidden Item</span>
+      <span style="${markerStyle}">After</span>
+      <span style="color: var(--pathable-color-text-muted, #444); font-size: 0.75rem; margin-left: 0.5rem;">Hidden item occupies no space</span>
+    </div>
+  `
+}
+
 export const AllValues = {
   render: () => `
     <div style="padding: 1rem;">
       <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Display Utility Classes</h3>
-      <p style="color: #444; font-size: 0.875rem; margin: 0 0 1.5rem;">
+      <p style="color: var(--pathable-color-text-muted, #444); font-size: 0.875rem; margin: 0 0 1.5rem;">
         Classes: <code>.pathable-display-flex</code>, <code>.pathable-display-block</code>, etc.
       </p>
       <div style="display: flex; flex-direction: column; gap: 1rem;">
         ${displayValues
           .map(
             ({ name, class: cls }) => `
-          <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
+          <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: var(--pathable-color-surface, #f9f9f9); border-radius: 4px;">
             <span style="width: 120px; font-weight: 600; font-size: 0.875rem;">${name}</span>
-            <div class="${cls}" style="background: #dde2e8; padding: 0.5rem; border: 1px dashed #00365c; ${cls === 'pathable-display-flex' ? 'gap: 0.5rem;' : ''}">
-              <span style="background: #00365c; color: #fff; padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 2px;">Item 1</span>
-              <span style="background: #00365c; color: #fff; padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 2px;">Item 2</span>
-            </div>
-            <span style="font-family: monospace; font-size: 0.7rem; color: #555; margin-left: auto;">.${cls}</span>
+            <div style="flex: 1; min-width: 0;">${renderPreview(cls)}</div>
+            <span style="font-family: monospace; font-size: 0.7rem; color: var(--pathable-color-text-muted, #555); margin-left: auto;">.${cls}</span>
           </div>
         `,
           )
