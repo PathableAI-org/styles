@@ -15,6 +15,7 @@
 
 .pathable-container {
   width: 100%;
+  box-sizing: border-box;
   max-width: var(--pathable-container-max-width, 1024px);
   margin-inline: auto;
   padding-inline: var(--pathable-container-gutter-x, var(--space-24));

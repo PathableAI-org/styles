@@ -53,7 +53,9 @@
 .pathable-app-shell {
   display: grid;
   grid-template-areas: 'sidebar main';
-  grid-template-columns: var(--pathable-app-shell-sidebar-width, 280px) 1fr;
+  grid-template-columns:
+    var(--pathable-app-shell-sidebar-width, 280px)
+    minmax(0, 1fr);
   grid-template-rows: 1fr;
   min-height: 100dvh;
 }
@@ -143,7 +145,9 @@
 .pathable-app-shell__content {
   grid-area: main;
   width: 100%;
-  max-width: var(--pathable-app-shell-content-max-width, 1024px);
+  min-width: 0;
+  max-width: min(100%, var(--pathable-app-shell-content-max-width, 1024px));
+  box-sizing: border-box;
   margin-inline: auto;
   padding: var(--pathable-app-shell-content-padding, var(--space-24));
   overflow-y: auto;

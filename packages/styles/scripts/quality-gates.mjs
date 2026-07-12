@@ -67,6 +67,22 @@ const CANONICAL_STORIES = [
   { id: 'marketing-patterns-marketing-landing-page--desktop', mode: 'desktop' },
   { id: 'marketing-patterns-operational-dashboard--populated', mode: 'both' },
   { id: 'marketing-patterns-resource-directory--populated', mode: 'both' },
+  // Founder recipes (wave 005)
+  { id: 'recipes-tool-landing-page--desktop', mode: 'desktop' },
+  { id: 'recipes-tool-landing-page--mobile', mode: 'mobile' },
+  { id: 'recipes-questionnaire-results-flow--mobile', mode: 'mobile' },
+  { id: 'recipes-questionnaire-results-flow--questionnaire', mode: 'desktop' },
+  { id: 'recipes-questionnaire-results-flow--results', mode: 'desktop' },
+  { id: 'recipes-resource-finder--empty', mode: 'desktop' },
+  { id: 'recipes-resource-finder--mobile', mode: 'mobile' },
+  { id: 'recipes-resource-finder--populated', mode: 'desktop' },
+  { id: 'recipes-accommodations-intake-wizard--completed', mode: 'desktop' },
+  { id: 'recipes-accommodations-intake-wizard--in-progress', mode: 'desktop' },
+  { id: 'recipes-accommodations-intake-wizard--mobile', mode: 'mobile' },
+  { id: 'recipes-operational-dashboard--empty', mode: 'desktop' },
+  { id: 'recipes-operational-dashboard--loading', mode: 'desktop' },
+  { id: 'recipes-operational-dashboard--mobile', mode: 'mobile' },
+  { id: 'recipes-operational-dashboard--populated', mode: 'desktop' },
 ]
 
 /**
@@ -95,30 +111,7 @@ const VIEWPORTS = {
  *
  * Format: { [storyId]: { [viewport]: 'explanation' } }
  */
-const HORIZONTAL_OVERFLOW_ALLOWLIST = {
-  'application-shell-desktop-shell--default': {
-    desktop:
-      'P2 — App shell content padding / max-width math causes 32 px overflow at 1280 px. Tracked in tmp/storybook-brand-accessibility-review.md.',
-  },
-  'application-shell-mobile-shell--default': {
-    mobile:
-      'P2 — App shell mobile content overflows 375 px viewport by 32 px. Tracked in tmp/storybook-brand-accessibility-review.md.',
-  },
-  'structured-workflow-wizard--mobile': {
-    mobile:
-      'Minor 2 px horizontal overflow at 375 px. Low severity; tracked for cleanup.',
-  },
-  'marketing-patterns-operational-dashboard--populated': {
-    desktop:
-      'P2 — App shell content padding / max-width math causes 32 px overflow at 1280 px. Same root cause as app-shell stories; tracked in tmp/storybook-brand-accessibility-review.md.',
-    mobile:
-      'P2 — App shell content overflows 375 px viewport by 32 px. Same root cause as app-shell-mobile stories; tracked in tmp/storybook-brand-accessibility-review.md.',
-  },
-  'marketing-patterns-resource-directory--populated': {
-    mobile:
-      'P2 — Content overflows 375 px viewport by 32 px due to container max-width math. Tracked in tmp/storybook-brand-accessibility-review.md.',
-  },
-}
+const HORIZONTAL_OVERFLOW_ALLOWLIST = {}
 
 /**
  * Unnamed controls: visible interactive elements without an accessible name
@@ -154,11 +147,6 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
   ],
   'structured-workflow-wizard--wizard-long-form': [
     {
-      selector: 'select.pathable-select',
-      reason:
-        'USWDS select elements render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS select token changes. Tracked for a future wave.',
-    },
-    {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
@@ -183,66 +171,21 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
     },
     {
-      selector: 'button.pathable-filter-bar__clear',
-      reason:
-        'Filter bar clear button uses USWDS sizing. Tracked for refinement.',
-    },
-    {
-      selector: 'button.pathable-filter-pill__dismiss',
-      reason:
-        'Filter pill dismiss button is an inline icon-only control. Compact by design. Tracked for refinement.',
-    },
-    {
       selector: '.pathable-resource-card__link',
       reason:
-        'Resource card title links render at text line-height on mobile. Same pattern as breadcrumb links. Tracked for future refinement.',
-    },
-    {
-      selector: '.pathable-pagination__link',
-      reason:
-        'Pagination number links render at text sizing. Compact by design. Tracked for refinement.',
-    },
-    {
-      selector: 'select.pathable-select',
-      reason:
-        'USWDS select elements render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS select token changes. Tracked for a future wave.',
+        'Resource card title links render at text line-height on mobile. Same pattern as breadcrumb links.',
     },
   ],
   'marketing-patterns-resource-directory--populated': [
-    {
-      selector: 'button.pathable-button',
-      reason:
-        'USWDS buttons render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS button token changes. Tracked for a future wave.',
-    },
     {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
     },
     {
-      selector: 'button.pathable-filter-bar__clear',
-      reason:
-        'Filter bar clear button uses USWDS sizing. Tracked for refinement.',
-    },
-    {
-      selector: 'button.pathable-filter-pill__dismiss',
-      reason:
-        'Filter pill dismiss button is an inline icon-only control. Compact by design. Tracked for refinement.',
-    },
-    {
       selector: '.pathable-resource-card__link',
       reason:
-        'Resource card title links render at text line-height on mobile. Same pattern as breadcrumb links. Tracked for future refinement.',
-    },
-    {
-      selector: '.pathable-pagination__link',
-      reason:
-        'Pagination number links render at text sizing. Compact by design. Tracked for refinement.',
-    },
-    {
-      selector: 'select.pathable-select',
-      reason:
-        'USWDS select elements render at 40 px height on mobile. Increasing to 44 px requires upstream USWDS select token changes. Tracked for a future wave.',
+        'Resource card title links render at text line-height on mobile. Same pattern as breadcrumb links.',
     },
   ],
   'dashboard-dashboard-header--with-many-actions': [
@@ -255,6 +198,40 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
       selector: 'input[type="radio"], input[type="checkbox"]',
       reason:
         'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+  ],
+  'recipes-questionnaire-results-flow--mobile': [
+    {
+      selector: 'input[type="radio"], input[type="checkbox"]',
+      reason:
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+  ],
+  'recipes-resource-finder--mobile': [
+    {
+      selector: 'input[type="radio"], input[type="checkbox"]',
+      reason:
+        'Native radio/checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum).',
+    },
+    {
+      selector: '.pathable-logo a',
+      reason:
+        'Brand logo is a conventional text link in the global header, not a primary touch action in the recipe content.',
+    },
+  ],
+  'recipes-tool-landing-page--mobile': [
+    {
+      selector: '.pathable-logo a, .pathable-footer a',
+      reason:
+        'Brand and footer links are conventional text links. Primary CTA buttons remain subject to the 44 px target check.',
+    },
+  ],
+  'recipes-operational-dashboard--mobile': [
+    {
+      selector:
+        '.pathable-dashboard-header__breadcrumb a, .pathable-surface > div > a',
+      reason:
+        'Breadcrumb and section utility links are conventional inline text links. Primary action controls remain subject to the 44 px target check.',
     },
   ],
 }
