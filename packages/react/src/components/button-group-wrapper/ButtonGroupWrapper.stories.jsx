@@ -1,65 +1,70 @@
 import React from 'react'
-import { ButtonGroupWrapper } from './ButtonGroupWrapper'
-import { ButtonWrapper } from '../button-wrapper/ButtonWrapper'
+import { Button } from '../Button/Button' // Update import path
 
 export default {
-  title: 'Components/ButtonGroupWrapper',
-  component: ButtonGroupWrapper,
+  title: 'Components/ButtonGroup', // Update story title
+  component: Button, // Assuming ButtonGroup component will be rendered using Button, adjust if ButtonGroup is a distinct component
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Interaction Model**: React component\n\n**Consumers must**: Import from `@pathable/react`. No additional CSS import required.',
+      },
+    },
+  },
+  argTypes: {
+    children: {
+      control: { type: 'text' },
+      description:
+        'Button group content (expects Button components or similar).',
+      defaultValue: `
+        <li><Button variant="save">Save</Button></li>
+        <li><Button variant="cancel">Cancel</Button></li>
+      `,
+    },
+    className: {
+      control: { type: 'text' },
+      description: 'Additional CSS class names for the button group container.',
+      defaultValue: '',
+    },
+  },
 }
 
-export const Default = {
-  render: () => (
-    <ButtonGroupWrapper>
+const Template = (args) => (
+  <div className="button-group" {...args}>
+    {' '}
+    {/* Added a container div with button-group class */}
+    {args.children}
+  </div>
+)
+
+export const Default = Template.bind({})
+Default.args = {
+  children: (
+    <>
       <li>
-        <ButtonWrapper variant="primary">Primary</ButtonWrapper>
+        <Button variant="save">Save</Button>
       </li>
       <li>
-        <ButtonWrapper variant="secondary">Secondary</ButtonWrapper>
+        <Button variant="cancel">Cancel</Button>
       </li>
-      <li>
-        <ButtonWrapper variant="outline">Outline</ButtonWrapper>
-      </li>
-    </ButtonGroupWrapper>
+    </>
   ),
 }
 
-export const SingleButton = {
-  render: () => (
-    <ButtonGroupWrapper>
+export const RowLayout = Template.bind({})
+RowLayout.args = {
+  children: (
+    <>
       <li>
-        <ButtonWrapper variant="primary">Submit</ButtonWrapper>
-      </li>
-    </ButtonGroupWrapper>
-  ),
-}
-
-export const WithDisabled = {
-  render: () => (
-    <ButtonGroupWrapper>
-      <li>
-        <ButtonWrapper variant="primary">Save</ButtonWrapper>
+        <Button variant="primary">Option 1</Button>
       </li>
       <li>
-        <ButtonWrapper variant="secondary" disabled>
-          Cancel
-        </ButtonWrapper>
-      </li>
-    </ButtonGroupWrapper>
-  ),
-}
-
-export const MixedVariants = {
-  render: () => (
-    <ButtonGroupWrapper>
-      <li>
-        <ButtonWrapper variant="save">Save</ButtonWrapper>
+        <Button variant="primary">Option 2</Button>
       </li>
       <li>
-        <ButtonWrapper variant="continue">Continue</ButtonWrapper>
+        <Button variant="primary">Option 3</Button>
       </li>
-      <li>
-        <ButtonWrapper variant="destructive">Delete</ButtonWrapper>
-      </li>
-    </ButtonGroupWrapper>
+    </>
   ),
 }

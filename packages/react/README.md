@@ -14,28 +14,28 @@ No separate installation of `@pathable/styles` is required — styles are includ
 ## Usage
 
 ```tsx
-import { Button, ButtonWrapper, ButtonGroupWrapper } from '@pathable/react'
+import { Button, ButtonGroup } from '@pathable/react'
 
 function App() {
   return (
     <>
       <Button>Click Me</Button>
-      <ButtonWrapper variant="primary" size="big">
+      <Button variant="primary" size="big">
         Primary
-      </ButtonWrapper>
-      <ButtonWrapper variant="outline">Outline</ButtonWrapper>
-      <ButtonWrapper variant="secondary" disabled>
+      </Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="destructive" disabled>
         Disabled
-      </ButtonWrapper>
+      </Button>
 
-      <ButtonGroupWrapper>
+      <ButtonGroup>
         <li>
-          <ButtonWrapper variant="save">Save</ButtonWrapper>
+          <Button variant="save">Save</Button>
         </li>
         <li>
-          <ButtonWrapper variant="cancel">Cancel</ButtonWrapper>
+          <Button variant="cancel">Cancel</Button>
         </li>
-      </ButtonGroupWrapper>
+      </ButtonGroup>
     </>
   )
 }
@@ -43,7 +43,7 @@ function App() {
 
 The rendered `<button>` element will have the `pathable-button` CSS class applied with all PathAble styling.
 
-### ButtonWrapper Props
+### Button Props
 
 | Prop      | Type                                                                                                                                                                                  | Default     | Description                    |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------ |
@@ -53,7 +53,7 @@ The rendered `<button>` element will have the `pathable-button` CSS class applie
 | disabled  | `boolean`                                                                                                                                                                             | —           | Whether the button is disabled |
 | className | `string`                                                                                                                                                                              | —           | Additional CSS class names     |
 
-### ButtonGroupWrapper Props
+### ButtonGroup Props
 
 | Prop      | Type              | Description                |
 | --------- | ----------------- | -------------------------- |
