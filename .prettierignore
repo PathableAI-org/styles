@@ -17,4 +17,5 @@ build/Release
 *.tgz
 .cache
 .npm
-.eslintcache
+.eslintcache.agents/
+.agents/
