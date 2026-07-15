@@ -12,8 +12,8 @@
 ## Functional Requirements
 
 *   The React wrapper must expose a component that can render `Button` components from `packages/styles`.
-*   The wrapper must support rendering the following `Button` variants: primary, secondary, tertiary, outline, ghost, disabled.
-*   The wrapper must support rendering the following `Button` sizes: small, medium, large.
+*   The wrapper must support rendering the following `Button` variants: primary, secondary, accent-cool, accent-warm, outline, inverse, base, unstyled, save, continue, review, destructive, low-emphasis.
+*   The wrapper must support rendering the following `Button` sizes: default, big.
 *   The React wrapper must expose a component that can render `ButtonGroup` components from `packages/styles`.
 *   The `ButtonGroup` wrapper must correctly display child `Button` components.
 *   All wrapped components must render according to their defined styles and behavior.
@@ -31,11 +31,6 @@
 *   The `packages/styles` workspace contains correctly implemented `Button` and `ButtonGroup` components with defined variants and sizes.
 *   The existing Storybook setup can accommodate new component documentation.
 *   React development environment and build tools are configured correctly.
-
-## [NEEDS CLARIFICATION] Missing Information
-
-*   **Button Variants and Sizes**: The exact list of supported `Button` variants and sizes from `packages/styles` is not specified. Assuming common variants (primary, secondary, tertiary, outline, ghost, disabled) and sizes (small, medium, large) for now. Please confirm if these are accurate or provide the definitive list.
-*   **ButtonGroup Configuration**: Specific configuration options or props for `ButtonGroup` (e.g., spacing, orientation) are not detailed. Assuming default behavior where applicable.
 
 ## Key Entities
 

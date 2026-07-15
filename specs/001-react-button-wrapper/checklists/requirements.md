@@ -2,7 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-07-15
-**Feature**: [Link to spec.md](/Users/jake/Documents/GitHub/styles/specs/001-react-button-wrapper/spec.md)
+**Feature**: [Link to spec.md](specs/001-react-button-wrapper/spec.md)
 
 ## Content Quality
 

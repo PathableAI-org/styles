@@ -10,15 +10,9 @@ export default {
 export const Default = {
   render: () => (
     <ButtonGroup>
-      <li>
-        <Button variant="primary">Primary</Button>
-      </li>
-      <li>
-        <Button variant="secondary">Secondary</Button>
-      </li>
-      <li>
-        <Button variant="outline">Outline</Button>
-      </li>
+      <Button variant="primary">Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="outline">Outline</Button>
     </ButtonGroup>
   ),
 }
@@ -26,9 +20,7 @@ export const Default = {
 export const SingleButton = {
   render: () => (
     <ButtonGroup>
-      <li>
-        <Button variant="primary">Submit</Button>
-      </li>
+      <Button variant="primary">Submit</Button>
     </ButtonGroup>
   ),
 }
@@ -36,14 +28,10 @@ export const SingleButton = {
 export const WithDisabled = {
   render: () => (
     <ButtonGroup>
-      <li>
-        <Button variant="primary">Save</Button>
-      </li>
-      <li>
-        <Button variant="secondary" disabled>
-          Cancel
-        </Button>
-      </li>
+      <Button variant="primary">Save</Button>
+      <Button variant="secondary" disabled>
+        Cancel
+      </Button>
     </ButtonGroup>
   ),
 }
@@ -51,15 +39,9 @@ export const WithDisabled = {
 export const MixedVariants = {
   render: () => (
     <ButtonGroup>
-      <li>
-        <Button variant="save">Save</Button>
-      </li>
-      <li>
-        <Button variant="continue">Continue</Button>
-      </li>
-      <li>
-        <Button variant="destructive">Delete</Button>
-      </li>
+      <Button variant="save">Save</Button>
+      <Button variant="continue">Continue</Button>
+      <Button variant="destructive">Delete</Button>
     </ButtonGroup>
   ),
 }

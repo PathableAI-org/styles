@@ -29,12 +29,8 @@ function App() {
       </Button>
 
       <ButtonGroup>
-        <li>
-          <Button variant="save">Save</Button>
-        </li>
-        <li>
-          <Button variant="cancel">Cancel</Button>
-        </li>
+        <Button variant="save">Save</Button>
+        <Button variant="continue">Continue</Button>
       </ButtonGroup>
     </>
   )
