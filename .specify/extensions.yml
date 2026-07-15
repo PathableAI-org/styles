@@ -105,7 +105,7 @@ hooks:
     condition: null
   - extension: agent-context
     command: speckit.agent-context.update
-    enabled: true
+    enabled: false
     optional: true
     priority: 10
     prompt: Execute speckit.agent-context.update?
@@ -131,7 +131,7 @@ hooks:
     condition: null
   - extension: agent-context
     command: speckit.agent-context.update
-    enabled: true
+    enabled: false
     optional: true
     priority: 10
     prompt: Execute speckit.agent-context.update?
