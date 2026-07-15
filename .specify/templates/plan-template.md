@@ -40,7 +40,22 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Confirm whether the feature changes `packages/styles`, a wrapper package
+  such as `packages/react`, or both.
+- If a wrapper package changes, identify the owning `packages/styles` contract
+  first. Wrapper-only styles, tokens, assets, or visual semantics are not
+  permitted.
+- Verify consumers can install and import wrapper packages without adding a
+  separate application import of `@pathable/styles`; required CSS, fonts,
+  icons, JavaScript helpers, and assets must flow through the wrapper package.
+- Confirm new visual behavior is documented or demonstrated in the
+  `packages/styles` source, README, Storybook stories, or feature docs before
+  a wrapper exposes it.
+- Confirm the plan does not disable, weaken, skip, or remove lint checks.
+  Agents must fix lint findings or report blockers; only explicit human
+  approval may authorize a narrow lint-rule bypass.
+- Confirm any violations are documented in Complexity Tracking with rationale
+  and a migration path.
 
 ## Project Structure
 

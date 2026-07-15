@@ -83,6 +83,14 @@
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right functional requirements.
+  For visual/design-system work, requirements must name the owning
+  `packages/styles` source contract before naming framework wrappers. A wrapper
+  package requirement must state how the wrapper automatically imports or
+  packages the required `@pathable/styles` CSS, fonts, icons, JavaScript
+  helpers, and assets for normal consumer use.
+  Requirements must not ask agents to disable, weaken, skip, or silence lint
+  checks. Only explicit human maintainer approval may authorize a narrow
+  lint-rule bypass.
 -->
 
 ### Functional Requirements
