@@ -1,3 +1,3 @@
-import '@pathable/styles/dist/styles.css'
-
-export { Button } from './components/Button/Button'
+export { Button } from './components/Button/Button.jsx'
+export { ButtonWrapper } from './components/button-wrapper/ButtonWrapper.jsx'
+export { ButtonGroupWrapper } from './components/button-group-wrapper/ButtonGroupWrapper.jsx'
