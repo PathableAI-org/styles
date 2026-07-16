@@ -1,9 +1,6 @@
 {
   "*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}": ["eslint --fix", "prettier --write"],
   "*.{json,html,yaml,yml}": ["prettier --write"],
-  "*.md": [
-    "prettier --write",
-    "markdownlint --fix --quiet --ignore-path .markdownlintignore"
-  ],
+  "*.md": ["prettier --write", "markdownlint --fix --quiet"],
   "*.{css,scss}": ["prettier --write", "stylelint --fix --quiet"]
 }
