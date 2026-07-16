@@ -45,6 +45,9 @@
 - If a wrapper package changes, identify the owning `packages/styles` contract
   first. Wrapper-only styles, tokens, assets, or visual semantics are not
   permitted.
+- If `packages/react` adds or renames a component, confirm its exported
+  component name is the CamelCase form of the equivalent `packages/styles`
+  component name with any `pathable` prefix removed.
 - Verify consumers can install and import wrapper packages without adding a
   separate application import of `@pathable/styles`; required CSS, fonts,
   icons, JavaScript helpers, and assets must flow through the wrapper package.
