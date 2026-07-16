@@ -1,5 +1,6 @@
 node_modules
 dist
+build
 .specify
 .cursor
 pnpm-lock.yaml

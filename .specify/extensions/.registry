@@ -8,7 +8,7 @@
       "enabled": true,
       "priority": 10,
       "registered_commands": {
-        "cursor-agent": [
+        "opencode": [
           "speckit.git.feature",
           "speckit.git.validate",
           "speckit.git.remote",
@@ -25,11 +25,7 @@
       "manifest_hash": "sha256:9a1dc02d2d0139bb03860392ecacef79183be2c442feda2f9ccaa4e5907b1e47",
       "enabled": false,
       "priority": 10,
-      "registered_commands": {
-        "cursor-agent": [
-          "speckit.agent-context.update"
-        ]
-      },
+      "registered_commands": {},
       "registered_skills": [],
       "installed_at": "2026-07-04T11:16:31.033865+00:00"
     }

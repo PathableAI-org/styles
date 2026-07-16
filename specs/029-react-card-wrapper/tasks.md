@@ -39,9 +39,9 @@
 
 **Purpose**: Establish the exact source contract and package surfaces before implementation.
 
-- [ ] T001 Review `packages/styles/src/pathable-component-wrappers/pathable-card.scss`, `packages/styles/src/stories/components/Basic/Card.stories.js`, and `specs/029-react-card-wrapper/contracts/props.md` to confirm the supported `Card` presentations and record any mismatch as a blocker in `specs/029-react-card-wrapper/tasks.md`
-- [ ] T002 Inspect `packages/react/src/components/Button/Button.jsx`, `packages/react/src/components/button-group/ButtonGroup.jsx`, and `packages/react/src/index.js` to mirror the existing component, PropTypes, class composition, and export conventions for `Card`
-- [ ] T003 [P] Inspect `packages/react/src/stories/components/Basic/Button.stories.jsx` and `packages/react/src/stories/components/Basic/ButtonGroup.stories.jsx` to mirror React Storybook naming, controls, and documentation conventions for `Card`
+- [X] T001 Review `packages/styles/src/pathable-component-wrappers/pathable-card.scss`, `packages/styles/src/stories/components/Basic/Card.stories.js`, and `specs/029-react-card-wrapper/contracts/props.md` to confirm the supported `Card` presentations and record any mismatch as a blocker in `specs/029-react-card-wrapper/tasks.md`
+- [X] T002 Inspect `packages/react/src/components/Button/Button.jsx`, `packages/react/src/components/button-group/ButtonGroup.jsx`, and `packages/react/src/index.js` to mirror the existing component, PropTypes, class composition, and export conventions for `Card`
+- [X] T003 [P] Inspect `packages/react/src/stories/components/Basic/Button.stories.jsx` and `packages/react/src/stories/components/Basic/ButtonGroup.stories.jsx` to mirror React Storybook naming, controls, and documentation conventions for `Card`
 
 ---
 
@@ -51,10 +51,10 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Create `packages/react/src/components/Card/Card.jsx` with exported `Card`, root `pathable-card` class composition, `className` passthrough, rest prop passthrough, and PropTypes matching `specs/029-react-card-wrapper/contracts/props.md`
-- [ ] T005 Add `export { Card } from './components/Card/Card.jsx'` to `packages/react/src/index.js` while preserving existing `Button` and `ButtonGroup` exports
-- [ ] T006 Add shared class mapping in `packages/react/src/components/Card/Card.jsx` for `presentation` values `base`, `media`, `flag`, `header-first`, and `workflow`, ensuring every mapped class exists in `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
-- [ ] T007 Add structural rendering helpers inside `packages/react/src/components/Card/Card.jsx` for title, body, footer, media, metadata, status, and actions regions using only existing `pathable-card*` classes from `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
+- [X] T004 Create `packages/react/src/components/Card/Card.jsx` with exported `Card`, root `pathable-card` class composition, `className` passthrough, rest prop passthrough, and PropTypes matching `specs/029-react-card-wrapper/contracts/props.md`
+- [X] T005 Add `export { Card } from './components/Card/Card.jsx'` to `packages/react/src/index.js` while preserving existing `Button` and `ButtonGroup` exports
+- [X] T006 Add shared class mapping in `packages/react/src/components/Card/Card.jsx` for `presentation` values `base`, `media`, `flag`, `header-first`, and `workflow`, ensuring every mapped class exists in `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
+- [X] T007 Add structural rendering helpers inside `packages/react/src/components/Card/Card.jsx` for title, body, footer, media, metadata, status, and actions regions using only existing `pathable-card*` classes from `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in priority order.
 
@@ -68,11 +68,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Implement base title, children, footer, className, and rest-prop rendering in `packages/react/src/components/Card/Card.jsx` for `CASE-CARD-POS-001` and `CASE-CARD-ALT-001`
-- [ ] T009 [US1] Ensure missing-title and missing-body branches in `packages/react/src/components/Card/Card.jsx` omit empty card regions while preserving valid supplied content for `CASE-CARD-ALT-001`
-- [ ] T010 [US1] Add `Default`, `WithFooter`, `WithoutTitle`, and `CustomClassName` stories to `packages/react/src/stories/components/Basic/Card.stories.jsx` covering `CASE-CARD-POS-001` and `CASE-CARD-ALT-001`
-- [ ] T011 [US1] Update `packages/react/README.md` with basic `Card` import and usage examples covering title, children, footer, and `className` from `specs/029-react-card-wrapper/quickstart.md`
-- [ ] T012 [US1] Run `pnpm --filter @pathable/react build` and capture the successful command output as validation evidence for `SC-001` and `CASE-CARD-POS-001`
+- [X] T008 [US1] Implement base title, children, footer, className, and rest-prop rendering in `packages/react/src/components/Card/Card.jsx` for `CASE-CARD-POS-001` and `CASE-CARD-ALT-001`
+- [X] T009 [US1] Ensure missing-title and missing-body branches in `packages/react/src/components/Card/Card.jsx` omit empty card regions while preserving valid supplied content for `CASE-CARD-ALT-001`
+- [X] T010 [US1] Add `Default`, `WithFooter`, `WithoutTitle`, and `CustomClassName` stories to `packages/react/src/stories/components/Basic/Card.stories.jsx` covering `CASE-CARD-POS-001` and `CASE-CARD-ALT-001`
+- [X] T011 [US1] Update `packages/react/README.md` with basic `Card` import and usage examples covering title, children, footer, and `className` from `specs/029-react-card-wrapper/quickstart.md`
+- [X] T012 [US1] Run `pnpm --filter @pathable/react build` and capture the successful command output as validation evidence for `SC-001` and `CASE-CARD-POS-001`
 
 **Checkpoint**: User Story 1 is independently usable and demonstrable as the MVP.
 
@@ -86,13 +86,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Implement `presentation="media"` and `media` region behavior in `packages/react/src/components/Card/Card.jsx`, mapping only to existing media card structure from `packages/styles/src/stories/components/Basic/Card.stories.js`
-- [ ] T014 [US2] Implement `presentation="flag"` and `presentation="header-first"` class mapping in `packages/react/src/components/Card/Card.jsx`, using only existing `pathable-card--flag` and `pathable-card--header-first` modifiers from `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
-- [ ] T015 [US2] Implement `presentation="workflow"` regions in `packages/react/src/components/Card/Card.jsx` for title, metadata, status, body, and actions using existing workflow card classes from `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
-- [ ] T016 [US2] Ensure unsupported or combined presentation/content cases in `packages/react/src/components/Card/Card.jsx` degrade to documented base or supported presentation output without introducing wrapper-only styling for `CASE-CARD-VAL-001` and `CASE-CARD-NEG-001`
-- [ ] T017 [US2] Add `Media`, `Flag`, `HeaderFirst`, `Workflow`, and `WorkflowWithStatus` stories to `packages/react/src/stories/components/Basic/Card.stories.jsx` covering `CASE-CARD-POS-002`, `CASE-CARD-VAL-001`, and `VIS-CARD-002`
-- [ ] T018 [US2] Update `packages/react/README.md` with media and workflow card examples matching `specs/029-react-card-wrapper/quickstart.md`
-- [ ] T019 [US2] Run `pnpm --filter @pathable/storybook-react build-storybook` and capture the successful command output as validation evidence for `SC-002`, `SC-004`, and `VIS-CARD-002`
+- [X] T013 [US2] Implement `presentation="media"` and `media` region behavior in `packages/react/src/components/Card/Card.jsx`, mapping only to existing media card structure from `packages/styles/src/stories/components/Basic/Card.stories.js`
+- [X] T014 [US2] Implement `presentation="flag"` and `presentation="header-first"` class mapping in `packages/react/src/components/Card/Card.jsx`, using only existing `pathable-card--flag` and `pathable-card--header-first` modifiers from `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
+- [X] T015 [US2] Implement `presentation="workflow"` regions in `packages/react/src/components/Card/Card.jsx` for title, metadata, status, body, and actions using existing workflow card classes from `packages/styles/src/pathable-component-wrappers/pathable-card.scss`
+- [X] T016 [US2] Ensure unsupported or combined presentation/content cases in `packages/react/src/components/Card/Card.jsx` degrade to documented base or supported presentation output without introducing wrapper-only styling for `CASE-CARD-VAL-001` and `CASE-CARD-NEG-001`
+- [X] T017 [US2] Add `Media`, `Flag`, `HeaderFirst`, `Workflow`, and `WorkflowWithStatus` stories to `packages/react/src/stories/components/Basic/Card.stories.jsx` covering `CASE-CARD-POS-002`, `CASE-CARD-VAL-001`, and `VIS-CARD-002`
+- [X] T018 [US2] Update `packages/react/README.md` with media and workflow card examples matching `specs/029-react-card-wrapper/quickstart.md`
+- [X] T019 [US2] Run `pnpm --filter @pathable/storybook-react build-storybook` and capture the successful command output as validation evidence for `SC-002`, `SC-004`, and `VIS-CARD-002`
 
 **Checkpoint**: User Stories 1 and 2 both work independently and remain inside the existing styles contract.
 
@@ -106,10 +106,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Verify `packages/react/src/index.js` imports `@pathable/styles/dist/styles.css` once and exports `Card`, then update the file if either contract is missing for `CASE-CARD-POS-003`
-- [ ] T021 [US3] Verify `packages/react/package.json` keeps `@pathable/styles` as a runtime dependency and exposes package output needed for `Card` consumers, then update the file if package-content validation requires it
-- [ ] T022 [US3] Update `packages/react/README.md` to state that consumers import `Card` from `@pathable/react` and do not need a separate application import of `@pathable/styles`
-- [ ] T023 [US3] Run `pnpm --filter @pathable/react build` and `pnpm --filter @pathable/react pack --dry-run`, then capture the successful command output as package-content evidence for `SC-003` and `CASE-CARD-POS-003`
+- [X] T020 [US3] Verify `packages/react/src/index.js` imports `@pathable/styles/dist/styles.css` once and exports `Card`, then update the file if either contract is missing for `CASE-CARD-POS-003`
+- [X] T021 [US3] Verify `packages/react/package.json` keeps `@pathable/styles` as a runtime dependency and exposes package output needed for `Card` consumers, then update the file if package-content validation requires it
+- [X] T022 [US3] Update `packages/react/README.md` to state that consumers import `Card` from `@pathable/react` and do not need a separate application import of `@pathable/styles`
+- [X] T023 [US3] Run `pnpm --filter @pathable/react build` and `pnpm --filter @pathable/react pack --dry-run`, then capture the successful command output as package-content evidence for `SC-003` and `CASE-CARD-POS-003`
 
 **Checkpoint**: All user stories are independently functional and package-consumer evidence exists.
 
@@ -119,12 +119,12 @@
 
 **Purpose**: Final validation, formatting, and review across all user stories.
 
-- [ ] T024 [P] Run `pnpm lint:js` and fix findings in `packages/react/src/components/Card/Card.jsx` and `packages/react/src/stories/components/Basic/Card.stories.jsx` without disabling, weakening, skipping, or silencing lint rules
-- [ ] T025 [P] Run `pnpm check:format` and apply formatting to `packages/react/src/components/Card/Card.jsx`, `packages/react/src/stories/components/Basic/Card.stories.jsx`, and `packages/react/README.md` if needed
-- [ ] T026 Run the quickstart validation paths from `specs/029-react-card-wrapper/quickstart.md` against `packages/react/README.md`, `packages/react/src/index.js`, and `packages/react/src/stories/components/Basic/Card.stories.jsx`, then capture command output or review notes as evidence for `SC-001` through `SC-005`
-- [ ] T027 Review boundary compliance across `specs/029-react-card-wrapper/spec.md`, `specs/029-react-card-wrapper/contracts/props.md`, `packages/react/src/components/Card/Card.jsx`, and `packages/styles/src/pathable-component-wrappers/pathable-card.scss`, confirming scope stays within React wrapper `Card` and existing `packages/styles` card contract
-- [ ] T028 Review visual consistency across `packages/react/src/stories/components/Basic/Card.stories.jsx`, `packages/styles/src/stories/components/Basic/Card.stories.js`, and `specs/029-react-card-wrapper/checklists/behavior-testability.md`, confirming `VIS-CARD-001` through `VIS-CARD-003` remain satisfied without wrapper-only styling
-- [ ] T029 Review package-consumer evidence across `packages/react/package.json`, `packages/react/src/index.js`, and `pnpm --filter @pathable/react pack --dry-run` output, confirming no separate consumer-side `@pathable/styles` import is required
+- [X] T024 [P] Run `pnpm lint:js` and fix findings in `packages/react/src/components/Card/Card.jsx` and `packages/react/src/stories/components/Basic/Card.stories.jsx` without disabling, weakening, skipping, or silencing lint rules
+- [X] T025 [P] Run `pnpm check:format` and apply formatting to `packages/react/src/components/Card/Card.jsx`, `packages/react/src/stories/components/Basic/Card.stories.jsx`, and `packages/react/README.md` if needed
+- [X] T026 Run the quickstart validation paths from `specs/029-react-card-wrapper/quickstart.md` against `packages/react/README.md`, `packages/react/src/index.js`, and `packages/react/src/stories/components/Basic/Card.stories.jsx`, then capture command output or review notes as evidence for `SC-001` through `SC-005`
+- [X] T027 Review boundary compliance across `specs/029-react-card-wrapper/spec.md`, `specs/029-react-card-wrapper/contracts/props.md`, `packages/react/src/components/Card/Card.jsx`, and `packages/styles/src/pathable-component-wrappers/pathable-card.scss`, confirming scope stays within React wrapper `Card` and existing `packages/styles` card contract
+- [X] T028 Review visual consistency across `packages/react/src/stories/components/Basic/Card.stories.jsx`, `packages/styles/src/stories/components/Basic/Card.stories.js`, and `specs/029-react-card-wrapper/checklists/behavior-testability.md`, confirming `VIS-CARD-001` through `VIS-CARD-003` remain satisfied without wrapper-only styling
+- [X] T029 Review package-consumer evidence across `packages/react/package.json`, `packages/react/src/index.js`, and `pnpm --filter @pathable/react pack --dry-run` output, confirming no separate consumer-side `@pathable/styles` import is required
 
 ---
 

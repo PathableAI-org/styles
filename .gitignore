@@ -109,6 +109,7 @@ vite.config.ts.timestamp-*
 .pnpm-store/
 
 # Build outputs
+build/
 dist/
 apps/docs/dist/
 packages/styles/dist/
