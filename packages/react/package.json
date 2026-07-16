@@ -13,7 +13,8 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@pathable/styles": "workspace:*"
+    "@pathable/styles": "workspace:*",
+    "prop-types": "^15.8.1"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

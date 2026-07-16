@@ -124,6 +124,9 @@ importers:
       '@pathable/styles':
         specifier: workspace:*
         version: link:../styles
+      prop-types:
+        specifier: ^15.8.1
+        version: 15.8.1
       react:
         specifier: ^18.0.0 || ^19.0.0
         version: 18.3.1
