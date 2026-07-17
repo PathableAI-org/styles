@@ -13,7 +13,7 @@ export default {
 
 export const Unordered = {
   render: () => `
-    <ul class="pathable-list pathable-list--unordered">
+    <ul class="pathable-list">
       <li>Unordered list item one</li>
       <li>Unordered list item two</li>
       <li>Unordered list item three</li>
@@ -25,7 +25,7 @@ export const Default = Unordered
 
 export const Ordered = {
   render: () => `
-    <ol class="pathable-list pathable-list--ordered">
+    <ol class="pathable-list">
       <li>Ordered list item one</li>
       <li>Ordered list item two</li>
       <li>Ordered list item three</li>
@@ -35,7 +35,7 @@ export const Ordered = {
 
 export const Unstyled = {
   render: () => `
-    <ul class="pathable-list pathable-list--unstyled">
+    <ul class="pathable-list usa-list--unstyled">
       <li>Unstyled list item one</li>
       <li>Unstyled list item two</li>
       <li>Unstyled list item three</li>

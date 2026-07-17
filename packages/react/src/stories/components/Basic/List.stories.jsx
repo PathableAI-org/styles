@@ -54,6 +54,10 @@ export const RichItems = {
           key: 'confirm-goals',
           attributes: { 'aria-label': 'Confirm coaching session goals' },
         },
+        [
+          <span key="array-prefix">Array node content </span>,
+          <span key="array-suffix">renders as one item.</span>,
+        ],
         'Share follow-up resources.',
       ]}
     />

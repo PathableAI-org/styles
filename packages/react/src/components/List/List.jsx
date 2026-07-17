@@ -2,21 +2,32 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const PRESENTATION_CLASS = {
-  unordered: 'pathable-list--unordered',
-  ordered: 'pathable-list--ordered',
-  unstyled: 'pathable-list--unstyled',
+  unordered: '',
+  ordered: '',
+  unstyled: 'usa-list--unstyled',
 }
 
 function resolvePresentation(presentation) {
-  return PRESENTATION_CLASS[presentation] ? presentation : 'unordered'
+  return Object.prototype.hasOwnProperty.call(PRESENTATION_CLASS, presentation)
+    ? presentation
+    : 'unordered'
 }
 
 function hasItems(items) {
   return Array.isArray(items) && items.length > 0
 }
 
+function isListItemObject(item) {
+  return (
+    item &&
+    typeof item === 'object' &&
+    !Array.isArray(item) &&
+    !React.isValidElement(item)
+  )
+}
+
 function getItemKey(item, index) {
-  if (item && typeof item === 'object' && !React.isValidElement(item)) {
+  if (isListItemObject(item)) {
     return item.key ?? index
   }
 
@@ -24,7 +35,7 @@ function getItemKey(item, index) {
 }
 
 function getItemContent(item) {
-  if (item && typeof item === 'object' && !React.isValidElement(item)) {
+  if (isListItemObject(item)) {
     return item.content
   }
 
@@ -32,7 +43,7 @@ function getItemContent(item) {
 }
 
 function getItemProps(item) {
-  if (item && typeof item === 'object' && !React.isValidElement(item)) {
+  if (isListItemObject(item)) {
     const { className, attributes = {} } = item
     return {
       ...attributes,
