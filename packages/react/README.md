@@ -14,11 +14,38 @@ No separate installation of `@pathable/styles` is required — styles are includ
 ## Usage
 
 ```tsx
-import { Button, ButtonGroup } from '@pathable/react'
+import { Button, ButtonGroup, Card } from '@pathable/react'
 
 function App() {
   return (
     <>
+      <Card
+        title="Upcoming coaching session"
+        footer={<a href="/sessions/42">Open session</a>}
+        className="dashboard-card"
+      >
+        <p>Review the participant notes and prepare the next action plan.</p>
+      </Card>
+
+      <Card
+        presentation="media"
+        title="Resource spotlight"
+        media={<img src="/resource.jpg" alt="Resource preview" />}
+      >
+        <p>Share a helpful resource with the participant.</p>
+      </Card>
+
+      <Card
+        presentation="workflow"
+        title="Employment progress report"
+        metadata="Generated today"
+        status="Completed"
+        actions={<Button variant="secondary">Download report</Button>}
+        tabIndex={0}
+      >
+        <p>All employment goal milestones have been met this period.</p>
+      </Card>
+
       <Button>Click Me</Button>
       <Button variant="primary" size="big">
         Primary
@@ -37,7 +64,21 @@ function App() {
 }
 ```
 
-The rendered `<button>` element will have the `pathable-button` CSS class applied with all PathAble styling.
+The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathable/react`; they do not need to import `@pathable/styles` separately in application code.
+
+### Card Props
+
+| Prop         | Type                                                          | Default  | Description                         |
+| ------------ | ------------------------------------------------------------- | -------- | ----------------------------------- |
+| children     | `React.ReactNode`                                             | —        | Main card body content              |
+| title        | `React.ReactNode`                                             | —        | Card heading content                |
+| footer       | `React.ReactNode`                                             | —        | Footer region content               |
+| media        | `React.ReactNode`                                             | —        | Media region content                |
+| presentation | `'base' \| 'media' \| 'flag' \| 'header-first' \| 'workflow'` | `'base'` | Existing Pathable card presentation |
+| metadata     | `React.ReactNode`                                             | —        | Workflow metadata content           |
+| status       | `React.ReactNode`                                             | —        | Workflow status content             |
+| actions      | `React.ReactNode`                                             | —        | Workflow action content             |
+| className    | `string`                                                      | —        | Additional root element class names |
 
 ### Button Props
 

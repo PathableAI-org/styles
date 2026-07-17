@@ -2,18 +2,19 @@
   ------------------------------------------------------------------
   Sync Impact Report
   ------------------------------------------------------------------
-  Version change: 1.1.0 → 1.2.0
+  Version change: 1.2.0 → 1.3.0
   Principles modified:
-    - Development Workflow & Quality Gates expanded with human-only lint bypass rules
+    - Wrapper Packages Are Thin Consumers expanded with React component naming parity
   Sections added:
     - none
   Sections removed: none
   Templates requiring updates:
-    - .specify/templates/plan-template.md           ✅ updated with lint-bypass gate
-    - .specify/templates/spec-template.md            ✅ updated with human-only lint-bypass guidance
-    - .specify/templates/tasks-template.md           ✅ updated with lint compliance task guidance
+    - .specify/templates/plan-template.md           ✅ updated with React naming parity gate
+    - .specify/templates/spec-template.md            ✅ updated with React naming parity guidance
+    - .specify/templates/tasks-template.md           ✅ updated with React naming task guidance
     - .specify/templates/constitution-template.md    ✅ reviewed; template remains generic
-    - .specify/templates/commands/*.md               ✅ not present
+    - .specify/presets/*/commands/*.md               ✅ reviewed; no constitution-specific change required
+    - .specify/extensions/*/commands/*.md            ✅ reviewed; no constitution-specific change required
     - README.md                                      ✅ reviewed; no constitution-specific change required
   Follow-up TODOs: none deferred
   ------------------------------------------------------------------
@@ -64,6 +65,10 @@ component-class semantics owned by `packages/styles`. Adding a new wrapper
 component, variant, or prop is only allowed after the equivalent
 framework-neutral style contract has been added to `packages/styles`, covered
 by its documentation or stories, and exported through the styles package.
+React components in `packages/react` MUST use the CamelCase form of the
+equivalent `packages/styles` component name after removing any `pathable`
+prefix. For example, `pathable-alert` maps to `Alert`, and
+`pathable-button-group` maps to `ButtonGroup`.
 
 ### V. Consumer Imports Must Be Complete
 
@@ -184,6 +189,9 @@ changed and what the nature of each change was.
 - **Framework mapping only**: Wrapper props and component names MAY improve
   framework ergonomics, but each visual state MUST map to an existing
   `packages/styles` class, token, or documented pattern.
+- **React naming parity**: React components in `packages/react` MUST be named
+  by converting the equivalent `packages/styles` component name to CamelCase
+  and removing any `pathable` prefix.
 
 ## Development Workflow & Quality Gates
 
@@ -287,4 +295,4 @@ this constitution. Violations MUST be documented in their complexity tracking
 section with justification. Complexity is not automatically forbidden but it
 MUST be transparent and justified.
 
-**Version**: 1.2.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-15
+**Version**: 1.3.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-16

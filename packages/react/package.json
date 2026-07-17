@@ -1,5 +1,6 @@
 {
   "name": "@pathable/react",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "files": [

@@ -41,6 +41,10 @@
   @extend .usa-card__media--exdent;
 }
 
+.pathable-card--media {
+  @extend .usa-card;
+}
+
 .pathable-card--flag {
   @extend .usa-card--flag;
 }
