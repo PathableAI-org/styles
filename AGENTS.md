@@ -2,5 +2,5 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/001-react-button-wrapper/plan.md
+at specs/030-react-list-wrapper/plan.md
 <!-- SPECKIT END -->
