@@ -1,6 +1,6 @@
 // packages/react/src/stories/components/Basic/Table.stories.jsx
 import React from 'react'
-import { Table } from '../../components/Table/Table.jsx' // Corrected import path
+import { Table } from '../../../components/Table/Table'
 import PropTypes from 'prop-types'
 
 export default {
