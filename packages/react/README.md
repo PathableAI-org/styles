@@ -14,7 +14,7 @@ No separate installation of `@pathable/styles` is required — styles are includ
 ## Usage
 
 ```tsx
-import { Button, ButtonGroup, Card } from '@pathable/react'
+import { Button, ButtonGroup, Card, List } from '@pathable/react'
 
 function App() {
   return (
@@ -59,12 +59,56 @@ function App() {
         <Button variant="save">Save</Button>
         <Button variant="continue">Continue</Button>
       </ButtonGroup>
+
+      <List
+        items={[
+          'Review participant goals',
+          'Prepare coaching resources',
+          'Send follow-up notes',
+        ]}
+      />
+
+      <List
+        presentation="ordered"
+        items={[
+          'Complete intake notes',
+          'Schedule follow-up session',
+          'Send resource summary',
+        ]}
+      />
+
+      <List
+        presentation="unstyled"
+        className="dashboard-list"
+        aria-label="Session actions"
+        items={[
+          {
+            content: <a href="/sessions/42">Open session notes</a>,
+            key: 'session-notes',
+          },
+          {
+            content: <strong>Confirm next appointment</strong>,
+            key: 'next-appointment',
+          },
+        ]}
+      />
     </>
   )
 }
 ```
 
 The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathable/react`; they do not need to import `@pathable/styles` separately in application code.
+
+### List Props
+
+| Prop         | Type                                       | Default       | Description                         |
+| ------------ | ------------------------------------------ | ------------- | ----------------------------------- |
+| presentation | `'unordered' \| 'ordered' \| 'unstyled'`   | `'unordered'` | Existing Pathable list presentation |
+| items        | `Array<React.ReactNode \| ListItemObject>` | —             | Ordered list item content           |
+| children     | `React.ReactNode`                          | —             | Consumer-composed list content      |
+| className    | `string`                                   | —             | Additional root element class names |
+
+`ListItemObject` supports `content`, optional `key`, optional `className`, and optional `attributes` for item-level `aria-*`, `data-*`, and standard list item attributes.
 
 ### Card Props
 
