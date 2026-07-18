@@ -9,7 +9,8 @@ export default {
   parameters: {
     docs: {
       description: {
-        // Removed the problematic description string
+        component:
+          '**Interaction Model**: React component\n\n**Consumers must**: Import from `@pathable/react`. No additional CSS import required.',
       },
     },
   },
@@ -273,9 +274,9 @@ export const RichCellContent = {
   },
 }
 
-// --- Story: Invalid Presentation (fallback to default) ---
-export const InvalidPresentation = {
-  name: 'Invalid Presentation (fallback)',
+// --- Story: Unsupported Presentation (fallback to default) ---
+export const UnsupportedPresentationFallback = {
+  name: 'Unsupported Presentation (fallback)',
   args: {
     presentation: 'unsupported-value',
     children: (

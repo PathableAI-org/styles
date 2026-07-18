@@ -10,13 +10,18 @@ const presentationModifierMap = {
   striped: 'pathable-table--striped',
 }
 
-export const Table = ({
+export function Table({
   children,
   className,
   presentation = 'default',
   ...rest
-}) => {
-  const modifier = presentationModifierMap[presentation]
+}) {
+  const modifier = Object.prototype.hasOwnProperty.call(
+    presentationModifierMap,
+    presentation,
+  )
+    ? presentationModifierMap[presentation]
+    : undefined
   const presentationClass = modifier ? `${BASE_CLASS} ${modifier}` : BASE_CLASS
 
   // Combine the presentation class with any additional provided classes
