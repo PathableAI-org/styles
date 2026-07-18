@@ -1,7 +1,6 @@
 // packages/react/src/stories/components/Basic/Table.stories.jsx
 import React from 'react'
 import { Table } from '../../../components/Table/Table'
-import PropTypes from 'prop-types'
 
 export default {
   title: 'Components/Table',
@@ -40,11 +39,12 @@ export const Default = {
     presentation: 'default',
     children: (
       <>
+        <caption>Team members by role and department</caption>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Department</th>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+            <th scope="col">Department</th>
           </tr>
         </thead>
         <tbody>
@@ -266,6 +266,31 @@ export const RichCellContent = {
                 <li>List item 2</li>
               </ul>
             </td>
+          </tr>
+        </tbody>
+      </>
+    ),
+  },
+}
+
+// --- Story: Invalid Presentation (fallback to default) ---
+export const InvalidPresentation = {
+  name: 'Invalid Presentation (fallback)',
+  args: {
+    presentation: 'unsupported-value',
+    children: (
+      <>
+        <caption>Fallback table — unsupported presentation value</caption>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jane Doe</td>
+            <td>Designer</td>
           </tr>
         </tbody>
       </>

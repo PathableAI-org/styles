@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// Map of presentation values to CSS class names
-const presentationMap = {
-  default: 'pathable-table',
+const BASE_CLASS = 'pathable-table'
+
+// Map of non-default presentation values to their modifier CSS class names
+const presentationModifierMap = {
   borderless: 'pathable-table--borderless',
   compact: 'pathable-table--compact',
   striped: 'pathable-table--striped',
@@ -15,8 +16,8 @@ export const Table = ({
   presentation = 'default',
   ...rest
 }) => {
-  const presentationClass =
-    presentationMap[presentation] || presentationMap.default
+  const modifier = presentationModifierMap[presentation]
+  const presentationClass = modifier ? `${BASE_CLASS} ${modifier}` : BASE_CLASS
 
   // Combine the presentation class with any additional provided classes
   // The rest operator includes standard HTML attributes like 'id', 'aria-*', 'data-*', etc.
@@ -34,7 +35,7 @@ Table.propTypes = {
    * The content of the table, typically including thead, tbody, etc.
    * This component is designed to wrap native table elements and preserve their structure.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Additional CSS class names to apply to the table element.
    */
