@@ -14,7 +14,15 @@ No separate installation of `@pathable/styles` is required — styles are includ
 ## Usage
 
 ```tsx
-import { Button, ButtonGroup, Card, List, Table } from '@pathable/react'
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Link,
+  List,
+  Table,
+  Tag,
+} from '@pathable/react'
 
 function App() {
   return (
@@ -59,6 +67,12 @@ function App() {
         <Button variant="save">Save</Button>
         <Button variant="continue">Continue</Button>
       </ButtonGroup>
+
+      <Link href="/sessions/42">Open coaching session</Link>
+
+      <Link href="https://external.example.com" presentation="external">
+        External resource
+      </Link>
 
       <List
         items={[
@@ -113,12 +127,38 @@ function App() {
           </tr>
         </tbody>
       </Table>
+
+      <Tag>Active</Tag>
+
+      <Tag size="big">Urgent</Tag>
     </>
   )
 }
 ```
 
 The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathable/react`; they do not need to import `@pathable/styles` separately in application code.
+
+> **Navigation policy**: The `external` Link presentation changes only the visual treatment (adds `pathable-link--external`). Consumers remain responsible for `href`, `target`, `rel`, download behavior, and any routing logic.
+
+### Link Props
+
+| Prop         | Type                      | Default     | Description                                                                         |
+| ------------ | ------------------------- | ----------- | ----------------------------------------------------------------------------------- |
+| presentation | `'default' \| 'external'` | `'default'` | Selects an implemented Link treatment. Unsupported values fall back to `'default'`. |
+| children     | `React.ReactNode`         | —           | Consumer-supplied link content. Preserved unchanged inside the anchor.              |
+| className    | `string`                  | —           | Additional root class names. Appended without replacing `pathable-link`.            |
+
+Any other valid anchor attributes (e.g., `href`, `target`, `rel`, `aria-*`, `data-*`, event handlers) are forwarded to the root `<a>` element.
+
+### Tag Props
+
+| Prop      | Type                 | Default     | Description                                                                   |
+| --------- | -------------------- | ----------- | ----------------------------------------------------------------------------- |
+| size      | `'default' \| 'big'` | `'default'` | Selects an implemented Tag size. Unsupported values fall back to `'default'`. |
+| children  | `React.ReactNode`    | —           | Consumer-supplied inline content. Preserved unchanged inside the span.        |
+| className | `string`             | —           | Additional root class names. Appended without replacing `pathable-tag`.       |
+
+The Tag is a non-interactive presentational inline label. Any other valid span attributes (e.g., `aria-*`, `data-*`, event handlers) are forwarded to the root `<span>` element.
 
 ### List Props
 
