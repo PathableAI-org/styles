@@ -1,13 +1,16 @@
-import React from 'react'
 import { ButtonGroup } from '../../../components/button-group/ButtonGroup'
 import { Button } from '../../../components/Button/Button'
+import type { Meta, StoryObj } from '@storybook/react'
 
-export default {
+const meta = {
   title: 'Components/ButtonGroup',
   component: ButtonGroup,
-}
+} satisfies Meta<typeof ButtonGroup>
 
-export const Default = {
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   render: () => (
     <ButtonGroup>
       <Button variant="primary">Primary</Button>
@@ -17,7 +20,7 @@ export const Default = {
   ),
 }
 
-export const SingleButton = {
+export const SingleButton: Story = {
   render: () => (
     <ButtonGroup>
       <Button variant="primary">Submit</Button>
@@ -25,7 +28,7 @@ export const SingleButton = {
   ),
 }
 
-export const WithDisabled = {
+export const WithDisabled: Story = {
   render: () => (
     <ButtonGroup>
       <Button variant="primary">Save</Button>
@@ -36,7 +39,7 @@ export const WithDisabled = {
   ),
 }
 
-export const MixedVariants = {
+export const MixedVariants: Story = {
   render: () => (
     <ButtonGroup>
       <Button variant="save">Save</Button>

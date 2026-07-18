@@ -1,8 +1,8 @@
-import React from 'react'
 import { Card } from '../../../components/Card/Card'
 import { Button } from '../../../components/Button/Button'
+import type { Meta, StoryObj } from '@storybook/react'
 
-export default {
+const meta = {
   title: 'Components/Card',
   component: Card,
   parameters: {
@@ -18,22 +18,22 @@ export default {
       options: ['base', 'media', 'flag', 'header-first', 'workflow'],
       control: { type: 'select' },
       description: 'Existing Pathable card presentation.',
-      defaultValue: 'base',
     },
     title: {
       control: { type: 'text' },
       description: 'Card heading content.',
-      defaultValue: 'Card Title',
     },
     className: {
       control: { type: 'text' },
       description: 'Additional CSS class names.',
-      defaultValue: '',
     },
   },
-}
+} satisfies Meta<typeof Card>
 
-export const Default = {
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     title: 'Card Title',
     children: (
@@ -45,7 +45,7 @@ export const Default = {
   },
 }
 
-export const WithFooter = {
+export const WithFooter: Story = {
   render: () => (
     <Card
       title="Card with footer"
@@ -56,7 +56,7 @@ export const WithFooter = {
   ),
 }
 
-export const WithoutTitle = {
+export const WithoutTitle: Story = {
   render: () => (
     <Card>
       <p>
@@ -66,7 +66,7 @@ export const WithoutTitle = {
   ),
 }
 
-export const CustomClassName = {
+export const CustomClassName: Story = {
   render: () => (
     <Card title="Custom class" className="demo-card-composition">
       <p>The custom class is preserved next to the Pathable card class.</p>
@@ -74,7 +74,7 @@ export const CustomClassName = {
   ),
 }
 
-export const Media = {
+export const Media: Story = {
   render: () => (
     <Card
       presentation="media"
@@ -87,7 +87,7 @@ export const Media = {
   ),
 }
 
-export const Flag = {
+export const Flag: Story = {
   render: () => (
     <Card
       presentation="flag"
@@ -100,7 +100,7 @@ export const Flag = {
   ),
 }
 
-export const HeaderFirst = {
+export const HeaderFirst: Story = {
   render: () => (
     <Card
       presentation="header-first"
@@ -116,7 +116,7 @@ export const HeaderFirst = {
   ),
 }
 
-export const Workflow = {
+export const Workflow: Story = {
   render: () => (
     <Card
       presentation="workflow"
@@ -133,7 +133,7 @@ export const Workflow = {
   ),
 }
 
-export const WorkflowWithStatus = {
+export const WorkflowWithStatus: Story = {
   render: () => (
     <Card
       presentation="workflow"

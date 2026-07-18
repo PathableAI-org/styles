@@ -1,7 +1,18 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import { HTMLAttributes, ReactNode } from 'react'
 
-const PRESENTATION_CLASS = {
+type CardPresentation = 'base' | 'media' | 'flag' | 'header-first' | 'workflow'
+
+interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+  title?: ReactNode
+  footer?: ReactNode
+  media?: ReactNode
+  presentation?: CardPresentation
+  metadata?: ReactNode
+  status?: ReactNode
+  actions?: ReactNode
+}
+
+const PRESENTATION_CLASS: Record<CardPresentation, string> = {
   base: '',
   media: 'pathable-card--media',
   flag: 'pathable-card--flag',
@@ -9,16 +20,21 @@ const PRESENTATION_CLASS = {
   workflow: 'pathable-card--workflow',
 }
 
-function hasContent(value) {
+function hasContent(value: unknown): boolean {
   return value !== null && value !== undefined && value !== false
 }
 
 function resolvePresentation(
-  presentation,
-  { media, metadata, status, actions },
-) {
-  if (PRESENTATION_CLASS[presentation]) {
-    return presentation
+  presentation: string,
+  {
+    media,
+    metadata,
+    status,
+    actions,
+  }: Pick<CardProps, 'media' | 'metadata' | 'status' | 'actions'>,
+): CardPresentation {
+  if (Object.prototype.hasOwnProperty.call(PRESENTATION_CLASS, presentation)) {
+    return presentation as CardPresentation
   }
 
   if (hasContent(metadata) || hasContent(status) || hasContent(actions)) {
@@ -32,7 +48,13 @@ function resolvePresentation(
   return 'base'
 }
 
-function CardTitle({ children, workflow = false }) {
+function CardTitle({
+  children,
+  workflow = false,
+}: {
+  children?: ReactNode
+  workflow?: boolean
+}) {
   if (!hasContent(children)) {
     return null
   }
@@ -44,12 +66,7 @@ function CardTitle({ children, workflow = false }) {
   )
 }
 
-CardTitle.propTypes = {
-  children: PropTypes.node,
-  workflow: PropTypes.bool,
-}
-
-function CardMedia({ children }) {
+function CardMedia({ children }: { children?: ReactNode }) {
   if (!hasContent(children)) {
     return null
   }
@@ -57,11 +74,13 @@ function CardMedia({ children }) {
   return <div className="pathable-card__media">{children}</div>
 }
 
-CardMedia.propTypes = {
-  children: PropTypes.node,
-}
-
-function CardBody({ children, title }) {
+function CardBody({
+  children,
+  title,
+}: {
+  children?: ReactNode
+  title?: ReactNode
+}) {
   if (!hasContent(children) && !hasContent(title)) {
     return null
   }
@@ -74,12 +93,7 @@ function CardBody({ children, title }) {
   )
 }
 
-CardBody.propTypes = {
-  children: PropTypes.node,
-  title: PropTypes.node,
-}
-
-function CardFooter({ children }) {
+function CardFooter({ children }: { children?: ReactNode }) {
   if (!hasContent(children)) {
     return null
   }
@@ -87,11 +101,15 @@ function CardFooter({ children }) {
   return <div className="pathable-card__footer">{children}</div>
 }
 
-CardFooter.propTypes = {
-  children: PropTypes.node,
-}
-
-function WorkflowCardBody({ children, metadata, actions }) {
+function WorkflowCardBody({
+  children,
+  metadata,
+  actions,
+}: {
+  children?: ReactNode
+  metadata?: ReactNode
+  actions?: ReactNode
+}) {
   if (!hasContent(children) && !hasContent(metadata) && !hasContent(actions)) {
     return null
   }
@@ -109,26 +127,6 @@ function WorkflowCardBody({ children, metadata, actions }) {
   )
 }
 
-WorkflowCardBody.propTypes = {
-  children: PropTypes.node,
-  metadata: PropTypes.node,
-  actions: PropTypes.node,
-}
-
-/**
- * @param {object} props
- * @param {React.ReactNode} props.children - Main card body content.
- * @param {string} [props.className=''] - Additional root class names.
- * @param {React.ReactNode} [props.title] - Card heading content.
- * @param {React.ReactNode} [props.footer] - Footer region content.
- * @param {React.ReactNode} [props.media] - Media region content.
- * @param {'base'|'media'|'flag'|'header-first'|'workflow'} [props.presentation='base'] - Existing Pathable card presentation.
- * @param {React.ReactNode} [props.metadata] - Workflow metadata content.
- * @param {React.ReactNode} [props.status] - Workflow status content.
- * @param {React.ReactNode} [props.actions] - Workflow action content.
- * @param {*} [props.rest] - Any other props to spread onto the root element.
- * @returns {React.ReactElement} The Card component.
- */
 export function Card({
   children,
   className = '',
@@ -140,7 +138,7 @@ export function Card({
   status,
   actions,
   ...rest
-}) {
+}: CardProps) {
   const resolvedPresentation = resolvePresentation(presentation, {
     media,
     metadata,
@@ -180,22 +178,4 @@ export function Card({
       <CardFooter>{footer}</CardFooter>
     </div>
   )
-}
-
-Card.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  title: PropTypes.node,
-  footer: PropTypes.node,
-  media: PropTypes.node,
-  presentation: PropTypes.oneOf([
-    'base',
-    'media',
-    'flag',
-    'header-first',
-    'workflow',
-  ]),
-  metadata: PropTypes.node,
-  status: PropTypes.node,
-  actions: PropTypes.node,
 }

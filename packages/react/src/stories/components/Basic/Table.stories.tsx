@@ -1,8 +1,7 @@
-// packages/react/src/stories/components/Basic/Table.stories.jsx
-import React from 'react'
 import { Table } from '../../../components/Table/Table'
+import type { Meta, StoryObj } from '@storybook/react'
 
-export default {
+const meta = {
   title: 'Components/Table',
   component: Table,
   tags: ['autodocs'],
@@ -19,23 +18,23 @@ export default {
       control: 'select',
       options: ['default', 'borderless', 'compact', 'striped'],
       description: 'The visual presentation of the table.',
-      defaultValue: 'default',
     },
     className: {
       control: 'text',
       description: 'Additional CSS class names to apply to the table.',
     },
     children: {
-      control: 'none', // Children are content, not a direct prop to control here
+      control: 'none',
       description:
         'The content of the table, typically including `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` elements.',
     },
-    // other HTML attributes can be controlled via ...rest, but not explicitly listed here
   },
-}
+} satisfies Meta<typeof Table>
 
-// --- Story: Default Table ---
-export const Default = {
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     presentation: 'default',
     children: (
@@ -70,8 +69,7 @@ export const Default = {
   },
 }
 
-// --- Story: Borderless Table ---
-export const Borderless = {
+export const Borderless: Story = {
   args: {
     presentation: 'borderless',
     children: (
@@ -105,8 +103,7 @@ export const Borderless = {
   },
 }
 
-// --- Story: Compact Table ---
-export const Compact = {
+export const Compact: Story = {
   args: {
     presentation: 'compact',
     children: (
@@ -140,8 +137,7 @@ export const Compact = {
   },
 }
 
-// --- Story: Striped Table ---
-export const Striped = {
+export const Striped: Story = {
   args: {
     presentation: 'striped',
     children: (
@@ -175,8 +171,7 @@ export const Striped = {
   },
 }
 
-// --- Story: Table with Custom Attributes ---
-export const CustomAttributes = {
+export const CustomAttributes: Story = {
   args: {
     presentation: 'default',
     id: 'my-custom-table',
@@ -200,8 +195,7 @@ export const CustomAttributes = {
   },
 }
 
-// --- Story: Table with Additional ClassNames ---
-export const AdditionalClassNames = {
+export const AdditionalClassNames: Story = {
   args: {
     presentation: 'compact',
     className: 'my-extra-table-styling',
@@ -224,8 +218,7 @@ export const AdditionalClassNames = {
   },
 }
 
-// --- Story: Table with Empty Body ---
-export const EmptyBody = {
+export const EmptyBody: Story = {
   args: {
     presentation: 'default',
     children: (
@@ -242,8 +235,7 @@ export const EmptyBody = {
   },
 }
 
-// --- Story: Table with Rich Cell Content ---
-export const RichCellContent = {
+export const RichCellContent: Story = {
   args: {
     presentation: 'default',
     children: (
@@ -257,7 +249,7 @@ export const RichCellContent = {
         <tbody>
           <tr>
             <td>
-              This is a cell with <strong>rich content</strong> including
+              This is a cell with <strong>rich content</strong> including{' '}
               <em>multiple elements</em>.
             </td>
             <td>
@@ -274,8 +266,7 @@ export const RichCellContent = {
   },
 }
 
-// --- Story: Unsupported Presentation (fallback to default) ---
-export const UnsupportedPresentationFallback = {
+export const UnsupportedPresentationFallback: Story = {
   name: 'Unsupported Presentation (fallback)',
   args: {
     presentation: 'unsupported-value',

@@ -1,7 +1,7 @@
-import React from 'react'
 import { Tag } from '../../../components/Tag/Tag'
+import type { Meta, StoryObj } from '@storybook/react'
 
-export default {
+const meta = {
   title: 'Components/Tag',
   component: Tag,
   tags: ['autodocs'],
@@ -18,36 +18,36 @@ export default {
       options: ['default', 'big'],
       control: { type: 'select' },
       description: 'Selects an implemented Tag size.',
-      defaultValue: 'default',
     },
     children: {
       control: { type: 'text' },
       description: 'Consumer-supplied inline content.',
-      defaultValue: 'Tag Text',
     },
     className: {
       control: { type: 'text' },
       description: 'Additional root class names.',
-      defaultValue: '',
     },
+  },
+} satisfies Meta<typeof Tag>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: {
+    children: 'Default Tag',
+    size: 'default',
   },
 }
 
-const Template = (args) => <Tag {...args} />
-
-export const Default = Template.bind({})
-Default.args = {
-  children: 'Default Tag',
-  size: 'default',
+export const Big: Story = {
+  args: {
+    children: 'Big Tag',
+    size: 'big',
+  },
 }
 
-export const Big = Template.bind({})
-Big.args = {
-  children: 'Big Tag',
-  size: 'big',
-}
-
-export const RichContent = {
+export const RichContent: Story = {
   render: () => (
     <Tag>
       <strong>Due:</strong> <time dateTime="2026-07-25">July 25, 2026</time>
@@ -55,7 +55,7 @@ export const RichContent = {
   ),
 }
 
-export const CustomAttributes = {
+export const CustomAttributes: Story = {
   render: () => (
     <Tag aria-label="Status indicator" data-testid="status-tag">
       Active
@@ -63,11 +63,11 @@ export const CustomAttributes = {
   ),
 }
 
-export const EmptyContent = {
+export const EmptyContent: Story = {
   render: () => <Tag />,
 }
 
-export const UnsupportedSizeFallback = {
+export const UnsupportedSizeFallback: Story = {
   name: 'Unsupported Size (fallback)',
   render: () => (
     <Tag size="extra-large">Unsupported size falls back to default</Tag>

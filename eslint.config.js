@@ -16,6 +16,7 @@ export default [
       'handoffs/**',
       'patches/**',
       'tmp/**',
+      '**/*.tsx',
     ],
   },
   js.configs.recommended,
@@ -43,7 +44,7 @@ export default [
     },
   },
   {
-    files: ['**/*.{jsx,tsx}'],
+    files: ['**/*.jsx'],
     ...pluginReact.configs.flat?.recommended,
     ...pluginReact.configs.flat?.['jsx-runtime'],
     languageOptions: {

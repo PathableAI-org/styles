@@ -1,6 +1,6 @@
 export default {
   framework: '@storybook/react-vite',
-  stories: ['../../../packages/react/src/stories/**/*.stories.jsx'],
+  stories: ['../../../packages/react/src/stories/**/*.stories.tsx'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   docs: { autodocs: true },
   async viteFinal(config, { configType }) {

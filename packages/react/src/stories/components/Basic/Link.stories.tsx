@@ -1,7 +1,7 @@
-import React from 'react'
 import { Link } from '../../../components/Link/Link'
+import type { Meta, StoryObj } from '@storybook/react'
 
-export default {
+const meta = {
   title: 'Components/Link',
   component: Link,
   tags: ['autodocs'],
@@ -18,38 +18,38 @@ export default {
       options: ['default', 'external'],
       control: { type: 'select' },
       description: 'Selects an implemented Link treatment.',
-      defaultValue: 'default',
     },
     children: {
       control: { type: 'text' },
       description: 'Consumer-supplied link content.',
-      defaultValue: 'Link Text',
     },
     className: {
       control: { type: 'text' },
       description: 'Additional root class names.',
-      defaultValue: '',
     },
+  },
+} satisfies Meta<typeof Link>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: {
+    href: '#example-default',
+    children: 'Default Link',
+    presentation: 'default',
   },
 }
 
-const Template = (args) => <Link {...args} />
-
-export const Default = Template.bind({})
-Default.args = {
-  href: '#example-default',
-  children: 'Default Link',
-  presentation: 'default',
+export const External: Story = {
+  args: {
+    href: '#example-external',
+    children: 'External Link',
+    presentation: 'external',
+  },
 }
 
-export const External = Template.bind({})
-External.args = {
-  href: '#example-external',
-  children: 'External Link',
-  presentation: 'external',
-}
-
-export const RichContent = {
+export const RichContent: Story = {
   render: () => (
     <Link href="#rich-content">
       Review the <strong>participant plan</strong> and{' '}
@@ -58,7 +58,7 @@ export const RichContent = {
   ),
 }
 
-export const CustomAttributes = {
+export const CustomAttributes: Story = {
   render: () => (
     <Link
       href="#custom-attrs"
@@ -72,11 +72,11 @@ export const CustomAttributes = {
   ),
 }
 
-export const EmptyContent = {
+export const EmptyContent: Story = {
   render: () => <Link href="#empty" aria-label="Empty link example" />,
 }
 
-export const UnsupportedPresentationFallback = {
+export const UnsupportedPresentationFallback: Story = {
   name: 'Unsupported Presentation (fallback)',
   render: () => (
     <Link href="#fallback" presentation="nav">
