@@ -1,5 +1,5 @@
 import esbuild from 'esbuild'
-import { copyFileSync, mkdirSync } from 'fs'
+import { mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -36,12 +36,15 @@ async function main() {
 
   console.log('[build-js] Built dist/pathable.js')
 
-  // Copy the FOUC init script as-is
-  copyFileSync(
-    join(srcJsDir, 'pathable-init.js'),
-    join(distDir, 'pathable-init.js'),
-  )
-  console.log('[build-js] Copied dist/pathable-init.js')
+  // Build the FOUC init script from TypeScript source
+  await esbuild.build({
+    entryPoints: [join(srcJsDir, 'pathable-init.ts')],
+    bundle: false,
+    minify: false,
+    outfile: join(distDir, 'pathable-init.js'),
+    format: 'iife',
+  })
+  console.log('[build-js] Built dist/pathable-init.js')
 }
 
 main().catch((err) => {
