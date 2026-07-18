@@ -33,7 +33,7 @@ function resolvePresentation(
     actions,
   }: Pick<CardProps, 'media' | 'metadata' | 'status' | 'actions'>,
 ): CardPresentation {
-  if (PRESENTATION_CLASS[presentation as CardPresentation]) {
+  if (Object.prototype.hasOwnProperty.call(PRESENTATION_CLASS, presentation)) {
     return presentation as CardPresentation
   }
 
