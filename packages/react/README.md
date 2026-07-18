@@ -14,7 +14,7 @@ No separate installation of `@pathable/styles` is required — styles are includ
 ## Usage
 
 ```tsx
-import { Button, ButtonGroup, Card, List } from '@pathable/react'
+import { Button, ButtonGroup, Card, List, Table } from '@pathable/react'
 
 function App() {
   return (
@@ -92,6 +92,27 @@ function App() {
           },
         ]}
       />
+
+      <Table
+        presentation="striped"
+        className="my-custom-class"
+        id="my-table-1"
+        aria-label="Data table"
+      >
+        <caption>Team members</caption>
+        <thead>
+          <tr>
+            <th scope="col">Header 1</th>
+            <th scope="col">Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Data 1</td>
+            <td>Data 2</td>
+          </tr>
+        </tbody>
+      </Table>
     </>
   )
 }
@@ -140,6 +161,20 @@ The rendered components include the corresponding `pathable-*` CSS classes with 
 | --------- | ----------------- | -------------------------- |
 | children  | `React.ReactNode` | Button group content       |
 | className | `string`          | Additional CSS class names |
+
+### Table Props
+
+| Prop         | Type                                                  | Default     | Description                                                                                 |
+| ------------ | ----------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------- |
+| children     | `React.ReactNode`                                     | —           | Table content, typically `<caption>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` elements |
+| className    | `string`                                              | —           | Additional CSS class names to apply to the table element                                    |
+| presentation | `'default' \| 'borderless' \| 'compact' \| 'striped'` | `'default'` | Visual presentation of the table. Unsupported values fall back to `'default'`               |
+
+Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can also be passed directly as props and will be applied to the underlying `<table>` element.
+
+#### Table Accessibility
+
+Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
 
 ## Development
 
