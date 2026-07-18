@@ -1,7 +1,7 @@
-import React from 'react'
 import { List } from '../../../components/List/List'
+import type { Meta, StoryObj } from '@storybook/react'
 
-export default {
+const meta = {
   title: 'Components/List',
   component: List,
   parameters: {
@@ -17,17 +17,18 @@ export default {
       options: ['unordered', 'ordered', 'unstyled'],
       control: { type: 'select' },
       description: 'Existing Pathable list presentation.',
-      defaultValue: 'unordered',
     },
     className: {
       control: { type: 'text' },
       description: 'Additional CSS class names.',
-      defaultValue: '',
     },
   },
-}
+} satisfies Meta<typeof List>
 
-export const Default = {
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     items: [
       'Unordered list item one',
@@ -37,7 +38,7 @@ export const Default = {
   },
 }
 
-export const RichItems = {
+export const RichItems: Story = {
   render: () => (
     <List
       items={[
@@ -64,11 +65,11 @@ export const RichItems = {
   ),
 }
 
-export const Empty = {
+export const Empty: Story = {
   render: () => <List aria-label="No current action items" items={[]} />,
 }
 
-export const CustomClassName = {
+export const CustomClassName: Story = {
   render: () => (
     <List
       className="demo-list-composition"
@@ -81,7 +82,7 @@ export const CustomClassName = {
   ),
 }
 
-export const Ordered = {
+export const Ordered: Story = {
   render: () => (
     <List
       presentation="ordered"
@@ -94,7 +95,7 @@ export const Ordered = {
   ),
 }
 
-export const Unstyled = {
+export const Unstyled: Story = {
   render: () => (
     <List
       presentation="unstyled"
@@ -107,7 +108,7 @@ export const Unstyled = {
   ),
 }
 
-export const UnsupportedPresentationFallback = {
+export const UnsupportedPresentationFallback: Story = {
   render: () => (
     <List
       presentation="timeline"
