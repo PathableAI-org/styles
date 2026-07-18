@@ -64,7 +64,7 @@ export const CustomAttributes = {
 }
 
 export const EmptyContent = {
-  render: () => <Tag aria-label="Empty tag example" />,
+  render: () => <Tag />,
 }
 
 export const UnsupportedSizeFallback = {
