@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode } from 'react'
+import { HTMLAttributes, isValidElement, ReactNode } from 'react'
 
 type ListPresentation = 'unordered' | 'ordered' | 'unstyled'
 
@@ -36,7 +36,7 @@ function isListItemObject(item: unknown): item is ListItemObject {
     item !== null &&
     typeof item === 'object' &&
     !Array.isArray(item) &&
-    !React.isValidElement(item)
+    !isValidElement(item)
   )
 }
 

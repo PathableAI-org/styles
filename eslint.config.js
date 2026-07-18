@@ -16,7 +16,6 @@ export default [
       'handoffs/**',
       'patches/**',
       'tmp/**',
-      '**/*.ts',
       '**/*.tsx',
     ],
   },
