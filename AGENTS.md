@@ -2,5 +2,5 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/031-react-table-wrapper/plan.md
+at specs/032-react-link-tag-wrappers/plan.md
 <!-- SPECKIT END -->

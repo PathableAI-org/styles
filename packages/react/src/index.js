@@ -11,3 +11,5 @@ export { List } from './components/List/List.jsx'
 
 // Export the new Table component
 export { Table } from './components/Table/Table.jsx'
+export { Link } from './components/Link/Link.jsx'
+export { Tag } from './components/Tag/Tag.jsx'
