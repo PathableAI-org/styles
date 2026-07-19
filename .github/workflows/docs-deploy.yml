@@ -78,6 +78,7 @@ jobs:
 
       - name: Build React docs
         run: |
+          pnpm --filter @pathable/react build
           pnpm --filter @pathable/storybook-react build-storybook
           mkdir -p apps/storybook/storybook-static/react
           cp -r apps/storybook-react/storybook-static/* apps/storybook/storybook-static/react/

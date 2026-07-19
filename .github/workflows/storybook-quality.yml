@@ -44,6 +44,9 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathable/styles build
 
+      - name: Build React package
+        run: pnpm --filter @pathable/react build
+
       - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
 
@@ -146,6 +149,9 @@ jobs:
 
       - name: Build styles
         run: pnpm --filter @pathable/styles build
+
+      - name: Build React package
+        run: pnpm --filter @pathable/react build
 
       - name: Build Storybook
         run: pnpm --filter @pathable/storybook build-storybook

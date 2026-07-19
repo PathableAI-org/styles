@@ -119,7 +119,7 @@ jobs:
         run: pnpm lint:tokens
 
   storybook-build:
-    name: Storybook build
+    name: Storybook build (HTML + React)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -139,11 +139,17 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathable/styles build
 
-      - name: Build Storybook
+      - name: Build React package
+        run: pnpm --filter @pathable/react build
+
+      - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
 
+      - name: Build React Storybook
+        run: pnpm --filter @pathable/storybook-react build-storybook
+
   storybook-a11y-tests:
-    name: Storybook accessibility tests
+    name: Storybook accessibility tests (HTML + React)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -166,10 +172,16 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathable/styles build
 
-      - name: Build Storybook
+      - name: Build React package
+        run: pnpm --filter @pathable/react build
+
+      - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
 
-      - name: Accessibility tests
+      - name: Build React Storybook
+        run: pnpm --filter @pathable/storybook-react build-storybook
+
+      - name: Accessibility tests — HTML Storybook
         run: |
           set +e
           npx serve -n -l 6006 apps/storybook/storybook-static &
@@ -187,6 +199,28 @@ jobs:
             sleep 1
           done
           pnpm --filter @pathable/storybook test-storybook --index-json --url http://127.0.0.1:6006
+          TEST_EXIT=$?
+          kill $SERVE_PID 2>/dev/null || true
+          exit $TEST_EXIT
+
+      - name: Accessibility tests — React Storybook
+        run: |
+          set +e
+          npx serve -n -l 6007 apps/storybook-react/storybook-static &
+          SERVE_PID=$!
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:6007/ 2>/dev/null; then
+              echo "Server ready after ${i}s"
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "Server failed to start"
+              kill $SERVE_PID 2>/dev/null || true
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm --filter @pathable/storybook-react test-storybook --index-json --url http://127.0.0.1:6007
           TEST_EXIT=$?
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT

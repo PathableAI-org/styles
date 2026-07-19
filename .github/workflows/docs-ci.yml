@@ -34,5 +34,6 @@ jobs:
 
       - name: Build docs
         run: |
+          pnpm --filter @pathable/react build
           STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
           pnpm --filter @pathable/storybook-react build-storybook

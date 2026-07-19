@@ -1,15 +1,26 @@
 import { Card } from '../../../components/Card/Card'
 import { Button } from '../../../components/Button/Button'
+import { Link } from '../../../components/Link/Link'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
   title: 'Components/Card',
   component: Card,
+  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component:
-          '**Interaction Model**: React component\n\n**Consumers must**: Import from `@pathable/react`. No additional CSS import required.',
+        component: `A container that groups related content and actions. The Card component supports multiple presentations for different content patterns.
+
+**When to use**: For grouping related content in a visually distinct container. Use the \`base\` presentation for simple content groups, \`media\` for cards with images, \`flag\` for media beside text, \`header-first\` for hero layouts, and \`workflow\` for task or status cards.
+
+**When not to use**: Do not use Card purely for visual decoration. For simple bordered content groups without semantic grouping requirements, consider a \`<section>\` or a container div with the appropriate spacing utility classes.
+
+**Underlying element**: \`<div>\` with \`.pathable-card\` class.
+
+**Accessible naming**: Cards do not have an implicit heading level. Consumers should provide a heading element (via the \`title\` prop or children) at the appropriate heading level for their document outline.
+
+**Known constraints**: The \`workflow\` presentation auto-applies when \`metadata\`, \`status\`, or \`actions\` props are provided, regardless of the explicit \`presentation\` value. The \`media\` and \`flag\` presentations require a \`media\` prop with image content.`,
       },
     },
   },
@@ -17,15 +28,18 @@ const meta = {
     presentation: {
       options: ['base', 'media', 'flag', 'header-first', 'workflow'],
       control: { type: 'select' },
-      description: 'Existing Pathable card presentation.',
+      description:
+        'The card presentation pattern. \`base\`: simple content container with optional title. \`media\`: card with a media/image element. \`flag\`: media beside text in a horizontal layout. \`header-first\`: hero-style card with media above content. \`workflow\`: task or status card with metadata and actions. When \`metadata\`, \`status\`, or \`actions\` are provided, the presentation auto-resolves to \`workflow\`.',
     },
     title: {
       control: { type: 'text' },
-      description: 'Card heading content.',
+      description:
+        'Card heading content. Rendered as an \`<h3>\` inside the card header region. Consumers must ensure heading levels fit their document outline.',
     },
     className: {
       control: { type: 'text' },
-      description: 'Additional CSS class names.',
+      description:
+        'Additional CSS class names appended after the PathAble card classes.',
     },
   },
 } satisfies Meta<typeof Card>
@@ -33,7 +47,28 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+// ---------------------------------------------------------------------------
+// Playground
+// ---------------------------------------------------------------------------
+
+export const Playground: Story = {
+  args: {
+    title: 'Card Title',
+    presentation: 'base',
+    children: (
+      <p>
+        This is the default card body content. Cards can contain text, links,
+        and other elements.
+      </p>
+    ),
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Fixed state stories
+// ---------------------------------------------------------------------------
+
+export const Base: Story = {
   args: {
     title: 'Card Title',
     children: (
@@ -49,9 +84,9 @@ export const WithFooter: Story = {
   render: () => (
     <Card
       title="Card with footer"
-      footer={<a href="#card-footer">Learn more</a>}
+      footer={<Link href="#card-footer">Learn more</Link>}
     >
-      <p>This card has body content and footer content after the body.</p>
+      <p>This card has body content and a footer link following the body.</p>
     </Card>
   ),
 }
@@ -74,11 +109,11 @@ export const CustomClassName: Story = {
   ),
 }
 
-export const Media: Story = {
+export const MediaPresentation: Story = {
   render: () => (
     <Card
       presentation="media"
-      title="Media Card Title"
+      title="Media Card"
       media={<img src="https://placehold.co/600x400" alt="Media placeholder" />}
       footer={<span>Updated today</span>}
     >
@@ -87,20 +122,20 @@ export const Media: Story = {
   ),
 }
 
-export const Flag: Story = {
+export const FlagPresentation: Story = {
   render: () => (
     <Card
       presentation="flag"
       title="Flag card"
       media={<img src="https://placehold.co/240x160" alt="Flag placeholder" />}
-      footer={<a href="#flag-card">Review details</a>}
+      footer={<Link href="#flag-card">Review details</Link>}
     >
-      <p>This card uses the existing flag modifier from the styles contract.</p>
+      <p>This card uses the flag layout with media beside the text.</p>
     </Card>
   ),
 }
 
-export const HeaderFirst: Story = {
+export const HeaderFirstPresentation: Story = {
   render: () => (
     <Card
       presentation="header-first"
@@ -110,19 +145,19 @@ export const HeaderFirst: Story = {
       }
     >
       <p>
-        The header-first modifier maps directly to the Pathable styles class.
+        The header-first presentation places media above the content region.
       </p>
     </Card>
   ),
 }
 
-export const Workflow: Story = {
+export const WorkflowPresentation: Story = {
   render: () => (
     <Card
       presentation="workflow"
       title="Today's Coaching Session: J. Doe"
       metadata="Last updated: Today, 2:30 PM | Duration: 45 min"
-      actions={<a href="#workflow-card">View session notes</a>}
+      actions={<Link href="#workflow-card">View session notes</Link>}
       tabIndex={0}
     >
       <p>
@@ -149,4 +184,72 @@ export const WorkflowWithStatus: Story = {
       </p>
     </Card>
   ),
+}
+
+// ---------------------------------------------------------------------------
+// Long content
+// ---------------------------------------------------------------------------
+
+export const LongContent: Story = {
+  render: () => (
+    <Card
+      presentation="workflow"
+      title="Comprehensive Employment Assessment and Progress Tracking for Participant K. Smith — Q2 2026 Review Period"
+      metadata="Generated: Jul 8, 2026 | Period: Q2 2026 | Status: Under Review by Regional Coordinator"
+      status="In Progress"
+      actions={
+        <div className="pathable-button-group">
+          <Button variant="secondary">Download Report</Button>
+          <Button variant="primary">Schedule Review</Button>
+        </div>
+      }
+    >
+      <p>
+        This is a deliberately long card description that demonstrates how the
+        workflow card handles extended body content. It includes multiple
+        sentences and demonstrates text wrapping behavior. The card should
+        accommodate variable-length content without breaking the layout or
+        causing overflow issues.
+      </p>
+      <p>
+        Additional paragraph content to verify multi-paragraph body rendering
+        and spacing between paragraphs inside the card body region.
+      </p>
+    </Card>
+  ),
+}
+
+// ---------------------------------------------------------------------------
+// Narrow (mobile) viewport
+// ---------------------------------------------------------------------------
+
+export const Narrow: Story = {
+  args: {
+    title: 'Mobile Card',
+    children: <p>This card renders at a narrow mobile viewport width.</p>,
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+}
+
+export const NarrowWorkflow: Story = {
+  render: () => (
+    <Card
+      presentation="workflow"
+      title="Coaching Session"
+      metadata="Today, 2:30 PM"
+      status="Scheduled"
+      actions={<Button variant="primary">Join Session</Button>}
+    >
+      <p>Upcoming session with J. Doe. Focus: workplace communication.</p>
+    </Card>
+  ),
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
 }
