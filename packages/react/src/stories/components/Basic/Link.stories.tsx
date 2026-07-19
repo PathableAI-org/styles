@@ -1,5 +1,6 @@
 import { Link } from '../../../components/Link/Link'
 import type { Meta, StoryObj } from '@storybook/react'
+import { userEvent, within, expect } from 'storybook/test'
 
 const meta = {
   title: 'Components/Link',
@@ -8,8 +9,17 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          '**Interaction Model**: React component\n\n**Consumers must**: Import from `@pathable/react`. No additional CSS import required.',
+        component: `A navigational link styled with PathAble design tokens. Renders a standard \`<a>\` element with \`.pathable-link\` class.
+
+**When to use**: For navigating between pages, linking to external resources, or any standard hyperlink behavior. Prefer Link over raw \`<a>\` elements to ensure consistent PathAble styling.
+
+**When not to use**: Do not use Link for actions that trigger application behavior (use \`<Button>\` instead). Do not use Link for in-page anchor navigation that doesn't need link styling.
+
+**Underlying element**: \`<a>\` (HTMLAnchorElement).
+
+**Navigation policy**: The \`external\` presentation adds only a visual indicator (\`.pathable-link--external\`). Consumers are responsible for \`href\`, \`target\`, \`rel\`, download behavior, and any routing logic. For external links, consumers should set \`target="_blank"\` and \`rel="noopener noreferrer"\` as needed.
+
+**Known constraints**: The component does not validate href values. Unsupported \`presentation\` values silently fall back to \`default\` with no visual change.`,
       },
     },
   },
@@ -17,21 +27,39 @@ const meta = {
     presentation: {
       options: ['default', 'external'],
       control: { type: 'select' },
-      description: 'Selects an implemented Link treatment.',
+      description:
+        'The link presentation variant. \`default\`: standard inline link. \`external\`: adds a visual indicator that the link leads to an external resource.',
     },
     children: {
       control: { type: 'text' },
-      description: 'Consumer-supplied link content.',
+      description:
+        'Link content. Can be plain text or rich content (elements). Must be meaningful out of context — avoid "click here" or "read more" as the only content.',
     },
     className: {
       control: { type: 'text' },
-      description: 'Additional root class names.',
+      description:
+        'Additional CSS class names appended after the PathAble link classes.',
     },
+  },
+  args: {
+    href: '#example',
+    children: 'Example Link',
+    presentation: 'default',
   },
 } satisfies Meta<typeof Link>
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+// ---------------------------------------------------------------------------
+// Playground
+// ---------------------------------------------------------------------------
+
+export const Playground: Story = {}
+
+// ---------------------------------------------------------------------------
+// Fixed state stories
+// ---------------------------------------------------------------------------
 
 export const Default: Story = {
   args: {
@@ -41,6 +69,8 @@ export const Default: Story = {
   },
 }
 
+/** External links receive the \`.pathable-link--external\` modifier class
+ *  for a visual external-link indicator. */
 export const External: Story = {
   args: {
     href: '#example-external',
@@ -82,5 +112,91 @@ export const UnsupportedPresentationFallback: Story = {
     <Link href="#fallback" presentation="nav">
       Unsupported presentation falls back to default
     </Link>
+  ),
+}
+
+// ---------------------------------------------------------------------------
+// Long content
+// ---------------------------------------------------------------------------
+
+export const LongLabel: Story = {
+  args: {
+    href: '#long',
+    children:
+      'Review the comprehensive employment coaching program enrollment requirements and submit your application for the next available cohort',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Narrow viewport
+// ---------------------------------------------------------------------------
+
+export const Narrow: Story = {
+  args: {
+    href: '#narrow',
+    children: 'Mobile Link',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Interaction tests
+// ---------------------------------------------------------------------------
+
+/** Verifies that a link renders with the correct role and accessible name. */
+export const AccessibilityCheck: Story = {
+  args: {
+    href: '#a11y-test',
+    children: 'Accessible Link',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('link has correct role and accessible name', async () => {
+      const link = canvas.getByRole('link', { name: 'Accessible Link' })
+      await expect(link).toBeVisible()
+    })
+
+    await step('link has valid href attribute', async () => {
+      const link = canvas.getByRole('link', { name: 'Accessible Link' })
+      await expect(link).toHaveAttribute('href', '#a11y-test')
+    })
+  },
+}
+
+/** Verifies keyboard focus behavior on the link element. */
+export const KeyboardFocus: Story = {
+  args: {
+    href: '#focus-test',
+    children: 'Focusable Link',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('link receives keyboard focus', async () => {
+      const link = canvas.getByRole('link', { name: 'Focusable Link' })
+      await userEvent.tab()
+      await expect(link).toHaveFocus()
+    })
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Composition — link in a realistic content context
+// ---------------------------------------------------------------------------
+
+/** A link used inline within a paragraph of body text, demonstrating the
+ *  expected content pattern for navigation links. */
+export const InlineInParagraph: Story = {
+  render: () => (
+    <p>
+      Before your next session, please{' '}
+      <Link href="#review-notes">review the participant notes</Link> and update
+      any action items that have changed since the last meeting.
+    </p>
   ),
 }

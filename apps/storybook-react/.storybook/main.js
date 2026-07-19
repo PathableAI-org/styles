@@ -7,9 +7,6 @@ export default {
     if (configType === 'PRODUCTION' && process.env.STORYBOOK_BUILD === 'true') {
       config.base = '/styles/react/'
     }
-    if (configType === 'PRODUCTION' && process.env.STORYBOOK_BUILD === 'true') {
-      config.base = '/styles/react/'
-    }
 
     // Configure manualChunks for optimizing large chunks
     config.build = {
@@ -20,24 +17,17 @@ export default {
           ...config.build?.rollupOptions?.output,
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              // Split react and react-dom into their own chunks
               if (
                 id.includes('react/index.js') ||
                 id.includes('react-dom/client.js')
               ) {
                 return '@react/react-dom'
               }
-              // You can add more manual chunk configurations here for other large libraries
-              // For example, splitting common third-party libraries:
-              // if (id.includes('node_modules/lodash')) {
-              //   return '@lodash/lodash'
-              // }
             }
-            return null // Return null for default chunking
+            return null
           },
         },
       },
-      // Ensure assets are included in the build
       assetsInclude: [
         '**/*.{png,jpg,jpeg,gif,svg,woff2,ttf,otf,eot,ico,cur,webp}',
       ],

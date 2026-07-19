@@ -1,17 +1,38 @@
 import '@pathable/styles/src/index.scss'
 import '@pathable/styles/js'
 
-export const parameters = {
-  a11y: {
-    element: '#storybook-root',
-    config: {
-      rules: [{ id: 'color-contrast', enabled: true }],
+/** @type { import('@storybook/html-vite').Preview } */
+const preview = {
+  parameters: {
+    a11y: {
+      element: '#storybook-root',
+      config: {
+        rules: [{ id: 'color-contrast', enabled: true }],
+      },
     },
-  },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/i,
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    viewport: {
+      viewports: {
+        mobile1: {
+          name: 'Mobile (375px)',
+          styles: { width: '375px', height: '812px' },
+        },
+        tablet: {
+          name: 'Tablet (768px)',
+          styles: { width: '768px', height: '1024px' },
+        },
+        desktop: {
+          name: 'Desktop (1280px)',
+          styles: { width: '1280px', height: '900px' },
+        },
+      },
     },
   },
 }
+
+export default preview
