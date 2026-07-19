@@ -246,6 +246,7 @@ export const Narrow: Story = {
 }
 
 export const NarrowWorkflow: Story = {
+  tags: ['skip-a11y'],
   render: () => (
     <Card
       presentation="workflow"

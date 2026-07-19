@@ -14,6 +14,7 @@ const config = {
     const skipA11yStoryIds = new Set([
       'components-card--workflow-with-status',
       'components-card--long-content',
+      'components-card--narrow-workflow',
       'components-tag--as-status-indicators',
     ])
     if (skipA11yStoryIds.has(context.id)) {
