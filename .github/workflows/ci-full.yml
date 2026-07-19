@@ -118,6 +118,109 @@ jobs:
       - name: Token custom property lint
         run: pnpm lint:tokens
 
+  react-typecheck:
+    name: React typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 23
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck React
+        run: pnpm --filter @pathable/react typecheck
+
+  react-build:
+    name: React build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 23
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build styles
+        run: pnpm --filter @pathable/styles build
+
+      - name: Build React
+        run: pnpm --filter @pathable/react build
+
+  react-storybook-build:
+    name: React Storybook build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 23
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build styles
+        run: pnpm --filter @pathable/styles build
+
+      - name: Build React
+        run: pnpm --filter @pathable/react build
+
+      - name: Build React Storybook
+        run: pnpm --filter @pathable/storybook-react build-storybook
+
+  react-package-validation:
+    name: React package validation
+    runs-on: ubuntu-latest
+    needs: react-build
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 23
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build styles
+        run: pnpm --filter @pathable/styles build
+
+      - name: Build React
+        run: pnpm --filter @pathable/react build
+
+      - name: Validate package
+        run: pnpm --filter @pathable/react check:package
+
+      - name: Validate types
+        run: pnpm --filter @pathable/react check:types
+
   storybook-build:
     name: Storybook build
     runs-on: ubuntu-latest
@@ -169,7 +272,10 @@ jobs:
       - name: Build Storybook
         run: pnpm --filter @pathable/storybook build-storybook
 
-      - name: Accessibility tests
+      - name: Build React Storybook
+        run: pnpm --filter @pathable/react build && pnpm --filter @pathable/storybook-react build-storybook
+
+      - name: Accessibility tests (styles)
         run: |
           set +e
           npx serve -n -l 6006 apps/storybook/storybook-static &
@@ -187,6 +293,28 @@ jobs:
             sleep 1
           done
           pnpm --filter @pathable/storybook test-storybook --index-json --url http://127.0.0.1:6006
+          TEST_EXIT=$?
+          kill $SERVE_PID 2>/dev/null || true
+          exit $TEST_EXIT
+
+      - name: Accessibility tests (React)
+        run: |
+          set +e
+          npx serve -n -l 6007 apps/storybook-react/storybook-static &
+          SERVE_PID=$!
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:6007/ 2>/dev/null; then
+              echo "Server ready after ${i}s"
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "Server failed to start"
+              kill $SERVE_PID 2>/dev/null || true
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm --filter @pathable/storybook-react test-storybook --index-json --url http://127.0.0.1:6007
           TEST_EXIT=$?
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
