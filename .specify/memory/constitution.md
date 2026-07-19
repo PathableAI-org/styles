@@ -2,20 +2,48 @@
   ------------------------------------------------------------------
   Sync Impact Report
   ------------------------------------------------------------------
-  Version change: 1.2.0 → 1.3.0
+  Version change: 1.3.0 → 1.4.0
   Principles modified:
-    - Wrapper Packages Are Thin Consumers expanded with React component naming parity
+    - IV: "Wrapper Packages Are Thin Consumers" → "Wrapper Packages Preserve
+      Semantic and Visual Parity" (expanded with semantic HTML, accessibility
+      behavior, class contracts, type safety, and publishable validation)
+    - X: "Accessibility Is Part of Token Quality" → "Accessibility Is a Release
+      Requirement" (expanded with static linting, rendered testing, keyboard
+      behavior, focus management, and manual-review dimensions)
+    - XII: "Documentation Is a First-Class Package Concern" → "Documentation
+      Surfaces Have Distinct Responsibilities" (expanded with canonical-source
+      rules for Astro docs, Storybook, READMEs, and specs)
+  Principles added:
+    - XIV: Storybook Stories Are Executable Component Contracts
+    - XV: Responsive and Inclusive States Are First-Class
+    - XVI: Framework Storybooks Must Remain Independently Valid
   Sections added:
-    - none
+    - Automated Validation & Quality Gates (expands and replaces the former
+      "Development Workflow & Quality Gates" section; adds enforceable gate,
+      file-exclusion, and local/CI consistency rules)
+    - Visual Regression Protection (new subsection under Quality Gates)
   Sections removed: none
   Templates requiring updates:
-    - .specify/templates/plan-template.md           ✅ updated with React naming parity gate
-    - .specify/templates/spec-template.md            ✅ updated with React naming parity guidance
-    - .specify/templates/tasks-template.md           ✅ updated with React naming task guidance
-    - .specify/templates/constitution-template.md    ✅ reviewed; template remains generic
-    - .specify/presets/*/commands/*.md               ✅ reviewed; no constitution-specific change required
-    - .specify/extensions/*/commands/*.md            ✅ reviewed; no constitution-specific change required
-    - README.md                                      ✅ reviewed; no constitution-specific change required
+    - .specify/templates/plan-template.md           → updated with expanded Constitution Check
+    - .specify/templates/spec-template.md            → updated with accessibility, story, and
+                                                       responsive-state guidance
+    - .specify/templates/tasks-template.md           → updated with story, interaction,
+                                                       a11y, responsive, visual, package,
+                                                       and documentation task categories
+    - .specify/templates/constitution-template.md    → reviewed; generic template — no
+                                                       project-specific content to sync
+    - .specify/templates/checklist-template.md       → reviewed; generic template — no
+                                                       project-specific content to sync
+    - .specify/presets/workflow-preset/commands/*.md → reviewed; no constitution-specific
+                                                       change required
+    - .specify/presets/workflow-preset/templates/    → reviewed; no constitution-specific
+                                                       change required
+    - .specify/presets/toc-navigation/*              → reviewed; no constitution-specific
+                                                       change required
+    - .specify/extensions/git/commands/*.md          → reviewed; no constitution-specific
+                                                       change required
+    - .specify/extensions/agent-context/commands/*.md→ reviewed; no constitution-specific
+                                                       change required
   Follow-up TODOs: none deferred
   ------------------------------------------------------------------
 -->
@@ -55,20 +83,36 @@ to support advanced consumers who want to extend the package via `@use` and
 `@forward`. The SCSS API is a secondary, opt-in surface; the CSS output is the
 source of truth.
 
-### IV. Wrapper Packages Are Thin Consumers
+### IV. Wrapper Packages Preserve Semantic and Visual Parity
 
-Framework packages such as `packages/react` exist only as ergonomic wrappers
-around `@pathable/styles`. They MAY expose framework-native components,
+Framework packages such as `packages/react` exist as adapters over the shared
+Pathable design system. They MAY expose framework-native components,
 entrypoints, and type surfaces, but they MUST NOT duplicate, fork, or redefine
 styles, fonts, icons, assets, tokens, spacing, accessibility states, or
 component-class semantics owned by `packages/styles`. Adding a new wrapper
 component, variant, or prop is only allowed after the equivalent
 framework-neutral style contract has been added to `packages/styles`, covered
 by its documentation or stories, and exported through the styles package.
+
+Framework components MUST preserve the shared package's semantic HTML,
+accessibility behavior, class contracts, design tokens, and intended visual
+behavior. Framework packages MUST NOT duplicate or fork shared styling without
+an explicit architectural decision recorded in the feature's `research.md`.
+
 React components in `packages/react` MUST use the CamelCase form of the
 equivalent `packages/styles` component name after removing any `pathable`
 prefix. For example, `pathable-alert` maps to `Alert`, and
 `pathable-button-group` maps to `ButtonGroup`.
+
+Public component APIs and generated declarations MUST be type-safe and suitable
+for consumers. Publishable artifacts MUST be validated as consumers receive
+them: exports, included files, runtime entry points, peer dependencies, and
+declarations. A successful monorepo build alone MUST NOT be treated as proof
+that a package is publishable.
+
+Breaking changes to public component APIs, markup contracts, CSS contracts, or
+package exports MUST follow the repository's release and change-management
+policy.
 
 ### V. Consumer Imports Must Be Complete
 
@@ -121,7 +165,22 @@ documentation — Figma alone is not sufficient. If Figma and code disagree, the
 discrepancy MUST be recorded as a tracked issue or documented decision and
 resolved intentionally rather than silently diverging.
 
-### X. Accessibility Is Part of Token Quality
+### X. Accessibility Is a Release Requirement
+
+Accessibility applies to the shared styles, HTML examples, React components,
+patterns, and documentation. Automated and behavioral accessibility gates MUST
+pass before a pull request that affects rendered UI is merged.
+
+Static JSX accessibility linting and rendered accessibility testing are
+complementary and MUST NOT be treated as interchangeable. Automated tools MUST
+be supplemented by behavioral tests for keyboard interaction, focus placement,
+focus restoration, state communication, and accessible names where automation
+cannot determine correctness.
+
+Interactive components MUST preserve visible focus and semantic keyboard
+behavior. Stable Storybook stories MUST participate in automated rendered
+accessibility checks unless a narrow, documented exception exists.
+Accessibility violations in required checks MUST block merge.
 
 Color and focus-related tokens MUST support accessible UI outcomes. The token
 package MUST NOT claim full WCAG compliance for downstream products, but it
@@ -129,6 +188,15 @@ MUST avoid obvious accessibility traps, especially around text contrast, focus
 indicators, state colors (hover, active, disabled), and disabled-state
 affordances. Component packages in future workspaces MUST inherit and preserve
 these accessibility intentions.
+
+Accessibility exceptions MUST NOT disable broad rules across the project merely
+to accommodate one component. Story-level exceptions MUST be narrow, justified,
+and limited to specific rules with documented rationale. Examples and tests
+MUST use synthetic, non-sensitive data.
+
+Periodic manual keyboard and assistive-technology review SHOULD be performed
+as a quality practice on a schedule defined by contributor documentation. This
+is a quality expectation, not an automated gate.
 
 ### XI. Framework Independence Comes from @pathable/styles
 
@@ -139,14 +207,24 @@ packages — they MUST NOT embed, redefine, or regenerate the source of truth.
 Framework-specific packages MAY map the styles contract into framework-native
 APIs, but the canonical definitions always reside in `packages/styles`.
 
-### XII. Documentation Is a First-Class Package Concern
+### XII. Documentation Surfaces Have Distinct Responsibilities
 
-The repository MUST eventually include a GitHub Pages documentation site
-explaining installation, CSS import usage, SCSS usage, theme usage, package
-exports, local development, build commands, publishing flow, and examples for
-each downstream framework package. The first implementation slice MUST include
-enough README documentation to support the `@pathable/styles` package
-independently, even before the full docs site exists.
+Documentation surfaces MUST avoid contradictory sources of truth. When the same
+fact must appear on multiple surfaces, one surface is the canonical source and
+others derive from or link to it.
+
+- The Astro documentation site is the curated public entry point for
+  installation, foundations, brand guidance, agent guidance, and roadmap
+  information.
+- Storybook is the exhaustive, executable catalog for components, states,
+  interactions, accessibility, and compositions.
+- Package READMEs and contributor/agent instructions contain operational
+  commands and authoring procedures.
+- Specifications and plans describe feature-specific requirements and
+  implementation decisions.
+
+The repository MUST include enough README documentation to support each
+published package independently, even before the full docs site exists.
 
 ### XIII. Versioning and Release Discipline
 
@@ -157,6 +235,66 @@ changes requiring a major version bump. Before publishing, build output and
 package contents MUST be verified (via `pnpm pack --dry-run` or equivalent).
 Future multi-package releases MUST clearly document which workspace packages
 changed and what the nature of each change was.
+
+### XIV. Storybook Stories Are Executable Component Contracts
+
+Storybook is the exhaustive component and pattern workbench — not merely a
+visual gallery. Stories define supported public behavior and serve as
+regression fixtures, accessibility test targets, interaction test harnesses,
+and visual-regression cases.
+
+Every supported, externally meaningful component state MUST normally have a
+deterministic, named story. A Controls or Playground story MAY support
+exploration but MUST NOT substitute for fixed regression stories. Stories MUST
+represent supported public behavior rather than invented props or undocumented
+states.
+
+Interactive components MUST include browser-executed interaction coverage for
+their critical observable behavior, including keyboard behavior and focus
+management where applicable. Storybook tests MUST prefer accessible queries
+(`getByRole`, `getByLabelText`, `getByText`) and observable outcomes over
+implementation details such as CSS selectors or `data-testid` attributes.
+
+Stable stories used for tests or screenshots MUST avoid uncontrolled
+randomness, current dates, live network dependencies, sensitive data, and
+nondeterministic animation.
+
+Component stories MUST document primitives and their supported states. Pattern
+and recipe stories MUST demonstrate realistic compositions without silently
+creating new production APIs. Story metadata and documentation MUST explain
+semantic intent, appropriate use, misuse, accessibility obligations, and
+important constraints rather than merely restating prop names.
+
+### XV. Responsive and Inclusive States Are First-Class
+
+The design system is intended for use in low-bandwidth, mobile-first,
+accessibility-sensitive applications. Applicable components and patterns MUST
+be evaluated for:
+
+- Narrow and mobile layouts
+- Long and localized-looking content
+- Constrained containers
+- Increased text size and wrapping
+- Keyboard focus visibility
+- High-contrast or forced-colors behavior when supported
+- Reduced motion for animated behavior
+- Loading, empty, error, disabled, and read-only states when those states are
+  part of the component contract
+
+A combinatorial story for every possible prop, viewport, and theme is not
+required. Explicit coverage of meaningful supported contracts and historically
+risky combinations SHOULD be provided.
+
+### XVI. Framework Storybooks Must Remain Independently Valid
+
+Each framework Storybook MUST build and test successfully in its own framework
+context. Composition into the primary catalog MUST NOT hide a framework
+Storybook's independent failures. The primary catalog SHOULD degrade gracefully
+when an optional composed Storybook is unavailable during local development.
+
+Shared design-system behavior MUST remain recognizable across HTML and
+framework-specific representations. Changes to shared components SHOULD verify
+affected Storybooks rather than only the package where the source edit occurred.
 
 ## Stack and Dependency Constraints
 
@@ -181,11 +319,20 @@ changed and what the nature of each change was.
   wrapper package exposes them.
 - **No wrapper-only styling**: Wrapper packages MUST NOT introduce private CSS
   that changes visual semantics outside the `@pathable/styles` contract.
+- **Semantic and visual parity**: Wrapper components MUST preserve the shared
+  package's semantic HTML, accessibility behavior, class contracts, design
+  tokens, and intended visual behavior.
 - **Automatic assets**: Wrapper public entrypoints MUST import or otherwise
   package the compiled styles and assets required for normal consumer use.
 - **Transitive installability**: `pnpm pack --dry-run` or equivalent validation
   MUST demonstrate that a wrapper package can be installed and imported without
   a separate client-side `@pathable/styles` import.
+- **Type safety**: Public component APIs and generated declarations MUST be
+  type-safe and suitable for consumers.
+- **Publishable validation**: Publishable artifacts MUST be validated as
+  consumers receive them: exports, included files, runtime entry points, peer
+  dependencies, and declarations. A successful monorepo build alone MUST NOT be
+  treated as proof that a package is publishable.
 - **Framework mapping only**: Wrapper props and component names MAY improve
   framework ergonomics, but each visual state MUST map to an existing
   `packages/styles` class, token, or documented pattern.
@@ -193,7 +340,46 @@ changed and what the nature of each change was.
   by converting the equivalent `packages/styles` component name to CamelCase
   and removing any `pathable` prefix.
 
-## Development Workflow & Quality Gates
+## Automated Validation & Quality Gates
+
+### Validation as Product Contract
+
+Source code, styles, stories, documentation, generated declarations, and
+publishable package metadata MUST be validated by automated quality gates
+appropriate to their file type and package.
+
+Pull requests MUST run the applicable linting, formatting, type-checking,
+build, test, accessibility, and package-validation gates before merge. Required
+checks MUST fail on actionable violations; a warning-only configuration MUST
+NOT create the appearance of enforcement.
+
+Files MUST NOT be silently excluded from their applicable validator merely to
+make CI pass. Rule suppressions and test exclusions MUST be narrowly scoped,
+documented, and justified. Valid findings SHOULD be fixed at the source instead
+of disabling a rule globally.
+
+Generated output, caches, dependencies, and intentionally external artifacts
+MAY be excluded explicitly. Local validation and CI validation MUST remain
+materially consistent so contributors and coding agents can reproduce failures.
+
+The established tool categories include: JavaScript/TypeScript linting, style
+linting, Markdown linting, formatting, token validation, type checking,
+Storybook testing, and package-distribution checks.
+
+### Lint Enforcement
+
+Agents MUST NOT disable, weaken, skip, or remove lint checks to make work pass.
+This includes inline disable comments, ignore-file entries, rule severity
+reductions, file or glob exclusions, package-script bypasses, CI-condition
+changes, and command flags that silence lint failures. Agents MUST fix the
+underlying issue or report the lint conflict as a blocker.
+
+Only a human maintainer may bypass a lint rule. A human-approved bypass MUST be
+narrow, include the rule name, explain the reason, and preserve the smallest
+practical scope. Agents MAY implement a human-specified bypass only when the
+approval is explicit in the task, issue, PR, or conversation context.
+
+### Gate Categories
 
 - **Token changes require build verification**: Any change to token values or
   names MUST be followed by a build (`pnpm build`) and the output checked into
@@ -205,22 +391,24 @@ changed and what the nature of each change was.
   diff or output comparison when color, elevation, or spacing values change.
 - **Package contents**: Before release, run `pnpm pack --dry-run` or equivalent
   to verify the published package contains the expected files.
-- **Lint checks are agent-enforced**: Agents MUST NOT disable, weaken, skip, or
-  remove lint checks to make work pass. This includes inline disable comments,
-  ignore-file entries, rule severity reductions, file or glob exclusions,
-  package-script bypasses, CI-condition changes, and command flags that silence
-  lint failures. Agents MUST fix the underlying issue or report the lint
-  conflict as a blocker.
-- **Lint bypasses are human-only**: Only a human maintainer may bypass a lint
-  rule. A human-approved bypass MUST be narrow, include the rule name, explain
-  the reason, and preserve the smallest practical scope. Agents MAY implement a
-  human-specified bypass only when the approval is explicit in the task,
-  issue, PR, or conversation context.
 - **Commit discipline**: Changes that affect multiple workspace packages SHOULD
   be committed separately per workspace unless they are logically atomic.
 - **Figma sync**: When Figma design tokens are updated, a corresponding
   repository issue or pull request MUST be created to track the code-side
   update. Silent divergence is not permitted.
+
+### Visual Regression Protection
+
+Visual regression protects design-system stability. Stable stories SHOULD serve
+as deterministic visual-regression fixtures for meaningful component states.
+Visual checks MUST protect design tokens, typography, spacing, responsive
+behavior, focus indicators, overflow, wrapping, icon alignment, and state
+presentation where applicable.
+
+Visual snapshots MUST be updated only after intentional review of the rendered
+change. Snapshot approval MUST NOT be used to conceal unexplained regressions.
+Serialized DOM snapshots MUST NOT be treated as a complete substitute for
+browser-rendered visual or behavioral validation.
 
 ## Change Scope Granularity
 
@@ -295,4 +483,4 @@ this constitution. Violations MUST be documented in their complexity tracking
 section with justification. Complexity is not automatically forbidden but it
 MUST be transparent and justified.
 
-**Version**: 1.3.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-16
+**Version**: 1.4.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-19

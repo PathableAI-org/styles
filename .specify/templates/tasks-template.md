@@ -42,6 +42,11 @@ description: "Task list template for feature implementation"
   - Delivered as an MVP increment
 
   DO NOT keep these sample tasks in the generated tasks.md file.
+
+  Task categories below marked with applicability conditions MUST only be
+  included when the condition is met. Do not generate Storybook, accessibility,
+  responsive, or visual tasks for changes that cannot affect rendered UI or
+  component contracts. An applicability decision is required, not boilerplate.
   ============================================================================
 -->
 
@@ -69,6 +74,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T007 Create base models/entities that all stories depend on
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
+
+<!-- Design-system wrapper foundational tasks — only when the feature
+     changes or adds wrapper components -->
 - [ ] T010 Add or update the owning `packages/styles` contract before wrapper
       work begins (required for design-system wrapper features)
 - [ ] T011 Verify wrapper package entrypoints import/package required
@@ -77,6 +85,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T012 Verify each `packages/react` component name is the CamelCase form
       of its equivalent `packages/styles` component name with any `pathable`
       prefix removed (required for React wrapper features)
+- [ ] T013 Verify wrapper components preserve the shared package's semantic
+      HTML, accessibility behavior, class contracts, design tokens, and
+      intended visual behavior (required for wrapper features)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -92,17 +103,70 @@ Examples of foundational tasks (adjust based on your project):
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T013 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T014 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T020 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T021 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T016 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T017 [US1] Implement [Service] in src/services/[service].py (depends on T015, T016)
-- [ ] T018 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T019 [US1] Add validation and error handling
-- [ ] T020 [US1] Add logging for user story 1 operations
+- [ ] T022 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+- [ ] T023 [P] [US1] Create [Entity2] model in src/models/[entity2].py
+- [ ] T024 [US1] Implement [Service] in src/services/[service].py (depends on T022, T023)
+- [ ] T025 [US1] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T026 [US1] Add validation and error handling
+- [ ] T027 [US1] Add logging for user story 1 operations
+
+<!-- Story task categories — only when the feature affects rendered UI or
+     component contracts. Skip these entirely for non-UI work. -->
+
+<!-- Fixed stories for supported states -->
+- [ ] T028 [P] [US1] Add `Default` story with realistic default props in
+      [path/to/Component.stories.tsx]
+- [ ] T029 [P] [US1] Add `Disabled` story in [path/to/Component.stories.tsx]
+      (if component supports disabled state)
+- [ ] T030 [P] [US1] Add one fixed named story per meaningful variant in
+      [path/to/Component.stories.tsx]
+
+<!-- Interaction tests (interactive components only) -->
+- [ ] T031 [P] [US1] Add keyboard activation interaction test using
+      `getByRole` and `@storybook/test` in [path/to/Component.stories.tsx]
+- [ ] T032 [P] [US1] Verify focus management and visible focus indicator in
+      interaction test in [path/to/Component.stories.tsx]
+
+<!-- Accessibility validation (rendered UI only) -->
+- [ ] T033 [US1] Verify Storybook a11y addon reports no new violations for
+      [component] stories; document and justify any narrow story-level
+      exceptions
+- [ ] T034 [US1] Run static accessibility linting (`eslint-plugin-jsx-a11y`)
+      on [component] source and fix findings
+
+<!-- Responsive and constrained-content cases -->
+- [ ] T035 [P] [US1] Add `Narrow` or `Mobile` viewport story for [component]
+      in [path/to/Component.stories.tsx]
+- [ ] T036 [P] [US1] Add `LongContent` story with localized-looking text for
+      [component] in [path/to/Component.stories.tsx]
+- [ ] T037 [US1] Verify keyboard focus visibility, high-contrast behavior,
+      and reduced-motion preference for [component]
+
+<!-- Visual fixtures (when visual regression is active) -->
+- [ ] T038 [P] [US1] Add deterministic visual-regression fixture stories for
+      [component] states in [path/to/Component.stories.tsx]
+
+<!-- Package and consumer validation (when publishable packages change) -->
+- [ ] T039 [US1] Run `pnpm build` for affected packages and verify output
+- [ ] T040 [US1] Run `pnpm pack --dry-run` or equivalent package-content
+      validation for affected packages, including wrapper transitive imports
+- [ ] T041 [US1] Verify type declarations are generated and type-checked
+      for [package]
+
+<!-- Documentation updates -->
+- [ ] T042 [P] [US1] Update Storybook metadata for [component] with semantic
+      intent, usage guidance, misuse warnings, and accessibility obligations
+- [ ] T043 [P] [US1] Update package README or Astro docs for [feature]
+      (identify canonical source and derive/link others)
+
+<!-- CI integration (when new artifact types or checks are introduced) -->
+- [ ] T044 [US1] Add or update CI workflow steps for [new check or artifact
+      type]
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -116,15 +180,17 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T021 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T022 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T050 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T051 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 2
 
-- [ ] T023 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T024 [US2] Implement [Service] in src/services/[service].py
-- [ ] T025 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T026 [US2] Integrate with User Story 1 components (if needed)
+- [ ] T052 [P] [US2] Create [Entity] model in src/models/[entity].py
+- [ ] T053 [US2] Implement [Service] in src/services/[service].py
+- [ ] T054 [US2] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T055 [US2] Integrate with User Story 1 components (if needed)
+
+<!-- Repeat applicable task categories from User Story 1 as needed for US2 -->
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -138,14 +204,14 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T027 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T028 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T060 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T061 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 3
 
-- [ ] T029 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T030 [US3] Implement [Service] in src/services/[service].py
-- [ ] T031 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T062 [P] [US3] Create [Entity] model in src/models/[entity].py
+- [ ] T063 [US3] Implement [Service] in src/services/[service].py
+- [ ] T064 [US3] Implement [endpoint/feature] in src/[location]/[file].py
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -169,7 +235,16 @@ Examples of foundational tasks (adjust based on your project):
   human maintainer has explicitly approved a narrow bypass
 - [ ] TXXX Run package-content validation for affected packages
   (`pnpm pack --dry-run` or equivalent), including wrapper transitive imports
+- [ ] TXXX Run type checking for affected packages
 - [ ] TXXX Run quickstart.md validation
+
+<!-- Cross-framework verification — only when shared styles or contracts change -->
+- [ ] TXXX Build and test all affected framework Storybooks in their own
+      framework context; confirm composition does not hide independent failures
+
+<!-- Visual regression approval — only when visual fixtures changed -->
+- [ ] TXXX Review visual-regression snapshots; approve intentional changes;
+      do not use snapshot approval to conceal unexplained regressions
 
 ---
 
@@ -267,3 +342,10 @@ With multiple developers:
   corresponding `packages/styles` contract exists
 - Avoid: disabling, weakening, skipping, or silencing lint checks. Agents must
   fix lint findings or escalate for explicit human approval of a narrow bypass.
+- Avoid: generating Storybook, accessibility, responsive, or visual tasks for
+  changes that cannot affect rendered UI or component contracts. An
+  applicability decision is required, not boilerplate tasks.
+- Avoid: using Playground/Controls stories as a substitute for fixed,
+  deterministic regression stories.
+- Avoid: using serialized DOM snapshots as a complete substitute for
+  browser-rendered visual or behavioral validation.
