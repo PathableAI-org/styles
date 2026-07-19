@@ -1,7 +1,6 @@
 ;(function () {
   'use strict'
-  var loadingClasses = ['pathable-js-loading', 'usa-js-loading']
-  var fallback
+  const loadingClasses = ['pathable-js-loading', 'usa-js-loading']
   loadingClasses.forEach(function (c) {
     document.documentElement.classList.add(c)
   })
@@ -10,7 +9,7 @@
       document.documentElement.classList.remove(c)
     })
   }
-  fallback = setTimeout(revertClasses, 8000)
+  const fallback = setTimeout(revertClasses, 8000)
   function verifyLoaded() {
     if (window.pathableJsLoaded) {
       clearTimeout(fallback)
