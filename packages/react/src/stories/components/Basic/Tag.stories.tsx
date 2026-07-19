@@ -1,4 +1,5 @@
 import { Tag } from '../../../components/Tag/Tag'
+import { Card } from '../../../components/Card/Card'
 import type { Meta, StoryObj } from '@storybook/react'
 import { within, expect } from 'storybook/test'
 
@@ -152,7 +153,6 @@ export const AccessibilityCheck: Story = {
  *  the typical pattern of using tags for metadata alongside content. */
 export const AsStatusIndicators: Story = {
   render: () => {
-    const { Card } = require('../../../components/Card/Card')
     return (
       <Card
         presentation="workflow"

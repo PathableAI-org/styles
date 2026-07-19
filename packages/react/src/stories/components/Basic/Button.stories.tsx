@@ -298,13 +298,11 @@ export const KeyboardActivation: Story = {
     })
 
     await step('Enter key activates the button', async () => {
-      const button = canvas.getByRole('button', { name: 'Keyboard Button' })
       await userEvent.keyboard('{Enter}')
       await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
 
     await step('Space key activates the button', async () => {
-      const button = canvas.getByRole('button', { name: 'Keyboard Button' })
       await userEvent.keyboard(' ')
       await expect(args.onClick).toHaveBeenCalledTimes(2)
     })

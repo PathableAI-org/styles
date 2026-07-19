@@ -1,6 +1,6 @@
 import { Link } from '../../../components/Link/Link'
 import type { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within, expect, fn } from 'storybook/test'
+import { userEvent, within, expect } from 'storybook/test'
 
 const meta = {
   title: 'Components/Link',

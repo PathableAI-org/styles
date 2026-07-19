@@ -3,6 +3,9 @@ import { Button } from '../../../components/Button/Button'
 import { Link } from '../../../components/Link/Link'
 import type { Meta, StoryObj } from '@storybook/react'
 
+const PLACEHOLDER_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23c8c8c8'/%3E%3C/svg%3E"
+
 const meta = {
   title: 'Components/Card',
   component: Card,
@@ -114,7 +117,7 @@ export const MediaPresentation: Story = {
     <Card
       presentation="media"
       title="Media Card"
-      media={<img src="https://placehold.co/600x400" alt="Media placeholder" />}
+      media={<img src={PLACEHOLDER_IMAGE} alt="Media placeholder" />}
       footer={<span>Updated today</span>}
     >
       <p>This card includes a media element alongside the body content.</p>
@@ -127,7 +130,7 @@ export const FlagPresentation: Story = {
     <Card
       presentation="flag"
       title="Flag card"
-      media={<img src="https://placehold.co/240x160" alt="Flag placeholder" />}
+      media={<img src={PLACEHOLDER_IMAGE} alt="Flag placeholder" />}
       footer={<Link href="#flag-card">Review details</Link>}
     >
       <p>This card uses the flag layout with media beside the text.</p>
@@ -140,9 +143,7 @@ export const HeaderFirstPresentation: Story = {
     <Card
       presentation="header-first"
       title="Header-first card"
-      media={
-        <img src="https://placehold.co/600x320" alt="Header placeholder" />
-      }
+      media={<img src={PLACEHOLDER_IMAGE} alt="Header placeholder" />}
     >
       <p>
         The header-first presentation places media above the content region.

@@ -282,15 +282,9 @@ jobs:
         run: pnpm --filter @pathable/storybook build-storybook
 
       - name: Build React Storybook
-<<<<<<< HEAD
         run: pnpm --filter @pathable/storybook-react build-storybook
 
       - name: Accessibility tests — HTML Storybook
-=======
-        run: pnpm --filter @pathable/react build && pnpm --filter @pathable/storybook-react build-storybook
-
-      - name: Accessibility tests (styles)
->>>>>>> origin/main
         run: |
           set +e
           npx serve -n -l 6006 apps/storybook/storybook-static &
@@ -312,11 +306,7 @@ jobs:
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
 
-<<<<<<< HEAD
       - name: Accessibility tests — React Storybook
-=======
-      - name: Accessibility tests (React)
->>>>>>> origin/main
         run: |
           set +e
           npx serve -n -l 6007 apps/storybook-react/storybook-static &
