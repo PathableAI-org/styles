@@ -15,7 +15,7 @@ export function SummaryBox({
 
   return (
     <div className={classes} {...rest}>
-      {heading && <h2 className="pathable-summary-box__heading">{heading}</h2>}
+      {heading && <h3 className="pathable-summary-box__heading">{heading}</h3>}
       <div className="pathable-summary-box__text">{children}</div>
     </div>
   )

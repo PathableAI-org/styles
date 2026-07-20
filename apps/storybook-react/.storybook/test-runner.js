@@ -22,7 +22,6 @@ const config = {
       'components-card--narrow-workflow',
       'components-tag--as-status-indicators',
       'components-communication-alert--error',
-      'components-communication-communicationpatterns--default',
     ])
     if (skipA11yStoryIds.has(context.id)) {
       return
