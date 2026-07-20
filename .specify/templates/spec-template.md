@@ -83,6 +83,9 @@
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right functional requirements.
+
+  ## Design-system and visual work
+
   For visual/design-system work, requirements must name the owning
   `packages/styles` source contract before naming framework wrappers. A wrapper
   package requirement must state how the wrapper automatically imports or
@@ -90,10 +93,54 @@
   helpers, and assets for normal consumer use. A `packages/react` component
   requirement must name the React component as the CamelCase form of the
   equivalent `packages/styles` component name with any `pathable` prefix
-  removed.
+  removed. Wrapper components must preserve the shared package's semantic HTML,
+  accessibility behavior, class contracts, design tokens, and intended visual
+  behavior.
+
+  ## Storybook and interaction requirements
+
+  When the feature affects rendered component UI, requirements should identify
+  the meaningful supported component states that need deterministic, named
+  stories. For interactive components, requirements should describe the
+  critical observable keyboard and focus behavior that interaction tests must
+  verify. Stories must use accessible queries (`getByRole`, `getByLabelText`)
+  and avoid implementation details. Stories must be deterministic — no dates,
+  random values, or live network calls.
+
+  ## Accessibility requirements
+
+  When the feature affects rendered UI, markup, or component behavior,
+  requirements should describe the expected accessible behavior: appropriate
+  ARIA roles, keyboard accessibility, disabled state communication, focus
+  visibility, and any color-contrast obligations. Static JSX accessibility
+  linting and rendered accessibility testing are complementary — both must be
+  addressed. Broad a11y rule disablement is not permitted; narrow story-level
+  exceptions require documented justification.
+
+  ## Responsive and resilient state requirements
+
+  When the feature affects rendered UI, requirements should call out
+  narrow/mobile behavior, long-content handling, constrained containers,
+  increased text size, keyboard focus visibility, high-contrast or
+  forced-colors behavior, reduced motion, and state presentations (loading,
+  empty, error, disabled, read-only) when these are part of the component
+  contract.
+
+  ## Visual regression requirements
+
+  When the feature affects rendered component UI or design tokens, requirements
+  should identify the stable stories that serve as visual-regression fixtures.
+  Visual checks protect design tokens, typography, spacing, responsive
+  behavior, focus indicators, overflow, wrapping, icon alignment, and state
+  presentation.
+
+  ## Lint and validation
+
   Requirements must not ask agents to disable, weaken, skip, or silence lint
   checks. Only explicit human maintainer approval may authorize a narrow
-  lint-rule bypass.
+  lint-rule bypass. Files must not be silently excluded from their applicable
+  validator merely to make CI pass. Warning-only configurations must not create
+  the appearance of enforcement.
 -->
 
 ### Functional Requirements
