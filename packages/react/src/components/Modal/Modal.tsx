@@ -61,13 +61,11 @@ export function Modal({
   // Set initial focus
   useEffect(() => {
     if (open) {
-      requestAnimationFrame(() => {
-        if (initialFocusRef?.current) {
-          initialFocusRef.current.focus()
-        } else if (closeRef.current) {
-          closeRef.current.focus()
-        }
-      })
+      if (initialFocusRef?.current) {
+        initialFocusRef.current.focus()
+      } else if (closeRef.current) {
+        closeRef.current.focus()
+      }
     }
   }, [open, initialFocusRef])
 

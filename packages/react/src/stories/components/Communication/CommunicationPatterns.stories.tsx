@@ -36,7 +36,7 @@ function CommunicationPatternsStory() {
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '1rem' }}>
-      <h1>Employment Program Enrollment</h1>
+      <h2>Employment Program Enrollment</h2>
 
       <SiteAlert status="info">
         <p>
