@@ -15,7 +15,7 @@ const meta = {
 
 **When not to use**: Do not use for unordered processes (use ProcessList). Do not use for fewer than 2 steps.
 
-**Underlying element**: \`<ol>\` with step segments and labels.
+**Underlying element**: A wrapping \`<div>\` containing an \`<ol>\` with step segments and labels.
 
 **Known constraints**: Current step is 1-based. Invalid or missing currentStep produces no invented current state. Steps before currentStep are marked completed.`,
       },

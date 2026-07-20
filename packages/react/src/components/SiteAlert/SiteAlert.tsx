@@ -37,7 +37,7 @@ export function SiteAlert({
     .join(' ')
 
   return (
-    <div className={classes} role={role} {...rest}>
+    <div {...rest} className={classes} role={role}>
       {heading && <h3>{heading}</h3>}
       {children}
     </div>

@@ -39,7 +39,7 @@ export function Alert({
     .join(' ')
 
   return (
-    <div className={classes} role={role} {...rest}>
+    <div {...rest} className={classes} role={role}>
       <div className="pathable-alert__body">
         {heading && <h3>{heading}</h3>}
         {children}

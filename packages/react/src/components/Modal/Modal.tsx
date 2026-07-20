@@ -5,6 +5,7 @@ import {
   useRef,
   useCallback,
   useId,
+  KeyboardEvent,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -29,6 +30,7 @@ export function Modal({
   closeLabel = 'Close modal',
   initialFocusRef,
   className = '',
+  onKeyDown: consumerOnKeyDown,
   ...rest
 }: ModalProps) {
   const autoId = useId()
@@ -69,9 +71,10 @@ export function Modal({
     }
   }, [open, initialFocusRef])
 
-  // Tab containment
+  // Tab containment — compose with consumer onKeyDown so internal
+  // Escape close and Tab logic can't be accidentally disabled
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
         return
@@ -107,14 +110,17 @@ export function Modal({
     // which are required for accessible dialog behavior.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
+      {...rest}
+      ref={contentRef}
       className={classes}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
-      onKeyDown={handleKeyDown}
-      ref={contentRef}
-      {...rest}
+      onKeyDown={(e) => {
+        handleKeyDown(e)
+        consumerOnKeyDown?.(e)
+      }}
     >
       <div className="pathable-modal__content">
         <div className="pathable-modal__heading">

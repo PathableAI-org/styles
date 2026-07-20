@@ -62,10 +62,10 @@ export function Accordion({
 
   return (
     <div className={classes} {...rest}>
-      {items.map((item) => {
+      {items.map((item, index) => {
         const isExpanded = expandedIds.includes(item.id)
-        const contentId = `accordion-content-${instanceId}-${item.id}`
-        const buttonId = `accordion-button-${instanceId}-${item.id}`
+        const contentId = `accordion-content-${instanceId}-${index}`
+        const buttonId = `accordion-button-${instanceId}-${index}`
 
         return (
           <div key={item.id}>
