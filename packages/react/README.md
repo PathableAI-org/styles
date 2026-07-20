@@ -15,11 +15,19 @@ No separate installation of `@pathable/styles` is required — styles are includ
 
 ```tsx
 import {
+  Accordion,
+  Alert,
+  Banner,
   Button,
   ButtonGroup,
   Card,
   Link,
   List,
+  Modal,
+  ProcessList,
+  SiteAlert,
+  StepIndicator,
+  SummaryBox,
   Table,
   Tag,
 } from '@pathable/react'
@@ -215,6 +223,19 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### Communication Components
+
+| Component     | Description                                                                                                                         | Props                                                                                            |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Accordion     | Expandable disclosure panels with single or multiple selection. Supports controlled/uncontrolled expanded state and disabled items. | `items`, `expandedIds`, `defaultExpandedIds`, `allowMultiple`, `onExpandedChange`                |
+| Alert         | Status messages with info, success, warning, error, and emergency severity levels. Optional slim variant.                           | `status`, `slim`, `heading`, `children`, `role`                                                  |
+| Banner        | Official site banner with disclosure toggle. Controlled/uncontrolled expanded state.                                                | `summary`, `children`, `expanded`, `defaultExpanded`, `onExpandedChange`                         |
+| Modal         | Dialog rendered via portal with focus trapping, Escape close, scroll locking, and focus restoration.                                | `open`, `onClose`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
+| ProcessList   | Ordered list of process steps with headings and body content.                                                                       | `items` (array of `{id, heading, body}`)                                                         |
+| SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                     | `status`, `slim`, `heading`, `children`, `role`                                                  |
+| StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
+| SummaryBox    | Key information callout box with optional heading.                                                                                  | `heading`, `children`                                                                            |
 
 ## Development
 

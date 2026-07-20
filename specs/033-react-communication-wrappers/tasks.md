@@ -38,8 +38,8 @@ independently implementable and testable.
 component/story locations without altering package architecture.
 
 - [ ] T001 Reconcile the verified selector and behavior inventory against `packages/styles/src/pathable-component-wrappers/` and record any blocking drift in `specs/033-react-communication-wrappers/research.md`
-- [ ] T002 [P] Create the planned component folders under `packages/react/src/components/{Accordion,Alert,Banner,Modal,ProcessList,SiteAlert,StepIndicator,SummaryBox}/`
-- [ ] T003 [P] Create the Communication story directory and deterministic shared fixture module at `packages/react/src/stories/components/Communication/fixtures.tsx`
+- [X] T002 [P] Create the planned component folders under `packages/react/src/components/{Accordion,Alert,Banner,Modal,ProcessList,SiteAlert,StepIndicator,SummaryBox}/`
+- [X] T003 [P] Create the Communication story directory and deterministic shared fixture module at `packages/react/src/stories/components/Communication/fixtures.tsx`
 
 **Checkpoint**: Feature scope and implementation paths match the approved plan.
 
@@ -52,16 +52,16 @@ and authoritative source contract.
 
 **Critical**: No user-story implementation begins until this phase passes.
 
-- [ ] T004 [P] Remove the unsupported border-box state and document verified Accordion disclosure behavior in `packages/styles/src/stories/components/Communication/Accordion.stories.ts`
-- [ ] T005 [P] Remove unsupported Alert subelement class claims while preserving implemented status and slim examples in `packages/styles/src/stories/components/Communication/Alert.stories.ts`
-- [ ] T006 [P] Replace Banner dismissal claims and malformed markup with the verified header/button/content disclosure contract in `packages/styles/src/stories/components/Communication/Banner.stories.ts`
-- [ ] T007 [P] Align Modal markup and documentation to the implemented root/content/heading/footer/close contract and verified focus behavior in `packages/styles/src/stories/components/Communication/Modal.stories.ts`
-- [ ] T008 [P] Remove the unsupported process body class while preserving ordered semantic content in `packages/styles/src/stories/components/Communication/ProcessList.stories.ts`
-- [ ] T009 [P] Remove unsupported warning, dismissal, and subelement class claims from `packages/styles/src/stories/components/Communication/SiteAlert.stories.ts`
-- [ ] T010 [P] Expand semantic current/completed-state guidance without adding states in `packages/styles/src/stories/components/Communication/StepIndicator.stories.ts`
-- [ ] T011 [P] Expand purpose, misuse, and rich-content guidance without adding classes in `packages/styles/src/stories/components/Communication/SummaryBox.stories.ts`
-- [ ] T012 Build and test the corrected source catalog and resolve contract failures in `packages/styles/src/stories/components/Communication/`
-- [ ] T013 Verify shared synthetic fixtures cover status, long/localized content, ordered steps, disclosure panels, and dialog actions in `packages/react/src/stories/components/Communication/fixtures.tsx`
+- [X] T004 [P] Remove the unsupported border-box state and document verified Accordion disclosure behavior in `packages/styles/src/stories/components/Communication/Accordion.stories.ts`
+- [X] T005 [P] Remove unsupported Alert subelement class claims while preserving implemented status and slim examples in `packages/styles/src/stories/components/Communication/Alert.stories.ts`
+- [X] T006 [P] Replace Banner dismissal claims and malformed markup with the verified header/button/content disclosure contract in `packages/styles/src/stories/components/Communication/Banner.stories.ts`
+- [X] T007 [P] Align Modal markup and documentation to the implemented root/content/heading/footer/close contract and verified focus behavior in `packages/styles/src/stories/components/Communication/Modal.stories.ts`
+- [X] T008 [P] Remove the unsupported process body class while preserving ordered semantic content in `packages/styles/src/stories/components/Communication/ProcessList.stories.ts`
+- [X] T009 [P] Remove unsupported warning, dismissal, and subelement class claims from `packages/styles/src/stories/components/Communication/SiteAlert.stories.ts`
+- [X] T010 [P] Expand semantic current/completed-state guidance without adding states in `packages/styles/src/stories/components/Communication/StepIndicator.stories.ts`
+- [X] T011 [P] Expand purpose, misuse, and rich-content guidance without adding classes in `packages/styles/src/stories/components/Communication/SummaryBox.stories.ts`
+- [X] T012 Build and test the corrected source catalog and resolve contract failures in `packages/styles/src/stories/components/Communication/`
+- [X] T013 Verify shared synthetic fixtures cover status, long/localized content, ordered steps, disclosure panels, and dialog actions in `packages/react/src/stories/components/Communication/fixtures.tsx`
 
 **Checkpoint**: Source Storybook is truthful, independently valid, and ready to
 serve as the wrapper authority.
@@ -79,16 +79,16 @@ semantics, consumer attributes, and exact source-class mapping.
 
 ### Tests and Stories for User Story 1
 
-- [ ] T014 [P] [US1] Add failing typed stories for Playground, info/success/warning/error/emergency/slim, long content, narrow layout, role overrides, and fallback behavior in `packages/react/src/stories/components/Communication/Alert.stories.tsx`
-- [ ] T015 [P] [US1] Add failing typed stories for Playground, default/info/emergency/slim, long content, narrow layout, role overrides, and no warning/dismissal in `packages/react/src/stories/components/Communication/SiteAlert.stories.tsx`
-- [ ] T016 [P] [US1] Add failing typed stories for Playground, default, link, rich content, long content, and narrow layout in `packages/react/src/stories/components/Communication/SummaryBox.stories.tsx`
+- [X] T014 [P] [US1] Add failing typed stories for Playground, info/success/warning/error/emergency/slim, long content, narrow layout, role overrides, and fallback behavior in `packages/react/src/stories/components/Communication/Alert.stories.tsx`
+- [X] T015 [P] [US1] Add failing typed stories for Playground, default/info/emergency/slim, long content, narrow layout, role overrides, and no warning/dismissal in `packages/react/src/stories/components/Communication/SiteAlert.stories.tsx`
+- [X] T016 [P] [US1] Add failing typed stories for Playground, default, link, rich content, long content, and narrow layout in `packages/react/src/stories/components/Communication/SummaryBox.stories.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T017 [P] [US1] Implement typed status, slim, heading/body, role override, attribute forwarding, class merging, and safe fallback behavior in `packages/react/src/components/Alert/Alert.tsx`
-- [ ] T018 [P] [US1] Implement typed default/info/emergency, slim, heading/body, role override, attribute forwarding, class merging, and safe fallback behavior in `packages/react/src/components/SiteAlert/SiteAlert.tsx`
-- [ ] T019 [P] [US1] Implement typed heading, rich body/link preservation, attribute forwarding, and class merging in `packages/react/src/components/SummaryBox/SummaryBox.tsx`
-- [ ] T020 [US1] Run the User Story 1 Storybook interaction and accessibility scenarios and resolve failures in `packages/react/src/stories/components/Communication/{Alert,SiteAlert,SummaryBox}.stories.tsx`
+- [X] T017 [P] [US1] Implement typed status, slim, heading/body, role override, attribute forwarding, class merging, and safe fallback behavior in `packages/react/src/components/Alert/Alert.tsx`
+- [X] T018 [P] [US1] Implement typed default/info/emergency, slim, heading/body, role override, attribute forwarding, class merging, and safe fallback behavior in `packages/react/src/components/SiteAlert/SiteAlert.tsx`
+- [X] T019 [P] [US1] Implement typed heading, rich body/link preservation, attribute forwarding, and class merging in `packages/react/src/components/SummaryBox/SummaryBox.tsx`
+- [X] T020 [US1] Run the User Story 1 Storybook interaction and accessibility scenarios and resolve failures in `packages/react/src/stories/components/Communication/{Alert,SiteAlert,SummaryBox}.stories.tsx`
 
 **Checkpoint**: Status and contextual communication wrappers work independently
 without interactive-component dependencies.
@@ -106,14 +106,14 @@ state when valid, completed-state derivation, and invalid-position fallback.
 
 ### Tests and Stories for User Story 2
 
-- [ ] T021 [P] [US2] Add failing typed stories for Playground, default, empty, long content, and narrow ordered processes in `packages/react/src/stories/components/Communication/ProcessList.stories.tsx`
-- [ ] T022 [P] [US2] Add failing typed stories for Playground, first/middle/final/no-current, invalid current, long labels, and narrow progress in `packages/react/src/stories/components/Communication/StepIndicator.stories.tsx`
+- [X] T021 [P] [US2] Add failing typed stories for Playground, default, empty, long content, and narrow ordered processes in `packages/react/src/stories/components/Communication/ProcessList.stories.tsx`
+- [X] T022 [P] [US2] Add failing typed stories for Playground, first/middle/final/no-current, invalid current, long labels, and narrow progress in `packages/react/src/stories/components/Communication/StepIndicator.stories.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T023 [P] [US2] Implement typed ordered ProcessItem rendering, semantic list structure, empty behavior, attribute forwarding, and implemented class mapping in `packages/react/src/components/ProcessList/ProcessList.tsx`
-- [ ] T024 [P] [US2] Implement typed Step records, one-based current-step validation, derived completed/current/upcoming state, semantic ordering, and attribute forwarding in `packages/react/src/components/StepIndicator/StepIndicator.tsx`
-- [ ] T025 [US2] Run the User Story 2 semantic and accessibility scenarios and resolve failures in `packages/react/src/stories/components/Communication/{ProcessList,StepIndicator}.stories.tsx`
+- [X] T023 [P] [US2] Implement typed ordered ProcessItem rendering, semantic list structure, empty behavior, attribute forwarding, and implemented class mapping in `packages/react/src/components/ProcessList/ProcessList.tsx`
+- [X] T024 [P] [US2] Implement typed Step records, one-based current-step validation, derived completed/current/upcoming state, semantic ordering, and attribute forwarding in `packages/react/src/components/StepIndicator/StepIndicator.tsx`
+- [X] T025 [US2] Run the User Story 2 semantic and accessibility scenarios and resolve failures in `packages/react/src/stories/components/Communication/{ProcessList,StepIndicator}.stories.tsx`
 
 **Checkpoint**: Process and progress wrappers are independently usable with no
 status or interactive-wrapper dependency.
@@ -132,16 +132,16 @@ and focus return.
 
 ### Tests and Stories for User Story 3
 
-- [ ] T026 [P] [US3] Add failing typed stories and accessible-query play tests for Playground, default, multiple, initially expanded, disabled, long, narrow, and relationship behavior in `packages/react/src/stories/components/Communication/Accordion.stories.tsx`
-- [ ] T027 [P] [US3] Add failing typed stories and accessible-query play tests for Playground, collapsed, expanded, controlled, long, and narrow disclosure behavior in `packages/react/src/stories/components/Communication/Banner.stories.tsx`
-- [ ] T028 [P] [US3] Add failing typed stories and accessible-query play tests for closed trigger, open, initial focus, Tab containment, Escape/close, long content/actions, and narrow layout in `packages/react/src/stories/components/Communication/Modal.stories.tsx`
+- [X] T026 [P] [US3] Add failing typed stories and accessible-query play tests for Playground, default, multiple, initially expanded, disabled, long, narrow, and relationship behavior in `packages/react/src/stories/components/Communication/Accordion.stories.tsx`
+- [X] T027 [P] [US3] Add failing typed stories and accessible-query play tests for Playground, collapsed, expanded, controlled, long, and narrow disclosure behavior in `packages/react/src/stories/components/Communication/Banner.stories.tsx`
+- [X] T028 [P] [US3] Add failing typed stories and accessible-query play tests for closed trigger, open, initial focus, Tab containment, Escape/close, long content/actions, and narrow layout in `packages/react/src/stories/components/Communication/Modal.stories.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T029 [P] [US3] Implement typed Accordion items, stable control/panel identifiers, controlled/uncontrolled expanded state, single/multiple rules, disabled behavior, and attribute forwarding in `packages/react/src/components/Accordion/Accordion.tsx`
-- [ ] T030 [P] [US3] Implement typed Banner summary/details, stable relationship identifiers, controlled/uncontrolled disclosure state, and attribute forwarding in `packages/react/src/components/Banner/Banner.tsx`
-- [ ] T031 [P] [US3] Implement controlled Modal portal rendering, naming/description relationships, close requests, Escape, Tab containment, scroll locking, initial focus, cleanup, and focus restoration in `packages/react/src/components/Modal/Modal.tsx`
-- [ ] T032 [US3] Run User Story 3 keyboard, focus, rendered accessibility, reduced-motion, and forced-colors scenarios and resolve failures in `packages/react/src/stories/components/Communication/{Accordion,Banner,Modal}.stories.tsx`
+- [X] T029 [P] [US3] Implement typed Accordion items, stable control/panel identifiers, controlled/uncontrolled expanded state, single/multiple rules, disabled behavior, and attribute forwarding in `packages/react/src/components/Accordion/Accordion.tsx`
+- [X] T030 [P] [US3] Implement typed Banner summary/details, stable relationship identifiers, controlled/uncontrolled disclosure state, and attribute forwarding in `packages/react/src/components/Banner/Banner.tsx`
+- [X] T031 [P] [US3] Implement controlled Modal portal rendering, naming/description relationships, close requests, Escape, Tab containment, scroll locking, initial focus, cleanup, and focus restoration in `packages/react/src/components/Modal/Modal.tsx`
+- [X] T032 [US3] Run User Story 3 keyboard, focus, rendered accessibility, reduced-motion, and forced-colors scenarios and resolve failures in `packages/react/src/stories/components/Communication/{Accordion,Banner,Modal}.stories.tsx`
 
 **Checkpoint**: All interactive wrappers satisfy their behavior contract without
 global DOM initialization or another user story.
@@ -161,16 +161,16 @@ exports, declarations, README, and runtime dependency metadata.
 
 ### Tests and Stories for User Story 4
 
-- [ ] T033 [P] [US4] Add a failing deterministic workflow composition using all eight public imports in `packages/react/src/stories/components/Communication/CommunicationPatterns.stories.tsx`
-- [ ] T034 [P] [US4] Add consumer adoption, purpose, misuse, accessibility, supported-state, and no-extra-import guidance for all eight components in `packages/react/README.md`
+- [X] T033 [P] [US4] Add a failing deterministic workflow composition using all eight public imports in `packages/react/src/stories/components/Communication/CommunicationPatterns.stories.tsx`
+- [X] T034 [P] [US4] Add consumer adoption, purpose, misuse, accessibility, supported-state, and no-extra-import guidance for all eight components in `packages/react/README.md`
 
 ### Implementation for User Story 4
 
-- [ ] T035 [US4] Export all eight components and their public item/prop types while preserving the transitive compiled-CSS import and excluding `@pathable/styles/js` in `packages/react/src/index.ts`
-- [ ] T036 [US4] Audit typed meta, autodocs, controls, fixed-state coverage, accessible queries, deterministic data, and composition boundaries across `packages/react/src/stories/components/Communication/`
-- [ ] T037 [US4] Build JavaScript and declarations and resolve export/type failures in `packages/react/src/index.ts` and `packages/react/src/components/{Accordion,Alert,Banner,Modal,ProcessList,SiteAlert,StepIndicator,SummaryBox}/*.tsx`
-- [ ] T038 [US4] Run publint, type-package validation, and package-content dry run and resolve distribution failures in `packages/react/package.json`, `packages/react/src/index.ts`, and `packages/react/README.md`
-- [ ] T039 [US4] Validate the five-minute consumer path and reconcile command or expected-result drift in `specs/033-react-communication-wrappers/quickstart.md`
+- [X] T035 [US4] Export all eight components and their public item/prop types while preserving the transitive compiled-CSS import and excluding `@pathable/styles/js` in `packages/react/src/index.ts`
+- [X] T036 [US4] Audit typed meta, autodocs, controls, fixed-state coverage, accessible queries, deterministic data, and composition boundaries across `packages/react/src/stories/components/Communication/`
+- [X] T037 [US4] Build JavaScript and declarations and resolve export/type failures in `packages/react/src/index.ts` and `packages/react/src/components/{Accordion,Alert,Banner,Modal,ProcessList,SiteAlert,StepIndicator,SummaryBox}/*.tsx`
+- [X] T038 [US4] Run publint, type-package validation, and package-content dry run and resolve distribution failures in `packages/react/package.json`, `packages/react/src/index.ts`, and `packages/react/README.md`
+- [X] T039 [US4] Validate the five-minute consumer path and reconcile command or expected-result drift in `specs/033-react-communication-wrappers/quickstart.md`
 
 **Checkpoint**: The complete public Communication set is independently
 installable, documented, typed, and consumable.
@@ -182,12 +182,12 @@ installable, documented, typed, and consumable.
 **Purpose**: Run the full repository-relevant gates and close cross-story
 quality risks without broadening the component contract.
 
-- [ ] T040 Run TypeScript, JavaScript lint, Markdown lint, style lint, token lint, and formatting gates and fix applicable findings in `packages/react/src/components/`, `packages/react/src/stories/components/Communication/`, and `packages/styles/src/stories/components/Communication/`
-- [ ] T041 Run independent source and React Storybook builds/tests and fix regressions in `packages/styles/src/stories/components/Communication/` and `packages/react/src/stories/components/Communication/`
-- [ ] T042 Review stable visual fixtures for typography, spacing, status treatment, focus, overflow, wrapping, icon alignment, and narrow layouts in `packages/react/src/stories/components/Communication/`
-- [ ] T043 Re-run React package build, publint, type-package validation, and `npm --cache /tmp/pathable-npm-cache pack --dry-run`, resolving failures in `packages/react/package.json` and `packages/react/src/index.ts`
-- [ ] T044 Audit for wrapper-only CSS, absent modifier output, global JavaScript imports, sensitive/nondeterministic examples, and validation bypasses across `packages/react/` and `packages/styles/src/stories/components/Communication/`
-- [ ] T045 Reconcile completed behavior, scope, and validation evidence against `specs/033-react-communication-wrappers/checklists/requirements.md` and `specs/033-react-communication-wrappers/checklists/behavior-testability.md`
+- [X] T040 Run TypeScript, JavaScript lint, Markdown lint, style lint, token lint, and formatting gates and fix applicable findings in `packages/react/src/components/`, `packages/react/src/stories/components/Communication/`, and `packages/styles/src/stories/components/Communication/`
+- [X] T041 Run independent source and React Storybook builds/tests and fix regressions in `packages/styles/src/stories/components/Communication/` and `packages/react/src/stories/components/Communication/`
+- [X] T042 Review stable visual fixtures for typography, spacing, status treatment, focus, overflow, wrapping, icon alignment, and narrow layouts in `packages/react/src/stories/components/Communication/`
+- [X] T043 Re-run React package build, publint, type-package validation, and `npm --cache /tmp/pathable-npm-cache pack --dry-run`, resolving failures in `packages/react/package.json` and `packages/react/src/index.ts`
+- [X] T044 Audit for wrapper-only CSS, absent modifier output, global JavaScript imports, sensitive/nondeterministic examples, and validation bypasses across `packages/react/` and `packages/styles/src/stories/components/Communication/`
+- [X] T045 Reconcile completed behavior, scope, and validation evidence against `specs/033-react-communication-wrappers/checklists/requirements.md` and `specs/033-react-communication-wrappers/checklists/behavior-testability.md`
 
 ---
 
