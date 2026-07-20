@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathable/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Expand/collapse, keyboard navigation (Enter/Space to toggle)\n**Consumers must**: Import `@pathable/styles/js` to enable interactive behavior.',
+          '**Status**: CSS-only in this package. The React wrapper at `@pathable/react` provides JS behavior (expand/collapse, keyboard navigation via Enter/Space).\n\n**CSS markup**: Requires `.pathable-accordion`, `.pathable-accordion__heading`, `.pathable-accordion__button`, `.pathable-accordion__content`.\n\n**Disclosure behavior (verified)**:\n- Each accordion item is a disclosure widget.\n- The button uses `aria-expanded="false"` (collapsed) or `aria-expanded="true"` (expanded).\n- The content panel is associated via `aria-controls` on the button and `id` on the panel.\n- The content panel uses the `hidden` attribute when collapsed.\n- Keyboard: Enter or Space toggles the disclosure.\n\n**Consumers must**: Import `@pathable/styles` CSS. For JS behavior, use `@pathable/react` Accordion component or import `@pathable/styles/js`.',
       },
     },
   },
@@ -37,29 +37,6 @@ export const Default = {
       </div>
       <div class="pathable-accordion__content" id="accordion-content-3" hidden>
         <p>No Soldier shall, in time of peace be quartered in any house, without the consent of the Owner, nor in time of war, but in a manner to be prescribed by law.</p>
-      </div>
-    </div>
-  `,
-}
-
-export const BorderBox = {
-  render: () => `
-    <div class="pathable-accordion pathable-accordion--border-box">
-      <div class="pathable-accordion__heading">
-        <button class="pathable-accordion__button" aria-expanded="false" aria-controls="accordion-bb-1">
-          Section One
-        </button>
-      </div>
-      <div class="pathable-accordion__content" id="accordion-bb-1" hidden>
-        <p>This accordion uses the border-box variant, which adds a visible border around each accordion item.</p>
-      </div>
-      <div class="pathable-accordion__heading">
-        <button class="pathable-accordion__button" aria-expanded="false" aria-controls="accordion-bb-2">
-          Section Two
-        </button>
-      </div>
-      <div class="pathable-accordion__content" id="accordion-bb-2" hidden>
-        <p>Each section is visually separated with a border for clearer content delineation.</p>
       </div>
     </div>
   `,

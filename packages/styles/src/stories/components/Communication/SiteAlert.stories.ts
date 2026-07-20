@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathable/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Dismiss, keyboard navigation\n**Consumers must**: Import `@pathable/styles/js` to enable interactive behavior.',
+          '**Interaction Model**: CSS-only in this package. Dismiss behavior may be provided by external JS.\n\n**Consumers must**: Import `@pathable/styles` CSS.\n\n**CSS markup**: Uses `.pathable-site-alert`, `.pathable-site-alert--info`, `.pathable-site-alert--emergency`, `.pathable-site-alert--slim`. The `--warning` variant is NOT implemented. No `__body`, `__heading`, or `__text` sub-element classes exist — all content uses semantic HTML without absent class names.\n\n**No dismissal built in**: This component does not include dismissal behavior by default. If dismissal is needed, consumers must implement it via external JavaScript.',
       },
     },
   },
@@ -14,34 +14,19 @@ export default {
 export const Info = {
   render: () => `
     <div class="pathable-site-alert pathable-site-alert--info" role="alert">
-      <div class="pathable-site-alert__body">
-        <h3 class="pathable-site-alert__heading">Site Notice</h3>
-        <p class="pathable-site-alert__text">This site uses cookies to improve your experience.</p>
-      </div>
+      <h3>Site Notice</h3>
+      <p>This site uses cookies to improve your experience.</p>
     </div>
   `,
 }
 
 export const Default = Info
 
-export const Warning = {
-  render: () => `
-    <div class="pathable-site-alert pathable-site-alert--warning" role="alert">
-      <div class="pathable-site-alert__body">
-        <h3 class="pathable-site-alert__heading">Scheduled Maintenance</h3>
-        <p class="pathable-site-alert__text">This site will be undergoing maintenance on Saturday from 2:00 AM to 6:00 AM EST.</p>
-      </div>
-    </div>
-  `,
-}
-
 export const Emergency = {
   render: () => `
     <div class="pathable-site-alert pathable-site-alert--emergency" role="alert">
-      <div class="pathable-site-alert__body">
-        <h3 class="pathable-site-alert__heading">Emergency Alert</h3>
-        <p class="pathable-site-alert__text">Please follow all official guidance and check for updates regularly.</p>
-      </div>
+      <h3>Emergency Alert</h3>
+      <p>Please follow all official guidance and check for updates regularly.</p>
     </div>
   `,
 }
@@ -49,9 +34,7 @@ export const Emergency = {
 export const Slim = {
   render: () => `
     <div class="pathable-site-alert pathable-site-alert--slim" role="alert">
-      <div class="pathable-site-alert__body">
-        <p class="pathable-site-alert__text">A slim site alert with minimal padding for compact notifications.</p>
-      </div>
+      <p>A slim site alert with minimal padding for compact notifications.</p>
     </div>
   `,
 }
