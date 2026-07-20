@@ -62,10 +62,10 @@ export function Accordion({
 
   return (
     <div className={classes} {...rest}>
-      {items.map((item, index) => {
+      {items.map((item) => {
         const isExpanded = expandedIds.includes(item.id)
-        const contentId = `accordion-content-${instanceId}-${index}`
-        const buttonId = `accordion-button-${instanceId}-${index}`
+        const contentId = `accordion-content-${instanceId}-${item.id}`
+        const buttonId = `accordion-button-${instanceId}-${item.id}`
 
         return (
           <div key={item.id}>
@@ -79,6 +79,7 @@ export function Accordion({
                 onClick={() => {
                   if (!item.disabled) toggleId(item.id)
                 }}
+                type="button"
               >
                 {item.heading}
               </button>

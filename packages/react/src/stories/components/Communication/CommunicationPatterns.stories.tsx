@@ -1,11 +1,13 @@
-import { Accordion } from '../../../components/Accordion/Accordion'
-import { Alert } from '../../../components/Alert/Alert'
-import { Banner } from '../../../components/Banner/Banner'
-import { Modal } from '../../../components/Modal/Modal'
-import { ProcessList } from '../../../components/ProcessList/ProcessList'
-import { SiteAlert } from '../../../components/SiteAlert/SiteAlert'
-import { StepIndicator } from '../../../components/StepIndicator/StepIndicator'
-import { SummaryBox } from '../../../components/SummaryBox/SummaryBox'
+import {
+  Accordion,
+  Alert,
+  Banner,
+  Modal,
+  ProcessList,
+  SiteAlert,
+  StepIndicator,
+  SummaryBox,
+} from '../../../index'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { ACCORDION_ITEMS, PROCESS_ITEMS, STEPS } from './fixtures'

@@ -81,7 +81,7 @@ export function Modal({
       }
       if (e.key === 'Tab' && contentRef.current) {
         const focusable = contentRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          'button:not(:disabled):not([hidden]), [href]:not(:disabled):not([hidden]), input:not(:disabled):not([hidden]), select:not(:disabled):not([hidden]), textarea:not(:disabled):not([hidden]), [tabindex]:not([tabindex="-1"]):not(:disabled):not([hidden])',
         )
         const first = focusable[0]
         const last = focusable[focusable.length - 1]
