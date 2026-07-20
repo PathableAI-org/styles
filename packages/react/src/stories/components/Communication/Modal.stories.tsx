@@ -244,7 +244,7 @@ export const OpenCloseBehavior: Story = {
     children: <p>Content here.</p>,
     onClose: fn(),
   },
-  play: async ({ step }) => {
+  play: async ({ args, step }) => {
     await step('modal is rendered in the portal', async () => {
       // The modal is portaled to document.body, so query the whole document
       const dialog = document.body.querySelector('[role="dialog"]')

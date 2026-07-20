@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useCallback, useState } from 'react'
+import { HTMLAttributes, ReactNode, useCallback, useState, useId } from 'react'
 
 interface BannerProps extends HTMLAttributes<HTMLElement> {
   summary: ReactNode
@@ -8,8 +8,6 @@ interface BannerProps extends HTMLAttributes<HTMLElement> {
   onExpandedChange?: (expanded: boolean) => void
   id?: string
 }
-
-let bannerIdCounter = 0
 
 export function Banner({
   summary,
@@ -24,9 +22,8 @@ export function Banner({
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
   const isControlled = controlledExpanded !== undefined
   const isExpanded = isControlled ? controlledExpanded : internalExpanded
-  const [baseId] = useState(
-    () => idProp || `pathable-banner-${++bannerIdCounter}`,
-  )
+  const autoId = useId()
+  const baseId = idProp || `pathable-banner-${autoId}`
 
   const toggle = useCallback(() => {
     const next = !isExpanded
@@ -56,16 +53,17 @@ export function Banner({
               fill="currentColor"
             />
           </svg>
-          <button
-            className="pathable-banner__button"
-            aria-expanded={isExpanded}
-            aria-controls={`${baseId}-content`}
-            onClick={toggle}
-            type="button"
-          >
-            {summary}
-          </button>
+          <span>An official website of the PathAble</span>
         </div>
+        <button
+          className="pathable-banner__button"
+          aria-expanded={isExpanded}
+          aria-controls={`${baseId}-content`}
+          onClick={toggle}
+          type="button"
+        >
+          {summary}
+        </button>
       </div>
       <div
         id={`${baseId}-content`}

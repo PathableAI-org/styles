@@ -33,9 +33,11 @@ export function Modal({
 }: ModalProps) {
   const autoId = useId()
   const titleId = `modal-title-${autoId}`
+  const descriptionId = description ? `modal-desc-${autoId}` : undefined
   const contentRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const previousActiveElement = useRef<HTMLElement | null>(null)
+  const previousOverflow = useRef<string>('')
   const mounted = useRef(false)
 
   // Capture and restore focus
@@ -43,16 +45,14 @@ export function Modal({
     if (open) {
       mounted.current = true
       previousActiveElement.current = document.activeElement as HTMLElement
-      // Lock scroll
+      previousOverflow.current = document.body.style.overflow
       document.body.style.overflow = 'hidden'
     } else if (mounted.current) {
-      // Restore scroll
-      document.body.style.overflow = ''
-      // Restore focus
+      document.body.style.overflow = previousOverflow.current
       previousActiveElement.current?.focus()
     }
     return () => {
-      document.body.style.overflow = ''
+      document.body.style.overflow = previousOverflow.current
     }
   }, [open])
 
@@ -98,39 +98,43 @@ export function Modal({
     [onClose],
   )
 
-  if (!open) return null
+  if (!open || typeof document === 'undefined') return null
 
   const classes = ['pathable-modal', className].filter(Boolean).join(' ')
 
-  return createPortal(
+  const dialog = (
+    // The dialog role element needs onKeyDown for Escape close and Tab containment,
+    // which are required for accessible dialog behavior.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
       className={classes}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
+      aria-describedby={descriptionId}
       onKeyDown={handleKeyDown}
       ref={contentRef}
       {...rest}
     >
       <div className="pathable-modal__content">
-        <h2 id={titleId} className="pathable-modal__heading">
-          {title}
-        </h2>
-        {description && <p>{description}</p>}
-        <button
-          ref={closeRef}
-          className="pathable-modal__close"
-          aria-label={closeLabel}
-          onClick={onClose}
-          type="button"
-        >
-          &times;
-        </button>
+        <div className="pathable-modal__heading">
+          <h2 id={titleId}>{title}</h2>
+          <button
+            ref={closeRef}
+            className="pathable-modal__close"
+            aria-label={closeLabel}
+            onClick={onClose}
+            type="button"
+          >
+            &times;
+          </button>
+        </div>
+        {description && <p id={descriptionId}>{description}</p>}
         {children && <div>{children}</div>}
         {footer && <div className="pathable-modal__footer">{footer}</div>}
       </div>
-    </div>,
-    document.body,
+    </div>
   )
+
+  return createPortal(dialog, document.body)
 }

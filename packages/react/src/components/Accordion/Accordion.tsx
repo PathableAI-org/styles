@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useCallback, useState } from 'react'
+import { HTMLAttributes, ReactNode, useCallback, useState, useId } from 'react'
 
 interface AccordionItem {
   id: string
@@ -28,6 +28,7 @@ export function Accordion({
     useState<string[]>(defaultExpandedIds)
   const isControlled = controlledExpandedIds !== undefined
   const expandedIds = isControlled ? controlledExpandedIds : internalExpandedIds
+  const instanceId = useId()
 
   const toggleId = useCallback(
     (id: string) => {
@@ -63,8 +64,8 @@ export function Accordion({
     <div className={classes} {...rest}>
       {items.map((item) => {
         const isExpanded = expandedIds.includes(item.id)
-        const contentId = `accordion-content-${item.id}`
-        const buttonId = `accordion-button-${item.id}`
+        const contentId = `accordion-content-${instanceId}-${item.id}`
+        const buttonId = `accordion-button-${instanceId}-${item.id}`
 
         return (
           <div key={item.id}>

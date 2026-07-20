@@ -38,10 +38,8 @@ export function SiteAlert({
 
   return (
     <div className={classes} role={role} {...rest}>
-      <div className="pathable-site-alert__body">
-        {heading && <h3>{heading}</h3>}
-        {children}
-      </div>
+      {heading && <h3>{heading}</h3>}
+      {children}
     </div>
   )
 }
