@@ -66,8 +66,10 @@ function CommunicationPatternsStory() {
 
       <ProcessList items={PROCESS_ITEMS.slice(0, 3)} />
 
-      <Banner summary="Official website of the United States government">
-        <p>The .gov domain indicates official government information.</p>
+      <Banner summary="Here's how you know">
+        <p>
+          Reminder: Session documentation must be completed within 24 hours.
+        </p>
       </Banner>
 
       <button type="button" onClick={() => setModalOpen(true)}>
