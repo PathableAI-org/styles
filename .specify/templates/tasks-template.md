@@ -128,7 +128,7 @@ Examples of foundational tasks (adjust based on your project):
 
 <!-- Interaction tests (interactive components only) -->
 - [ ] T031 [P] [US1] Add keyboard activation interaction test using
-      `getByRole` and `@storybook/test` in [path/to/Component.stories.tsx]
+      `getByRole` and `storybook/test` in [path/to/Component.stories.tsx]
 - [ ] T032 [P] [US1] Verify focus management and visible focus indicator in
       interaction test in [path/to/Component.stories.tsx]
 
