@@ -30,6 +30,7 @@ import {
   SummaryBox,
   Table,
   Tag,
+  Textarea,
 } from '@pathable/react'
 
 function App() {
@@ -136,6 +137,15 @@ function App() {
         </tbody>
       </Table>
 
+      <label htmlFor="session-note">Session note</label>
+      <Textarea
+        id="session-note"
+        name="sessionNote"
+        rows={5}
+        aria-describedby="session-note-hint"
+      />
+      <p id="session-note-hint">Include the agreed next action.</p>
+
       <Tag>Active</Tag>
 
       <Tag size="big">Urgent</Tag>
@@ -223,6 +233,26 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### Textarea Props
+
+`Textarea` wraps a native `<textarea>` with the `pathable-textarea` class and forwards standard textarea attributes.
+
+| Prop         | Type                                    | Default | Description                                  |
+| ------------ | --------------------------------------- | ------- | -------------------------------------------- |
+| className    | `string`                                | —       | Additional CSS class names                   |
+| rows         | `number`                                | —       | Visible number of text rows                  |
+| cols         | `number`                                | —       | Visible number of character columns          |
+| value        | `string \| number \| readonly string[]` | —       | Controlled field value                       |
+| defaultValue | `string \| number \| readonly string[]` | —       | Initial uncontrolled field value             |
+| disabled     | `boolean`                               | —       | Prevents interaction and form submission     |
+| readOnly     | `boolean`                               | —       | Allows reading and selection without editing |
+
+Any other standard textarea attributes, including `id`, `name`, `placeholder`, `required`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<textarea>` element.
+
+#### Textarea Accessibility
+
+Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
 
 ### Communication Components
 
