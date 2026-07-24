@@ -9,6 +9,8 @@ export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
 export { List } from './components/List/List.js'
 export { Table } from './components/Table/Table.js'
+export { Textarea } from './components/Textarea/Textarea.js'
+export type { TextareaProps } from './components/Textarea/Textarea.js'
 export { Link } from './components/Link/Link.js'
 export { Tag } from './components/Tag/Tag.js'
 
