@@ -18,6 +18,7 @@ import {
   Accordion,
   Alert,
   Banner,
+  Breadcrumb,
   Button,
   ButtonGroup,
   Card,
@@ -36,6 +37,14 @@ import {
 function App() {
   return (
     <>
+      <Breadcrumb
+        aria-label="Breadcrumbs"
+        items={[
+          { content: 'Home', href: '#home', key: 'home' },
+          { content: 'Participant resources', current: true, key: 'resources' },
+        ]}
+      />
+
       <Card
         title="Upcoming coaching session"
         footer={<a href="/sessions/42">Open session</a>}
@@ -219,6 +228,23 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | --------- | ----------------- | -------------------------- |
 | children  | `React.ReactNode` | Button group content       |
 | className | `string`          | Additional CSS class names |
+
+### Breadcrumb Props
+
+`Breadcrumb` renders a semantic navigation landmark with a PathAble ordered list. It applies the nested PathAble classes for items and links so consumers only provide content, destinations, and current-page meaning.
+
+| Prop      | Type               | Default | Description                               |
+| --------- | ------------------ | ------- | ----------------------------------------- |
+| items     | `BreadcrumbItem[]` | `[]`    | Breadcrumb content and navigation records |
+| className | `string`           | —       | Additional CSS class names                |
+
+Each `BreadcrumbItem` supports `content`, optional `href`, optional `current`, optional `key`, `className`, `attributes` for native list-item attributes, `linkClassName`, and `linkAttributes` for native anchor attributes. Current items render as text with `aria-current="page"`; items without an `href` also render as text.
+
+Any other standard navigation attributes, including `aria-label`, `data-*`, and event handlers, are forwarded to the underlying `<nav>` element.
+
+#### Breadcrumb Accessibility
+
+Provide an accessible navigation name with `aria-label` or another accessible naming mechanism. Mark exactly one current page when the breadcrumb represents the current location. Keep labels concise and preserve a meaningful page heading separately.
 
 ### Table Props
 

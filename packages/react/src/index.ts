@@ -4,6 +4,13 @@
 import '@pathable/styles/dist/styles.css'
 
 // Export core components
+export { Breadcrumb } from './components/Breadcrumb/Breadcrumb.js'
+export type {
+  BreadcrumbItem,
+  BreadcrumbItemAttributes,
+  BreadcrumbLinkAttributes,
+  BreadcrumbProps,
+} from './components/Breadcrumb/Breadcrumb.js'
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
