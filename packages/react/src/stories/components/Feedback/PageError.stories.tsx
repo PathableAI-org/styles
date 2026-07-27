@@ -22,9 +22,6 @@ const LOCK_ICON = (
   </svg>
 )
 
-/** The source nav token currently fails contrast on the light surface. */
-const NAV_A11Y_TAGS = ['skip-a11y']
-
 const meta = {
   title: 'Components/Feedback/PageError',
   component: PageError,
@@ -128,7 +125,6 @@ export const FullPage: Story = {
 }
 
 export const NotFound: Story = {
-  tags: NAV_A11Y_TAGS,
   args: {
     layout: 'full-page',
     variant: 'not-found',
@@ -141,7 +137,6 @@ export const NotFound: Story = {
 }
 
 export const AccessRestricted: Story = {
-  tags: NAV_A11Y_TAGS,
   args: {
     layout: 'full-page',
     variant: 'access-restricted',
@@ -166,7 +161,6 @@ export const WithoutIcon: Story = {
 }
 
 export const CustomAttributes: Story = {
-  tags: NAV_A11Y_TAGS,
   args: {
     layout: 'compact',
     variant: 'access-restricted',
@@ -205,7 +199,6 @@ export const CustomAttributes: Story = {
 }
 
 export const AccessibilityCheck: Story = {
-  tags: NAV_A11Y_TAGS,
   args: {
     layout: 'full-page',
     variant: 'not-found',
@@ -262,6 +255,8 @@ export const RetryInteraction: Story = {
     await expect(retry).toHaveFocus()
     await userEvent.keyboard('{Enter}')
     await expect(retryClick).toHaveBeenCalledTimes(1)
+    await userEvent.keyboard(' ')
+    await expect(retryClick).toHaveBeenCalledTimes(2)
   },
 }
 
@@ -296,7 +291,6 @@ export const Narrow: Story = {
 }
 
 export const PageComposition: Story = {
-  tags: NAV_A11Y_TAGS,
   render: () => (
     <main>
       <PageError
