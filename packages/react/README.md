@@ -24,6 +24,7 @@ import {
   Link,
   List,
   Modal,
+  PageError,
   ProcessList,
   SiteAlert,
   StepIndicator,
@@ -43,6 +44,14 @@ function App() {
       >
         <p>Review the participant notes and prepare the next action plan.</p>
       </Card>
+
+      <PageError
+        layout="compact"
+        heading="Unable to load data"
+        body="The data for this section could not be retrieved. Please try again."
+        retry={<Button>Try again</Button>}
+        nav={<a href="#go-back">Go back</a>}
+      />
 
       <Card
         presentation="media"
@@ -202,6 +211,27 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | status       | `React.ReactNode`                                             | —        | Workflow status content             |
 | actions      | `React.ReactNode`                                             | —        | Workflow action content             |
 | className    | `string`                                                      | —        | Additional root element class names |
+
+### PageError Props
+
+`PageError` renders a page-level error using the `pathable-page-error` class, a compact or full-page layout, and the supported generic, not-found, and access-restricted variants.
+
+| Prop      | Type                                              | Default     | Description                                                                                 |
+| --------- | ------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------- |
+| layout    | `'compact' \| 'full-page'`                        | `'compact'` | Selects the inline panel or full-page layout.                                               |
+| variant   | `'generic' \| 'not-found' \| 'access-restricted'` | `'generic'` | Error context and matching PathAble modifier.                                               |
+| icon      | `React.ReactElement`                              | —           | Optional decorative icon. It receives `pathable-page-error__icon` and `aria-hidden="true"`. |
+| heading   | `React.ReactNode`                                 | required    | Primary message rendered as an `<h2>` for compact or `<h1>` for full-page layout.           |
+| body      | `React.ReactNode`                                 | required    | Explanation rendered as a `<p>`.                                                            |
+| retry     | `React.ReactElement`                              | —           | Optional retry action. The element must accept `className`.                                 |
+| nav       | `React.ReactElement`                              | —           | Optional navigation action. The element must accept `className`.                            |
+| className | `string`                                          | —           | Additional root class names appended after the PathAble page-error classes.                 |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
+
+#### PageError Accessibility
+
+Use `compact` for an inline error panel and `full-page` for a page-level failure. Provide a clear heading and explanation, use a retry action when recovery is possible, and provide navigation when the user needs another destination. Icons are decorative and hidden from assistive technology.
 
 ### Button Props
 

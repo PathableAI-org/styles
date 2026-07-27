@@ -20,6 +20,12 @@ export type { AccordionItem } from './components/Accordion/Accordion.js'
 export { Alert } from './components/Alert/Alert.js'
 export { Banner } from './components/Banner/Banner.js'
 export { Modal } from './components/Modal/Modal.js'
+export { PageError } from './components/PageError/PageError.js'
+export type {
+  PageErrorLayout,
+  PageErrorProps,
+  PageErrorVariant,
+} from './components/PageError/PageError.js'
 export { ProcessList } from './components/ProcessList/ProcessList.js'
 export type { ProcessItem } from './components/ProcessList/ProcessList.js'
 export { SiteAlert } from './components/SiteAlert/SiteAlert.js'
