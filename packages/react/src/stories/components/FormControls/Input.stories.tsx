@@ -1,5 +1,6 @@
 import { Input } from '../../../components/Input/Input'
 import { Button } from '../../../components/Button/Button'
+import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within, expect } from 'storybook/test'
 
@@ -154,6 +155,36 @@ export const ReadOnly: Story = {
     'aria-label': 'Participant identifier',
     readOnly: true,
     defaultValue: 'participant-042',
+  },
+}
+
+function ControlledInputStory() {
+  const [value, setValue] = useState('participant-042')
+
+  return (
+    <div>
+      <label htmlFor="controlled-participant-id">Participant identifier</label>
+      <Input
+        id="controlled-participant-id"
+        name="participantId"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    </div>
+  )
+}
+
+export const Controlled: Story = {
+  render: () => <ControlledInputStory />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox', {
+      name: 'Participant identifier',
+    })
+
+    await userEvent.clear(input)
+    await userEvent.type(input, 'participant-099')
+    await expect(input).toHaveValue('participant-099')
   },
 }
 
