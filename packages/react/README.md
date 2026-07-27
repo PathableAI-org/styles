@@ -30,6 +30,7 @@ import {
   SummaryBox,
   Table,
   Tag,
+  Select,
   Textarea,
 } from '@pathable/react'
 
@@ -146,6 +147,13 @@ function App() {
       />
       <p id="session-note-hint">Include the agreed next action.</p>
 
+      <label htmlFor="employment-goal">Employment goal</label>
+      <Select id="employment-goal" name="employmentGoal">
+        <option value="">Select a goal</option>
+        <option value="job-search">Job search skills</option>
+        <option value="interview">Interview preparation</option>
+      </Select>
+
       <Tag>Active</Tag>
 
       <Tag size="big">Urgent</Tag>
@@ -253,6 +261,27 @@ Any other standard textarea attributes, including `id`, `name`, `placeholder`, `
 #### Textarea Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Select Props
+
+`Select` wraps a native `<select>` with the `pathable-select` class and forwards standard select attributes.
+
+| Prop         | Type                                    | Default | Description                              |
+| ------------ | --------------------------------------- | ------- | ---------------------------------------- |
+| children     | `React.ReactNode`                       | —       | Native `<option>` elements               |
+| className    | `string`                                | —       | Additional CSS class names               |
+| multiple     | `boolean`                               | —       | Allows selecting multiple options        |
+| size         | `number`                                | —       | Number of visible options                |
+| value        | `string \| number \| readonly string[]` | —       | Controlled field value                   |
+| defaultValue | `string \| number \| readonly string[]` | —       | Initial uncontrolled field value         |
+| disabled     | `boolean`                               | —       | Prevents interaction and form submission |
+| required     | `boolean`                               | —       | Enables native required-field validation |
+
+Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<select>` element.
+
+#### Select Accessibility
+
+Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
 
 ### Communication Components
 
