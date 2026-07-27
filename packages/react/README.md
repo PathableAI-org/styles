@@ -39,6 +39,11 @@ function App() {
     <>
       <Skipnav href="#main-content">Skip to main content</Skipnav>
 
+      <main id="main-content">
+        <h1>Participant dashboard</h1>
+        <p>Review coaching sessions and agreed action plans.</p>
+      </main>
+
       <Card
         title="Upcoming coaching session"
         footer={<a href="/sessions/42">Open session</a>}
