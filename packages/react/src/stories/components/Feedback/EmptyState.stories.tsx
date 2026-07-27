@@ -260,6 +260,8 @@ export const ActionInteraction: Story = {
     await expect(action).toHaveFocus()
     await userEvent.keyboard('{Enter}')
     await expect(actionClick).toHaveBeenCalledTimes(1)
+    await userEvent.keyboard(' ')
+    await expect(actionClick).toHaveBeenCalledTimes(2)
   },
 }
 
