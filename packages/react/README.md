@@ -223,9 +223,11 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | icon      | `React.ReactElement`                              | —           | Optional decorative icon. It receives `pathable-page-error__icon` and `aria-hidden="true"`. |
 | heading   | `React.ReactNode`                                 | required    | Primary message rendered as an `<h2>` for compact or `<h1>` for full-page layout.           |
 | body      | `React.ReactNode`                                 | required    | Explanation rendered as a `<p>`.                                                            |
-| retry     | `React.ReactElement`                              | —           | Optional retry action. The element must accept `className`.                                 |
+| retry     | `React.ReactElement`                              | —           | Retry action: use `Button` or a native button with `pathable-button`; accepts `className`.  |
 | nav       | `React.ReactElement`                              | —           | Optional navigation action. The element must accept `className`.                            |
 | className | `string`                                          | —           | Additional root class names appended after the PathAble page-error classes.                 |
+
+The wrapper adds `pathable-page-error__retry` to the retry action but does not add button styling automatically.
 
 Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
 

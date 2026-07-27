@@ -42,7 +42,7 @@ const meta = {
 
 **Variants**: \`generic\`, \`not-found\`, and \`access-restricted\` map directly to the implemented PathAble modifier classes. The generic variant uses no additional variant class.
 
-**Slots**: The \`icon\` is decorative and is forced to \`aria-hidden="true"\`. The \`retry\` and \`nav\` actions must be elements that accept \`className\`, such as a native button, native link, or \`Button\`, so their required PathAble classes can be merged without wrapper markup.`,
+**Slots**: The \`icon\` is decorative and is forced to \`aria-hidden="true"\`. The \`retry\` action must be a \`Button\` or a native button that already has the \`pathable-button\` class; the wrapper adds \`pathable-page-error__retry\` but does not add button styling. The \`nav\` action can be a native link or another element that accepts \`className\`, so its required PathAble class can be merged without wrapper markup.`,
       },
     },
   },
@@ -74,7 +74,7 @@ const meta = {
     retry: {
       control: false,
       description:
-        'Optional retry action. The element must accept className so the retry class can be merged.',
+        'Optional Button or native button with pathable-button. The element must accept className so the retry class can be merged; button styling is not added automatically.',
     },
     nav: {
       control: false,
