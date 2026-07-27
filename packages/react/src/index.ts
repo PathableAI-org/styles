@@ -11,6 +11,8 @@ export { List } from './components/List/List.js'
 export { Table } from './components/Table/Table.js'
 export { Textarea } from './components/Textarea/Textarea.js'
 export type { TextareaProps } from './components/Textarea/Textarea.js'
+export { Skipnav } from './components/Skipnav/Skipnav.js'
+export type { SkipnavProps } from './components/Skipnav/Skipnav.js'
 export { Link } from './components/Link/Link.js'
 export { Tag } from './components/Tag/Tag.js'
 
