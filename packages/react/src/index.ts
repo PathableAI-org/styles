@@ -7,6 +7,11 @@ import '@pathable/styles/dist/styles.css'
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
+export { EmptyState } from './components/EmptyState/EmptyState.js'
+export type {
+  EmptyStateProps,
+  EmptyStateVariant,
+} from './components/EmptyState/EmptyState.js'
 export { List } from './components/List/List.js'
 export { Table } from './components/Table/Table.js'
 export { Textarea } from './components/Textarea/Textarea.js'
