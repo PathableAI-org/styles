@@ -235,6 +235,31 @@ export const KeyboardNavigation: Story = {
   },
 }
 
+export const SpaceSelection: Story = {
+  render: () => (
+    <fieldset>
+      <legend>Keyboard goal selection</legend>
+      <Radio name="space-progress" value="significant">
+        Significant progress
+      </Radio>
+      <Radio name="space-progress" value="moderate">
+        Moderate progress
+      </Radio>
+    </fieldset>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const significant = canvas.getByRole('radio', {
+      name: 'Significant progress',
+    })
+
+    await userEvent.tab()
+    await expect(significant).toHaveFocus()
+    await userEvent.keyboard(' ')
+    await expect(significant).toBeChecked()
+  },
+}
+
 export const LongContent: Story = {
   render: () => (
     <Radio
