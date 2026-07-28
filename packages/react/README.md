@@ -18,6 +18,7 @@ import {
   Accordion,
   Alert,
   Banner,
+  Breadcrumb,
   Button,
   ButtonGroup,
   Card,
@@ -25,18 +26,28 @@ import {
   Link,
   List,
   Modal,
+  PageError,
   ProcessList,
   SiteAlert,
   StepIndicator,
   SummaryBox,
   Table,
   Tag,
+  Select,
   Textarea,
 } from '@pathable/react'
 
 function App() {
   return (
     <>
+      <Breadcrumb
+        aria-label="Breadcrumbs"
+        items={[
+          { content: 'Home', href: '#home', key: 'home' },
+          { content: 'Participant resources', current: true, key: 'resources' },
+        ]}
+      />
+
       <Card
         title="Upcoming coaching session"
         footer={<a href="/sessions/42">Open session</a>}
@@ -44,6 +55,14 @@ function App() {
       >
         <p>Review the participant notes and prepare the next action plan.</p>
       </Card>
+
+      <PageError
+        layout="compact"
+        heading="Unable to load data"
+        body="The data for this section could not be retrieved. Please try again."
+        retry={<Button>Try again</Button>}
+        nav={<a href="#go-back">Go back</a>}
+      />
 
       <Card
         presentation="media"
@@ -155,6 +174,13 @@ function App() {
         required
       />
 
+      <label htmlFor="employment-goal">Employment goal</label>
+      <Select id="employment-goal" name="employmentGoal">
+        <option value="">Select a goal</option>
+        <option value="job-search">Job search skills</option>
+        <option value="interview">Interview preparation</option>
+      </Select>
+
       <Tag>Active</Tag>
 
       <Tag size="big">Urgent</Tag>
@@ -212,6 +238,29 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | actions      | `React.ReactNode`                                             | —        | Workflow action content             |
 | className    | `string`                                                      | —        | Additional root element class names |
 
+### PageError Props
+
+`PageError` renders a page-level error using the `pathable-page-error` class, a compact or full-page layout, and the supported generic, not-found, and access-restricted variants.
+
+| Prop      | Type                                              | Default     | Description                                                                                 |
+| --------- | ------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------- |
+| layout    | `'compact' \| 'full-page'`                        | `'compact'` | Selects the inline panel or full-page layout.                                               |
+| variant   | `'generic' \| 'not-found' \| 'access-restricted'` | `'generic'` | Error context and matching PathAble modifier.                                               |
+| icon      | `React.ReactElement`                              | —           | Optional decorative icon. It receives `pathable-page-error__icon` and `aria-hidden="true"`. |
+| heading   | `React.ReactNode`                                 | required    | Primary message rendered as an `<h2>` for compact or `<h1>` for full-page layout.           |
+| body      | `React.ReactNode`                                 | required    | Explanation rendered as a `<p>`.                                                            |
+| retry     | `React.ReactElement`                              | —           | Retry action: use `Button` or a native button with `pathable-button`; accepts `className`.  |
+| nav       | `React.ReactElement`                              | —           | Optional navigation action. The element must accept `className`.                            |
+| className | `string`                                          | —           | Additional root class names appended after the PathAble page-error classes.                 |
+
+The wrapper adds `pathable-page-error__retry` to the retry action but does not add button styling automatically.
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
+
+#### PageError Accessibility
+
+Use `compact` for an inline error panel and `full-page` for a page-level failure. Provide a clear heading and explanation, use a retry action when recovery is possible, and provide navigation when the user needs another destination. Icons are decorative and hidden from assistive technology.
+
 ### Button Props
 
 | Prop      | Type                                                                                                                                                                                  | Default     | Description                    |
@@ -228,6 +277,23 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | --------- | ----------------- | -------------------------- |
 | children  | `React.ReactNode` | Button group content       |
 | className | `string`          | Additional CSS class names |
+
+### Breadcrumb Props
+
+`Breadcrumb` renders a semantic navigation landmark with a PathAble ordered list. It applies the nested PathAble classes for items and links so consumers only provide content, destinations, and current-page meaning.
+
+| Prop      | Type               | Default | Description                               |
+| --------- | ------------------ | ------- | ----------------------------------------- |
+| items     | `BreadcrumbItem[]` | `[]`    | Breadcrumb content and navigation records |
+| className | `string`           | —       | Additional CSS class names                |
+
+Each `BreadcrumbItem` supports `content`, optional `href`, optional `current`, optional `key`, `className`, `attributes` for native list-item attributes, `linkClassName`, and `linkAttributes` for native anchor attributes. Current items render as text with `aria-current="page"`; items without an `href` also render as text.
+
+Any other standard navigation attributes, including `aria-label`, `data-*`, and event handlers, are forwarded to the underlying `<nav>` element.
+
+#### Breadcrumb Accessibility
+
+Provide an accessible navigation name with `aria-label` or another accessible naming mechanism. Mark exactly one current page when the breadcrumb represents the current location. Keep labels concise and preserve a meaningful page heading separately.
 
 ### Table Props
 
@@ -282,6 +348,27 @@ Any other standard textarea attributes, including `id`, `name`, `placeholder`, `
 #### Textarea Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Select Props
+
+`Select` wraps a native `<select>` with the `pathable-select` class and forwards standard select attributes.
+
+| Prop         | Type                                    | Default | Description                              |
+| ------------ | --------------------------------------- | ------- | ---------------------------------------- |
+| children     | `React.ReactNode`                       | —       | Native `<option>` elements               |
+| className    | `string`                                | —       | Additional CSS class names               |
+| multiple     | `boolean`                               | —       | Allows selecting multiple options        |
+| size         | `number`                                | —       | Number of visible options                |
+| value        | `string \| number \| readonly string[]` | —       | Controlled field value                   |
+| defaultValue | `string \| number \| readonly string[]` | —       | Initial uncontrolled field value         |
+| disabled     | `boolean`                               | —       | Prevents interaction and form submission |
+| required     | `boolean`                               | —       | Enables native required-field validation |
+
+Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<select>` element.
+
+#### Select Accessibility
+
+Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
 
 ### Communication Components
 

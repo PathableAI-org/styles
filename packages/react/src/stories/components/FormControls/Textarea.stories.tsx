@@ -1,5 +1,6 @@
 import { Textarea } from '../../../components/Textarea/Textarea'
 import { Button } from '../../../components/Button/Button'
+import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within, expect } from 'storybook/test'
 
@@ -138,6 +139,37 @@ export const ReadOnly: Story = {
     'aria-label': 'Completed session notes',
     readOnly: true,
     defaultValue: 'The participant completed the agreed action plan.',
+  },
+}
+
+function ControlledTextareaStory() {
+  const [value, setValue] = useState(
+    'The participant reviewed the action plan.',
+  )
+
+  return (
+    <div>
+      <label htmlFor="controlled-session-notes">Session notes</label>
+      <Textarea
+        id="controlled-session-notes"
+        name="sessionNotes"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        rows={4}
+      />
+    </div>
+  )
+}
+
+export const Controlled: Story = {
+  render: () => <ControlledTextareaStory />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const textarea = canvas.getByRole('textbox', { name: 'Session notes' })
+
+    await userEvent.clear(textarea)
+    await userEvent.type(textarea, 'Updated session notes.')
+    await expect(textarea).toHaveValue('Updated session notes.')
   },
 }
 
