@@ -83,12 +83,12 @@ export const Inline: Story = {
   },
 }
 
-export const PoliteStatus: Story = {
+export const PoliteFieldMessage: Story = {
   args: {
-    id: 'profile-status',
+    id: 'participant-id-error',
     role: 'status',
     'aria-live': 'polite',
-    children: 'Your changes could not be saved. Try again.',
+    children: 'Use the participant ID format ABC-123.',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
