@@ -14,6 +14,8 @@ export type {
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
+export { ErrorMessage } from './components/ErrorMessage/ErrorMessage.js'
+export type { ErrorMessageProps } from './components/ErrorMessage/ErrorMessage.js'
 export { List } from './components/List/List.js'
 export { Table } from './components/Table/Table.js'
 export { Textarea } from './components/Textarea/Textarea.js'
