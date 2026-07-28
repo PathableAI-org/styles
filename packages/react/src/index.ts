@@ -14,6 +14,8 @@ export type {
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
+export { Checkbox } from './components/Checkbox/Checkbox.js'
+export type { CheckboxProps } from './components/Checkbox/Checkbox.js'
 export { List } from './components/List/List.js'
 export { Table } from './components/Table/Table.js'
 export { Textarea } from './components/Textarea/Textarea.js'
