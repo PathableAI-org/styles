@@ -23,6 +23,7 @@ import {
   ButtonGroup,
   Card,
   EmptyState,
+  Form,
   Input,
   Link,
   List,
@@ -191,13 +192,16 @@ function App() {
       />
       <p id="session-note-hint">Include the agreed next action.</p>
 
-      <label htmlFor="participant-email">Participant email</label>
-      <Input
-        id="participant-email"
-        name="participantEmail"
-        type="email"
-        required
-      />
+      <Form aria-label="Participant contact">
+        <label htmlFor="participant-email">Participant email</label>
+        <Input
+          id="participant-email"
+          name="participantEmail"
+          type="email"
+          required
+        />
+        <Button type="submit">Save participant</Button>
+      </Form>
 
       <label htmlFor="employment-goal">Employment goal</label>
       <Select id="employment-goal" name="employmentGoal">
@@ -372,6 +376,24 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Form Props
+
+`Form` wraps a native `<form>` with the `pathable-form` class and forwards standard form attributes.
+
+| Prop       | Type                                                  | Default | Description                                                                   |
+| ---------- | ----------------------------------------------------- | ------- | ----------------------------------------------------------------------------- |
+| children   | `React.ReactNode`                                     | —       | Labeled form controls and submit or other form actions.                       |
+| className  | `string`                                              | —       | Additional class names appended after `pathable-form`.                        |
+| action     | `React.FormHTMLAttributes<HTMLFormElement>['action']` | —       | Native submission URL or React form action.                                   |
+| method     | `React.FormHTMLAttributes<HTMLFormElement>['method']` | `'get'` | Native browser submission method.                                             |
+| noValidate | `boolean`                                             | —       | Disables native constraint validation; provide an equivalent accessible flow. |
+
+Any other standard form attributes, including `id`, `encType`, `target`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<form>` element.
+
+#### Form Accessibility
+
+Use a visible heading with `aria-labelledby` or an appropriate `aria-label` when the form needs an accessible name. Give every contained control an accessible label and provide a clearly labeled submit action. Do not nest forms. Form does not manage control state, validation, submission requests, or server responses.
 
 ### Textarea Props
 
