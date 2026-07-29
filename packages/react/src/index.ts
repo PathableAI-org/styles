@@ -19,6 +19,8 @@ export type {
   EmptyStateProps,
   EmptyStateVariant,
 } from './components/EmptyState/EmptyState.js'
+export { Fieldset } from './components/Fieldset/Fieldset.js'
+export type { FieldsetProps } from './components/Fieldset/Fieldset.js'
 export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
 export { List } from './components/List/List.js'
