@@ -201,13 +201,21 @@ function App() {
       />
 
       <Fieldset>
-        <legend>Employment goal</legend>
-        <label htmlFor="employment-goal">Select a goal</label>
+        <legend>Employment preferences</legend>
+        <label htmlFor="employment-goal">Employment goal</label>
         <Select id="employment-goal" name="employmentGoal">
           <option value="">Select a goal</option>
           <option value="job-search">Job search skills</option>
           <option value="interview">Interview preparation</option>
         </Select>
+        <label htmlFor="employment-hours">Preferred weekly hours</label>
+        <Input
+          id="employment-hours"
+          name="employmentHours"
+          type="number"
+          min={1}
+          max={40}
+        />
       </Fieldset>
 
       <Tag>Active</Tag>
