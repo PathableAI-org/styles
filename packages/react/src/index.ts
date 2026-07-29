@@ -19,6 +19,8 @@ export type {
   EmptyStateProps,
   EmptyStateVariant,
 } from './components/EmptyState/EmptyState.js'
+export { FormGroup } from './components/FormGroup/FormGroup.js'
+export type { FormGroupProps } from './components/FormGroup/FormGroup.js'
 export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
 export { List } from './components/List/List.js'
