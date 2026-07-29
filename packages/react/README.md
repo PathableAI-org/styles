@@ -28,6 +28,7 @@ import {
   PageError,
   ProcessList,
   SiteAlert,
+  Skipnav,
   StepIndicator,
   SummaryBox,
   Table,
@@ -39,6 +40,13 @@ import {
 function App() {
   return (
     <>
+      <Skipnav href="#main-content">Skip to main content</Skipnav>
+
+      <main id="main-content">
+        <h1>Participant dashboard</h1>
+        <p>Review coaching sessions and agreed action plans.</p>
+      </main>
+
       <Breadcrumb
         aria-label="Breadcrumbs"
         items={[
@@ -319,6 +327,22 @@ Any other standard textarea attributes, including `id`, `name`, `placeholder`, `
 #### Textarea Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Skipnav Props
+
+`Skipnav` wraps a native `<a>` with the `pathable-skipnav` class. It is intended for bypassing repeated navigation and moving keyboard users directly to the page's main content.
+
+| Prop      | Type              | Default | Description                                                   |
+| --------- | ----------------- | ------- | ------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Visible text describing the main content destination.         |
+| href      | `string`          | —       | Fragment or URL for the main content target.                  |
+| className | `string`          | —       | Additional CSS class names appended after `pathable-skipnav`. |
+
+Any other standard anchor attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<a>` element.
+
+#### Skipnav Accessibility
+
+Place Skipnav near the beginning of the page or application shell. Point `href` to a unique `id` on the page's main content landmark, for example `<main id="main-content">`. Provide meaningful link text and keep the target landmark present in the rendered page.
 
 ### Select Props
 
