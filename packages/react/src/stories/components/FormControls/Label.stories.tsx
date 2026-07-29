@@ -40,7 +40,6 @@ const meta = {
   },
   args: {
     children: 'Participant name',
-    htmlFor: 'participant-name',
   },
 } satisfies Meta<typeof Label>
 
@@ -50,16 +49,20 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const Default: Story = {
-  args: {
-    children: 'Email address',
-    htmlFor: 'email-address',
-  },
+  render: () => (
+    <div>
+      <Label htmlFor="email-address">Email address</Label>
+      <Input id="email-address" name="email" type="email" />
+    </div>
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox', { name: 'Email address' })
     const label = canvas.getByText('Email address')
 
     await expect(label).toHaveClass('pathable-label')
     await expect(label).toHaveAttribute('for', 'email-address')
+    await expect(input).toHaveAttribute('id', 'email-address')
   },
 }
 
@@ -82,7 +85,7 @@ export const FormComposition: Story = {
 
 export const RichContent: Story = {
   render: () => (
-    <Label htmlFor="session-date">
+    <Label>
       Session <strong>date</strong>
     </Label>
   ),
@@ -91,7 +94,6 @@ export const RichContent: Story = {
 export const CustomAttributes: Story = {
   render: () => (
     <Label
-      htmlFor="custom-field"
       id="custom-field-label"
       className="custom-label"
       data-testid="custom-label"
@@ -110,21 +112,19 @@ export const CustomAttributes: Story = {
 }
 
 export const EmptyContent: Story = {
-  render: () => <Label htmlFor="empty-label-control" />,
+  render: () => <Label />,
 }
 
 export const LongContent: Story = {
   args: {
     children:
       'Participant employment goal and preferred coaching pathway for the next session',
-    htmlFor: 'employment-goal',
   },
 }
 
 export const Narrow: Story = {
   args: {
     children: 'Preferred communication method',
-    htmlFor: 'communication-method',
   },
   parameters: {
     viewport: {
