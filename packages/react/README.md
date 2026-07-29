@@ -23,6 +23,7 @@ import {
   ButtonGroup,
   Card,
   EmptyState,
+  Input,
   Link,
   List,
   Modal,
@@ -190,6 +191,14 @@ function App() {
       />
       <p id="session-note-hint">Include the agreed next action.</p>
 
+      <label htmlFor="participant-email">Participant email</label>
+      <Input
+        id="participant-email"
+        name="participantEmail"
+        type="email"
+        required
+      />
+
       <label htmlFor="employment-goal">Employment goal</label>
       <Select id="employment-goal" name="employmentGoal">
         <option value="">Select a goal</option>
@@ -343,6 +352,26 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### Input Props
+
+`Input` wraps a native `<input>` with the `pathable-input` class and forwards standard input attributes.
+
+| Prop         | Type                                    | Default | Description                                              |
+| ------------ | --------------------------------------- | ------- | -------------------------------------------------------- |
+| type         | `React.HTMLInputTypeAttribute`          | —       | Native input type, such as `text`, `email`, or `search`. |
+| className    | `string`                                | —       | Additional CSS class names                               |
+| value        | `string \| number \| readonly string[]` | —       | Controlled field value                                   |
+| defaultValue | `string \| number \| readonly string[]` | —       | Initial uncontrolled field value                         |
+| disabled     | `boolean`                               | —       | Prevents interaction and form submission                 |
+| readOnly     | `boolean`                               | —       | Allows reading and selection without editing             |
+| required     | `boolean`                               | —       | Enables native required-field validation                 |
+
+Any other standard input attributes, including `id`, `name`, `placeholder`, `min`, `max`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<input>` element.
+
+#### Input Accessibility
+
+Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
 
 ### Textarea Props
 
