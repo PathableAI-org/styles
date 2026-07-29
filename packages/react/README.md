@@ -22,6 +22,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  EmptyState,
   Link,
   List,
   Modal,
@@ -62,6 +63,22 @@ function App() {
       >
         <p>Review the participant notes and prepare the next action plan.</p>
       </Card>
+
+      <EmptyState
+        variant="no-results"
+        icon={
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z" />
+          </svg>
+        }
+        heading="No matching results"
+        body="Try adjusting your search terms or filters."
+        action={
+          <a href="#clear-filters" className="pathable-button">
+            Clear filters
+          </a>
+        }
+      />
 
       <PageError
         layout="compact"
@@ -236,6 +253,25 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | status       | `React.ReactNode`                                             | —        | Workflow status content             |
 | actions      | `React.ReactNode`                                             | —        | Workflow action content             |
 | className    | `string`                                                      | —        | Additional root element class names |
+
+### EmptyState Props
+
+`EmptyState` renders a structured empty view using the `pathable-empty-state` class and one of its four supported variants.
+
+| Prop      | Type                                                           | Default     | Description                                                                                  |
+| --------- | -------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| variant   | `'no-data' \| 'no-results' \| 'setup-required' \| 'completed'` | `'no-data'` | Empty-state context and matching PathAble modifier.                                          |
+| icon      | `React.ReactElement`                                           | —           | Optional decorative icon. It receives `pathable-empty-state__icon` and `aria-hidden="true"`. |
+| heading   | `React.ReactNode`                                              | required    | Primary message rendered as an `<h2>`.                                                       |
+| body      | `React.ReactNode`                                              | required    | Explanation rendered as a `<p>`.                                                             |
+| action    | `React.ReactElement`                                           | —           | Optional link or button. The element must accept `className`.                                |
+| className | `string`                                                       | —           | Additional root class names appended after the PathAble empty-state classes.                 |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
+
+#### EmptyState Accessibility
+
+Use the variant that accurately describes why content is absent. Provide a clear heading and explanation. Icons are decorative and hidden from assistive technology. Use a meaningful link or button for `action`; the component preserves its native keyboard behavior and event handlers.
 
 ### PageError Props
 
