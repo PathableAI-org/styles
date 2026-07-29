@@ -22,6 +22,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  EmptyState,
   Input,
   Link,
   List,
@@ -29,6 +30,7 @@ import {
   PageError,
   ProcessList,
   SiteAlert,
+  Skipnav,
   StepIndicator,
   SummaryBox,
   Table,
@@ -40,6 +42,13 @@ import {
 function App() {
   return (
     <>
+      <Skipnav href="#main-content">Skip to main content</Skipnav>
+
+      <main id="main-content">
+        <h1>Participant dashboard</h1>
+        <p>Review coaching sessions and agreed action plans.</p>
+      </main>
+
       <Breadcrumb
         aria-label="Breadcrumbs"
         items={[
@@ -55,6 +64,22 @@ function App() {
       >
         <p>Review the participant notes and prepare the next action plan.</p>
       </Card>
+
+      <EmptyState
+        variant="no-results"
+        icon={
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z" />
+          </svg>
+        }
+        heading="No matching results"
+        body="Try adjusting your search terms or filters."
+        action={
+          <a href="#clear-filters" className="pathable-button">
+            Clear filters
+          </a>
+        }
+      />
 
       <PageError
         layout="compact"
@@ -238,6 +263,25 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | actions      | `React.ReactNode`                                             | —        | Workflow action content             |
 | className    | `string`                                                      | —        | Additional root element class names |
 
+### EmptyState Props
+
+`EmptyState` renders a structured empty view using the `pathable-empty-state` class and one of its four supported variants.
+
+| Prop      | Type                                                           | Default     | Description                                                                                  |
+| --------- | -------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| variant   | `'no-data' \| 'no-results' \| 'setup-required' \| 'completed'` | `'no-data'` | Empty-state context and matching PathAble modifier.                                          |
+| icon      | `React.ReactElement`                                           | —           | Optional decorative icon. It receives `pathable-empty-state__icon` and `aria-hidden="true"`. |
+| heading   | `React.ReactNode`                                              | required    | Primary message rendered as an `<h2>`.                                                       |
+| body      | `React.ReactNode`                                              | required    | Explanation rendered as a `<p>`.                                                             |
+| action    | `React.ReactElement`                                           | —           | Optional link or button. The element must accept `className`.                                |
+| className | `string`                                                       | —           | Additional root class names appended after the PathAble empty-state classes.                 |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
+
+#### EmptyState Accessibility
+
+Use the variant that accurately describes why content is absent. Provide a clear heading and explanation. Icons are decorative and hidden from assistive technology. Use a meaningful link or button for `action`; the component preserves its native keyboard behavior and event handlers.
+
 ### PageError Props
 
 `PageError` renders a page-level error using the `pathable-page-error` class, a compact or full-page layout, and the supported generic, not-found, and access-restricted variants.
@@ -348,6 +392,22 @@ Any other standard textarea attributes, including `id`, `name`, `placeholder`, `
 #### Textarea Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Skipnav Props
+
+`Skipnav` wraps a native `<a>` with the `pathable-skipnav` class. It is intended for bypassing repeated navigation and moving keyboard users directly to the page's main content.
+
+| Prop      | Type              | Default | Description                                                   |
+| --------- | ----------------- | ------- | ------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Visible text describing the main content destination.         |
+| href      | `string`          | —       | Fragment or URL for the main content target.                  |
+| className | `string`          | —       | Additional CSS class names appended after `pathable-skipnav`. |
+
+Any other standard anchor attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<a>` element.
+
+#### Skipnav Accessibility
+
+Place Skipnav near the beginning of the page or application shell. Point `href` to a unique `id` on the page's main content landmark, for example `<main id="main-content">`. Provide meaningful link text and keep the target landmark present in the rendered page.
 
 ### Select Props
 
