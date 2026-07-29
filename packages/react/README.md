@@ -183,22 +183,22 @@ function App() {
         </tbody>
       </Table>
 
-      <label htmlFor="session-note">Session note</label>
-      <Textarea
-        id="session-note"
-        name="sessionNote"
-        rows={5}
-        aria-describedby="session-note-hint"
-      />
-      <p id="session-note-hint">Include the agreed next action.</p>
-
       <Form
-        aria-label="Participant contact"
+        aria-label="Participant details"
         onSubmit={(event) => {
           event.preventDefault()
           // Consumer-owned submission handling goes here.
         }}
       >
+        <label htmlFor="session-note">Session note</label>
+        <Textarea
+          id="session-note"
+          name="sessionNote"
+          rows={5}
+          aria-describedby="session-note-hint"
+        />
+        <p id="session-note-hint">Include the agreed next action.</p>
+
         <label htmlFor="participant-email">Participant email</label>
         <Input
           id="participant-email"
@@ -206,15 +206,16 @@ function App() {
           type="email"
           required
         />
-        <Button type="submit">Save participant</Button>
-      </Form>
 
-      <label htmlFor="employment-goal">Employment goal</label>
-      <Select id="employment-goal" name="employmentGoal">
-        <option value="">Select a goal</option>
-        <option value="job-search">Job search skills</option>
-        <option value="interview">Interview preparation</option>
-      </Select>
+        <label htmlFor="employment-goal">Employment goal</label>
+        <Select id="employment-goal" name="employmentGoal">
+          <option value="">Select a goal</option>
+          <option value="job-search">Job search skills</option>
+          <option value="interview">Interview preparation</option>
+        </Select>
+
+        <Button type="submit">Save participant details</Button>
+      </Form>
 
       <Tag>Active</Tag>
 
