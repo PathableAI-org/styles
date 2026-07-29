@@ -23,6 +23,7 @@ import {
   ButtonGroup,
   Card,
   EmptyState,
+  Hint,
   Input,
   Link,
   List,
@@ -189,7 +190,7 @@ function App() {
         rows={5}
         aria-describedby="session-note-hint"
       />
-      <p id="session-note-hint">Include the agreed next action.</p>
+      <Hint id="session-note-hint">Include the agreed next action.</Hint>
 
       <label htmlFor="participant-email">Participant email</label>
       <Input
@@ -372,6 +373,22 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Hint Props
+
+`Hint` wraps a native `<span>` with the `pathable-hint` class and forwards standard span attributes.
+
+| Prop      | Type              | Default | Description                                                       |
+| --------- | ----------------- | ------- | ----------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Supplemental guidance for completing the associated form control. |
+| id        | `string`          | —       | Identifier referenced by the control through `aria-describedby`.  |
+| className | `string`          | —       | Additional class names appended after `pathable-hint`.            |
+
+Any other standard span attributes, including `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<span>` element.
+
+#### Hint Accessibility
+
+Keep guidance concise and specific. Give the Hint an `id` and connect it to the related control with `aria-describedby` when it describes that control. Use ErrorMessage for validation recovery guidance and do not use Hint as an announcement or general status message.
 
 ### Textarea Props
 
