@@ -192,7 +192,13 @@ function App() {
       />
       <p id="session-note-hint">Include the agreed next action.</p>
 
-      <Form aria-label="Participant contact">
+      <Form
+        aria-label="Participant contact"
+        onSubmit={(event) => {
+          event.preventDefault()
+          // Consumer-owned submission handling goes here.
+        }}
+      >
         <label htmlFor="participant-email">Participant email</label>
         <Input
           id="participant-email"

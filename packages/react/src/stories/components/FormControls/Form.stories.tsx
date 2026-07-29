@@ -13,6 +13,10 @@ const defaultChildren = (
   </>
 )
 
+const preventSubmit = (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault()
+}
+
 const meta = {
   title: 'Components/Form Controls/Form',
   component: Form,
@@ -64,6 +68,7 @@ const meta = {
     children: defaultChildren,
     method: 'post',
     noValidate: false,
+    onSubmit: preventSubmit,
   },
 } satisfies Meta<typeof Form>
 
@@ -106,9 +111,16 @@ export const Submission: Story = {
     const canvas = within(canvasElement)
     const form = canvas.getByRole('form', { name: 'Save participant' })
     const button = canvas.getByRole('button', { name: 'Save participant' })
+    const input = canvas.getByRole('textbox', { name: 'Participant name' })
 
     await expect(form).toHaveClass('pathable-form')
     await userEvent.click(button)
+    await expect(submitSpy).toHaveBeenCalledTimes(1)
+
+    submitSpy.mockClear()
+    await userEvent.click(input)
+    await expect(input).toHaveFocus()
+    await userEvent.keyboard('{Enter}')
     await expect(submitSpy).toHaveBeenCalledTimes(1)
   },
 }
@@ -150,7 +162,10 @@ export const EmptyContent: Story = {
 
 export const LongContent: Story = {
   render: () => (
-    <Form aria-label="Detailed participant information">
+    <Form
+      aria-label="Detailed participant information"
+      onSubmit={preventSubmit}
+    >
       <label htmlFor="long-name">
         Participant full name as it should appear in formal coaching records
       </label>
@@ -167,7 +182,7 @@ export const Narrow: Story = {
     },
   },
   render: () => (
-    <Form aria-label="Narrow participant form">
+    <Form aria-label="Narrow participant form" onSubmit={preventSubmit}>
       <label htmlFor="narrow-name">
         Participant name and preferred contact
       </label>
