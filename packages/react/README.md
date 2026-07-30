@@ -22,6 +22,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  ErrorMessage,
   Checkbox,
   EmptyState,
   Input,
@@ -207,6 +208,19 @@ function App() {
         <option value="job-search">Job search skills</option>
         <option value="interview">Interview preparation</option>
       </Select>
+
+      <label htmlFor="participant-email">Participant email</label>
+      <input
+        id="participant-email"
+        name="participantEmail"
+        className="pathable-input"
+        type="email"
+        aria-invalid="true"
+        aria-describedby="participant-email-error"
+      />
+      <ErrorMessage id="participant-email-error" role="alert">
+        Enter an email address in the format name@example.com.
+      </ErrorMessage>
 
       <Radio name="employmentGoal" value="job-search" defaultChecked>
         Job search skills
@@ -442,6 +456,24 @@ Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`
 #### Select Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
+
+### ErrorMessage Props
+
+`ErrorMessage` wraps a native `<span>` with the `pathable-error-message` class and forwards standard span attributes. It does not automatically set `role="alert"` or manage validation state.
+
+| Prop      | Type                               | Default  | Description                                                             |
+| --------- | ---------------------------------- | -------- | ----------------------------------------------------------------------- |
+| children  | `React.ReactNode`                  | required | Human-readable recovery guidance                                        |
+| className | `string`                           | —        | Additional CSS class names appended after `pathable-error-message`      |
+| id        | `string`                           | —        | Identifier referenced by the invalid control through `aria-describedby` |
+| role      | `string`                           | —        | Optional consumer-selected role, such as `alert` or `status`            |
+| aria-live | `'off' \| 'polite' \| 'assertive'` | —        | Optional live-region behavior selected by the consuming validation flow |
+
+Any other standard span attributes, including `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<span>` element.
+
+#### ErrorMessage Accessibility
+
+Provide specific recovery guidance and associate the message with the invalid control through `aria-describedby`. Use `aria-invalid="true"` on the associated control when application validation identifies an error. Choose `role="alert"` or `aria-live` only when the validation flow should announce the message immediately.
 
 ### Radio Props
 
