@@ -30,6 +30,7 @@ import {
   Modal,
   PageError,
   ProcessList,
+  Radio,
   SiteAlert,
   Skipnav,
   StepIndicator,
@@ -207,6 +208,9 @@ function App() {
         <option value="interview">Interview preparation</option>
       </Select>
 
+      <Radio name="employmentGoal" value="job-search" defaultChecked>
+        Job search skills
+      </Radio>
       <Checkbox
         name="sessionReminders"
         value="enabled"
@@ -438,6 +442,30 @@ Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`
 #### Select Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
+
+### Radio Props
+
+`Radio` renders a native `<input type="radio">` inside a PathAble label structure. It forwards native radio attributes while applying the PathAble input, label, and optional description classes.
+
+| Prop           | Type              | Default  | Description                                           |
+| -------------- | ----------------- | -------- | ----------------------------------------------------- |
+| children       | `React.ReactNode` | required | Visible radio label and accessible name               |
+| description    | `React.ReactNode` | —        | Optional supporting content rendered inside the label |
+| className      | `string`          | —        | Additional classes appended to the root label         |
+| checked        | `boolean`         | —        | Controlled selected state; use with `onChange`        |
+| defaultChecked | `boolean`         | —        | Initial selected state for an uncontrolled radio      |
+| disabled       | `boolean`         | —        | Prevents interaction and form submission              |
+| required       | `boolean`         | —        | Enables native required-field validation              |
+| name           | `string`          | —        | Native group name shared by mutually exclusive radios |
+| value          | `string`          | —        | Native value submitted when selected                  |
+
+Any other supported native input attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying radio input. The wrapper does not manage selected state, validation, or submission.
+
+The wrapper exposes the default radio contract only. The `pathable-radio--tile` modifier is not exposed because it is not implemented by the owning stylesheet contract. For related choices, compose Radio instances inside a native `<fieldset>` with a `<legend>` and give every option the same `name`.
+
+#### Radio Accessibility
+
+The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Native arrow-key navigation is preserved for radios that share a `name`.
 
 ### Checkbox Props
 
