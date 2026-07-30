@@ -22,14 +22,20 @@ import {
   Button,
   ButtonGroup,
   Card,
+  ErrorMessage,
+  Checkbox,
   EmptyState,
   FormGroup,
+  Fieldset,
+  Hint,
   Input,
+  Label,
   Link,
   List,
   Modal,
   PageError,
   ProcessList,
+  Radio,
   SiteAlert,
   Skipnav,
   StepIndicator,
@@ -190,10 +196,10 @@ function App() {
         rows={5}
         aria-describedby="session-note-hint"
       />
-      <p id="session-note-hint">Include the agreed next action.</p>
+      <Hint id="session-note-hint">Include the agreed next action.</Hint>
 
       <FormGroup>
-        <label htmlFor="participant-email">Participant email</label>
+        <Label htmlFor="participant-email">Participant email</Label>
         <Input
           id="participant-email"
           name="participantEmail"
@@ -202,12 +208,47 @@ function App() {
         />
       </FormGroup>
 
-      <label htmlFor="employment-goal">Employment goal</label>
-      <Select id="employment-goal" name="employmentGoal">
-        <option value="">Select a goal</option>
-        <option value="job-search">Job search skills</option>
-        <option value="interview">Interview preparation</option>
-      </Select>
+      <Fieldset>
+        <legend>Employment preferences</legend>
+        <label htmlFor="employment-goal">Employment goal</label>
+        <Select id="employment-goal" name="employmentGoal">
+          <option value="">Select a goal</option>
+          <option value="job-search">Job search skills</option>
+          <option value="interview">Interview preparation</option>
+        </Select>
+        <label htmlFor="employment-hours">Preferred weekly hours</label>
+        <Input
+          id="employment-hours"
+          name="employmentHours"
+          type="number"
+          min={1}
+          max={40}
+        />
+      </Fieldset>
+
+      <label htmlFor="participant-email">Participant email</label>
+      <input
+        id="participant-email"
+        name="participantEmail"
+        className="pathable-input"
+        type="email"
+        aria-invalid="true"
+        aria-describedby="participant-email-error"
+      />
+      <ErrorMessage id="participant-email-error" role="alert">
+        Enter an email address in the format name@example.com.
+      </ErrorMessage>
+
+      <Radio name="employmentGoal" value="job-search" defaultChecked>
+        Job search skills
+      </Radio>
+      <Checkbox
+        name="sessionReminders"
+        value="enabled"
+        description="You can change this preference at any time."
+      >
+        Send session reminders
+      </Checkbox>
 
       <Tag>Active</Tag>
 
@@ -392,6 +433,38 @@ Any other standard div attributes, including `aria-*`, `data-*`, and event handl
 
 FormGroup is a visual styling wrapper and does not create a semantic group or accessible name. Give each contained control a visible associated `<label>` or an appropriate ARIA label. Associate hints and validation messages with the control through `aria-describedby`. Use a native `<fieldset>` when related controls need a shared group name, and do not use FormGroup as a replacement for a fieldset.
 
+### Hint Props
+
+`Hint` wraps a native `<span>` with the `pathable-hint` class and forwards standard span attributes.
+
+| Prop      | Type              | Default | Description                                                       |
+| --------- | ----------------- | ------- | ----------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Supplemental guidance for completing the associated form control. |
+| id        | `string`          | —       | Identifier referenced by the control through `aria-describedby`.  |
+| className | `string`          | —       | Additional class names appended after `pathable-hint`.            |
+
+Any other standard span attributes, including `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<span>` element.
+
+#### Hint Accessibility
+
+Keep guidance concise and specific. Give the Hint an `id` and connect it to the related control with `aria-describedby` when it describes that control. Use ErrorMessage for validation recovery guidance and do not use Hint as an announcement or general status message.
+
+### Label Props
+
+`Label` wraps a native `<label>` with the `pathable-label` class and forwards standard label attributes.
+
+| Prop      | Type              | Default | Description                                                        |
+| --------- | ----------------- | ------- | ------------------------------------------------------------------ |
+| children  | `React.ReactNode` | —       | Visible text or inline content naming the associated form control. |
+| htmlFor   | `string`          | —       | `id` of the associated form control.                               |
+| className | `string`          | —       | Additional CSS class names appended after `pathable-label`.        |
+
+Any other standard label attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<label>` element.
+
+#### Label Accessibility
+
+Give each form control an accessible name with a visible `Label` and a matching `htmlFor`/`id` pair, or place the control inside the label. Use `aria-describedby` for supporting hints or validation messages rather than putting all instructions in the label.
+
 ### Textarea Props
 
 `Textarea` wraps a native `<textarea>` with the `pathable-textarea` class and forwards standard textarea attributes.
@@ -448,6 +521,89 @@ Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`
 #### Select Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
+
+### Fieldset Props
+
+`Fieldset` wraps a native `<fieldset>` with the `pathable-fieldset` class and forwards standard fieldset attributes.
+
+| Prop      | Type              | Default | Description                                                     |
+| --------- | ----------------- | ------- | --------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Related form controls with a meaningful first-child `<legend>`. |
+| className | `string`          | —       | Additional class names appended after `pathable-fieldset`.      |
+| disabled  | `boolean`         | —       | Disables descendant form controls through native behavior.      |
+| name      | `string`          | —       | Optional native fieldset name.                                  |
+
+Any other standard fieldset attributes, including `id`, `form`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<fieldset>` element.
+
+#### Fieldset Accessibility
+
+Use a meaningful `<legend>` as the first child so assistive technology can identify the group. Use Fieldset for related controls, not as a generic layout container. Disabled Fieldset descendants follow native browser behavior.
+
+### ErrorMessage Props
+
+`ErrorMessage` wraps a native `<span>` with the `pathable-error-message` class and forwards standard span attributes. It does not automatically set `role="alert"` or manage validation state.
+
+| Prop      | Type                               | Default  | Description                                                             |
+| --------- | ---------------------------------- | -------- | ----------------------------------------------------------------------- |
+| children  | `React.ReactNode`                  | required | Human-readable recovery guidance                                        |
+| className | `string`                           | —        | Additional CSS class names appended after `pathable-error-message`      |
+| id        | `string`                           | —        | Identifier referenced by the invalid control through `aria-describedby` |
+| role      | `string`                           | —        | Optional consumer-selected role, such as `alert` or `status`            |
+| aria-live | `'off' \| 'polite' \| 'assertive'` | —        | Optional live-region behavior selected by the consuming validation flow |
+
+Any other standard span attributes, including `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<span>` element.
+
+#### ErrorMessage Accessibility
+
+Provide specific recovery guidance and associate the message with the invalid control through `aria-describedby`. Use `aria-invalid="true"` on the associated control when application validation identifies an error. Choose `role="alert"` or `aria-live` only when the validation flow should announce the message immediately.
+
+### Radio Props
+
+`Radio` renders a native `<input type="radio">` inside a PathAble label structure. It forwards native radio attributes while applying the PathAble input, label, and optional description classes.
+
+| Prop           | Type              | Default  | Description                                           |
+| -------------- | ----------------- | -------- | ----------------------------------------------------- |
+| children       | `React.ReactNode` | required | Visible radio label and accessible name               |
+| description    | `React.ReactNode` | —        | Optional supporting content rendered inside the label |
+| className      | `string`          | —        | Additional classes appended to the root label         |
+| checked        | `boolean`         | —        | Controlled selected state; use with `onChange`        |
+| defaultChecked | `boolean`         | —        | Initial selected state for an uncontrolled radio      |
+| disabled       | `boolean`         | —        | Prevents interaction and form submission              |
+| required       | `boolean`         | —        | Enables native required-field validation              |
+| name           | `string`          | —        | Native group name shared by mutually exclusive radios |
+| value          | `string`          | —        | Native value submitted when selected                  |
+
+Any other supported native input attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying radio input. The wrapper does not manage selected state, validation, or submission.
+
+The wrapper exposes the default radio contract only. The `pathable-radio--tile` modifier is not exposed because it is not implemented by the owning stylesheet contract. For related choices, compose Radio instances inside a native `<fieldset>` with a `<legend>` and give every option the same `name`.
+
+#### Radio Accessibility
+
+The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Native arrow-key navigation is preserved for radios that share a `name`.
+
+### Checkbox Props
+
+`Checkbox` renders a native `<input type="checkbox">` inside a PathAble label structure. It forwards native checkbox attributes while applying the PathAble input, label, and optional description classes.
+
+| Prop           | Type              | Default  | Description                                           |
+| -------------- | ----------------- | -------- | ----------------------------------------------------- |
+| children       | `React.ReactNode` | required | Visible checkbox label and accessible name            |
+| description    | `React.ReactNode` | —        | Optional supporting content rendered inside the label |
+| className      | `string`          | —        | Additional classes appended to the root label         |
+| checked        | `boolean`         | —        | Controlled checked state; use with `onChange`         |
+| defaultChecked | `boolean`         | —        | Initial checked state for an uncontrolled checkbox    |
+| disabled       | `boolean`         | —        | Prevents interaction and form submission              |
+| required       | `boolean`         | —        | Enables native required-field validation              |
+| name           | `string`          | —        | Native form field name                                |
+| value          | `string`          | —        | Native value submitted when checked                   |
+
+Any other supported native input attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying checkbox input. The wrapper does not manage checked state, validation, or submission.
+
+The wrapper exposes the default checkbox contract only. The `pathable-checkbox--tile` modifier is not exposed because it is not implemented by the owning stylesheet contract. For related choices, compose Checkbox instances inside a native `<fieldset>` with a `<legend>`.
+
+#### Checkbox Accessibility
+
+The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Use a radio group instead when choices are mutually exclusive.
 
 ### Communication Components
 

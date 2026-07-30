@@ -11,4 +11,5 @@
 
 .pathable-hint {
   @extend .usa-hint;
+  color: var(--pathable-color-text-muted);
 }
