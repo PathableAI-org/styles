@@ -25,6 +25,8 @@ export type {
 } from './components/EmptyState/EmptyState.js'
 export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
+export { Label } from './components/Label/Label.js'
+export type { LabelProps } from './components/Label/Label.js'
 export { List } from './components/List/List.js'
 export { Table } from './components/Table/Table.js'
 export { Textarea } from './components/Textarea/Textarea.js'

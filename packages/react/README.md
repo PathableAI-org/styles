@@ -26,6 +26,7 @@ import {
   Checkbox,
   EmptyState,
   Input,
+  Label,
   Link,
   List,
   Modal,
@@ -194,7 +195,7 @@ function App() {
       />
       <p id="session-note-hint">Include the agreed next action.</p>
 
-      <label htmlFor="participant-email">Participant email</label>
+      <Label htmlFor="participant-email">Participant email</Label>
       <Input
         id="participant-email"
         name="participantEmail"
@@ -399,6 +400,22 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Label Props
+
+`Label` wraps a native `<label>` with the `pathable-label` class and forwards standard label attributes.
+
+| Prop      | Type              | Default | Description                                                        |
+| --------- | ----------------- | ------- | ------------------------------------------------------------------ |
+| children  | `React.ReactNode` | —       | Visible text or inline content naming the associated form control. |
+| htmlFor   | `string`          | —       | `id` of the associated form control.                               |
+| className | `string`          | —       | Additional CSS class names appended after `pathable-label`.        |
+
+Any other standard label attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<label>` element.
+
+#### Label Accessibility
+
+Give each form control an accessible name with a visible `Label` and a matching `htmlFor`/`id` pair, or place the control inside the label. Use `aria-describedby` for supporting hints or validation messages rather than putting all instructions in the label.
 
 ### Textarea Props
 
