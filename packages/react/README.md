@@ -25,6 +25,7 @@ import {
   ErrorMessage,
   Checkbox,
   EmptyState,
+  FormGroup,
   Fieldset,
   Hint,
   Input,
@@ -197,13 +198,15 @@ function App() {
       />
       <Hint id="session-note-hint">Include the agreed next action.</Hint>
 
-      <Label htmlFor="participant-email">Participant email</Label>
-      <Input
-        id="participant-email"
-        name="participantEmail"
-        type="email"
-        required
-      />
+      <FormGroup>
+        <Label htmlFor="participant-email">Participant email</Label>
+        <Input
+          id="participant-email"
+          name="participantEmail"
+          type="email"
+          required
+        />
+      </FormGroup>
 
       <Fieldset>
         <legend>Employment preferences</legend>
@@ -413,6 +416,22 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### FormGroup Props
+
+`FormGroup` wraps a native `<div>` with the `pathable-form-group` class and forwards standard div attributes.
+
+| Prop      | Type              | Default | Description                                                  |
+| --------- | ----------------- | ------- | ------------------------------------------------------------ |
+| children  | `React.ReactNode` | —       | Label, form control, and related hint or validation content. |
+| className | `string`          | —       | Additional class names appended after `pathable-form-group`. |
+| id        | `string`          | —       | Optional native div ID.                                      |
+
+Any other standard div attributes, including `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<div>` element.
+
+#### FormGroup Accessibility
+
+FormGroup is a visual styling wrapper and does not create a semantic group or accessible name. Give each contained control a visible associated `<label>` or an appropriate ARIA label. Associate hints and validation messages with the control through `aria-describedby`. Use a native `<fieldset>` when related controls need a shared group name, and do not use FormGroup as a replacement for a fieldset.
 
 ### Hint Props
 

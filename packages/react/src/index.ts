@@ -23,6 +23,8 @@ export type {
   EmptyStateProps,
   EmptyStateVariant,
 } from './components/EmptyState/EmptyState.js'
+export { FormGroup } from './components/FormGroup/FormGroup.js'
+export type { FormGroupProps } from './components/FormGroup/FormGroup.js'
 export { Fieldset } from './components/Fieldset/Fieldset.js'
 export type { FieldsetProps } from './components/Fieldset/Fieldset.js'
 export { Hint } from './components/Hint/Hint.js'
