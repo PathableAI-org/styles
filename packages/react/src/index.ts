@@ -23,6 +23,8 @@ export type {
   EmptyStateProps,
   EmptyStateVariant,
 } from './components/EmptyState/EmptyState.js'
+export { Hint } from './components/Hint/Hint.js'
+export type { HintProps } from './components/Hint/Hint.js'
 export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
 export { Label } from './components/Label/Label.js'
