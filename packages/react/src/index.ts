@@ -50,6 +50,8 @@ export type {
 } from './components/PageError/PageError.js'
 export { ProcessList } from './components/ProcessList/ProcessList.js'
 export type { ProcessItem } from './components/ProcessList/ProcessList.js'
+export { Radio } from './components/Radio/Radio.js'
+export type { RadioProps } from './components/Radio/Radio.js'
 export { SiteAlert } from './components/SiteAlert/SiteAlert.js'
 export { StepIndicator } from './components/StepIndicator/StepIndicator.js'
 export type { Step } from './components/StepIndicator/StepIndicator.js'
