@@ -25,6 +25,7 @@ import {
   ErrorMessage,
   Checkbox,
   EmptyState,
+  Fieldset,
   Hint,
   Input,
   Label,
@@ -204,12 +205,23 @@ function App() {
         required
       />
 
-      <label htmlFor="employment-goal">Employment goal</label>
-      <Select id="employment-goal" name="employmentGoal">
-        <option value="">Select a goal</option>
-        <option value="job-search">Job search skills</option>
-        <option value="interview">Interview preparation</option>
-      </Select>
+      <Fieldset>
+        <legend>Employment preferences</legend>
+        <label htmlFor="employment-goal">Employment goal</label>
+        <Select id="employment-goal" name="employmentGoal">
+          <option value="">Select a goal</option>
+          <option value="job-search">Job search skills</option>
+          <option value="interview">Interview preparation</option>
+        </Select>
+        <label htmlFor="employment-hours">Preferred weekly hours</label>
+        <Input
+          id="employment-hours"
+          name="employmentHours"
+          type="number"
+          min={1}
+          max={40}
+        />
+      </Fieldset>
 
       <label htmlFor="participant-email">Participant email</label>
       <input
@@ -490,6 +502,23 @@ Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`
 #### Select Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
+
+### Fieldset Props
+
+`Fieldset` wraps a native `<fieldset>` with the `pathable-fieldset` class and forwards standard fieldset attributes.
+
+| Prop      | Type              | Default | Description                                                     |
+| --------- | ----------------- | ------- | --------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Related form controls with a meaningful first-child `<legend>`. |
+| className | `string`          | —       | Additional class names appended after `pathable-fieldset`.      |
+| disabled  | `boolean`         | —       | Disables descendant form controls through native behavior.      |
+| name      | `string`          | —       | Optional native fieldset name.                                  |
+
+Any other standard fieldset attributes, including `id`, `form`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<fieldset>` element.
+
+#### Fieldset Accessibility
+
+Use a meaningful `<legend>` as the first child so assistive technology can identify the group. Use Fieldset for related controls, not as a generic layout container. Disabled Fieldset descendants follow native browser behavior.
 
 ### ErrorMessage Props
 
