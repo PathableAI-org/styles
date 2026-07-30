@@ -22,6 +22,9 @@ import {
   Button,
   ButtonGroup,
   Card,
+  Checkbox,
+  EmptyState,
+  Input,
   Link,
   List,
   Modal,
@@ -29,6 +32,7 @@ import {
   ProcessList,
   Radio,
   SiteAlert,
+  Skipnav,
   StepIndicator,
   SummaryBox,
   Table,
@@ -40,6 +44,13 @@ import {
 function App() {
   return (
     <>
+      <Skipnav href="#main-content">Skip to main content</Skipnav>
+
+      <main id="main-content">
+        <h1>Participant dashboard</h1>
+        <p>Review coaching sessions and agreed action plans.</p>
+      </main>
+
       <Breadcrumb
         aria-label="Breadcrumbs"
         items={[
@@ -55,6 +66,22 @@ function App() {
       >
         <p>Review the participant notes and prepare the next action plan.</p>
       </Card>
+
+      <EmptyState
+        variant="no-results"
+        icon={
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z" />
+          </svg>
+        }
+        heading="No matching results"
+        body="Try adjusting your search terms or filters."
+        action={
+          <a href="#clear-filters" className="pathable-button">
+            Clear filters
+          </a>
+        }
+      />
 
       <PageError
         layout="compact"
@@ -166,6 +193,14 @@ function App() {
       />
       <p id="session-note-hint">Include the agreed next action.</p>
 
+      <label htmlFor="participant-email">Participant email</label>
+      <Input
+        id="participant-email"
+        name="participantEmail"
+        type="email"
+        required
+      />
+
       <label htmlFor="employment-goal">Employment goal</label>
       <Select id="employment-goal" name="employmentGoal">
         <option value="">Select a goal</option>
@@ -176,6 +211,13 @@ function App() {
       <Radio name="employmentGoal" value="job-search" defaultChecked>
         Job search skills
       </Radio>
+      <Checkbox
+        name="sessionReminders"
+        value="enabled"
+        description="You can change this preference at any time."
+      >
+        Send session reminders
+      </Checkbox>
 
       <Tag>Active</Tag>
 
@@ -233,6 +275,25 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | status       | `React.ReactNode`                                             | —        | Workflow status content             |
 | actions      | `React.ReactNode`                                             | —        | Workflow action content             |
 | className    | `string`                                                      | —        | Additional root element class names |
+
+### EmptyState Props
+
+`EmptyState` renders a structured empty view using the `pathable-empty-state` class and one of its four supported variants.
+
+| Prop      | Type                                                           | Default     | Description                                                                                  |
+| --------- | -------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| variant   | `'no-data' \| 'no-results' \| 'setup-required' \| 'completed'` | `'no-data'` | Empty-state context and matching PathAble modifier.                                          |
+| icon      | `React.ReactElement`                                           | —           | Optional decorative icon. It receives `pathable-empty-state__icon` and `aria-hidden="true"`. |
+| heading   | `React.ReactNode`                                              | required    | Primary message rendered as an `<h2>`.                                                       |
+| body      | `React.ReactNode`                                              | required    | Explanation rendered as a `<p>`.                                                             |
+| action    | `React.ReactElement`                                           | —           | Optional link or button. The element must accept `className`.                                |
+| className | `string`                                                       | —           | Additional root class names appended after the PathAble empty-state classes.                 |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
+
+#### EmptyState Accessibility
+
+Use the variant that accurately describes why content is absent. Provide a clear heading and explanation. Icons are decorative and hidden from assistive technology. Use a meaningful link or button for `action`; the component preserves its native keyboard behavior and event handlers.
 
 ### PageError Props
 
@@ -305,6 +366,26 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
 
+### Input Props
+
+`Input` wraps a native `<input>` with the `pathable-input` class and forwards standard input attributes.
+
+| Prop         | Type                                    | Default | Description                                              |
+| ------------ | --------------------------------------- | ------- | -------------------------------------------------------- |
+| type         | `React.HTMLInputTypeAttribute`          | —       | Native input type, such as `text`, `email`, or `search`. |
+| className    | `string`                                | —       | Additional CSS class names                               |
+| value        | `string \| number \| readonly string[]` | —       | Controlled field value                                   |
+| defaultValue | `string \| number \| readonly string[]` | —       | Initial uncontrolled field value                         |
+| disabled     | `boolean`                               | —       | Prevents interaction and form submission                 |
+| readOnly     | `boolean`                               | —       | Allows reading and selection without editing             |
+| required     | `boolean`                               | —       | Enables native required-field validation                 |
+
+Any other standard input attributes, including `id`, `name`, `placeholder`, `min`, `max`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<input>` element.
+
+#### Input Accessibility
+
+Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
 ### Textarea Props
 
 `Textarea` wraps a native `<textarea>` with the `pathable-textarea` class and forwards standard textarea attributes.
@@ -324,6 +405,22 @@ Any other standard textarea attributes, including `id`, `name`, `placeholder`, `
 #### Textarea Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Skipnav Props
+
+`Skipnav` wraps a native `<a>` with the `pathable-skipnav` class. It is intended for bypassing repeated navigation and moving keyboard users directly to the page's main content.
+
+| Prop      | Type              | Default | Description                                                   |
+| --------- | ----------------- | ------- | ------------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | Visible text describing the main content destination.         |
+| href      | `string`          | —       | Fragment or URL for the main content target.                  |
+| className | `string`          | —       | Additional CSS class names appended after `pathable-skipnav`. |
+
+Any other standard anchor attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<a>` element.
+
+#### Skipnav Accessibility
+
+Place Skipnav near the beginning of the page or application shell. Point `href` to a unique `id` on the page's main content landmark, for example `<main id="main-content">`. Provide meaningful link text and keep the target landmark present in the rendered page.
 
 ### Select Props
 
@@ -369,6 +466,30 @@ The wrapper exposes the default radio contract only. The `pathable-radio--tile` 
 #### Radio Accessibility
 
 The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Native arrow-key navigation is preserved for radios that share a `name`.
+
+### Checkbox Props
+
+`Checkbox` renders a native `<input type="checkbox">` inside a PathAble label structure. It forwards native checkbox attributes while applying the PathAble input, label, and optional description classes.
+
+| Prop           | Type              | Default  | Description                                           |
+| -------------- | ----------------- | -------- | ----------------------------------------------------- |
+| children       | `React.ReactNode` | required | Visible checkbox label and accessible name            |
+| description    | `React.ReactNode` | —        | Optional supporting content rendered inside the label |
+| className      | `string`          | —        | Additional classes appended to the root label         |
+| checked        | `boolean`         | —        | Controlled checked state; use with `onChange`         |
+| defaultChecked | `boolean`         | —        | Initial checked state for an uncontrolled checkbox    |
+| disabled       | `boolean`         | —        | Prevents interaction and form submission              |
+| required       | `boolean`         | —        | Enables native required-field validation              |
+| name           | `string`          | —        | Native form field name                                |
+| value          | `string`          | —        | Native value submitted when checked                   |
+
+Any other supported native input attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying checkbox input. The wrapper does not manage checked state, validation, or submission.
+
+The wrapper exposes the default checkbox contract only. The `pathable-checkbox--tile` modifier is not exposed because it is not implemented by the owning stylesheet contract. For related choices, compose Checkbox instances inside a native `<fieldset>` with a `<legend>`.
+
+#### Checkbox Accessibility
+
+The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Use a radio group instead when choices are mutually exclusive.
 
 ### Communication Components
 
