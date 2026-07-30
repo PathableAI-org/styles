@@ -25,6 +25,7 @@ import {
   ErrorMessage,
   Checkbox,
   EmptyState,
+  Form,
   FormGroup,
   Fieldset,
   Hint,
@@ -189,66 +190,72 @@ function App() {
         </tbody>
       </Table>
 
-      <label htmlFor="session-note">Session note</label>
-      <Textarea
-        id="session-note"
-        name="sessionNote"
-        rows={5}
-        aria-describedby="session-note-hint"
-      />
-      <Hint id="session-note-hint">Include the agreed next action.</Hint>
-
-      <FormGroup>
-        <Label htmlFor="participant-email">Participant email</Label>
-        <Input
-          id="participant-email"
-          name="participantEmail"
-          type="email"
-          required
-        />
-      </FormGroup>
-
-      <Fieldset>
-        <legend>Employment preferences</legend>
-        <label htmlFor="employment-goal">Employment goal</label>
-        <Select id="employment-goal" name="employmentGoal">
-          <option value="">Select a goal</option>
-          <option value="job-search">Job search skills</option>
-          <option value="interview">Interview preparation</option>
-        </Select>
-        <label htmlFor="employment-hours">Preferred weekly hours</label>
-        <Input
-          id="employment-hours"
-          name="employmentHours"
-          type="number"
-          min={1}
-          max={40}
-        />
-      </Fieldset>
-
-      <label htmlFor="participant-email">Participant email</label>
-      <input
-        id="participant-email"
-        name="participantEmail"
-        className="pathable-input"
-        type="email"
-        aria-invalid="true"
-        aria-describedby="participant-email-error"
-      />
-      <ErrorMessage id="participant-email-error" role="alert">
-        Enter an email address in the format name@example.com.
-      </ErrorMessage>
-
-      <Radio name="employmentGoal" value="job-search" defaultChecked>
-        Job search skills
-      </Radio>
-      <Checkbox
-        name="sessionReminders"
-        value="enabled"
-        description="You can change this preference at any time."
+      <Form
+        aria-label="Participant details"
+        onSubmit={(event) => {
+          event.preventDefault()
+          // Consumer-owned submission handling goes here.
+        }}
       >
-        Send session reminders
-      </Checkbox>
+        <label htmlFor="session-note">Session note</label>
+        <Textarea
+          id="session-note"
+          name="sessionNote"
+          rows={5}
+          aria-describedby="session-note-hint"
+        />
+        <Hint id="session-note-hint">Include the agreed next action.</Hint>
+
+        <FormGroup>
+          <Label htmlFor="participant-email">Participant email</Label>
+          <Input
+            id="participant-email"
+            name="participantEmail"
+            type="email"
+            required
+            aria-invalid="true"
+            aria-describedby="participant-email-error"
+          />
+          <ErrorMessage id="participant-email-error" role="alert">
+            Enter an email address in the format name@example.com.
+          </ErrorMessage>
+        </FormGroup>
+
+        <Fieldset>
+          <legend>Employment preferences</legend>
+          <FormGroup>
+            <Label htmlFor="employment-goal">Employment goal</Label>
+            <Select id="employment-goal" name="employmentGoal">
+              <option value="">Select a goal</option>
+              <option value="job-search">Job search skills</option>
+              <option value="interview">Interview preparation</option>
+            </Select>
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="employment-hours">Preferred weekly hours</Label>
+            <Input
+              id="employment-hours"
+              name="employmentHours"
+              type="number"
+              min={1}
+              max={40}
+            />
+          </FormGroup>
+        </Fieldset>
+
+        <Radio name="employmentGoal" value="job-search" defaultChecked>
+          Job search skills
+        </Radio>
+        <Checkbox
+          name="sessionReminders"
+          value="enabled"
+          description="You can change this preference at any time."
+        >
+          Send session reminders
+        </Checkbox>
+
+        <Button type="submit">Save participant details</Button>
+      </Form>
 
       <Tag>Active</Tag>
 
@@ -416,6 +423,24 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Form Props
+
+`Form` wraps a native `<form>` with the `pathable-form` class and forwards standard form attributes.
+
+| Prop       | Type                                                  | Default | Description                                                                   |
+| ---------- | ----------------------------------------------------- | ------- | ----------------------------------------------------------------------------- |
+| children   | `React.ReactNode`                                     | —       | Labeled form controls and submit or other form actions.                       |
+| className  | `string`                                              | —       | Additional class names appended after `pathable-form`.                        |
+| action     | `React.FormHTMLAttributes<HTMLFormElement>['action']` | —       | Native submission URL or React form action.                                   |
+| method     | `React.FormHTMLAttributes<HTMLFormElement>['method']` | `'get'` | Native browser submission method.                                             |
+| noValidate | `boolean`                                             | —       | Disables native constraint validation; provide an equivalent accessible flow. |
+
+Any other standard form attributes, including `id`, `encType`, `target`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<form>` element.
+
+#### Form Accessibility
+
+Use a visible heading with `aria-labelledby` or an appropriate `aria-label` when the form needs an accessible name. Give every contained control an accessible label and provide a clearly labeled submit action. Do not nest forms. Form does not manage control state, validation, submission requests, or server responses.
 
 ### FormGroup Props
 
