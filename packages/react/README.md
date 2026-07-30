@@ -23,6 +23,7 @@ import {
   ButtonGroup,
   Card,
   ErrorMessage,
+  Checkbox,
   EmptyState,
   Input,
   Link,
@@ -219,6 +220,14 @@ function App() {
       <ErrorMessage id="participant-email-error" role="alert">
         Enter an email address in the format name@example.com.
       </ErrorMessage>
+
+      <Checkbox
+        name="sessionReminders"
+        value="enabled"
+        description="You can change this preference at any time."
+      >
+        Send session reminders
+      </Checkbox>
 
       <Tag>Active</Tag>
 
@@ -461,6 +470,30 @@ Any other standard span attributes, including `aria-*`, `data-*`, and event hand
 #### ErrorMessage Accessibility
 
 Provide specific recovery guidance and associate the message with the invalid control through `aria-describedby`. Use `aria-invalid="true"` on the associated control when application validation identifies an error. Choose `role="alert"` or `aria-live` only when the validation flow should announce the message immediately.
+
+### Checkbox Props
+
+`Checkbox` renders a native `<input type="checkbox">` inside a PathAble label structure. It forwards native checkbox attributes while applying the PathAble input, label, and optional description classes.
+
+| Prop           | Type              | Default  | Description                                           |
+| -------------- | ----------------- | -------- | ----------------------------------------------------- |
+| children       | `React.ReactNode` | required | Visible checkbox label and accessible name            |
+| description    | `React.ReactNode` | —        | Optional supporting content rendered inside the label |
+| className      | `string`          | —        | Additional classes appended to the root label         |
+| checked        | `boolean`         | —        | Controlled checked state; use with `onChange`         |
+| defaultChecked | `boolean`         | —        | Initial checked state for an uncontrolled checkbox    |
+| disabled       | `boolean`         | —        | Prevents interaction and form submission              |
+| required       | `boolean`         | —        | Enables native required-field validation              |
+| name           | `string`          | —        | Native form field name                                |
+| value          | `string`          | —        | Native value submitted when checked                   |
+
+Any other supported native input attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying checkbox input. The wrapper does not manage checked state, validation, or submission.
+
+The wrapper exposes the default checkbox contract only. The `pathable-checkbox--tile` modifier is not exposed because it is not implemented by the owning stylesheet contract. For related choices, compose Checkbox instances inside a native `<fieldset>` with a `<legend>`.
+
+#### Checkbox Accessibility
+
+The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Use a radio group instead when choices are mutually exclusive.
 
 ### Communication Components
 
