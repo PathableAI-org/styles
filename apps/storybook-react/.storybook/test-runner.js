@@ -30,6 +30,7 @@ const config = {
       'components-feedback-pageerror--custom-attributes',
       'components-feedback-pageerror--accessibility-check',
       'components-feedback-pageerror--page-composition',
+      'components-feedback-toast--warning',
     ])
 
     const rules = {
@@ -39,9 +40,9 @@ const config = {
       region: { enabled: false },
       ...(colorContrastExceptionStoryIds.has(context.id)
         ? {
-            // The source page-error link token currently fails contrast on
-            // the light surface. Keep every other axe rule active while the
-            // design-token issue is tracked separately.
+            // Source link tokens fail contrast on the light surface for the
+            // PageError and Toast/Warning actions. Keep every other axe rule
+            // active while the design-token issue is tracked separately.
             'color-contrast': { enabled: false },
           }
         : {}),

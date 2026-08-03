@@ -241,6 +241,7 @@ export const Warning: Story = {
     await expect(action).toHaveClass('pathable-toast__action')
     await userEvent.click(action)
     await expect(actionSpy).toHaveBeenCalledTimes(1)
+    await userEvent.unhover(action)
   },
 }
 
