@@ -28,6 +28,7 @@ import {
   Form,
   FormGroup,
   Fieldset,
+  Header,
   Hint,
   Input,
   Label,
@@ -51,6 +52,21 @@ function App() {
   return (
     <>
       <Skipnav href="#main-content">Skip to main content</Skipnav>
+
+      <Header
+        brand="PathAble"
+        brandHref="#main-content"
+        navigationLabel="Primary navigation"
+        items={[
+          {
+            id: 'participants',
+            content: 'Participants',
+            href: '#participants',
+          },
+          { id: 'sessions', content: 'Coaching sessions', href: '#sessions' },
+          { id: 'resources', content: 'Resources', href: '#resources' },
+        ]}
+      />
 
       <main id="main-content">
         <h1>Participant dashboard</h1>
@@ -267,6 +283,12 @@ function App() {
 
 The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathable/react`; they do not need to import `@pathable/styles` separately in application code.
 
+Header's mobile navigation uses the USWDS JavaScript distributed by `@pathable/styles`. Import it once at the application boundary; do not import it in individual components:
+
+```tsx
+import '@pathable/styles/js'
+```
+
 > **Navigation policy**: The `external` Link presentation changes only the visual treatment (adds `pathable-link--external`). Consumers remain responsible for `href`, `target`, `rel`, download behavior, and any routing logic.
 
 ### Link Props
@@ -372,6 +394,26 @@ Use `compact` for an inline error panel and `full-page` for a page-level failure
 | --------- | ----------------- | -------------------------- |
 | children  | `React.ReactNode` | Button group content       |
 | className | `string`          | Additional CSS class names |
+
+### Header Props
+
+`Header` renders the basic USWDS header hierarchy with both `pathable-*` styling classes and the required `usa-*` compatibility classes. It does not own mobile-menu state or import the USWDS JavaScript bundle.
+
+| Prop            | Type                       | Default                | Description                                                   |
+| --------------- | -------------------------- | ---------------------- | ------------------------------------------------------------- |
+| brand           | `React.ReactNode`          | required               | Visible content for the native brand link                     |
+| brandHref       | `string`                   | required               | Consumer-owned destination for the brand link                 |
+| items           | `readonly HeaderNavItem[]` | required               | Consumer-owned primary-navigation records                     |
+| menuLabel       | `string`                   | `'Menu'`               | Visible label for the mobile menu button                      |
+| closeLabel      | `string`                   | `'Close navigation'`   | Accessible name for the icon-only mobile close button         |
+| navigationLabel | `string`                   | `'Primary navigation'` | Accessible name for the navigation landmark                   |
+| className       | `string`                   | —                      | Additional class names appended after the Header root classes |
+
+Each `HeaderNavItem` requires a stable `id`, `content`, `href`, and accepts optional native anchor `attributes`. Destinations, routing, link callbacks, targets, and relationships remain consumer-owned.
+
+#### Header Accessibility And JavaScript
+
+Import `@pathable/styles/js` once at the application boundary to enable USWDS mobile menu opening, focus movement to the close button, Escape handling, and focus restoration. The wrapper deliberately has no `open` prop or internal open state, preventing competing React and USWDS state owners. Without JavaScript, the semantic header, labeled navigation landmark, brand link, and navigation links remain in the DOM as native elements.
 
 ### Breadcrumb Props
 

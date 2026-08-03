@@ -31,6 +31,12 @@ export { Fieldset } from './components/Fieldset/Fieldset.js'
 export type { FieldsetProps } from './components/Fieldset/Fieldset.js'
 export { Hint } from './components/Hint/Hint.js'
 export type { HintProps } from './components/Hint/Hint.js'
+export { Header } from './components/Header/Header.js'
+export type {
+  HeaderNavItem,
+  HeaderNavItemAttributes,
+  HeaderProps,
+} from './components/Header/Header.js'
 export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
 export { Label } from './components/Label/Label.js'
