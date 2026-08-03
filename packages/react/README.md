@@ -40,6 +40,7 @@ import {
   Pagination,
   ProcessList,
   Radio,
+  Search,
   SiteAlert,
   Skeleton,
   Skipnav,
@@ -220,6 +221,19 @@ function App() {
         <Button variant="save">Save</Button>
         <Button variant="continue">Continue</Button>
       </ButtonGroup>
+
+      <Search
+        size="big"
+        label="Search participant resources"
+        buttonLabel="Search resources"
+        action="/resources"
+        method="get"
+        inputProps={{
+          id: 'participant-resource-search',
+          name: 'query',
+          placeholder: 'Search coaching resources',
+        }}
+      />
 
       <Link href="/sessions/42">Open coaching session</Link>
 
@@ -629,6 +643,27 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Search Props
+
+`Search` renders a native search landmark with an associated search input and submit button. It applies the existing `pathable-search` contract and uses the package's `Input` and `Button` primitives. The search icon is a fixed decorative SVG and does not depend on the public Icon wrapper.
+
+| Prop        | Type                     | Default     | Description                                                                                  |
+| ----------- | ------------------------ | ----------- | -------------------------------------------------------------------------------------------- |
+| size        | `'default' \| 'big'`     | `'default'` | Selects the icon-button treatment or the big treatment with a visible button label.          |
+| label       | `React.ReactNode`        | required    | Accessible label associated with the native search input.                                    |
+| buttonLabel | `React.ReactNode`        | `'Search'`  | Accessible submit action label; visually hidden at the default size and visible in big mode. |
+| inputProps  | `SearchInputProps`       | `{}`        | Native search input attributes other than `type`, which is always `search`.                  |
+| className   | `string`                 | —           | Additional class names appended after the PathAble search classes.                           |
+| onSubmit    | `React.FormEventHandler` | —           | Native form submit handler; the wrapper does not prevent default submission.                 |
+
+Any other standard form attributes, including `id`, `action`, `method`, `target`, `aria-*`, `data-*`, and event handlers, are forwarded to the root `<form role="search">`. `inputProps` forwards native input attributes such as `name`, `placeholder`, `value`, `defaultValue`, `onChange`, `disabled`, `required`, `aria-*`, and `data-*`.
+
+#### Search Accessibility
+
+Use a specific `label` that describes what content is searched. The wrapper associates that label with the searchbox, hides the decorative SVG from assistive technology, and keeps `buttonLabel` available as the submit button's accessible name in both sizes. Big mode shows that label at wider viewports and follows the owning responsive search contract by collapsing to the named icon button on small viewports. The input and button retain native keyboard and submission behavior: Enter in the searchbox or activation of the submit button submits the form once.
+
+Search does not own the query, results, validation, request, or keyboard routing. Use controlled input attributes when the application owns the query, or native `defaultValue` for an uncontrolled field. A disabled search input remains disabled according to native behavior; disable or remove the submit action at the application level only when that action is also unavailable.
 
 ### Form Props
 

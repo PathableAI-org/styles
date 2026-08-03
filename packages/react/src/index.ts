@@ -59,6 +59,12 @@ export type {
   SidenavListAttributes,
   SidenavProps,
 } from './components/Sidenav/Sidenav.js'
+export { Search } from './components/Search/Search.js'
+export type {
+  SearchInputProps,
+  SearchProps,
+  SearchSize,
+} from './components/Search/Search.js'
 export { Link } from './components/Link/Link.js'
 export { Tag } from './components/Tag/Tag.js'
 
