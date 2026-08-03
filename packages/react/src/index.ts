@@ -45,6 +45,14 @@ export { Skipnav } from './components/Skipnav/Skipnav.js'
 export type { SkipnavProps } from './components/Skipnav/Skipnav.js'
 export { Select } from './components/Select/Select.js'
 export type { SelectProps } from './components/Select/Select.js'
+export { Sidenav } from './components/Sidenav/Sidenav.js'
+export type {
+  SidenavItem,
+  SidenavItemAttributes,
+  SidenavLinkAttributes,
+  SidenavListAttributes,
+  SidenavProps,
+} from './components/Sidenav/Sidenav.js'
 export { Link } from './components/Link/Link.js'
 export { Tag } from './components/Tag/Tag.js'
 
