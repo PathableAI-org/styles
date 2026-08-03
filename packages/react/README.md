@@ -44,6 +44,8 @@ import {
   Table,
   Tag,
   Select,
+  Toast,
+  ToastRegion,
   Textarea,
 } from '@pathable/react'
 
@@ -96,6 +98,14 @@ function App() {
         retry={<Button>Try again</Button>}
         nav={<a href="#go-back">Go back</a>}
       />
+
+      <ToastRegion aria-label="Notifications">
+        <Toast
+          variant="success"
+          message="Participant records saved successfully."
+          dismissible
+        />
+      </ToastRegion>
 
       <Card
         presentation="media"
@@ -630,6 +640,39 @@ The wrapper exposes the default checkbox contract only. The `pathable-checkbox--
 
 The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Use a radio group instead when choices are mutually exclusive.
 
+### Toast Props
+
+`Toast` renders an individual transient notification using the existing `pathable-toast` classes. `ToastRegion` renders the stacking container that positions and spaces multiple toasts. Neither component owns visibility, queuing, auto-dismiss timers, or application state.
+
+#### ToastRegion Props
+
+| Prop      | Type              | Default | Description                                                 |
+| --------- | ----------------- | ------- | ----------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | One or more Toast instances rendered in the stacking region |
+| className | `string`          | —       | Additional classes appended after `pathable-toast__region`  |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, `style`, and event handlers, are forwarded to the region.
+
+#### Toast Props
+
+| Prop         | Type                                                        | Default           | Description                                                                                  |
+| ------------ | ----------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------- |
+| variant      | `'info' \| 'progress' \| 'success' \| 'warning' \| 'error'` | `'info'`          | Notification context and matching PathAble modifier class.                                   |
+| message      | `React.ReactNode`                                           | required          | Concise notification content rendered in the message region.                                 |
+| icon         | `React.ReactElement`                                        | —                 | Optional decorative icon. It receives the toast icon class and `aria-hidden="true"`.         |
+| action       | `React.ReactElement`                                        | —                 | Optional link or button. It must accept `className` so the action class can be merged.       |
+| dismissible  | `boolean`                                                   | `false`           | Adds the dismiss button and `pathable-toast--dismissible` modifier.                          |
+| dismissLabel | `string`                                                    | `'Dismiss'`       | Accessible label for the dismiss button.                                                     |
+| onDismiss    | `React.MouseEventHandler<HTMLButtonElement>`                | —                 | Called when the consumer activates dismiss; removing the toast remains consumer-owned.       |
+| role         | `'status' \| 'alert'`                                       | variant-dependent | Live-region urgency. Info/progress/success default to `status`; warning/error default alert. |
+| className    | `string`                                                    | —                 | Additional classes appended after the PathAble toast classes.                                |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, `style`, and event handlers, are forwarded to the individual toast. The action receives `pathable-toast__action`; a supplied icon receives `pathable-toast__icon` and is forced decorative.
+
+#### Toast Accessibility
+
+Use `role="status"` for polite operational updates and `role="alert"` for urgent, time-sensitive messages. Toast derives that role from the variant by default but allows an explicit override. Give messages enough context to stand alone, keep icons decorative, provide a meaningful `dismissLabel`, and ensure action content describes what will happen. Consumers remain responsible for visibility timing, removal, queueing, focus policy, and announcements when a toast appears or is dismissed.
+
 ### Communication Components
 
 | Component     | Description                                                                                                                         | Props                                                                                            |
@@ -638,6 +681,8 @@ The required `children` content supplies the visible label through a native `<la
 | Alert         | Status messages with info, success, warning, error, and emergency severity levels. Optional slim variant.                           | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | Banner        | Official site banner with disclosure toggle. Controlled/uncontrolled expanded state.                                                | `summary`, `children`, `expanded`, `defaultExpanded`, `onExpandedChange`                         |
 | Modal         | Dialog rendered via portal with focus trapping, Escape close, scroll locking, and focus restoration.                                | `open`, `onClose`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
+| Toast         | Transient feedback notification with five variants, optional action, and optional dismiss control.                                  | `variant`, `message`, `icon`, `action`, `dismissible`, `dismissLabel`, `role`                    |
+| ToastRegion   | Fixed stacking container for one or more Toast instances.                                                                           | `children`, `className`                                                                          |
 | ProcessList   | Ordered list of process steps with headings and body content.                                                                       | `items` (array of `{id, heading, body}`)                                                         |
 | SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                     | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
