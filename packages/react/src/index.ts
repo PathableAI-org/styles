@@ -58,6 +58,15 @@ export type {
   PageErrorProps,
   PageErrorVariant,
 } from './components/PageError/PageError.js'
+export { Pagination } from './components/Pagination/Pagination.js'
+export type {
+  PaginationAnchorAttributes,
+  PaginationItem,
+  PaginationLink,
+  PaginationOverflowItem,
+  PaginationPageItem,
+  PaginationProps,
+} from './components/Pagination/Pagination.js'
 export { ProcessList } from './components/ProcessList/ProcessList.js'
 export type { ProcessItem } from './components/ProcessList/ProcessList.js'
 export { Radio } from './components/Radio/Radio.js'
