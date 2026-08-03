@@ -38,6 +38,7 @@ import {
   ProcessList,
   Radio,
   SiteAlert,
+  Skeleton,
   Skipnav,
   StepIndicator,
   SummaryBox,
@@ -96,6 +97,13 @@ function App() {
         retry={<Button>Try again</Button>}
         nav={<a href="#go-back">Go back</a>}
       />
+
+      <p>Loading participant summary</p>
+      <Skeleton>
+        <Skeleton variant="text-heading" />
+        <Skeleton variant="text-body" />
+        <Skeleton variant="text-body" />
+      </Skeleton>
 
       <Card
         presentation="media"
@@ -332,6 +340,22 @@ Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and e
 #### EmptyState Accessibility
 
 Use the variant that accurately describes why content is absent. Provide a clear heading and explanation. Icons are decorative and hidden from assistive technology. Use a meaningful link or button for `action`; the component preserves its native keyboard behavior and event handlers.
+
+### Skeleton Props
+
+`Skeleton` renders a decorative loading placeholder using the existing PathAble skeleton classes. It does not manage loading state, replacement content, timers, or announcements.
+
+| Prop      | Type                                                                          | Default | Description                                                                    |
+| --------- | ----------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------ |
+| variant   | `'text-heading' \| 'text-body' \| 'avatar' \| 'card' \| 'table-row' \| 'row'` | —       | Selects an implemented placeholder shape; omit it for a composition container. |
+| children  | `React.ReactNode`                                                             | —       | Optional placeholder composition, primarily when `variant` is omitted.         |
+| className | `string`                                                                      | —       | Additional root class names appended after the PathAble skeleton classes.      |
+
+Any other standard non-focusable `<div>` attributes, including `id` and `data-*`, are forwarded to the root element. The wrapper always renders `aria-hidden="true"`; consumers cannot override the accessibility-tree exclusion or make the root focusable through `tabIndex` or `contentEditable`.
+
+#### Skeleton Accessibility
+
+Match each placeholder to the approximate dimensions of the content it replaces to reduce layout shift. Skeletons are decorative and excluded from the accessibility tree, so keep interactive or meaningful content outside them. Provide separate visible or assistive loading status text when users need an announcement. Replace Skeleton with real content when loading completes in consumer-owned state; the component does not run timers or make that transition itself.
 
 ### PageError Props
 
