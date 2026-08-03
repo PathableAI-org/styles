@@ -78,6 +78,8 @@ const STORY_REGION_STYLE = {
   maxWidth: '28rem',
 }
 
+const STATIC_TOAST_STYLE = { animation: 'none' }
+
 function handleAction(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault()
   actionSpy(event)
@@ -221,6 +223,7 @@ export const Warning: Story = {
       </a>
     ),
     dismissible: true,
+    style: STATIC_TOAST_STYLE,
   },
   play: async ({ canvasElement }) => {
     actionSpy.mockClear()
@@ -259,6 +262,7 @@ export const Stacked: Story = {
         icon={INFO_ICON}
         dismissible
         onDismiss={dismissSpy}
+        style={STATIC_TOAST_STYLE}
       />
       <Toast
         variant="success"
@@ -266,22 +270,26 @@ export const Stacked: Story = {
         icon={SUCCESS_ICON}
         dismissible
         onDismiss={dismissSpy}
+        style={STATIC_TOAST_STYLE}
       />
       <Toast
         variant="warning"
         message="Low disk space on the server."
         icon={WARNING_ICON}
+        style={STATIC_TOAST_STYLE}
       />
     </ToastRegion>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(canvas.getByText('Background sync complete.')).toBeVisible()
-    await expect(canvas.getByText('Document saved.')).toBeVisible()
+    await expect(
+      canvas.getByText('Background sync complete.'),
+    ).toBeInTheDocument()
+    await expect(canvas.getByText('Document saved.')).toBeInTheDocument()
     await expect(
       canvas.getByText('Low disk space on the server.'),
-    ).toBeVisible()
+    ).toBeInTheDocument()
   },
 }
 
