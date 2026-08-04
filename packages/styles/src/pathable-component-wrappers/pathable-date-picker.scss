@@ -99,6 +99,10 @@
   @extend .usa-date-picker__calendar__date--within-range;
 }
 
+.pathable-date-picker__calendar__date--within-range:not([disabled]) {
+  color: var(--pathable-color-text);
+}
+
 .pathable-date-picker__calendar__previous-year {
   @extend .usa-date-picker__calendar__previous-year;
 }

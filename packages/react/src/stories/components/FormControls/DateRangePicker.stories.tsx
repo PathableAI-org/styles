@@ -230,10 +230,14 @@ export const InvalidText: Story = {
     const start = canvas.getByRole('textbox', { name: 'Start date' })
 
     await userEvent.click(start)
+    await userEvent.clear(start)
     await userEvent.type(start, '13/40/2026')
+    await expect(start).toHaveValue('13/40/2026')
     await userEvent.keyboard('{Enter}')
 
-    await expect(start).toHaveAttribute('aria-invalid', 'true')
+    await expect(
+      canvas.getByRole('textbox', { name: 'Start date' }),
+    ).toHaveAttribute('aria-invalid', 'true')
     await expect(
       canvas.getByText('Please enter a valid date'),
     ).toHaveTextContent('Please enter a valid date')
@@ -241,6 +245,10 @@ export const InvalidText: Story = {
 }
 
 export const CalendarViews: Story = {
+  args: {
+    minDate: '2026-01-01',
+    maxDate: '2027-12-31',
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const start = canvas.getByRole('textbox', { name: 'Start date' })
@@ -300,7 +308,9 @@ export const ControlledBlur: Story = {
       canvas.getByRole('button', { name: 'Outside control' }),
     )
 
-    await expect(start).toHaveValue('03/12/2026')
+    await expect(
+      canvas.getByRole('textbox', { name: 'Start date' }),
+    ).toHaveValue('03/12/2026')
   },
 }
 
