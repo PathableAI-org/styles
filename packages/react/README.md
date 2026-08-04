@@ -36,6 +36,7 @@ import {
   MediaBlock,
   Modal,
   PageError,
+  Pagination,
   ProcessList,
   Radio,
   SiteAlert,
@@ -64,6 +65,46 @@ function App() {
           { content: 'Home', href: '#home', key: 'home' },
           { content: 'Participant resources', current: true, key: 'resources' },
         ]}
+      />
+
+      <Pagination
+        aria-label="Participant result pages"
+        currentPage={3}
+        previous={{ href: '/participants?page=2' }}
+        items={[
+          {
+            key: 'page-1',
+            type: 'page',
+            page: 1,
+            href: '/participants?page=1',
+          },
+          {
+            key: 'page-2',
+            type: 'page',
+            page: 2,
+            href: '/participants?page=2',
+          },
+          {
+            key: 'page-3',
+            type: 'page',
+            page: 3,
+            href: '/participants?page=3',
+          },
+          {
+            key: 'page-4',
+            type: 'page',
+            page: 4,
+            href: '/participants?page=4',
+          },
+          { key: 'overflow', type: 'overflow' },
+          {
+            key: 'page-10',
+            type: 'page',
+            page: 10,
+            href: '/participants?page=10',
+          },
+        ]}
+        next={{ href: '/participants?page=4' }}
       />
 
       <Card
@@ -424,6 +465,26 @@ Any other standard navigation attributes, including `aria-label`, `data-*`, and 
 #### Breadcrumb Accessibility
 
 Provide an accessible navigation name with `aria-label` or another accessible naming mechanism. Mark exactly one current page when the breadcrumb represents the current location. Keep labels concise and preserve a meaningful page heading separately.
+
+### Pagination Props
+
+`Pagination` renders a consumer-supplied page window as native links inside a semantic navigation landmark. The component does not calculate which pages to show, change `currentPage`, intercept navigation, or integrate with a router.
+
+| Prop        | Type                        | Default  | Description                                                                        |
+| ----------- | --------------------------- | -------- | ---------------------------------------------------------------------------------- |
+| items       | `readonly PaginationItem[]` | required | Ordered page and overflow records supplied by the consumer.                        |
+| currentPage | `number`                    | required | Consumer-owned page number. The matching page link receives `aria-current="page"`. |
+| previous    | `PaginationLink`            | —        | Optional previous-page native link. Omit it when there is no previous destination. |
+| next        | `PaginationLink`            | —        | Optional next-page native link. Omit it when there is no next destination.         |
+| className   | `string`                    | —        | Additional root class names appended without replacing `pathable-pagination`.      |
+
+Any other standard navigation attributes, including `aria-label`, `aria-labelledby`, `id`, `data-*`, and event handlers, are forwarded to the root `<nav>` element.
+
+`PaginationItem` is a discriminated union. Page records require `key`, `type: 'page'`, `page`, and `href`, plus optional native anchor `attributes`. Overflow records contain only `key` and `type: 'overflow'`; they render as a non-interactive ellipsis. `PaginationLink` requires `href` and accepts an optional accessible `label` and native anchor `attributes`. Anchor destinations, targets, relations, download behavior, and event handlers remain consumer-owned.
+
+#### Pagination Accessibility
+
+Give each Pagination landmark a concise accessible name. Supply `currentPage` from application state; if it does not match a page record, Pagination renders no false current marker. Previous, next, and page destinations are native anchors and retain browser keyboard and navigation behavior. Overflow is presentational and cannot receive focus or activation.
 
 ### Table Props
 
