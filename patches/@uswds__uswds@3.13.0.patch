@@ -102,6 +102,18 @@ index 6d45346c62ba2bcda4a8cbf1d461afeca1f2ac12..76d8da7e8fa0022a564e675b84fe1733
  const VISIBLE_CLASS = "is-visible";
  
  let navigation;
+@@ -109,5 +109,11 @@ const setSafariScrollPosition = (body) => {
+ const toggleNav = (active) => {
+   const { body } = document;
++  if (!navigation.focusTrap) {
++    navigation.focusTrap = FocusTrap(body.querySelector(NAV), {
++      Escape: onMenuClose,
++    });
++  }
++
+   const safeActive = typeof active === "boolean" ? active : !isActive();
+ 
+   setSafariScrollPosition(body);
 diff --git a/packages/usa-modal/src/index.js b/packages/usa-modal/src/index.js
 index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb921d991f8 100644
 --- a/packages/usa-modal/src/index.js
