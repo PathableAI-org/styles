@@ -22,6 +22,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  ComboBox,
   ErrorMessage,
   Checkbox,
   EmptyState,
@@ -623,6 +624,25 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### ComboBox Props
+
+`ComboBox` is a searchable single-choice control. It keeps a visually hidden native `<select>` as the form-value source and renders the searchable input and listbox with React-owned behavior. It does not require a separate `@pathable/styles/js` import.
+
+| Prop             | Type                        | Default  | Description                                                                                            |
+| ---------------- | --------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| label            | `React.ReactNode`           | required | Visible label for the combobox input.                                                                  |
+| options          | `readonly ComboBoxOption[]` | required | Options with `value`, `label`, and optional `disabled` properties.                                     |
+| selectProps      | `ComboBoxSelectProps`       | `{}`     | Native select attributes, including `id`, `name`, `value`, `defaultValue`, `required`, and `disabled`. |
+| inputProps       | `ComboBoxInputProps`        | `{}`     | Visible input attributes, including `placeholder`, `aria-describedby`, and event handlers.             |
+| disableFiltering | `boolean`                   | `false`  | Shows all options while typing instead of filtering the list.                                          |
+| className        | `string`                    | —        | Additional root class names appended after the PathAble ComboBox classes.                              |
+
+`ComboBoxOption` requires a string `value` and `label`; `disabled` options remain visible but cannot be selected. Empty option values are reserved for the hidden native placeholder option.
+
+#### ComboBox Accessibility
+
+ComboBox supplies the visible label, `combobox` role, `listbox` relationship, active-descendant state, keyboard navigation, and polite result announcements. Use `inputProps.aria-describedby` for hints or validation messages. The hidden native select retains the submitted field name and selected value. Use `selectProps.value` with `selectProps.onChange` for controlled selection or `selectProps.defaultValue` for uncontrolled selection.
 
 ### Input Props
 

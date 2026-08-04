@@ -18,6 +18,13 @@ export { ErrorMessage } from './components/ErrorMessage/ErrorMessage.js'
 export type { ErrorMessageProps } from './components/ErrorMessage/ErrorMessage.js'
 export { Checkbox } from './components/Checkbox/Checkbox.js'
 export type { CheckboxProps } from './components/Checkbox/Checkbox.js'
+export { ComboBox } from './components/ComboBox/ComboBox.js'
+export type {
+  ComboBoxInputProps,
+  ComboBoxOption,
+  ComboBoxProps,
+  ComboBoxSelectProps,
+} from './components/ComboBox/ComboBox.js'
 export { EmptyState } from './components/EmptyState/EmptyState.js'
 export type {
   EmptyStateProps,
