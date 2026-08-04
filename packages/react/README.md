@@ -33,6 +33,7 @@ import {
   Label,
   Link,
   List,
+  MediaBlock,
   Modal,
   PageError,
   ProcessList,
@@ -169,6 +170,22 @@ function App() {
         ]}
       />
 
+      <MediaBlock
+        media={
+          <img
+            src="/participants/jordan-lee.jpg"
+            alt="Portrait of participant Jordan Lee"
+            width={96}
+            height={96}
+          />
+        }
+        title={<h2>Jordan Lee</h2>}
+        description="Employment coaching participant"
+        aria-label="Participant summary for Jordan Lee"
+      >
+        <p>Current goal: prepare for a customer-service placement interview.</p>
+      </MediaBlock>
+
       <Table
         presentation="striped"
         className="my-custom-class"
@@ -299,6 +316,24 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | className    | `string`                                   | —             | Additional root element class names |
 
 `ListItemObject` supports `content`, optional `key`, optional `className`, and optional `attributes` for item-level `aria-*`, `data-*`, and standard list item attributes.
+
+### MediaBlock Props
+
+`MediaBlock` composes consumer-owned media with optional supporting content using the existing PathAble media-block regions. It does not alter the media element, invent alt text, or choose a heading level.
+
+| Prop        | Type              | Default  | Description                                                                                                         |
+| ----------- | ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| media       | `React.ReactNode` | required | Consumer-owned image, SVG, video, iframe, or other media. Its native semantics and attributes remain unchanged.     |
+| title       | `React.ReactNode` | —        | Optional title content in a neutral styled region. Supply a heading element when the document outline requires one. |
+| description | `React.ReactNode` | —        | Optional concise supporting content in the description region.                                                      |
+| children    | `React.ReactNode` | —        | Optional rich body content rendered after the title and description.                                                |
+| className   | `string`          | —        | Additional root class names appended after `pathable-media-block`.                                                  |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element. The body is omitted when `title`, `description`, and `children` are all empty; empty title and description regions are never rendered.
+
+#### MediaBlock Accessibility
+
+Provide meaningful `alt` text for informative images and `alt=""` for decorative images. Supply semantic title content, such as the heading level appropriate to the surrounding page, because MediaBlock intentionally does not create an implicit heading. Keep interactive media and body content responsible for their own native keyboard and accessible-name behavior.
 
 ### Card Props
 
