@@ -182,7 +182,7 @@ export const CalendarSelection: Story = {
 
     await step('selects a new start date', async () => {
       await userEvent.click(
-        canvas.getByRole('button', { name: 'March 12, 2026' }),
+        canvas.getByRole('button', { name: 'Thursday, March 12, 2026' }),
       )
       await expect(start).toHaveValue('03/12/2026')
       await expect(start).toHaveFocus()
@@ -212,10 +212,10 @@ export const RangeConstraints: Story = {
 
     await userEvent.click(end)
     await expect(
-      canvas.getByRole('button', { name: 'March 9, 2026' }),
+      canvas.getByRole('button', { name: 'Monday, March 9, 2026' }),
     ).toBeDisabled()
     await expect(
-      canvas.getByRole('button', { name: 'March 19, 2026' }),
+      canvas.getByRole('button', { name: 'Thursday, March 19, 2026' }),
     ).not.toBeDisabled()
     await expect(
       canvas.getByRole('button', { name: 'Navigate back one month' }),
@@ -294,6 +294,7 @@ export const ControlledBlur: Story = {
           endInputProps={{ id: 'controlled-end', name: 'controlledEnd' }}
         />
         <button type="button">Outside control</button>
+        <p>Selected start: {range.startDate}</p>
       </div>
     )
   },
@@ -308,9 +309,7 @@ export const ControlledBlur: Story = {
       canvas.getByRole('button', { name: 'Outside control' }),
     )
 
-    await expect(
-      canvas.getByRole('textbox', { name: 'Start date' }),
-    ).toHaveValue('03/12/2026')
+    await expect(canvas.getByText('Selected start: 2026-03-12')).toBeVisible()
   },
 }
 

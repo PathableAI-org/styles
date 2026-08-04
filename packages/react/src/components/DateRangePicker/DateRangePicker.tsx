@@ -864,7 +864,7 @@ export function DateRangePicker({
     } = props
     const isInvalid = invalidSide === side
     const inputValue =
-      openSide === side || invalidSide === side
+      openSide === side || invalidSide === side || draftText[side]
         ? draftText[side]
         : formatDisplayDate(value)
 
