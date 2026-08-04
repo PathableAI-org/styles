@@ -82,6 +82,11 @@ export type { ProcessItem } from './components/ProcessList/ProcessList.js'
 export { Radio } from './components/Radio/Radio.js'
 export type { RadioProps } from './components/Radio/Radio.js'
 export { SiteAlert } from './components/SiteAlert/SiteAlert.js'
+export { Skeleton } from './components/Skeleton/Skeleton.js'
+export type {
+  SkeletonProps,
+  SkeletonVariant,
+} from './components/Skeleton/Skeleton.js'
 export { StepIndicator } from './components/StepIndicator/StepIndicator.js'
 export type { Step } from './components/StepIndicator/StepIndicator.js'
 export { SummaryBox } from './components/SummaryBox/SummaryBox.js'
