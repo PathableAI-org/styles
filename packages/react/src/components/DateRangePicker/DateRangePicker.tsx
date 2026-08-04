@@ -2,6 +2,7 @@ import {
   useId,
   useRef,
   useState,
+  useEffect,
   type ChangeEventHandler,
   type FocusEvent,
   type FocusEventHandler,
@@ -46,6 +47,7 @@ export interface DateRangePickerProps extends Omit<
 }
 
 type DateSide = 'start' | 'end'
+type CalendarView = 'date' | 'month' | 'year'
 
 interface CalendarProps {
   readonly side: DateSide
@@ -59,8 +61,11 @@ interface CalendarProps {
   readonly maxDate?: string
   readonly onMonthChange: (month: Date) => void
   readonly onActiveDateChange: (date: string) => void
+  readonly view: CalendarView
+  readonly onViewChange: (view: CalendarView) => void
   readonly onSelectDate: (date: string) => void
   readonly onClose: () => void
+  readonly locale: string
 }
 
 const ROOT_CLASS = 'pathable-date-range-picker usa-date-range-picker'
@@ -76,7 +81,8 @@ const INTERNAL_INPUT_CLASS =
 const BUTTON_CLASS = 'pathable-date-picker__button usa-date-picker__button'
 const CALENDAR_CLASS =
   'pathable-date-picker__calendar usa-date-picker__calendar'
-const STATUS_CLASS = 'pathable-date-picker__status usa-date-picker__status'
+const STATUS_CLASS =
+  'pathable-sr-only pathable-date-picker__status usa-date-picker__status'
 const TABLE_CLASS =
   'pathable-date-picker__calendar__table usa-date-picker__calendar__table'
 const ROW_CLASS =
@@ -119,22 +125,29 @@ const NEXT_MONTH_CLASS =
   'pathable-date-picker__calendar__next-month usa-date-picker__calendar__next-month'
 const MONTH_SELECTION_CLASS =
   'pathable-date-picker__calendar__month-selection usa-date-picker__calendar__month-selection'
+const YEAR_SELECTION_CLASS =
+  'pathable-date-picker__calendar__year-selection usa-date-picker__calendar__year-selection'
+const MONTH_PICKER_CLASS =
+  'pathable-date-picker__calendar__month-picker usa-date-picker__calendar__month-picker'
+const YEAR_PICKER_CLASS =
+  'pathable-date-picker__calendar__year-picker usa-date-picker__calendar__year-picker'
+const MONTH_CLASS =
+  'pathable-date-picker__calendar__month usa-date-picker__calendar__month'
+const MONTH_FOCUSED_CLASS =
+  'pathable-date-picker__calendar__month--focused usa-date-picker__calendar__month--focused'
+const MONTH_SELECTED_CLASS =
+  'pathable-date-picker__calendar__month--selected usa-date-picker__calendar__month--selected'
+const YEAR_CLASS =
+  'pathable-date-picker__calendar__year usa-date-picker__calendar__year'
+const YEAR_FOCUSED_CLASS =
+  'pathable-date-picker__calendar__year--focused usa-date-picker__calendar__year--focused'
+const YEAR_SELECTED_CLASS =
+  'pathable-date-picker__calendar__year--selected usa-date-picker__calendar__year--selected'
+const PREVIOUS_YEAR_CHUNK_CLASS =
+  'pathable-date-picker__calendar__previous-year-chunk usa-date-picker__calendar__previous-year-chunk'
+const NEXT_YEAR_CHUNK_CLASS =
+  'pathable-date-picker__calendar__next-year-chunk usa-date-picker__calendar__next-year-chunk'
 
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 const INVALID_DATE_MESSAGE = 'Please enter a valid date'
 
 function createDate(year: number, month: number, day: number) {
@@ -200,6 +213,21 @@ function firstDayOfWeek(date: Date) {
   return addDays(date, -date.getUTCDay())
 }
 
+function lastDayOfMonth(date: Date) {
+  return addDays(
+    createDate(date.getUTCFullYear(), date.getUTCMonth() + 1, 1),
+    -1,
+  )
+}
+
+function constrainDate(date: Date, minValue?: string, maxValue?: string) {
+  const minDate = parseISODate(minValue)
+  const maxDate = parseISODate(maxValue)
+  if (minDate && date < minDate) return minDate
+  if (maxDate && date > maxDate) return maxDate
+  return date
+}
+
 function isWithinRange(value: string, start?: string, end?: string) {
   return Boolean(start && end && value > start && value < end)
 }
@@ -209,10 +237,16 @@ function getCalendarDays(month: Date) {
   return Array.from({ length: 42 }, (_, index) => addDays(first, index))
 }
 
-function accessibleDateLabel(value: string) {
+function accessibleDateLabel(value: string, locale: string) {
   const date = parseISODate(value)
   return date
-    ? `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`
+    ? new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'long',
+        timeZone: 'UTC',
+        weekday: 'long',
+        year: 'numeric',
+      }).format(date)
     : value
 }
 
@@ -228,23 +262,72 @@ function Calendar({
   maxDate,
   onMonthChange,
   onActiveDateChange,
+  view,
+  onViewChange,
   onSelectDate,
   onClose,
+  locale,
 }: CalendarProps) {
   const days = getCalendarDays(month)
-  const monthValue = `${MONTHS[month.getUTCMonth()]} ${month.getUTCFullYear()}`
+  const activeButtonRef = useRef<HTMLButtonElement>(null)
+  const monthFormatter = new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    timeZone: 'UTC',
+  })
   const today = new Date()
   const todayValue = toISODate(
     createDate(today.getFullYear(), today.getMonth(), today.getDate()),
   )
+  const weekdays = Array.from({ length: 7 }, (_, index) =>
+    createDate(2023, 0, 1 + index),
+  )
+  const lowerBounds = [minDate, side === 'end' ? selectedStart : '']
+    .filter(Boolean)
+    .sort()
+  const upperBounds = [maxDate, side === 'start' ? selectedEnd : '']
+    .filter(Boolean)
+    .sort()
+  const lowerBound = lowerBounds[0]
+  const upperBound = upperBounds[upperBounds.length - 1]
 
   const isDisabled = (value: string) =>
     Boolean(
-      (minDate && value < minDate) ||
-      (maxDate && value > maxDate) ||
-      (side === 'start' && selectedEnd && value > selectedEnd) ||
-      (side === 'end' && selectedStart && value < selectedStart),
+      (lowerBound && value < lowerBound) || (upperBound && value > upperBound),
     )
+
+  const isMonthDisabled = (value: Date) => {
+    const first = toISODate(firstDayOfMonth(value))
+    const last = toISODate(lastDayOfMonth(value))
+    return Boolean(
+      (lowerBound && last < lowerBound) || (upperBound && first > upperBound),
+    )
+  }
+
+  const isYearDisabled = (year: number) =>
+    isMonthDisabled(createDate(year, 0, 1)) &&
+    isMonthDisabled(createDate(year, 11, 1))
+
+  const firstAvailableDate = (value: Date) => {
+    const first = firstDayOfMonth(value)
+    const last = lastDayOfMonth(value).getUTCDate()
+    for (let day = 1; day <= last; day += 1) {
+      const candidate = toISODate(
+        createDate(value.getUTCFullYear(), value.getUTCMonth(), day),
+      )
+      if (!isDisabled(candidate)) return candidate
+    }
+    return toISODate(first)
+  }
+
+  const changeMonth = (value: Date) => {
+    const nextMonth = firstDayOfMonth(value)
+    onMonthChange(nextMonth)
+    onActiveDateChange(firstAvailableDate(nextMonth))
+  }
+
+  useEffect(() => {
+    if (!hidden) activeButtonRef.current?.focus()
+  }, [activeDate, hidden, month, view])
 
   const handleDateKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     const current = parseISODate(activeDate)
@@ -276,6 +359,11 @@ function Calendar({
       case 'PageDown':
         next = event.shiftKey ? addYears(current, 1) : addMonths(current, 1)
         break
+      case 'Enter':
+      case ' ':
+        onSelectDate(activeDate)
+        event.preventDefault()
+        return
       case 'Escape':
         onClose()
         event.preventDefault()
@@ -285,61 +373,82 @@ function Calendar({
     }
 
     const nextValue = toISODate(next)
+    if (isDisabled(nextValue)) {
+      event.preventDefault()
+      return
+    }
     onActiveDateChange(nextValue)
     onMonthChange(firstDayOfMonth(next))
     event.preventDefault()
   }
 
-  return (
-    <div
-      id={calendarId}
-      className={CALENDAR_CLASS}
-      role="application"
-      aria-label={`${side === 'start' ? 'Start' : 'End'} date calendar`}
-      hidden={hidden}
-    >
+  const renderDateView = () => (
+    <>
       <div className={ROW_CLASS}>
         <button
           type="button"
           className={PREVIOUS_YEAR_CLASS}
           aria-label="Navigate back one year"
-          onClick={() => onMonthChange(addYears(month, -1))}
+          disabled={isYearDisabled(month.getUTCFullYear() - 1)}
+          onClick={() => changeMonth(addYears(month, -1))}
         />
         <button
           type="button"
           className={PREVIOUS_MONTH_CLASS}
           aria-label="Navigate back one month"
-          onClick={() => onMonthChange(addMonths(month, -1))}
+          disabled={isMonthDisabled(addMonths(month, -1))}
+          onClick={() => changeMonth(addMonths(month, -1))}
         />
         <span className={MONTH_LABEL_CLASS}>
           <button
             type="button"
             className={MONTH_SELECTION_CLASS}
-            aria-label={`${monthValue}. Select month`}
-            onClick={() => undefined}
+            aria-label={`${monthFormatter.format(month)}. Select month`}
+            onClick={() => onViewChange('month')}
           >
-            {monthValue}
+            {monthFormatter.format(month)}
+          </button>
+          <button
+            type="button"
+            className={YEAR_SELECTION_CLASS}
+            aria-label={`${month.getUTCFullYear()}. Select year`}
+            onClick={() => onViewChange('year')}
+          >
+            {month.getUTCFullYear()}
           </button>
         </span>
         <button
           type="button"
           className={NEXT_MONTH_CLASS}
           aria-label="Navigate forward one month"
-          onClick={() => onMonthChange(addMonths(month, 1))}
+          disabled={isMonthDisabled(addMonths(month, 1))}
+          onClick={() => changeMonth(addMonths(month, 1))}
         />
         <button
           type="button"
           className={NEXT_YEAR_CLASS}
           aria-label="Navigate forward one year"
-          onClick={() => onMonthChange(addYears(month, 1))}
+          disabled={isYearDisabled(month.getUTCFullYear() + 1)}
+          onClick={() => changeMonth(addYears(month, 1))}
         />
       </div>
       <table className={TABLE_CLASS}>
         <thead>
           <tr>
-            {WEEKDAYS.map((weekday) => (
-              <th key={weekday} scope="col" className={DAY_OF_WEEK_CLASS}>
-                {weekday}
+            {weekdays.map((weekday) => (
+              <th
+                key={weekday.toISOString()}
+                scope="col"
+                className={DAY_OF_WEEK_CLASS}
+                aria-label={new Intl.DateTimeFormat(locale, {
+                  timeZone: 'UTC',
+                  weekday: 'long',
+                }).format(weekday)}
+              >
+                {new Intl.DateTimeFormat(locale, {
+                  timeZone: 'UTC',
+                  weekday: 'short',
+                }).format(weekday)}
               </th>
             ))}
           </tr>
@@ -381,10 +490,11 @@ function Calendar({
                     className={`${CELL_CLASS} ${CENTER_CELL_CLASS}`}
                   >
                     <button
+                      ref={isActive ? activeButtonRef : undefined}
                       type="button"
                       id={`${calendarId}-${value}`}
                       className={dateClassName}
-                      aria-label={accessibleDateLabel(value)}
+                      aria-label={accessibleDateLabel(value, locale)}
                       aria-pressed={isSelected}
                       aria-current={value === todayValue ? 'date' : undefined}
                       disabled={isDisabled(value)}
@@ -402,6 +512,142 @@ function Calendar({
           ))}
         </tbody>
       </table>
+    </>
+  )
+
+  const renderMonthView = () => (
+    <div className={MONTH_PICKER_CLASS}>
+      <table className={TABLE_CLASS} role="presentation">
+        <tbody>
+          {Array.from({ length: 4 }, (_, row) => (
+            <tr key={row}>
+              {Array.from({ length: 3 }, (_, column) => {
+                const monthIndex = row * 3 + column
+                const value = createDate(month.getUTCFullYear(), monthIndex, 1)
+                const isSelected = monthIndex === month.getUTCMonth()
+                const isActive = isSelected
+                return (
+                  <td key={monthIndex} className={CELL_CLASS}>
+                    <button
+                      ref={isActive ? activeButtonRef : undefined}
+                      type="button"
+                      className={[
+                        MONTH_CLASS,
+                        isActive ? MONTH_FOCUSED_CLASS : '',
+                        isSelected ? MONTH_SELECTED_CLASS : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      aria-pressed={isSelected}
+                      disabled={isMonthDisabled(value)}
+                      tabIndex={isActive ? 0 : -1}
+                      onClick={() => {
+                        changeMonth(value)
+                        onViewChange('date')
+                      }}
+                    >
+                      {monthFormatter.format(value)}
+                    </button>
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+
+  const yearStart = month.getUTCFullYear() - (month.getUTCFullYear() % 12)
+  const renderYearView = () => (
+    <div className={YEAR_PICKER_CLASS}>
+      <table className={TABLE_CLASS} role="presentation">
+        <tbody>
+          <tr>
+            <td className={CELL_CLASS}>
+              <button
+                type="button"
+                className={PREVIOUS_YEAR_CHUNK_CLASS}
+                aria-label="Navigate back 12 years"
+                disabled={isYearDisabled(yearStart - 1)}
+                onClick={() =>
+                  changeMonth(
+                    createDate(yearStart - 12, month.getUTCMonth(), 1),
+                  )
+                }
+              />
+            </td>
+            <td colSpan={3} className={CELL_CLASS}>
+              <table className={TABLE_CLASS} role="presentation">
+                <tbody>
+                  {Array.from({ length: 4 }, (_, row) => (
+                    <tr key={row}>
+                      {Array.from({ length: 3 }, (_, column) => {
+                        const year = yearStart + row * 3 + column
+                        const value = createDate(year, month.getUTCMonth(), 1)
+                        const isSelected = year === month.getUTCFullYear()
+                        return (
+                          <td key={year} className={CELL_CLASS}>
+                            <button
+                              ref={isSelected ? activeButtonRef : undefined}
+                              type="button"
+                              className={[
+                                YEAR_CLASS,
+                                isSelected ? YEAR_FOCUSED_CLASS : '',
+                                isSelected ? YEAR_SELECTED_CLASS : '',
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
+                              aria-pressed={isSelected}
+                              disabled={isYearDisabled(year)}
+                              tabIndex={isSelected ? 0 : -1}
+                              onClick={() => {
+                                changeMonth(value)
+                                onViewChange('date')
+                              }}
+                            >
+                              {year}
+                            </button>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </td>
+            <td className={CELL_CLASS}>
+              <button
+                type="button"
+                className={NEXT_YEAR_CHUNK_CLASS}
+                aria-label="Navigate forward 12 years"
+                disabled={isYearDisabled(yearStart + 12)}
+                onClick={() =>
+                  changeMonth(
+                    createDate(yearStart + 12, month.getUTCMonth(), 1),
+                  )
+                }
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  )
+
+  return (
+    <div
+      id={calendarId}
+      className={CALENDAR_CLASS}
+      role="application"
+      aria-label={`${side === 'start' ? 'Start' : 'End'} date calendar`}
+      hidden={hidden}
+    >
+      {view === 'date'
+        ? renderDateView()
+        : view === 'month'
+          ? renderMonthView()
+          : renderYearView()}
     </div>
   )
 }
@@ -448,32 +694,24 @@ export function DateRangePicker({
     selectedStart || selectedEnd || toISODate(initialMonth),
   )
   const [openSide, setOpenSide] = useState<DateSide | null>(null)
+  const [calendarView, setCalendarView] = useState<CalendarView>('date')
   const [draftText, setDraftText] = useState({
     start: formatDisplayDate(selectedStart),
     end: formatDisplayDate(selectedEnd),
   })
   const [invalidSide, setInvalidSide] = useState<DateSide | null>(null)
+  const locale =
+    typeof document !== 'undefined' && document.documentElement.lang
+      ? document.documentElement.lang
+      : 'en-US'
 
   const startInputId = `${startId}-label`
   const endInputId = `${endId}-label`
   const rootClassName = [ROOT_CLASS, className].filter(Boolean).join(' ')
 
-  const updateRange = (side: DateSide, nextValue: string) => {
-    let nextStart = selectedStart
-    let nextEnd = selectedEnd
-
-    if (side === 'start') {
-      nextStart = nextValue
-      if (nextStart && nextEnd && nextEnd < nextStart) nextEnd = ''
-      if (startDate === undefined) setInternalStartDate(nextStart)
-      if (endDate === undefined && nextEnd !== selectedEnd) {
-        setInternalEndDate(nextEnd)
-      }
-    } else {
-      nextEnd = nextValue
-      if (endDate === undefined) setInternalEndDate(nextEnd)
-    }
-
+  const applyRange = (nextStart: string, nextEnd: string) => {
+    if (startDate === undefined) setInternalStartDate(nextStart)
+    if (endDate === undefined) setInternalEndDate(nextEnd)
     setDraftText({
       start: formatDisplayDate(nextStart),
       end: formatDisplayDate(nextEnd),
@@ -482,49 +720,93 @@ export function DateRangePicker({
     onRangeChange?.({ startDate: nextStart, endDate: nextEnd })
   }
 
-  const commitDraft = (side: DateSide) => {
-    const text = draftText[side]
+  const parseDraft = (text: string) => {
     if (!text) {
-      updateRange(side, '')
-      return
+      return ''
     }
 
     const date = parseDisplayDate(text)
     const value = date ? toISODate(date) : ''
     const violatesBounds = Boolean(
-      value &&
-      ((minDate && value < minDate) ||
-        (maxDate && value > maxDate) ||
-        (side === 'start' && selectedEnd && value > selectedEnd) ||
-        (side === 'end' && selectedStart && value < selectedStart)),
+      value && ((minDate && value < minDate) || (maxDate && value > maxDate)),
     )
 
-    if (!value || violatesBounds) {
+    return !value || violatesBounds ? null : value
+  }
+
+  const commitDraft = (side: DateSide) => {
+    const value = parseDraft(draftText[side])
+    if (value === null) {
       setInvalidSide(side)
-      return
+      return false
     }
 
-    updateRange(side, value)
+    let nextStart = selectedStart
+    let nextEnd = selectedEnd
+    if (side === 'start') {
+      nextStart = value
+      if (nextStart && nextEnd && nextEnd < nextStart) nextEnd = ''
+    } else {
+      if (selectedStart && value && value < selectedStart) {
+        setInvalidSide(side)
+        return false
+      }
+      nextEnd = value
+    }
+
+    applyRange(nextStart, nextEnd)
+    return true
+  }
+
+  const commitDrafts = () => {
+    const nextStart = parseDraft(draftText.start)
+    if (nextStart === null) {
+      setInvalidSide('start')
+      return false
+    }
+
+    const nextEnd = parseDraft(draftText.end)
+    if (nextEnd === null) {
+      setInvalidSide('end')
+      return false
+    }
+
+    const normalizedEnd =
+      nextStart && nextEnd && nextEnd < nextStart ? '' : nextEnd
+    applyRange(nextStart, normalizedEnd)
+    return true
   }
 
   const openCalendar = (side: DateSide) => {
     const value = side === 'start' ? selectedStart : selectedEnd
-    const date =
-      parseISODate(value) ?? parseISODate(defaultMonth) ?? initialMonth
+    const date = constrainDate(
+      parseISODate(value) ?? parseISODate(defaultMonth) ?? initialMonth,
+      side === 'end' ? selectedStart || minDate : minDate,
+      side === 'start' ? selectedEnd || maxDate : maxDate,
+    )
     setCalendarMonth(firstDayOfMonth(date))
-    setActiveDate(value || toISODate(date))
+    setActiveDate(toISODate(date))
     setDraftText((current) => ({
       ...current,
       [side]: formatDisplayDate(value),
     }))
     setInvalidSide(null)
+    setCalendarView('date')
     setOpenSide(side)
   }
 
-  const closeCalendar = () => {
-    commitDraft('start')
-    commitDraft('end')
+  const closeCalendar = (restoreFocus = false) => {
+    const closingSide = openSide
+    commitDrafts()
     setOpenSide(null)
+    setCalendarView('date')
+    if (restoreFocus && closingSide) {
+      requestAnimationFrame(() => {
+        const input =
+          closingSide === 'start' ? startInputRef.current : endInputRef.current
+        input?.focus()
+      })
+    }
   }
 
   const selectDate = (value: string) => {
@@ -538,8 +820,11 @@ export function DateRangePicker({
     )
     if (disabled) return
 
-    updateRange(openSide, value)
+    const nextStart = openSide === 'start' ? value : selectedStart
+    const nextEnd = openSide === 'end' ? value : selectedEnd
+    applyRange(nextStart, nextEnd)
     setOpenSide(null)
+    setCalendarView('date')
     requestAnimationFrame(() => {
       const input =
         openSide === 'start' ? startInputRef.current : endInputRef.current
@@ -569,6 +854,7 @@ export function DateRangePicker({
     const {
       id: _id,
       name,
+      form,
       className: inputClassName,
       onChange,
       onFocus,
@@ -578,7 +864,9 @@ export function DateRangePicker({
     } = props
     const isInvalid = invalidSide === side
     const inputValue =
-      openSide === side ? draftText[side] : formatDisplayDate(value)
+      openSide === side || invalidSide === side
+        ? draftText[side]
+        : formatDisplayDate(value)
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
       setDraftText((current) => ({
@@ -609,6 +897,7 @@ export function DateRangePicker({
         }))
         setInvalidSide(null)
         setOpenSide(null)
+        setCalendarView('date')
         event.preventDefault()
       }
       if (event.key === 'Enter') {
@@ -640,6 +929,7 @@ export function DateRangePicker({
               .filter(Boolean)
               .join(' ')}
             type="text"
+            form={form}
             value={inputValue}
             placeholder={props.placeholder ?? 'MM/DD/YYYY'}
             pattern="\\d{2}\\/\\d{2}\\/\\d{4}"
@@ -660,7 +950,7 @@ export function DateRangePicker({
             disabled={props.disabled}
             onClick={() => {
               if (openSide === side) {
-                closeCalendar()
+                closeCalendar(true)
                 return
               }
               openCalendar(side)
@@ -676,10 +966,13 @@ export function DateRangePicker({
             selectedEnd={selectedEnd}
             minDate={minDate}
             maxDate={maxDate}
+            view={calendarView}
+            onViewChange={setCalendarView}
             onMonthChange={(month) => setCalendarMonth(firstDayOfMonth(month))}
             onActiveDateChange={setActiveDate}
             onSelectDate={selectDate}
-            onClose={closeCalendar}
+            onClose={() => closeCalendar(true)}
+            locale={locale}
             hidden={openSide !== side}
           />
           <div className={STATUS_CLASS} role="status" aria-live="polite">
@@ -689,6 +982,8 @@ export function DateRangePicker({
         <input
           className={INTERNAL_INPUT_CLASS}
           type="hidden"
+          disabled={props.disabled}
+          form={form}
           name={name}
           value={value}
           readOnly

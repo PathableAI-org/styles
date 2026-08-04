@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { expect, userEvent, within } from 'storybook/test'
+import { useState } from 'react'
 
 import { Button } from '../../../components/Button/Button'
 import {
@@ -139,6 +140,11 @@ export const Disabled: Story = {
     await expect(
       canvas.getByRole('textbox', { name: 'End date' }),
     ).toBeDisabled()
+    for (const input of canvasElement.querySelectorAll(
+      'input[type="hidden"]',
+    )) {
+      await expect(input).toBeDisabled()
+    }
   },
 }
 
@@ -179,6 +185,7 @@ export const CalendarSelection: Story = {
         canvas.getByRole('button', { name: 'March 12, 2026' }),
       )
       await expect(start).toHaveValue('03/12/2026')
+      await expect(start).toHaveFocus()
     })
   },
 }
@@ -189,9 +196,9 @@ export const KeyboardNavigation: Story = {
     const start = canvas.getByRole('textbox', { name: 'Start date' })
 
     await userEvent.click(start)
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'March 10, 2026' }),
-    )
+    await expect(
+      canvas.getByRole('button', { name: 'Tuesday, March 10, 2026' }),
+    ).toHaveFocus()
     await userEvent.keyboard('{ArrowRight}{Enter}')
 
     await expect(start).toHaveValue('03/11/2026')
@@ -210,6 +217,9 @@ export const RangeConstraints: Story = {
     await expect(
       canvas.getByRole('button', { name: 'March 19, 2026' }),
     ).not.toBeDisabled()
+    await expect(
+      canvas.getByRole('button', { name: 'Navigate back one month' }),
+    ).toBeDisabled()
   },
 }
 
@@ -221,12 +231,76 @@ export const InvalidText: Story = {
 
     await userEvent.click(start)
     await userEvent.type(start, '13/40/2026')
-    await userEvent.tab()
+    await userEvent.keyboard('{Enter}')
 
     await expect(start).toHaveAttribute('aria-invalid', 'true')
-    await expect(canvas.getByRole('status')).toHaveTextContent(
-      'Please enter a valid date',
+    await expect(
+      canvas.getByText('Please enter a valid date'),
+    ).toHaveTextContent('Please enter a valid date')
+  },
+}
+
+export const CalendarViews: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+
+    await userEvent.click(start)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'March. Select month' }),
     )
+    await userEvent.click(canvas.getByRole('button', { name: 'February' }))
+    await expect(
+      canvas.getByRole('button', { name: 'February. Select month' }),
+    ).toBeVisible()
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: '2026. Select year' }),
+    )
+    await userEvent.click(canvas.getByRole('button', { name: '2027' }))
+    await expect(
+      canvas.getByRole('button', { name: '2027. Select year' }),
+    ).toBeVisible()
+  },
+}
+
+export const ControlledBlur: Story = {
+  render: () => {
+    const [range, setRange] = useState({
+      startDate: '2026-03-10',
+      endDate: '2026-03-18',
+    })
+
+    return (
+      <div>
+        <DateRangePicker
+          startLabel="Start date"
+          endLabel="End date"
+          startDate={range.startDate}
+          endDate={range.endDate}
+          onRangeChange={setRange}
+          minDate="2026-03-01"
+          maxDate="2026-03-31"
+          defaultMonth="2026-03-01"
+          startInputProps={{ id: 'controlled-start', name: 'controlledStart' }}
+          endInputProps={{ id: 'controlled-end', name: 'controlledEnd' }}
+        />
+        <button type="button">Outside control</button>
+      </div>
+    )
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+
+    await userEvent.click(start)
+    await userEvent.clear(start)
+    await userEvent.type(start, '03/12/2026')
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Outside control' }),
+    )
+
+    await expect(start).toHaveValue('03/12/2026')
   },
 }
 
