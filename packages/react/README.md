@@ -46,6 +46,7 @@ import {
   Table,
   Tag,
   Select,
+  Sidenav,
   Textarea,
 } from '@pathable/react'
 
@@ -105,6 +106,30 @@ function App() {
           },
         ]}
         next={{ href: '/participants?page=4' }}
+      />
+
+      <Sidenav
+        aria-label="Participant navigation"
+        currentId="all-participants"
+        items={[
+          { id: 'overview', content: 'Overview', href: '/participants' },
+          {
+            id: 'participants',
+            content: 'Participants',
+            children: [
+              {
+                id: 'all-participants',
+                content: 'All participants',
+                href: '/participants/all',
+              },
+              {
+                id: 'add-participant',
+                content: 'Add participant',
+                href: '/participants/new',
+              },
+            ],
+          },
+        ]}
       />
 
       <Card
@@ -485,6 +510,25 @@ Any other standard navigation attributes, including `aria-label`, `aria-labelled
 #### Pagination Accessibility
 
 Give each Pagination landmark a concise accessible name. Supply `currentPage` from application state; if it does not match a page record, Pagination renders no false current marker. Previous, next, and page destinations are native anchors and retain browser keyboard and navigation behavior. Overflow is presentational and cannot receive focus or activation.
+
+### Sidenav Props
+
+`Sidenav` renders persistent application or section navigation as an `<aside>` containing recursive lists and native anchors. The application derives `currentId` from its routing state; Sidenav does not intercept navigation or own active or expansion state.
+
+| Prop         | Type                     | Default | Description                                                                        |
+| ------------ | ------------------------ | ------- | ---------------------------------------------------------------------------------- |
+| items        | `readonly SidenavItem[]` | —       | Immutable recursive destination and section records.                               |
+| currentId    | `string`                 | —       | Stable item ID to receive `pathable-current` and `aria-current="page"`.            |
+| className    | `string`                 | —       | Additional root class names appended after `pathable-sidenav`.                     |
+| `aria-label` | `string`                 | —       | Accessible name for the side-navigation landmark. `aria-labelledby` is also valid. |
+
+Each `SidenavItem` requires a stable `id` and `content`. An optional `href` renders a native anchor; without one, content remains text and is not exposed as a fake link. Optional recursive `children` render a nested `pathable-sidenav__sublist`. Records may provide `className` and `attributes` for the list item, `linkClassName` and `linkAttributes` for its anchor, and `listClassName` and `listAttributes` for its child list.
+
+`currentId` is matched depth-first. An omitted or unknown ID marks no item current. If malformed data repeats an ID, only the first match receives current-page semantics, preserving the single-current contract.
+
+#### Sidenav Accessibility
+
+Give every Sidenav an accessible name with `aria-label` or `aria-labelledby`. Keep destination labels concise and use stable, unique item IDs. Derive `currentId` from the router without duplicating route state inside the wrapper. Native anchors preserve browser navigation and keyboard order; section labels without `href` remain non-interactive text.
 
 ### Table Props
 
