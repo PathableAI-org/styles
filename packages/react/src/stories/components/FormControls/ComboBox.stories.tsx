@@ -97,9 +97,12 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const input = canvas.getByRole('combobox', { name: 'Employment goal' })
+    const nativeSelect = canvasElement.querySelector('select')
 
     await expect(input).toHaveAttribute('aria-expanded', 'false')
     await expect(input).toHaveAttribute('aria-autocomplete', 'list')
+    if (!nativeSelect) throw new Error('Expected the native select control')
+    await expect(nativeSelect).toHaveClass('pathable-sr-only')
   },
 }
 

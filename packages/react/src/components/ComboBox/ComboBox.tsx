@@ -43,7 +43,8 @@ export interface ComboBoxProps extends Omit<
 const ROOT_CLASS = 'pathable-combo-box usa-combo-box'
 const PRISTINE_CLASS = 'pathable-combo-box--pristine usa-combo-box--pristine'
 const INPUT_CLASS = 'pathable-combo-box__input usa-combo-box__input'
-const SELECT_CLASS = 'pathable-combo-box__select usa-combo-box__select'
+const SELECT_CLASS =
+  'pathable-sr-only pathable-combo-box__select usa-combo-box__select'
 const CLEAR_INPUT_CLASS =
   'pathable-combo-box__clear-input usa-combo-box__clear-input'
 const CLEAR_INPUT_WRAPPER_CLASS =
