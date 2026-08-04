@@ -53,6 +53,7 @@ interface CalendarProps {
   readonly side: DateSide
   readonly calendarId: string
   readonly hidden: boolean
+  readonly focusActiveDate: boolean
   readonly month: Date
   readonly activeDate: string
   readonly selectedStart: string
@@ -254,6 +255,7 @@ function Calendar({
   side,
   calendarId,
   hidden,
+  focusActiveDate,
   month,
   activeDate,
   selectedStart,
@@ -287,8 +289,8 @@ function Calendar({
   const upperBounds = [maxDate, side === 'start' ? selectedEnd : '']
     .filter(Boolean)
     .sort()
-  const lowerBound = lowerBounds[0]
-  const upperBound = upperBounds[upperBounds.length - 1]
+  const lowerBound = lowerBounds[lowerBounds.length - 1]
+  const upperBound = upperBounds[0]
 
   const isDisabled = (value: string) =>
     Boolean(
@@ -326,8 +328,8 @@ function Calendar({
   }
 
   useEffect(() => {
-    if (!hidden) activeButtonRef.current?.focus()
-  }, [activeDate, hidden, month, view])
+    if (!hidden && focusActiveDate) activeButtonRef.current?.focus()
+  }, [activeDate, focusActiveDate, hidden, month, view])
 
   const handleDateKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     const current = parseISODate(activeDate)
@@ -694,6 +696,7 @@ export function DateRangePicker({
     selectedStart || selectedEnd || toISODate(initialMonth),
   )
   const [openSide, setOpenSide] = useState<DateSide | null>(null)
+  const [focusCalendar, setFocusCalendar] = useState(false)
   const [calendarView, setCalendarView] = useState<CalendarView>('date')
   const [draftText, setDraftText] = useState({
     start: formatDisplayDate(selectedStart),
@@ -777,7 +780,7 @@ export function DateRangePicker({
     return true
   }
 
-  const openCalendar = (side: DateSide) => {
+  const openCalendar = (side: DateSide, shouldFocusCalendar = false) => {
     const value = side === 'start' ? selectedStart : selectedEnd
     const date = constrainDate(
       parseISODate(value) ?? parseISODate(defaultMonth) ?? initialMonth,
@@ -792,12 +795,14 @@ export function DateRangePicker({
     }))
     setInvalidSide(null)
     setCalendarView('date')
+    setFocusCalendar(shouldFocusCalendar)
     setOpenSide(side)
   }
 
   const closeCalendar = (restoreFocus = false) => {
     const closingSide = openSide
     commitDrafts()
+    setFocusCalendar(false)
     setOpenSide(null)
     setCalendarView('date')
     if (restoreFocus && closingSide) {
@@ -823,6 +828,7 @@ export function DateRangePicker({
     const nextStart = openSide === 'start' ? value : selectedStart
     const nextEnd = openSide === 'end' ? value : selectedEnd
     applyRange(nextStart, nextEnd)
+    setFocusCalendar(false)
     setOpenSide(null)
     setCalendarView('date')
     requestAnimationFrame(() => {
@@ -869,9 +875,10 @@ export function DateRangePicker({
         : formatDisplayDate(value)
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+      const nextValue = event.currentTarget.value
       setDraftText((current) => ({
         ...current,
-        [side]: event.currentTarget.value,
+        [side]: nextValue,
       }))
       setInvalidSide(null)
       onChange?.(event)
@@ -879,7 +886,6 @@ export function DateRangePicker({
 
     const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
       onFocus?.(event)
-      openCalendar(side)
     }
 
     const handleClick: MouseEventHandler<HTMLInputElement> = (event) => {
@@ -896,6 +902,7 @@ export function DateRangePicker({
           [side]: formatDisplayDate(value),
         }))
         setInvalidSide(null)
+        setFocusCalendar(false)
         setOpenSide(null)
         setCalendarView('date')
         event.preventDefault()
@@ -953,14 +960,14 @@ export function DateRangePicker({
                 closeCalendar(true)
                 return
               }
-              openCalendar(side)
-              inputRef.current?.focus()
+              openCalendar(side, true)
             }}
           />
           <Calendar
             side={side}
             calendarId={calendarId}
             month={calendarMonth}
+            focusActiveDate={openSide === side && focusCalendar}
             activeDate={activeDate}
             selectedStart={selectedStart}
             selectedEnd={selectedEnd}

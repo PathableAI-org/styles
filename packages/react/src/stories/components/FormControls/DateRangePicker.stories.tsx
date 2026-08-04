@@ -186,6 +186,9 @@ export const CalendarSelection: Story = {
       )
       await expect(start).toHaveValue('03/12/2026')
       await expect(start).toHaveFocus()
+      await expect(
+        canvas.getByRole('button', { name: 'Toggle start date calendar' }),
+      ).toHaveAttribute('aria-expanded', 'false')
     })
   },
 }
@@ -194,8 +197,11 @@ export const KeyboardNavigation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const toggle = canvas.getByRole('button', {
+      name: 'Toggle start date calendar',
+    })
 
-    await userEvent.click(start)
+    await userEvent.click(toggle)
     await expect(
       canvas.getByRole('button', { name: 'Tuesday, March 10, 2026' }),
     ).toHaveFocus()
@@ -246,6 +252,8 @@ export const InvalidText: Story = {
 
 export const CalendarViews: Story = {
   args: {
+    defaultStartDate: '',
+    defaultEndDate: '',
     minDate: '2026-01-01',
     maxDate: '2027-12-31',
   },
@@ -309,6 +317,7 @@ export const ControlledBlur: Story = {
       canvas.getByRole('button', { name: 'Outside control' }),
     )
 
+    await expect(start).toHaveValue('03/12/2026')
     await expect(canvas.getByText('Selected start: 2026-03-12')).toBeVisible()
   },
 }
