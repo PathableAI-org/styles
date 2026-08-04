@@ -12,3 +12,53 @@
 .pathable-combo-box {
   @extend .usa-combo-box;
 }
+
+// USWDS JavaScript uses the configured PathAble prefix for generated children.
+// Extend every child selector so PathAble-only markup receives the same styles.
+.pathable-combo-box--pristine {
+  @extend .usa-combo-box--pristine;
+}
+
+.pathable-combo-box__input {
+  @extend .usa-combo-box__input;
+}
+
+.pathable-combo-box__clear-input {
+  @extend .usa-combo-box__clear-input;
+}
+
+.pathable-combo-box__clear-input__wrapper {
+  @extend .usa-combo-box__clear-input__wrapper;
+}
+
+.pathable-combo-box__input-button-separator {
+  @extend .usa-combo-box__input-button-separator;
+}
+
+.pathable-combo-box__toggle-list {
+  @extend .usa-combo-box__toggle-list;
+}
+
+.pathable-combo-box__toggle-list__wrapper {
+  @extend .usa-combo-box__toggle-list__wrapper;
+}
+
+.pathable-combo-box__list {
+  @extend .usa-combo-box__list;
+}
+
+.pathable-combo-box__list-option {
+  @extend .usa-combo-box__list-option;
+}
+
+.pathable-combo-box__list-option--focused {
+  @extend .usa-combo-box__list-option--focused;
+}
+
+.pathable-combo-box__list-option--selected {
+  @extend .usa-combo-box__list-option--selected;
+}
+
+.pathable-combo-box__list-option--no-results {
+  @extend .usa-combo-box__list-option--no-results;
+}
