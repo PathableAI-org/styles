@@ -24,6 +24,13 @@ export type {
   DateRangePickerProps,
   DateRangeValue,
 } from './components/DateRangePicker/DateRangePicker.js'
+export { ComboBox } from './components/ComboBox/ComboBox.js'
+export type {
+  ComboBoxInputProps,
+  ComboBoxOption,
+  ComboBoxProps,
+  ComboBoxSelectProps,
+} from './components/ComboBox/ComboBox.js'
 export { EmptyState } from './components/EmptyState/EmptyState.js'
 export type {
   EmptyStateProps,
@@ -47,9 +54,20 @@ export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
 export { Label } from './components/Label/Label.js'
 export type { LabelProps } from './components/Label/Label.js'
+export { Loading } from './components/Loading/Loading.js'
+export type { LoadingProps, LoadingSize } from './components/Loading/Loading.js'
 export { List } from './components/List/List.js'
 export { MediaBlock } from './components/MediaBlock/MediaBlock.js'
 export type { MediaBlockProps } from './components/MediaBlock/MediaBlock.js'
+export { Toast, ToastRegion } from './components/Toast/Toast.js'
+export type {
+  ToastAction,
+  ToastIcon,
+  ToastProps,
+  ToastRegionProps,
+  ToastRole,
+  ToastVariant,
+} from './components/Toast/Toast.js'
 export { Table } from './components/Table/Table.js'
 export { Textarea } from './components/Textarea/Textarea.js'
 export type { TextareaProps } from './components/Textarea/Textarea.js'

@@ -41,6 +41,27 @@ diff --git a/packages/usa-combo-box/src/index.js b/packages/usa-combo-box/src/in
 index dacdf97d3103613eadfb51702f15557900ff1838..f3a704ad0dd3fd63fdfb49696d4a19951b5ed923 100644
 --- a/packages/usa-combo-box/src/index.js
 +++ b/packages/usa-combo-box/src/index.js
+@@ -23,10 +23,10 @@
+-const COMBO_BOX = `.${COMBO_BOX_CLASS}`;
++const COMBO_BOX = `.${COMBO_BOX_CLASS}:not([data-react-owned])`;
+-const SELECT = `.${SELECT_CLASS}`;
++const SELECT = `${COMBO_BOX} .${SELECT_CLASS}`;
+-const INPUT = `.${INPUT_CLASS}`;
++const INPUT = `${COMBO_BOX} .${INPUT_CLASS}`;
+-const CLEAR_INPUT_BUTTON = `.${CLEAR_INPUT_BUTTON_CLASS}`;
++const CLEAR_INPUT_BUTTON = `${COMBO_BOX} .${CLEAR_INPUT_BUTTON_CLASS}`;
+-const TOGGLE_LIST_BUTTON = `.${TOGGLE_LIST_BUTTON_CLASS}`;
++const TOGGLE_LIST_BUTTON = `${COMBO_BOX} .${TOGGLE_LIST_BUTTON_CLASS}`;
+-const LIST = `.${LIST_CLASS}`;
++const LIST = `${COMBO_BOX} .${LIST_CLASS}`;
+-const LIST_OPTION = `.${LIST_OPTION_CLASS}`;
++const LIST_OPTION = `${COMBO_BOX} .${LIST_OPTION_CLASS}`;
+-const LIST_OPTION_FOCUSED = `.${LIST_OPTION_FOCUSED_CLASS}`;
++const LIST_OPTION_FOCUSED = `${COMBO_BOX} .${LIST_OPTION_FOCUSED_CLASS}`;
+-const LIST_OPTION_SELECTED = `.${LIST_OPTION_SELECTED_CLASS}`;
++const LIST_OPTION_SELECTED = `${COMBO_BOX} .${LIST_OPTION_SELECTED_CLASS}`;
+-const STATUS = `.${STATUS_CLASS}`;
++const STATUS = `${COMBO_BOX} .${STATUS_CLASS}`;
 @@ -207,7 +207,7 @@ const enhanceComboBox = (_comboBoxEl) => {
    selectLabel.setAttribute("id", listIdLabel);
    selectEl.setAttribute("aria-hidden", "true");

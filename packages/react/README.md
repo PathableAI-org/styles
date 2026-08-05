@@ -23,6 +23,7 @@ import {
   ButtonGroup,
   Card,
   DateRangePicker,
+  ComboBox,
   ErrorMessage,
   Checkbox,
   EmptyState,
@@ -36,6 +37,7 @@ import {
   Link,
   List,
   MediaBlock,
+  Loading,
   Modal,
   PageError,
   Pagination,
@@ -51,6 +53,8 @@ import {
   Tag,
   Select,
   Sidenav,
+  Toast,
+  ToastRegion,
   Textarea,
 } from '@pathable/react'
 
@@ -183,12 +187,22 @@ function App() {
         nav={<a href="#go-back">Go back</a>}
       />
 
+      <ToastRegion aria-label="Notifications">
+        <Toast
+          variant="success"
+          message="Participant records saved successfully."
+          dismissible
+        />
+      </ToastRegion>
+
       <p>Loading participant summary</p>
       <Skeleton>
         <Skeleton variant="text-heading" />
         <Skeleton variant="text-body" />
         <Skeleton variant="text-body" />
       </Skeleton>
+
+      <Loading text="Loading participant records..." />
 
       <Card
         presentation="media"
@@ -518,6 +532,24 @@ Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and e
 
 Use `compact` for an inline error panel and `full-page` for a page-level failure. Provide a clear heading and explanation, use a retry action when recovery is possible, and provide navigation when the user needs another destination. Icons are decorative and hidden from assistive technology.
 
+### Loading Props
+
+`Loading` renders the existing `pathable-loading` inline indicator with a decorative spinner and optional status text. It does not own loading state, timers, requests, or the replacement content shown when work completes.
+
+| Prop      | Type                               | Default     | Description                                                                                        |
+| --------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| size      | `'default' \| 'large'`             | `'default'` | Selects the 24px default indicator or the 40px `pathable-loading--large` treatment.                |
+| text      | `React.ReactNode`                  | —           | Optional visible status text rendered with `pathable-loading__text`.                               |
+| className | `string`                           | —           | Additional class names appended after the PathAble loading classes.                                |
+| role      | `string`                           | —           | Optional consumer-selected role, such as `status` for spinner-only usage.                          |
+| aria-live | `'off' \| 'polite' \| 'assertive'` | `'polite'`  | Live-region politeness for status text; consumers may override it for their announcement strategy. |
+
+Any other standard `<div>` attributes, including `id`, `aria-label`, `data-*`, and event handlers, are forwarded to the root element. The spinner always receives `aria-hidden="true"`.
+
+#### Loading Accessibility
+
+Use concise `text` that identifies what is loading. The root defaults to `aria-live="polite"`; use a consumer-provided `role="status"` and accessible `aria-label` when rendering spinner-only loading. Consumers remain responsible for showing and replacing the indicator, choosing announcement timing, and providing any page-level loading status required by the application.
+
 ### Button Props
 
 | Prop      | Type                                                                                                                                                                                  | Default     | Description                    |
@@ -648,6 +680,25 @@ Use a `<caption>` element or `aria-label` to give the table an accessible name. 
 #### DateRangePicker Accessibility
 
 The visible fields use native labels, `aria-invalid` for invalid or out-of-range text, and calendar buttons with accessible date names. Use `startInputProps.aria-describedby` and `endInputProps.aria-describedby` for hints or validation messages. Calendar selection supports arrow keys, Home/End, PageUp/PageDown, Shift+PageUp/Shift+PageDown, and Escape. The hidden inputs submit ISO values under the supplied `name` attributes.
+
+### ComboBox Props
+
+`ComboBox` is a searchable single-choice control. It keeps a visually hidden native `<select>` as the form-value source and renders the searchable input and listbox with React-owned behavior. It does not require a separate `@pathable/styles/js` import.
+
+| Prop             | Type                        | Default  | Description                                                                                            |
+| ---------------- | --------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| label            | `React.ReactNode`           | required | Visible label for the combobox input.                                                                  |
+| options          | `readonly ComboBoxOption[]` | required | Options with `value`, `label`, and optional `disabled` properties.                                     |
+| selectProps      | `ComboBoxSelectProps`       | `{}`     | Native select attributes, including `id`, `name`, `value`, `defaultValue`, `required`, and `disabled`. |
+| inputProps       | `ComboBoxInputProps`        | `{}`     | Visible input attributes, including `placeholder`, `aria-describedby`, and event handlers.             |
+| disableFiltering | `boolean`                   | `false`  | Shows all options while typing instead of filtering the list.                                          |
+| className        | `string`                    | —        | Additional root class names appended after the PathAble ComboBox classes.                              |
+
+`ComboBoxOption` requires a string `value` and `label`; `disabled` options remain visible but cannot be selected. Empty option values are reserved for the hidden native placeholder option.
+
+#### ComboBox Accessibility
+
+ComboBox supplies the visible label, `combobox` role, `listbox` relationship, active-descendant state, keyboard navigation, and polite result announcements. Use `inputProps.aria-describedby` for hints or validation messages. The hidden native select retains the submitted field name and selected value. Use `selectProps.value` with `selectProps.onChange` for controlled selection or `selectProps.defaultValue` for uncontrolled selection.
 
 ### Input Props
 
@@ -896,6 +947,39 @@ The wrapper exposes the default checkbox contract only. The `pathable-checkbox--
 
 The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Use a radio group instead when choices are mutually exclusive.
 
+### Toast Props
+
+`Toast` renders an individual transient notification using the existing `pathable-toast` classes. `ToastRegion` renders the stacking container that positions and spaces multiple toasts. Neither component owns visibility, queuing, auto-dismiss timers, or application state.
+
+#### ToastRegion Props
+
+| Prop      | Type              | Default | Description                                                 |
+| --------- | ----------------- | ------- | ----------------------------------------------------------- |
+| children  | `React.ReactNode` | —       | One or more Toast instances rendered in the stacking region |
+| className | `string`          | —       | Additional classes appended after `pathable-toast__region`  |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, `style`, and event handlers, are forwarded to the region.
+
+#### Toast Props
+
+| Prop         | Type                                                        | Default           | Description                                                                                  |
+| ------------ | ----------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------- |
+| variant      | `'info' \| 'progress' \| 'success' \| 'warning' \| 'error'` | `'info'`          | Notification context and matching PathAble modifier class.                                   |
+| message      | `React.ReactNode`                                           | required          | Concise notification content rendered in the message region.                                 |
+| icon         | `React.ReactElement`                                        | —                 | Optional decorative icon. It receives the toast icon class and `aria-hidden="true"`.         |
+| action       | `React.ReactElement`                                        | —                 | Optional link or button. It must accept `className` so the action class can be merged.       |
+| dismissible  | `boolean`                                                   | `false`           | Adds the dismiss button and `pathable-toast--dismissible` modifier.                          |
+| dismissLabel | `string`                                                    | `'Dismiss'`       | Accessible label for the dismiss button.                                                     |
+| onDismiss    | `React.MouseEventHandler<HTMLButtonElement>`                | —                 | Called when the consumer activates dismiss; removing the toast remains consumer-owned.       |
+| role         | `'status' \| 'alert'`                                       | variant-dependent | Live-region urgency. Info/progress/success default to `status`; warning/error default alert. |
+| className    | `string`                                                    | —                 | Additional classes appended after the PathAble toast classes.                                |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, `style`, and event handlers, are forwarded to the individual toast. The action receives `pathable-toast__action`; a supplied icon receives `pathable-toast__icon` and is forced decorative.
+
+#### Toast Accessibility
+
+Use `role="status"` for polite operational updates and `role="alert"` for urgent, time-sensitive messages. Toast derives that role from the variant by default but allows an explicit override. Give messages enough context to stand alone, keep icons decorative, provide a meaningful `dismissLabel`, and ensure action content describes what will happen. Consumers remain responsible for visibility timing, removal, queueing, focus policy, and announcements when a toast appears or is dismissed.
+
 ### Communication Components
 
 | Component     | Description                                                                                                                         | Props                                                                                            |
@@ -904,6 +988,9 @@ The required `children` content supplies the visible label through a native `<la
 | Alert         | Status messages with info, success, warning, error, and emergency severity levels. Optional slim variant.                           | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | Banner        | Official site banner with disclosure toggle. Controlled/uncontrolled expanded state.                                                | `summary`, `children`, `expanded`, `defaultExpanded`, `onExpandedChange`                         |
 | Modal         | Dialog rendered via portal with focus trapping, Escape close, scroll locking, and focus restoration.                                | `open`, `onClose`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
+| Toast         | Transient feedback notification with five variants, optional action, and optional dismiss control.                                  | `variant`, `message`, `icon`, `action`, `dismissible`, `dismissLabel`, `role`                    |
+| ToastRegion   | Fixed stacking container for one or more Toast instances.                                                                           | `children`, `className`                                                                          |
+| Loading       | Inline CSS-only loading indicator with optional status text and a large page-level treatment.                                       | `size`, `text`, `role`, `aria-live`                                                              |
 | ProcessList   | Ordered list of process steps with headings and body content.                                                                       | `items` (array of `{id, heading, body}`)                                                         |
 | SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                     | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
