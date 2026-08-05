@@ -13,11 +13,12 @@ export default {
 
 export const Default = {
   render: () => `
+<label for="employment-goal">Employment goal</label>
 <div class="pathable-combo-box">
-  <select class="pathable-select">
-    <option>Goal Setting</option>
-    <option>Skills Assessment</option>
-    <option>Job Placement</option>
+  <select class="pathable-select" id="employment-goal" name="employmentGoal">
+    <option value="goal-setting">Goal Setting</option>
+    <option value="skills-assessment">Skills Assessment</option>
+    <option value="job-placement">Job Placement</option>
   </select>
 </div>
   `,

@@ -22,28 +22,36 @@ import {
   Button,
   ButtonGroup,
   Card,
+  ComboBox,
   ErrorMessage,
   Checkbox,
   EmptyState,
   Form,
   FormGroup,
   Fieldset,
+  Header,
   Hint,
   Input,
   Label,
   Link,
   List,
+  MediaBlock,
+  Loading,
   Modal,
   PageError,
+  Pagination,
   ProcessList,
   Radio,
+  Search,
   SiteAlert,
+  Skeleton,
   Skipnav,
   StepIndicator,
   SummaryBox,
   Table,
   Tag,
   Select,
+  Sidenav,
   Toast,
   ToastRegion,
   Textarea,
@@ -53,6 +61,21 @@ function App() {
   return (
     <>
       <Skipnav href="#main-content">Skip to main content</Skipnav>
+
+      <Header
+        brand="PathAble"
+        brandHref="#main-content"
+        navigationLabel="Primary navigation"
+        items={[
+          {
+            id: 'participants',
+            content: 'Participants',
+            href: '#participants',
+          },
+          { id: 'sessions', content: 'Coaching sessions', href: '#sessions' },
+          { id: 'resources', content: 'Resources', href: '#resources' },
+        ]}
+      />
 
       <main id="main-content">
         <h1>Participant dashboard</h1>
@@ -64,6 +87,70 @@ function App() {
         items={[
           { content: 'Home', href: '#home', key: 'home' },
           { content: 'Participant resources', current: true, key: 'resources' },
+        ]}
+      />
+
+      <Pagination
+        aria-label="Participant result pages"
+        currentPage={3}
+        previous={{ href: '/participants?page=2' }}
+        items={[
+          {
+            key: 'page-1',
+            type: 'page',
+            page: 1,
+            href: '/participants?page=1',
+          },
+          {
+            key: 'page-2',
+            type: 'page',
+            page: 2,
+            href: '/participants?page=2',
+          },
+          {
+            key: 'page-3',
+            type: 'page',
+            page: 3,
+            href: '/participants?page=3',
+          },
+          {
+            key: 'page-4',
+            type: 'page',
+            page: 4,
+            href: '/participants?page=4',
+          },
+          { key: 'overflow', type: 'overflow' },
+          {
+            key: 'page-10',
+            type: 'page',
+            page: 10,
+            href: '/participants?page=10',
+          },
+        ]}
+        next={{ href: '/participants?page=4' }}
+      />
+
+      <Sidenav
+        aria-label="Participant navigation"
+        currentId="all-participants"
+        items={[
+          { id: 'overview', content: 'Overview', href: '/participants' },
+          {
+            id: 'participants',
+            content: 'Participants',
+            children: [
+              {
+                id: 'all-participants',
+                content: 'All participants',
+                href: '/participants/all',
+              },
+              {
+                id: 'add-participant',
+                content: 'Add participant',
+                href: '/participants/new',
+              },
+            ],
+          },
         ]}
       />
 
@@ -107,6 +194,15 @@ function App() {
         />
       </ToastRegion>
 
+      <p>Loading participant summary</p>
+      <Skeleton>
+        <Skeleton variant="text-heading" />
+        <Skeleton variant="text-body" />
+        <Skeleton variant="text-body" />
+      </Skeleton>
+
+      <Loading text="Loading participant records..." />
+
       <Card
         presentation="media"
         title="Resource spotlight"
@@ -139,6 +235,19 @@ function App() {
         <Button variant="save">Save</Button>
         <Button variant="continue">Continue</Button>
       </ButtonGroup>
+
+      <Search
+        size="big"
+        label="Search participant resources"
+        buttonLabel="Search resources"
+        action="/resources"
+        method="get"
+        inputProps={{
+          id: 'participant-resource-search',
+          name: 'query',
+          placeholder: 'Search coaching resources',
+        }}
+      />
 
       <Link href="/sessions/42">Open coaching session</Link>
 
@@ -178,6 +287,22 @@ function App() {
           },
         ]}
       />
+
+      <MediaBlock
+        media={
+          <img
+            src="/participants/jordan-lee.jpg"
+            alt="Portrait of participant Jordan Lee"
+            width={96}
+            height={96}
+          />
+        }
+        title={<h2>Jordan Lee</h2>}
+        description="Employment coaching participant"
+        aria-label="Participant summary for Jordan Lee"
+      >
+        <p>Current goal: prepare for a customer-service placement interview.</p>
+      </MediaBlock>
 
       <Table
         presentation="striped"
@@ -277,6 +402,12 @@ function App() {
 
 The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathable/react`; they do not need to import `@pathable/styles` separately in application code.
 
+Header's mobile navigation uses the USWDS JavaScript distributed by `@pathable/styles`. Import it once at the application boundary; do not import it in individual components:
+
+```tsx
+import '@pathable/styles/js'
+```
+
 > **Navigation policy**: The `external` Link presentation changes only the visual treatment (adds `pathable-link--external`). Consumers remain responsible for `href`, `target`, `rel`, download behavior, and any routing logic.
 
 ### Link Props
@@ -309,6 +440,24 @@ The Tag is a non-interactive presentational inline label. Any other valid span a
 | className    | `string`                                   | —             | Additional root element class names |
 
 `ListItemObject` supports `content`, optional `key`, optional `className`, and optional `attributes` for item-level `aria-*`, `data-*`, and standard list item attributes.
+
+### MediaBlock Props
+
+`MediaBlock` composes consumer-owned media with optional supporting content using the existing PathAble media-block regions. It does not alter the media element, invent alt text, or choose a heading level.
+
+| Prop        | Type              | Default  | Description                                                                                                         |
+| ----------- | ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| media       | `React.ReactNode` | required | Consumer-owned image, SVG, video, iframe, or other media. Its native semantics and attributes remain unchanged.     |
+| title       | `React.ReactNode` | —        | Optional title content in a neutral styled region. Supply a heading element when the document outline requires one. |
+| description | `React.ReactNode` | —        | Optional concise supporting content in the description region.                                                      |
+| children    | `React.ReactNode` | —        | Optional rich body content rendered after the title and description.                                                |
+| className   | `string`          | —        | Additional root class names appended after `pathable-media-block`.                                                  |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element. The body is omitted when `title`, `description`, and `children` are all empty; empty title and description regions are never rendered.
+
+#### MediaBlock Accessibility
+
+Provide meaningful `alt` text for informative images and `alt=""` for decorative images. Supply semantic title content, such as the heading level appropriate to the surrounding page, because MediaBlock intentionally does not create an implicit heading. Keep interactive media and body content responsible for their own native keyboard and accessible-name behavior.
 
 ### Card Props
 
@@ -343,6 +492,22 @@ Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and e
 
 Use the variant that accurately describes why content is absent. Provide a clear heading and explanation. Icons are decorative and hidden from assistive technology. Use a meaningful link or button for `action`; the component preserves its native keyboard behavior and event handlers.
 
+### Skeleton Props
+
+`Skeleton` renders a decorative loading placeholder using the existing PathAble skeleton classes. It does not manage loading state, replacement content, timers, or announcements.
+
+| Prop      | Type                                                                          | Default | Description                                                                    |
+| --------- | ----------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------ |
+| variant   | `'text-heading' \| 'text-body' \| 'avatar' \| 'card' \| 'table-row' \| 'row'` | —       | Selects an implemented placeholder shape; omit it for a composition container. |
+| children  | `React.ReactNode`                                                             | —       | Optional placeholder composition, primarily when `variant` is omitted.         |
+| className | `string`                                                                      | —       | Additional root class names appended after the PathAble skeleton classes.      |
+
+Any other standard non-focusable `<div>` attributes, including `id` and `data-*`, are forwarded to the root element. The wrapper always renders `aria-hidden="true"`; consumers cannot override the accessibility-tree exclusion or make the root focusable through `tabIndex` or `contentEditable`.
+
+#### Skeleton Accessibility
+
+Match each placeholder to the approximate dimensions of the content it replaces to reduce layout shift. Skeletons are decorative and excluded from the accessibility tree, so keep interactive or meaningful content outside them. Provide separate visible or assistive loading status text when users need an announcement. Replace Skeleton with real content when loading completes in consumer-owned state; the component does not run timers or make that transition itself.
+
 ### PageError Props
 
 `PageError` renders a page-level error using the `pathable-page-error` class, a compact or full-page layout, and the supported generic, not-found, and access-restricted variants.
@@ -366,6 +531,24 @@ Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and e
 
 Use `compact` for an inline error panel and `full-page` for a page-level failure. Provide a clear heading and explanation, use a retry action when recovery is possible, and provide navigation when the user needs another destination. Icons are decorative and hidden from assistive technology.
 
+### Loading Props
+
+`Loading` renders the existing `pathable-loading` inline indicator with a decorative spinner and optional status text. It does not own loading state, timers, requests, or the replacement content shown when work completes.
+
+| Prop      | Type                               | Default     | Description                                                                                        |
+| --------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| size      | `'default' \| 'large'`             | `'default'` | Selects the 24px default indicator or the 40px `pathable-loading--large` treatment.                |
+| text      | `React.ReactNode`                  | —           | Optional visible status text rendered with `pathable-loading__text`.                               |
+| className | `string`                           | —           | Additional class names appended after the PathAble loading classes.                                |
+| role      | `string`                           | —           | Optional consumer-selected role, such as `status` for spinner-only usage.                          |
+| aria-live | `'off' \| 'polite' \| 'assertive'` | `'polite'`  | Live-region politeness for status text; consumers may override it for their announcement strategy. |
+
+Any other standard `<div>` attributes, including `id`, `aria-label`, `data-*`, and event handlers, are forwarded to the root element. The spinner always receives `aria-hidden="true"`.
+
+#### Loading Accessibility
+
+Use concise `text` that identifies what is loading. The root defaults to `aria-live="polite"`; use a consumer-provided `role="status"` and accessible `aria-label` when rendering spinner-only loading. Consumers remain responsible for showing and replacing the indicator, choosing announcement timing, and providing any page-level loading status required by the application.
+
 ### Button Props
 
 | Prop      | Type                                                                                                                                                                                  | Default     | Description                    |
@@ -382,6 +565,26 @@ Use `compact` for an inline error panel and `full-page` for a page-level failure
 | --------- | ----------------- | -------------------------- |
 | children  | `React.ReactNode` | Button group content       |
 | className | `string`          | Additional CSS class names |
+
+### Header Props
+
+`Header` renders the basic USWDS header hierarchy with both `pathable-*` styling classes and the required `usa-*` compatibility classes. It does not own mobile-menu state or import the USWDS JavaScript bundle.
+
+| Prop            | Type                       | Default                | Description                                                   |
+| --------------- | -------------------------- | ---------------------- | ------------------------------------------------------------- |
+| brand           | `React.ReactNode`          | required               | Visible content for the native brand link                     |
+| brandHref       | `string`                   | required               | Consumer-owned destination for the brand link                 |
+| items           | `readonly HeaderNavItem[]` | required               | Consumer-owned primary-navigation records                     |
+| menuLabel       | `string`                   | `'Menu'`               | Visible label for the mobile menu button                      |
+| closeLabel      | `string`                   | `'Close navigation'`   | Accessible name for the icon-only mobile close button         |
+| navigationLabel | `string`                   | `'Primary navigation'` | Accessible name for the navigation landmark                   |
+| className       | `string`                   | —                      | Additional class names appended after the Header root classes |
+
+Each `HeaderNavItem` requires a stable `id`, `content`, `href`, and accepts optional native anchor `attributes`. Destinations, routing, link callbacks, targets, and relationships remain consumer-owned.
+
+#### Header Accessibility And JavaScript
+
+Import `@pathable/styles/js` once at the application boundary to enable USWDS mobile menu opening, focus movement to the close button, Escape handling, and focus restoration. The wrapper deliberately has no `open` prop or internal open state, preventing competing React and USWDS state owners. Without JavaScript, the semantic header, labeled navigation landmark, brand link, and navigation links remain in the DOM as native elements.
 
 ### Breadcrumb Props
 
@@ -400,6 +603,45 @@ Any other standard navigation attributes, including `aria-label`, `data-*`, and 
 
 Provide an accessible navigation name with `aria-label` or another accessible naming mechanism. Mark exactly one current page when the breadcrumb represents the current location. Keep labels concise and preserve a meaningful page heading separately.
 
+### Pagination Props
+
+`Pagination` renders a consumer-supplied page window as native links inside a semantic navigation landmark. The component does not calculate which pages to show, change `currentPage`, intercept navigation, or integrate with a router.
+
+| Prop        | Type                        | Default  | Description                                                                        |
+| ----------- | --------------------------- | -------- | ---------------------------------------------------------------------------------- |
+| items       | `readonly PaginationItem[]` | required | Ordered page and overflow records supplied by the consumer.                        |
+| currentPage | `number`                    | required | Consumer-owned page number. The matching page link receives `aria-current="page"`. |
+| previous    | `PaginationLink`            | —        | Optional previous-page native link. Omit it when there is no previous destination. |
+| next        | `PaginationLink`            | —        | Optional next-page native link. Omit it when there is no next destination.         |
+| className   | `string`                    | —        | Additional root class names appended without replacing `pathable-pagination`.      |
+
+Any other standard navigation attributes, including `aria-label`, `aria-labelledby`, `id`, `data-*`, and event handlers, are forwarded to the root `<nav>` element.
+
+`PaginationItem` is a discriminated union. Page records require `key`, `type: 'page'`, `page`, and `href`, plus optional native anchor `attributes`. Overflow records contain only `key` and `type: 'overflow'`; they render as a non-interactive ellipsis. `PaginationLink` requires `href` and accepts an optional accessible `label` and native anchor `attributes`. Anchor destinations, targets, relations, download behavior, and event handlers remain consumer-owned.
+
+#### Pagination Accessibility
+
+Give each Pagination landmark a concise accessible name. Supply `currentPage` from application state; if it does not match a page record, Pagination renders no false current marker. Previous, next, and page destinations are native anchors and retain browser keyboard and navigation behavior. Overflow is presentational and cannot receive focus or activation.
+
+### Sidenav Props
+
+`Sidenav` renders persistent application or section navigation as an `<aside>` containing recursive lists and native anchors. The application derives `currentId` from its routing state; Sidenav does not intercept navigation or own active or expansion state.
+
+| Prop         | Type                     | Default | Description                                                                        |
+| ------------ | ------------------------ | ------- | ---------------------------------------------------------------------------------- |
+| items        | `readonly SidenavItem[]` | —       | Immutable recursive destination and section records.                               |
+| currentId    | `string`                 | —       | Stable item ID to receive `pathable-current` and `aria-current="page"`.            |
+| className    | `string`                 | —       | Additional root class names appended after `pathable-sidenav`.                     |
+| `aria-label` | `string`                 | —       | Accessible name for the side-navigation landmark. `aria-labelledby` is also valid. |
+
+Each `SidenavItem` requires a stable `id` and `content`. An optional `href` renders a native anchor; without one, content remains text and is not exposed as a fake link. Optional recursive `children` render a nested `pathable-sidenav__sublist`. Records may provide `className` and `attributes` for the list item, `linkClassName` and `linkAttributes` for its anchor, and `listClassName` and `listAttributes` for its child list.
+
+`currentId` is matched depth-first. An omitted or unknown ID marks no item current. If malformed data repeats an ID, only the first match receives current-page semantics, preserving the single-current contract.
+
+#### Sidenav Accessibility
+
+Give every Sidenav an accessible name with `aria-label` or `aria-labelledby`. Keep destination labels concise and use stable, unique item IDs. Derive `currentId` from the router without duplicating route state inside the wrapper. Native anchors preserve browser navigation and keyboard order; section labels without `href` remain non-interactive text.
+
 ### Table Props
 
 | Prop         | Type                                                  | Default     | Description                                                                                 |
@@ -413,6 +655,25 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### ComboBox Props
+
+`ComboBox` is a searchable single-choice control. It keeps a visually hidden native `<select>` as the form-value source and renders the searchable input and listbox with React-owned behavior. It does not require a separate `@pathable/styles/js` import.
+
+| Prop             | Type                        | Default  | Description                                                                                            |
+| ---------------- | --------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| label            | `React.ReactNode`           | required | Visible label for the combobox input.                                                                  |
+| options          | `readonly ComboBoxOption[]` | required | Options with `value`, `label`, and optional `disabled` properties.                                     |
+| selectProps      | `ComboBoxSelectProps`       | `{}`     | Native select attributes, including `id`, `name`, `value`, `defaultValue`, `required`, and `disabled`. |
+| inputProps       | `ComboBoxInputProps`        | `{}`     | Visible input attributes, including `placeholder`, `aria-describedby`, and event handlers.             |
+| disableFiltering | `boolean`                   | `false`  | Shows all options while typing instead of filtering the list.                                          |
+| className        | `string`                    | —        | Additional root class names appended after the PathAble ComboBox classes.                              |
+
+`ComboBoxOption` requires a string `value` and `label`; `disabled` options remain visible but cannot be selected. Empty option values are reserved for the hidden native placeholder option.
+
+#### ComboBox Accessibility
+
+ComboBox supplies the visible label, `combobox` role, `listbox` relationship, active-descendant state, keyboard navigation, and polite result announcements. Use `inputProps.aria-describedby` for hints or validation messages. The hidden native select retains the submitted field name and selected value. Use `selectProps.value` with `selectProps.onChange` for controlled selection or `selectProps.defaultValue` for uncontrolled selection.
 
 ### Input Props
 
@@ -433,6 +694,27 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 #### Input Accessibility
 
 Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+
+### Search Props
+
+`Search` renders a native search landmark with an associated search input and submit button. It applies the existing `pathable-search` contract and uses the package's `Input` and `Button` primitives. The search icon is a fixed decorative SVG and does not depend on the public Icon wrapper.
+
+| Prop        | Type                     | Default     | Description                                                                                  |
+| ----------- | ------------------------ | ----------- | -------------------------------------------------------------------------------------------- |
+| size        | `'default' \| 'big'`     | `'default'` | Selects the icon-button treatment or the big treatment with a visible button label.          |
+| label       | `React.ReactNode`        | required    | Accessible label associated with the native search input.                                    |
+| buttonLabel | `React.ReactNode`        | `'Search'`  | Accessible submit action label; visually hidden at the default size and visible in big mode. |
+| inputProps  | `SearchInputProps`       | `{}`        | Native search input attributes other than `type`, which is always `search`.                  |
+| className   | `string`                 | —           | Additional class names appended after the PathAble search classes.                           |
+| onSubmit    | `React.FormEventHandler` | —           | Native form submit handler; the wrapper does not prevent default submission.                 |
+
+Any other standard form attributes, including `id`, `action`, `method`, `target`, `aria-*`, `data-*`, and event handlers, are forwarded to the root `<form role="search">`. `inputProps` forwards native input attributes such as `name`, `placeholder`, `value`, `defaultValue`, `onChange`, `disabled`, `required`, `aria-*`, and `data-*`.
+
+#### Search Accessibility
+
+Use a specific `label` that describes what content is searched. The wrapper associates that label with the searchbox, hides the decorative SVG from assistive technology, and keeps `buttonLabel` available as the submit button's accessible name in both sizes. Big mode shows that label at wider viewports and follows the owning responsive search contract by collapsing to the named icon button on small viewports. The input and button retain native keyboard and submission behavior: Enter in the searchbox or activation of the submit button submits the form once.
+
+Search does not own the query, results, validation, request, or keyboard routing. Use controlled input attributes when the application owns the query, or native `defaultValue` for an uncontrolled field. A disabled search input remains disabled according to native behavior; disable or remove the submit action at the application level only when that action is also unavailable.
 
 ### Form Props
 
@@ -683,6 +965,7 @@ Use `role="status"` for polite operational updates and `role="alert"` for urgent
 | Modal         | Dialog rendered via portal with focus trapping, Escape close, scroll locking, and focus restoration.                                | `open`, `onClose`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
 | Toast         | Transient feedback notification with five variants, optional action, and optional dismiss control.                                  | `variant`, `message`, `icon`, `action`, `dismissible`, `dismissLabel`, `role`                    |
 | ToastRegion   | Fixed stacking container for one or more Toast instances.                                                                           | `children`, `className`                                                                          |
+| Loading       | Inline CSS-only loading indicator with optional status text and a large page-level treatment.                                       | `size`, `text`, `role`, `aria-live`                                                              |
 | ProcessList   | Ordered list of process steps with headings and body content.                                                                       | `items` (array of `{id, heading, body}`)                                                         |
 | SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                     | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
