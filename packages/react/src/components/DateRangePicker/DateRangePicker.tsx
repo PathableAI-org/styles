@@ -49,6 +49,8 @@ export interface DateRangePickerProps extends Omit<
 type DateSide = 'start' | 'end'
 type CalendarView = 'date' | 'month' | 'year'
 
+type DirtySides = Record<DateSide, boolean>
+
 interface CalendarProps {
   readonly side: DateSide
   readonly calendarId: string
@@ -306,8 +308,9 @@ function Calendar({
   }
 
   const isYearDisabled = (year: number) =>
-    isMonthDisabled(createDate(year, 0, 1)) &&
-    isMonthDisabled(createDate(year, 11, 1))
+    Array.from({ length: 12 }, (_, month) =>
+      isMonthDisabled(createDate(year, month, 1)),
+    ).every(Boolean)
 
   const firstAvailableDate = (value: Date) => {
     const first = firstDayOfMonth(value)
@@ -322,9 +325,67 @@ function Calendar({
   }
 
   const changeMonth = (value: Date) => {
-    const nextMonth = firstDayOfMonth(value)
+    let nextMonth = firstDayOfMonth(value)
+    if (isMonthDisabled(nextMonth) && !isYearDisabled(value.getUTCFullYear())) {
+      const availableMonth = Array.from({ length: 12 }, (_, month) =>
+        createDate(value.getUTCFullYear(), month, 1),
+      ).find((month) => !isMonthDisabled(month))
+      if (availableMonth) nextMonth = availableMonth
+    }
     onMonthChange(nextMonth)
     onActiveDateChange(firstAvailableDate(nextMonth))
+  }
+
+  const handlePickerKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+    columns: number,
+    count: number,
+    getValue: (index: number) => Date,
+    isDisabled: (value: Date) => boolean,
+  ) => {
+    let nextIndex: number | null = null
+
+    switch (event.key) {
+      case 'ArrowLeft':
+        nextIndex = index - 1
+        break
+      case 'ArrowRight':
+        nextIndex = index + 1
+        break
+      case 'ArrowUp':
+        nextIndex = index - columns
+        break
+      case 'ArrowDown':
+        nextIndex = index + columns
+        break
+      case 'Home':
+        nextIndex = 0
+        break
+      case 'End':
+        nextIndex = count - 1
+        break
+      case 'Escape':
+        onClose()
+        event.preventDefault()
+        return
+      default:
+        return
+    }
+
+    if (nextIndex === null || nextIndex < 0 || nextIndex >= count) {
+      event.preventDefault()
+      return
+    }
+
+    const nextValue = getValue(nextIndex)
+    if (isDisabled(nextValue)) {
+      event.preventDefault()
+      return
+    }
+
+    onActiveDateChange(toISODate(nextValue))
+    event.preventDefault()
   }
 
   useEffect(() => {
@@ -527,7 +588,11 @@ function Calendar({
                 const monthIndex = row * 3 + column
                 const value = createDate(month.getUTCFullYear(), monthIndex, 1)
                 const isSelected = monthIndex === month.getUTCMonth()
-                const isActive = isSelected
+                const isActive =
+                  parseISODate(activeDate)?.getUTCFullYear() ===
+                    value.getUTCFullYear() &&
+                  parseISODate(activeDate)?.getUTCMonth() ===
+                    value.getUTCMonth()
                 return (
                   <td key={monthIndex} className={CELL_CLASS}>
                     <button
@@ -543,6 +608,18 @@ function Calendar({
                       aria-pressed={isSelected}
                       disabled={isMonthDisabled(value)}
                       tabIndex={isActive ? 0 : -1}
+                      onFocus={() => onActiveDateChange(toISODate(value))}
+                      onKeyDown={(event) =>
+                        handlePickerKeyDown(
+                          event,
+                          monthIndex,
+                          3,
+                          12,
+                          (index) =>
+                            createDate(month.getUTCFullYear(), index, 1),
+                          isMonthDisabled,
+                        )
+                      }
                       onClick={() => {
                         changeMonth(value)
                         onViewChange('date')
@@ -588,21 +665,43 @@ function Calendar({
                         const year = yearStart + row * 3 + column
                         const value = createDate(year, month.getUTCMonth(), 1)
                         const isSelected = year === month.getUTCFullYear()
+                        const isActive =
+                          parseISODate(activeDate)?.getUTCFullYear() === year
+
                         return (
                           <td key={year} className={CELL_CLASS}>
                             <button
-                              ref={isSelected ? activeButtonRef : undefined}
+                              ref={isActive ? activeButtonRef : undefined}
                               type="button"
                               className={[
                                 YEAR_CLASS,
-                                isSelected ? YEAR_FOCUSED_CLASS : '',
+                                isActive ? YEAR_FOCUSED_CLASS : '',
                                 isSelected ? YEAR_SELECTED_CLASS : '',
                               ]
                                 .filter(Boolean)
                                 .join(' ')}
                               aria-pressed={isSelected}
                               disabled={isYearDisabled(year)}
-                              tabIndex={isSelected ? 0 : -1}
+                              tabIndex={isActive ? 0 : -1}
+                              onFocus={() =>
+                                onActiveDateChange(toISODate(value))
+                              }
+                              onKeyDown={(event) =>
+                                handlePickerKeyDown(
+                                  event,
+                                  row * 3 + column,
+                                  3,
+                                  12,
+                                  (index) =>
+                                    createDate(
+                                      yearStart + index,
+                                      month.getUTCMonth(),
+                                      1,
+                                    ),
+                                  (date) =>
+                                    isYearDisabled(date.getUTCFullYear()),
+                                )
+                              }
                               onClick={() => {
                                 changeMonth(value)
                                 onViewChange('date')
@@ -702,6 +801,10 @@ export function DateRangePicker({
     start: formatDisplayDate(selectedStart),
     end: formatDisplayDate(selectedEnd),
   })
+  const [dirtySides, setDirtySides] = useState<DirtySides>({
+    start: false,
+    end: false,
+  })
   const [invalidSide, setInvalidSide] = useState<DateSide | null>(null)
   const locale =
     typeof document !== 'undefined' && document.documentElement.lang
@@ -711,6 +814,14 @@ export function DateRangePicker({
   const startInputId = `${startId}-label`
   const endInputId = `${endId}-label`
   const rootClassName = [ROOT_CLASS, className].filter(Boolean).join(' ')
+  const closedCalendarDate =
+    parseISODate(selectedStart) ?? parseISODate(selectedEnd) ?? initialMonth
+  const displayedMonth = openSide
+    ? calendarMonth
+    : firstDayOfMonth(closedCalendarDate)
+  const displayedActiveDate = openSide
+    ? activeDate
+    : toISODate(closedCalendarDate)
 
   const applyRange = (nextStart: string, nextEnd: string) => {
     if (startDate === undefined) setInternalStartDate(nextStart)
@@ -719,8 +830,11 @@ export function DateRangePicker({
       start: formatDisplayDate(nextStart),
       end: formatDisplayDate(nextEnd),
     })
+    setDirtySides({ start: false, end: false })
     setInvalidSide(null)
-    onRangeChange?.({ startDate: nextStart, endDate: nextEnd })
+    if (nextStart !== selectedStart || nextEnd !== selectedEnd) {
+      onRangeChange?.({ startDate: nextStart, endDate: nextEnd })
+    }
   }
 
   const parseDraft = (text: string) => {
@@ -737,20 +851,35 @@ export function DateRangePicker({
     return !value || violatesBounds ? null : value
   }
 
+  const getEffectiveValue = (side: DateSide) => {
+    const selectedValue = side === 'start' ? selectedStart : selectedEnd
+    if (!dirtySides[side]) return selectedValue
+
+    const parsedValue = parseDraft(draftText[side])
+    return parsedValue === null ? selectedValue : parsedValue
+  }
+
   const commitDraft = (side: DateSide) => {
-    const value = parseDraft(draftText[side])
+    const selectedValue = side === 'start' ? selectedStart : selectedEnd
+    const value = dirtySides[side] ? parseDraft(draftText[side]) : selectedValue
     if (value === null) {
       setInvalidSide(side)
       return false
     }
 
-    let nextStart = selectedStart
-    let nextEnd = selectedEnd
+    const otherSide: DateSide = side === 'start' ? 'end' : 'start'
+    if (dirtySides[otherSide] && parseDraft(draftText[otherSide]) === null) {
+      setInvalidSide(otherSide)
+      return false
+    }
+
+    let nextStart = getEffectiveValue('start')
+    let nextEnd = getEffectiveValue('end')
     if (side === 'start') {
       nextStart = value
       if (nextStart && nextEnd && nextEnd < nextStart) nextEnd = ''
     } else {
-      if (selectedStart && value && value < selectedStart) {
+      if (nextStart && value && value < nextStart) {
         setInvalidSide(side)
         return false
       }
@@ -762,13 +891,15 @@ export function DateRangePicker({
   }
 
   const commitDrafts = () => {
-    const nextStart = parseDraft(draftText.start)
+    const nextStart = dirtySides.start
+      ? parseDraft(draftText.start)
+      : selectedStart
     if (nextStart === null) {
       setInvalidSide('start')
       return false
     }
 
-    const nextEnd = parseDraft(draftText.end)
+    const nextEnd = dirtySides.end ? parseDraft(draftText.end) : selectedEnd
     if (nextEnd === null) {
       setInvalidSide('end')
       return false
@@ -781,19 +912,16 @@ export function DateRangePicker({
   }
 
   const openCalendar = (side: DateSide, shouldFocusCalendar = false) => {
-    const value = side === 'start' ? selectedStart : selectedEnd
+    const value = getEffectiveValue(side)
+    const otherValue =
+      side === 'end' ? getEffectiveValue('start') : getEffectiveValue('end')
     const date = constrainDate(
       parseISODate(value) ?? parseISODate(defaultMonth) ?? initialMonth,
-      side === 'end' ? selectedStart || minDate : minDate,
-      side === 'start' ? selectedEnd || maxDate : maxDate,
+      side === 'end' ? otherValue || minDate : minDate,
+      side === 'start' ? otherValue || maxDate : maxDate,
     )
     setCalendarMonth(firstDayOfMonth(date))
     setActiveDate(toISODate(date))
-    setDraftText((current) => ({
-      ...current,
-      [side]: formatDisplayDate(value),
-    }))
-    setInvalidSide(null)
     setCalendarView('date')
     setFocusCalendar(shouldFocusCalendar)
     setOpenSide(side)
@@ -817,16 +945,25 @@ export function DateRangePicker({
   const selectDate = (value: string) => {
     if (!openSide) return
 
+    const otherSide: DateSide = openSide === 'start' ? 'end' : 'start'
+    if (dirtySides[otherSide] && parseDraft(draftText[otherSide]) === null) {
+      setInvalidSide(otherSide)
+      return
+    }
+
+    const currentStart = getEffectiveValue('start')
+    const currentEnd = getEffectiveValue('end')
+
     const disabled = Boolean(
       (minDate && value < minDate) ||
       (maxDate && value > maxDate) ||
-      (openSide === 'start' && selectedEnd && value > selectedEnd) ||
-      (openSide === 'end' && selectedStart && value < selectedStart),
+      (openSide === 'start' && currentEnd && value > currentEnd) ||
+      (openSide === 'end' && currentStart && value < currentStart),
     )
     if (disabled) return
 
-    const nextStart = openSide === 'start' ? value : selectedStart
-    const nextEnd = openSide === 'end' ? value : selectedEnd
+    const nextStart = openSide === 'start' ? value : currentStart
+    const nextEnd = openSide === 'end' ? value : currentEnd
     applyRange(nextStart, nextEnd)
     setFocusCalendar(false)
     setOpenSide(null)
@@ -855,6 +992,8 @@ export function DateRangePicker({
     const id = isStart ? startId : endId
     const calendarId = isStart ? startCalendarId : endCalendarId
     const value = isStart ? selectedStart : selectedEnd
+    const effectiveStart = getEffectiveValue('start')
+    const effectiveEnd = getEffectiveValue('end')
     const inputRef = isStart ? startInputRef : endInputRef
     const inputLabelId = isStart ? startInputId : endInputId
     const {
@@ -863,6 +1002,7 @@ export function DateRangePicker({
       form,
       className: inputClassName,
       onChange,
+      onBlur,
       onFocus,
       onKeyDown,
       onClick,
@@ -870,7 +1010,7 @@ export function DateRangePicker({
     } = props
     const isInvalid = invalidSide === side
     const inputValue =
-      openSide === side || invalidSide === side || draftText[side]
+      dirtySides[side] || invalidSide === side
         ? draftText[side]
         : formatDisplayDate(value)
 
@@ -880,8 +1020,19 @@ export function DateRangePicker({
         ...current,
         [side]: nextValue,
       }))
-      setInvalidSide(null)
+      setDirtySides((current) => ({ ...current, [side]: true }))
+      setInvalidSide((current) => (current === side ? null : current))
       onChange?.(event)
+    }
+
+    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+      onBlur?.(event)
+      if (
+        event.relatedTarget === startInputRef.current ||
+        event.relatedTarget === endInputRef.current
+      ) {
+        commitDraft(side)
+      }
     }
 
     const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
@@ -901,7 +1052,8 @@ export function DateRangePicker({
           ...current,
           [side]: formatDisplayDate(value),
         }))
-        setInvalidSide(null)
+        setDirtySides((current) => ({ ...current, [side]: false }))
+        setInvalidSide((current) => (current === side ? null : current))
         setFocusCalendar(false)
         setOpenSide(null)
         setCalendarView('date')
@@ -944,6 +1096,7 @@ export function DateRangePicker({
             aria-controls={calendarId}
             aria-invalid={isInvalid || undefined}
             onChange={handleChange}
+            onBlur={handleBlur}
             onFocus={handleFocus}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
@@ -966,16 +1119,22 @@ export function DateRangePicker({
           <Calendar
             side={side}
             calendarId={calendarId}
-            month={calendarMonth}
+            month={displayedMonth}
             focusActiveDate={openSide === side && focusCalendar}
-            activeDate={activeDate}
-            selectedStart={selectedStart}
-            selectedEnd={selectedEnd}
+            activeDate={displayedActiveDate}
+            selectedStart={effectiveStart}
+            selectedEnd={effectiveEnd}
             minDate={minDate}
             maxDate={maxDate}
             view={calendarView}
-            onViewChange={setCalendarView}
-            onMonthChange={(month) => setCalendarMonth(firstDayOfMonth(month))}
+            onViewChange={(view) => {
+              setCalendarView(view)
+              setFocusCalendar(true)
+            }}
+            onMonthChange={(month) => {
+              setCalendarMonth(firstDayOfMonth(month))
+              setFocusCalendar(true)
+            }}
             onActiveDateChange={setActiveDate}
             onSelectDate={selectDate}
             onClose={() => closeCalendar(true)}

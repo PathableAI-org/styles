@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { useState } from 'react'
 
 import { Button } from '../../../components/Button/Button'
@@ -140,6 +140,12 @@ export const Disabled: Story = {
     await expect(
       canvas.getByRole('textbox', { name: 'End date' }),
     ).toBeDisabled()
+    await expect(
+      canvas.getByRole('button', { name: 'Toggle start date calendar' }),
+    ).toBeDisabled()
+    await expect(
+      canvas.getByRole('button', { name: 'Toggle end date calendar' }),
+    ).toBeDisabled()
     for (const input of canvasElement.querySelectorAll(
       'input[type="hidden"]',
     )) {
@@ -169,7 +175,10 @@ export const Required: Story = {
 }
 
 export const CalendarSelection: Story = {
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onRangeChange: fn(),
+  },
+  play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement)
     const start = canvas.getByRole('textbox', { name: 'Start date' })
 
@@ -189,6 +198,37 @@ export const CalendarSelection: Story = {
       await expect(
         canvas.getByRole('button', { name: 'Toggle start date calendar' }),
       ).toHaveAttribute('aria-expanded', 'false')
+      await expect(args.onRangeChange).toHaveBeenCalledWith({
+        startDate: '2026-03-12',
+        endDate: '2026-03-18',
+      })
+      await expect(args.onRangeChange).toHaveBeenCalledTimes(1)
+    })
+  },
+}
+
+export const CalendarReplacesDraft: Story = {
+  args: {
+    onRangeChange: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const end = canvas.getByRole('textbox', { name: 'End date' })
+
+    await userEvent.click(start)
+    await userEvent.clear(start)
+    await userEvent.type(start, '03/20/2026')
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Thursday, March 12, 2026' }),
+    )
+
+    await expect(start).toHaveValue('03/12/2026')
+    await expect(end).toHaveValue('03/18/2026')
+    await expect(args.onRangeChange).toHaveBeenCalledTimes(1)
+    await expect(args.onRangeChange).toHaveBeenCalledWith({
+      startDate: '2026-03-12',
+      endDate: '2026-03-18',
     })
   },
 }
@@ -250,6 +290,41 @@ export const InvalidText: Story = {
   },
 }
 
+export const InvalidDraftPreserved: Story = {
+  args: {
+    onRangeChange: fn(),
+  },
+  render: (args) => (
+    <div>
+      <DateRangePicker {...args} />
+      <button type="button">Outside control</button>
+    </div>
+  ),
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+
+    await userEvent.click(start)
+    await userEvent.clear(start)
+    await userEvent.type(start, '13/40/2026')
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Outside control' }),
+    )
+    await userEvent.click(canvas.getByRole('textbox', { name: 'End date' }))
+
+    await expect(start).toHaveValue('13/40/2026')
+    await expect(start).toHaveAttribute('aria-invalid', 'true')
+    await userEvent.keyboard('{Escape}')
+    await expect(start).toHaveAttribute('aria-invalid', 'true')
+    await userEvent.click(canvas.getByRole('textbox', { name: 'End date' }))
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Thursday, March 19, 2026' }),
+    )
+    await expect(args.onRangeChange).not.toHaveBeenCalled()
+    await expect(start).toHaveValue('13/40/2026')
+  },
+}
+
 export const CalendarViews: Story = {
   args: {
     defaultStartDate: '',
@@ -280,7 +355,165 @@ export const CalendarViews: Story = {
   },
 }
 
+export const PickerKeyboardFocus: Story = {
+  args: {
+    minDate: '2026-01-01',
+    maxDate: '2026-12-31',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const toggle = canvas.getByRole('button', {
+      name: 'Toggle start date calendar',
+    })
+
+    await userEvent.click(toggle)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'March. Select month' }),
+    )
+    await expect(
+      canvas.getByRole('button', { name: 'March', exact: true }),
+    ).toHaveFocus()
+
+    await userEvent.keyboard('{ArrowLeft}{Enter}')
+    await expect(
+      canvas.getByRole('button', { name: 'Sunday, February 1, 2026' }),
+    ).toHaveFocus()
+  },
+}
+
+export const CalendarViewEscape: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const toggle = canvas.getByRole('button', {
+      name: 'Toggle start date calendar',
+    })
+
+    await userEvent.click(toggle)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'March. Select month' }),
+    )
+    await userEvent.keyboard('{Escape}')
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await expect(start).toHaveFocus()
+
+    await userEvent.click(toggle)
+    await userEvent.click(
+      canvas.getByRole('button', { name: '2026. Select year' }),
+    )
+    await userEvent.keyboard('{Escape}')
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await expect(start).toHaveFocus()
+  },
+}
+
+export const InteriorYearConstraint: Story = {
+  args: {
+    defaultStartDate: '',
+    defaultEndDate: '',
+    minDate: '2026-06-15',
+    maxDate: '2026-06-20',
+    defaultMonth: '2026-06-01',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Toggle start date calendar' }),
+    )
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'June. Select month' }),
+    )
+    await userEvent.click(canvas.getByRole('button', { name: 'June' }))
+    await userEvent.click(
+      canvas.getByRole('button', { name: '2026. Select year' }),
+    )
+
+    await expect(
+      canvas.getByRole('button', { name: '2026' }),
+    ).not.toBeDisabled()
+    await expect(canvas.getByRole('button', { name: '2025' })).toBeDisabled()
+    await expect(canvas.getByRole('button', { name: '2027' })).toBeDisabled()
+  },
+}
+
+export const BoundaryYearFocus: Story = {
+  args: {
+    defaultStartDate: '',
+    defaultEndDate: '',
+    minDate: '2026-01-01',
+    maxDate: '2027-06-20',
+    defaultMonth: '2026-12-01',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Toggle start date calendar' }),
+    )
+    await userEvent.click(
+      canvas.getByRole('button', { name: '2026. Select year' }),
+    )
+    await userEvent.click(canvas.getByRole('button', { name: '2027' }))
+
+    await expect(
+      canvas.getByRole('button', { name: /January 1, 2027$/ }),
+    ).toHaveFocus()
+  },
+}
+
 export const ControlledBlur: Story = {
+  args: {
+    onRangeChange: fn(),
+  },
+  render: (args) => {
+    const [range, setRange] = useState({
+      startDate: '2026-03-10',
+      endDate: '2026-03-18',
+    })
+
+    return (
+      <div>
+        <DateRangePicker
+          startLabel="Start date"
+          endLabel="End date"
+          startDate={range.startDate}
+          endDate={range.endDate}
+          onRangeChange={(value) => {
+            args.onRangeChange?.(value)
+            setRange(value)
+          }}
+          minDate="2026-03-01"
+          maxDate="2026-03-31"
+          defaultMonth="2026-03-01"
+          startInputProps={{ id: 'controlled-start', name: 'controlledStart' }}
+          endInputProps={{ id: 'controlled-end', name: 'controlledEnd' }}
+        />
+        <button type="button">Outside control</button>
+        <p>Selected start: {range.startDate}</p>
+      </div>
+    )
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+
+    await userEvent.click(start)
+    await userEvent.clear(start)
+    await userEvent.type(start, '03/12/2026')
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Outside control' }),
+    )
+
+    await expect(start).toHaveValue('03/12/2026')
+    await expect(canvas.getByText('Selected start: 2026-03-12')).toBeVisible()
+    await expect(args.onRangeChange).toHaveBeenCalledTimes(1)
+    await expect(args.onRangeChange).toHaveBeenCalledWith({
+      startDate: '2026-03-12',
+      endDate: '2026-03-18',
+    })
+  },
+}
+
+export const ControlledPropSync: Story = {
   render: () => {
     const [range, setRange] = useState({
       startDate: '2026-03-10',
@@ -294,15 +527,18 @@ export const ControlledBlur: Story = {
           endLabel="End date"
           startDate={range.startDate}
           endDate={range.endDate}
-          onRangeChange={setRange}
-          minDate="2026-03-01"
-          maxDate="2026-03-31"
           defaultMonth="2026-03-01"
-          startInputProps={{ id: 'controlled-start', name: 'controlledStart' }}
-          endInputProps={{ id: 'controlled-end', name: 'controlledEnd' }}
+          startInputProps={{ id: 'sync-start', name: 'syncStart' }}
+          endInputProps={{ id: 'sync-end', name: 'syncEnd' }}
         />
-        <button type="button">Outside control</button>
-        <p>Selected start: {range.startDate}</p>
+        <button
+          type="button"
+          onClick={() =>
+            setRange({ startDate: '2026-04-20', endDate: '2026-04-28' })
+          }
+        >
+          Update date range
+        </button>
       </div>
     )
   },
@@ -313,12 +549,110 @@ export const ControlledBlur: Story = {
     await userEvent.click(start)
     await userEvent.clear(start)
     await userEvent.type(start, '03/12/2026')
+    await userEvent.keyboard('{Escape}')
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Update date range' }),
+    )
+
+    await expect(start).toHaveValue('04/20/2026')
+    await expect(canvas.getByRole('textbox', { name: 'End date' })).toHaveValue(
+      '04/28/2026',
+    )
+    await expect(
+      canvasElement.querySelector('input[name="syncStart"][type="hidden"]'),
+    ).toHaveValue('2026-04-20')
+    await expect(
+      canvasElement.querySelector('input[name="syncEnd"][type="hidden"]'),
+    ).toHaveValue('2026-04-28')
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Toggle start date calendar' }),
+    )
+    await expect(
+      canvas.getByRole('button', { name: /April 20, 2026$/ }),
+    ).toHaveFocus()
+  },
+}
+
+export const DirtyFieldPreserved: Story = {
+  args: {
+    onRangeChange: fn(),
+  },
+  render: (args) => {
+    const [range, setRange] = useState({
+      startDate: '2026-03-10',
+      endDate: '2026-03-18',
+    })
+
+    return (
+      <div>
+        <DateRangePicker
+          startLabel="Start date"
+          endLabel="End date"
+          startDate={range.startDate}
+          endDate={range.endDate}
+          onRangeChange={(value) => {
+            args.onRangeChange?.(value)
+            setRange(value)
+          }}
+          minDate="2026-03-01"
+          maxDate="2026-03-31"
+          defaultMonth="2026-03-01"
+          startInputProps={{ id: 'dirty-start', name: 'dirtyStart' }}
+          endInputProps={{ id: 'dirty-end', name: 'dirtyEnd' }}
+        />
+        <p>
+          Current range: {range.startDate} to {range.endDate || 'not selected'}
+        </p>
+      </div>
+    )
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const end = canvas.getByRole('textbox', { name: 'End date' })
+
+    await userEvent.click(start)
+    await userEvent.clear(start)
+    await userEvent.type(start, '03/20/2026')
+    await userEvent.click(end)
+
+    await expect(start).toHaveValue('03/20/2026')
+    await expect(
+      canvas.getByText('Current range: 2026-03-20 to not selected'),
+    ).toBeVisible()
+    await expect(end).toHaveValue('')
+    await expect(
+      canvasElement.querySelector('input[name="dirtyStart"][type="hidden"]'),
+    ).toHaveValue('2026-03-20')
+    await expect(
+      canvasElement.querySelector('input[name="dirtyEnd"][type="hidden"]'),
+    ).toHaveValue('')
+    await expect(args.onRangeChange).toHaveBeenCalledTimes(1)
+  },
+}
+
+export const NoOpBlur: Story = {
+  args: {
+    onRangeChange: fn(),
+  },
+  render: (args) => (
+    <div>
+      <DateRangePicker {...args} />
+      <button type="button">Outside control</button>
+    </div>
+  ),
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    await userEvent.click(start)
+    await userEvent.clear(start)
+    await userEvent.type(start, '03/10/2026')
     await userEvent.click(
       canvas.getByRole('button', { name: 'Outside control' }),
     )
 
-    await expect(start).toHaveValue('03/12/2026')
-    await expect(canvas.getByText('Selected start: 2026-03-12')).toBeVisible()
+    await expect(args.onRangeChange).not.toHaveBeenCalled()
   },
 }
 
