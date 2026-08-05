@@ -373,6 +373,69 @@ export const DisabledInteraction: Story = {
   },
 }
 
+export const DisabledAppearances: Story = {
+  render: () => (
+    <div className="pathable-cluster pathable-cluster--gap-lg">
+      {(
+        [
+          'bare',
+          'subtle',
+          'bordered',
+          'inverse',
+          'destructive',
+        ] satisfies IconButtonAppearance[]
+      ).map((appearance) => (
+        <IconButton
+          key={appearance}
+          appearance={appearance}
+          disabled
+          aria-label={`Disabled ${appearance} action`}
+        >
+          <CloseIcon />
+        </IconButton>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const appearance of [
+      'bare',
+      'subtle',
+      'bordered',
+      'inverse',
+      'destructive',
+    ] satisfies IconButtonAppearance[]) {
+      const button = canvas.getByRole('button', {
+        name: `Disabled ${appearance} action`,
+      })
+      const style = window.getComputedStyle(button)
+      const restingStyle = {
+        backgroundColor: style.backgroundColor,
+        borderColor: style.borderColor,
+        color: style.color,
+        opacity: style.opacity,
+      }
+
+      await expect(button).toBeDisabled()
+      await expect(
+        contrastRatio(restingStyle.color, restingStyle.backgroundColor),
+      ).toBeGreaterThanOrEqual(3)
+      await userEvent.hover(button)
+
+      const hoverStyle = window.getComputedStyle(button)
+      await expect({
+        backgroundColor: hoverStyle.backgroundColor,
+        borderColor: hoverStyle.borderColor,
+        color: hoverStyle.color,
+        opacity: hoverStyle.opacity,
+      }).toEqual(restingStyle)
+
+      await userEvent.unhover(button)
+    }
+  },
+}
+
 export const OnDifferentSurfaces: Story = {
   render: () => (
     <div className="pathable-cluster pathable-cluster--gap-lg">
@@ -418,6 +481,51 @@ export const OnDifferentSurfaces: Story = {
           ),
         ).toBeGreaterThanOrEqual(3)
       }
+    }
+  },
+}
+
+export const NestedSurfaces: Story = {
+  render: () => (
+    <div className="pathable-cluster pathable-cluster--gap-lg">
+      <div className="pathable-surface pathable-surface--brand pathable-padding-4">
+        <div className="pathable-surface pathable-surface--inverse pathable-padding-4">
+          <IconButton
+            appearance="inverse"
+            aria-label="Close nested inverse panel"
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+      </div>
+      <div className="pathable-surface pathable-surface--inverse pathable-padding-4">
+        <div className="pathable-surface pathable-surface--brand pathable-padding-4">
+          <IconButton appearance="bare" aria-label="Close nested brand panel">
+            <CloseIcon />
+          </IconButton>
+        </div>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const name of [
+      'Close nested inverse panel',
+      'Close nested brand panel',
+    ]) {
+      await userEvent.tab()
+      const button = canvas.getByRole('button', { name })
+      const surface = button.parentElement
+
+      await expect(button).toHaveFocus()
+      await expect(surface).not.toBeNull()
+      await expect(
+        contrastRatio(
+          window.getComputedStyle(button).outlineColor,
+          window.getComputedStyle(surface as HTMLElement).backgroundColor,
+        ),
+      ).toBeGreaterThanOrEqual(3)
     }
   },
 }
