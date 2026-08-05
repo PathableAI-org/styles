@@ -13,28 +13,14 @@ export default {
 
 export const Default = {
   render: () => `
-<div class="pathable-date-range-picker">
-  <div class="pathable-date-range-picker__inputs">
-    <div class="pathable-date-range-picker__start">
+<div class="pathable-date-range-picker usa-date-range-picker">
+  <div class="pathable-date-picker usa-date-picker pathable-date-range-picker__range-start usa-date-range-picker__range-start">
       <label class="pathable-label" for="drp-start">Start date</label>
-      <input
-        id="drp-start"
-        class="pathable-input pathable-input--date"
-        type="text"
-        pattern="\\d{4}-\\d{2}-\\d{2}"
-        placeholder="YYYY-MM-DD"
-      />
-    </div>
-    <div class="pathable-date-range-picker__end">
+        <input id="drp-start" class="pathable-input pathable-input--date" type="text" name="startDate" pattern="\\d{2}\\/\\d{2}\\/\\d{4}" placeholder="MM/DD/YYYY" />
+  </div>
+  <div class="pathable-date-picker usa-date-picker pathable-date-range-picker__range-end usa-date-range-picker__range-end">
       <label class="pathable-label" for="drp-end">End date</label>
-      <input
-        id="drp-end"
-        class="pathable-input pathable-input--date"
-        type="text"
-        pattern="\\d{4}-\\d{2}-\\d{2}"
-        placeholder="YYYY-MM-DD"
-      />
-    </div>
+        <input id="drp-end" class="pathable-input pathable-input--date" type="text" name="endDate" pattern="\\d{2}\\/\\d{2}\\/\\d{4}" placeholder="MM/DD/YYYY" />
   </div>
 </div>
   `,

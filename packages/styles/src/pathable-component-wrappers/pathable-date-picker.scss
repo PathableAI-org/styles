@@ -12,3 +12,157 @@
 // No base .usa-date-picker class exists in USWDS source.
 // Only .usa-date-picker__wrapper, .usa-date-picker--active, and child elements are defined.
 // JS-driven component — keep .usa-date-picker on DOM for JS to find elements.
+
+// USWDS JavaScript uses the configured PathAble prefix for generated children.
+// Extend the USWDS selectors so generated pathable markup receives the same styles.
+.pathable-date-picker--active {
+  @extend .usa-date-picker--active;
+}
+
+.pathable-date-picker--initialized {
+  @extend .usa-date-picker--initialized;
+}
+
+.pathable-date-picker__wrapper {
+  @extend .usa-date-picker__wrapper;
+}
+
+.pathable-date-picker__button {
+  @extend .usa-date-picker__button;
+}
+
+.pathable-date-picker__external-input {
+  @extend .usa-date-picker__external-input;
+}
+
+.pathable-date-picker__calendar {
+  @extend .usa-date-picker__calendar;
+}
+
+.pathable-date-picker__calendar__table {
+  @extend .usa-date-picker__calendar__table;
+}
+
+.pathable-date-picker__calendar__row {
+  @extend .usa-date-picker__calendar__row;
+}
+
+.pathable-date-picker__calendar__cell {
+  @extend .usa-date-picker__calendar__cell;
+}
+
+.pathable-date-picker__calendar__cell--center-items {
+  @extend .usa-date-picker__calendar__cell--center-items;
+}
+
+.pathable-date-picker__calendar__month-label {
+  @extend .usa-date-picker__calendar__month-label;
+}
+
+.pathable-date-picker__calendar__day-of-week {
+  @extend .usa-date-picker__calendar__day-of-week;
+}
+
+.pathable-date-picker__calendar__date {
+  @extend .usa-date-picker__calendar__date;
+}
+
+.pathable-date-picker__calendar__date--focused {
+  @extend .usa-date-picker__calendar__date--focused;
+}
+
+.pathable-date-picker__calendar__date--selected {
+  @extend .usa-date-picker__calendar__date--selected;
+}
+
+.pathable-date-picker__calendar__date--previous-month {
+  @extend .usa-date-picker__calendar__date--previous-month;
+}
+
+.pathable-date-picker__calendar__date--next-month {
+  @extend .usa-date-picker__calendar__date--next-month;
+}
+
+.pathable-date-picker__calendar__date--range-date {
+  @extend .usa-date-picker__calendar__date--range-date;
+}
+
+.pathable-date-picker__calendar__date--range-date-start {
+  @extend .usa-date-picker__calendar__date--range-date-start;
+}
+
+.pathable-date-picker__calendar__date--range-date-end {
+  @extend .usa-date-picker__calendar__date--range-date-end;
+}
+
+.pathable-date-picker__calendar__date--within-range {
+  @extend .usa-date-picker__calendar__date--within-range;
+}
+
+.pathable-date-picker__calendar__date--within-range:not([disabled]) {
+  color: var(--pathable-color-text);
+}
+
+.pathable-date-picker__calendar__previous-year {
+  @extend .usa-date-picker__calendar__previous-year;
+}
+
+.pathable-date-picker__calendar__previous-month {
+  @extend .usa-date-picker__calendar__previous-month;
+}
+
+.pathable-date-picker__calendar__next-year {
+  @extend .usa-date-picker__calendar__next-year;
+}
+
+.pathable-date-picker__calendar__next-month {
+  @extend .usa-date-picker__calendar__next-month;
+}
+
+.pathable-date-picker__calendar__month-selection {
+  @extend .usa-date-picker__calendar__month-selection;
+}
+
+.pathable-date-picker__calendar__year-selection {
+  @extend .usa-date-picker__calendar__year-selection;
+}
+
+.pathable-date-picker__calendar__month-picker {
+  @extend .usa-date-picker__calendar__month-picker;
+}
+
+.pathable-date-picker__calendar__month {
+  @extend .usa-date-picker__calendar__month;
+}
+
+.pathable-date-picker__calendar__month--focused {
+  @extend .usa-date-picker__calendar__month--focused;
+}
+
+.pathable-date-picker__calendar__month--selected {
+  @extend .usa-date-picker__calendar__month--selected;
+}
+
+.pathable-date-picker__calendar__year-picker {
+  @extend .usa-date-picker__calendar__year-picker;
+}
+
+.pathable-date-picker__calendar__previous-year-chunk {
+  @extend .usa-date-picker__calendar__previous-year-chunk;
+}
+
+.pathable-date-picker__calendar__next-year-chunk {
+  @extend .usa-date-picker__calendar__next-year-chunk;
+}
+
+.pathable-date-picker__calendar__year {
+  @extend .usa-date-picker__calendar__year;
+}
+
+.pathable-date-picker__calendar__year--focused {
+  @extend .usa-date-picker__calendar__year--focused;
+}
+
+.pathable-date-picker__calendar__year--selected {
+  @extend .usa-date-picker__calendar__year--selected;
+}

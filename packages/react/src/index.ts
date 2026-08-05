@@ -18,6 +18,12 @@ export { ErrorMessage } from './components/ErrorMessage/ErrorMessage.js'
 export type { ErrorMessageProps } from './components/ErrorMessage/ErrorMessage.js'
 export { Checkbox } from './components/Checkbox/Checkbox.js'
 export type { CheckboxProps } from './components/Checkbox/Checkbox.js'
+export { DateRangePicker } from './components/DateRangePicker/DateRangePicker.js'
+export type {
+  DateRangeInputProps,
+  DateRangePickerProps,
+  DateRangeValue,
+} from './components/DateRangePicker/DateRangePicker.js'
 export { ComboBox } from './components/ComboBox/ComboBox.js'
 export type {
   ComboBoxInputProps,

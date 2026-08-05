@@ -22,6 +22,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  DateRangePicker,
   ComboBox,
   ErrorMessage,
   Checkbox,
@@ -655,6 +656,30 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### DateRangePicker Props
+
+`DateRangePicker` is a two-field date range control with React-owned calendar behavior. It renders visible `MM/DD/YYYY` inputs and hidden ISO `YYYY-MM-DD` form values. It does not require a separate `@pathable/styles/js` import.
+
+| Prop             | Type                              | Default  | Description                                                                                            |
+| ---------------- | --------------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| startLabel       | `React.ReactNode`                 | required | Accessible label for the start-date input.                                                             |
+| endLabel         | `React.ReactNode`                 | required | Accessible label for the end-date input.                                                               |
+| startInputProps  | `DateRangeInputProps`             | `{}`     | Native start input attributes, including `id`, `name`, `required`, `disabled`, and `aria-describedby`. |
+| endInputProps    | `DateRangeInputProps`             | `{}`     | Native end input attributes, including `id`, `name`, `required`, `disabled`, and `aria-describedby`.   |
+| startDate        | `string`                          | —        | Controlled ISO start date, such as `2026-03-10`.                                                       |
+| endDate          | `string`                          | —        | Controlled ISO end date, such as `2026-03-18`.                                                         |
+| defaultStartDate | `string`                          | `''`     | Initial uncontrolled ISO start date.                                                                   |
+| defaultEndDate   | `string`                          | `''`     | Initial uncontrolled ISO end date.                                                                     |
+| minDate          | `string`                          | —        | Inclusive ISO lower bound for both dates.                                                              |
+| maxDate          | `string`                          | —        | Inclusive ISO upper bound for both dates.                                                              |
+| defaultMonth     | `string`                          | —        | Initial ISO month/date used when no selected date determines the calendar month.                       |
+| onRangeChange    | `(value: DateRangeValue) => void` | —        | Called with ISO start and end values after calendar or valid text selection.                           |
+| className        | `string`                          | —        | Additional root class names appended after the PathAble date-range classes.                            |
+
+#### DateRangePicker Accessibility
+
+The visible fields use native labels, `aria-invalid` for invalid or out-of-range text, and calendar buttons with accessible date names. Use `startInputProps.aria-describedby` and `endInputProps.aria-describedby` for hints or validation messages. Calendar selection supports arrow keys, Home/End, PageUp/PageDown, Shift+PageUp/Shift+PageDown, and Escape. The hidden inputs submit ISO values under the supplied `name` attributes.
 
 ### ComboBox Props
 
