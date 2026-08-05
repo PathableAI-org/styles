@@ -1,6 +1,7 @@
 export default {
   framework: '@storybook/react-vite',
   stories: ['../../../packages/react/src/stories/**/*.stories.tsx'],
+  staticDirs: [{ from: '../../../packages/styles/dist/img', to: '/img' }],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   docs: { autodocs: true },
   async viteFinal(config, { configType }) {

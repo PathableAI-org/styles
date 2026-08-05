@@ -448,21 +448,25 @@ function Calendar({
   const renderDateView = () => (
     <>
       <div className={ROW_CLASS}>
-        <button
-          type="button"
-          className={PREVIOUS_YEAR_CLASS}
-          aria-label="Navigate back one year"
-          disabled={isYearDisabled(month.getUTCFullYear() - 1)}
-          onClick={() => changeMonth(addYears(month, -1))}
-        />
-        <button
-          type="button"
-          className={PREVIOUS_MONTH_CLASS}
-          aria-label="Navigate back one month"
-          disabled={isMonthDisabled(addMonths(month, -1))}
-          onClick={() => changeMonth(addMonths(month, -1))}
-        />
-        <span className={MONTH_LABEL_CLASS}>
+        <div className={`${CELL_CLASS} ${CENTER_CELL_CLASS}`}>
+          <button
+            type="button"
+            className={PREVIOUS_YEAR_CLASS}
+            aria-label="Navigate back one year"
+            disabled={isYearDisabled(month.getUTCFullYear() - 1)}
+            onClick={() => changeMonth(addYears(month, -1))}
+          />
+        </div>
+        <div className={`${CELL_CLASS} ${CENTER_CELL_CLASS}`}>
+          <button
+            type="button"
+            className={PREVIOUS_MONTH_CLASS}
+            aria-label="Navigate back one month"
+            disabled={isMonthDisabled(addMonths(month, -1))}
+            onClick={() => changeMonth(addMonths(month, -1))}
+          />
+        </div>
+        <div className={`${CELL_CLASS} ${MONTH_LABEL_CLASS}`}>
           <button
             type="button"
             className={MONTH_SELECTION_CLASS}
@@ -479,21 +483,25 @@ function Calendar({
           >
             {month.getUTCFullYear()}
           </button>
-        </span>
-        <button
-          type="button"
-          className={NEXT_MONTH_CLASS}
-          aria-label="Navigate forward one month"
-          disabled={isMonthDisabled(addMonths(month, 1))}
-          onClick={() => changeMonth(addMonths(month, 1))}
-        />
-        <button
-          type="button"
-          className={NEXT_YEAR_CLASS}
-          aria-label="Navigate forward one year"
-          disabled={isYearDisabled(month.getUTCFullYear() + 1)}
-          onClick={() => changeMonth(addYears(month, 1))}
-        />
+        </div>
+        <div className={`${CELL_CLASS} ${CENTER_CELL_CLASS}`}>
+          <button
+            type="button"
+            className={NEXT_MONTH_CLASS}
+            aria-label="Navigate forward one month"
+            disabled={isMonthDisabled(addMonths(month, 1))}
+            onClick={() => changeMonth(addMonths(month, 1))}
+          />
+        </div>
+        <div className={`${CELL_CLASS} ${CENTER_CELL_CLASS}`}>
+          <button
+            type="button"
+            className={NEXT_YEAR_CLASS}
+            aria-label="Navigate forward one year"
+            disabled={isYearDisabled(month.getUTCFullYear() + 1)}
+            onClick={() => changeMonth(addYears(month, 1))}
+          />
+        </div>
       </div>
       <table className={TABLE_CLASS}>
         <thead>
@@ -548,10 +556,7 @@ function Calendar({
                   .join(' ')
 
                 return (
-                  <td
-                    key={value}
-                    className={`${CELL_CLASS} ${CENTER_CELL_CLASS}`}
-                  >
+                  <td key={value}>
                     <button
                       ref={isActive ? activeButtonRef : undefined}
                       type="button"
