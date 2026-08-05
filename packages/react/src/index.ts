@@ -52,6 +52,13 @@ export type {
 } from './components/Header/Header.js'
 export { Input } from './components/Input/Input.js'
 export type { InputProps } from './components/Input/Input.js'
+export { IconButton } from './components/IconButton/IconButton.js'
+export type {
+  IconButtonAppearance,
+  IconButtonProps,
+  IconButtonShape,
+  IconButtonSize,
+} from './components/IconButton/IconButton.js'
 export { Label } from './components/Label/Label.js'
 export type { LabelProps } from './components/Label/Label.js'
 export { Loading } from './components/Loading/Loading.js'

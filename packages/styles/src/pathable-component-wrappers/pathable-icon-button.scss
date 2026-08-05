@@ -136,6 +136,13 @@
   color: var(--pathable-color-surface);
 }
 
+// The default blue focus ring does not contrast sufficiently with the brand
+// surface. Scope a contrasting token to these buttons while preserving the
+// shared forced-colors override.
+.pathable-surface--brand .pathable-icon-button {
+  --pathable-color-focus-ring: var(--pathable-color-text);
+}
+
 // --- Accessibility media queries ---
 
 @media (forced-colors: active) {
