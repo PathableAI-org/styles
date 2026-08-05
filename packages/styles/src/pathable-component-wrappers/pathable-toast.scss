@@ -84,13 +84,13 @@
 // Toast action link/button slot
 .pathable-toast__action {
   flex-shrink: 0;
-  color: var(--pathable-color-link);
+  color: var(--pathable-color-text);
   font-size: var(--pathable-font-size-body-sm);
   font-weight: var(--pathable-font-weight-bold);
   text-decoration: underline;
 
   &:hover {
-    color: var(--pathable-color-accent);
+    color: var(--pathable-color-text-muted);
   }
 }
 
