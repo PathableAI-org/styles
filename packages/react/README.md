@@ -36,6 +36,7 @@ import {
   Link,
   List,
   MediaBlock,
+  Loading,
   Modal,
   PageError,
   Pagination,
@@ -189,6 +190,8 @@ function App() {
         <Skeleton variant="text-body" />
         <Skeleton variant="text-body" />
       </Skeleton>
+
+      <Loading text="Loading participant records..." />
 
       <Card
         presentation="media"
@@ -517,6 +520,24 @@ Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and e
 #### PageError Accessibility
 
 Use `compact` for an inline error panel and `full-page` for a page-level failure. Provide a clear heading and explanation, use a retry action when recovery is possible, and provide navigation when the user needs another destination. Icons are decorative and hidden from assistive technology.
+
+### Loading Props
+
+`Loading` renders the existing `pathable-loading` inline indicator with a decorative spinner and optional status text. It does not own loading state, timers, requests, or the replacement content shown when work completes.
+
+| Prop      | Type                               | Default     | Description                                                                                        |
+| --------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| size      | `'default' \| 'large'`             | `'default'` | Selects the 24px default indicator or the 40px `pathable-loading--large` treatment.                |
+| text      | `React.ReactNode`                  | —           | Optional visible status text rendered with `pathable-loading__text`.                               |
+| className | `string`                           | —           | Additional class names appended after the PathAble loading classes.                                |
+| role      | `string`                           | —           | Optional consumer-selected role, such as `status` for spinner-only usage.                          |
+| aria-live | `'off' \| 'polite' \| 'assertive'` | `'polite'`  | Live-region politeness for status text; consumers may override it for their announcement strategy. |
+
+Any other standard `<div>` attributes, including `id`, `aria-label`, `data-*`, and event handlers, are forwarded to the root element. The spinner always receives `aria-hidden="true"`.
+
+#### Loading Accessibility
+
+Use concise `text` that identifies what is loading. The root defaults to `aria-live="polite"`; use a consumer-provided `role="status"` and accessible `aria-label` when rendering spinner-only loading. Consumers remain responsible for showing and replacing the indicator, choosing announcement timing, and providing any page-level loading status required by the application.
 
 ### Button Props
 
@@ -899,6 +920,7 @@ The required `children` content supplies the visible label through a native `<la
 | Alert         | Status messages with info, success, warning, error, and emergency severity levels. Optional slim variant.                           | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | Banner        | Official site banner with disclosure toggle. Controlled/uncontrolled expanded state.                                                | `summary`, `children`, `expanded`, `defaultExpanded`, `onExpandedChange`                         |
 | Modal         | Dialog rendered via portal with focus trapping, Escape close, scroll locking, and focus restoration.                                | `open`, `onClose`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
+| Loading       | Inline CSS-only loading indicator with optional status text and a large page-level treatment.                                       | `size`, `text`, `role`, `aria-live`                                                              |
 | ProcessList   | Ordered list of process steps with headings and body content.                                                                       | `items` (array of `{id, heading, body}`)                                                         |
 | SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                     | `status`, `slim`, `heading`, `children`, `role`                                                  |
 | StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
