@@ -44,6 +44,7 @@ import {
   Pagination,
   ProcessList,
   Radio,
+  Range,
   Search,
   SiteAlert,
   Skeleton,
@@ -389,6 +390,22 @@ function App() {
               type="number"
               min={1}
               max={40}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label htmlFor="session-duration">Session duration</Label>
+            <Hint id="session-duration-hint">
+              Choose a duration from 15 to 120 minutes.
+            </Hint>
+            <Range
+              id="session-duration"
+              name="sessionDuration"
+              min={15}
+              max={120}
+              step={15}
+              defaultValue={45}
+              aria-describedby="session-duration-hint"
             />
           </FormGroup>
         </Fieldset>
@@ -956,6 +973,28 @@ The wrapper exposes the default radio contract only. The `pathable-radio--tile` 
 #### Radio Accessibility
 
 The required `children` content supplies the visible label through a native `<label>`. Use `aria-describedby` to associate external hints or validation messages, and use `aria-invalid` when application validation identifies an error. Native arrow-key navigation is preserved for radios that share a `name`.
+
+### Range Props
+
+`Range` wraps a native `<input type="range">` with the `pathable-range` class. It forwards supported native input attributes while fixing `type` to `range`; it does not render a label, displayed value, tick labels, or application state.
+
+| Prop           | Type               | Default | Description                                                                  |
+| -------------- | ------------------ | ------- | ---------------------------------------------------------------------------- |
+| min            | `number \| string` | `0`     | Inclusive native lower bound.                                                |
+| max            | `number \| string` | `100`   | Inclusive native upper bound.                                                |
+| step           | `number \| string` | `1`     | Native increment between valid values.                                       |
+| value          | `string \| number` | —       | Controlled current value; use with `onChange`.                               |
+| defaultValue   | `string \| number` | —       | Initial value for an uncontrolled slider.                                    |
+| disabled       | `boolean`          | —       | Prevents pointer and keyboard interaction and excludes the field from forms. |
+| name           | `string`           | —       | Native form field name.                                                      |
+| className      | `string`           | —       | Additional class names appended after `pathable-range`.                      |
+| aria-valuetext | `string`           | —       | Human-readable value when the numeric value alone is insufficient.           |
+
+Any other supported native range input attributes, including `id`, `form`, `list`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying input. The wrapper does not clamp, normalize, format, or announce values; those behaviors remain native or consumer-owned.
+
+#### Range Accessibility
+
+Provide a visible associated `Label` whenever possible, and use `aria-describedby` to connect supporting hints. Show the current value when users need precision. Use `aria-valuetext` for units or qualitative meanings, such as `45 minutes` or `moderate`, while keeping the numeric `value`, `min`, `max`, and `step` coherent. Avoid repeating the same value through both `aria-describedby` and `aria-valuetext`. Native arrow keys and Home/End behavior are preserved.
 
 ### Checkbox Props
 
