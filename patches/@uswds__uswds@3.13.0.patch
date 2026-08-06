@@ -212,6 +212,17 @@ index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb9
  const VISIBLE_CLASS = "is-visible";
  const HIDDEN_CLASS = "is-hidden";
  
+diff --git a/packages/usa-range/src/index.js b/packages/usa-range/src/index.js
+--- a/packages/usa-range/src/index.js
++++ b/packages/usa-range/src/index.js
+@@ -6,4 +6,4 @@ const { prefix: PREFIX } = require("../../uswds-core/src/js/config");
+ const RANGE_CLASSNAME = `${PREFIX}-range`;
+-const RANGE = `.${RANGE_CLASSNAME}`;
+-const RANGE_WRAPPER_CLASS = `${RANGE}__wrapper`;
+-const VALUE_WRAPPER_CLASS = `${RANGE}__value`;
++const RANGE = `.${RANGE_CLASSNAME}:not([data-react-owned])`;
++const RANGE_WRAPPER_CLASS = `.${RANGE_CLASSNAME}__wrapper`;
++const VALUE_WRAPPER_CLASS = `.${RANGE_CLASSNAME}__value`;
 diff --git a/packages/usa-validation/src/index.js b/packages/usa-validation/src/index.js
 index 5c1bd48532558f825f5e86d3e02dbbe477f73a52..1d5136d0baa2ab6ef81aa95467c3ccc47bb7e9ce 100755
 --- a/packages/usa-validation/src/index.js

@@ -17,5 +17,12 @@ export function Range({
 }: RangeProps & { readonly children?: never }) {
   const combinedClassName = [BASE_CLASS, className].filter(Boolean).join(' ')
 
-  return <input {...rest} type="range" className={combinedClassName} />
+  return (
+    <input
+      {...rest}
+      type="range"
+      className={combinedClassName}
+      data-react-owned="true"
+    />
+  )
 }

@@ -248,27 +248,35 @@ export const KeyboardInteraction: Story = {
 
 function ControlledRangeStory() {
   const [value, setValue] = useState(3)
+  const [visible, setVisible] = useState(true)
 
   return (
     <div>
-      <Label htmlFor="controlled-range">Support intensity</Label>
-      <Range
-        id="controlled-range"
-        name="supportIntensity"
-        min={1}
-        max={5}
-        value={value}
-        onChange={(event) => setValue(event.currentTarget.valueAsNumber)}
-        aria-valuetext={`${value} of 5`}
-      />
-      <output id="controlled-range-value" htmlFor="controlled-range">
-        {value} of 5
-      </output>
+      {visible && (
+        <>
+          <Label htmlFor="controlled-range">Support intensity</Label>
+          <Range
+            id="controlled-range"
+            name="supportIntensity"
+            min={1}
+            max={5}
+            value={value}
+            onChange={(event) => setValue(event.currentTarget.valueAsNumber)}
+            aria-valuetext={`Support level ${value} of 5`}
+          />
+          <output id="controlled-range-value" htmlFor="controlled-range">
+            {value} of 5
+          </output>
+        </>
+      )}
       <Button
         type="button"
         onClick={() => setValue((current) => Math.min(current + 1, 5))}
       >
         Increase intensity
+      </Button>
+      <Button type="button" onClick={() => setVisible((current) => !current)}>
+        {visible ? 'Hide slider' : 'Show slider'}
       </Button>
     </div>
   )
@@ -276,15 +284,78 @@ function ControlledRangeStory() {
 
 export const Controlled: Story = {
   render: () => <ControlledRangeStory />,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const slider = canvas.getByRole('slider', { name: 'Support intensity' })
 
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Increase intensity' }),
+    await step(
+      'remains owned by React and preserves accessible text',
+      async () => {
+        await expect(slider).toHaveAttribute('data-react-owned', 'true')
+        await expect(slider).toHaveAttribute(
+          'aria-valuetext',
+          'Support level 3 of 5',
+        )
+        await expect(
+          canvasElement.querySelector('.pathable-range__wrapper'),
+        ).toBeNull()
+        await expect(
+          canvasElement.querySelector('.pathable-range__value'),
+        ).toBeNull()
+      },
     )
-    await expect(slider).toHaveValue('4')
-    await expect(canvas.getByText('4 of 5')).toBeVisible()
+
+    await step(
+      'ignores global enhancement during controlled updates',
+      async () => {
+        slider.dispatchEvent(new Event('change', { bubbles: true }))
+        await expect(slider).toHaveAttribute(
+          'aria-valuetext',
+          'Support level 3 of 5',
+        )
+
+        await userEvent.click(
+          canvas.getByRole('button', { name: 'Increase intensity' }),
+        )
+        await expect(slider).toHaveValue('4')
+        await expect(slider).toHaveAttribute(
+          'aria-valuetext',
+          'Support level 4 of 5',
+        )
+        await expect(canvas.getByText('4 of 5')).toBeVisible()
+
+        slider.dispatchEvent(new Event('change', { bubbles: true }))
+        await expect(slider).toHaveAttribute(
+          'aria-valuetext',
+          'Support level 4 of 5',
+        )
+      },
+    )
+
+    await step(
+      'unmounts and remounts without external DOM ownership',
+      async () => {
+        await userEvent.click(
+          canvas.getByRole('button', { name: 'Hide slider' }),
+        )
+        await expect(canvas.queryByRole('slider')).not.toBeInTheDocument()
+
+        await userEvent.click(
+          canvas.getByRole('button', { name: 'Show slider' }),
+        )
+        const remountedSlider = canvas.getByRole('slider', {
+          name: 'Support intensity',
+        })
+        await expect(remountedSlider).toHaveValue('4')
+        await expect(remountedSlider).toHaveAttribute(
+          'data-react-owned',
+          'true',
+        )
+        await expect(
+          canvasElement.querySelector('.pathable-range__wrapper'),
+        ).toBeNull()
+      },
+    )
   },
 }
 
