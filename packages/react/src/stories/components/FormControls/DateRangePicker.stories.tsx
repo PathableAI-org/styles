@@ -207,6 +207,76 @@ export const CalendarSelection: Story = {
   },
 }
 
+export const CalendarLayout: Story = {
+  args: {
+    minDate: '2025-01-01',
+    maxDate: '2027-12-31',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('renders dates in seven table columns', async () => {
+      await userEvent.click(
+        canvas.getByRole('button', { name: 'Toggle start date calendar' }),
+      )
+
+      const calendar = canvas.getByRole('application', {
+        name: 'Start date calendar',
+      })
+      const rows = within(calendar).getAllByRole('row')
+      const cells = within(rows[1]).getAllByRole('cell')
+      const firstCellTop = cells[0].getBoundingClientRect().top
+
+      await expect(cells).toHaveLength(7)
+      for (const cell of cells) {
+        await expect(window.getComputedStyle(cell).display).toBe('table-cell')
+        await expect(cell.getBoundingClientRect().top).toBeCloseTo(
+          firstCellTop,
+          1,
+        )
+      }
+    })
+
+    await step('aligns navigation controls in five cells', async () => {
+      const controls = [
+        canvas.getByRole('button', { name: 'Navigate back one year' }),
+        canvas.getByRole('button', { name: 'Navigate back one month' }),
+        canvas.getByRole('button', { name: 'March. Select month' }),
+        canvas.getByRole('button', { name: 'Navigate forward one month' }),
+        canvas.getByRole('button', { name: 'Navigate forward one year' }),
+      ]
+      const cells = controls.map((control) => control.parentElement)
+      const row = cells[0]?.parentElement
+
+      await expect(new Set(cells).size).toBe(5)
+      for (const [index, cell] of cells.entries()) {
+        await expect(cell).not.toBeNull()
+        await expect(cell?.parentElement).toBe(row)
+        await expect(
+          window.getComputedStyle(cell as HTMLElement).flexGrow,
+        ).toBe(index === 2 ? '4' : '1')
+      }
+    })
+
+    await step('serves calendar navigation icons', async () => {
+      const previousMonth = canvas.getByRole('button', {
+        name: 'Navigate back one month',
+      })
+      const backgroundImage =
+        window.getComputedStyle(previousMonth).backgroundImage
+      const iconUrl = backgroundImage.match(/url\(["']?([^"')]+)["']?\)/)?.[1]
+
+      await expect(iconUrl).toBeDefined()
+      const response = await fetch(iconUrl as string)
+      await expect(response.ok).toBe(true)
+      await expect(response.headers.get('content-type')).toContain(
+        'image/svg+xml',
+      )
+      await expect(await response.text()).toContain('<svg')
+    })
+  },
+}
+
 export const CalendarReplacesDraft: Story = {
   args: {
     onRangeChange: fn(),
