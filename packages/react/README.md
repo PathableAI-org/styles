@@ -32,6 +32,7 @@ import {
   Fieldset,
   Header,
   Hint,
+  IconButton,
   Input,
   Label,
   Link,
@@ -236,6 +237,19 @@ function App() {
         <Button variant="save">Save</Button>
         <Button variant="continue">Continue</Button>
       </ButtonGroup>
+
+      <IconButton appearance="subtle" aria-label="Close participant panel">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </IconButton>
 
       <Search
         size="big"
@@ -559,6 +573,26 @@ Use concise `text` that identifies what is loading. The root defaults to `aria-l
 | children  | `React.ReactNode`                                                                                                                                                                     | —           | Button content                 |
 | disabled  | `boolean`                                                                                                                                                                             | —           | Whether the button is disabled |
 | className | `string`                                                                                                                                                                              | —           | Additional CSS class names     |
+
+### IconButton Props
+
+`IconButton` is an icon-only native button for compact actions such as closing a panel, opening a menu, or saving a record. It applies the existing `pathable-icon-button` visual contract and does not require separate CSS or JavaScript imports.
+
+| Prop       | Type                                                             | Default     | Description                                                                                        |
+| ---------- | ---------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| appearance | `'bare' \| 'subtle' \| 'bordered' \| 'inverse' \| 'destructive'` | `'bare'`    | Visual treatment for the action and surrounding surface.                                           |
+| size       | `'compact' \| 'default' \| 'large'`                              | `'default'` | Selects the 32px, 44px, or 52px target. Compact is intended only for dense desktop interfaces.     |
+| shape      | `'square' \| 'circle'`                                           | `'square'`  | Selects the default rounded-square target or circular treatment.                                   |
+| children   | `React.ReactNode`                                                | required    | Consumer-provided icon content, normally a decorative SVG.                                         |
+| className  | `string`                                                         | —           | Additional class names appended after the PathAble IconButton classes.                             |
+| disabled   | `boolean`                                                        | —           | Uses the native disabled state, preventing pointer and keyboard activation.                        |
+| type       | `'button' \| 'submit' \| 'reset'`                                | `'button'`  | Native button type. Explicitly use `submit` only when the icon action submits its containing form. |
+
+Any other standard button attributes, including event handlers, `aria-*`, `data-*`, and form attributes, are forwarded to the native `<button>`.
+
+#### IconButton Accessibility
+
+Every IconButton requires an accessible name through `aria-label` or `aria-labelledby`; the icon alone is not a sufficient name. Decorative SVG children should use `aria-hidden="true"` and `focusable="false"`. Use the 44px default size for normal application and touch interfaces. Reserve the 32px compact size for constrained desktop toolbars. IconButton does not add a tooltip, loading behavior, or toggle state; consumers may forward native `aria-pressed` when appropriate, but persistent toggle styling is outside this component's contract.
 
 ### ButtonGroup Props
 

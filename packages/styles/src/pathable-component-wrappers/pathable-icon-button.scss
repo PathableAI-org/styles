@@ -92,17 +92,9 @@
   background: transparent;
 }
 
-.pathable-icon-button--bare:hover {
-  background: var(--pathable-color-bg);
-}
-
 // Subtle: light background fill
 .pathable-icon-button--subtle {
   background: var(--pathable-color-bg);
-}
-
-.pathable-icon-button--subtle:hover {
-  background: var(--pathable-color-border);
 }
 
 // Bordered: transparent with visible border
@@ -111,19 +103,10 @@
   border: 1px solid var(--pathable-color-border);
 }
 
-.pathable-icon-button--bordered:hover {
-  border-color: var(--pathable-color-text);
-}
-
 // Inverse: dark background for use on dark surfaces
 .pathable-icon-button--inverse {
   background: var(--pathable-color-text);
   color: var(--pathable-color-surface);
-}
-
-.pathable-icon-button--inverse:hover {
-  opacity: 0.9;
-  background: var(--pathable-color-text);
 }
 
 // Destructive: danger signaling
@@ -131,9 +114,52 @@
   color: var(--pathable-color-danger);
 }
 
-.pathable-icon-button--destructive:hover {
-  background: var(--pathable-color-danger);
-  color: var(--pathable-color-surface);
+.pathable-icon-button:not(:disabled):not([aria-disabled='true']) {
+  &.pathable-icon-button--bare:hover {
+    background: var(--pathable-color-bg);
+  }
+
+  &.pathable-icon-button--subtle:hover {
+    background: var(--pathable-color-border);
+  }
+
+  &.pathable-icon-button--bordered:hover {
+    border-color: var(--pathable-color-text);
+  }
+
+  &.pathable-icon-button--inverse:hover {
+    opacity: 0.9;
+    background: var(--pathable-color-text);
+  }
+
+  &.pathable-icon-button--destructive:hover {
+    background: var(--pathable-color-danger);
+    color: var(--pathable-color-surface);
+  }
+}
+
+.pathable-icon-button:disabled,
+.pathable-icon-button[aria-disabled='true'] {
+  color: var(--pathable-color-text);
+}
+
+// The default blue focus ring does not contrast sufficiently with the brand
+// surface. Let the nearest surface set an IconButton-specific color so nested
+// inverse and brand surfaces do not leak focus context into one another.
+.pathable-surface--brand {
+  --pathable-icon-button-focus-ring: var(--pathable-color-text);
+}
+
+.pathable-surface--inverse {
+  --pathable-icon-button-focus-ring: var(--pathable-color-focus-ring);
+}
+
+.pathable-icon-button:focus-visible,
+.pathable-icon-button:focus-within {
+  outline-color: var(
+    --pathable-icon-button-focus-ring,
+    var(--pathable-color-focus-ring)
+  );
 }
 
 // --- Accessibility media queries ---
