@@ -1,6 +1,6 @@
 import { Modal } from '../../../components/Modal/Modal'
 import type { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within, expect, fn } from 'storybook/test'
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test'
 import { LONG_CONTENT } from './fixtures'
 
 const meta = {
@@ -270,6 +270,10 @@ export const EscapeCloses: Story = {
   },
   play: async ({ args, step }) => {
     await step('Escape key calls onClose', async () => {
+      const closeButton = within(document.body).getByRole('button', {
+        name: 'Close modal',
+      })
+      await waitFor(() => expect(closeButton).toHaveFocus())
       await userEvent.keyboard('{Escape}')
       await expect(args.onClose).toHaveBeenCalledTimes(1)
     })
