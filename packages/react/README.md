@@ -577,7 +577,7 @@ Use concise `text` that identifies what is loading. The root defaults to `aria-l
 | children    | `React.ReactNode` | —             | Consumer-provided SVG shapes such as `path`, `circle`, or `g`.                                      |
 | viewBox     | `string`          | `'0 0 24 24'` | Native SVG coordinate system.                                                                       |
 | aria-hidden | `boolean`         | `true`        | Excludes decorative icons from the accessibility tree. Explicitly set `false` for meaningful icons. |
-| focusable   | SVG focus value   | `'false'`     | Prevents a non-interactive icon from becoming an extra keyboard stop.                               |
+| focusable   | `'auto' \| 'true' \| 'false'` | `'false'`     | Prevents a non-interactive icon from becoming an extra keyboard stop.                               |
 | className   | `string`          | —             | Additional class names appended after `pathable-icon`.                                              |
 
 All other native SVG attributes, including `width`, `height`, `fill`, `stroke`, `role`, `aria-*`, `data-*`, and event handlers, are forwarded to the `<svg>` element.
