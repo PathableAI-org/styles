@@ -24,6 +24,11 @@ export type {
   DateRangePickerProps,
   DateRangeValue,
 } from './components/DateRangePicker/DateRangePicker.js'
+export { DatePicker } from './components/DatePicker/DatePicker.js'
+export type {
+  DatePickerInputProps,
+  DatePickerProps,
+} from './components/DatePicker/DatePicker.js'
 export { ComboBox } from './components/ComboBox/ComboBox.js'
 export type {
   ComboBoxInputProps,
