@@ -572,13 +572,13 @@ Use concise `text` that identifies what is loading. The root defaults to `aria-l
 
 `Icon` is a thin native SVG wrapper that applies `pathable-icon` while leaving artwork, dimensions, and visual presentation consumer-owned. It does not provide a named icon registry, interactions, tooltips, or application-specific meaning.
 
-| Prop        | Type              | Default       | Description                                                                                         |
-| ----------- | ----------------- | ------------- | --------------------------------------------------------------------------------------------------- |
-| children    | `React.ReactNode` | —             | Consumer-provided SVG shapes such as `path`, `circle`, or `g`.                                      |
-| viewBox     | `string`          | `'0 0 24 24'` | Native SVG coordinate system.                                                                       |
-| aria-hidden | `boolean`         | `true`        | Excludes decorative icons from the accessibility tree. Explicitly set `false` for meaningful icons. |
+| Prop        | Type                          | Default       | Description                                                                                         |
+| ----------- | ----------------------------- | ------------- | --------------------------------------------------------------------------------------------------- |
+| children    | `React.ReactNode`             | —             | Consumer-provided SVG shapes such as `path`, `circle`, or `g`.                                      |
+| viewBox     | `string`                      | `'0 0 24 24'` | Native SVG coordinate system.                                                                       |
+| aria-hidden | `boolean`                     | `true`        | Excludes decorative icons from the accessibility tree. Explicitly set `false` for meaningful icons. |
 | focusable   | `'auto' \| 'true' \| 'false'` | `'false'`     | Prevents a non-interactive icon from becoming an extra keyboard stop.                               |
-| className   | `string`          | —             | Additional class names appended after `pathable-icon`.                                              |
+| className   | `string`                      | —             | Additional class names appended after `pathable-icon`.                                              |
 
 All other native SVG attributes, including `width`, `height`, `fill`, `stroke`, `role`, `aria-*`, `data-*`, and event handlers, are forwarded to the `<svg>` element.
 
