@@ -31,7 +31,7 @@ export function formatDisplayDate(value?: string) {
 }
 
 export function parseDisplayDate(value: string) {
-  const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
   if (!match) return null
 
   return parseISODate(`${match[3]}-${match[1]}-${match[2]}`)
