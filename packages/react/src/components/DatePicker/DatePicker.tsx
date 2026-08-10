@@ -333,7 +333,11 @@ export function DatePicker({
           form={form}
           value={inputValue}
           disabled={disabled}
+          readOnly={readOnly}
+          placeholder={placeholder ?? 'MM/DD/YYYY'}
           pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
+          role="combobox"
+          aria-labelledby={[labelId, consumerAriaLabelledBy]
             .filter(Boolean)
             .join(' ')}
           aria-haspopup="dialog"

@@ -288,6 +288,23 @@ export const InvalidText: Story = {
   },
 }
 
+export const WhitespaceText: Story = {
+  args: { defaultDate: '', onDateChange: fn() },
+  play: async ({ canvasElement, args }) => {
+    const input = within(canvasElement).getByRole('combobox', {
+      name: 'Appointment date',
+    })
+
+    await userEvent.click(input)
+    await userEvent.type(input, ' 03/10/2026 ')
+    await userEvent.keyboard('{Enter}')
+
+    await expect(input).toHaveValue('03/10/2026')
+    await expect(input).toBeValid()
+    await expect(args.onDateChange).toHaveBeenCalledWith('2026-03-10')
+  },
+}
+
 export const OutOfBoundsText: Story = {
   args: { defaultDate: '', onDateChange: fn() },
   play: async ({ canvasElement, args }) => {

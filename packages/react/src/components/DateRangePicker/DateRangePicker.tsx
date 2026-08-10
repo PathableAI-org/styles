@@ -439,7 +439,7 @@ export function DateRangePicker({
             form={form}
             value={inputValue}
             placeholder={props.placeholder ?? 'MM/DD/YYYY'}
-            pattern="\d{2}/\d{2}/\d{4}"
+            pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
             role="combobox"
             aria-labelledby={inputLabelId}
             aria-haspopup="dialog"
