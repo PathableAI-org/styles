@@ -1,7 +1,6 @@
 {
   "name": "@pathable/react",
   "version": "0.0.0",
-  "private": true,
   "type": "module",
   "files": [
     "dist",
@@ -14,6 +13,9 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
