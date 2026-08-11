@@ -124,6 +124,8 @@ export { ProcessList } from './components/ProcessList/ProcessList.js'
 export type { ProcessItem } from './components/ProcessList/ProcessList.js'
 export { Radio } from './components/Radio/Radio.js'
 export type { RadioProps } from './components/Radio/Radio.js'
+export { Range } from './components/Range/Range.js'
+export type { RangeProps } from './components/Range/Range.js'
 export { SiteAlert } from './components/SiteAlert/SiteAlert.js'
 export { Skeleton } from './components/Skeleton/Skeleton.js'
 export type {
