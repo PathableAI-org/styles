@@ -33,6 +33,7 @@ import {
   Fieldset,
   Header,
   Hint,
+  Icon,
   IconButton,
   Input,
   Label,
@@ -241,16 +242,9 @@ function App() {
       </ButtonGroup>
 
       <IconButton appearance="subtle" aria-label="Close participant panel">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-          focusable="false"
-        >
+        <Icon fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
+        </Icon>
       </IconButton>
 
       <Search
@@ -591,6 +585,24 @@ Use concise `text` that identifies what is loading. The root defaults to `aria-l
 | children  | `React.ReactNode`                                                                                                                                                                     | —           | Button content                 |
 | disabled  | `boolean`                                                                                                                                                                             | —           | Whether the button is disabled |
 | className | `string`                                                                                                                                                                              | —           | Additional CSS class names     |
+
+### Icon Props
+
+`Icon` is a thin native SVG wrapper that applies `pathable-icon` while leaving artwork, dimensions, and visual presentation consumer-owned. It does not provide a named icon registry, interactions, tooltips, or application-specific meaning.
+
+| Prop        | Type                          | Default       | Description                                                                                         |
+| ----------- | ----------------------------- | ------------- | --------------------------------------------------------------------------------------------------- |
+| children    | `React.ReactNode`             | —             | Consumer-provided SVG shapes such as `path`, `circle`, or `g`.                                      |
+| viewBox     | `string`                      | `'0 0 24 24'` | Native SVG coordinate system.                                                                       |
+| aria-hidden | `boolean`                     | `true`        | Excludes decorative icons from the accessibility tree. Explicitly set `false` for meaningful icons. |
+| focusable   | `'auto' \| 'true' \| 'false'` | `'false'`     | Prevents a non-interactive icon from becoming an extra keyboard stop.                               |
+| className   | `string`                      | —             | Additional class names appended after `pathable-icon`.                                              |
+
+All other native SVG attributes, including `width`, `height`, `fill`, `stroke`, `role`, `aria-*`, `data-*`, and event handlers, are forwarded to the `<svg>` element.
+
+#### Icon Accessibility
+
+Icons are decorative by default. When an icon communicates information that is not available in adjacent text, set `aria-hidden={false}`, `role="img"`, and provide an accessible name with `aria-label` or `aria-labelledby`. Icon is not interactive; place it inside a labelled Button or IconButton when it represents an action.
 
 ### IconButton Props
 

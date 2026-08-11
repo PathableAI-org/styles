@@ -64,6 +64,8 @@ export type {
   IconButtonShape,
   IconButtonSize,
 } from './components/IconButton/IconButton.js'
+export { Icon } from './components/Icon/Icon.js'
+export type { IconProps } from './components/Icon/Icon.js'
 export { Label } from './components/Label/Label.js'
 export type { LabelProps } from './components/Label/Label.js'
 export { Loading } from './components/Loading/Loading.js'
