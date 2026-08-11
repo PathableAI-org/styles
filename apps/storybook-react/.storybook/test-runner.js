@@ -10,7 +10,7 @@ const config = {
     // – WorkflowWithStatus, LongContent, AsStatusIndicators:
     //   The .pathable-card__status element has insufficient color contrast
     //   against the card background — a pre-existing design token issue in
-    //   @pathable/styles. Tracked for future fix.
+    //   @pathableai/styles. Tracked for future fix.
     // – Alert/Error: color contrast violation from pre-existing design
     //   tokens in the error alert background color.
     const skipA11yStoryIds = new Set([

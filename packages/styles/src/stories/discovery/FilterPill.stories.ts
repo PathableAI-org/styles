@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Each pill uses `.pathable-filter-pill` with a label and a dismiss button with `aria-label`.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Each pill uses `.pathable-filter-pill` with a label and a dismiss button with `aria-label`.',
       },
     },
   },

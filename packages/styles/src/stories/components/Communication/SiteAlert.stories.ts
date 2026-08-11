@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only in this package. Dismiss behavior may be provided by external JS.\n\n**Consumers must**: Import `@pathable/styles` CSS.\n\n**CSS markup**: Uses `.pathable-site-alert`, `.pathable-site-alert--info`, `.pathable-site-alert--emergency`, `.pathable-site-alert--slim`. The `--warning` variant is NOT implemented. No `__body`, `__heading`, or `__text` sub-element classes exist — all content uses semantic HTML without absent class names.\n\n**No dismissal built in**: This component does not include dismissal behavior by default. If dismissal is needed, consumers must implement it via external JavaScript.',
+          '**Interaction Model**: CSS-only in this package. Dismiss behavior may be provided by external JS.\n\n**Consumers must**: Import `@pathableai/styles` CSS.\n\n**CSS markup**: Uses `.pathable-site-alert`, `.pathable-site-alert--info`, `.pathable-site-alert--emergency`, `.pathable-site-alert--slim`. The `--warning` variant is NOT implemented. No `__body`, `__heading`, or `__text` sub-element classes exist — all content uses semantic HTML without absent class names.\n\n**No dismissal built in**: This component does not include dismissal behavior by default. If dismissal is needed, consumers must implement it via external JavaScript.',
       },
     },
   },

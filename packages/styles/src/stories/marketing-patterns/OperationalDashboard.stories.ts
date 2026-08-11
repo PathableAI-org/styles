@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes responsive app shell, dashboard header, KPI cards, activity list, schedule section, responsive table, toast notification, loading skeletons, empty state, and mobile bottom navigation from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for internal tools or operations status views. Optional patterns include schedule items, toasts, and activity lists. See the dashboard pattern documentation for detailed usage.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. This page composes responsive app shell, dashboard header, KPI cards, activity list, schedule section, responsive table, toast notification, loading skeletons, empty state, and mobile bottom navigation from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for internal tools or operations status views. Optional patterns include schedule items, toasts, and activity lists. See the dashboard pattern documentation for detailed usage.',
       },
     },
   },

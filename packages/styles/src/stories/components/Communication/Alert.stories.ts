@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\n**CSS markup**: Requires `.pathable-alert`, `.pathable-alert__body`. Do not use `pathable-alert__heading` or `pathable-alert__text` — only `pathable-alert__body` is implemented. Headings and paragraphs within the body receive alert-specific color theming but use semantic HTML elements, not custom class names.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\n**CSS markup**: Requires `.pathable-alert`, `.pathable-alert__body`. Do not use `pathable-alert__heading` or `pathable-alert__text` — only `pathable-alert__body` is implemented. Headings and paragraphs within the body receive alert-specific color theming but use semantic HTML elements, not custom class names.',
       },
     },
   },

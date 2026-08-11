@@ -4,7 +4,7 @@ Use these rules when creating or editing PathAble UI, documentation, prototypes,
 
 ## Required Source Of Truth
 
-Agents MUST use the tokens and rules from `@pathable/styles`.
+Agents MUST use the tokens and rules from `@pathableai/styles`.
 
 Agents MUST prefer semantic tokens over hardcoded color or font values.
 
@@ -213,7 +213,7 @@ Most typography CSS custom properties are emitted in two namespaces: `--pathable
 
 ### Font File Distribution
 
-Font files (`.woff2`) are bundled with the `@pathable/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script. The fonts are published in the `fonts/` directory and referenced by the compiled CSS at `../fonts/...` relative to `dist/styles.css`.
+Font files (`.woff2`) are bundled with the `@pathableai/styles` npm package. They are automatically copied from [Fontsource](https://fontsource.org/) npm packages at build time via the `scripts/copy-fonts.mjs` script. The fonts are published in the `fonts/` directory and referenced by the compiled CSS at `../fonts/...` relative to `dist/styles.css`.
 
 Consuming projects do not need to manually place font files — they are distributed automatically with the package.
 

@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nEnd-to-end page composition using all layout primitives and surface variants together. Demonstrates that all primitives compose gracefully into a complete page.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nEnd-to-end page composition using all layout primitives and surface variants together. Demonstrates that all primitives compose gracefully into a complete page.',
       },
     },
   },

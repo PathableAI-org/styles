@@ -199,7 +199,7 @@ High-contrast themes should prioritize readability and WCAG contrast over subtle
 
 ## Utility Classes
 
-The `@pathable/styles` package generates `.pathable-*` CSS utility classes. See `packages/styles/AGENTS.md` for the complete utility module reference.
+The `@pathableai/styles` package generates `.pathable-*` CSS utility classes. See `packages/styles/AGENTS.md` for the complete utility module reference.
 
 ### Common Utility Class Examples
 

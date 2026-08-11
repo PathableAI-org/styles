@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — composition example\n\n**Consumers must**: Import `@pathable/styles` CSS. This story composes the dashboard header, KPI grid, and activity list into a cohesive dashboard overview page, demonstrating how the patterns work together.',
+          '**Interaction Model**: CSS-only — composition example\n\n**Consumers must**: Import `@pathableai/styles` CSS. This story composes the dashboard header, KPI grid, and activity list into a cohesive dashboard overview page, demonstrating how the patterns work together.',
       },
     },
   },

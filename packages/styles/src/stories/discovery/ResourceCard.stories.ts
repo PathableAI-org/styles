@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Each card uses `.pathable-resource-card` with layout modifier and optional interactive/has-action/no-image modifiers.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Each card uses `.pathable-resource-card` with layout modifier and optional interactive/has-action/no-image modifiers.',
       },
     },
   },

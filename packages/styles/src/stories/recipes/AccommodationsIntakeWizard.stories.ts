@@ -7,7 +7,7 @@ export default {
         story:
           '**Interaction Model**: CSS-only. Form inputs and step navigation are static in this demonstration. ' +
           'Consumers must add JavaScript for step progression, form validation, draft saving, and final submission.\n\n' +
-          '**Consumers must**: Import `@pathable/styles` CSS. This recipe composes a multi-step accommodations intake wizard with a step indicator, ' +
+          '**Consumers must**: Import `@pathableai/styles` CSS. This recipe composes a multi-step accommodations intake wizard with a step indicator, ' +
           'participant record header, form panels with contextual help, validation summary, save-status indicator, and navigation actions from existing public CSS classes.\n\n' +
           '**Accessibility notes**: The step indicator uses `<ol>` with `--completed` and `--current` modifier classes. ' +
           'Each step is a landmark-free panel with a visible heading. Form controls use `<label>` associations and `<fieldset>` with `<legend>` for checkbox groups. ' +

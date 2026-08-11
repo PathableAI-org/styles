@@ -1,15 +1,15 @@
-# @pathable/react
+# @pathableai/react
 
-React components for the PathAble design system, wrapping `@pathable/styles` with idiomatic React components.
+React components for the PathAble design system, wrapping `@pathableai/styles` with idiomatic React components.
 
 ## Installation
 
 ```bash
 # In a pnpm workspace
-pnpm add @pathable/react
+pnpm add @pathableai/react
 ```
 
-No separate installation of `@pathable/styles` is required — styles are included automatically as a dependency.
+No separate installation of `@pathableai/styles` is required — styles are included automatically as a dependency.
 
 ## Usage
 
@@ -60,7 +60,7 @@ import {
   Toast,
   ToastRegion,
   Textarea,
-} from '@pathable/react'
+} from '@pathableai/react'
 
 function App() {
   return (
@@ -427,12 +427,12 @@ function App() {
 }
 ```
 
-The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathable/react`; they do not need to import `@pathable/styles` separately in application code.
+The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathableai/react`; they do not need to import `@pathableai/styles` separately in application code.
 
-Header's mobile navigation uses the USWDS JavaScript distributed by `@pathable/styles`. Import it once at the application boundary; do not import it in individual components:
+Header's mobile navigation uses the USWDS JavaScript distributed by `@pathableai/styles`. Import it once at the application boundary; do not import it in individual components:
 
 ```tsx
-import '@pathable/styles/js'
+import '@pathableai/styles/js'
 ```
 
 > **Navigation policy**: The `external` Link presentation changes only the visual treatment (adds `pathable-link--external`). Consumers remain responsible for `href`, `target`, `rel`, download behavior, and any routing logic.
@@ -649,7 +649,7 @@ Each `HeaderNavItem` requires a stable `id`, `content`, `href`, and accepts opti
 
 #### Header Accessibility And JavaScript
 
-Import `@pathable/styles/js` once at the application boundary to enable USWDS mobile menu opening, focus movement to the close button, Escape handling, and focus restoration. The wrapper deliberately has no `open` prop or internal open state, preventing competing React and USWDS state owners. Without JavaScript, the semantic header, labeled navigation landmark, brand link, and navigation links remain in the DOM as native elements.
+Import `@pathableai/styles/js` once at the application boundary to enable USWDS mobile menu opening, focus movement to the close button, Escape handling, and focus restoration. The wrapper deliberately has no `open` prop or internal open state, preventing competing React and USWDS state owners. Without JavaScript, the semantic header, labeled navigation landmark, brand link, and navigation links remain in the DOM as native elements.
 
 ### Breadcrumb Props
 
@@ -723,7 +723,7 @@ Use a `<caption>` element or `aria-label` to give the table an accessible name. 
 
 ### DatePicker Props
 
-`DatePicker` is a single-date control with React-owned calendar behavior. It renders a visible `MM/DD/YYYY` input and a hidden ISO `YYYY-MM-DD` form value. It does not require a separate `@pathable/styles/js` import.
+`DatePicker` is a single-date control with React-owned calendar behavior. It renders a visible `MM/DD/YYYY` input and a hidden ISO `YYYY-MM-DD` form value. It does not require a separate `@pathableai/styles/js` import.
 
 ```tsx
 <DatePicker
@@ -765,7 +765,7 @@ DatePicker associates its visible label with the text input, marks invalid or ou
 
 ### DateRangePicker Props
 
-`DateRangePicker` is a two-field date range control with React-owned calendar behavior. It renders visible `MM/DD/YYYY` inputs and hidden ISO `YYYY-MM-DD` form values. It does not require a separate `@pathable/styles/js` import.
+`DateRangePicker` is a two-field date range control with React-owned calendar behavior. It renders visible `MM/DD/YYYY` inputs and hidden ISO `YYYY-MM-DD` form values. It does not require a separate `@pathableai/styles/js` import.
 
 | Prop             | Type                              | Default  | Description                                                                                            |
 | ---------------- | --------------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
@@ -789,7 +789,7 @@ The visible fields use native labels, `aria-invalid` for invalid or out-of-range
 
 ### ComboBox Props
 
-`ComboBox` is a searchable single-choice control. It keeps a visually hidden native `<select>` as the form-value source and renders the searchable input and listbox with React-owned behavior. It does not require a separate `@pathable/styles/js` import.
+`ComboBox` is a searchable single-choice control. It keeps a visually hidden native `<select>` as the form-value source and renders the searchable input and listbox with React-owned behavior. It does not require a separate `@pathableai/styles/js` import.
 
 | Prop             | Type                        | Default  | Description                                                                                            |
 | ---------------- | --------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |

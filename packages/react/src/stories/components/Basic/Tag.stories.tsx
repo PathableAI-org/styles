@@ -154,7 +154,7 @@ export const AccessibilityCheck: Story = {
  *
  *  The status badge (.pathable-card__status) has insufficient color contrast
  *  against the card background — a pre-existing design token issue in
- *  @pathable/styles. Tracked for future fix. */
+ *  @pathableai/styles. Tracked for future fix. */
 export const AsStatusIndicators: Story = {
   tags: ['skip-a11y'],
   render: () => {

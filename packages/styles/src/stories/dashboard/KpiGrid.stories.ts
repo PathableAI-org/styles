@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The KPI grid uses `.pathable-kpi-grid` with `.pathable-kpi-card` children. Trends use `data-trend` attribute (up/down/neutral) and must always include visible text or an icon label in addition to color.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. The KPI grid uses `.pathable-kpi-grid` with `.pathable-kpi-card` children. Trends use `data-trend` attribute (up/down/neutral) and must always include visible text or an icon label in addition to color.',
       },
     },
   },

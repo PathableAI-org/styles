@@ -1,7 +1,7 @@
 # Changesets
 
-Changesets record user-facing changes to `@pathable/styles` and
-`@pathable/react`. Both packages start at `0.0.0` and are versioned
+Changesets record user-facing changes to `@pathableai/styles` and
+`@pathableai/react`. Both packages start at `0.0.0` and are versioned
 independently.
 
 Create a changeset with:

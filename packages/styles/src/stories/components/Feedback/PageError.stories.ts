@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Render the appropriate variant when an error or access restriction occurs at the page level.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Render the appropriate variant when an error or access restriction occurs at the page level.',
       },
     },
   },

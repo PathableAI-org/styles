@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The filter bar uses `.pathable-filter-bar` with child regions. Native select controls inside `.pathable-filter-bar__facets` and `.pathable-filter-bar__sort` should use `.pathable-select`. Active filters use `.pathable-filter-pill` inside the `.pathable-filter-bar__filters` region.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. The filter bar uses `.pathable-filter-bar` with child regions. Native select controls inside `.pathable-filter-bar__facets` and `.pathable-filter-bar__sort` should use `.pathable-select`. Active filters use `.pathable-filter-pill` inside the `.pathable-filter-bar__filters` region.',
       },
     },
   },

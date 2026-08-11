@@ -1,7 +1,7 @@
-// Entry point for @pathable/react
+// Entry point for @pathableai/react
 
 // Import the main styles for the entire library
-import '@pathable/styles/dist/styles.css'
+import '@pathableai/styles/dist/styles.css'
 
 // Export core components
 export { Breadcrumb } from './components/Breadcrumb/Breadcrumb.js'

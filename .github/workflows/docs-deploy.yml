@@ -37,7 +37,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build main docs
         run: pnpm --filter @pathable/storybook build-storybook
@@ -78,7 +78,7 @@ jobs:
 
       - name: Build React docs
         run: |
-          pnpm --filter @pathable/react build
+          pnpm --filter @pathableai/react build
           pnpm --filter @pathable/storybook-react build-storybook
           mkdir -p apps/storybook/storybook-static/react
           cp -r apps/storybook-react/storybook-static/* apps/storybook/storybook-static/react/

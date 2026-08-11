@@ -9,8 +9,8 @@
     "test-storybook": "test-storybook"
   },
   "dependencies": {
-    "@pathable/react": "workspace:*",
-    "@pathable/styles": "workspace:*"
+    "@pathableai/react": "workspace:*",
+    "@pathableai/styles": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.5.0",

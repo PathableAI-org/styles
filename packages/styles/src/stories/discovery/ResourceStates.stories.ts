@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Shows populated, loading, empty, and sparse states for a resource grid. Loading state uses existing `.pathable-skeleton` pattern. Empty state uses existing `.pathable-empty-state` pattern.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Shows populated, loading, empty, and sparse states for a resource grid. Loading state uses existing `.pathable-skeleton` pattern. Empty state uses existing `.pathable-empty-state` pattern.',
       },
     },
   },

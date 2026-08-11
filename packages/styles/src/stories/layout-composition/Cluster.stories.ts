@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nWrapping horizontal layout for grouping related items such as tags, buttons, and controls.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nWrapping horizontal layout for grouping related items such as tags, buttons, and controls.',
       },
     },
   },

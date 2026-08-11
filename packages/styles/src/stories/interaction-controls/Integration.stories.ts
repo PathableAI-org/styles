@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
       },
     },
   },

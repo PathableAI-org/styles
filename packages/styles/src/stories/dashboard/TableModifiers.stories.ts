@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. These table modifier classes extend the existing `.pathable-table` base component. Sortable columns require `aria-sort` attribute. Selected rows require `aria-selected="true"`. Row actions use `.pathable-table__row-actions` within a table with `.pathable-table--has-actions`.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. These table modifier classes extend the existing `.pathable-table` base component. Sortable columns require `aria-sort` attribute. Selected rows require `aria-selected="true"`. Row actions use `.pathable-table__row-actions` within a table with `.pathable-table--has-actions`.',
       },
     },
   },

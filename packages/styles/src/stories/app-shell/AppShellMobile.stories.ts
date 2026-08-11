@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nMobile application shell with compact top bar, scrollable main content, and optional bottom navigation (up to 5 destinations). Shows the mobile viewport variant of the app shell.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nMobile application shell with compact top bar, scrollable main content, and optional bottom navigation (up to 5 destinations). Shows the mobile viewport variant of the app shell.',
       },
     },
   },

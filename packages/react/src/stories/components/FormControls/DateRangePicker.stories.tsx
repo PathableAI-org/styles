@@ -35,7 +35,7 @@ const meta = {
 
 **Underlying elements**: Two labelled visible text inputs, two hidden ISO value inputs, and an accessible calendar dialog rendered with native buttons and table markup.
 
-**Behavior**: React owns the calendar state, range validation, keyboard navigation, focus restoration, and status messaging. A separate \`@pathable/styles/js\` import is not required.`,
+**Behavior**: React owns the calendar state, range validation, keyboard navigation, focus restoration, and status messaging. A separate \`@pathableai/styles/js\` import is not required.`,
       },
     },
   },

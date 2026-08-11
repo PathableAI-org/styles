@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — composition example\n\n**Consumers must**: Import `@pathable/styles` CSS. This story composes the wizard page layout, step indicator, action footer, and validation summary into a cohesive multi-step form wizard, demonstrating how the patterns work together.\n\n**Sensitive data**: This composition is designed for staff workflows that may display participant or program information. Minimize displayed data to only what is necessary for the current task. Avoid placing sensitive data in decorative examples.',
+          '**Interaction Model**: CSS-only — composition example\n\n**Consumers must**: Import `@pathableai/styles` CSS. This story composes the wizard page layout, step indicator, action footer, and validation summary into a cohesive multi-step form wizard, demonstrating how the patterns work together.\n\n**Sensitive data**: This composition is designed for staff workflows that may display participant or program information. Minimize displayed data to only what is necessary for the current task. Avoid placing sensitive data in decorative examples.',
       },
     },
   },

@@ -1,7 +1,7 @@
 # Story Authoring Checklist
 
 Use this checklist when creating or updating Storybook stories for
-`@pathable/styles`. All items should be satisfied before opening a PR.
+`@pathableai/styles`. All items should be satisfied before opening a PR.
 
 ## Token Rules
 

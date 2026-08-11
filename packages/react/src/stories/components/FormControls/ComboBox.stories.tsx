@@ -43,7 +43,7 @@ const meta = {
 
 **When not to use**: Do not use ComboBox for free-form values, multiple selections, or a short list that users should compare at a glance. Use Input, Select, Radio, or Checkbox as appropriate.
 
-**Behavior**: The React wrapper owns filtering, list visibility, active-option state, keyboard navigation, selection, reset-on-blur, and status announcements. It does not require a separate \`@pathable/styles/js\` import.
+**Behavior**: The React wrapper owns filtering, list visibility, active-option state, keyboard navigation, selection, reset-on-blur, and status announcements. It does not require a separate \`@pathableai/styles/js\` import.
 
 **Accessibility**: The visible input has the \`combobox\` role and controls a labelled \`listbox\`. Arrow keys move through options, Enter selects, Escape resets, and the native select retains the submitted value. Use \`inputProps.aria-describedby\` for hints or validation messages.`,
       },

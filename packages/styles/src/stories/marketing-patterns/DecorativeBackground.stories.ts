@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — modifier classes\n\n**Consumers must**: Import `@pathable/styles` CSS. Apply `.pathable-decorative-bg` and a variant modifier to any section or container element. Decorative layers render via CSS `::before` pseudo-elements and are naturally excluded from the accessibility tree.\n\n**Contrast**: Default opacity of decorative layers (15%) preserves text and control contrast. Consumers can adjust via `--pathable-decorative-bg-opacity`.',
+          '**Interaction Model**: CSS-only — modifier classes\n\n**Consumers must**: Import `@pathableai/styles` CSS. Apply `.pathable-decorative-bg` and a variant modifier to any section or container element. Decorative layers render via CSS `::before` pseudo-elements and are naturally excluded from the accessibility tree.\n\n**Contrast**: Default opacity of decorative layers (15%) preserves text and control contrast. Consumers can adjust via `--pathable-decorative-bg-opacity`.',
       },
     },
   },

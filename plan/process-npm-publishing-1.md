@@ -1,5 +1,5 @@
 ---
-goal: Enable versioned npm publishing for @pathable/styles and @pathable/react
+goal: Enable versioned npm publishing for @pathableai/styles and @pathableai/react
 version: 1.0
 date_created: 2026-08-11
 last_updated: 2026-08-11
@@ -17,7 +17,7 @@ tags:
 
 ![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
 
-This plan converts `@pathable/styles` and `@pathable/react` from private
+This plan converts `@pathableai/styles` and `@pathableai/react` from private
 workspace packages into independently versioned public npm packages managed by
 Changesets. It includes package-contract hardening, a reviewable release-PR
 loop, protected npm publishing through trusted publishing, and first-release
@@ -25,21 +25,21 @@ bootstrap steps.
 
 The repository is not currently publish-ready. The audit on 2026-08-11 found:
 
-| Area               | Current state                                                                                                          | Required state                                                                               |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Changesets         | No `.changeset/` directory, CLI dependency, scripts, or workflow                                                       | Changesets 3 CLI and Changesets Action 2 release flow                                        |
-| `@pathable/styles` | `private: true`; no `version`; `npm pack --dry-run` fails with `Invalid package, must have name and version`           | Public package with a valid baseline version and complete metadata                           |
-| `@pathable/react`  | `private: true`; placeholder `0.0.0`; no publish metadata                                                              | Public package with a valid baseline version and complete metadata                           |
-| npm registry       | Both package lookups return npm `E404`                                                                                 | First public versions published under the npm `@pathable` organization                       |
-| Runtime            | Workflows use Node 23, which is EOL; Changesets 3 does not support Node 23                                             | Node 24 LTS for local policy and all workflows                                               |
-| Styles artifact    | Build outputs are generated and ignored; no package validation script                                                  | Reproducible build plus manifest and tarball checks                                          |
-| React artifact     | The current Vite output extracts `dist/index.css` without exporting or importing it and bundles React JSX runtime code | Published JS imports the styles dependency and leaves all React runtime entrypoints external |
-| Automation         | PR CI validates React packaging but there is no release-PR or publish workflow                                         | Separate version and publish capabilities with least-privilege permissions                   |
-| Authentication     | No repository-owned npm publishing contract                                                                            | One-time bootstrap publish followed by npm trusted publishing with OIDC                      |
+| Area                 | Current state                                                                                                          | Required state                                                                               |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Changesets           | No `.changeset/` directory, CLI dependency, scripts, or workflow                                                       | Changesets 3 CLI and Changesets Action 2 release flow                                        |
+| `@pathableai/styles` | `private: true`; no `version`; `npm pack --dry-run` fails with `Invalid package, must have name and version`           | Public package with a valid baseline version and complete metadata                           |
+| `@pathableai/react`  | `private: true`; placeholder `0.0.0`; no publish metadata                                                              | Public package with a valid baseline version and complete metadata                           |
+| npm registry         | Both package lookups return npm `E404`                                                                                 | First public versions published under the npm `@pathableai` organization                     |
+| Runtime              | Workflows use Node 23, which is EOL; Changesets 3 does not support Node 23                                             | Node 24 LTS for local policy and all workflows                                               |
+| Styles artifact      | Build outputs are generated and ignored; no package validation script                                                  | Reproducible build plus manifest and tarball checks                                          |
+| React artifact       | The current Vite output extracts `dist/index.css` without exporting or importing it and bundles React JSX runtime code | Published JS imports the styles dependency and leaves all React runtime entrypoints external |
+| Automation           | PR CI validates React packaging but there is no release-PR or publish workflow                                         | Separate version and publish capabilities with least-privilege permissions                   |
+| Authentication       | No repository-owned npm publishing contract                                                                            | One-time bootstrap publish followed by npm trusted publishing with OIDC                      |
 
 ## 1. Requirements & Constraints
 
-- **REQ-001**: Publish exactly `@pathable/styles` and `@pathable/react`; keep
+- **REQ-001**: Publish exactly `@pathableai/styles` and `@pathableai/react`; keep
   `@pathable/storybook`, `@pathable/storybook-react`, and the workspace root
   private and non-publishable.
 - **REQ-002**: Initialize both publishable package manifests at version
@@ -47,9 +47,9 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
   Changesets setup with an empty changeset so preparation does not create an
   unintended version bump.
 - **REQ-003**: Version the two packages independently. Keep `fixed` and
-  `linked` empty because `@pathable/styles` owns the styling contract while
-  `@pathable/react` is a dependent package with its own API release cadence.
-- **REQ-004**: Declare `@pathable/styles` from `@pathable/react` as
+  `linked` empty because `@pathableai/styles` owns the styling contract while
+  `@pathableai/react` is a dependent package with its own API release cadence.
+- **REQ-004**: Declare `@pathableai/styles` from `@pathableai/react` as
   `workspace:^` so pnpm rewrites the packed dependency to a compatible caret
   range, such as `^0.0.0` for the initial release.
 - **REQ-005**: Generate and review package changelogs through Changesets. Every
@@ -67,12 +67,12 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - **REQ-010**: The release build MUST start from a clean checkout, install with
   `pnpm install --frozen-lockfile`, rebuild all publishable output, validate both
   manifests, inspect both tarballs, and smoke-test installation before publish.
-- **REQ-011**: Importing `@pathable/react` MUST retain the documented automatic
-  import of `@pathable/styles/dist/styles.css`; consumers MUST NOT need to find
+- **REQ-011**: Importing `@pathableai/react` MUST retain the documented automatic
+  import of `@pathableai/styles/dist/styles.css`; consumers MUST NOT need to find
   an unexported `dist/index.css` artifact.
 - **REQ-012**: The React package MUST externalize `react`, `react-dom`, and all
   of their runtime subpaths so peer dependencies are not bundled.
-- **REQ-013**: `@pathable/styles` MUST publish compiled CSS, source SCSS,
+- **REQ-013**: `@pathableai/styles` MUST publish compiled CSS, source SCSS,
   JavaScript helpers, required USWDS icons, fonts, and package documentation;
   generated source maps MAY be included only after their source paths are
   reviewed for portability.
@@ -91,7 +91,7 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
   `22ccf9aa43179fe9e27dc62e575971d28cce197c`.
 - **SEC-005**: Use a protected GitHub environment named `npm` for the publish
   job. Configure required reviewers before enabling unattended publication.
-- **CON-001**: The npm `@pathable` organization, package ownership, billing
+- **CON-001**: The npm `@pathableai` organization, package ownership, billing
   policy, and maintainer access are external prerequisites and cannot be
   configured from this repository.
 - **CON-002**: npm trusted publishers are configured per package. The first
@@ -124,11 +124,11 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 | TASK-001 | In root `package.json`, add `engines.node: ">=24 <25"`; add `@changesets/cli: "^3.0.0"` to `devDependencies`; add scripts `changeset`, `version-packages`, `release:build`, `release:check`, and `release`. Define `release` as the ordered execution of package build, package checks, and `changeset publish`.                                                                                             |           |      |
 | TASK-002 | Update `pnpm-lock.yaml` with pnpm 11.11.0 after TASK-001. Run the install under Node 24 and keep the exact root `packageManager` value unchanged.                                                                                                                                                                                                                                                            |           |      |
 | TASK-003 | In `packages/styles/package.json`, add `version: "0.0.0"`, remove `private`, and add `description`, `license: "Unlicense"`, `repository` with URL and `directory: "packages/styles"`, `homepage`, `bugs`, `keywords`, `sideEffects: ["*.css", "dist/*.css"]`, and `publishConfig: { "access": "public" }`. Keep the existing files and exports contract unless tarball validation proves a missing artifact. |           |      |
-| TASK-004 | In `packages/react/package.json`, remove `private`; retain baseline `version: "0.0.0"`; add the same publication metadata with `directory: "packages/react"`; add `sideEffects` for the transitive CSS import; add `publishConfig.access: "public"`; change `@pathable/styles` to `workspace:^`.                                                                                                             |           |      |
-| TASK-005 | In `packages/react/vite.config.ts`, replace the exact external list with logic that externalizes `react`, `react-dom`, `react/*`, `react-dom/*`, `@pathable/styles`, and `@pathable/styles/*`. Confirm rebuilt `dist/index.js` retains `import '@pathable/styles/dist/styles.css'`, contains no bundled React license/runtime block, and does not produce an orphaned `dist/index.css`.                      |           |      |
+| TASK-004 | In `packages/react/package.json`, remove `private`; retain baseline `version: "0.0.0"`; add the same publication metadata with `directory: "packages/react"`; add `sideEffects` for the transitive CSS import; add `publishConfig.access: "public"`; change `@pathableai/styles` to `workspace:^`.                                                                                                           |           |      |
+| TASK-005 | In `packages/react/vite.config.ts`, replace the exact external list with logic that externalizes `react`, `react-dom`, `react/*`, `react-dom/*`, `@pathableai/styles`, and `@pathableai/styles/*`. Confirm rebuilt `dist/index.js` retains `import '@pathableai/styles/dist/styles.css'`, contains no bundled React license/runtime block, and does not produce an orphaned `dist/index.css`.                |           |      |
 | TASK-006 | Add `check:package` and `pack:check` scripts to `packages/styles/package.json` using the existing root `publint` dependency and `pnpm pack --dry-run --json`. Extend the React package check to assert its tarball includes all declarations referenced from `dist/index.d.ts`.                                                                                                                              |           |      |
 | TASK-007 | Repair `packages/styles/README.md` package-facing Markdown: close the installation fence, place SCSS in a separate fenced block, and replace repository-relative links that will not exist in the tarball with public repository URLs or included documents. Review `packages/react/README.md` against the rebuilt styles-loading behavior.                                                                  |           |      |
-| TASK-008 | Add isolated consumer smoke fixtures under `scripts/package-smoke/` that install the two generated tarballs in a temporary directory and verify: styles CSS/JS exports resolve; React ESM and types resolve; React peer dependencies remain external; the packed React manifest contains a registry-safe `@pathable/styles` range with no `workspace:` protocol.                                             |           |      |
+| TASK-008 | Add isolated consumer smoke fixtures under `scripts/package-smoke/` that install the two generated tarballs in a temporary directory and verify: styles CSS/JS exports resolve; React ESM and types resolve; React peer dependencies remain external; the packed React manifest contains a registry-safe `@pathableai/styles` range with no `workspace:` protocol.                                           |           |      |
 
 ### Implementation Phase 2
 
@@ -163,14 +163,14 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - GOAL-004: Bootstrap ownership safely, enable OIDC for both packages, and
   prove the steady-state release loop end to end.
 
-| Task     | Description                                                                                                                                                                                                                                                                                                                                           | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-021 | Before merging the implementation, verify that the npm `@pathable` organization exists, the intended maintainer has publish rights, public scoped packages are allowed, and both registry names still return `E404`. Record the maintainer and recovery owner in private operations documentation, not in repository secrets.                         |           |      |
-| TASK-022 | Merge the implementation and review the release-preparation PR that consumes the empty setup changeset. Require both manifests to remain at `0.0.0`, the React packed dependency to resolve to `@pathable/styles: ^0.0.0`, and all CI checks to pass before publication.                                                                              |           |      |
-| TASK-023 | Bootstrap the first publication with a short-lived granular npm token scoped only to `@pathable/styles` and `@pathable/react`, or an interactive maintainer publish with required npm 2FA. Use the exact tarballs produced and validated from the reviewed release commit; publish styles before React. Revoke the token immediately if one was used. |           |      |
-| TASK-024 | In npm settings for each new package, configure GitHub Actions trusted publishing with organization `PathableAI-org`, repository `styles`, workflow `release.yml`, environment `npm`, and allowed action `npm publish`.                                                                                                                               |           |      |
-| TASK-025 | Trigger a no-op release workflow and verify mode `none` performs no publish. Then merge one controlled patch changeset, review the version PR, and verify OIDC publishes the patch, creates package tags/releases, and reports provenance.                                                                                                            |           |      |
-| TASK-026 | Verify `npm view @pathable/styles version dist-tags repository --json` and `npm view @pathable/react version dist-tags dependencies repository --json`; install both from the public registry in a clean temporary consumer; run the same CSS, ESM, and TypeScript smoke tests; attach results to the release record.                                 |           |      |
+| Task     | Description                                                                                                                                                                                                                                                                                                                                               | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-021 | Before merging the implementation, verify that the npm `@pathableai` organization exists, the intended maintainer has publish rights, public scoped packages are allowed, and both registry names still return `E404`. Record the maintainer and recovery owner in private operations documentation, not in repository secrets.                           |           |      |
+| TASK-022 | Merge the implementation and review the release-preparation PR that consumes the empty setup changeset. Require both manifests to remain at `0.0.0`, the React packed dependency to resolve to `@pathableai/styles: ^0.0.0`, and all CI checks to pass before publication.                                                                                |           |      |
+| TASK-023 | Bootstrap the first publication with a short-lived granular npm token scoped only to `@pathableai/styles` and `@pathableai/react`, or an interactive maintainer publish with required npm 2FA. Use the exact tarballs produced and validated from the reviewed release commit; publish styles before React. Revoke the token immediately if one was used. |           |      |
+| TASK-024 | In npm settings for each new package, configure GitHub Actions trusted publishing with organization `PathableAI-org`, repository `styles`, workflow `release.yml`, environment `npm`, and allowed action `npm publish`.                                                                                                                                   |           |      |
+| TASK-025 | Trigger a no-op release workflow and verify mode `none` performs no publish. Then merge one controlled patch changeset, review the version PR, and verify OIDC publishes the patch, creates package tags/releases, and reports provenance.                                                                                                                |           |      |
+| TASK-026 | Verify `npm view @pathableai/styles version dist-tags repository --json` and `npm view @pathableai/react version dist-tags dependencies repository --json`; install both from the public registry in a clean temporary consumer; run the same CSS, ESM, and TypeScript smoke tests; attach results to the release record.                                 |           |      |
 
 ## 3. Alternatives
 
@@ -184,9 +184,9 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
   Rejected for steady state because npm trusted publishing provides
   workflow-bound short-lived credentials. A tightly scoped temporary token is
   allowed only for the first-package bootstrap.
-- **ALT-004**: Publish `@pathable/react` with bundled CSS and bundled React JSX
+- **ALT-004**: Publish `@pathableai/react` with bundled CSS and bundled React JSX
   runtime. Rejected because it contradicts peer dependency semantics and the
-  documented `@pathable/styles` ownership contract.
+  documented `@pathableai/styles` ownership contract.
 - **ALT-005**: Start at `1.0.0`. Rejected for the initial plan because the
   repository currently labels React `0.0.0` and has not yet established public
   compatibility expectations. Promotion to `1.0.0` requires an explicit API
@@ -203,7 +203,8 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - **DEP-003**: Node 24 LTS and pnpm 11.11.0.
 - **DEP-004**: Existing `publint`, `@arethetypeswrong/cli`, TypeScript, Vite,
   and package build scripts.
-- **DEP-005**: npm `@pathable` organization administration and publisher rights.
+- **DEP-005**: npm `@pathableai` organization administration and publisher
+  rights.
 - **DEP-006**: GitHub repository Actions permission to create pull requests and
   a protected `npm` deployment environment.
 
@@ -239,12 +240,12 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
   clean checkout.
 - **TEST-002**: `pnpm lint`, `pnpm typecheck`, `pnpm build`, and the existing
   Storybook quality gates pass under Node 24.
-- **TEST-003**: `pnpm --filter @pathable/styles pack --dry-run --json` succeeds
+- **TEST-003**: `pnpm --filter @pathableai/styles pack --dry-run --json` succeeds
   and contains every required CSS, JS, icon, font, SCSS, and documentation file.
-- **TEST-004**: `pnpm --filter @pathable/react check:package` and
+- **TEST-004**: `pnpm --filter @pathableai/react check:package` and
   `check:types` pass against a clean rebuilt `dist`.
 - **TEST-005**: React tarball inspection finds no `workspace:` dependency and
-  records a caret range for `@pathable/styles`.
+  records a caret range for `@pathableai/styles`.
 - **TEST-006**: React bundle inspection finds the styles import and no embedded
   React JSX runtime implementation.
 - **TEST-007**: A temporary ESM consumer imports both packages from tarballs and
@@ -291,7 +292,7 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - **ASSUMPTION-002**: `0.0.0` is the desired first public compatibility level.
 - **ASSUMPTION-003**: Package releases should be independent and use the npm
   `latest` dist-tag for stable releases; prerelease channels are out of scope.
-- **ASSUMPTION-004**: The `@pathable` npm organization can authorize
+- **ASSUMPTION-004**: The `@pathableai` npm organization can authorize
   `PathableAI-org/styles` and the `release.yml` workflow for trusted publishing.
 
 ## 8. Related Specifications / Further Reading

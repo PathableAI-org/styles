@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The wayfinder uses `.pathable-wayfinder` with a `.pathable-wayfinder--raised` modifier. Question groups use `<fieldset>` and `<legend>` for accessible grouping. The decorative icon carries `aria-hidden="true"`.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. The wayfinder uses `.pathable-wayfinder` with a `.pathable-wayfinder--raised` modifier. Question groups use `<fieldset>` and `<legend>` for accessible grouping. The decorative icon carries `aria-hidden="true"`.',
       },
     },
   },

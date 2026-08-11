@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — frame variants\n\n**Consumers must**: Import `@pathable/styles` CSS. Wrap an `<img>` in a `<figure>` element with `.pathable-screenshot-frame`. Add an optional `.pathable-screenshot-frame__caption` (`<figcaption>`) and apply a variant modifier.\n\n**Images**: Screenshot images are provided by the consuming application. Placeholder images are used in these examples.',
+          '**Interaction Model**: CSS-only — frame variants\n\n**Consumers must**: Import `@pathableai/styles` CSS. Wrap an `<img>` in a `<figure>` element with `.pathable-screenshot-frame`. Add an optional `.pathable-screenshot-frame__caption` (`<figcaption>`) and apply a variant modifier.\n\n**Images**: Screenshot images are provided by the consuming application. Placeholder images are used in these examples.',
       },
     },
   },

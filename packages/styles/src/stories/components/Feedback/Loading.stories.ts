@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Show/hide the loading indicator in application code. Use `aria-live="polite"` on the container.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Show/hide the loading indicator in application code. Use `aria-live="polite"` on the container.',
       },
     },
   },

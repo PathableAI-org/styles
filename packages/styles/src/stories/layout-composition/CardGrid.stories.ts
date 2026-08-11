@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nAuto-fitting grid suitable for cards and tiles. Columns automatically adjust count based on available width, never producing unreasonably narrow cards (minimum 300px).',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nAuto-fitting grid suitable for cards and tiles. Columns automatically adjust count based on available width, never producing unreasonably narrow cards (minimum 300px).',
       },
     },
   },
