@@ -5,9 +5,9 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (header requires USWDS JavaScript for mobile menu toggle — import `@pathable/styles/js` to enable interactive behavior).\n\n' +
-          '**Consumers must**: Import `@pathable/styles` CSS. This recipe composes site header, hero section with branded product state, feature overview, and footer from existing public CSS classes.\n\n' +
-          '**Accessibility notes**: The header hamburger menu requires `@pathable/styles/js` for keyboard-accessible toggle behavior. ' +
+          '**Interaction Model**: CSS-only (header requires USWDS JavaScript for mobile menu toggle — import `@pathableai/styles/js` to enable interactive behavior).\n\n' +
+          '**Consumers must**: Import `@pathableai/styles` CSS. This recipe composes site header, hero section with branded product state, feature overview, and footer from existing public CSS classes.\n\n' +
+          '**Accessibility notes**: The header hamburger menu requires `@pathableai/styles/js` for keyboard-accessible toggle behavior. ' +
           'All interactive controls use semantic HTML. The hero buttons are `<a>` elements with clear visual prominence — the primary action ("Try it free") has higher contrast than the secondary outline variant. ' +
           'Landmark regions (`<header>`, `<main>`, `<footer>`) provide screen-reader navigation. ' +
           'Screenshot frames use real component-based product states rather than inaccessible placeholder images.\n\n' +

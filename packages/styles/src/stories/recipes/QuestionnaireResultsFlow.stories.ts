@@ -7,7 +7,7 @@ export default {
         story:
           '**Interaction Model**: CSS-only. Radio/checkbox selections are static in this demonstration. ' +
           'Consumers must add JavaScript for step progression, score calculation, and dynamic result rendering.\n\n' +
-          '**Consumers must**: Import `@pathable/styles` CSS. This recipe demonstrates an accessible questionnaire that leads to a scored results view. ' +
+          '**Consumers must**: Import `@pathableai/styles` CSS. This recipe demonstrates an accessible questionnaire that leads to a scored results view. ' +
           'The questionnaire uses `<fieldset>` plus `<legend>` for question groups, labeled radio inputs, and a step indicator for progress.\n\n' +
           '**Accessibility notes**: Every question uses `<fieldset>` with a `<legend>` for screen-reader grouping. ' +
           'Radio inputs have explicit `<label>` associations. The step indicator uses `<ol>` with `aria-current="step"`. ' +

@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The activity list uses `.pathable-activity-list` containing `.pathable-activity-row` children. Groups are separated by `.pathable-activity-list__group-heading`. Status uses `data-status` attribute (completed, in-progress, pending, cancelled) and must always include a visible text label.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. The activity list uses `.pathable-activity-list` containing `.pathable-activity-row` children. Groups are separated by `.pathable-activity-list__group-heading`. Status uses `data-status` attribute (completed, in-progress, pending, cancelled) and must always include a visible text label.',
       },
     },
   },

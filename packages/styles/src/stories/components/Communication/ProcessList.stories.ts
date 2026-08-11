@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\n**CSS markup**: Requires `.pathable-process-list`, `.pathable-process-list__item`, `.pathable-process-list__heading`. Note: `pathable-process-list__body` is NOT implemented — body content is semantic HTML without the absent class.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\n**CSS markup**: Requires `.pathable-process-list`, `.pathable-process-list__item`, `.pathable-process-list__heading`. Note: `pathable-process-list__body` is NOT implemented — body content is semantic HTML without the absent class.',
       },
     },
   },

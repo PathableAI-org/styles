@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Render skeleton placeholders in place of real content while data loads. Container is `aria-hidden="true"`.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Render skeleton placeholders in place of real content while data loads. Container is `aria-hidden="true"`.',
       },
     },
   },

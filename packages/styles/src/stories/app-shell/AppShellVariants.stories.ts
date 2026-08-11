@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nApplication shell variants demonstrating long navigation labels, wide content mode, and fixed sidebar positioning.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nApplication shell variants demonstrating long navigation labels, wide content mode, and fixed sidebar positioning.',
       },
     },
   },

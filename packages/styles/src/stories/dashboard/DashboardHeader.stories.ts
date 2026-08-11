@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The dashboard header uses `.pathable-dashboard-header` with child regions. The page title must be the semantic `h1`.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. The dashboard header uses `.pathable-dashboard-header` with child regions. The page title must be the semantic `h1`.',
       },
     },
   },

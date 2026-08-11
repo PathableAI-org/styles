@@ -1,7 +1,7 @@
 /**
  * copy-icons.mjs
  *
- * Copies USWDS SVG icons from the compiled @pathable/styles package
+ * Copies USWDS SVG icons from the compiled @pathableai/styles package
  * into the Storybook static output so CSS background-image references
  * like url("../img/usa-icons/navigate_next.svg") resolve correctly.
  *
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const appRoot = join(__dirname, '..')
 
-// Source: icons built by @pathable/styles into dist/img/usa-icons/
+// Source: icons built by @pathableai/styles into dist/img/usa-icons/
 const sourceDir = join(
   appRoot,
   '..',
@@ -34,7 +34,9 @@ const destDir = join(appRoot, 'storybook-static', 'img', 'usa-icons')
 
 if (!existsSync(sourceDir)) {
   console.warn(`[copy-icons] WARNING: source directory not found: ${sourceDir}`)
-  console.warn('[copy-icons] Make sure @pathable/styles has been built first.')
+  console.warn(
+    '[copy-icons] Make sure @pathableai/styles has been built first.',
+  )
   process.exit(0)
 }
 

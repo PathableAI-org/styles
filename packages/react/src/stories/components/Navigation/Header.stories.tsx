@@ -36,7 +36,7 @@ const meta = {
 
 **Underlying elements**: A semantic \`<header>\` containing a native brand link, menu and close buttons, and a labeled \`<nav>\` list.
 
-**JavaScript requirement**: Import \`@pathable/styles/js\` once at the application boundary to enable the mobile open, focus, Escape, and close behavior. Header does not import JavaScript or own open state.
+**JavaScript requirement**: Import \`@pathableai/styles/js\` once at the application boundary to enable the mobile open, focus, Escape, and close behavior. Header does not import JavaScript or own open state.
 
 **Static fallback**: Without JavaScript, the brand and navigation remain native links in a labeled navigation landmark. Consumers own destinations, routing, and link callbacks.`,
       },

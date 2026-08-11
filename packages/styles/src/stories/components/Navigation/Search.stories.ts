@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: form submission, keyboard navigation\n**Consumers must**: Import `@pathable/styles/js` to enable interactive behavior.',
+          '**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: form submission, keyboard navigation\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
       },
     },
   },

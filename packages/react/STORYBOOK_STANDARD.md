@@ -1,6 +1,6 @@
 # Storybook Story Standard
 
-This document defines what a complete React component story file must contain in the `@pathable/react` package. Stories under `packages/react/src/stories/` act as executable specifications and development workbenches, not just component galleries.
+This document defines what a complete React component story file must contain in the `@pathableai/react` package. Stories under `packages/react/src/stories/` act as executable specifications and development workbenches, not just component galleries.
 
 ## Required structure
 

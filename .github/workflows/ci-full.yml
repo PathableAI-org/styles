@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -46,7 +46,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -67,7 +67,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -88,7 +88,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -109,7 +109,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -130,14 +130,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Typecheck React
-        run: pnpm --filter @pathable/react typecheck
+        run: pnpm --filter @pathableai/react typecheck
 
   react-build:
     name: React build
@@ -151,17 +151,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build React
-        run: pnpm --filter @pathable/react build
+        run: pnpm --filter @pathableai/react build
 
   react-storybook-build:
     name: React Storybook build
@@ -175,17 +175,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build React
-        run: pnpm --filter @pathable/react build
+        run: pnpm --filter @pathableai/react build
 
       - name: Build React Storybook
         run: pnpm --filter @pathable/storybook-react build-storybook
@@ -203,23 +203,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build React
-        run: pnpm --filter @pathable/react build
+        run: pnpm --filter @pathableai/react build
 
       - name: Validate package
-        run: pnpm --filter @pathable/react check:package
+        run: pnpm --filter @pathableai/react check:package
 
       - name: Validate types
-        run: pnpm --filter @pathable/react check:types
+        run: pnpm --filter @pathableai/react check:types
 
   storybook-build:
     name: Storybook build (HTML + React)
@@ -233,17 +233,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build React package
-        run: pnpm --filter @pathable/react build
+        run: pnpm --filter @pathableai/react build
 
       - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
@@ -263,7 +263,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -273,10 +273,10 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build React package
-        run: pnpm --filter @pathable/react build
+        run: pnpm --filter @pathableai/react build
 
       - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
@@ -340,7 +340,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -372,14 +372,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 23
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build styles
-        run: pnpm --filter @pathable/styles build
+        run: pnpm --filter @pathableai/styles build
 
       - name: Build Storybook
         run: pnpm --filter @pathable/storybook build-storybook

@@ -1,6 +1,6 @@
 {
-  "name": "@pathable/styles",
-  "private": true,
+  "name": "@pathableai/styles",
+  "version": "0.0.0",
   "files": [
     "README.md",
     "BRAND_RULES.md",
@@ -15,6 +15,9 @@
     "./js/init": "./dist/pathable-init.js",
     "./dist/*": "./dist/*",
     "./src/*": "./src/*"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",

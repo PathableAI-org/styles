@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — static overflow by default; opt-in marquee\n\n**Consumers must**: Import `@pathable/styles` CSS. Wrap chips in a `.pathable-chip-rail` container. Each chip is a `.pathable-chip-rail__chip` element.\n\n**Marquee**: Apply the `--marquee` modifier for auto-scrolling. Duplicate chip content for seamless looping and mark the duplicate set with `aria-hidden="true"`.',
+          '**Interaction Model**: CSS-only — static overflow by default; opt-in marquee\n\n**Consumers must**: Import `@pathableai/styles` CSS. Wrap chips in a `.pathable-chip-rail` container. Each chip is a `.pathable-chip-rail__chip` element.\n\n**Marquee**: Apply the `--marquee` modifier for auto-scrolling. Duplicate chip content for seamless looping and mark the duplicate set with `aria-hidden="true"`.',
       },
     },
   },

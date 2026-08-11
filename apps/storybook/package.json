@@ -9,7 +9,7 @@
     "test-storybook": "test-storybook"
   },
   "dependencies": {
-    "@pathable/styles": "workspace:*"
+    "@pathableai/styles": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.4.6",

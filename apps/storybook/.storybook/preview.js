@@ -1,5 +1,5 @@
-import '@pathable/styles/src/index.scss'
-import '@pathable/styles/js'
+import '@pathableai/styles/src/index.scss'
+import '@pathableai/styles/js'
 
 /** @type { import('@storybook/html-vite').Preview } */
 const preview = {

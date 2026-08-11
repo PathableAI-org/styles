@@ -32,7 +32,7 @@ const meta = {
 
 **Underlying elements**: A labelled visible text input, a hidden ISO value input, and a calendar dialog composed from native buttons and table markup.
 
-**Behavior**: React owns text validation, calendar views, date constraints, keyboard navigation, focus restoration, and status messaging. The visible format is \`MM/DD/YYYY\` and the submitted value is ISO \`YYYY-MM-DD\`. A separate \`@pathable/styles/js\` import is not required.`,
+**Behavior**: React owns text validation, calendar views, date constraints, keyboard navigation, focus restoration, and status messaging. The visible format is \`MM/DD/YYYY\` and the submitted value is ISO \`YYYY-MM-DD\`. A separate \`@pathableai/styles/js\` import is not required.`,
       },
     },
   },

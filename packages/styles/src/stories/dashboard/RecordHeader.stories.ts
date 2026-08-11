@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. The record header uses `.pathable-record-header` with child regions. Images should use an `img` tag; for fallback presentation, omit the image or apply `.pathable-record-header--no-image` modifier with an inline SVG icon.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. The record header uses `.pathable-record-header` with child regions. Images should use an `img` tag; for fallback presentation, omit the image or apply `.pathable-record-header--no-image` modifier with an inline SVG icon.',
       },
     },
   },

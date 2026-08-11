@@ -7,7 +7,7 @@ export default {
         story:
           '**Interaction Model**: CSS-only. Table sorting, data loading, and toast dismissal are static in this demonstration. ' +
           'Consumers must add JavaScript for sort, pagination, data fetching, and toast auto-dismiss behavior.\n\n' +
-          '**Consumers must**: Import `@pathable/styles` CSS. This recipe composes an app shell with sidebar navigation, dashboard header, KPI grid, ' +
+          '**Consumers must**: Import `@pathableai/styles` CSS. This recipe composes an app shell with sidebar navigation, dashboard header, KPI grid, ' +
           'activity timeline, schedule, responsive data table, and toast notification from existing public CSS classes.\n\n' +
           '**Accessibility notes**: The table uses `<th scope="col">` for column headers. KPI cards include visible trend labels (not just color or icon). ' +
           'Activity rows use `data-status` with `role="img"` and `aria-label` for status indicators. ' +

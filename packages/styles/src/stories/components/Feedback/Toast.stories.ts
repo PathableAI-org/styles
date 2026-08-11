@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Manage toast visibility, queuing, and auto-dismiss in application code.\n\n**Role convention**: Use `role="status"` for polite notifications and `role="alert"` for urgent time-sensitive messages.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Manage toast visibility, queuing, and auto-dismiss in application code.\n\n**Role convention**: Use `role="status"` for polite notifications and `role="alert"` for urgent time-sensitive messages.',
       },
     },
   },

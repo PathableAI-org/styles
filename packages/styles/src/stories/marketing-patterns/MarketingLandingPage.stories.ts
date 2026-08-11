@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (header requires USWDS JavaScript for mobile menu toggle — import `@pathable/styles/js` to enable interactive behavior)\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes site header, hero, audience row, alternating feature sections, statistic cards, CTA band, and footer from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for public-facing marketing or product landing pages. Optional patterns include decorative backgrounds, screenshot frames, bento grids, chip rails, and text highlights. See the combined pattern documentation for layering guidance.',
+          '**Interaction Model**: CSS-only (header requires USWDS JavaScript for mobile menu toggle — import `@pathableai/styles/js` to enable interactive behavior)\n\n**Consumers must**: Import `@pathableai/styles` CSS. This page composes site header, hero, audience row, alternating feature sections, statistic cards, CTA band, and footer from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for public-facing marketing or product landing pages. Optional patterns include decorative backgrounds, screenshot frames, bento grids, chip rails, and text highlights. See the combined pattern documentation for layering guidance.',
       },
     },
   },

@@ -10,7 +10,7 @@ export default defineConfig({
       fileName: 'index',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@pathable/styles'],
+      external: ['react', 'react-dom', '@pathableai/styles'],
       output: {
         globals: {
           react: 'React',

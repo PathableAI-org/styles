@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (no JavaScript required)\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes participant context, step indicator, objective/prompt, form entry area, save status, validation summary, navigation actions, and completed state from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for guided multi-step processes or form-based workflows. Optional patterns include save status indicators, validation summaries, and record headers. See the structured workflow documentation for detailed usage.',
+          '**Interaction Model**: CSS-only (no JavaScript required)\n\n**Consumers must**: Import `@pathableai/styles` CSS. This page composes participant context, step indicator, objective/prompt, form entry area, save status, validation summary, navigation actions, and completed state from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for guided multi-step processes or form-based workflows. Optional patterns include save status indicators, validation summaries, and record headers. See the structured workflow documentation for detailed usage.',
       },
     },
   },

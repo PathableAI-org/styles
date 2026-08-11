@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — grid layout\n\n**Consumers must**: Import `@pathable/styles` CSS. Use a `.pathable-bento-grid` container with `.pathable-bento-tile` children. Apply a type modifier (`--featured`, `--standard`, `--metric`, `--image`) to each tile.\n\n**Accessibility**: DOM order follows logical reading sequence. CSS Grid `grid-template-areas` handles visual placement. Tab order matches DOM order, not visual position.',
+          '**Interaction Model**: CSS-only — grid layout\n\n**Consumers must**: Import `@pathableai/styles` CSS. Use a `.pathable-bento-grid` container with `.pathable-bento-tile` children. Apply a type modifier (`--featured`, `--standard`, `--metric`, `--image`) to each tile.\n\n**Accessibility**: DOM order follows logical reading sequence. CSS Grid `grid-template-areas` handles visual placement. Tab order matches DOM order, not visual position.',
       },
     },
   },

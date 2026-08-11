@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. No JavaScript required.\n\nSquare and circular icon containers with consistent padding, centering, and semantic token application. Use for decorative icons (with `aria-hidden="true"`) or meaningful status icons (with `role="img"` and `aria-label` on the SVG).',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nSquare and circular icon containers with consistent padding, centering, and semantic token application. Use for decorative icons (with `aria-hidden="true"`) or meaningful status icons (with `role="img"` and `aria-label` on the SVG).',
       },
     },
   },

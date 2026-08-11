@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (no JavaScript required)\n\n**Consumers must**: Import `@pathable/styles` CSS. This page composes search-led hero, guided wayfinder, filter bar, active-filter pills, result count, sorting, resource-card grid, empty-results fallback, and pagination from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for browsable collections of resources with filters and search. Optional patterns include wayfinder guided discovery and empty-state fallbacks. See the discovery pattern documentation for detailed usage.',
+          '**Interaction Model**: CSS-only (no JavaScript required)\n\n**Consumers must**: Import `@pathableai/styles` CSS. This page composes search-led hero, guided wayfinder, filter bar, active-filter pills, result count, sorting, resource-card grid, empty-results fallback, and pagination from existing public CSS classes.\n\n**Which archetype to start from**: Choose this archetype for browsable collections of resources with filters and search. Optional patterns include wayfinder guided discovery and empty-state fallbacks. See the discovery pattern documentation for detailed usage.',
       },
     },
   },

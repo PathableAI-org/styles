@@ -7,7 +7,7 @@ export default {
         story:
           '**Interaction Model**: CSS-only. Filter checkboxes and search input are static in this demonstration. ' +
           'Consumers must add JavaScript for live filtering, pagination, and result count updates.\n\n' +
-          '**Consumers must**: Import `@pathable/styles` CSS. This recipe composes a search-led page with guided wayfinder, filter sidebar, active filters, result cards in a responsive grid, and pagination from existing public CSS classes.\n\n' +
+          '**Consumers must**: Import `@pathableai/styles` CSS. This recipe composes a search-led page with guided wayfinder, filter sidebar, active filters, result cards in a responsive grid, and pagination from existing public CSS classes.\n\n' +
           '**Accessibility notes**: The search input has a visible `<label>` and `role="search"` on the form. ' +
           'Filter checkboxes in the sidebar use semantic `<input type="checkbox">` with visible labels. ' +
           'Active filter pills have dismiss buttons with accessible names (`aria-label`). ' +

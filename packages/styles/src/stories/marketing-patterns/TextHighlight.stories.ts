@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only — inline modifier classes\n\n**Consumers must**: Import `@pathable/styles` CSS. Apply `.pathable-text-highlight` and a variant modifier to a `<span>` or inline element.\n\n**Multi-line support**: Uses `box-decoration-break: clone` so each wrapped line fragment gets the full background treatment.',
+          '**Interaction Model**: CSS-only — inline modifier classes\n\n**Consumers must**: Import `@pathableai/styles` CSS. Apply `.pathable-text-highlight` and a variant modifier to a `<span>` or inline element.\n\n**Multi-line support**: Uses `box-decoration-break: clone` so each wrapped line fragment gets the full background treatment.',
       },
     },
   },

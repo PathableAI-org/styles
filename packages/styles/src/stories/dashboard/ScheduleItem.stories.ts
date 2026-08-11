@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathable/styles` CSS. Each schedule item uses `.pathable-schedule-item` with a status modifier class (--cancelled, --completed, --tentative, --upcoming). Status labels are always visible text — never rely on color alone. Use `.pathable-schedule-list` as the wrapping container.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Each schedule item uses `.pathable-schedule-item` with a status modifier class (--cancelled, --completed, --tentative, --upcoming). Status labels are always visible text — never rely on color alone. Use `.pathable-schedule-list` as the wrapping container.',
       },
     },
   },
