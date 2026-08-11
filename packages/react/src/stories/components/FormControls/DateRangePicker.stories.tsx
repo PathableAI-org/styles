@@ -33,7 +33,7 @@ const meta = {
 
 **When not to use**: Do not use DateRangePicker for a single date, a time-only value, or an unbounded free-form date description. Use DatePicker, a time input, or a text input instead.
 
-**Underlying elements**: Two labelled visible text inputs, two hidden ISO value inputs, and an accessible calendar application rendered with native buttons and table markup.
+**Underlying elements**: Two labelled visible text inputs, two hidden ISO value inputs, and an accessible calendar dialog rendered with native buttons and table markup.
 
 **Behavior**: React owns the calendar state, range validation, keyboard navigation, focus restoration, and status messaging. A separate \`@pathable/styles/js\` import is not required.`,
       },
@@ -111,11 +111,11 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(
-      canvas.getByRole('textbox', { name: 'Start date' }),
+      canvas.getByRole('combobox', { name: 'Start date' }),
     ).toHaveValue('03/10/2026')
-    await expect(canvas.getByRole('textbox', { name: 'End date' })).toHaveValue(
-      '03/18/2026',
-    )
+    await expect(
+      canvas.getByRole('combobox', { name: 'End date' }),
+    ).toHaveValue('03/18/2026')
   },
 }
 
@@ -135,10 +135,10 @@ export const Disabled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(
-      canvas.getByRole('textbox', { name: 'Start date' }),
+      canvas.getByRole('combobox', { name: 'Start date' }),
     ).toBeDisabled()
     await expect(
-      canvas.getByRole('textbox', { name: 'End date' }),
+      canvas.getByRole('combobox', { name: 'End date' }),
     ).toBeDisabled()
     await expect(
       canvas.getByRole('button', { name: 'Toggle start date calendar' }),
@@ -166,10 +166,10 @@ export const Required: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(
-      canvas.getByRole('textbox', { name: 'Start date' }),
+      canvas.getByRole('combobox', { name: 'Start date' }),
     ).toBeRequired()
     await expect(
-      canvas.getByRole('textbox', { name: 'End date' }),
+      canvas.getByRole('combobox', { name: 'End date' }),
     ).toBeRequired()
   },
 }
@@ -180,12 +180,12 @@ export const CalendarSelection: Story = {
   },
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
 
     await step('opens the start calendar', async () => {
       await userEvent.click(start)
       await expect(
-        canvas.getByRole('application', { name: 'Start date calendar' }),
+        canvas.getByRole('dialog', { name: 'Start date calendar' }),
       ).toBeVisible()
     })
 
@@ -220,7 +220,7 @@ export const CalendarLayout: Story = {
         canvas.getByRole('button', { name: 'Toggle start date calendar' }),
       )
 
-      const calendar = canvas.getByRole('application', {
+      const calendar = canvas.getByRole('dialog', {
         name: 'Start date calendar',
       })
       const rows = within(calendar).getAllByRole('row')
@@ -283,8 +283,8 @@ export const CalendarReplacesDraft: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
-    const end = canvas.getByRole('textbox', { name: 'End date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
+    const end = canvas.getByRole('combobox', { name: 'End date' })
 
     await userEvent.click(start)
     await userEvent.clear(start)
@@ -306,7 +306,7 @@ export const CalendarReplacesDraft: Story = {
 export const KeyboardNavigation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
     const toggle = canvas.getByRole('button', {
       name: 'Toggle start date calendar',
     })
@@ -324,7 +324,7 @@ export const KeyboardNavigation: Story = {
 export const RangeConstraints: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const end = canvas.getByRole('textbox', { name: 'End date' })
+    const end = canvas.getByRole('combobox', { name: 'End date' })
 
     await userEvent.click(end)
     await expect(
@@ -343,7 +343,7 @@ export const InvalidText: Story = {
   args: { defaultStartDate: '', defaultEndDate: '' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
 
     await userEvent.click(start)
     await userEvent.clear(start)
@@ -352,7 +352,7 @@ export const InvalidText: Story = {
     await userEvent.keyboard('{Enter}')
 
     await expect(
-      canvas.getByRole('textbox', { name: 'Start date' }),
+      canvas.getByRole('combobox', { name: 'Start date' }),
     ).toHaveAttribute('aria-invalid', 'true')
     await expect(
       canvas.getByText('Please enter a valid date'),
@@ -372,7 +372,7 @@ export const InvalidDraftPreserved: Story = {
   ),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
 
     await userEvent.click(start)
     await userEvent.clear(start)
@@ -380,13 +380,13 @@ export const InvalidDraftPreserved: Story = {
     await userEvent.click(
       canvas.getByRole('button', { name: 'Outside control' }),
     )
-    await userEvent.click(canvas.getByRole('textbox', { name: 'End date' }))
+    await userEvent.click(canvas.getByRole('combobox', { name: 'End date' }))
 
     await expect(start).toHaveValue('13/40/2026')
     await expect(start).toHaveAttribute('aria-invalid', 'true')
     await userEvent.keyboard('{Escape}')
     await expect(start).toHaveAttribute('aria-invalid', 'true')
-    await userEvent.click(canvas.getByRole('textbox', { name: 'End date' }))
+    await userEvent.click(canvas.getByRole('combobox', { name: 'End date' }))
     await userEvent.click(
       canvas.getByRole('button', { name: 'Thursday, March 19, 2026' }),
     )
@@ -404,7 +404,7 @@ export const CalendarViews: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
 
     await userEvent.click(start)
     await userEvent.click(
@@ -454,7 +454,7 @@ export const PickerKeyboardFocus: Story = {
 export const CalendarViewEscape: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
     const toggle = canvas.getByRole('button', {
       name: 'Toggle start date calendar',
     })
@@ -564,7 +564,7 @@ export const ControlledBlur: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
 
     await userEvent.click(start)
     await userEvent.clear(start)
@@ -614,7 +614,7 @@ export const ControlledPropSync: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
 
     await userEvent.click(start)
     await userEvent.clear(start)
@@ -625,9 +625,9 @@ export const ControlledPropSync: Story = {
     )
 
     await expect(start).toHaveValue('04/20/2026')
-    await expect(canvas.getByRole('textbox', { name: 'End date' })).toHaveValue(
-      '04/28/2026',
-    )
+    await expect(
+      canvas.getByRole('combobox', { name: 'End date' }),
+    ).toHaveValue('04/28/2026')
     await expect(
       canvasElement.querySelector('input[name="syncStart"][type="hidden"]'),
     ).toHaveValue('2026-04-20')
@@ -679,8 +679,8 @@ export const DirtyFieldPreserved: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
-    const end = canvas.getByRole('textbox', { name: 'End date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
+    const end = canvas.getByRole('combobox', { name: 'End date' })
 
     await userEvent.click(start)
     await userEvent.clear(start)
@@ -714,7 +714,7 @@ export const NoOpBlur: Story = {
   ),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
     await userEvent.click(start)
     await userEvent.clear(start)
     await userEvent.type(start, '03/10/2026')
@@ -761,7 +761,7 @@ export const CustomAttributes: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const start = canvas.getByRole('textbox', { name: 'Start date' })
+    const start = canvas.getByRole('combobox', { name: 'Start date' })
     const root = start.closest('.pathable-date-range-picker')
 
     await expect(root).toHaveClass('custom-date-range')

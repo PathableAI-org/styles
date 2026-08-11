@@ -22,6 +22,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  DatePicker,
   DateRangePicker,
   ComboBox,
   ErrorMessage,
@@ -707,6 +708,48 @@ Any other standard HTML attributes (e.g., `id`, `aria-label`, `data-testid`) can
 #### Table Accessibility
 
 Use a `<caption>` element or `aria-label` to give the table an accessible name. Use `scope="col"` or `scope="row"` on `<th>` elements to identify header cells.
+
+### DatePicker Props
+
+`DatePicker` is a single-date control with React-owned calendar behavior. It renders a visible `MM/DD/YYYY` input and a hidden ISO `YYYY-MM-DD` form value. It does not require a separate `@pathable/styles/js` import.
+
+```tsx
+<DatePicker
+  label="Coaching appointment"
+  defaultDate="2026-03-10"
+  minDate="2026-03-01"
+  maxDate="2026-03-31"
+  defaultMonth="2026-03-01"
+  inputProps={{
+    id: 'coaching-date',
+    name: 'coachingDate',
+    required: true,
+    'aria-describedby': 'coaching-date-hint',
+  }}
+  onDateChange={(date) => {
+    // The committed date is an ISO YYYY-MM-DD value.
+    console.log(date)
+  }}
+/>
+```
+
+| Prop         | Type                     | Default  | Description                                                                                      |
+| ------------ | ------------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| label        | `React.ReactNode`        | required | Visible accessible label for the date input.                                                     |
+| inputProps   | `DatePickerInputProps`   | `{}`     | Native input attributes, including `id`, `name`, `required`, `disabled`, and `aria-describedby`. |
+| date         | `string`                 | —        | Controlled ISO date, such as `2026-03-10`.                                                       |
+| defaultDate  | `string`                 | `''`     | Initial uncontrolled ISO date.                                                                   |
+| minDate      | `string`                 | —        | Inclusive ISO lower bound.                                                                       |
+| maxDate      | `string`                 | —        | Inclusive ISO upper bound.                                                                       |
+| defaultMonth | `string`                 | —        | Initial ISO month/date used when no selected date determines the calendar month.                 |
+| onDateChange | `(date: string) => void` | —        | Called after a changed, valid text commit, calendar selection, or value clearing.                |
+| className    | `string`                 | —        | Additional root class names appended after the PathAble DatePicker classes.                      |
+
+Use `date` with `onDateChange` for controlled state or `defaultDate` for uncontrolled state. `inputProps.onChange` receives each visible text edit, while `onDateChange` receives only committed ISO values. The supplied `inputProps.name` is applied to the hidden ISO input used for form submission.
+
+#### DatePicker Accessibility
+
+DatePicker associates its visible label with the text input, marks invalid or out-of-range text with `aria-invalid`, and announces validation errors through a polite status region. The calendar supports arrow keys, Home/End, PageUp/PageDown, Shift+PageUp/Shift+PageDown, Enter, Space, and Escape. Calendar selection and Escape restore focus to the input. Use `inputProps.aria-describedby` for persistent format hints and consumer-owned validation messages.
 
 ### DateRangePicker Props
 
