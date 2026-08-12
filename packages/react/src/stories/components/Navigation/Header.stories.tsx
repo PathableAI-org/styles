@@ -228,8 +228,8 @@ export const CustomAttributes: Story = {
       'consumer-header',
     )
     await expect(banner).toHaveAttribute('data-region', 'global-navigation')
-    await expect(link).toHaveClass('usa-nav-link', 'consumer-nav-link')
-    await expect(link).not.toHaveClass('usa-nav__link', 'pathable-nav__link')
+    await expect(link).toHaveClass('usa-nav__link', 'consumer-nav-link')
+    await expect(link).not.toHaveClass('pathable-nav__link')
     await expect(link).toHaveAttribute('target', '_blank')
   },
 }
