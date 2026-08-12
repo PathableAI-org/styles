@@ -1,7 +1,7 @@
 // Entry point for @pathableai/react
 
-// Import the main styles for the entire library
-import '@pathableai/styles/dist/styles.css'
+// Retain the styles package's public CSS entry as a consumer-visible side effect.
+import '@pathableai/styles'
 
 // Export core components
 export { Breadcrumb } from './components/Breadcrumb/Breadcrumb.js'

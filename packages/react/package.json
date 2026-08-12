@@ -1,6 +1,11 @@
 {
   "name": "@pathableai/react",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PathableAI-org/styles.git",
+    "directory": "packages/react"
+  },
   "type": "module",
   "files": [
     "dist",

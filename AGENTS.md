@@ -2,7 +2,7 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/032-react-link-tag-wrappers/plan.md
+at specs/034-next-consumer-compat/plan.md
 
 ## Storybook conventions
 

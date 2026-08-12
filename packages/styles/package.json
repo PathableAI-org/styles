@@ -1,11 +1,17 @@
 {
   "name": "@pathableai/styles",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PathableAI-org/styles.git",
+    "directory": "packages/styles"
+  },
   "files": [
     "README.md",
     "BRAND_RULES.md",
     "AGENTS.md",
     "dist",
+    "img",
     "src",
     "fonts"
   ],
@@ -20,7 +26,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "build": "node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs",
     "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "lint:styles": "stylelint 'src/**/*.scss'",
     "lint:tokens": "node scripts/lint-tokens.mjs"
