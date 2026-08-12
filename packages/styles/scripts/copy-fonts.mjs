@@ -12,7 +12,15 @@
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
-import { join, dirname, normalize, resolve, sep } from 'node:path'
+import {
+  dirname,
+  isAbsolute,
+  join,
+  normalize,
+  relative,
+  resolve,
+  sep,
+} from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -88,10 +96,14 @@ for (const match of css.matchAll(urlPattern)) {
   if (!url.startsWith('../fonts/roboto-mono/')) continue
 
   const fontPath = normalize(url.slice('../fonts/'.length))
+  const sourcePath = resolve(uswdsFontRoot, fontPath)
+  const sourceRelativePath = relative(uswdsFontRoot, sourcePath)
   if (
-    fontPath === '..' ||
-    fontPath.startsWith(`..${sep}`) ||
-    resolve(uswdsFontRoot, fontPath) === uswdsFontRoot
+    isAbsolute(fontPath) ||
+    sourceRelativePath === '' ||
+    sourceRelativePath === '..' ||
+    sourceRelativePath.startsWith(`..${sep}`) ||
+    isAbsolute(sourceRelativePath)
   ) {
     throw new Error(`[copy-fonts] Unsafe stylesheet font path: ${url}`)
   }

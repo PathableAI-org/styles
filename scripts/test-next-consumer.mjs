@@ -35,6 +35,13 @@ function run(command, args, options = {}) {
     stdio: options.capture ? 'pipe' : 'inherit',
   })
 
+  if (result.error) {
+    throw new Error(
+      `Failed to start command: ${command} ${args.join(' ')}\n${result.error.message}`,
+      { cause: result.error },
+    )
+  }
+
   if (result.status !== 0) {
     const output = [result.stdout, result.stderr].filter(Boolean).join('\n')
     throw new Error(

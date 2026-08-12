@@ -7,7 +7,15 @@
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
-import { dirname, join, normalize, relative, resolve, sep } from 'node:path'
+import {
+  dirname,
+  isAbsolute,
+  join,
+  normalize,
+  relative,
+  resolve,
+  sep,
+} from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -39,10 +47,14 @@ for (const match of css.matchAll(urlPattern)) {
   if (!url.startsWith('../img/')) continue
 
   const imagePath = normalize(url.slice('../img/'.length))
+  const sourcePath = resolve(sourceRoot, imagePath)
+  const sourceRelativePath = relative(sourceRoot, sourcePath)
   if (
-    imagePath === '..' ||
-    imagePath.startsWith(`..${sep}`) ||
-    resolve(sourceRoot, imagePath) === sourceRoot
+    isAbsolute(imagePath) ||
+    sourceRelativePath === '' ||
+    sourceRelativePath === '..' ||
+    sourceRelativePath.startsWith(`..${sep}`) ||
+    isAbsolute(sourceRelativePath)
   ) {
     throw new Error(`[copy-icons] Unsafe stylesheet image path: ${url}`)
   }
