@@ -152,6 +152,7 @@ export const KeyboardToggle: Story = {
     await step('Space collapses the banner content', async () => {
       await userEvent.keyboard(' ')
       await expect(button).toHaveAttribute('aria-expanded', 'false')
+      await expect(button).toHaveFocus()
       await expect(
         canvas.getByText('Keyboard-revealed content.'),
       ).not.toBeVisible()
