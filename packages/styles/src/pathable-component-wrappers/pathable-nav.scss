@@ -2,8 +2,8 @@
 //
 // Wraps usa-nav component as pathable-nav.
 // USWDS dependencies: uswds-fonts
-// JS-driven: Yes — nav JS selects .usa-nav, .usa-nav__link
-// Requires .usa-* on DOM: Yes — keep .usa-nav for JS to find elements
+// JS-driven: Yes — patched header JS selects .pathable-nav and child controls
+// Requires .usa-* on DOM: Yes — keep .usa-* classes for USWDS nested styles
 
 @use 'uswds-core' as *;
 
@@ -27,6 +27,10 @@
 
 .pathable-nav__secondary-links {
   @extend .usa-nav__secondary-links;
+}
+
+.pathable-js-mobile-nav--active {
+  @extend .usa-js-mobile-nav--active;
 }
 
 // No standalone .usa-nav__primary-item, .usa-nav__link classes exist in USWDS

@@ -633,7 +633,7 @@ Every IconButton requires an accessible name through `aria-label` or `aria-label
 
 ### Header Props
 
-`Header` renders the basic USWDS header hierarchy with both `pathable-*` styling classes and the required `usa-*` compatibility classes. It does not own mobile-menu state or import the USWDS JavaScript bundle.
+`Header` renders the one-level basic USWDS header hierarchy and mobile overlay with both `pathable-*` runtime classes and the required `usa-*` styling compatibility classes. It does not support dropdowns or megamenus, own mobile-menu state, or import the USWDS JavaScript bundle.
 
 | Prop            | Type                       | Default                | Description                                                   |
 | --------------- | -------------------------- | ---------------------- | ------------------------------------------------------------- |
@@ -649,7 +649,7 @@ Each `HeaderNavItem` requires a stable `id`, `content`, `href`, and accepts opti
 
 #### Header Accessibility And JavaScript
 
-Import `@pathableai/styles/js` once at the application boundary to enable USWDS mobile menu opening, focus movement to the close button, Escape handling, and focus restoration. The wrapper deliberately has no `open` prop or internal open state, preventing competing React and USWDS state owners. Without JavaScript, the semantic header, labeled navigation landmark, brand link, and navigation links remain in the DOM as native elements.
+Import `@pathableai/styles/js` once at the application boundary to enable USWDS mobile menu opening, overlay visibility, focus movement to the close button, Escape handling, and focus restoration. The wrapper deliberately has no `open` prop or internal open state, preventing competing React and USWDS state owners. Without JavaScript, the semantic header, labeled navigation landmark, brand link, and navigation links remain in the DOM as native elements.
 
 ### Breadcrumb Props
 

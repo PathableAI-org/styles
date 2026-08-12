@@ -34,7 +34,7 @@ const meta = {
 
 **When not to use**: Do not use Header for page-level headings, secondary navigation, dropdown menus, or unimplemented extended and megamenu variants.
 
-**Underlying elements**: A semantic \`<header>\` containing a native brand link, menu and close buttons, and a labeled \`<nav>\` list.
+**Underlying elements**: A mobile-navigation overlay followed by a semantic \`<header>\` containing a native brand link, menu and close buttons, and a labeled \`<nav>\` list.
 
 **JavaScript requirement**: Import \`@pathableai/styles/js\` once at the application boundary to enable the mobile open, focus, Escape, and close behavior. Header does not import JavaScript or own open state.
 
@@ -113,6 +113,9 @@ export const MobileMenuInteraction: Story = {
     const navigation = canvas.getByRole('navigation', {
       name: 'Primary navigation',
     })
+    const overlay = canvasElement.querySelector('.pathable-overlay')
+
+    await expect(overlay).toBeInTheDocument()
 
     if (menuButton.getBoundingClientRect().width === 0) {
       await expect(navigation).toBeVisible()
@@ -128,6 +131,11 @@ export const MobileMenuInteraction: Story = {
         await expect(menuButton).toHaveFocus()
         await userEvent.keyboard('{Enter}')
         await expect(navigation).toHaveClass('is-visible')
+        await expect(overlay).toHaveClass('is-visible')
+        await expect(document.body).toHaveClass(
+          'pathable-js-mobile-nav--active',
+        )
+        await expect(document.body).toHaveStyle({ overflow: 'hidden' })
       },
     )
 
@@ -144,6 +152,10 @@ export const MobileMenuInteraction: Story = {
       })
       await userEvent.click(closeButton)
       await expect(navigation).not.toHaveClass('is-visible')
+      await expect(overlay).not.toHaveClass('is-visible')
+      await expect(document.body).not.toHaveClass(
+        'pathable-js-mobile-nav--active',
+      )
       await expect(menuButton).toHaveFocus()
     })
   },
@@ -217,6 +229,7 @@ export const CustomAttributes: Story = {
     )
     await expect(banner).toHaveAttribute('data-region', 'global-navigation')
     await expect(link).toHaveClass('usa-nav__link', 'consumer-nav-link')
+    await expect(link).not.toHaveClass('pathable-nav__link')
     await expect(link).toHaveAttribute('target', '_blank')
   },
 }

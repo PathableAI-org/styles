@@ -2,8 +2,8 @@
 //
 // Wraps usa-header component as pathable-header.
 // USWDS dependencies: uswds-fonts
-// JS-driven: Yes — header JS selects .usa-header, .usa-nav, .usa-nav__link
-// Requires .usa-* on DOM: Yes — keep .usa-header for JS to find elements
+// JS-driven: Yes — patched header JS selects .pathable-header and nav classes
+// Requires .usa-* on DOM: Yes — keep .usa-* classes for USWDS nested styles
 
 @use 'uswds-core' as *;
 
@@ -44,4 +44,8 @@
 
 .pathable-menu-btn {
   @extend .usa-menu-btn;
+}
+
+.pathable-overlay {
+  @extend .usa-overlay;
 }
