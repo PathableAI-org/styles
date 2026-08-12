@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { expect, userEvent, within } from 'storybook/test'
+import { useState } from 'react'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import { Button } from '../../../components/Button/Button'
 import {
   ComboBox,
+  type ComboBoxInputProps,
   type ComboBoxOption,
 } from '../../../components/ComboBox/ComboBox'
 
@@ -150,9 +152,14 @@ export const Required: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(
-      canvas.getByRole('combobox', { name: 'Employment goal' }),
-    ).toBeRequired()
+    const input = canvas.getByRole('combobox', { name: 'Employment goal' })
+    const nativeSelect = canvasElement.querySelector('select')
+
+    await expect(input).toBeRequired()
+    await expect(input).toBeInvalid()
+    if (!nativeSelect) throw new Error('Expected the native select control')
+    await expect(nativeSelect).not.toBeRequired()
+    await expect(nativeSelect).toBeValid()
   },
 }
 
@@ -268,14 +275,61 @@ export const CustomAttributes: Story = {
 }
 
 export const FormComposition: Story = {
-  render: () => (
-    <form aria-label="Save employment goal">
-      <ComboBox
-        label="Employment goal"
-        options={OPTIONS}
-        selectProps={{ id: 'form-goal', name: 'formGoal', required: true }}
-      />
-      <Button type="submit">Save goal</Button>
-    </form>
-  ),
+  render: () => {
+    const [submission, setSubmission] = useState('not submitted')
+
+    return (
+      <form
+        aria-label="Save employment goal"
+        onSubmit={(event) => {
+          event.preventDefault()
+          const values = new FormData(event.currentTarget).getAll('formGoal')
+          setSubmission(`${values.length}:${values.join(',')}`)
+        }}
+      >
+        <ComboBox
+          label="Employment goal"
+          options={OPTIONS}
+          selectProps={{ id: 'form-goal', name: 'formGoal', required: true }}
+          // Simulates a JavaScript or previously compiled caller using the old API.
+          inputProps={{ name: 'formGoal' } as ComboBoxInputProps}
+        />
+        <Button type="submit">Save goal</Button>
+        <p>Submitted values: {submission}</p>
+      </form>
+    )
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('combobox', { name: 'Employment goal' })
+    const submit = canvas.getByRole('button', { name: 'Save goal' })
+    const nativeSelect = canvasElement.querySelector('select')
+
+    if (!nativeSelect) throw new Error('Expected the native select control')
+
+    await step(
+      'empty required value blocks submission on the combobox',
+      async () => {
+        await expect(input).not.toHaveAttribute('name')
+        await expect(nativeSelect).toHaveAttribute('name', 'formGoal')
+        await expect(nativeSelect).not.toBeRequired()
+        await userEvent.click(submit)
+        await expect(input).toHaveFocus()
+        await expect(input).toBeInvalid()
+        await expect(
+          canvas.getByText('Submitted values: not submitted'),
+        ).toBeVisible()
+      },
+    )
+
+    await step('selection submits one native value', async () => {
+      await userEvent.type(input, 'inter')
+      await userEvent.keyboard('{ArrowDown}{Enter}')
+      await waitFor(() => expect(input).toBeValid())
+      await userEvent.click(submit)
+      await expect(
+        canvas.getByText('Submitted values: 1:interview'),
+      ).toBeVisible()
+    })
+  },
 }

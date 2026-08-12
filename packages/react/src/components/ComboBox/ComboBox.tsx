@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useId,
   useRef,
   useState,
@@ -26,7 +27,7 @@ export type ComboBoxSelectProps = Omit<
 
 export type ComboBoxInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  'children' | 'defaultValue' | 'id' | 'onChange' | 'type' | 'value'
+  'children' | 'defaultValue' | 'id' | 'name' | 'onChange' | 'type' | 'value'
 >
 
 export interface ComboBoxProps extends Omit<
@@ -92,12 +93,13 @@ export function ComboBox({
   } = selectProps
   const {
     className: inputClassName,
+    name: _inputName,
     onClick: consumerOnClick,
     onFocus: consumerOnFocus,
     onKeyDown: consumerOnKeyDown,
     placeholder,
     ...nativeInputProps
-  } = inputProps
+  } = inputProps as InputHTMLAttributes<HTMLInputElement>
   const inputRef = useRef<HTMLInputElement>(null)
   const selectRef = useRef<HTMLSelectElement>(null)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -115,6 +117,14 @@ export function ComboBox({
   const [isPristine, setIsPristine] = useState(Boolean(selectedValue))
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+
+  useEffect(() => {
+    inputRef.current?.setCustomValidity(
+      required && !disabled && (!selectedValue || !selectedOption)
+        ? 'Please select an option.'
+        : '',
+    )
+  }, [disabled, required, selectedOption, selectedValue])
 
   const getVisibleOptions = (query: string, pristine = isPristine) => {
     const nonPlaceholderOptions = options.filter((option) => option.value)
@@ -309,7 +319,6 @@ export function ComboBox({
         className={SELECT_CLASS}
         value={selectedValue}
         disabled={disabled}
-        required={required}
         aria-hidden="true"
         tabIndex={-1}
         onChange={selectChangeHandler}
