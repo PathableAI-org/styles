@@ -130,6 +130,36 @@ export const ToggleBehavior: Story = {
   },
 }
 
+export const KeyboardToggle: Story = {
+  args: {
+    summary: 'Keyboard disclosure',
+    children: <p>Keyboard-revealed content.</p>,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button', {
+      name: /Keyboard disclosure/,
+    })
+
+    await step('Enter expands the banner content', async () => {
+      await userEvent.tab()
+      await expect(button).toHaveFocus()
+      await userEvent.keyboard('{Enter}')
+      await expect(button).toHaveAttribute('aria-expanded', 'true')
+      await expect(canvas.getByText('Keyboard-revealed content.')).toBeVisible()
+    })
+
+    await step('Space collapses the banner content', async () => {
+      await userEvent.keyboard(' ')
+      await expect(button).toHaveAttribute('aria-expanded', 'false')
+      await expect(button).toHaveFocus()
+      await expect(
+        canvas.getByText('Keyboard-revealed content.'),
+      ).not.toBeVisible()
+    })
+  },
+}
+
 export const ControlledExpanded: Story = {
   args: {
     summary: 'Controlled disclosure',
