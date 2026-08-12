@@ -29,6 +29,10 @@
   @extend .usa-nav__secondary-links;
 }
 
+.pathable-js-mobile-nav--active {
+  @extend .usa-js-mobile-nav--active;
+}
+
 // No standalone .usa-nav__primary-item, .usa-nav__link classes exist in USWDS
 // These are nested selectors inside .usa-nav__primary, not top-level standalone classes.
 // The nav items and links are styled via .usa-nav__primary > .usa-nav__primary-item > a

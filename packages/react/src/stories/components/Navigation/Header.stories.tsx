@@ -132,6 +132,10 @@ export const MobileMenuInteraction: Story = {
         await userEvent.keyboard('{Enter}')
         await expect(navigation).toHaveClass('is-visible')
         await expect(overlay).toHaveClass('is-visible')
+        await expect(document.body).toHaveClass(
+          'pathable-js-mobile-nav--active',
+        )
+        await expect(document.body).toHaveStyle({ overflow: 'hidden' })
       },
     )
 
@@ -149,6 +153,9 @@ export const MobileMenuInteraction: Story = {
       await userEvent.click(closeButton)
       await expect(navigation).not.toHaveClass('is-visible')
       await expect(overlay).not.toHaveClass('is-visible')
+      await expect(document.body).not.toHaveClass(
+        'pathable-js-mobile-nav--active',
+      )
       await expect(menuButton).toHaveFocus()
     })
   },
