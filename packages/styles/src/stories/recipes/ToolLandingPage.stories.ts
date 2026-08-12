@@ -40,10 +40,10 @@ const headerHtml = `
         </svg>
       </button>
       <ul class="pathable-nav__primary usa-nav__primary usa-accordion">
-        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Platform</span></a></li>
-        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Solutions</span></a></li>
-        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Resources</span></a></li>
-        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Pricing</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav__link" href="#"><span>Platform</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav__link" href="#"><span>Solutions</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav__link" href="#"><span>Resources</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav__link" href="#"><span>Pricing</span></a></li>
       </ul>
     </nav>
   </div>
