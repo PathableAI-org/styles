@@ -23,22 +23,28 @@ export default {
 /* Page Header                                           */
 /* -------------------------------------------------- */
 const headerHtml = `
+<div class="pathable-overlay usa-overlay"></div>
 <header class="pathable-header pathable-header--basic usa-header usa-header--basic">
-  <div class="pathable-nav-container">
-    <div class="pathable-navbar">
-      <div class="pathable-logo" id="finder-logo">
-        <em class="pathable-logo__text">
+  <div class="pathable-nav-container usa-nav-container">
+    <div class="pathable-navbar usa-navbar">
+      <div class="pathable-logo usa-logo" id="finder-logo">
+        <em class="pathable-logo__text usa-logo__text">
           <a href="#">PathAble</a>
         </em>
       </div>
-      <button class="pathable-menu-btn">Menu</button>
+      <button type="button" class="pathable-menu-btn usa-menu-btn">Menu</button>
     </div>
     <nav class="pathable-nav usa-nav" aria-label="Primary navigation">
-      <ul class="pathable-nav__primary">
-        <li class="pathable-nav__primary-item"><a href="#"><span>Dashboard</span></a></li>
-        <li class="pathable-nav__primary-item"><a href="#"><span>Resources</span></a></li>
-        <li class="pathable-nav__primary-item"><a href="#"><span>Programs</span></a></li>
-        <li class="pathable-nav__primary-item"><a href="#"><span>Admin</span></a></li>
+      <button type="button" class="pathable-nav__close usa-nav__close" aria-label="Close navigation">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4l-6.3 6.31-1.41-1.42L9.17 12l-6.29-6.29 1.41-1.42 6.3 6.31 6.3-6.31 1.41 1.42Z"></path>
+        </svg>
+      </button>
+      <ul class="pathable-nav__primary usa-nav__primary usa-accordion">
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Dashboard</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Resources</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Programs</span></a></li>
+        <li class="pathable-nav__primary-item usa-nav__primary-item"><a class="usa-nav-link" href="#"><span>Admin</span></a></li>
       </ul>
     </nav>
   </div>
