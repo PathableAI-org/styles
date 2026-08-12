@@ -84,7 +84,7 @@ export function Header({
                     <a
                       {...attributes}
                       href={item.href}
-                      className={['usa-nav-link', linkClassName]
+                      className={['usa-nav__link', linkClassName]
                         .filter(Boolean)
                         .join(' ')}
                     >
