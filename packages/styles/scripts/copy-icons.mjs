@@ -1,64 +1,78 @@
 /**
- * copy-icons.mjs
+ * Copies each USWDS image referenced by compiled CSS to the package-root path
+ * that `dist/styles.css` resolves through `../img/...`.
  *
- * Copies USWDS SVG icons from node_modules to dist/img/usa-icons/
- * so the compiled CSS can reference them via url("../img/usa-icons/*.svg").
+ * The `dist/img` mirror remains available for the existing Storybook asset
+ * copier and other distribution-path consumers.
  */
 
-import { copyFileSync, existsSync, mkdirSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
+import { dirname, join, normalize, relative, resolve, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const packageRoot = join(__dirname, '..')
-
-// Icons referenced by the compiled CSS
-const requiredIcons = [
-  'add.svg',
-  'arrow_back.svg',
-  'calendar_today.svg',
-  'check_circle.svg',
-  'close.svg',
-  'error.svg',
-  'expand_less.svg',
-  'expand_more.svg',
-  'info.svg',
-  'navigate_before.svg',
-  'navigate_far_before.svg',
-  'navigate_far_next.svg',
-  'navigate_next.svg',
-  'remove.svg',
-  'search.svg',
-  'unfold_more.svg',
-  'warning.svg',
-]
-
-const sourceDir = join(
+const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
+const stylesheetPath = join(packageRoot, 'dist', 'styles.css')
+const sourceRoot = join(
   packageRoot,
   'node_modules',
   '@uswds/uswds',
   'dist',
   'img',
-  'usa-icons',
 )
-const destDir = join(packageRoot, 'dist', 'img', 'usa-icons')
+const destinations = [
+  join(packageRoot, 'img'),
+  join(packageRoot, 'dist', 'img'),
+]
 
-let copied = 0
-let warnings = 0
-
-mkdirSync(destDir, { recursive: true })
-
-for (const icon of requiredIcons) {
-  const sourcePath = join(sourceDir, icon)
-  const destPath = join(destDir, icon)
-  if (!existsSync(sourcePath)) {
-    console.warn(`[copy-icons] WARNING: source not found: ${sourcePath}`)
-    warnings++
-    continue
-  }
-  copyFileSync(sourcePath, destPath)
-  copied++
+if (!existsSync(stylesheetPath)) {
+  throw new Error(
+    `[copy-icons] Compiled stylesheet not found: ${stylesheetPath}`,
+  )
 }
 
-console.log(`[copy-icons] Copied ${copied} icon file(s)`)
-if (warnings > 0) console.log(`[copy-icons] ${warnings} warning(s)`)
+const css = readFileSync(stylesheetPath, 'utf8')
+const imagePaths = new Set()
+const urlPattern = /url\(\s*(['"]?)(.*?)\1\s*\)/gu
+
+for (const match of css.matchAll(urlPattern)) {
+  const url = match[2].trim().split(/[?#]/u, 1)[0]
+  if (!url.startsWith('../img/')) continue
+
+  const imagePath = normalize(url.slice('../img/'.length))
+  if (
+    imagePath === '..' ||
+    imagePath.startsWith(`..${sep}`) ||
+    resolve(sourceRoot, imagePath) === sourceRoot
+  ) {
+    throw new Error(`[copy-icons] Unsafe stylesheet image path: ${url}`)
+  }
+  imagePaths.add(imagePath)
+}
+
+const missing = []
+let copied = 0
+
+for (const imagePath of [...imagePaths].sort()) {
+  const sourcePath = resolve(sourceRoot, imagePath)
+  if (!existsSync(sourcePath)) {
+    missing.push(relative(packageRoot, sourcePath))
+    continue
+  }
+
+  for (const destinationRoot of destinations) {
+    const destinationPath = resolve(destinationRoot, imagePath)
+    mkdirSync(dirname(destinationPath), { recursive: true })
+    copyFileSync(sourcePath, destinationPath)
+    copied += 1
+  }
+}
+
+if (missing.length > 0) {
+  throw new Error(
+    `[copy-icons] Missing ${missing.length} USWDS source image(s):\n${missing.join('\n')}`,
+  )
+}
+
+console.log(
+  `[copy-icons] Copied ${imagePaths.size} referenced image(s) to ${destinations.length} package location(s) (${copied} files)`,
+)

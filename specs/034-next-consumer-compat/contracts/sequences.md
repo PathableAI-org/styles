@@ -16,10 +16,9 @@
 2. Point fixture dependencies at the two local tarballs and pinned Next/React validation versions.
 3. Install the fixture from the populated pnpm store, avoiding registry access during validation where practical.
 4. Build the production application.
-5. Start the built application on an ephemeral local port.
-6. Request the root page and verify HTTP success plus text emitted by Card, Link, List, Tag, and Loading.
-7. Reject React ownership, older-element, or runtime mismatch output.
-8. Stop the server and remove the temporary directory.
+5. Read Next's generated static server HTML for the root page and verify text emitted by Card, Link, List, Tag, and Loading.
+6. Reject React ownership, older-element, or runtime mismatch output.
+7. Remove the temporary directory.
 
 ## Patch release preparation
 

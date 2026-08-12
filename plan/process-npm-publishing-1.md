@@ -84,8 +84,9 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
   token in repository secrets.
 - **SEC-002**: The publish job MUST run on a GitHub-hosted runner and have
   `id-token: write`. Non-publish jobs MUST NOT have that permission.
-- **SEC-003**: Do not configure `registry-url` or an empty npm auth-token entry
-  in the OIDC publish job because that can prevent npm CLI OIDC discovery.
+- **SEC-003**: Configure `registry-url: https://registry.npmjs.org` as shown in
+  npm's trusted-publishing guidance, but do not set `NODE_AUTH_TOKEN` or retain
+  a long-lived npm write token. Ensure npm CLI 11.5.1 or newer is used.
 - **SEC-004**: Pin every third-party action to a full commit SHA with a version
   comment. Pin Changesets Action 2.0.0 to
   `22ccf9aa43179fe9e27dc62e575971d28cce197c`.
@@ -99,7 +100,7 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
   repository workflow.
 - **CON-003**: The trusted publisher repository value MUST be
   `PathableAI-org/styles`, the workflow filename MUST exactly match
-  `release.yml`, the environment MUST be `npm`, and the allowed operation MUST
+  `publish.yml`, the environment MUST be `npm`, and the allowed operation MUST
   include `npm publish`.
 - **CON-004**: The installed `@changesets/cli@3.0.0` requires Node
   `^22.11 || ^24 || >=26`, npm `>=10.9.0`, and pnpm `>=10.0.0`.
@@ -148,15 +149,15 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - GOAL-003: Add least-privilege release automation that versions on `main` and
   publishes only reviewed release commits.
 
-| Task     | Description                                                                                                                                                                                                                                                                                                         | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-014 | Replace every `node-version: 23` in `.github/workflows/*.yml` with `node-version: 24`. Validate existing CI before introducing publication so runtime migration failures are isolated.                                                                                                                              |           |      |
-| TASK-015 | Create `.github/workflows/release.yml` triggered by pushes to `main` with concurrency group `release-${{ github.ref }}` and `cancel-in-progress: false`. Use Changesets Action 2.0.0 sub-actions, not the combined action, so OIDC permission exists only in the publish job.                                       |           |      |
-| TASK-016 | Add a `mode` job with `contents: read` that checks out the full repository, sets up pnpm and Node 24 without `registry-url`, installs frozen dependencies, and runs `changesets/action/select-mode`. Export its `mode` and `publish-plan-artifact-id`.                                                              |           |      |
-| TASK-017 | Add a `version` job gated on mode `version`, with only `contents: write` and `pull-requests: write`. Run `changesets/action/version` with script `pnpm version-packages`, PR title `chore: version packages`, commit message `chore: version packages`, and base branch `main`.                                     |           |      |
-| TASK-018 | Add a `build-and-pack` job gated on mode `publish`, with `contents: read` only. Perform frozen install, complete package builds, lint/type/package validations, tarball assertions, and consumer smoke tests, then run `changesets/action/pack` using the publish-plan artifact. Export its `pack-dir-artifact-id`. |           |      |
-| TASK-019 | Add a `publish` job gated on successful `build-and-pack`, assigned to the protected `npm` environment, with `contents: write` and `id-token: write`. Do not set `NODE_AUTH_TOKEN` and do not set `registry-url`. Run `changesets/action/publish` with the pack artifact and enable GitHub releases and tags.        |           |      |
-| TASK-020 | In GitHub repository settings, enable Actions to create pull requests and protect the `npm` environment with required reviewers. Confirm branch protection does not prevent the version action from updating its dedicated release PR.                                                                              |           |      |
+| Task     | Description                                                                                                                                                                                                                                                                                                     | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-014 | Replace every `node-version: 23` in `.github/workflows/*.yml` with `node-version: 24`. Validate existing CI before introducing publication so runtime migration failures are isolated.                                                                                                                          |           |            |
+| TASK-015 | Create `.github/workflows/publish.yml` triggered by pushes to `main` with concurrency group `${{ github.workflow }}-${{ github.ref }}` and `cancel-in-progress: false`. Pin Changesets Action 2.0.0 and every setup action to an immutable commit SHA.                                                          | ✅        | 2026-08-12 |
+| TASK-016 | Configure the release job to check out full history, set up pnpm and Node 24, configure the npmjs registry without a package-manager cache, install npm 11.19.0, and install frozen dependencies.                                                                                                               | ✅        | 2026-08-12 |
+| TASK-017 | Run the packed Next.js consumer smoke test before release handling so the reviewed tarballs, React runtime externalization, public CSS contract, and referenced assets are revalidated from a clean checkout.                                                                                                   | ✅        | 2026-08-12 |
+| TASK-018 | Configure Changesets Action to open or update the `chore: version packages` PR while changesets exist, using `pnpm version-packages`.                                                                                                                                                                           | ✅        | 2026-08-12 |
+| TASK-019 | Configure Changesets Action to run `pnpm release` after the version PR is merged, create GitHub releases and tags, and authenticate to npm through OIDC. Assign the job to the protected `npm` environment with `contents: write`, `pull-requests: write`, and `id-token: write`; do not set `NODE_AUTH_TOKEN`. | ✅        | 2026-08-12 |
+| TASK-020 | In GitHub repository settings, enable Actions to create pull requests and protect the `npm` environment with required reviewers. Confirm branch protection does not prevent the version action from updating its dedicated release PR.                                                                          |           |            |
 
 ### Implementation Phase 4
 
@@ -168,7 +169,7 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 | TASK-021 | Before merging the implementation, verify that the npm `@pathableai` organization exists, the intended maintainer has publish rights, public scoped packages are allowed, and both registry names still return `E404`. Record the maintainer and recovery owner in private operations documentation, not in repository secrets.                           |           |      |
 | TASK-022 | Merge the implementation and review the release-preparation PR that consumes the empty setup changeset. Require both manifests to remain at `0.0.0`, the React packed dependency to resolve to `@pathableai/styles: ^0.0.0`, and all CI checks to pass before publication.                                                                                |           |      |
 | TASK-023 | Bootstrap the first publication with a short-lived granular npm token scoped only to `@pathableai/styles` and `@pathableai/react`, or an interactive maintainer publish with required npm 2FA. Use the exact tarballs produced and validated from the reviewed release commit; publish styles before React. Revoke the token immediately if one was used. |           |      |
-| TASK-024 | In npm settings for each new package, configure GitHub Actions trusted publishing with organization `PathableAI-org`, repository `styles`, workflow `release.yml`, environment `npm`, and allowed action `npm publish`.                                                                                                                                   |           |      |
+| TASK-024 | In npm settings for each new package, configure GitHub Actions trusted publishing with organization `PathableAI-org`, repository `styles`, workflow `publish.yml`, environment `npm`, and allowed action `npm publish`.                                                                                                                                   |           |      |
 | TASK-025 | Trigger a no-op release workflow and verify mode `none` performs no publish. Then merge one controlled patch changeset, review the version PR, and verify OIDC publishes the patch, creates package tags/releases, and reports provenance.                                                                                                                |           |      |
 | TASK-026 | Verify `npm view @pathableai/styles version dist-tags repository --json` and `npm view @pathableai/react version dist-tags dependencies repository --json`; install both from the public registry in a clean temporary consumer; run the same CSS, ESM, and TypeScript smoke tests; attach results to the release record.                                 |           |      |
 
@@ -225,7 +226,7 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - **FILE-009**: `packages/styles/README.md` — package-safe installation guidance.
 - **FILE-010**: `packages/react/README.md` — verified consumption guidance.
 - **FILE-011**: `scripts/package-smoke/**` — tarball and clean-consumer checks.
-- **FILE-012**: `.github/workflows/release.yml` — version, pack, and publish flow.
+- **FILE-012**: `.github/workflows/publish.yml` — version and publish flow.
 - **FILE-013**: `.github/workflows/ci-full.yml` — package validation and Node 24.
 - **FILE-014**: `.github/workflows/docs-ci.yml` — Node 24.
 - **FILE-015**: `.github/workflows/docs-deploy.yml` — Node 24.
@@ -293,7 +294,7 @@ The repository is not currently publish-ready. The audit on 2026-08-11 found:
 - **ASSUMPTION-003**: Package releases should be independent and use the npm
   `latest` dist-tag for stable releases; prerelease channels are out of scope.
 - **ASSUMPTION-004**: The `@pathableai` npm organization can authorize
-  `PathableAI-org/styles` and the `release.yml` workflow for trusted publishing.
+  `PathableAI-org/styles` and the `publish.yml` workflow for trusted publishing.
 
 ## 8. Related Specifications / Further Reading
 

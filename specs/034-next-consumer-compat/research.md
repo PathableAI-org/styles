@@ -36,7 +36,7 @@
 
 ## Decision 4: Validate packed artifacts in a generated consumer
 
-**Decision**: Add a repository script that builds and packs both workspaces, inspects the tarballs and packed manifests, generates a temporary Next.js 15.5.22/React 18.3.1 App Router fixture, installs the tarballs, builds it, starts the production server, and asserts rendered content.
+**Decision**: Add a repository script that builds and packs both workspaces, inspects the tarballs and packed manifests, generates a temporary Next.js 15.5.22/React 18.3.1 App Router fixture, installs the tarballs, builds it, and asserts the generated server-rendered HTML.
 
 **Rationale**: Workspace-source tests cannot detect pnpm manifest rewriting, missing `files` entries, missing assets, or library bundling differences. A generated fixture remains narrow while exercising the same artifacts a downstream application receives.
 

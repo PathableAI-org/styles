@@ -13,7 +13,7 @@ Correct the publishable `@pathableai/react` and `@pathableai/styles` contracts s
 **Language/Version**: TypeScript and ECMAScript modules on Node.js `^24.0.0 || >=26.0.0`  
 **Primary Dependencies**: Vite 6 library mode, React/React DOM peer dependencies, `@pathableai/styles`, Sass, USWDS, Next.js 15.5.22 and React 18.3.1 for consumer validation  
 **Storage**: N/A; package artifacts and temporary test fixtures only  
-**Testing**: Node assertion smoke script, pnpm pack, Next production build/start, publint, Are the Types Wrong, ESLint, TypeScript, Storybook test-runner, Prettier  
+**Testing**: Node assertion smoke script, pnpm pack, Next production build/static server render, publint, Are the Types Wrong, ESLint, TypeScript, Storybook test-runner, Prettier  
 **Target Platform**: npm-compatible ESM packages consumed by Next.js 15 App Router on Node.js  
 **Project Type**: pnpm workspace with two independently published library packages  
 **Performance Goals**: Packed consumer validation completes in one local command; package entry import adds no bundled React implementation  
@@ -93,7 +93,7 @@ Research decisions are recorded in [research.md](./research.md):
 - Preserve automatic CSS by leaving the styles package root import as an external side-effect import in the React entry bundle.
 - Externalize React, React DOM, and both JSX runtime entrypoints explicitly.
 - Preserve the compiled CSS URL contract and publish referenced USWDS images/fonts at package-root `img/` and `fonts/` paths.
-- Test packed tarballs in a generated Next.js 15/React 18 application, using repository-installed validation dependencies and an offline install after the dependency graph is present.
+- Test packed tarballs in a generated Next.js 15/React 18 application, using repository-installed validation dependencies, an offline install after the dependency graph is present, and Next's generated server-rendered HTML.
 - Add a fresh patch Changeset rather than editing generated 0.0.1 changelogs or restoring consumed Changeset files.
 
 ## Phase 1 Design & Contracts

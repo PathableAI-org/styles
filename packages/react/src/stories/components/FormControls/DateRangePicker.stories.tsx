@@ -264,7 +264,10 @@ export const CalendarLayout: Story = {
       })
       const backgroundImage =
         window.getComputedStyle(previousMonth).backgroundImage
-      const iconUrl = backgroundImage.match(/url\(["']?([^"')]+)["']?\)/)?.[1]
+      const iconUrl = backgroundImage
+        .match(/url\((?:"([^"]+)"|'([^']+)'|([^"')]+))\)/u)
+        ?.slice(1)
+        .find(Boolean)
 
       await expect(iconUrl).toBeDefined()
       const response = await fetch(iconUrl as string)

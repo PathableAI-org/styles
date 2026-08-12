@@ -9,8 +9,8 @@
 
 **Purpose**: Establish the scoped command and fixture dependency surface.
 
-- [ ] T001 Add the `test:next-consumer` root command and pinned Next 15/React 18 validation dependencies in `package.json`
-- [ ] T002 Regenerate `pnpm-lock.yaml` for the validation dependency additions without altering package release versions
+- [x] T001 Add the `test:next-consumer` root command and pinned Next 15/React 18 validation dependencies in `package.json`
+- [x] T002 Regenerate `pnpm-lock.yaml` for the validation dependency additions without altering package release versions
 
 ---
 
@@ -20,9 +20,9 @@
 
 **⚠️ CRITICAL**: User story implementation starts only after the harness can reproduce the current package defects.
 
-- [ ] T003 Create temporary-directory, command execution, tar extraction, and cleanup helpers in `scripts/test-next-consumer.mjs`
-- [ ] T004 Add packed manifest and tarball file-list assertions for both packages in `scripts/test-next-consumer.mjs`
-- [ ] T005 Run `pnpm test:next-consumer` and record the expected baseline React-runtime, missing-style-import, and asset failures in `specs/034-next-consumer-compat/quickstart.md`
+- [x] T003 Create temporary-directory, command execution, tar extraction, and cleanup helpers in `scripts/test-next-consumer.mjs`
+- [x] T004 Add packed manifest and tarball file-list assertions for both packages in `scripts/test-next-consumer.mjs`
+- [x] T005 Run `pnpm test:next-consumer` and record the expected baseline React-runtime, missing-style-import, and asset failures in `specs/034-next-consumer-compat/quickstart.md`
 
 **Checkpoint**: The packed-package harness fails for the observed consumer defects rather than passing against workspace source.
 
@@ -36,16 +36,16 @@
 
 ### Tests for User Story 1
 
-- [ ] T006 [US1] Generate the Next.js 15/React 18 App Router fixture and representative component page in `scripts/test-next-consumer.mjs`
-- [ ] T007 [US1] Add production build, server lifecycle, HTTP content, and React-error assertions in `scripts/test-next-consumer.mjs`
+- [x] T006 [US1] Generate the Next.js 15/React 18 App Router fixture and representative component page in `scripts/test-next-consumer.mjs`
+- [x] T007 [US1] Add production build, generated server HTML content, and React-error assertions in `scripts/test-next-consumer.mjs`
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Externalize React, React DOM, both JSX runtimes, and the styles entry in `packages/react/vite.config.ts`
-- [ ] T009 [US1] Update the React public source entry to preserve the external styles side-effect import in `packages/react/src/index.ts`
-- [ ] T010 [US1] Verify the packed React runtime imports consumer React and passes the generated production build/render path via `pnpm test:next-consumer`
+- [x] T008 [US1] Externalize React, React DOM, both JSX runtimes, and the styles entry in `packages/react/vite.config.ts`
+- [x] T009 [US1] Update the React public source entry to preserve the external styles side-effect import in `packages/react/src/index.ts`
+- [x] T010 [US1] Verify the packed React runtime imports consumer React and passes the generated production build/render path via `pnpm test:next-consumer`
 
-**Checkpoint**: The consumer build and server-render contract passes independently, even before all stylesheet asset assertions are repaired.
+**Checkpoint**: The consumer build and static server-render contract passes independently, even before all stylesheet asset assertions are repaired.
 
 ---
 
@@ -57,15 +57,15 @@
 
 ### Tests for User Story 2
 
-- [ ] T011 [US2] Add packed CSS URL parsing, safe path resolution, and missing-asset assertions in `scripts/test-next-consumer.mjs`
+- [x] T011 [US2] Add packed CSS URL parsing, safe path resolution, and missing-asset assertions in `scripts/test-next-consumer.mjs`
 
 ### Implementation for User Story 2
 
-- [ ] T012 [P] [US2] Copy all referenced USWDS image families to package-root `img/` paths in `packages/styles/scripts/copy-icons.mjs`
-- [ ] T013 [P] [US2] Copy referenced Roboto Mono files while preserving existing PathAble fonts in `packages/styles/scripts/copy-fonts.mjs`
-- [ ] T014 [US2] Include package-root images in the publishable styles files contract in `packages/styles/package.json`
-- [ ] T015 [US2] Document the verified automatic styling and application usage contract in `packages/react/README.md`
-- [ ] T016 [US2] Build and pack both packages and verify every stylesheet asset and public style import via `pnpm test:next-consumer`
+- [x] T012 [P] [US2] Copy all referenced USWDS image families to package-root `img/` paths in `packages/styles/scripts/copy-icons.mjs`
+- [x] T013 [P] [US2] Copy referenced Roboto Mono files while preserving existing PathAble fonts in `packages/styles/scripts/copy-fonts.mjs`
+- [x] T014 [US2] Include package-root images in the publishable styles files contract in `packages/styles/package.json`
+- [x] T015 [US2] Document the verified automatic styling and application usage contract in `packages/react/README.md`
+- [x] T016 [US2] Build and pack both packages and verify every stylesheet asset and public style import via `pnpm test:next-consumer`
 
 **Checkpoint**: The packed packages provide complete styling without a direct downstream styles import or consumer bundler workaround.
 
@@ -79,8 +79,8 @@
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Add a patch Changeset for both corrected public contracts under `.changeset/`
-- [ ] T018 [US3] Run Changesets status and document projected next versions without running version or publish commands in `specs/034-next-consumer-compat/quickstart.md`
+- [x] T017 [US3] Add a patch Changeset for both corrected public contracts under `.changeset/`
+- [x] T018 [US3] Run Changesets status and document projected next versions without running version or publish commands in `specs/034-next-consumer-compat/quickstart.md`
 
 **Checkpoint**: Release intent is ready and publication remains unperformed.
 
@@ -90,10 +90,10 @@
 
 **Purpose**: Complete required package and repository evidence.
 
-- [ ] T019 [P] Run React lint, typecheck, publint, and Are the Types Wrong gates from `specs/034-next-consumer-compat/quickstart.md`
-- [ ] T020 [P] Run styles build, React build, and packed Next consumer smoke from `specs/034-next-consumer-compat/quickstart.md`
-- [ ] T021 Run `pnpm test:storybook-react`, `pnpm check:format`, and `git diff --check`
-- [ ] T022 Reconcile final files, tarball evidence, limitations, and exact gate results in `specs/034-next-consumer-compat/quickstart.md`
+- [x] T019 [P] Run React lint, typecheck, publint, and Are the Types Wrong gates from `specs/034-next-consumer-compat/quickstart.md`
+- [x] T020 [P] Run styles build, React build, and packed Next consumer smoke from `specs/034-next-consumer-compat/quickstart.md`
+- [x] T021 Run `pnpm test:storybook-react`, `pnpm check:format`, and `git diff --check`
+- [x] T022 Reconcile final files, tarball evidence, limitations, and exact gate results in `specs/034-next-consumer-compat/quickstart.md`
 
 ---
 

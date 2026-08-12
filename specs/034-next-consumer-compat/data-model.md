@@ -43,7 +43,7 @@ This feature has no persisted business data. The validation model consists of bu
 
 ### State transitions
 
-`created -> dependencies installed -> built -> server started -> content verified -> removed`
+`created -> dependencies installed -> built and statically server-rendered -> content verified -> removed`
 
 Any failed transition fails the smoke test. Temporary cleanup still runs after failure.
 

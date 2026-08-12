@@ -22,7 +22,7 @@
 - Extracts or lists both tarballs and validates consumer-visible manifests and file contents.
 - Generates a temporary App Router page importing Card, Link, List, Tag, and Loading from the React tarball installation.
 - Installs Next 15.5.22, React 18.3.1, React DOM 18.3.1, and both local tarballs without downloading dependencies during the smoke phase where the pnpm store is already populated.
-- Runs a production build, starts the built server, fetches the page, and verifies all representative text.
+- Runs a production build, reads Next's generated server-rendered page, and verifies all representative text.
 - Fails on known React runtime mismatch messages, missing CSS assets, missing public style import, workspace protocols, or non-zero child commands.
 
 ## Release contract

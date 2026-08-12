@@ -9,7 +9,13 @@ React components for the PathAble design system, wrapping `@pathableai/styles` w
 pnpm add @pathableai/react
 ```
 
-No separate installation of `@pathableai/styles` is required — styles are included automatically as a dependency.
+No separate installation or stylesheet import is required. Importing
+`@pathableai/react` loads the public `@pathableai/styles` stylesheet through the
+package dependency and includes its published fonts and images automatically.
+
+In a Next.js App Router application, import components normally from a page or
+layout. Do not import a private `dist` stylesheet path or add a webpack asset
+workaround.
 
 ## Usage
 
