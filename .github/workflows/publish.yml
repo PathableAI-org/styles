@@ -55,6 +55,7 @@ jobs:
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org'
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -89,7 +90,6 @@ jobs:
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org'
-          package-manager-cache: false
 
       - name: Setup npm trusted publishing client
         run: npm install --global npm@11.19.0
