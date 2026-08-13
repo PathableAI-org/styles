@@ -260,8 +260,8 @@ index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb9
      },
      teardown(root) {
        selectOrMatches(MODAL, root).forEach((modalWindow) => {
-+        const modalWrapper = modalWindow.parentElement.parentElement;
-+        if (modalWrapper.classList.contains(VISIBLE_CLASS)) {
++        const modalWrapper = modalWindow.closest(`.${WRAPPER_CLASSNAME}`);
++        if (modalWrapper?.classList.contains(VISIBLE_CLASS)) {
 +          modal.toggleModal.call(modal, { target: null });
 +        }
 +
