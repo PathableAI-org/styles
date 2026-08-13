@@ -84,6 +84,7 @@ screenshots/
 
 # Storybook test results
 apps/storybook/test-results/
+apps/storybook-react/test-results/
 
 # Test artifacts
 artifacts/
