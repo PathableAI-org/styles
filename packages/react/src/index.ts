@@ -14,6 +14,14 @@ export type {
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
+export { AppShell } from './components/AppShell/AppShell.js'
+export type {
+  AppShellProps,
+  BottomNavItem,
+  ContentWidth,
+} from './components/AppShell/AppShell.js'
+export { AppShellNavItem } from './components/AppShell/AppShellNavItem.js'
+export type { AppShellNavItemProps } from './components/AppShell/AppShellNavItem.js'
 export { ErrorMessage } from './components/ErrorMessage/ErrorMessage.js'
 export type { ErrorMessageProps } from './components/ErrorMessage/ErrorMessage.js'
 export { Checkbox } from './components/Checkbox/Checkbox.js'
