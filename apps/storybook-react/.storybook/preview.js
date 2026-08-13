@@ -1,5 +1,4 @@
 import '@pathableai/styles/dist/styles.css'
-import '@pathableai/styles/js'
 
 /** @type { import('@storybook/react-vite').Preview } */
 const preview = {

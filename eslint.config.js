@@ -87,7 +87,12 @@ export default defineConfig([
 
   // Config/scripts files (Node context, no-console allowed)
   {
-    files: ['**/scripts/**', '**/*.config.{js,mjs,cjs,ts}', '**/.storybook/**'],
+    files: [
+      '**/scripts/**',
+      '**/*.config.{js,mjs,cjs,ts}',
+      '**/.storybook/**',
+      'behavior-contracts/**/*.mjs',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,

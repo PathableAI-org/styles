@@ -35,9 +35,9 @@ target conformance, and routine validation remain independently reviewable.
 **Purpose**: Establish top-level tooling and root commands without changing a
 package's production dependencies.
 
-- [ ] T001 Add `@cucumber/cucumber` as a root development dependency in `package.json` and `pnpm-lock.yaml`
-- [ ] T002 Create the top-level contract directory and contributor overview in `behavior-contracts/README.md`
-- [ ] T003 [P] Configure Cucumber feature and ESM support discovery in `behavior-contracts/cucumber.mjs`
+- [x] T001 Add `@cucumber/cucumber` as a root development dependency in `package.json` and `pnpm-lock.yaml`
+- [x] T002 Create the top-level contract directory and contributor overview in `behavior-contracts/README.md`
+- [x] T003 [P] Configure Cucumber feature and ESM support discovery in `behavior-contracts/cucumber.mjs`
 
 ---
 
@@ -48,9 +48,9 @@ by every scenario.
 
 **⚠️ CRITICAL**: No user story can execute until this phase is complete.
 
-- [ ] T004 Define required capabilities, target metadata, fixture mappings, and validation in `behavior-contracts/targets.mjs`
-- [ ] T005 Implement per-scenario target, page, fixture navigation, and disclosure resolution state in `behavior-contracts/support/world.mjs`
-- [ ] T006 Implement shared browser launch, isolated context setup, teardown, and cleanup hooks in `behavior-contracts/support/hooks.mjs`
+- [x] T004 Define required capabilities, target metadata, fixture mappings, and validation in `behavior-contracts/targets.mjs`
+- [x] T005 Implement per-scenario target, page, fixture navigation, and disclosure resolution state in `behavior-contracts/support/world.mjs`
+- [x] T006 Implement shared browser launch, isolated context setup, teardown, and cleanup hooks in `behavior-contracts/support/hooks.mjs`
 
 **Checkpoint**: Cucumber can create a browser world for a validated target and
 resolve a package-specific story from a shared fixture name.
@@ -68,12 +68,12 @@ ARIA state, associated-panel availability, and focus.
 
 ### Tests for User Story 1
 
-- [ ] T007 [US1] Write the three traceable readable Accordion scenarios in `behavior-contracts/features/accordion.feature`
-- [ ] T008 [US1] Implement fixture, keyboard, disclosure-state, panel-availability, and focus step definitions in `behavior-contracts/steps/accordion.steps.mjs`
+- [x] T007 [US1] Write the three traceable readable Accordion scenarios in `behavior-contracts/features/accordion.feature`
+- [x] T008 [US1] Implement fixture, keyboard, disclosure-state, panel-availability, and focus step definitions in `behavior-contracts/steps/accordion.steps.mjs`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Validate the feature has exactly three scenarios and no undefined, pending, or package-specific steps through `behavior-contracts/cucumber.mjs`
+- [x] T009 [US1] Validate the feature has exactly three scenarios and no undefined, pending, or package-specific steps through `behavior-contracts/cucumber.mjs`
 
 **Checkpoint**: One canonical contract describes Enter expansion, Space
 collapse, and single-open behavior without framework implementation details.
@@ -91,14 +91,14 @@ preview does not import `@pathableai/styles/js`.
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Add deterministic collapsed and initially-expanded styles fixtures in `packages/styles/src/stories/components/Communication/Accordion.stories.ts`
-- [ ] T011 [P] [US2] Confirm deterministic collapsed and initially-expanded React fixtures remain addressable in `packages/react/src/stories/components/Communication/Accordion.stories.tsx`
+- [x] T010 [P] [US2] Add deterministic collapsed and initially-expanded styles fixtures in `packages/styles/src/stories/components/Communication/Accordion.stories.ts`
+- [x] T011 [P] [US2] Confirm deterministic collapsed and initially-expanded React fixtures remain addressable in `packages/react/src/stories/components/Communication/Accordion.stories.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Remove global styles JavaScript behavior from the React catalog in `apps/storybook-react/.storybook/preview.js`
-- [ ] T013 [US2] Register the styles and React fixture story IDs, capabilities, build prerequisites, static directories, and ports in `behavior-contracts/targets.mjs`
-- [ ] T014 [US2] Execute both target-specific Cucumber profiles and correct any shared-contract or fixture mismatch in `behavior-contracts/`
+- [x] T012 [US2] Remove global styles JavaScript behavior from the React catalog in `apps/storybook-react/.storybook/preview.js`
+- [x] T013 [US2] Register the styles and React fixture story IDs, capabilities, build prerequisites, static directories, and ports in `behavior-contracts/targets.mjs`
+- [x] T014 [US2] Execute both target-specific Cucumber profiles and correct any shared-contract or fixture mismatch in `behavior-contracts/`
 
 **Checkpoint**: Both implementations produce three passing conformance results
 from the same feature file without competing behavior runtimes.
@@ -116,13 +116,13 @@ readiness, and no remaining owned server or browser processes.
 
 ### Tests for User Story 3
 
-- [ ] T015 [US3] Define runner preflight, readiness, child failure, signal, and cleanup expectations in `behavior-contracts/README.md`
+- [x] T015 [US3] Define runner preflight, readiness, child failure, signal, and cleanup expectations in `behavior-contracts/README.md`
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Implement sequential build, static-server readiness, Cucumber invocation, target-labelled output, signal handling, and cleanup in `behavior-contracts/run.mjs`
-- [ ] T017 [US3] Add styles, React, and aggregate Accordion contract scripts in `package.json`
-- [ ] T018 [US3] Verify unknown targets and missing fixture/capability registrations fail with actionable target context through `behavior-contracts/run.mjs`
+- [x] T016 [US3] Implement sequential build, static-server readiness, Cucumber invocation, target-labelled output, signal handling, and cleanup in `behavior-contracts/run.mjs`
+- [x] T017 [US3] Add styles, React, and aggregate Accordion contract scripts in `package.json` and enforce the aggregate in `.github/workflows/ci-full.yml`
+- [x] T018 [US3] Verify unknown targets and missing fixture/capability registrations fail with actionable target context through `behavior-contracts/run.mjs`
 
 **Checkpoint**: Local and CI-compatible commands reliably produce the complete
 six-result matrix and clean up owned processes.
@@ -134,11 +134,11 @@ six-result matrix and clean up owned processes.
 **Purpose**: Reconcile documentation, validators, and complete repository
 evidence before publication.
 
-- [ ] T019 [P] Document implementation ownership, Gherkin consumption, target registration, exclusions, and manual-review limits in `behavior-contracts/README.md`
-- [ ] T020 Verify lint coverage includes all `behavior-contracts/**/*.mjs` files in `eslint.config.js`
-- [ ] T021 Run focused validation commands from `specs/036-accordion-behavior-contract/quickstart.md`
-- [ ] T022 Run `pnpm lint`, `pnpm typecheck`, `pnpm test:storybook`, `pnpm test:next-consumer`, and `git diff --check origin/main`
-- [ ] T023 Reconcile the implementation with `specs/036-accordion-behavior-contract/spec.md`, `plan.md`, `contracts/runner.md`, and mark all completed tasks in `specs/036-accordion-behavior-contract/tasks.md`
+- [x] T019 [P] Document implementation ownership, Gherkin consumption, target registration, exclusions, and manual-review limits in `behavior-contracts/README.md`
+- [x] T020 Verify lint coverage includes all `behavior-contracts/**/*.mjs` files in `eslint.config.js`
+- [x] T021 Run focused validation commands from `specs/036-accordion-behavior-contract/quickstart.md`
+- [x] T022 Run `pnpm lint`, `pnpm typecheck`, `pnpm test:storybook`, `pnpm test:next-consumer`, and `git diff --check origin/main`
+- [x] T023 Reconcile the implementation with `specs/036-accordion-behavior-contract/spec.md`, `plan.md`, `contracts/runner.md`, and mark all completed tasks in `specs/036-accordion-behavior-contract/tasks.md`
 
 ---
 
