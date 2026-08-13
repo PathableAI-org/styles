@@ -120,7 +120,7 @@
 .pathable-app-shell__nav-item--active,
 .pathable-app-shell__nav-item[aria-current='page'] {
   font-weight: 700;
-  color: var(--pathable-color-accent);
+  color: var(--pathable-color-text);
   border-left-color: var(--pathable-color-accent);
   background: color-mix(in srgb, var(--pathable-color-accent) 8%, transparent);
 }

@@ -204,9 +204,10 @@ export const MobileShell: Story = {
       </p>
     </AppShell>
   ),
-  parameters: {
+  globals: {
     viewport: {
-      defaultViewport: 'mobile1',
+      value: 'mobile1',
+      isRotated: false,
     },
   },
 }
@@ -289,9 +290,10 @@ export const NarrowViewport: Story = {
       <p>All mobile regions are visible at 375px.</p>
     </AppShell>
   ),
-  parameters: {
+  globals: {
     viewport: {
-      defaultViewport: 'mobile1',
+      value: 'mobile1',
+      isRotated: false,
     },
   },
 }
@@ -429,25 +431,40 @@ export const ResponsiveLayoutSwitch: Story = {
       <h1>Mobile View</h1>
     </AppShell>
   ),
-  parameters: {
+  globals: {
     viewport: {
-      defaultViewport: 'mobile1',
+      value: 'mobile1',
+      isRotated: false,
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('top bar title is present on mobile', async () => {
-      await expect(canvas.getByText('PathAble')).toBeInTheDocument()
+      const topBar = canvas.getByRole('banner', { hidden: true })
+      await expect(within(topBar).getByText('PathAble')).toBeInTheDocument()
     })
 
     await step(
       'bottom navigation is present with active destination',
       async () => {
-        const bottomNav = canvas.getByRole('navigation', { name: 'Primary' })
+        const bottomNav = canvas
+          .getAllByRole('navigation', { hidden: true })
+          .find((navigation) =>
+            within(navigation).queryByRole('link', {
+              name: /Home/,
+              hidden: true,
+            }),
+          )
+
+        if (!bottomNav) {
+          throw new Error('Mobile bottom navigation was not rendered')
+        }
+
         await expect(bottomNav).toBeInTheDocument()
         const activeItem = within(bottomNav).getByRole('link', {
           name: /Home/,
+          hidden: true,
         })
         await expect(activeItem).toHaveAttribute('aria-current', 'page')
       },
