@@ -11,15 +11,18 @@ export default {
   },
 }
 
-export const Default = {
-  render: () => `
+function renderAccordion(firstExpanded = false) {
+  const firstExpandedValue = String(firstExpanded)
+  const firstHiddenAttribute = firstExpanded ? '' : ' hidden'
+
+  return `
     <div class="pathable-accordion">
       <div class="pathable-accordion__heading">
-        <button class="pathable-accordion__button" aria-expanded="false" aria-controls="accordion-content-1">
+        <button class="pathable-accordion__button" aria-expanded="${firstExpandedValue}" aria-controls="accordion-content-1">
           First Amendment
         </button>
       </div>
-      <div class="pathable-accordion__content" id="accordion-content-1" hidden>
+      <div class="pathable-accordion__content" id="accordion-content-1"${firstHiddenAttribute}>
         <p>Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.</p>
       </div>
       <div class="pathable-accordion__heading">
@@ -39,5 +42,13 @@ export const Default = {
         <p>No Soldier shall, in time of peace be quartered in any house, without the consent of the Owner, nor in time of war, but in a manner to be prescribed by law.</p>
       </div>
     </div>
-  `,
+  `
+}
+
+export const Default = {
+  render: () => renderAccordion(),
+}
+
+export const InitiallyExpanded = {
+  render: () => renderAccordion(true),
 }
