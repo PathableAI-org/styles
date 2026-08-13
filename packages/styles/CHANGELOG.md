@@ -1,5 +1,12 @@
 # @pathableai/styles
 
+## 0.0.2
+
+### Patch Changes
+
+- b0b2fe0: Fix Next.js App Router consumption by using the consumer's React runtime,
+  retaining automatic styles, and packaging every compiled CSS asset.
+
 ## 0.0.1
 
 ### Patch Changes
