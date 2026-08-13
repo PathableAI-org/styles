@@ -2,8 +2,8 @@
 //
 // Wraps usa-modal component as pathable-modal.
 // USWDS dependencies: uswds-fonts, usa-icon
-// JS-driven: Yes — modal JS selects .usa-modal, .usa-modal__close
-// Requires .usa-* on DOM: Yes — keep .usa-modal for JS to find elements
+// JS-driven: Yes — patched modal JS selects .pathable-modal
+// Requires .usa-* on DOM: Yes — keep .usa-* classes for USWDS nested styles
 
 @use 'uswds-core' as *;
 
@@ -14,8 +14,20 @@
   @extend .usa-modal;
 }
 
+.pathable-modal-wrapper {
+  @extend .usa-modal-wrapper;
+}
+
+.pathable-modal-overlay {
+  @extend .usa-modal-overlay;
+}
+
 .pathable-modal__content {
   @extend .usa-modal__content;
+}
+
+.pathable-modal__main {
+  @extend .usa-modal__main;
 }
 
 .pathable-modal__heading {
@@ -28,4 +40,8 @@
 
 .pathable-modal__close {
   @extend .usa-modal__close;
+}
+
+.pathable-js-modal--active {
+  @extend .usa-js-modal--active;
 }

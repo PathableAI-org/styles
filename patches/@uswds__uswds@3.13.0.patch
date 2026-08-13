@@ -201,6 +201,13 @@ diff --git a/packages/usa-modal/src/index.js b/packages/usa-modal/src/index.js
 index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb921d991f8 100644
 --- a/packages/usa-modal/src/index.js
 +++ b/packages/usa-modal/src/index.js
+@@ -14,5 +14,5 @@ const FORCE_ACTION_ATTRIBUTE = "data-force-action";
+ const NON_MODAL_HIDDEN_ATTRIBUTE = `data-modal-hidden`;
+-const MODAL = `.${MODAL_CLASSNAME}`;
++const MODAL = `.${MODAL_CLASSNAME}:not([data-react-owned])`;
+ const INITIAL_FOCUS = `.${WRAPPER_CLASSNAME} *[data-focus]`;
+ const CLOSE_BUTTON = `${WRAPPER_CLASSNAME} *[${CLOSER_ATTRIBUTE}]`;
+ const OPENERS = `*[${OPENER_ATTRIBUTE}][aria-controls]`;
 @@ -20,8 +20,8 @@ const CLOSERS = `${CLOSE_BUTTON}, .${OVERLAY_CLASSNAME}:not([${FORCE_ACTION_ATTR
  const NON_MODALS = `body > *:not(.${WRAPPER_CLASSNAME}):not([aria-hidden])`;
  const NON_MODALS_HIDDEN = `[${NON_MODAL_HIDDEN_ATTRIBUTE}]`;
@@ -211,6 +218,55 @@ index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb9
 +const PREVENT_CLICK_CLASS = "pathable-js-no-click";
  const VISIBLE_CLASS = "is-visible";
  const HIDDEN_CLASS = "is-hidden";
+
+@@ -63,10 +63,14 @@ function toggleModal(event) {
+   let originalOpener;
+   let clickedElement = event.target;
+   const { body } = document;
+   const safeActive = !isActive();
++  if (safeActive && document.querySelector(`.${WRAPPER_CLASSNAME}[data-react-owned].${VISIBLE_CLASS}`)) {
++    return false;
++  }
++
+   const modalId = clickedElement
+     ? clickedElement.getAttribute("aria-controls")
+-    : document.querySelector(`.${WRAPPER_CLASSNAME}.${VISIBLE_CLASS}`);
++    : document.querySelector(`.${WRAPPER_CLASSNAME}.${VISIBLE_CLASS}:not([data-react-owned])`);
+   const targetModal = safeActive
+     ? document.getElementById(modalId)
+-    : document.querySelector(`.${WRAPPER_CLASSNAME}.${VISIBLE_CLASS}`);
++    : document.querySelector(`.${WRAPPER_CLASSNAME}.${VISIBLE_CLASS}:not([data-react-owned])`);
+@@ -163,7 +167,7 @@ function toggleModal(event) {
+       nonModal.setAttribute("aria-hidden", "true");
+       nonModal.setAttribute(NON_MODAL_HIDDEN_ATTRIBUTE, "");
+     });
+-  } else if (!safeActive && menuButton && returnFocus) {
++  } else if (!safeActive) {
+     // The modal window is closed.
+     // Non-modals now accessible to screen reader
+     document.querySelectorAll(NON_MODALS_HIDDEN).forEach((nonModal) => {
+@@ -173,6 +177,8 @@ function toggleModal(event) {
+     // Focus is returned to the opener
+-    returnFocus.focus();
+-    modal.focusTrap.update(safeActive);
++    if (menuButton && returnFocus) {
++      returnFocus.focus();
++    }
++    modal.focusTrap?.update(safeActive);
+   }
+
+   return safeActive;
+@@ -374,6 +380,11 @@ modal = behavior(
+     },
+     teardown(root) {
+       selectOrMatches(MODAL, root).forEach((modalWindow) => {
++        const modalWrapper = modalWindow.parentElement.parentElement;
++        if (modalWrapper.classList.contains(VISIBLE_CLASS)) {
++          modal.toggleModal.call(modal, { target: null });
++        }
++
+         const modalId = modalWindow.id;
+         cleanUpModal(modalWindow);
  
 diff --git a/packages/usa-range/src/index.js b/packages/usa-range/src/index.js
 --- a/packages/usa-range/src/index.js

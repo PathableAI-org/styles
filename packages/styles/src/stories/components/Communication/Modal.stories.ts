@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Status**: CSS-only in this package. The React wrapper at `@pathableai/react` provides JS behavior (open/close, focus trapping, keyboard Escape, scroll locking).\n\n**CSS markup**: Requires `.pathable-modal`, `.pathable-modal__content`, `.pathable-modal__heading`, `.pathable-modal__footer`, `.pathable-modal__close`.\n\n**Note**: The overlay is rendered by USWDS JS and is not a separate CSS class. The `pathable-modal__heading` replaces the title element. No `__overlay`, `__dialog`, `__header`, or `__title` selectors exist — the markup uses `__heading` for the heading and `__content` as the direct child of `pathable-modal`.\n\n**Consumers must**: Import `@pathableai/styles` CSS. For JS behavior, use `@pathableai/react` Modal component or import `@pathableai/styles/js`. When using USWDS JS, keep `.usa-modal` on the DOM alongside `.pathable-modal`.',
+          '**Status**: The source markup is enhanced by `@pathableai/styles/js`, which creates the wrapper and backdrop, manages visibility, traps focus, handles Escape, locks scrolling, and isolates background content. The React wrapper at `@pathableai/react` owns the equivalent behavior itself.\n\n**CSS markup**: The enhanced structure uses `.pathable-modal-wrapper`, `.pathable-modal-overlay`, `.pathable-modal`, `.pathable-modal__content`, `.pathable-modal__main`, `.pathable-modal__heading`, `.pathable-modal__footer`, and `.pathable-modal__close`.\n\n**Consumers must**: Import `@pathableai/styles` CSS and either import `@pathableai/styles/js` for source markup or use the React `Modal`. Keep matching `.usa-*` classes on source markup for USWDS nested style selectors.',
       },
     },
   },
@@ -13,17 +13,22 @@ export default {
 
 export const Default = {
   render: () => `
-    <div class="pathable-modal">
-      <div class="pathable-modal__content">
-        <div class="pathable-modal__heading">
-          <h2 id="modal-heading">Add Support Activity</h2>
-          <button class="pathable-modal__close" aria-label="Close modal">&times;</button>
+    <button class="pathable-button usa-button" type="button" aria-controls="support-activity-modal" data-open-modal>
+      Add support activity
+    </button>
+    <div class="pathable-modal usa-modal" id="support-activity-modal" aria-labelledby="modal-heading" aria-describedby="modal-description">
+      <div class="pathable-modal__content usa-modal__content">
+        <div class="pathable-modal__main usa-modal__main">
+          <h2 class="pathable-modal__heading usa-modal__heading" id="modal-heading">Add Support Activity</h2>
+          <div id="modal-description">
+            <p>Select the type of support activity to add to this participant's coaching plan. Activities are tied to employment goals and require supervisor approval.</p>
+          </div>
+          <div class="pathable-modal__footer usa-modal__footer">
+            <button class="pathable-button usa-button" type="button" data-close-modal>Add Activity</button>
+            <button class="pathable-button usa-button pathable-button--outline usa-button--outline" type="button" data-close-modal>Cancel</button>
+          </div>
         </div>
-        <p>Select the type of support activity to add to this participant's coaching plan. Activities are tied to employment goals and require supervisor approval.</p>
-        <div class="pathable-modal__footer">
-          <button class="pathable-button">Add Activity</button>
-          <button class="pathable-button pathable-button--outline">Cancel</button>
-        </div>
+        <button class="pathable-button usa-button pathable-modal__close usa-modal__close" type="button" aria-label="Close modal" data-close-modal>&times;</button>
       </div>
     </div>
   `,

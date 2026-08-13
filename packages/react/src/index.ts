@@ -112,6 +112,7 @@ export type { AccordionItem } from './components/Accordion/Accordion.js'
 export { Alert } from './components/Alert/Alert.js'
 export { Banner } from './components/Banner/Banner.js'
 export { Modal } from './components/Modal/Modal.js'
+export type { ModalProps } from './components/Modal/Modal.js'
 export { PageError } from './components/PageError/PageError.js'
 export type {
   PageErrorLayout,

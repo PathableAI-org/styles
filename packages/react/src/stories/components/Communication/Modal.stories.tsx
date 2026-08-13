@@ -1,6 +1,7 @@
 import { Modal } from '../../../components/Modal/Modal'
 import type { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test'
+import { useRef, useState } from 'react'
 import { LONG_CONTENT } from './fixtures'
 
 const meta = {
@@ -16,9 +17,11 @@ const meta = {
 
 **When not to use**: Do not use for non-essential information (use a Banner or Alert instead). Do not use for long or complex workflows. Do not use when the user needs to reference the underlying page content.
 
+**Behavior**: React owns the complete portaled overlay. Opening the modal isolates background body content with \`inert\` and \`aria-hidden\`, locks scrolling, and moves focus inside. The close button, Escape, or the backdrop requests close. Closing restores all managed document state and returns focus to the prior element. A separate \`@pathableai/styles/js\` import is not required.
+
 **Keyboard behavior**: Tab cycles through focusable elements within the modal. Escape closes the modal. Focus is trapped inside the modal while open.
 
-**Underlying element**: Portaled \`<div>\` with role="dialog" and aria-modal="true".`,
+**Underlying element**: A complete portaled overlay containing a \`<div>\` with role="dialog" and aria-modal="true".`,
       },
     },
   },
@@ -77,6 +80,67 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+function ModalLifecycleFixture({ onClose }: { onClose: () => void }) {
+  const [open, setOpen] = useState(false)
+  const initialFocusRef = useRef<HTMLButtonElement>(null)
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)}>
+        Open contract modal
+      </button>
+      <Modal
+        open={open}
+        onClose={() => {
+          onClose()
+          setOpen(false)
+        }}
+        title="Review activity"
+        description="Confirm the activity details before continuing."
+        initialFocusRef={initialFocusRef}
+        className="contract-dialog"
+        data-testid="contract-dialog"
+        footer={<button type="button">Save activity</button>}
+      >
+        <button ref={initialFocusRef} type="button">
+          Review selection
+        </button>
+      </Modal>
+    </>
+  )
+}
+
+function StackedModalFixture() {
+  const [lowerOpen, setLowerOpen] = useState(false)
+  const [upperOpen, setUpperOpen] = useState(false)
+
+  return (
+    <>
+      <button type="button" onClick={() => setLowerOpen(true)}>
+        Open lower modal
+      </button>
+      <Modal
+        open={lowerOpen}
+        onClose={() => setLowerOpen(false)}
+        title="Lower modal"
+      >
+        <button type="button" onClick={() => setUpperOpen(true)}>
+          Open upper modal
+        </button>
+      </Modal>
+      <Modal
+        open={upperOpen}
+        onClose={() => setUpperOpen(false)}
+        title="Upper modal"
+      >
+        <button type="button" onClick={() => setLowerOpen(false)}>
+          Remove lower modal
+        </button>
+      </Modal>
+    </>
+  )
+}
 
 // ---------------------------------------------------------------------------
 // Playground
@@ -241,15 +305,35 @@ export const OpenCloseBehavior: Story = {
   args: {
     open: true,
     title: 'Test Modal',
+    description: 'Modal contract description.',
     children: <p>Content here.</p>,
+    className: 'custom-dialog',
+    'data-testid': 'test-dialog',
     onClose: fn(),
   },
   play: async ({ args, step }) => {
-    await step('modal is rendered in the portal', async () => {
-      // The modal is portaled to document.body, so query the whole document
-      const dialog = document.body.querySelector('[role="dialog"]')
-      await expect(dialog).not.toBeNull()
-    })
+    await step(
+      'React renders and owns the complete portaled overlay',
+      async () => {
+        const dialog = within(document.body).getByRole('dialog', {
+          name: 'Test Modal',
+        })
+        const wrapper = dialog.closest('.pathable-modal-wrapper')
+        const overlay = dialog.closest('.pathable-modal-overlay')
+
+        await expect(dialog).toHaveAccessibleDescription(
+          'Modal contract description.',
+        )
+        await expect(dialog).toHaveClass('pathable-modal', 'custom-dialog')
+        await expect(dialog).toHaveAttribute('data-react-owned', 'true')
+        await expect(dialog).toHaveAttribute('data-testid', 'test-dialog')
+        await expect(wrapper).toHaveAttribute('data-react-owned', 'true')
+        await expect(overlay).not.toBeNull()
+        await expect(
+          document.querySelector('[data-placeholder-for]'),
+        ).toBeNull()
+      },
+    )
 
     await step('close button calls onClose', async () => {
       const closeButton = within(document.body).getByRole('button', {
@@ -258,6 +342,178 @@ export const OpenCloseBehavior: Story = {
       await userEvent.click(closeButton)
       await expect(args.onClose).toHaveBeenCalledTimes(1)
     })
+  },
+}
+
+export const DocumentStateRestoration: Story = {
+  render: (args) => <ModalLifecycleFixture onClose={args.onClose} />,
+  args: {
+    open: false,
+    onClose: fn(),
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const opener = canvas.getByRole('button', { name: 'Open contract modal' })
+    const preservedSibling = document.createElement('div')
+    const dynamicSibling = document.createElement('div')
+    const previousOverflow = document.body.style.getPropertyValue('overflow')
+    const previousOverflowPriority =
+      document.body.style.getPropertyPriority('overflow')
+    const hadActiveClass = document.body.classList.contains(
+      'pathable-js-modal--active',
+    )
+
+    preservedSibling.setAttribute('aria-hidden', 'false')
+    preservedSibling.setAttribute('inert', 'preserved')
+    document.body.append(preservedSibling)
+
+    try {
+      await step(
+        'opening isolates the background and moves focus',
+        async () => {
+          await userEvent.click(opener)
+
+          const dialog = within(document.body).getByRole('dialog', {
+            name: 'Review activity',
+          })
+          const initialFocus = within(dialog).getByRole('button', {
+            name: 'Review selection',
+          })
+
+          await waitFor(() => expect(initialFocus).toHaveFocus())
+          await expect(dialog).toHaveAccessibleDescription(
+            'Confirm the activity details before continuing.',
+          )
+          await expect(canvasElement).toHaveAttribute('aria-hidden', 'true')
+          await expect(canvasElement).toHaveAttribute('inert')
+          await expect(preservedSibling).toHaveAttribute('aria-hidden', 'true')
+          await expect(preservedSibling).toHaveAttribute('inert', '')
+          document.body.append(dynamicSibling)
+          await waitFor(() => {
+            expect(dynamicSibling).toHaveAttribute('aria-hidden', 'true')
+            expect(dynamicSibling).toHaveAttribute('inert', '')
+          })
+          await expect(document.body.style.overflow).toBe('hidden')
+          await expect(
+            document.body.classList.contains('pathable-js-modal--active'),
+          ).toBe(hadActiveClass)
+        },
+      )
+
+      await step(
+        'backdrop close restores prior document state and focus',
+        async () => {
+          const overlay = document.body.querySelector<HTMLElement>(
+            '.pathable-modal-overlay',
+          )
+          await expect(overlay).not.toBeNull()
+          await userEvent.click(overlay as HTMLElement)
+
+          await waitFor(() => {
+            expect(
+              within(document.body).queryByRole('dialog', {
+                name: 'Review activity',
+              }),
+            ).not.toBeInTheDocument()
+          })
+          await expect(args.onClose).toHaveBeenCalledTimes(1)
+          await expect(opener).toHaveFocus()
+          await expect(canvasElement).not.toHaveAttribute('aria-hidden')
+          await expect(canvasElement).not.toHaveAttribute('inert')
+          await expect(preservedSibling).toHaveAttribute('aria-hidden', 'false')
+          await expect(preservedSibling).toHaveAttribute('inert', 'preserved')
+          await expect(dynamicSibling).not.toHaveAttribute('aria-hidden')
+          await expect(dynamicSibling).not.toHaveAttribute('inert')
+          await expect(document.body.style.overflow).toBe(previousOverflow)
+          await expect(
+            document.body.style.getPropertyPriority('overflow'),
+          ).toBe(previousOverflowPriority)
+          await expect(
+            document.body.classList.contains('pathable-js-modal--active'),
+          ).toBe(hadActiveClass)
+        },
+      )
+
+      await step(
+        'Escape closes and restores focus after reopening',
+        async () => {
+          await userEvent.click(opener)
+          await waitFor(() => {
+            expect(
+              within(document.body).getByRole('button', {
+                name: 'Review selection',
+              }),
+            ).toHaveFocus()
+          })
+          await userEvent.keyboard('{Escape}')
+          await waitFor(() => expect(opener).toHaveFocus())
+          await expect(args.onClose).toHaveBeenCalledTimes(2)
+        },
+      )
+    } finally {
+      preservedSibling.remove()
+      dynamicSibling.remove()
+    }
+  },
+}
+
+export const StackedModalRestoration: Story = {
+  render: () => <StackedModalFixture />,
+  args: {
+    open: false,
+  },
+  play: async ({ canvasElement, step }) => {
+    const pageOpener = within(canvasElement).getByRole('button', {
+      name: 'Open lower modal',
+    })
+
+    await step('opening an upper modal isolates the lower layer', async () => {
+      await userEvent.click(pageOpener)
+      const lowerDialog = within(document.body).getByRole('dialog', {
+        name: 'Lower modal',
+      })
+      await userEvent.click(
+        within(lowerDialog).getByRole('button', { name: 'Open upper modal' }),
+      )
+
+      const lowerWrapper = lowerDialog.closest('.pathable-modal-wrapper')
+      const upperDialog = within(document.body).getByRole('dialog', {
+        name: 'Upper modal',
+      })
+      await expect(lowerWrapper).toHaveAttribute('aria-hidden', 'true')
+      await expect(lowerWrapper).toHaveAttribute('inert')
+      await expect(upperDialog).not.toHaveAttribute('aria-hidden')
+      await expect(document.body.style.overflow).toBe('hidden')
+    })
+
+    await step(
+      'out-of-order teardown preserves the active layer and page focus target',
+      async () => {
+        const upperDialog = within(document.body).getByRole('dialog', {
+          name: 'Upper modal',
+        })
+        await userEvent.click(
+          within(upperDialog).getByRole('button', {
+            name: 'Remove lower modal',
+          }),
+        )
+
+        await waitFor(() => {
+          expect(
+            within(document.body).queryByRole('dialog', {
+              name: 'Lower modal',
+            }),
+          ).not.toBeInTheDocument()
+        })
+        await expect(document.body.style.overflow).toBe('hidden')
+
+        await userEvent.click(
+          within(upperDialog).getByRole('button', { name: 'Close modal' }),
+        )
+        await waitFor(() => expect(pageOpener).toHaveFocus())
+        await expect(document.body.style.overflow).toBe('')
+      },
+    )
   },
 }
 

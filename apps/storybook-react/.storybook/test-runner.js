@@ -47,7 +47,12 @@ const config = {
         : {}),
     }
 
-    await checkA11y(page, '#storybook-root', {
+    const reactModal = '.pathable-modal-wrapper[data-react-owned="true"]'
+    const axeTarget = (await page.locator(reactModal).count())
+      ? reactModal
+      : '#storybook-root'
+
+    await checkA11y(page, axeTarget, {
       detailedReport: true,
       detailedReportOptions: { html: true },
       axeOptions: {
