@@ -1,12 +1,11 @@
-# Contract: Accordion Behavior Runner
+# Contract: Behavior Contract Runner
 
 ## Public Commands
 
 | Command | Required result |
 | --- | --- |
-| `pnpm test:contracts:accordion:styles` | Build, serve, and execute all Accordion scenarios against styles |
-| `pnpm test:contracts:accordion:react` | Build, serve, and execute all Accordion scenarios against React |
-| `pnpm test:contracts:accordion` | Execute both targets sequentially and fail if either fails |
+| `pnpm test:contracts:styles` | Build, serve, and execute every discovered feature against styles |
+| `pnpm test:contracts` | Execute every discovered feature against every registered target and fail if any fails |
 
 All commands own their spawned server and browser lifecycle. They return zero
 only when build, readiness, preflight, every scenario, and cleanup succeed.
@@ -46,7 +45,7 @@ Shared step text is intentionally constrained:
 
 Step definitions locate disclosures by accessible role and name. They may use
 `aria-controls` only to resolve the associated panel. They MUST NOT use PathAble
-CSS classes, React props, test IDs, hooks, or private component state.
+CSS classes, framework props, test IDs, hooks, or private component state.
 
 ## Fixture Resolution
 
@@ -89,8 +88,7 @@ No required scenario uses pending, skipped, or undefined steps.
 
 - The styles target runs with `@pathableai/styles/js` installed by its normal
   Storybook preview.
-- The React target loads PathAble CSS but does not load
-  `@pathableai/styles/js`; Accordion state changes originate from React.
-- Neither target imports the Gherkin feature or step definitions.
-- The top-level runner imports no React component source or styles JavaScript
+- Framework targets are not registered or changed by this pilot.
+- Targets do not import the Gherkin feature or step definitions.
+- The top-level runner imports no component source or styles JavaScript
   implementation module directly.

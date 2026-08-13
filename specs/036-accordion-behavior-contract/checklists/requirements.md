@@ -35,5 +35,6 @@ to planning
 ## Notes
 
 - Validation passed on the first review iteration.
-- References to the styles and React targets define the requested product
-  boundary; tool and runner decisions remain in planning artifacts.
+- References to the initial styles target and deferred framework targets define
+  the requested product boundary; tool and runner decisions remain in planning
+  artifacts.

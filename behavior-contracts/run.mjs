@@ -146,7 +146,7 @@ async function stopServer(server) {
 async function runTarget(targetName) {
   const target = getTarget(targetName)
 
-  console.log(`\n=== Accordion behavior contracts: ${target.name} ===`)
+  console.log(`\n=== Behavior contracts: ${target.name} ===`)
 
   for (const [command, ...args] of target.buildCommands) {
     await runCommand(
@@ -212,6 +212,6 @@ try {
     await runTarget(targetName)
   }
 } catch (error) {
-  console.error(`\nAccordion behavior contracts failed: ${error.message}`)
+  console.error(`\nBehavior contracts failed: ${error.message}`)
   process.exitCode = 1
 }

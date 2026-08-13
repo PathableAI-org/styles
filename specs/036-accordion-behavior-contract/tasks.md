@@ -80,28 +80,28 @@ collapse, and single-open behavior without framework implementation details.
 
 ---
 
-## Phase 4: User Story 2 - Verify Independent Implementations (Priority: P2)
+## Phase 4: User Story 2 - Verify the Initial Implementation (Priority: P2)
 
-**Goal**: Supply equivalent styles and React fixtures and prove each target
-implements the shared behavior independently.
+**Goal**: Supply styles fixtures, prove the reference implementation conforms,
+and defer framework registration without modifying React.
 
-**Independent Test**: Run the same feature separately against the styles and
-React Storybooks and observe three passing scenarios per target while the React
-preview does not import `@pathableai/styles/js`.
+**Independent Test**: Run all discovered features against the styles Storybook,
+observe three passing scenarios, and confirm the feature diff contains no React
+component, story, or catalog changes.
 
 ### Tests for User Story 2
 
 - [x] T010 [P] [US2] Add deterministic collapsed and initially-expanded styles fixtures in `packages/styles/src/stories/components/Communication/Accordion.stories.ts`
-- [x] T011 [P] [US2] Confirm deterministic collapsed and initially-expanded React fixtures remain addressable in `packages/react/src/stories/components/Communication/Accordion.stories.tsx`
+- [x] T011 [P] [US2] Confirm React components, stories, and catalog configuration remain outside this feature's diff
 
 ### Implementation for User Story 2
 
-- [x] T012 [US2] Remove global styles JavaScript behavior from the React catalog in `apps/storybook-react/.storybook/preview.js`
-- [x] T013 [US2] Register the styles and React fixture story IDs, capabilities, build prerequisites, static directories, and ports in `behavior-contracts/targets.mjs`
-- [x] T014 [US2] Execute both target-specific Cucumber profiles and correct any shared-contract or fixture mismatch in `behavior-contracts/`
+- [x] T012 [US2] Keep framework targets, including React, explicitly deferred in `behavior-contracts/README.md`
+- [x] T013 [US2] Register the styles fixture story IDs, capabilities, build prerequisites, static directory, and port in `behavior-contracts/targets.mjs`
+- [x] T014 [US2] Execute the styles Cucumber target and correct any shared-contract or fixture mismatch in `behavior-contracts/`
 
-**Checkpoint**: Both implementations produce three passing conformance results
-from the same feature file without competing behavior runtimes.
+**Checkpoint**: The reference implementation produces three passing
+conformance results and React remains unchanged and unregistered.
 
 ---
 
@@ -121,11 +121,11 @@ readiness, and no remaining owned server or browser processes.
 ### Implementation for User Story 3
 
 - [x] T016 [US3] Implement sequential build, static-server readiness, Cucumber invocation, target-labelled output, signal handling, and cleanup in `behavior-contracts/run.mjs`
-- [x] T017 [US3] Add styles, React, and aggregate Accordion contract scripts in `package.json` and enforce the aggregate in `.github/workflows/ci-full.yml`
+- [x] T017 [US3] Add general aggregate and styles-only contract scripts in `package.json` and enforce the general command under a component-neutral job in `.github/workflows/ci-full.yml`
 - [x] T018 [US3] Verify unknown targets and missing fixture/capability registrations fail with actionable target context through `behavior-contracts/run.mjs`
 
-**Checkpoint**: Local and CI-compatible commands reliably produce the complete
-six-result matrix and clean up owned processes.
+**Checkpoint**: Local and CI-compatible commands discover every feature, run
+every registered target, and clean up owned processes.
 
 ---
 
@@ -152,8 +152,8 @@ evidence before publication.
   test-first contract.
 - **US2 (Phase 4)**: Depends on US1; makes the initially failing shared contract
   executable against both packages.
-- **US3 (Phase 5)**: Depends on both targets passing; packages lifecycle into
-  stable contributor commands.
+- **US3 (Phase 5)**: Depends on the initial target passing; packages lifecycle
+  into stable contributor commands.
 - **Polish (Phase 6)**: Depends on all user stories.
 
 ### User Story Dependencies
@@ -183,8 +183,8 @@ evidence before publication.
 
 1. Canonical contract → one reviewable shared behavior source.
 2. Styles target → executable reference implementation evidence.
-3. React target → independent framework conformance evidence.
-4. Aggregate launcher → repeatable local and CI workflow.
+3. General aggregate launcher → repeatable local and CI workflow.
+4. Future framework targets → separately scoped conformance evidence.
 5. Full validation → PR-ready repository evidence.
 
 ## Notes

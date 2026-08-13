@@ -56,38 +56,39 @@ scenarios or steps. Missing target data becomes a preflight failure.
 - Put adapters inside each package. Rejected for the pilot because it disperses
   the shared conformance configuration the user requested at repository root.
 
-## Behavior Independence
+## Framework Target Deferral
 
-**Decision**: Keep the styles Storybook's `@pathableai/styles/js` import and
-remove that global import from the React Storybook.
+**Decision**: Keep the styles Storybook's existing
+`@pathableai/styles/js` import, register only the styles target, and make no
+React component or catalog changes in this pilot.
 
-**Rationale**: The styles bundle installs delegated Accordion behavior on the
-document and therefore supports stories rendered after initialization. React
-already owns Accordion state and click handling. Loading both behaviors into
-the React catalog makes independence unprovable and risks competing DOM/state
-updates.
+**Rationale**: The first PR should establish the general discovery, target,
+browser, and CI mechanism with the styles-owned reference implementation.
+Registering React also requires proving that its native behavior is not masked
+or affected by a globally installed DOM runtime; that is a separate,
+framework-specific change.
 
 **Alternatives considered**:
 
-- Leave the bundle globally loaded in React. Rejected because passing behavior
-  could be supplied or affected by the reference implementation.
-- Add a test-only environment flag. Rejected because the normal React
-  Storybook should itself demonstrate framework-native ownership.
+- Register React while leaving its catalog unchanged. Rejected because passing
+  behavior could be supplied or affected by the reference implementation.
+- Remove the styles behavior bundle from the React catalog in this pilot.
+  Rejected because the user explicitly deferred all React changes.
 
 ## Scenario Scope
 
 **Decision**: Begin with three scenarios: Enter expands, Space collapses, and
 opening a second item closes the first.
 
-**Rationale**: These behaviors exist in the styles JavaScript and React default
-contract, cover the essential disclosure state machine, and exercise separate
-collapsed and expanded fixtures. Panel association, visibility, focus
-retention, and ARIA state are asserted inside these scenarios.
+**Rationale**: These behaviors exist in the styles JavaScript contract, cover
+the essential disclosure state machine, and exercise separate collapsed and
+expanded fixtures. Panel association, visibility, focus retention, and ARIA
+state are asserted inside these scenarios.
 
 **Alternatives considered**:
 
-- Include disabled items. Deferred because disabled behavior currently exists
-  as a React API but is not an explicit styles JavaScript capability.
+- Include disabled items. Deferred because it is not yet an explicit styles
+  JavaScript capability.
 - Include multiple-open behavior. Deferred because target configuration and
   public ownership should be resolved deliberately rather than inferred into
   this minimal pilot.
@@ -106,8 +107,8 @@ failure handlers prevent leaked servers.
 
 - Require contributors to start Storybooks manually. Rejected because the
   aggregate command and CI would be nondeterministic and burdensome.
-- Start both Storybooks concurrently. Rejected for the pilot because it adds
-  lifecycle complexity without improving contract coverage.
+- Start multiple Storybooks concurrently. Rejected for the pilot because it
+  adds lifecycle complexity without improving contract coverage.
 
 ## Dependency Selection
 

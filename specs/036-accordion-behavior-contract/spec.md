@@ -6,7 +6,9 @@
 
 **Status**: Draft
 
-**Input**: User description: "Create a PR that introduces a top-level, package-independent executable behavior contract mechanism, starting only with Accordion and verifying both the styles JavaScript and React implementations."
+**Input**: User description: "Create a PR that introduces a top-level,
+package-independent executable behavior contract mechanism, starting only with
+Accordion. Keep the mechanism and CI general, and do not change React yet."
 
 ## Table of Contents
 
@@ -47,30 +49,28 @@ framework APIs, implementation internals, or package-specific selectors.
 
 ---
 
-### User Story 2 - Verify Independent Implementations (Priority: P2)
+### User Story 2 - Verify the Initial Implementation (Priority: P2)
 
-A package maintainer can run the same Accordion behavior contract against the
-framework-neutral styles implementation and the React implementation while
-allowing each package to implement the behavior in the way best suited to its
-runtime.
+A package maintainer can run the Accordion behavior contract against the
+styles reference implementation while leaving framework packages unchanged
+until they are deliberately registered later.
 
-**Why this priority**: Shared ownership only prevents drift when every claimed
-implementation is tested against the same observable requirements.
+**Why this priority**: The first executable target proves the shared contract
+and target-registration mechanism without coupling the infrastructure pilot to
+a framework migration.
 
-**Independent Test**: Execute the contract separately against the styles and
-React catalogs and confirm that every required Accordion scenario passes for
-both targets without either target loading the other target's behavior
-implementation.
+**Independent Test**: Execute every discovered feature against the registered
+styles catalog and confirm that all required Accordion scenarios pass while no
+React component, story, or catalog configuration changes.
 
 **Acceptance Scenarios**:
 
 1. **Given** the styles target is selected, **When** the Accordion contract is
    executed, **Then** all required scenarios run against the styles package's
    reference behavior.
-2. **Given** the React target is selected, **When** the same Accordion contract
-   is executed, **Then** all required scenarios run against React-owned
-   behavior without relying on the styles JavaScript behavior bundle.
-3. **Given** a required fixture or capability is missing from either target,
+2. **Given** a future framework target is not yet registered, **When** this
+   pilot runs, **Then** no framework component or catalog is modified or tested.
+3. **Given** a required fixture or capability is missing from the target,
    **When** conformance is requested, **Then** the run fails clearly rather
    than silently skipping the requirement.
 
@@ -79,22 +79,23 @@ implementation.
 ### User Story 3 - Run Conformance in Normal Validation (Priority: P3)
 
 A contributor can run one documented command locally and in continuous
-integration to see implementation-specific Accordion conformance results and
+integration to see implementation-specific behavior conformance results and
 diagnose a failure from the named scenario and target.
 
 **Why this priority**: The contract is durable only if it participates in the
 repository's routine validation and produces actionable evidence.
 
 **Independent Test**: Run the documented aggregate validation command and
-verify it exercises both targets, reports readable scenario names and target
-names, returns a nonzero result for a deliberate contract violation, and
+verify it discovers all feature files, exercises every registered target,
+reports readable scenario names and target names, returns a nonzero result for
+a deliberate contract violation, and
 leaves no persistent server processes or generated output in source control.
 
 **Acceptance Scenarios**:
 
-1. **Given** both implementations conform, **When** aggregate contract
-   validation runs, **Then** one successful result is reported for each
-   required scenario and target.
+1. **Given** all registered implementations conform, **When** aggregate
+   contract validation runs, **Then** one successful result is reported for
+   each discovered scenario and registered target.
 2. **Given** one implementation violates an observable Accordion outcome,
    **When** validation runs, **Then** the failing target, scenario, and expected
    outcome are identifiable from the result.
@@ -113,7 +114,8 @@ leaves no persistent server processes or generated output in source control.
 - A panel is visually hidden while still exposed through the relevant semantic
   contract, or visually present while marked unavailable.
 - Focus moves away from the disclosure after activation.
-- One target passes while the other fails the same scenario.
+- One registered target passes while another registered target fails the same
+  scenario.
 - A failed or interrupted run leaves a catalog server or browser process open.
 
 ## Requirements *(mandatory)*
@@ -132,15 +134,14 @@ leaves no persistent server processes or generated output in source control.
 - **FR-005**: The shared Accordion contract MUST cover Enter expansion, Space
   collapse, disclosure-to-panel association, expanded-state communication,
   panel availability, focus retention, and one-open-item behavior.
-- **FR-006**: The styles implementation and React implementation MUST each
-  provide a deterministic rendering target for every required shared fixture.
-- **FR-007**: Both implementations MUST be exercised by the same scenario
-  definitions and shared observable step vocabulary.
+- **FR-006**: The styles implementation MUST provide a deterministic rendering
+  target for every required shared fixture.
+- **FR-007**: Every registered implementation MUST be exercised by the same
+  discovered scenario definitions and shared observable step vocabulary.
 - **FR-008**: The styles target MUST exercise the behavior implementation owned
   and published by the styles package.
-- **FR-009**: The React target MUST exercise React-owned Accordion behavior
-  without depending on DOM mutation from the styles JavaScript behavior
-  implementation.
+- **FR-009**: This pilot MUST NOT modify or register React components, React
+  stories, or React catalog configuration.
 - **FR-010**: Target-specific mounting details MUST be isolated from the shared
   behavior scenarios and shared observable assertions.
 - **FR-011**: Missing required fixtures, capabilities, targets, or reachable
@@ -149,8 +150,9 @@ leaves no persistent server processes or generated output in source control.
 - **FR-012**: Scenario and runtime test names MUST describe observable product
   behavior; traceability identifiers MUST remain in contract metadata rather
   than user-facing test titles.
-- **FR-013**: Contributors MUST have separate validation commands for the
-  styles target, the React target, and the aggregate conformance matrix.
+- **FR-013**: Contributors MUST have a general validation command for every
+  discovered feature and registered target plus an optional styles-only
+  command.
 - **FR-014**: Aggregate validation MUST stop every browser and catalog process
   it starts on success, failure, or interruption.
 - **FR-015**: Existing catalog documentation, rendered accessibility checks,
@@ -185,15 +187,14 @@ leaves no persistent server processes or generated output in source control.
 
 - **SC-001**: One canonical set of exactly three initial Accordion scenarios
   covers Enter expansion, Space collapse, and one-open-item behavior.
-- **SC-002**: 100% of the three shared scenarios execute against both the
-  styles and React targets, producing six target-specific results.
-- **SC-003**: Both targets pass all shared scenarios without loading the other
-  target's behavior implementation.
+- **SC-002**: 100% of the three shared scenarios execute against the registered
+  styles target, producing three target-specific results.
+- **SC-003**: The styles target passes all shared scenarios through the styles
+  package's published behavior implementation.
 - **SC-004**: A missing fixture, unreachable target, or behavioral mismatch
   produces a nonzero result that names the affected target and scenario.
-- **SC-005**: A contributor can start the full two-target validation using one
-  documented command and determine the outcome without inspecting generated
-  implementation code.
+- **SC-005**: A contributor can start validation of all discovered contracts
+  and registered targets using one general documented command.
 - **SC-006**: Contract validation leaves zero browser or catalog processes
   started by the command running after completion or interruption.
 - **SC-007**: Existing required lint, build, Storybook, accessibility, and
@@ -201,15 +202,14 @@ leaves no persistent server processes or generated output in source control.
 
 ## Assumptions
 
-- The existing styles JavaScript Accordion behavior and React Accordion
-  component are the two implementations evaluated by this pilot.
+- The existing styles JavaScript Accordion behavior is the sole implementation
+  evaluated by this pilot; framework targets are intentionally deferred.
 - Deterministic component catalog stories remain the rendering boundary for
   browser-executed component validation.
 - The styles package continues to own the shared visual, semantic, and
-  framework-neutral behavior definition; React may retain its native state
-  implementation as long as it conforms.
-- Package-specific API behavior, such as controlled React state and callbacks,
-  remains in package-specific tests and is outside the shared contract.
+  framework-neutral behavior definition.
+- Package-specific API behavior remains in package-specific tests and is
+  outside the shared contract.
 - Disabled-item behavior and multiple-open-item behavior are deferred until
   their cross-implementation ownership and parity are explicitly resolved.
 - Automated conformance evidence does not replace manual keyboard, focus, or

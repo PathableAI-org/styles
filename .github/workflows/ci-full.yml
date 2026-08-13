@@ -190,8 +190,8 @@ jobs:
       - name: Build React Storybook
         run: pnpm --filter @pathable/storybook-react build-storybook
 
-  accordion-behavior-contracts:
-    name: Accordion behavior contracts (HTML + React)
+  behavior-contracts:
+    name: Behavior contracts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -211,8 +211,8 @@ jobs:
       - name: Install Playwright browser
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Test shared Accordion behavior
-        run: pnpm test:contracts:accordion
+      - name: Test behavior contracts
+        run: pnpm test:contracts
 
   react-package-validation:
     name: React package validation

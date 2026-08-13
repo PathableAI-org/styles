@@ -30,7 +30,7 @@ A concrete implementation environment evaluated for conformance.
 
 | Field | Description | Validation |
 | --- | --- | --- |
-| Name | Stable CLI/reporting name | `styles` or `react` in this pilot |
+| Name | Stable CLI/reporting name | `styles` in this pilot |
 | Storybook package | Workspace providing the catalog | Must exist |
 | Build commands | Ordered prerequisites | Every command must exit successfully |
 | Static directory | Built catalog output | Must exist before serving |

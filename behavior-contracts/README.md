@@ -11,9 +11,10 @@ for other components.
 
 The execution path is:
 
-1. Cucumber reads `features/accordion.feature`.
-2. Cucumber binds each `Given`, `When`, and `Then` sentence to a definition in
-   `steps/accordion.steps.mjs`.
+1. Cucumber discovers every `features/**/*.feature` file. Accordion is the only
+   feature in the initial pilot.
+2. Cucumber binds each `Given`, `When`, and `Then` sentence to definitions under
+   `steps/**/*.mjs`.
 3. The selected entry in `targets.mjs` maps a shared fixture name such as
    `accordion.first-expanded` to that package's deterministic Storybook story.
 4. `support/world.mjs` opens the story's direct iframe URL in Playwright.
@@ -29,28 +30,22 @@ listeners, PathAble CSS selectors, Storybook IDs, or package directories.
 
 ## Commands
 
-Run the styles reference implementation:
+Run every discovered behavior contract against every registered target:
 
 ```bash
-pnpm test:contracts:accordion:styles
+pnpm test:contracts
 ```
 
-Run the React implementation:
+Run every discovered contract against only the styles target:
 
 ```bash
-pnpm test:contracts:accordion:react
-```
-
-Run the complete two-target matrix:
-
-```bash
-pnpm test:contracts:accordion
+pnpm test:contracts:styles
 ```
 
 Each command builds its selected package prerequisites and Storybook, starts a
-static server, waits up to 30 seconds for readiness, runs all three scenarios,
-and cleans up its owned processes. Aggregate validation runs targets
-sequentially and returns nonzero if either target fails.
+static server, waits up to 30 seconds for readiness, runs every discovered
+feature, and cleans up its owned processes. Aggregate validation runs all
+registered targets sequentially and returns nonzero if any target fails.
 
 ## Accordion contract scope
 
@@ -63,20 +58,17 @@ The pilot defines three rules:
 Those scenarios also verify disclosure-to-panel association, `aria-expanded`,
 panel visibility and availability, and focus retention.
 
-Disabled-item and multiple-open behavior are deliberately excluded. React
-currently exposes those APIs, but they should not become shared requirements
-until their framework-neutral ownership and parity are resolved explicitly.
+Disabled-item and multiple-open behavior are deliberately excluded. They should
+not become shared requirements until their framework-neutral ownership and
+parity are resolved explicitly.
 
 ## Implementation independence
 
-The styles Storybook imports `@pathableai/styles/js`, so its Accordion target
-exercises the reference DOM behavior published by the styles package.
-
-The React Storybook imports PathAble CSS but not `@pathableai/styles/js`.
-React's Accordion component owns its state changes. This prevents the reference
-DOM behavior from masking a React defect or competing with React event handling.
-
-The same Gherkin and step definitions execute against both.
+The initial styles Storybook target imports `@pathableai/styles/js`, so its
+Accordion scenarios exercise the reference DOM behavior published by the
+styles package. This pilot does not alter or register React components or the
+React Storybook. A framework target can be added later without moving or
+copying the Gherkin definitions.
 
 ## Target preflight and failures
 
@@ -97,7 +89,7 @@ product-readable scenario name and unmet observable step.
 
 ## Adding another framework target
 
-To add a future Vue, Svelte, or other implementation:
+To add a future React, Vue, Svelte, or other implementation:
 
 1. Create deterministic Accordion stories for all-collapsed and
    first-expanded single-open states.
@@ -105,11 +97,12 @@ To add a future Vue, Svelte, or other implementation:
    story mappings, and required capabilities.
 3. Add a root script invoking `node behavior-contracts/run.mjs <target>` if a
    dedicated command is useful.
-4. Run the unchanged Accordion feature against the new target.
+4. Run all unchanged feature files against the new target.
 
 Do not copy or generate the Gherkin into the package. Framework-only concerns,
-such as controlled React state, callbacks, ref forwarding, or a Vue model
-binding, remain in that package's tests.
+such as controlled state, callbacks, ref forwarding, or model binding, remain
+in that package's tests. Ensure a framework target does not also load a DOM
+behavior runtime that could mask or compete with its native implementation.
 
 ## Relationship to other validation
 

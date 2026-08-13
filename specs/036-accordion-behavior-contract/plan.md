@@ -9,11 +9,11 @@
 Create a top-level `behavior-contracts/` harness that owns a three-scenario
 Gherkin contract for observable Accordion behavior and executes it through
 Cucumber step definitions backed by Playwright. The runner builds and serves
-one deterministic Storybook target at a time, then executes the same feature
-against the styles JavaScript reference implementation and the React-owned
-implementation. Package-specific Storybook stories supply only deterministic
+one deterministic Storybook target at a time, initially executing all
+discovered features against only the styles JavaScript reference
+implementation. Package-specific Storybook stories supply deterministic
 mounting states; target mappings and runtime details remain outside the
-framework-neutral feature file.
+framework-neutral feature file. Framework targets are deliberately deferred.
 
 ## Technical Context
 
@@ -29,11 +29,11 @@ framework-neutral feature file.
 
 **Project Type**: pnpm ESM monorepo containing publishable style and React libraries plus independent Storybook applications
 
-**Performance Goals**: One command produces six target-specific results; each catalog has a bounded 30-second readiness window and every spawned process is cleaned up
+**Performance Goals**: One general command discovers all features and produces results for every registered target; each catalog has a bounded 30-second readiness window and every spawned process is cleaned up
 
-**Constraints**: The Gherkin contract remains package-independent; React must not load the styles JavaScript bundle; the vanilla target must exercise the published styles behavior; failures cannot be silently skipped
+**Constraints**: The Gherkin contract and CI naming remain component-independent; the styles target must exercise the published styles behavior; React remains unchanged and unregistered; failures cannot be silently skipped
 
-**Scale/Scope**: Accordion only, three shared scenarios, two targets, two deterministic starting fixtures
+**Scale/Scope**: Accordion only, three shared scenarios, one initial styles target, two deterministic starting fixtures
 
 ## Constitution Check
 
@@ -45,10 +45,9 @@ framework-neutral feature file.
   behavior source; `packages/styles` continues to own the compiled JavaScript,
   CSS, markup classes, semantics, and documentation.
 - [x] No component API, token, class, asset, or visual state is added.
-- [x] React continues to use its native `Accordion` implementation while
-  proving parity against the source-owned shared behavior definition.
-- [x] The change removes the global styles JavaScript import from the React
-  Storybook so tests cannot receive two competing Accordion implementations.
+- [x] No React component, story, package, or Storybook configuration changes.
+- [x] React conformance is deferred until it can be registered as a deliberate
+  framework-target change.
 
 ### Consumer and Publishable Validation
 
@@ -59,8 +58,8 @@ framework-neutral feature file.
 
 ### Validation Gates
 
-- [x] Add focused styles, React, and aggregate behavior-contract commands.
-- [x] Run contract matrix, React typecheck/build, both Storybook suites, lint,
+- [x] Add general aggregate and focused styles behavior-contract commands.
+- [x] Run the registered target matrix, existing repository suites, lint,
   format, Markdownlint, package consumer validation, and `git diff --check`.
 - [x] No lint or accessibility rule is disabled or excluded.
 
@@ -78,7 +77,7 @@ framework-neutral feature file.
 ### Accessibility
 
 - [x] Enter, Space, focus retention, `aria-expanded`, `aria-controls`, and panel
-  availability are browser-executed for both targets.
+  availability are browser-executed for the initial styles target.
 - [x] Existing rendered Axe checks remain mandatory and separate.
 - [x] No claim of manual assistive-technology certification is introduced.
 
@@ -104,9 +103,9 @@ framework-neutral feature file.
 
 ### Cross-Framework Impact
 
-- [x] Both HTML and React Storybooks build and test independently.
-- [x] The aggregate command runs the same scenario definitions against each
-  target rather than relying on Storybook composition.
+- [x] No framework package or framework catalog is changed by this pilot.
+- [x] The general aggregate command can run the same scenario definitions
+  against additional targets when they are registered later.
 
 ### Complexity Tracking
 
@@ -147,9 +146,7 @@ behavior-contracts/
     └── world.mjs
 
 apps/storybook/.storybook/preview.js
-apps/storybook-react/.storybook/preview.js
 packages/styles/src/stories/components/Communication/Accordion.stories.ts
-packages/react/src/stories/components/Communication/Accordion.stories.tsx
 package.json
 pnpm-lock.yaml
 ```
@@ -171,8 +168,8 @@ Research decisions are captured in [research.md](./research.md):
 3. Keep target mappings explicit instead of generating framework test code.
 4. Run targets sequentially with owned server lifecycle and failure-safe
    cleanup.
-5. Remove global styles JavaScript from React Storybook to prove independent
-   behavior ownership.
+5. Defer framework target registration so the infrastructure pilot makes no
+   React changes.
 
 ## Phase 1: Design & Contracts
 
@@ -185,9 +182,9 @@ Research decisions are captured in [research.md](./research.md):
 ## Post-Design Constitution Re-evaluation
 
 All gates remain passed. The design strengthens Principles I, IV, X, XIV, and
-XVI by making shared behavior executable while retaining framework-native
-implementations and independent Storybook validation. No shared runtime is
-forced on React and no wrapper-only behavior is introduced.
+XVI by making shared behavior executable while preserving a path for future
+framework-native targets. No React change or wrapper-only behavior is
+introduced.
 
 ## Design Artifacts
 

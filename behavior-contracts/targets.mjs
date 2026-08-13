@@ -27,19 +27,6 @@ export const targets = {
     fixtures: { ...commonFixtures },
     capabilities: [...commonCapabilities],
   },
-  react: {
-    name: 'react',
-    storybookWorkspace: '@pathable/storybook-react',
-    buildCommands: [
-      ['pnpm', '--filter', '@pathableai/styles', 'build'],
-      ['pnpm', '--filter', '@pathableai/react', 'build'],
-      ['pnpm', '--filter', '@pathable/storybook-react', 'build-storybook'],
-    ],
-    staticDirectory: 'apps/storybook-react/storybook-static',
-    port: 6107,
-    fixtures: { ...commonFixtures },
-    capabilities: [...commonCapabilities],
-  },
 }
 
 export function getTarget(name) {
