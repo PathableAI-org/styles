@@ -79,6 +79,41 @@ export const KeyboardActivation: Story = {
 
 Automated accessibility testing is not a substitute for periodic manual keyboard and assistive-technology review.
 
+## Server rendering contract
+
+Server Component compatibility is the default for every public component. Do
+not add a `server` tag: the absence of a rendering exception declares that the
+component is intended to remain usable directly from a React Server Component.
+
+Components that intentionally require a client boundary must acknowledge that
+decision on the component meta with exactly one of these tags:
+
+| Tag           | Contract                                                                    |
+| ------------- | --------------------------------------------------------------------------- |
+| `client-ssr`  | Requires a client boundary but must produce meaningful initial server HTML. |
+| `client-only` | Requires a browser and is not expected to produce meaningful server HTML.   |
+
+Rendering tags belong on the component meta, not individual stories. Every
+exception must include a concrete reason:
+
+```tsx
+const meta = {
+  component: ComponentName,
+  tags: ['autodocs', 'client-ssr'],
+  parameters: {
+    rendering: {
+      reason: 'Owns disclosure state and event handlers.',
+    },
+  },
+} satisfies Meta<typeof ComponentName>
+```
+
+Run `pnpm test:storybook-react-server` to produce the advisory report under
+`apps/storybook-react/test-results/`. The audit reports potential client-only
+features without failing. `pnpm test:storybook-react-server:strict` applies the
+same contract as a merge-blocking check; it is reserved for the enforcement
+phase after existing components have been classified and refactored.
+
 ## Visual regression eligibility
 
 Stable fixed-state stories should serve as deterministic visual-regression cases. Stories must be:
@@ -137,6 +172,9 @@ When adding a new React component to the design system, ensure the following:
 - [ ] Stories are deterministic (no random content, dates, or network calls)
 - [ ] At least one composition story showing realistic usage in a known pattern
 - [ ] Story-level a11y exceptions are narrow and documented (if any)
+- [ ] Component remains Server Component compatible by default
+- [ ] Any required `client-ssr` or `client-only` exception is declared on component meta
+- [ ] Every rendering exception documents a concrete reason
 
 ## Reference implementation
 
