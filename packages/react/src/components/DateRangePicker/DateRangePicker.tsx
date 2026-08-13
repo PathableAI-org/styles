@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useId,
   useRef,
   useState,
@@ -184,6 +185,33 @@ export function DateRangePicker({
     return !value || violatesBounds ? null : value
   }
 
+  const dateIsInvalid = (value: string) =>
+    Boolean(
+      value &&
+      (!parseISODate(value) ||
+        (minDate && value < minDate) ||
+        (maxDate && value > maxDate)),
+    )
+  const getFormValue = (side: DateSide) => {
+    const selectedValue = side === 'start' ? selectedStart : selectedEnd
+    if (dirtySides[side]) return parseDraft(draftText[side])
+    return dateIsInvalid(selectedValue) ? null : selectedValue
+  }
+  const formStart = getFormValue('start')
+  const formEnd = getFormValue('end')
+  const rangeIsReversed = Boolean(formStart && formEnd && formEnd < formStart)
+  const startValueIsInvalid = formStart === null
+  const endValueIsInvalid = formEnd === null || rangeIsReversed
+
+  useEffect(() => {
+    startInputRef.current?.setCustomValidity(
+      startValueIsInvalid ? INVALID_DATE_MESSAGE : '',
+    )
+    endInputRef.current?.setCustomValidity(
+      endValueIsInvalid ? INVALID_DATE_MESSAGE : '',
+    )
+  }, [endValueIsInvalid, startValueIsInvalid])
+
   const getEffectiveValue = (side: DateSide) => {
     const selectedValue = side === 'start' ? selectedStart : selectedEnd
     if (!dirtySides[side]) return selectedValue
@@ -328,6 +356,12 @@ export function DateRangePicker({
     const effectiveEnd = getEffectiveValue('end')
     const inputRef = isStart ? startInputRef : endInputRef
     const inputLabelId = isStart ? startInputId : endInputId
+    const valueIsInvalid = isStart ? startValueIsInvalid : endValueIsInvalid
+    const submittedValue = valueIsInvalid
+      ? ''
+      : isStart
+        ? (formStart ?? '')
+        : (formEnd ?? '')
     const {
       id: _id,
       name,
@@ -340,7 +374,7 @@ export function DateRangePicker({
       onClick,
       ...rest
     } = props
-    const isInvalid = invalidSide === side
+    const isInvalid = invalidSide === side || valueIsInvalid
     const inputValue =
       dirtySides[side] || invalidSide === side
         ? draftText[side]
@@ -356,6 +390,16 @@ export function DateRangePicker({
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
       const nextValue = event.currentTarget.value
+      const parsedValue = parseDraft(nextValue)
+      const otherValue = getEffectiveValue(side === 'start' ? 'end' : 'start')
+      const violatesRange = Boolean(
+        side === 'end' && parsedValue && otherValue && parsedValue < otherValue,
+      )
+      event.currentTarget.setCustomValidity(
+        nextValue && (parsedValue === null || violatesRange)
+          ? INVALID_DATE_MESSAGE
+          : '',
+      )
       setDraftText((current) => ({ ...current, [side]: nextValue }))
       setDirtySides((current) => ({ ...current, [side]: true }))
       setInvalidSide((current) => (current === side ? null : current))
@@ -503,7 +547,7 @@ export function DateRangePicker({
           disabled={props.disabled}
           form={form}
           name={name}
-          value={value}
+          value={submittedValue}
           readOnly
         />
       </div>
