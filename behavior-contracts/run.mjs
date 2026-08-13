@@ -87,7 +87,9 @@ async function waitForServer(target, server) {
     }
 
     try {
-      const response = await fetch(serverUrl)
+      const response = await fetch(serverUrl, {
+        signal: AbortSignal.timeout(1_000),
+      })
       if (response.ok) return serverUrl
     } catch {
       // The server is still starting.
