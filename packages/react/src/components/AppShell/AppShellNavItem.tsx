@@ -20,13 +20,12 @@ export function AppShellNavItem({
     .filter(Boolean)
     .join(' ')
 
-  const extra: Record<string, unknown> = {}
-  if (active) {
-    extra['aria-current'] = 'page'
-  }
-
   return (
-    <a className={classes} {...rest} {...extra}>
+    <a
+      className={classes}
+      {...rest}
+      aria-current={active ? ('page' as const) : undefined}
+    >
       {children}
     </a>
   )

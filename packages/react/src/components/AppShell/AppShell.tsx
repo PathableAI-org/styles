@@ -96,7 +96,7 @@ export function AppShell({
 
       {bottomNavItems && bottomNavItems.length > 0 ? (
         <nav className="pathable-bottom-navigation" aria-label="Primary">
-          {bottomNavItems.map((item, index) => {
+          {bottomNavItems.map((item) => {
             const itemClass = [
               'pathable-bottom-navigation__item',
               item.active && 'pathable-bottom-navigation__item--active',
@@ -104,18 +104,14 @@ export function AppShell({
               .filter(Boolean)
               .join(' ')
 
-            const itemProps: Record<string, unknown> = {
-              className: itemClass,
-              href: item.href,
-            }
-
-            if (item.active) {
-              itemProps['aria-current'] = 'page'
-            }
-
             return (
-              <a key={index} {...itemProps}>
-                {item.icon}
+              <a
+                key={item.href}
+                className={itemClass}
+                href={item.href}
+                aria-current={item.active ? ('page' as const) : undefined}
+              >
+                <span aria-hidden="true">{item.icon}</span>
                 <span>{item.label}</span>
               </a>
             )
