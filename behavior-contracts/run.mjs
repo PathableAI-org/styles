@@ -155,7 +155,15 @@ async function runTarget(targetName) {
     )
   }
 
-  await access(resolve(repositoryRoot, target.staticDirectory))
+  try {
+    await access(resolve(repositoryRoot, target.staticDirectory))
+  } catch (error) {
+    throw new Error(
+      `Target "${target.name}" static directory "${target.staticDirectory}" is unavailable: ${error.message}`,
+      { cause: error },
+    )
+  }
+
   const server = startServer(target)
   activeServer = server
 
