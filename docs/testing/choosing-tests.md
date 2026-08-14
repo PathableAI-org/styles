@@ -51,14 +51,14 @@ Some structural details are legitimate requirements because they expose
 meaning to browsers and assistive technologies. Test the semantic effect, not
 the arbitrary tree shape.
 
-| Usually contractual | Usually incidental |
-| --- | --- |
-| Accessible role and name | Wrapper element count |
-| Programmatic label association | CSS class used for styling |
-| Expanded, selected, checked, or invalid state | React component state |
-| Control-to-panel relationship | Element ancestry |
-| Focus placement and restoration | Internal event handler |
-| Content availability | Generated implementation ID value |
+| Usually contractual                           | Usually incidental                |
+| --------------------------------------------- | --------------------------------- |
+| Accessible role and name                      | Wrapper element count             |
+| Programmatic label association                | CSS class used for styling        |
+| Expanded, selected, checked, or invalid state | React component state             |
+| Control-to-panel relationship                 | Element ancestry                  |
+| Focus placement and restoration               | Internal event handler            |
+| Content availability                          | Generated implementation ID value |
 
 For an association such as `aria-controls`, verify that it resolves to the
 correct panel. Do not require a particular generated ID string.

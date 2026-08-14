@@ -90,8 +90,11 @@ pnpm test:storybook
 # React-only iteration
 pnpm test:storybook-react
 
-# Full repository checks before completion
+# Default repository test suite
 pnpm test
+
+# Visual smoke tests
+pnpm test:visual
 ```
 
 Also run package-specific type, lint, build, or server-rendering checks required

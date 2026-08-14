@@ -6,10 +6,10 @@ tests, and accessibility checks for both the styles and React packages.
 
 ## Current Storybooks
 
-| Implementation | Story source | Storybook application |
-| --- | --- | --- |
-| Styles and raw HTML | `packages/styles/src/stories/` | `apps/storybook/` |
-| React | `packages/react/src/stories/` | `apps/storybook-react/` |
+| Implementation      | Story source                   | Storybook application   |
+| ------------------- | ------------------------------ | ----------------------- |
+| Styles and raw HTML | `packages/styles/src/stories/` | `apps/storybook/`       |
+| React               | `packages/react/src/stories/`  | `apps/storybook-react/` |
 
 React story conventions are defined in
 [`packages/react/STORYBOOK_STANDARD.md`](../../packages/react/STORYBOOK_STANDARD.md).
@@ -52,12 +52,17 @@ pnpm build:docs
 # Build the React Storybook
 pnpm build:docs-react
 
-# Run all repository validation
+# Run the default repository test suite
 pnpm test
+
+# Run visual smoke tests
+pnpm test:visual
 ```
 
 The current Storybook test command builds each catalog, serves it locally, and
-runs its stories in a browser. CI invokes the same repository commands.
+runs its stories in a browser. CI runs equivalent build, browser-test,
+accessibility, and visual-smoke steps, although workflow wiring may call package
+scripts directly.
 
 ## Shared validation structure
 

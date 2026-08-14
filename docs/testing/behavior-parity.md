@@ -40,9 +40,7 @@ validation answers, "What must every implementation do?"
 Prefer one function per meaningful behavior:
 
 ```ts
-export async function verifyEnterExpandsDisclosure(
-  canvasElement: HTMLElement,
-) {
+export async function verifyEnterExpandsDisclosure(canvasElement: HTMLElement) {
   const canvas = within(canvasElement)
   const disclosure = canvas.getByRole('button', {
     name: 'First Amendment',

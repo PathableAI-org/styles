@@ -1,6 +1,6 @@
 # Testing principles
 
-These principles adapt the ideas in the team's
+These principles adapt the ideas in the team's internal
 [Playwright E2E Testing Best Practices](https://app.notion.com/p/3bb7cbd04b6d81729a42e209d82aad1a)
 to component testing.
 
