@@ -42,7 +42,7 @@ No `packages/styles` source changes — the owning contract already exists.
 
 **Purpose**: Confirm the workspace is ready; no new dependencies or project scaffolding needed.
 
-- [ ] T001 Verify repository dependencies are installed and `packages/styles` is built by running `pnpm install` and `pnpm build` from the repo root; confirm `packages/react` imports resolve
+- [X] T001 Verify repository dependencies are installed and `packages/styles` is built by running `pnpm install` and `pnpm build` from the repo root; confirm `packages/react` imports resolve
 
 ---
 
@@ -52,10 +52,10 @@ No `packages/styles` source changes — the owning contract already exists.
 
 **⚠️ CRITICAL**: No user story story-work can begin until this phase is complete.
 
-- [ ] T002 Verify the owning styles contract exists at `packages/styles/src/pathable-component-wrappers/pathable-dashboard-header.scss` and is compiled into `@pathableai/styles` dist; confirm no new SCSS is required
-- [ ] T003 Verify `packages/react/src/index.ts` imports `@pathableai/styles` as a side-effect so consumers receive transitive CSS (Principle V)
-- [ ] T004 Create the `DashboardHeader` component in `packages/react/src/components/DashboardHeader/DashboardHeader.tsx` implementing the props contract from `contracts/props.md` (required `title` rendered as `h1`; optional `breadcrumb`, `context`, `description`, `actions`; `compact`/`stacked` boolean modifiers mapping to `pathable-dashboard-header--compact`/`--stacked`; `className` merge and `...rest` spread). Ensure empty optional regions are omitted
-- [ ] T005 Add `export { DashboardHeader } from './components/DashboardHeader/DashboardHeader.js'` and `export type { DashboardHeaderProps } from './components/DashboardHeader/DashboardHeader.js'` to `packages/react/src/index.ts`
+- [X] T002 Verify the owning styles contract exists at `packages/styles/src/pathable-component-wrappers/pathable-dashboard-header.scss` and is compiled into `@pathableai/styles` dist; confirm no new SCSS is required
+- [X] T003 Verify `packages/react/src/index.ts` imports `@pathableai/styles` as a side-effect so consumers receive transitive CSS (Principle V)
+- [X] T004 Create the `DashboardHeader` component in `packages/react/src/components/DashboardHeader/DashboardHeader.tsx` implementing the props contract from `contracts/props.md` (required `title` rendered as `h1`; optional `breadcrumb`, `context`, `description`, `actions`; `compact`/`stacked` boolean modifiers mapping to `pathable-dashboard-header--compact`/`--stacked`; `className` merge and `...rest` spread). Ensure empty optional regions are omitted
+- [X] T005 Add `export { DashboardHeader } from './components/DashboardHeader/DashboardHeader.js'` and `export type { DashboardHeaderProps } from './components/DashboardHeader/DashboardHeader.js'` to `packages/react/src/index.ts`
 
 **Checkpoint**: Component exists and is exported; all stories can now render against it.
 
@@ -69,11 +69,11 @@ No `packages/styles` source changes — the owning contract already exists.
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Create the story file `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with `satisfies Meta<typeof DashboardHeader>`, `title: 'Dashboard/Dashboard Header'`, `tags: ['autodocs']`, a semantic component description (when to use / when not to use), argTypes with controls, and a `Playground` story
-- [ ] T007 [US1] Add a `Default` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` rendering a full header (breadcrumb + title + context + description + two `Button` actions) with deterministic content
-- [ ] T008 [US1] Add a `WithoutActions` story rendering title + context + description with no `actions` prop
-- [ ] T009 [US1] Add a `ManyActions` story rendering four or more action buttons to exercise wrapping
-- [ ] T010 [US1] Add a keyboard-interaction `play` test story (e.g., `ActionKeyboardActivation`) using `getByRole` and `@storybook/test` that tabs to the first action button and verifies Enter/Space activation fires the `fn()` spy
+- [X] T006 [US1] Create the story file `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with `satisfies Meta<typeof DashboardHeader>`, `title: 'Dashboard/Dashboard Header'`, `tags: ['autodocs']`, a semantic component description (when to use / when not to use), argTypes with controls, and a `Playground` story
+- [X] T007 [US1] Add a `Default` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` rendering a full header (breadcrumb + title + context + description + two `Button` actions) with deterministic content
+- [X] T008 [US1] Add a `WithoutActions` story rendering title + context + description with no `actions` prop
+- [X] T009 [US1] Add a `ManyActions` story rendering four or more action buttons to exercise wrapping
+- [X] T010 [US1] Add a keyboard-interaction `play` test story (e.g., `ActionKeyboardActivation`) using `getByRole` and `@storybook/test` that tabs to the first action button and verifies Enter/Space activation fires the `fn()` spy
 
 **Checkpoint**: User Story 1 is functional and independently verifiable — title, description, and actions render with keyboard-operable controls.
 
@@ -87,8 +87,8 @@ No `packages/styles` source changes — the owning contract already exists.
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Add a `BreadcrumbAndContext` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` rendering `breadcrumb` (links/spans) and `context` content, verifying `pathable-dashboard-header__breadcrumb` and `__context` elements appear in the DOM
-- [ ] T012 [US2] Add a `play` test in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` (or extend an existing story) asserting the breadcrumb links are reachable by keyboard and the context text is exposed to the accessibility tree
+- [X] T011 [US2] Add a `BreadcrumbAndContext` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` rendering `breadcrumb` (links/spans) and `context` content, verifying `pathable-dashboard-header__breadcrumb` and `__context` elements appear in the DOM
+- [X] T012 [US2] Add a `play` test in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` (or extend an existing story) asserting the breadcrumb links are reachable by keyboard and the context text is exposed to the accessibility tree
 
 **Checkpoint**: User Stories 1 AND 2 both work; breadcrumb and context regions render correctly.
 
@@ -102,10 +102,10 @@ No `packages/styles` source changes — the owning contract already exists.
 
 ### Implementation for User Story 3
 
-- [ ] T013 [US3] Add a `Compact` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with `compact` prop and a `play` test asserting `pathable-dashboard-header--compact` is applied
-- [ ] T014 [US3] Add a `Stacked` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with `stacked` prop and a `play` test asserting `pathable-dashboard-header--stacked` is applied
-- [ ] T015 [US3] Add a `LongTitle` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with a long unbroken title to exercise wrapping
-- [ ] T016 [US3] Add a `Mobile` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` using the `mobile1` viewport parameter, confirming actions stack below the title without horizontal overflow
+- [X] T013 [US3] Add a `Compact` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with `compact` prop and a `play` test asserting `pathable-dashboard-header--compact` is applied
+- [X] T014 [US3] Add a `Stacked` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with `stacked` prop and a `play` test asserting `pathable-dashboard-header--stacked` is applied
+- [X] T015 [US3] Add a `LongTitle` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` with a long unbroken title to exercise wrapping
+- [X] T016 [US3] Add a `Mobile` story in `packages/react/src/stories/dashboard/DashboardHeader.stories.tsx` using the `mobile1` viewport parameter, confirming actions stack below the title without horizontal overflow
 
 **Checkpoint**: All user stories functional; variants and responsive behavior covered.
 
@@ -115,12 +115,12 @@ No `packages/styles` source changes — the owning contract already exists.
 
 **Purpose**: Validation gates and package/consumer verification.
 
-- [ ] T017 Run `pnpm lint` in `packages/react` (`eslint src --max-warnings=0`); fix all findings at source without disabling rules, adding ignore entries, or reducing severity
-- [ ] T018 Run `pnpm typecheck` in `packages/react`; confirm no type errors
-- [ ] T019 Run `pnpm build` in `packages/react`; confirm `vite build` and `tsc -p tsconfig.build.json` succeed and declarations are generated
-- [ ] T020 Run `pnpm check:package` (`publint`) and `pnpm check:types` (`attw`) in `packages/react`; then `pnpm pack --dry-run` to confirm the published package includes transitive `@pathableai/styles` CSS
-- [ ] T021 Run `pnpm test:storybook-react`; confirm all story tests pass and the a11y addon reports no violations on stable stories (Playground exempt)
-- [ ] T022 Run the validation scenarios in `specs/037-react-dashboard-header/quickstart.md` and confirm each expected outcome, especially VS-04 (new `Dashboard` Storybook section)
+- [X] T017 Run `pnpm lint` in `packages/react` (`eslint src --max-warnings=0`); fix all findings at source without disabling rules, adding ignore entries, or reducing severity
+- [X] T018 Run `pnpm typecheck` in `packages/react`; confirm no type errors
+- [X] T019 Run `pnpm build` in `packages/react`; confirm `vite build` and `tsc -p tsconfig.build.json` succeed and declarations are generated
+- [X] T020 Run `pnpm check:package` (`publint`) and `pnpm check:types` (`attw`) in `packages/react`; then `pnpm pack --dry-run` to confirm the published package includes transitive `@pathableai/styles` CSS
+- [X] T021 Run `pnpm test:storybook-react`; confirm all story tests pass and the a11y addon reports no violations on stable stories (Playground exempt)
+- [X] T022 Run the validation scenarios in `specs/037-react-dashboard-header/quickstart.md` and confirm each expected outcome, especially VS-04 (new `Dashboard` Storybook section)
 
 ---
 

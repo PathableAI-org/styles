@@ -14,6 +14,8 @@ export type {
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
+export { DashboardHeader } from './components/DashboardHeader/DashboardHeader.js'
+export type { DashboardHeaderProps } from './components/DashboardHeader/DashboardHeader.js'
 export { AppShell } from './components/AppShell/AppShell.js'
 export type {
   AppShellProps,
