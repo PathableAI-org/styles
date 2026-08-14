@@ -1,5 +1,11 @@
 # @pathableai/react
 
+## 0.0.4-alpha.0
+
+### Patch Changes
+
+- 3629001: Add DashboardHeader component
+
 ## 0.0.3
 
 ### Patch Changes
