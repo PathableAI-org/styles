@@ -1,11 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { Button } from '../../components/Button/Button'
 import {
   DashboardHeader,
   type DashboardHeaderProps,
 } from '../../components/DashboardHeader/DashboardHeader'
+
+const actionClick = fn()
 
 const meta = {
   title: 'Dashboard/Dashboard Header',
@@ -112,6 +114,14 @@ export const WithoutActions: Story = {
     context: 'Last updated today',
     description:
       'A personalized overview of your active programs, upcoming tasks, and recent activity.',
+  },
+}
+
+export const TitleOnly: Story = {
+  args: {
+    title: 'Program Summary',
+    context: undefined,
+    description: undefined,
   },
 }
 
@@ -253,7 +263,8 @@ export const StructureAndRegions: Story = {
 
     await step('breadcrumb links are reachable by keyboard', async () => {
       const breadcrumbLink = canvas.getByRole('link', { name: 'Home' })
-      await expect(breadcrumbLink).toBeInTheDocument()
+      await userEvent.tab()
+      await expect(breadcrumbLink).toHaveFocus()
       await expect(breadcrumbLink).toHaveAttribute('href', '#home')
     })
 
@@ -277,20 +288,13 @@ export const ActionKeyboardActivation: Story = {
   render: (args: DashboardHeaderProps) => (
     <DashboardHeader
       {...args}
-      actions={
-        <Button
-          onClick={() => {
-            window.document.body.dataset['actionFired'] = 'true'
-          }}
-        >
-          Add Program
-        </Button>
-      }
+      actions={<Button onClick={actionClick}>Add Program</Button>}
     />
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const button = canvas.getByRole('button', { name: 'Add Program' })
+    actionClick.mockClear()
 
     await step('button receives keyboard focus', async () => {
       await userEvent.tab()
@@ -298,15 +302,14 @@ export const ActionKeyboardActivation: Story = {
     })
 
     await step('Enter key activates the button', async () => {
-      delete window.document.body.dataset['actionFired']
       await userEvent.keyboard('{Enter}')
-      await expect(window.document.body.dataset['actionFired']).toBe('true')
+      await expect(actionClick).toHaveBeenCalledTimes(1)
     })
 
     await step('Space key activates the button', async () => {
-      delete window.document.body.dataset['actionFired']
+      actionClick.mockClear()
       await userEvent.keyboard(' ')
-      await expect(window.document.body.dataset['actionFired']).toBe('true')
+      await expect(actionClick).toHaveBeenCalledTimes(1)
     })
   },
 }

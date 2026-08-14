@@ -1,6 +1,10 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { Children } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
-export interface DashboardHeaderProps extends HTMLAttributes<HTMLDivElement> {
+export interface DashboardHeaderProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'title'
+> {
   /** The page title, rendered as the page's primary heading (required). */
   title: string
 
@@ -23,8 +27,10 @@ export interface DashboardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   stacked?: boolean
 }
 
-function hasContent(value: unknown): boolean {
-  return value !== null && value !== undefined && value !== false
+function hasContent(value: ReactNode): boolean {
+  return Children.toArray(value).some(
+    (child) => typeof child !== 'string' || child.trim().length > 0,
+  )
 }
 
 export function DashboardHeader({

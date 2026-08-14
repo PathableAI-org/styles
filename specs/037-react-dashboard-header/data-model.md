@@ -25,7 +25,7 @@ context/status indicator, description, and action regions into the
 | `compact` | `boolean` | No | `false` | Applies the `pathable-dashboard-header--compact` modifier |
 | `stacked` | `boolean` | No | `false` | Applies the `pathable-dashboard-header--stacked` modifier |
 | `className` | `string` | No | `''` | Additional CSS classes merged onto the root element |
-| `...rest` | `HTMLAttributes<HTMLDivElement>` | No | — | Passthrough attributes spread onto the root div |
+| `...rest` | `Omit<HTMLAttributes<HTMLDivElement>, 'title'>` | No | — | Passthrough attributes spread onto the root div; the native `title` attribute is omitted because `title` names the required page-heading prop |
 
 **DOM output**: `<div class="pathable-dashboard-header [--compact] [--stacked] [className]">` containing a title row (title + optional context + optional actions) plus optional breadcrumb and description regions.
 

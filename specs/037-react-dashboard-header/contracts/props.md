@@ -10,7 +10,8 @@
 ```typescript
 import { HTMLAttributes, ReactNode } from 'react'
 
-interface DashboardHeaderProps extends HTMLAttributes<HTMLDivElement> {
+interface DashboardHeaderProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** The page title, rendered as the primary heading (required). */
   title: string
 
@@ -46,7 +47,7 @@ interface DashboardHeaderProps extends HTMLAttributes<HTMLDivElement> {
 | `compact` | `boolean` | No | `false` | Adds `pathable-dashboard-header--compact` |
 | `stacked` | `boolean` | No | `false` | Adds `pathable-dashboard-header--stacked` |
 | `className` | `string` | No | `''` | Merged onto the root `<div class="pathable-dashboard-header">` |
-| `...rest` | `HTMLAttributes<HTMLDivElement>` | No | — | Spread onto the root div |
+| `...rest` | `Omit<HTMLAttributes<HTMLDivElement>, 'title'>` | No | — | Spread onto the root div; the native `title` attribute is omitted because `title` names the required page-heading prop |
 
 ### Expected DOM Output
 
