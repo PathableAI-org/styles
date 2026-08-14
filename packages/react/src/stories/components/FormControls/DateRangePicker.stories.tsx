@@ -398,6 +398,80 @@ export const InvalidDraftPreserved: Story = {
   },
 }
 
+export const InvalidDraftFormSubmission: Story = {
+  render: () => {
+    const [submittedRange, setSubmittedRange] = useState('not submitted')
+
+    return (
+      <form
+        aria-label="Filter records by date range"
+        onSubmit={(event) => {
+          event.preventDefault()
+          const values = new FormData(event.currentTarget)
+          setSubmittedRange(
+            `${String(values.get('filterStart') ?? '')} to ${String(
+              values.get('filterEnd') ?? '',
+            )}`,
+          )
+        }}
+      >
+        <DateRangePicker
+          startLabel="Filter start"
+          endLabel="Filter end"
+          defaultStartDate="2026-03-10"
+          defaultEndDate="2026-03-18"
+          minDate="2026-03-01"
+          maxDate="2026-03-31"
+          defaultMonth="2026-03-01"
+          startInputProps={{ id: 'filter-start', name: 'filterStart' }}
+          endInputProps={{ id: 'filter-end', name: 'filterEnd' }}
+        />
+        <Button type="submit">Apply filter</Button>
+        <p>Submitted range: {submittedRange}</p>
+      </form>
+    )
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const start = canvas.getByRole('combobox', { name: 'Filter start' })
+    const submit = canvas.getByRole('button', { name: 'Apply filter' })
+    const hiddenStart = canvasElement.querySelector(
+      'input[name="filterStart"][type="hidden"]',
+    )
+
+    if (!hiddenStart) throw new Error('Expected the hidden start-date input')
+
+    await step('invalid draft suppresses the stale ISO value', async () => {
+      await expect(hiddenStart).toHaveValue('2026-03-10')
+      await userEvent.click(start)
+      await userEvent.clear(start)
+      await userEvent.type(start, '13/40/2026')
+      await expect(start).toBeInvalid()
+      await expect(start).toHaveAttribute('aria-invalid', 'true')
+      await expect(hiddenStart).toHaveValue('')
+    })
+
+    await step('invalid draft blocks native form submission', async () => {
+      await userEvent.click(submit)
+      await expect(start).toHaveFocus()
+      await expect(
+        canvas.getByText('Submitted range: not submitted'),
+      ).toBeVisible()
+    })
+
+    await step('corrected draft submits the current ISO range', async () => {
+      await userEvent.clear(start)
+      await userEvent.type(start, '03/12/2026')
+      await expect(start).toBeValid()
+      await expect(hiddenStart).toHaveValue('2026-03-12')
+      await userEvent.click(submit)
+      await expect(
+        canvas.getByText('Submitted range: 2026-03-12 to 2026-03-18'),
+      ).toBeVisible()
+    })
+  },
+}
+
 export const CalendarViews: Story = {
   args: {
     defaultStartDate: '',
