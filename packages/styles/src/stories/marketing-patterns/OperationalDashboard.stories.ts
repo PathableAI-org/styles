@@ -139,15 +139,23 @@ const activities = [
   },
 ]
 
+const activityStatusLabels = {
+  completed: 'Completed',
+  'in-progress': 'In progress',
+  pending: 'Pending',
+  cancelled: 'Cancelled',
+}
+
 const buildActivityRow = (activity) => `
-<div class="pathable-activity-row">
-  <div class="pathable-activity-row__status" data-status="${activity.status}" role="img" aria-label="${activity.status}"></div>
+<div class="pathable-activity-row" role="listitem">
+  <span class="pathable-activity-row__status" data-status="${activity.status}" aria-hidden="true"></span>
+  <span class="pathable-activity-row__status-text">${activityStatusLabels[activity.status] || activity.status}</span>
   <div class="pathable-activity-row__body">
     <p class="pathable-activity-row__title">${activity.title}</p>
     <p class="pathable-activity-row__context">${activity.context}</p>
   </div>
   <span class="pathable-activity-row__date">${activity.date}</span>
-  <span class="pathable-activity-row__owner">${activity.owner}</span>
+  <span class="pathable-activity-row__owner"><span class="pathable-activity-row__owner-text">${activity.owner}</span></span>
 </div>
 `
 
@@ -272,7 +280,7 @@ const dashboardContent = `
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
   <div class="pathable-surface pathable-surface--raised" style="padding: 1.5rem;">
     <h2 style="margin: 0 0 1rem; font-size: 1rem; font-weight: 600;">Recent Activity</h2>
-    <div class="pathable-activity-list">
+    <div class="pathable-activity-list" role="list">
       ${activities.map(buildActivityRow).join('')}
     </div>
   </div>

@@ -106,6 +106,11 @@ async function assertStylesAssets(stylesRoot) {
     './dist/styles.css',
     'Packed styles manifest does not expose its public stylesheet entry',
   )
+  assert.match(
+    css,
+    /\.pathable-activity-list(?:\b|[_{,:.-])/u,
+    'Packed stylesheet omits Activity List selectors',
+  )
 
   for (const url of urls) {
     const asset = normalize(resolve(dirname(stylesheet), url))
@@ -138,6 +143,10 @@ async function assertReactPackage(reactRoot) {
     await readFile(join(reactRoot, 'package.json'), 'utf8'),
   )
   const runtime = await readFile(join(reactRoot, 'dist', 'index.js'), 'utf8')
+  const declarations = await readFile(
+    join(reactRoot, 'dist', 'index.d.ts'),
+    'utf8',
+  )
   const dependencyValues = Object.values(manifest.dependencies ?? {})
 
   assert.ok(
@@ -157,6 +166,22 @@ async function assertReactPackage(reactRoot) {
     /from\s+['"]react\/jsx-runtime['"]/u,
     'Packed React runtime does not import the consumer JSX runtime',
   )
+  assert.match(runtime, /ActivityList/u, 'Packed runtime omits ActivityList')
+  for (const publicType of [
+    'ActivityListProps',
+    'ActivityListDensity',
+    'ActivityStatus',
+    'ActivityStatusValue',
+    'ActivityItem',
+    'ActivityItemAttributes',
+    'ActivityGroup',
+    'ActivityGroupAttributes',
+  ]) {
+    assert.ok(
+      declarations.includes(publicType),
+      `Packed declarations omit ${publicType}`,
+    )
+  }
 
   for (const embeddedRuntimeMarker of [
     'ReactCurrentOwner',
@@ -215,7 +240,7 @@ export default function RootLayout({ children }) {
   )
   await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
-    `import { Card, Link, List, Loading, Tag } from '@pathableai/react'
+    `import { ActivityList, Card, Link, List, Loading, Tag } from '@pathableai/react'
 
 export default function Page() {
   return (
@@ -226,6 +251,35 @@ export default function Page() {
       <List items={['Consumer list item one', 'Consumer list item two']} />
       <Tag>Consumer tag</Tag>
       <Loading text="Consumer loading state" />
+      <ActivityList
+        groups={[
+          {
+            id: 'today',
+            heading: 'Consumer activity today',
+            items: [
+              {
+                id: 'complete',
+                title: 'Consumer completed activity',
+                context: 'Consumer participant',
+                date: 'September 30',
+                owner: 'Consumer owner',
+                status: 'completed',
+                statusLabel: 'Completed',
+                actions: <a href="/activity/complete">View consumer activity</a>,
+              },
+              {
+                id: 'review',
+                title: 'Consumer unfamiliar activity',
+                context: 'Consumer participant',
+                date: 'October 1',
+                owner: 'Consumer owner',
+                status: 'awaiting-review',
+                statusLabel: 'Awaiting review',
+              },
+            ],
+          },
+        ]}
+      />
     </main>
   )
 }
@@ -267,9 +321,20 @@ async function assertConsumer(fixtureRoot) {
     'Consumer list item one',
     'Consumer tag',
     'Consumer loading state',
+    'Consumer activity today',
+    'Consumer completed activity',
+    'Completed',
+    'Consumer unfamiliar activity',
+    'Awaiting review',
+    'View consumer activity',
   ]) {
     assert.ok(html.includes(content), `Rendered page is missing: ${content}`)
   }
+  assert.match(
+    html,
+    /aria-labelledby=/u,
+    'Rendered Activity List group is not associated with its heading',
+  )
 
   for (const runtimeError of [
     'ReactCurrentOwner',

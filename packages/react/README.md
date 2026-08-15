@@ -22,6 +22,7 @@ workaround.
 ```tsx
 import {
   Accordion,
+  ActivityList,
   Alert,
   Banner,
   Breadcrumb,
@@ -432,6 +433,57 @@ function App() {
   )
 }
 ```
+
+## Activity List
+
+Use `ActivityList` for ordered dashboard events or tasks. Each item supplies a
+stable ID, title, context, date or time, owner, status value, and visible
+`statusLabel`. The label is the status meaning available to sighted users and
+assistive technology; marker color and shape are supplementary.
+
+```tsx
+<ActivityList
+  aria-label="Recent activity"
+  items={[
+    {
+      id: 'assessment-complete',
+      title: 'Intake assessment completed',
+      context: 'Participant: Maria Gonzalez',
+      date: <time dateTime="2026-09-30T14:30:00">2:30 PM</time>,
+      owner: 'You',
+      status: 'completed',
+      statusLabel: 'Completed',
+      actions: <a href="/activity/assessment-complete">View assessment</a>,
+    },
+  ]}
+/>
+```
+
+The component preserves supplied item order, valid HTML and ARIA attributes,
+consumer class names, semantic `<time>` content, links, and named controls.
+Actions are optional and remain consumer-owned; no empty action container is
+rendered when they are absent. The component does not infer or localize status
+labels, format dates, fetch data, or perform workflow transitions. Unfamiliar
+status values keep their supplied visible label and receive the neutral marker.
+
+Use `groups` instead of `items` when activity is already organized by the
+consumer. Empty groups are omitted. Every remaining group heading is visually
+adjacent to, and programmatically labels, its row list. Set
+`groupHeadingLevel` from 2 through 6 to fit the surrounding document outline.
+The component preserves group and row order and never sorts or infers groups.
+
+`density="compact"` and `density="comfortable"` map to the shared source
+variants; omit `density` or use `"default"` for the standard treatment. The
+shared stylesheet keeps title, context, status, date, and owner text to one
+line with ellipsis when space is constrained. Its existing viewport behavior
+wraps rows and exposes actions at 640 pixels and below.
+
+For zero items or only empty groups, provide `emptyContent`. The component
+renders only the shared empty region and does not fabricate a message, row,
+heading, loading state, or error state. `ActivityList` is server-compatible by
+default and owns no fetching, filtering, pagination, or browser-only state.
+Import it only from `@pathableai/react`; the package loads its shared styling
+automatically.
 
 The rendered components include the corresponding `pathable-*` CSS classes with all PathAble styling. Consumers import components from `@pathableai/react`; they do not need to import `@pathableai/styles` separately in application code.
 

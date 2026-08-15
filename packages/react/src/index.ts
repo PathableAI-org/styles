@@ -11,6 +11,17 @@ export type {
   BreadcrumbLinkAttributes,
   BreadcrumbProps,
 } from './components/Breadcrumb/Breadcrumb.js'
+export { ActivityList } from './components/ActivityList/ActivityList.js'
+export type {
+  ActivityGroup,
+  ActivityGroupAttributes,
+  ActivityItem,
+  ActivityItemAttributes,
+  ActivityListDensity,
+  ActivityListProps,
+  ActivityStatus,
+  ActivityStatusValue,
+} from './components/ActivityList/ActivityList.js'
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'

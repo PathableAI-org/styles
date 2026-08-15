@@ -10,7 +10,7 @@ export default {
           '**Consumers must**: Import `@pathableai/styles` CSS. This recipe composes an app shell with sidebar navigation, dashboard header, KPI grid, ' +
           'activity timeline, schedule, responsive data table, and toast notification from existing public CSS classes.\n\n' +
           '**Accessibility notes**: The table uses `<th scope="col">` for column headers. KPI cards include visible trend labels (not just color or icon). ' +
-          'Activity rows use `data-status` with `role="img"` and `aria-label` for status indicators. ' +
+          'Activity rows pair decorative status markers with visible status labels. ' +
           'The toast uses `role="status"` for automatic screen-reader announcement. ' +
           'The sidebar navigation uses `aria-current="page"` on the active link. ' +
           'The main content area has `id="main-content"` for skip-navigation targets. ' +
@@ -158,14 +158,15 @@ const buildActivityRow = (a) => {
   }
   const statusLabel = statusLabels[a.status] || a.status
   return `
-<div class="pathable-activity-row">
-  <div class="pathable-activity-row__status" data-status="${a.status}" role="img" aria-label="Status: ${statusLabel}"></div>
+<div class="pathable-activity-row" role="listitem">
+  <span class="pathable-activity-row__status" data-status="${a.status}" aria-hidden="true"></span>
+  <span class="pathable-activity-row__status-text">${statusLabel}</span>
   <div class="pathable-activity-row__body">
     <p class="pathable-activity-row__title">${a.title}</p>
     <p class="pathable-activity-row__context">${a.context}</p>
   </div>
   <span class="pathable-activity-row__date">${a.date}</span>
-  <span class="pathable-activity-row__owner">${a.owner}</span>
+  <span class="pathable-activity-row__owner"><span class="pathable-activity-row__owner-text">${a.owner}</span></span>
 </div>
 `
 }
@@ -177,10 +178,14 @@ const activityListHtml = `
     <a href="#" style="font-size:0.875rem;">View all</a>
   </div>
   <div class="pathable-activity-list">
-    <h3 class="pathable-activity-list__group-heading">Today</h3>
-    ${activities.slice(0, 4).map(buildActivityRow).join('')}
-    <h3 class="pathable-activity-list__group-heading">Yesterday</h3>
-    ${activities.slice(4).map(buildActivityRow).join('')}
+    <h3 id="recipe-activity-today" class="pathable-activity-list__group-heading">Today</h3>
+    <div class="pathable-activity-list" role="list" aria-labelledby="recipe-activity-today">
+      ${activities.slice(0, 4).map(buildActivityRow).join('')}
+    </div>
+    <h3 id="recipe-activity-yesterday" class="pathable-activity-list__group-heading">Yesterday</h3>
+    <div class="pathable-activity-list" role="list" aria-labelledby="recipe-activity-yesterday">
+      ${activities.slice(4).map(buildActivityRow).join('')}
+    </div>
   </div>
 </div>
 `
