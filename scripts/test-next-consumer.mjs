@@ -106,6 +106,11 @@ async function assertStylesAssets(stylesRoot) {
     './dist/styles.css',
     'Packed styles manifest does not expose its public stylesheet entry',
   )
+  assert.match(
+    css,
+    /\.pathable-activity-list(?:\b|[_{,:.-])/u,
+    'Packed stylesheet omits Activity List selectors',
+  )
 
   for (const url of urls) {
     const asset = normalize(resolve(dirname(stylesheet), url))
@@ -138,6 +143,10 @@ async function assertReactPackage(reactRoot) {
     await readFile(join(reactRoot, 'package.json'), 'utf8'),
   )
   const runtime = await readFile(join(reactRoot, 'dist', 'index.js'), 'utf8')
+  const declarations = await readFile(
+    join(reactRoot, 'dist', 'index.d.ts'),
+    'utf8',
+  )
   const dependencyValues = Object.values(manifest.dependencies ?? {})
 
   assert.ok(
@@ -157,6 +166,37 @@ async function assertReactPackage(reactRoot) {
     /from\s+['"]react\/jsx-runtime['"]/u,
     'Packed React runtime does not import the consumer JSX runtime',
   )
+  const runtimeExports = runtime.match(/export\s*\{([^}]*)\}/su)?.[1] ?? ''
+  assert.match(
+    runtimeExports,
+    /\b(?:ActivityList|\w+\s+as\s+ActivityList)\b/u,
+    'Packed runtime does not explicitly export ActivityList',
+  )
+  assert.match(
+    declarations,
+    /export\s*\{\s*ActivityList\s*\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/u,
+    'Packed declarations do not explicitly export ActivityList',
+  )
+  const activityTypeExports =
+    declarations.match(
+      /export\s+type\s*\{([^}]*)\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/su,
+    )?.[1] ?? ''
+  for (const publicType of [
+    'ActivityListProps',
+    'ActivityListDensity',
+    'ActivityStatus',
+    'ActivityStatusValue',
+    'ActivityItem',
+    'ActivityItemAttributes',
+    'ActivityGroup',
+    'ActivityGroupAttributes',
+  ]) {
+    assert.match(
+      activityTypeExports,
+      new RegExp(`\\b${publicType}\\b`, 'u'),
+      `Packed declarations do not explicitly export ${publicType}`,
+    )
+  }
 
   for (const embeddedRuntimeMarker of [
     'ReactCurrentOwner',
@@ -215,7 +255,7 @@ export default function RootLayout({ children }) {
   )
   await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
-    `import { Card, Link, List, Loading, Tag } from '@pathableai/react'
+    `import { ActivityList, Card, Link, List, Loading, Tag } from '@pathableai/react'
 
 export default function Page() {
   return (
@@ -226,6 +266,35 @@ export default function Page() {
       <List items={['Consumer list item one', 'Consumer list item two']} />
       <Tag>Consumer tag</Tag>
       <Loading text="Consumer loading state" />
+      <ActivityList
+        groups={[
+          {
+            id: 'today',
+            heading: 'Consumer activity today',
+            items: [
+              {
+                id: 'complete',
+                title: 'Consumer completed activity',
+                context: 'Consumer participant',
+                date: 'September 30',
+                owner: 'Consumer owner',
+                status: 'completed',
+                statusLabel: 'Completed',
+                actions: <a href="/activity/complete">View consumer activity</a>,
+              },
+              {
+                id: 'review',
+                title: 'Consumer unfamiliar activity',
+                context: 'Consumer participant',
+                date: 'October 1',
+                owner: 'Consumer owner',
+                status: 'awaiting-review',
+                statusLabel: 'Awaiting review',
+              },
+            ],
+          },
+        ]}
+      />
     </main>
   )
 }
@@ -267,9 +336,49 @@ async function assertConsumer(fixtureRoot) {
     'Consumer list item one',
     'Consumer tag',
     'Consumer loading state',
+    'Consumer activity today',
+    'Consumer completed activity',
+    'Completed',
+    'Consumer unfamiliar activity',
+    'Awaiting review',
+    'View consumer activity',
   ]) {
     assert.ok(html.includes(content), `Rendered page is missing: ${content}`)
   }
+  const activityHeading = html.match(
+    /<h([2-6])([^>]*)>Consumer activity today<\/h\1>/u,
+  )
+  assert.ok(activityHeading, 'Rendered Activity List heading is missing')
+  assert.match(
+    activityHeading[2],
+    /class="pathable-activity-list__group-heading"/u,
+    'Rendered Activity List heading is missing its source class',
+  )
+  const activityHeadingId = activityHeading[2].match(/id="([^"]+)"/u)?.[1]
+  assert.ok(activityHeadingId, 'Rendered Activity List heading has no id')
+  const contentAfterHeading = html.slice(
+    activityHeading.index + activityHeading[0].length,
+  )
+  const adjacentListAttributes =
+    contentAfterHeading.match(/^\s*<div([^>]*)>/u)?.[1]
+  assert.ok(
+    adjacentListAttributes,
+    'Rendered Activity List heading has no adjacent group list',
+  )
+  assert.match(
+    adjacentListAttributes,
+    /class="pathable-activity-list"/u,
+    'Rendered Activity List group list is missing its source class',
+  )
+  assert.match(
+    adjacentListAttributes,
+    /role="list"/u,
+    'Rendered Activity List group does not expose the list role',
+  )
+  assert.ok(
+    adjacentListAttributes.includes(`aria-labelledby="${activityHeadingId}"`),
+    'Rendered Activity List group does not reference its adjacent heading',
+  )
 
   for (const runtimeError of [
     'ReactCurrentOwner',

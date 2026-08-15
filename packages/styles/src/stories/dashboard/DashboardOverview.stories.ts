@@ -65,24 +65,28 @@ export const Populated = {
       </div>
 
       <div class="pathable-activity-list">
-        <h2 class="pathable-activity-list__group-heading">Today</h2>
-        <div class="pathable-activity-row">
-          <div class="pathable-activity-row__status" data-status="completed" role="img" aria-label="completed"></div>
+        <h2 id="overview-activity-today" class="pathable-activity-list__group-heading">Today</h2>
+        <div class="pathable-activity-list" role="list" aria-labelledby="overview-activity-today">
+        <div class="pathable-activity-row" role="listitem">
+          <span class="pathable-activity-row__status" data-status="completed" aria-hidden="true"></span>
+          <span class="pathable-activity-row__status-text">Completed</span>
           <div class="pathable-activity-row__body">
             <p class="pathable-activity-row__title">Intake assessment completed</p>
             <p class="pathable-activity-row__context">Participant: Maria Gonzalez</p>
           </div>
           <span class="pathable-activity-row__date">2:30 PM</span>
-          <span class="pathable-activity-row__owner">You</span>
+          <span class="pathable-activity-row__owner"><span class="pathable-activity-row__owner-text">You</span></span>
         </div>
-        <div class="pathable-activity-row">
-          <div class="pathable-activity-row__status" data-status="in-progress" role="img" aria-label="in progress"></div>
+        <div class="pathable-activity-row" role="listitem">
+          <span class="pathable-activity-row__status" data-status="in-progress" aria-hidden="true"></span>
+          <span class="pathable-activity-row__status-text">In progress</span>
           <div class="pathable-activity-row__body">
             <p class="pathable-activity-row__title">Follow-up call scheduled</p>
             <p class="pathable-activity-row__context">Provider: Cascade Resources</p>
           </div>
           <span class="pathable-activity-row__date">11:00 AM</span>
-          <span class="pathable-activity-row__owner">Sara M.</span>
+          <span class="pathable-activity-row__owner"><span class="pathable-activity-row__owner-text">Sara M.</span></span>
+        </div>
         </div>
       </div>
     </div>

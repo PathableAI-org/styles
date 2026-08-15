@@ -90,11 +90,16 @@
     border-radius: 0;
     background: var(--pathable-color-danger);
   }
+}
 
-  // Text label for non-color differentiation
-  .pathable-activity-row__status-text {
-    display: none; /* consumers add pathable-sr-only for screen-reader-only text */
-  }
+// Visible text label provides the status meaning; the marker is decorative.
+.pathable-activity-row__status-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--pathable-color-text);
+  font-size: var(--pathable-font-size-body-xs);
 }
 
 // --- Row body: title + context ---
@@ -132,7 +137,10 @@
   font-size: var(--pathable-font-size-body-xs);
   color: var(--pathable-color-text-muted);
   white-space: nowrap;
-  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // --- Owner / participant ---
@@ -141,10 +149,18 @@
   font-size: var(--pathable-font-size-body-xs);
   color: var(--pathable-color-text);
   white-space: nowrap;
-  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   align-items: center;
   gap: var(--pathable-space-1);
+}
+
+.pathable-activity-row__owner-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 // --- Trailing actions ---
