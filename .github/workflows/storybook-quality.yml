@@ -20,23 +20,43 @@ permissions:
   contents: read
 
 jobs:
+  build:
+    name: Shared build (styles + React + Storybooks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/setup
+
+      - name: Build styles
+        run: pnpm --filter @pathableai/styles build
+
+      - name: Build React
+        run: pnpm --filter @pathableai/react build
+
+      - name: Build HTML Storybook
+        run: pnpm --filter @pathable/storybook build-storybook
+
+      - name: Build React Storybook
+        run: pnpm --filter @pathable/storybook-react build-storybook
+
+      - name: Upload HTML Storybook static
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        with:
+          name: storybook-html-static
+          path: apps/storybook/storybook-static/
+          retention-days: 1
+
+      - name: Upload React Storybook static
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        with:
+          name: storybook-react-static
+          path: apps/storybook-react/storybook-static/
+          retention-days: 1
+
   react-server-compatibility:
     name: React server compatibility (advisory)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: 24
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Audit React server compatibility
         continue-on-error: true
@@ -52,33 +72,24 @@ jobs:
 
   accessibility-tests:
     name: Storybook accessibility tests
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - uses: ./.github/actions/setup
         with:
-          node-version: 24
-          cache: 'pnpm'
+          install-playwright: 'true'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Download HTML Storybook static
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: storybook-html-static
+          path: apps/storybook/storybook-static/
 
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Build styles
-        run: pnpm --filter @pathableai/styles build
-
-      - name: Build React package
-        run: pnpm --filter @pathableai/react build
-
-      - name: Build HTML Storybook
-        run: pnpm --filter @pathable/storybook build-storybook
+      - name: Download React Storybook static
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: storybook-react-static
+          path: apps/storybook-react/storybook-static/
 
       - name: Test HTML Storybook
         run: |
@@ -101,9 +112,6 @@ jobs:
           TEST_EXIT=$?
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
-
-      - name: Build React Storybook
-        run: pnpm --filter @pathable/storybook-react build-storybook
 
       - name: Test React Storybook
         run: |
@@ -129,27 +137,21 @@ jobs:
 
   visual-smoke:
     name: Storybook visual smoke
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - uses: ./.github/actions/setup
         with:
-          node-version: 24
-          cache: 'pnpm'
+          install-playwright: 'true'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Download HTML Storybook static
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: storybook-html-static
+          path: apps/storybook/storybook-static/
 
       - name: Visual smoke tests
-        run: pnpm test:visual
+        run: node packages/styles/scripts/test-visual.mjs
 
       - name: Upload failure artifacts
         if: failure()
@@ -161,30 +163,16 @@ jobs:
 
   coverage:
     name: Storybook coverage
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - name: Download HTML Storybook static
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          node-version: 24
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build styles
-        run: pnpm --filter @pathableai/styles build
-
-      - name: Build React package
-        run: pnpm --filter @pathableai/react build
-
-      - name: Build Storybook
-        run: pnpm --filter @pathable/storybook build-storybook
+          name: storybook-html-static
+          path: apps/storybook/storybook-static/
 
       - name: Check storybook coverage
         run: pnpm storybook:coverage
@@ -199,30 +187,18 @@ jobs:
 
   quality-gates:
     name: Storybook Quality Gates
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - uses: ./.github/actions/setup
         with:
-          node-version: 24
-          cache: 'pnpm'
+          install-playwright: 'true'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Build styles
-        run: pnpm --filter @pathableai/styles build
-
-      - name: Build Storybook
-        run: pnpm --filter @pathable/storybook build-storybook
+      - name: Download HTML Storybook static
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: storybook-html-static
+          path: apps/storybook/storybook-static/
 
       - name: Quality Gates
-        run: pnpm quality-gates
+        run: node packages/styles/scripts/quality-gates.mjs
