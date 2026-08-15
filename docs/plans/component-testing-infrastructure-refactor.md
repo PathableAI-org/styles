@@ -163,8 +163,8 @@ result for it.
 
 - [ ] Replace duplicated shell, Cucumber, and workflow lifecycle code with one
       component-neutral runner that owns target metadata, prerequisite builds,
-      a direct `/iframe`-compatible static server, bounded readiness, test
-      execution, labelled results, signals, and cleanup.
+      direct `/iframe.html` story URLs, a static server, bounded readiness, test
+      execution, labeled results, signals, and cleanup.
 - [ ] Register `styles` first. Target selection must be explicit, and unknown
       targets, occupied ports, missing build output, missing stories, and test
       failures must be hard failures.
@@ -310,7 +310,7 @@ user-facing promise.
 | `apps/storybook/.storybook/`                                                | Wire Styles test environment and shared Axe policy                                            | Must continue exercising public Styles runtime             |
 | `scripts/test-storybook.*`                                                  | Replace duplicated target lifecycle with one runner                                           | Prove against Styles before registering React              |
 | `package.json` and `pnpm-lock.yaml`                                         | Add focused commands/workspace dependencies; later remove Cucumber                            | Cucumber removal waits for equivalence                     |
-| `.github/workflows/ci-full.yml`                                             | Call shared runner and publish target-labelled evidence                                       | Local failure paths verified first                         |
+| `.github/workflows/ci-full.yml`                                             | Call shared runner and publish target-labeled evidence                                        | Local failure paths verified first                         |
 | `behavior-contracts/`                                                       | Retire duplicate Accordion pilot                                                              | Delete only after new Styles evidence is equivalent        |
 | `packages/react/src/stories/components/Communication/Accordion.stories.tsx` | Adopt unchanged shared helpers                                                                | Phase 2 only                                               |
 | `apps/storybook-react/.storybook/preview.js`                                | Isolate native React behavior from Styles enhancement JS                                      | Required before React conformance is trusted               |
