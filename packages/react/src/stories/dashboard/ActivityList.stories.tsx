@@ -299,3 +299,15 @@ export const OnlyEmptyGroups: Story = {
     ).not.toBeInTheDocument()
   },
 }
+
+export const EmptyWithoutContent: Story = {
+  args: { items: [] },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild
+    await expect(root).toHaveClass('pathable-activity-list--empty')
+    await expect(root).toBeEmptyDOMElement()
+    await expect(
+      canvasElement.querySelector('.pathable-activity-list__empty'),
+    ).not.toBeInTheDocument()
+  },
+}

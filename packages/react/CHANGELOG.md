@@ -1,5 +1,17 @@
 # @pathableai/react
 
+## 0.0.4-alpha.0
+
+### Patch Changes
+
+- 3629001: Add DashboardHeader component
+
+## 0.0.3
+
+### Patch Changes
+
+- 994c482: Prevent invalid DateRangePicker drafts from exposing stale ISO form values and keep native validity on the visible date inputs.
+
 ## 0.0.2
 
 ### Patch Changes

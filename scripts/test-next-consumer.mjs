@@ -166,7 +166,21 @@ async function assertReactPackage(reactRoot) {
     /from\s+['"]react\/jsx-runtime['"]/u,
     'Packed React runtime does not import the consumer JSX runtime',
   )
-  assert.match(runtime, /ActivityList/u, 'Packed runtime omits ActivityList')
+  const runtimeExports = runtime.match(/export\s*\{([^}]*)\}/su)?.[1] ?? ''
+  assert.match(
+    runtimeExports,
+    /\b(?:ActivityList|\w+\s+as\s+ActivityList)\b/u,
+    'Packed runtime does not explicitly export ActivityList',
+  )
+  assert.match(
+    declarations,
+    /export\s*\{\s*ActivityList\s*\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/u,
+    'Packed declarations do not explicitly export ActivityList',
+  )
+  const activityTypeExports =
+    declarations.match(
+      /export\s+type\s*\{([^}]*)\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/su,
+    )?.[1] ?? ''
   for (const publicType of [
     'ActivityListProps',
     'ActivityListDensity',
@@ -177,9 +191,10 @@ async function assertReactPackage(reactRoot) {
     'ActivityGroup',
     'ActivityGroupAttributes',
   ]) {
-    assert.ok(
-      declarations.includes(publicType),
-      `Packed declarations omit ${publicType}`,
+    assert.match(
+      activityTypeExports,
+      new RegExp(`\\b${publicType}\\b`, 'u'),
+      `Packed declarations do not explicitly export ${publicType}`,
     )
   }
 
@@ -330,10 +345,39 @@ async function assertConsumer(fixtureRoot) {
   ]) {
     assert.ok(html.includes(content), `Rendered page is missing: ${content}`)
   }
+  const activityHeading = html.match(
+    /<h([2-6])([^>]*)>Consumer activity today<\/h\1>/u,
+  )
+  assert.ok(activityHeading, 'Rendered Activity List heading is missing')
   assert.match(
-    html,
-    /aria-labelledby=/u,
-    'Rendered Activity List group is not associated with its heading',
+    activityHeading[2],
+    /class="pathable-activity-list__group-heading"/u,
+    'Rendered Activity List heading is missing its source class',
+  )
+  const activityHeadingId = activityHeading[2].match(/id="([^"]+)"/u)?.[1]
+  assert.ok(activityHeadingId, 'Rendered Activity List heading has no id')
+  const contentAfterHeading = html.slice(
+    activityHeading.index + activityHeading[0].length,
+  )
+  const adjacentListAttributes =
+    contentAfterHeading.match(/^\s*<div([^>]*)>/u)?.[1]
+  assert.ok(
+    adjacentListAttributes,
+    'Rendered Activity List heading has no adjacent group list',
+  )
+  assert.match(
+    adjacentListAttributes,
+    /class="pathable-activity-list"/u,
+    'Rendered Activity List group list is missing its source class',
+  )
+  assert.match(
+    adjacentListAttributes,
+    /role="list"/u,
+    'Rendered Activity List group does not expose the list role',
+  )
+  assert.ok(
+    adjacentListAttributes.includes(`aria-labelledby="${activityHeadingId}"`),
+    'Rendered Activity List group does not reference its adjacent heading',
   )
 
   for (const runtimeError of [

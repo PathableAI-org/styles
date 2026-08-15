@@ -130,7 +130,9 @@ function renderEmptyList(
         className,
       )}
     >
-      <div className={`${ROOT_CLASS}__empty`}>{emptyContent}</div>
+      {emptyContent === undefined ? null : (
+        <div className={`${ROOT_CLASS}__empty`}>{emptyContent}</div>
+      )}
     </div>
   )
 }
