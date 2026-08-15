@@ -19,9 +19,10 @@ jobs:
     name: Build docs
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
         with:
-          install-playwright: 'true'
+          install_playwright: 'true'
 
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
@@ -58,7 +59,7 @@ jobs:
           exit $TEST_EXIT
 
       - name: Visual smoke tests
-        run: node packages/styles/scripts/test-visual.mjs
+        run: pnpm test:visual
 
       - name: Rebuild main docs for Pages
         run: STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook

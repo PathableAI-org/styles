@@ -24,8 +24,8 @@ jobs:
       js: ${{ github.event_name != 'pull_request' || steps.filter.outputs.js == 'true' }}
       markdown: ${{ github.event_name != 'pull_request' || steps.filter.outputs.markdown == 'true' }}
       react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react == 'true' }}
-      behavior-contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.behavior-contracts == 'true' }}
-      next-consumer: ${{ github.event_name != 'pull_request' || steps.filter.outputs.next-consumer == 'true' }}
+      behavior_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.behavior_contracts == 'true' }}
+      next_consumer: ${{ github.event_name != 'pull_request' || steps.filter.outputs.next_consumer == 'true' }}
       storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.storybook == 'true' }}
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
@@ -52,14 +52,14 @@ jobs:
               - 'packages/styles/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
-            behavior-contracts:
+            behavior_contracts:
               - 'behavior-contracts/**'
               - 'packages/styles/**'
               - 'apps/storybook/**'
               - 'apps/storybook-react/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
-            next-consumer:
+            next_consumer:
               - 'scripts/test-next-consumer.mjs'
               - 'packages/react/**'
               - 'packages/styles/**'
@@ -78,6 +78,7 @@ jobs:
     name: JS lint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
       - name: JS lint
         run: pnpm lint:js
@@ -88,6 +89,7 @@ jobs:
     name: Markdownlint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
       - name: Markdownlint
         run: pnpm lint:md
@@ -98,6 +100,7 @@ jobs:
     name: React typecheck
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
       - name: Typecheck React
         run: pnpm --filter @pathableai/react typecheck
@@ -108,6 +111,7 @@ jobs:
     name: React build + package validation
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
@@ -120,22 +124,24 @@ jobs:
 
   behavior-contracts:
     needs: changes
-    if: needs.changes.outputs.behavior-contracts == 'true'
+    if: needs.changes.outputs.behavior_contracts == 'true'
     name: Behavior contracts
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
         with:
-          install-playwright: 'true'
+          install_playwright: 'true'
       - name: Test behavior contracts
         run: pnpm test:contracts
 
   next-consumer:
     needs: changes
-    if: needs.changes.outputs.next-consumer == 'true'
+    if: needs.changes.outputs.next_consumer == 'true'
     name: Packed Next.js consumer
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
       - name: Validate packed Next.js consumer
         run: pnpm test:next-consumer
@@ -146,6 +152,7 @@ jobs:
     name: Storybook build (HTML + React)
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
       - name: Build styles
         run: pnpm --filter @pathableai/styles build

@@ -1,173 +1,113 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":dependencyDashboard",
-    ":combinePatchMinorReleases",
-    "helpers:pinGitHubActionDigests",
-    "schedule:nonOfficeHours"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    ':dependencyDashboard',
+    ':combinePatchMinorReleases',
+    'helpers:pinGitHubActionDigests',
+    'schedule:nonOfficeHours',
   ],
-  "timezone": "America/New_York",
-  "automerge": true,
-  "automergeType": "pr",
-  "platformAutomerge": true,
-  "enabledManagers": [
-    "npm",
-    "github-actions"
-  ],
-  "labels": [
-    "dependencies",
-    "renovate"
-  ],
-  "prConcurrentLimit": 8,
-  "prHourlyLimit": 2,
-  "rebaseWhen": "behind-base-branch",
-  "separateMajorMinor": true,
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": [
-      "* 0-4 * * 6"
-    ],
-    "groupName": "pnpm lockfile maintenance",
-    "addLabels": [
-      "lockfile"
-    ]
+  timezone: 'America/New_York',
+  automerge: true,
+  automergeType: 'pr',
+  platformAutomerge: true,
+  enabledManagers: ['npm', 'github-actions'],
+  labels: ['dependencies', 'renovate'],
+  prConcurrentLimit: 8,
+  prHourlyLimit: 2,
+  rebaseWhen: 'behind-base-branch',
+  separateMajorMinor: true,
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ['* 0-4 * * 6'],
+    groupName: 'pnpm lockfile maintenance',
+    addLabels: ['lockfile'],
   },
-  "vulnerabilityAlerts": {
-    "labels": [
-      "dependencies",
-      "renovate",
-      "security"
-    ]
+  vulnerabilityAlerts: {
+    labels: ['dependencies', 'renovate', 'security'],
   },
-  "packageRules": [
+  packageRules: [
     {
-      "description": "Group non-major pnpm workspace dependency updates into a reviewable batch.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest",
-        "pin",
-        "pinDigest"
-      ],
-      "groupName": "pnpm non-major dependencies",
-      "groupSlug": "pnpm-non-major",
-      "addLabels": [
-        "javascript",
-        "pnpm"
-      ]
+      description: 'Group non-major pnpm workspace dependency updates into a reviewable batch.',
+      matchManagers: ['npm'],
+      matchUpdateTypes: ['minor', 'patch', 'digest', 'pin', 'pinDigest'],
+      groupName: 'pnpm non-major dependencies',
+      groupSlug: 'pnpm-non-major',
+      addLabels: ['javascript', 'pnpm'],
     },
     {
-      "description": "Keep major JavaScript dependency upgrades isolated for easier regression triage.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "addLabels": [
-        "javascript",
-        "pnpm",
-        "major"
-      ]
+      description: 'Keep major JavaScript dependency upgrades isolated for easier regression triage.',
+      matchManagers: ['npm'],
+      matchUpdateTypes: ['major'],
+      addLabels: ['javascript', 'pnpm', 'major'],
     },
     {
-      "description": "Group non-major GitHub Action SHA and version-comment refreshes.",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest",
-        "pin",
-        "pinDigest"
-      ],
-      "groupName": "github actions non-major updates",
-      "groupSlug": "github-actions-non-major",
-      "addLabels": [
-        "ci",
-        "github-actions"
-      ]
+      description: 'Group non-major GitHub Action SHA and version-comment refreshes.',
+      matchManagers: ['github-actions'],
+      matchUpdateTypes: ['minor', 'patch', 'digest', 'pin', 'pinDigest'],
+      groupName: 'github actions non-major updates',
+      groupSlug: 'github-actions-non-major',
+      addLabels: ['ci', 'github-actions'],
     },
     {
-      "description": "Keep major GitHub Action upgrades separate.",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "addLabels": [
-        "ci",
-        "github-actions",
-        "major"
-      ]
+      description: 'Keep major GitHub Action upgrades separate.',
+      matchManagers: ['github-actions'],
+      matchUpdateTypes: ['major'],
+      addLabels: ['ci', 'github-actions', 'major'],
     },
     {
-      "description": "Never auto-merge major version upgrades.",
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "automerge": false
+      description: 'Never auto-merge major version upgrades.',
+      matchUpdateTypes: ['major'],
+      automerge: false,
     },
     {
-      "description": "Never auto-merge authentication, authorization, or cryptography packages.",
-      "matchManagers": [
-        "npm"
+      description: 'Never auto-merge authentication, authorization, or cryptography packages.',
+      matchManagers: ['npm'],
+      matchPackageNames: [
+        '/(^|\\/)auth($|[-/])/',
+        '/^@auth\\//',
+        '/^better-auth$/',
+        '/^passport($|[-/])/',
+        '/^openid-client$/',
+        '/^oauth/',
+        '/^jsonwebtoken$/',
+        '/^jose$/',
+        '/^aws-jwt-verify$/',
+        '/^amazon-cognito-identity-js$/',
+        '/^casbin$/',
+        '/^argon2$/',
+        '/^bcrypt($|-)/',
+        '/^libsodium/',
+        '/^tweetnacl/',
+        '/^node-forge$/',
+        '/^crypto/',
       ],
-      "matchPackageNames": [
-        "/(^|\\/)auth($|[-/])/",
-        "/^@auth\\//",
-        "/^better-auth$/",
-        "/^passport($|[-/])/",
-        "/^openid-client$/",
-        "/^oauth/",
-        "/^jsonwebtoken$/",
-        "/^jose$/",
-        "/^aws-jwt-verify$/",
-        "/^amazon-cognito-identity-js$/",
-        "/^casbin$/",
-        "/^argon2$/",
-        "/^bcrypt($|-)/",
-        "/^libsodium/",
-        "/^tweetnacl/",
-        "/^node-forge$/",
-        "/^crypto/"
-      ],
-      "automerge": false
+      automerge: false,
     },
     {
-      "description": "Never auto-merge infrastructure provisioning libraries.",
-      "matchManagers": [
-        "npm"
+      description: 'Never auto-merge infrastructure provisioning libraries.',
+      matchManagers: ['npm'],
+      matchPackageNames: [
+        '/^@aws-cdk\\//',
+        '/^aws-cdk($|-)/',
+        '/^cdktf$/',
+        '/^@cdktf\\//',
+        '/^terraform/',
       ],
-      "matchPackageNames": [
-        "/^@aws-cdk\\//",
-        "/^aws-cdk($|-)/",
-        "/^cdktf$/",
-        "/^@cdktf\\//",
-        "/^terraform/"
-      ],
-      "automerge": false
+      automerge: false,
     },
     {
-      "description": "Never auto-merge runtime framework upgrades that can change the component contract.",
-      "matchManagers": [
-        "npm"
+      description: 'Never auto-merge runtime framework upgrades that can change the component contract.',
+      matchManagers: ['npm'],
+      matchPackageNames: [
+        '/^react($|-)/',
+        '/^react-dom($|-)/',
+        '/^@types\\/react($|-)/',
+        '/^@types\\/react-dom($|-)/',
+        '/^next($|-)/',
+        '/^@uswds\\/uswds$/',
       ],
-      "matchPackageNames": [
-        "/^react($|-)/",
-        "/^react-dom($|-)/",
-        "/^@types\\/react($|-)/",
-        "/^@types\\/react-dom($|-)/",
-        "/^next($|-)/",
-        "/^@uswds\\/uswds$/"
-      ],
-      "automerge": false
-    }
-  ]
+      automerge: false,
+    },
+  ],
 }

@@ -24,6 +24,7 @@ jobs:
     name: Shared build (styles + React + Storybooks)
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
 
       - name: Build styles
@@ -56,6 +57,7 @@ jobs:
     name: React server compatibility (advisory)
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
 
       - name: Audit React server compatibility
@@ -75,9 +77,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
         with:
-          install-playwright: 'true'
+          install_playwright: 'true'
 
       - name: Download HTML Storybook static
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -140,9 +143,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
         with:
-          install-playwright: 'true'
+          install_playwright: 'true'
 
       - name: Download HTML Storybook static
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -151,7 +155,7 @@ jobs:
           path: apps/storybook/storybook-static/
 
       - name: Visual smoke tests
-        run: node packages/styles/scripts/test-visual.mjs
+        run: pnpm test:visual
 
       - name: Upload failure artifacts
         if: failure()
@@ -166,6 +170,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
 
       - name: Download HTML Storybook static
@@ -190,9 +195,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
         with:
-          install-playwright: 'true'
+          install_playwright: 'true'
 
       - name: Download HTML Storybook static
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -201,4 +207,4 @@ jobs:
           path: apps/storybook/storybook-static/
 
       - name: Quality Gates
-        run: node packages/styles/scripts/quality-gates.mjs
+        run: pnpm quality-gates
