@@ -24,14 +24,24 @@
 import { readFileSync, existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { accessibilityExceptions } from './accessibility-exceptions.mjs'
+import { getExceptionsFor } from './accessibility-exceptions.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(here, '..')
 
-const manifestModule = await import(
-  resolve(repoRoot, 'packages/storybook-contracts/dist/accordion/manifest.js')
+const manifestPath = resolve(
+  repoRoot,
+  'packages/storybook-contracts/dist/accordion/manifest.js',
 )
+
+if (!existsSync(manifestPath)) {
+  process.stderr.write(
+    'Accordion manifest is not built. Run `pnpm --filter @pathable/storybook-contracts build` (or the styles Storybook command) before generating the evidence report.\n',
+  )
+  process.exit(1)
+}
+
+const manifestModule = await import(manifestPath)
 const manifest = manifestModule.accordionManifest
 
 const target = 'styles'
@@ -79,7 +89,10 @@ const capabilities = manifest.shared.map((c) => ({
     targetEvidence?.passed === true ? 'play (green run)' : 'not yet executed',
 }))
 
-const exceptions = accessibilityExceptions.filter((e) => e.target === target)
+const exceptions = getExceptionsFor(target, storyId)
+const conversionTargets = getExceptionsFor(target, storyId, {
+  includeDisabled: true,
+}).filter((e) => e.enabled !== true)
 
 process.stdout.write(
   [
@@ -101,9 +114,18 @@ process.stdout.write(
     `- Scope: ${axe.bound}`,
     '',
     `## Exceptions (${exceptions.length})`,
-    ...exceptions.map(
-      (e) => `- ${e.story} :: ${e.rule} :: ${e.rationale} (${e.tracking})`,
-    ),
+    ...(exceptions.length
+      ? exceptions.map(
+          (e) => `- ${e.story} :: ${e.rule} :: ${e.rationale} (${e.tracking})`,
+        )
+      : ['- None']),
+    '',
+    `Conversion targets (${conversionTargets.length})`,
+    ...(conversionTargets.length
+      ? conversionTargets.map(
+          (e) => `- ${e.story} :: ${e.rule} (${e.tracking})`,
+        )
+      : ['- None']),
   ].join('\n') + '\n',
 )
 

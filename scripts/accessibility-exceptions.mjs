@@ -61,9 +61,21 @@ export const accessibilityExceptions = [
   },
 ]
 
-export function getExceptionsFor(target, story) {
+/**
+ * Return enabled exceptions for a target, optionally restricted to a story
+ * glob. Disabled entries are conversion targets, not active exceptions; they are
+ * excluded by default so consumers never present them as current exceptions.
+ */
+export function getExceptionsFor(
+  target,
+  story,
+  { includeDisabled = false } = {},
+) {
   return accessibilityExceptions.filter(
-    (e) => e.target === target && (story ? storyMatches(e.story, story) : true),
+    (e) =>
+      e.target === target &&
+      (includeDisabled || e.enabled === true) &&
+      (story ? storyMatches(e.story, story) : true),
   )
 }
 
@@ -84,10 +96,10 @@ if (process.argv[1]?.endsWith('accessibility-exceptions.mjs')) {
   process.stdout.write(
     `Accessibility exceptions (${list.length})\n` +
       list
-        .map(
-          (e) =>
-            `- [${e.enabled ? 'x' : ' '}] ${e.target}/${e.story} :: ${e.rule} :: ${e.rationale} (${e.tracking})`,
-        )
+        .map((e) => {
+          const status = e.enabled ? 'enabled' : 'conversion-target'
+          return `- [${e.enabled ? 'x' : ' '}] ${status} ${e.target}/${e.story} :: ${e.rule} :: ${e.rationale} (${e.tracking})`
+        })
         .join('\n') +
       '\n',
   )

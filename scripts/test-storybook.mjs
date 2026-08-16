@@ -21,6 +21,7 @@
  */
 import { spawn } from 'node:child_process'
 import { access, writeFile } from 'node:fs/promises'
+import { createServer } from 'node:net'
 import { dirname, resolve } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
@@ -128,24 +129,33 @@ function runCommand(command, args, { env = process.env } = {}) {
   })
 }
 
-/** Refuse to adopt a foreign server already listening on the target port. */
+/**
+ * Deterministic port-availability check. Only a listener that actually binds
+ * (`EADDRINUSE`) is treated as occupied; transient probe errors surface as a
+ * clear reason rather than being misclassified as "in use".
+ */
 async function assertPortFree(port) {
-  try {
-    await fetch(`http://127.0.0.1:${port}/`, {
-      signal: AbortSignal.timeout(500),
+  return new Promise((resolveProbe) => {
+    const probe = createServer()
+
+    probe.once('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        resolveProbe(false)
+        return
+      }
+      resolveProbe({ error: `Port probe failed: ${error.message}` })
     })
-    // If we got a response, a server is already there.
-    return false
-  } catch (error) {
-    if (error?.cause?.code === 'ECONNREFUSED') return true
-    return false
-  }
+
+    probe.listen(port, '127.0.0.1', () => {
+      probe.close(() => resolveProbe(true))
+    })
+  })
 }
 
 function startServer(port, staticDirectory) {
   return spawn(
     pnpmCommand,
-    ['exec', 'serve', '-n', '-l', String(port), staticDirectory],
+    ['exec', 'serve', '-n', '-l', `tcp://127.0.0.1:${port}`, staticDirectory],
     {
       cwd: repositoryRoot,
       env: process.env,
@@ -270,8 +280,15 @@ async function runTarget(targetName) {
 
   let server
   try {
-    const portFree = await assertPortFree(target.port)
-    if (!portFree) {
+    const portResult = await assertPortFree(target.port)
+
+    if (typeof portResult === 'object') {
+      throw new Error(
+        `Target "${target.name}" port probe failed on ${target.port}: ${portResult.error}`,
+      )
+    }
+
+    if (!portResult) {
       throw new Error(
         `Target "${target.name}" port ${target.port} is already in use. Stop the existing process or choose another port.`,
       )

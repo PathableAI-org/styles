@@ -9,7 +9,6 @@
     "test-storybook": "test-storybook"
   },
   "dependencies": {
-    "@pathable/storybook-contracts": "workspace:*",
     "@pathableai/styles": "workspace:*"
   },
   "devDependencies": {

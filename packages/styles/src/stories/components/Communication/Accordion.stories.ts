@@ -81,33 +81,42 @@ function harnessFor(root: HTMLElement): StoryHarness {
 }
 
 /**
- * Runtime-initialized guard: the Styles `/js` behavior (loaded by the preview)
- * must have attached Enter/Space toggle handlers. Rather than silently skipping,
- * verify the enhancement actually ran by checking the disclosure is a native
- * toggleable control and the expected runtime hook is present. This fails with
- * target/story/capability context instead of silently passing.
+ * Runtime-initialized guard: proves the Styles `/js` behavior is actually
+ * bound rather than trusting static markup. Performs a reversible toggle probe
+ * (click → expect `aria-expanded` to flip → click back to restore the initial
+ * state) so the check fails with target/story/capability context if the
+ * enhancement never initialized.
  */
-function assertRuntimeInitialized(root: HTMLElement) {
-  const firstButton = root.querySelector(
-    '.pathable-accordion__button, .usa-accordion__button',
-  )
-  if (!firstButton) {
-    throw new Error(
-      '[storybook-contracts:accordion] Runtime not initialized: no accordion disclosure button found in the Styles story. Ensure @pathableai/styles/js enhancement ran.',
-    )
-  }
-  if (firstButton.getAttribute('aria-expanded') === null) {
+async function assertRuntimeInitialized(harness: StoryHarness) {
+  const button = harness
+    .within(harness.root)
+    .getByRole('button', { name: FIRST_AMENDMENT })
+  const initial = button.getAttribute('aria-expanded')
+
+  if (initial === null) {
     throw new Error(
       '[storybook-contracts:accordion] Runtime not initialized: disclosure button has no aria-expanded. The Styles JS enhancement did not attach disclosure state.',
     )
   }
+
+  await harness.userEvent.click(button)
+  const toggled = button.getAttribute('aria-expanded')
+
+  if (toggled === initial) {
+    throw new Error(
+      '[storybook-contracts:accordion] Runtime not initialized: activating the disclosure did not change aria-expanded. Ensure @pathableai/styles/js enhancement ran.',
+    )
+  }
+
+  // Restore the initial state so capability helpers observe a consistent start.
+  await harness.userEvent.click(button)
 }
 
 export const Default = {
   render: () => renderAccordion(),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    assertRuntimeInitialized(canvasElement)
     const harness = harnessFor(canvasElement)
+    await assertRuntimeInitialized(harness)
 
     await verifyDisclosurePanelAssociation(harness, FIRST_AMENDMENT)
     await verifyPanelAvailability(harness, FIRST_AMENDMENT)
@@ -119,8 +128,8 @@ export const Default = {
 export const InitiallyExpanded = {
   render: () => renderAccordion(true),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    assertRuntimeInitialized(canvasElement)
     const harness = harnessFor(canvasElement)
+    await assertRuntimeInitialized(harness)
 
     await verifyPanelAvailability(harness, FIRST_AMENDMENT)
     await verifySpaceCollapsesDisclosure(harness, FIRST_AMENDMENT)
@@ -130,8 +139,8 @@ export const InitiallyExpanded = {
 export const SingleOpenBehavior = {
   render: () => renderAccordion(true),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    assertRuntimeInitialized(canvasElement)
     const harness = harnessFor(canvasElement)
+    await assertRuntimeInitialized(harness)
 
     await verifySingleOpenBehavior(harness, FIRST_AMENDMENT, SECOND_AMENDMENT)
   },
@@ -142,13 +151,13 @@ export const SharedContract = {
   parameters: {
     docs: {
       description: {
-        story: `Runs the shared Accordion capability contract from \`@pathable/storybook-contracts\` (${accordionManifest.shared.length} capabilities) against the published Styles runtime. This is the Styles-first proof required before the same contract can be adopted by another framework package.`,
+        story: `Composition proof: exercises the shared Accordion helpers from \`@pathable/storybook-contracts\` against the published Styles runtime. Each of the ${accordionManifest.shared.length} shared capabilities is individually proven by its dedicated story (\`Default\`, \`InitiallyExpanded\`, \`SingleOpenBehavior\`); this story demonstrates a coherent combined interaction flow and is the Styles-first reference for adopting the same helpers in another framework package.`,
       },
     },
   },
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    assertRuntimeInitialized(canvasElement)
     const harness = harnessFor(canvasElement)
+    await assertRuntimeInitialized(harness)
 
     await verifyDisclosurePanelAssociation(harness, FIRST_AMENDMENT)
     await verifyPanelAvailability(harness, FIRST_AMENDMENT)
