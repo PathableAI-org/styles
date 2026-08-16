@@ -47,10 +47,10 @@ below follow the plan.md structure.
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create the private `packages/storybook-contracts` workspace package with a `package.json` (`private: true`, explicit `exports`, `type: module`), `tsconfig.json`, minimal `README.md`, and a stub `src/` dir
-- [ ] T002 [P] Register `packages/storybook-contracts` so `apps/storybook` can import it via the existing `packages/*` workspace glob in `pnpm-workspace.yaml` (no new glob needed)
-- [ ] T003 [P] Add package scripts `lint`, `format`, and `typecheck` in `packages/storybook-contracts/package.json` that reuse the root ESLint/Prettier/TypeScript tooling
-- [ ] T004 [P] Add one shared type for a structural test interface (e.g. `StructuralElement`) exported from `packages/storybook-contracts/src/index.ts`; it must not reference React, Storybook renderer types, CSS selectors, or package internals
+- [x] T001 Create the private `packages/storybook-contracts` workspace package with a `package.json` (`private: true`, explicit `exports`, `type: module`), `tsconfig.json`, minimal `README.md`, and a stub `src/` dir
+- [x] T002 [P] Register `packages/storybook-contracts` so `apps/storybook` can import it via the existing `packages/*` workspace glob in `pnpm-workspace.yaml` (no new glob needed)
+- [x] T003 [P] Add package scripts `lint`, `format`, and `typecheck` in `packages/storybook-contracts/package.json` that reuse the root ESLint/Prettier/TypeScript tooling
+- [x] T004 [P] Add one shared type for a structural test interface (e.g. `StructuralElement`) exported from `packages/storybook-contracts/src/index.ts`; it must not reference React, Storybook renderer types, CSS selectors, or package internals
 
 **Checkpoint**: `pnpm --filter @pathable/storybook-contracts lint` and `typecheck` pass and the package is importable without adding files to any publishable package.
 
@@ -62,12 +62,12 @@ below follow the plan.md structure.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create the Accordion capability manifest at `packages/storybook-contracts/src/accordion/manifest.ts` listing the six initial shared capabilities (keyboard-enter, keyboard-space, single-open, panel-association, panel-availability, focus-retention) with `scope: 'shared'` and `state: 'initial'`
-- [ ] T006 In `packages/storybook-contracts/src/accordion/manifest.ts`, mark controlled/uncontrolled props, callbacks, refs, and server-rendering as package-specific (outside shared scope)
-- [ ] T007 [P] In `packages/storybook-contracts/src/accordion/manifest.ts`, mark disabled-item and multiple-open behavior as `state: 'unresolved'` shared scope (deferred until `packages/styles` exposes the same promise)
-- [ ] T008 [P] Create `packages/storybook-contracts/src/accordion/types.ts` with the shared fixture and capability types referenced by the manifest and the helpers
-- [ ] T009 [P] Add a unit guard test (in `packages/storybook-contracts/test/` or a `src/*.test.ts`) asserting the manifest lists exactly the six initial shared capabilities and bounds the shared fixture set
-- [ ] T010 [P] Verify the manifest against `specs/036-accordion-behavior-contract/` and the Styles and React Accordion stories by adding a reconciliation note to `packages/storybook-contracts/src/accordion/README.md`; no current shared assertion is dropped
+- [x] T005 Create the Accordion capability manifest at `packages/storybook-contracts/src/accordion/manifest.ts` listing the six initial shared capabilities (keyboard-enter, keyboard-space, single-open, panel-association, panel-availability, focus-retention) with `scope: 'shared'` and `state: 'initial'`
+- [x] T006 In `packages/storybook-contracts/src/accordion/manifest.ts`, mark controlled/uncontrolled props, callbacks, refs, and server-rendering as package-specific (outside shared scope)
+- [x] T007 [P] In `packages/storybook-contracts/src/accordion/manifest.ts`, mark disabled-item and multiple-open behavior as `state: 'unresolved'` shared scope (deferred until `packages/styles` exposes the same promise)
+- [x] T008 [P] Create `packages/storybook-contracts/src/accordion/types.ts` with the shared fixture and capability types referenced by the manifest and the helpers
+- [x] T009 [P] Add a unit guard test (in `packages/storybook-contracts/test/` or a `src/*.test.ts`) asserting the manifest lists exactly the six initial shared capabilities and bounds the shared fixture set
+- [x] T010 [P] Verify the manifest against `specs/036-accordion-behavior-contract/` and the Styles and React Accordion stories by adding a reconciliation note to `packages/storybook-contracts/src/accordion/README.md`; no current shared assertion is dropped
 
 **Checkpoint**: Foundation ready - the manifest and types underpin all user stories; US1 through US5 can begin.
 
@@ -85,10 +85,10 @@ shared assertion is missing.
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Add a rendered-stories reconciliation pass to `packages/storybook-contracts/src/accordion/README.md` confirming the manifest covers Enter expansion, Space collapse, single-open, disclosure-to-panel association, panel availability, and focus retention as observed in `apps/storybook` and `apps/storybook-react`
-- [ ] T012 [US1] Document in `packages/storybook-contracts/src/accordion/README.md` that controlled/uncontrolled props, callbacks, refs, and server-rendering remain package-specific and are excluded from the shared contract
-- [ ] T013 [US1] Document in `packages/storybook-contracts/src/accordion/README.md` that disabled and multiple-open behavior are unresolved shared scope until the Styles package documents the same promise
-- [ ] T014 [US1] Add a link/note from the Styles Accordion story `packages/styles/src/stories/components/Communication/Accordion.stories.ts` to the capability manifest so the two surfaces stay consistent
+- [x] T011 [US1] Add a rendered-stories reconciliation pass to `packages/storybook-contracts/src/accordion/README.md` confirming the manifest covers Enter expansion, Space collapse, single-open, disclosure-to-panel association, panel availability, and focus retention as observed in `apps/storybook` and `apps/storybook-react`
+- [x] T012 [US1] Document in `packages/storybook-contracts/src/accordion/README.md` that controlled/uncontrolled props, callbacks, refs, and server-rendering remain package-specific and are excluded from the shared contract
+- [x] T013 [US1] Document in `packages/storybook-contracts/src/accordion/README.md` that disabled and multiple-open behavior are unresolved shared scope until the Styles package documents the same promise
+- [x] T014 [US1] Add a link/note from the Styles Accordion story `packages/styles/src/stories/components/Communication/Accordion.stories.ts` to the capability manifest so the two surfaces stay consistent
 
 **Checkpoint**: US1 delivers the reviewable manifest; the manifest alone is a
 self-contained, independently testable artifact.
@@ -108,17 +108,17 @@ React Storybook.
 
 ### Implementation for User Story 2
 
-- [ ] T015 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyEnterExpandsDisclosure.ts` exercising keyboard activation and asserting the expanded state via accessible queries and observable semantics
-- [ ] T016 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifySpaceCollapsesDisclosure.ts` exercising Space activation and asserting the collapsed state
-- [ ] T017 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifySingleOpenBehavior.ts` asserting that activating a second disclosure closes the first
-- [ ] T018 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyDisclosurePanelAssociation.ts` asserting the disclosure resolves to its associated panel (generated IDs may vary)
-- [ ] T019 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyPanelAvailability.ts` asserting the panel is available only when expanded (e.g. `hidden` when collapsed)
-- [ ] T020 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyFocusRetention.ts` asserting focus stays on the disclosure after activation
-- [ ] T021 [US2] Export all helpers and the manifest from `packages/storybook-contracts/src/index.ts` with explicit named exports
-- [ ] T022 [US2] Add deterministic, named Accordion `play` stories in `packages/styles/src/stories/components/Communication/Accordion.stories.ts` (collapsed and initially expanded) that call the shared helpers while the catalog imports the built public `@pathableai/styles/js` behavior
-- [ ] T023 [US2] Add a runtime-initialized assertion to each Styles Accordion `play` story in `packages/styles/src/stories/components/Communication/Accordion.stories.ts` that fails with target/story/capability context instead of silently skipping
-- [ ] T024 [US2] Add a focused `test:storybook-styles` script in `package.json` that runs the Styles target without building or starting the React Storybook
-- [ ] T025 [US2] Verify `pnpm test:storybook-styles` passes from a clean checkout and that `scripts/test-storybook.sh apps/storybook 6006` (the pre-consolidation Styles path) is no longer required to prove the helpers
+- [x] T015 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyEnterExpandsDisclosure.ts` exercising keyboard activation and asserting the expanded state via accessible queries and observable semantics
+- [x] T016 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifySpaceCollapsesDisclosure.ts` exercising Space activation and asserting the collapsed state
+- [x] T017 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifySingleOpenBehavior.ts` asserting that activating a second disclosure closes the first
+- [x] T018 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyDisclosurePanelAssociation.ts` asserting the disclosure resolves to its associated panel (generated IDs may vary)
+- [x] T019 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyPanelAvailability.ts` asserting the panel is available only when expanded (e.g. `hidden` when collapsed)
+- [x] T020 [P] [US2] Create `packages/storybook-contracts/src/accordion/verifyFocusRetention.ts` asserting focus stays on the disclosure after activation
+- [x] T021 [US2] Export all helpers and the manifest from `packages/storybook-contracts/src/index.ts` with explicit named exports
+- [x] T022 [US2] Add deterministic, named Accordion `play` stories in `packages/styles/src/stories/components/Communication/Accordion.stories.ts` (collapsed and initially expanded) that call the shared helpers while the catalog imports the built public `@pathableai/styles/js` behavior
+- [x] T023 [US2] Add a runtime-initialized assertion to each Styles Accordion `play` story in `packages/styles/src/stories/components/Communication/Accordion.stories.ts` that fails with target/story/capability context instead of silently skipping
+- [x] T024 [US2] Add a focused `test:storybook-styles` script in `package.json` that runs the Styles target without building or starting the React Storybook
+- [x] T025 [US2] Verify `pnpm test:storybook-styles` passes from a clean checkout and that `scripts/test-storybook.sh apps/storybook 6006` (the pre-consolidation Styles path) is no longer required to prove the helpers
 
 **Checkpoint**: US2 delivers a working Styles-only shared-validation path. This
 is the MVP slice.
@@ -137,12 +137,12 @@ server process remains after any.
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Create `scripts/test-storybook.mjs` as the target-aware runner with explicit target metadata (workspace, build commands, static dir, port, capabilities, fixtures) and direct `/iframe.html` story URLs
-- [ ] T027 [US3] Register the `styles` target in `scripts/test-storybook.mjs` (or a `scripts/targets.mjs` module) first, with the existing `behavior-contracts/targets.mjs` capability/fixture set ported over
-- [ ] T028 [US3] Implement bounded readiness (30s) and server lifecycle in `scripts/test-storybook.mjs`, treating unknown targets, occupied ports, missing build output, and missing stories as hard failures
-- [ ] T029 [US3] Implement labeled per-target results and terminal pass/fail in `scripts/test-storybook.mjs` so a skipped/missing/unregistered target is a failure, never hidden by a green aggregate
-- [ ] T030 [US3] Add `SIGINT`/`SIGTERM` handlers and owned-process cleanup to `scripts/test-storybook.mjs` across success, failure, and interruption
-- [ ] T031 [US3] Wire `test:storybook-styles` to `scripts/test-storybook.mjs styles` in `package.json`; keep `test:storybook-react` package-specific; redefine `test:storybook` as the documented aggregate
+- [x] T026 [US3] Create `scripts/test-storybook.mjs` as the target-aware runner with explicit target metadata (workspace, build commands, static dir, port, capabilities, fixtures) and direct `/iframe.html` story URLs
+- [x] T027 [US3] Register the `styles` target in `scripts/test-storybook.mjs` (or a `scripts/targets.mjs` module) first, with the existing `behavior-contracts/targets.mjs` capability/fixture set ported over
+- [x] T028 [US3] Implement bounded readiness (30s) and server lifecycle in `scripts/test-storybook.mjs`, treating unknown targets, occupied ports, missing build output, and missing stories as hard failures
+- [x] T029 [US3] Implement labeled per-target results and terminal pass/fail in `scripts/test-storybook.mjs` so a skipped/missing/unregistered target is a failure, never hidden by a green aggregate
+- [x] T030 [US3] Add `SIGINT`/`SIGTERM` handlers and owned-process cleanup to `scripts/test-storybook.mjs` across success, failure, and interruption
+- [x] T031 [US3] Wire `test:storybook-styles` to `scripts/test-storybook.mjs styles` in `package.json`; keep `test:storybook-react` package-specific; redefine `test:storybook` as the documented aggregate
 - [ ] T032 [US3] Replace the duplicate server lifecycle in `.github/workflows/ci-full.yml` with a call to `scripts/test-storybook.mjs`, removing the inline build/serve/wait/cleanup YAML for the styles target
 - [ ] T033 [US3] Delete `scripts/test-storybook.sh` only after `scripts/test-storybook.mjs` covers both the styles and package-specific lifecycle uses
 - [ ] T034 [US3] Add lifecycle negative-path validation (per `quickstart.md`) covering test failure, occupied port, missing build output, SIGINT, and SIGTERM with zero owned processes remaining
@@ -166,12 +166,12 @@ aggregate as WCAG certification.
 
 ### Implementation for User Story 4
 
-- [ ] T035 [US4] Create `scripts/accessibility-exceptions.mjs` as a shared, reviewable registry scoped to target, story, and rule with rationale and tracking reference
-- [ ] T036 [US4] Convert the existing Styles catalog-wide Axe exclusions in `apps/storybook/.storybook/` to the narrowest story-level exceptions in the registry, without broadening failures to make the refactor pass
-- [ ] T037 [US4] Create `scripts/storybook-evidence-report.mjs` reporting three separate measures: deterministic fixtures, executable contract adoption, and automated Axe execution
-- [ ] T038 [US4] Make the report distinguish story presence from capability coverage and include any exception from the registry for the Accordion story
-- [ ] T039 [US4] Ensure no report/aggregate output is labeled WCAG certification; keep visual smoke and manual keyboard/focus/assistive-technology review as separate evidence in `scripts/storybook-evidence-report.mjs`
-- [ ] T040 [US4] Run the Accordion report and verify it lists the Styles story (`--default` and `--initially-expanded`), six covered capabilities, Axe execution, and any exceptions
+- [x] T035 [US4] Create `scripts/accessibility-exceptions.mjs` as a shared, reviewable registry scoped to target, story, and rule with rationale and tracking reference
+- [x] T036 [US4] Convert the existing Styles catalog-wide Axe exclusions in `apps/storybook/.storybook/` to the narrowest story-level exceptions in the registry, without broadening failures to make the refactor pass
+- [x] T037 [US4] Create `scripts/storybook-evidence-report.mjs` reporting three separate measures: deterministic fixtures, executable contract adoption, and automated Axe execution
+- [x] T038 [US4] Make the report distinguish story presence from capability coverage and include any exception from the registry for the Accordion story
+- [x] T039 [US4] Ensure no report/aggregate output is labeled WCAG certification; keep visual smoke and manual keyboard/focus/assistive-technology review as separate evidence in `scripts/storybook-evidence-report.mjs`
+- [x] T040 [US4] Run the Accordion report and verify it lists the Styles story (`--default` and `--initially-expanded`), six covered capabilities, Axe execution, and any exceptions
 
 **Checkpoint**: US4 delivers honest, separated evidence for the Accordion story,
 independently reviewable from the runner.
@@ -196,8 +196,8 @@ confirm no other feature depends on them.
 - [ ] T043 [US5] Delete `behavior-contracts/features/accordion.feature`, `behavior-contracts/steps/`, `behavior-contracts/support/`, `behavior-contracts/cucumber.mjs`, `behavior-contracts/run.mjs`, and `behavior-contracts/targets.mjs` after equivalence is accepted
 - [ ] T044 [US5] Remove `@cucumber/cucumber` from root `package.json` devDependencies and update `pnpm-lock.yaml`
 - [ ] T045 [US5] Remove the duplicate pilot CI job in `.github/workflows/ci-full.yml` that invokes the Cucumber runner
-- [ ] T046 [US5] Update `docs/testing/` so commands, paths, failure behavior, and the Styles-first rule match the implemented system
-- [ ] T047 [US5] Add an architecture record (in `docs/testing/` or `specs/041-component-test-infra/research.md`) explaining why direct Storybook helpers are the default and when Gherkin would still be justified
+- [x] T046 [US5] Update `docs/testing/` so commands, paths, failure behavior, and the Styles-first rule match the implemented system
+- [x] T047 [US5] Add an architecture record (in `docs/testing/` or `specs/041-component-test-infra/research.md`) explaining why direct Storybook helpers are the default and when Gherkin would still be justified
 
 **Checkpoint**: US5 fully retires the pilot only after equivalence; until then,
 `pnpm test:contracts:styles` remains green and independently runnable.
@@ -208,11 +208,11 @@ confirm no other feature depends on them.
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T048 [P] Run `pnpm pack --dry-run` on `@pathableai/styles` and `@pathableai/react` and confirm `packages/storybook-contracts` adds no file to either publishable payload
-- [ ] T049 [P] Update `docs/testing/tooling-and-structure.md` to remove the obsolete `packages/storybook-contracts/` proposal ambiguity now that the package exists
-- [ ] T050 Run the full `quickstart.md` validation end-to-end from a clean checkout
-- [ ] T051 Run `pnpm lint`, `pnpm typecheck`, and `git diff --check` and fix any findings
-- [ ] T052 Final review: confirm no React story, catalog, or component changed in Phase 1
+- [x] T048 [P] Run `pnpm pack --dry-run` on `@pathableai/styles` and `@pathableai/react` and confirm `packages/storybook-contracts` adds no file to either publishable payload
+- [x] T049 [P] Update `docs/testing/tooling-and-structure.md` to remove the obsolete `packages/storybook-contracts/` proposal ambiguity now that the package exists
+- [x] T050 Run the full `quickstart.md` validation end-to-end from a clean checkout
+- [x] T051 Run `pnpm lint`, `pnpm typecheck`, and `git diff --check` and fix any findings
+- [x] T052 Final review: confirm no React story, catalog, or component changed in Phase 1
 
 ---
 

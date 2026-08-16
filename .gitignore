@@ -120,6 +120,7 @@ storybook-static/
 
 # Temporary / scratch files
 tmp/
+scripts/.storybook-evidence.json
 
 # Selective import test outputs
 packages/styles/test/selective-import.css

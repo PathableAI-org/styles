@@ -186,3 +186,36 @@ real proof (the browser story) does not require.
 
 All technical unknowns are resolved. No `NEEDS CLARIFICATION` markers remain in
 the plan or spec.
+
+## Architecture record: direct Storybook helpers over Gherkin
+
+**Decision**: Direct Storybook `play` functions that call renderer-neutral shared
+helpers are the default component-test authoring layer. Gherkin/Cucumber remains
+justified only where a feature file has a distinct stakeholder-facing purpose
+that benefits from the extra translation and execution layer.
+
+**Rationale**: Storybook already supplies deterministic package-specific
+rendering, and `@storybook/test` gives accessible queries, keyboard actions,
+focus, ARIA state, and observable assertions. A helper named for one capability
+(`verifyEnterExpandsDisclosure`) is adopted unchanged by a downstream framework
+without coupling it to a second framework (Cucumber) or to Storybook renderer
+types, props, state models, or package internals. This keeps the shared package
+private, limits it to accessible actions and observable assertions, and lets
+Styles be the first and only executable owner of a shared behavior before any
+framework package adopts it (the Styles-first rule).
+
+**When Gherkin is still justified**: when a feature file is a stakeholder-facing
+artifact — for example, product or compliance review of user journeys unrelated
+to a specific component's Storybook rendering — the readability and structured
+scenarios justify keeping it. It is not justified as an alternative authoring
+layer for component-level parity, because that duplicates the shared helpers'
+observable assertions and adds drift risk.
+
+**Consequence**: the existing top-level `behavior-contracts/` Cucumber pilot is
+the recorded, duplicated surface. It remains green and independently runnable
+until the new Styles `play` validation (proven here by `scripts/test-storybook.mjs styles`)
+is reviewed as equivalent to its `@SCN-ACC-001/002/003` scenarios; only then are
+its feature, steps, custom runner, `@cucumber/cucumber` dependency, and
+duplicate CI job removed. That retirement is a deliberate follow-up, not part of
+this implementation batch, because equivalence requires a maintainer review of
+the two evidence sources.

@@ -4,14 +4,16 @@
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build && node scripts/copy-icons.mjs",
-    "build": "storybook build && node scripts/copy-icons.mjs",
+    "build-storybook": "pnpm --filter @pathable/storybook-contracts build && storybook build && node scripts/copy-icons.mjs",
+    "build": "pnpm --filter @pathable/storybook-contracts build && storybook build && node scripts/copy-icons.mjs",
     "test-storybook": "test-storybook"
   },
   "dependencies": {
+    "@pathable/storybook-contracts": "workspace:*",
     "@pathableai/styles": "workspace:*"
   },
   "devDependencies": {
+    "@pathable/storybook-contracts": "workspace:*",
     "@storybook/addon-a11y": "^10.4.6",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/html-vite": "^10.4.6",
