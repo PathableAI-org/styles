@@ -68,7 +68,7 @@ Add a set of SCSS interaction-state mixins, an accessible icon-button component,
 **Status: PASS** — SCSS source will be included in the existing entry point; compiled CSS output will include new patterns automatically via the existing `sass` build command.
 
 ### Gate 6: Token Naming Must Be Semantic and Stable (Principle VI)
-**Status: PASS** — All new styling uses existing semantic tokens (`--pathable-color-surface`, `--pathable-color-focus-ring`, `--pathable-color-border`, `--elevation-*`, `--radius-*`, `--space-*`, etc.). No new foundational tokens are required beyond what already exists. SegmentedControl adds one component-scoped custom property, `--pathable-segmented-control-focus-ring`, defaulting to the existing `--pathable-color-text` token.
+**Status: PASS** — All new styling uses existing semantic tokens (`--pathable-color-surface`, `--pathable-color-focus-ring`, `--pathable-color-border`, `--elevation-*`, `--radius-*`, `--space-*`, etc.). No new foundational tokens are required beyond what already exists. Segmented control adds one component-scoped custom property, `--pathable-segmented-control-focus-ring`, defaulting to the existing `--pathable-color-text` token.
 
 ### Gate 7: Design Source Alignment Matters (Principle VII)
 **Status: PASS** — No new tokens are being added that could diverge from Figma. Existing tokens referenced are already aligned.
