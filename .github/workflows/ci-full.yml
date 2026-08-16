@@ -52,13 +52,6 @@ jobs:
               - 'packages/styles/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
-            behavior_contracts:
-              - 'behavior-contracts/**'
-              - 'packages/styles/**'
-              - 'apps/storybook/**'
-              - 'apps/storybook-react/**'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
             next_consumer:
               - 'scripts/test-next-consumer.mjs'
               - 'packages/react/**'
@@ -124,19 +117,6 @@ jobs:
         run: pnpm --filter @pathableai/react check:package
       - name: Validate types
         run: pnpm --filter @pathableai/react check:types
-
-  behavior-contracts:
-    needs: changes
-    if: needs.changes.outputs.behavior_contracts == 'true'
-    name: Behavior contracts
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-      - name: Test behavior contracts
-        run: pnpm test:contracts
 
   next-consumer:
     needs: changes

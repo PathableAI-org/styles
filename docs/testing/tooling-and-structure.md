@@ -40,10 +40,13 @@ assistive-technology review.
 ## Commands
 
 ```bash
-# Run both Storybook suites
+# Run the Styles Storybook suite (target-aware runner, styles first)
+pnpm test:storybook-styles
+
+# Run both Storybook suites (documented aggregate)
 pnpm test:storybook
 
-# Run the React Storybook suite
+# Run the React Storybook suite (package-specific)
 pnpm test:storybook-react
 
 # Build the styles Storybook
@@ -59,6 +62,14 @@ pnpm test
 pnpm test:visual
 ```
 
+`test:storybook-styles` drives `scripts/test-storybook.mjs styles`, which builds
+the shared-contract package, the styles package, and the styles Storybook, serves
+it, waits for readiness, runs the test-runner in a browser, writes a labeled
+evidence file, and cleans up every process it started. `test:storybook` is the
+documented aggregate: it runs the styles target through the runner and then the
+React Storybook through its package-specific script. A skipped, missing, or
+unregistered target is a hard failure, never hidden by a green overall result.
+
 The current Storybook test command builds each catalog, serves it locally, and
 runs its stories in a browser. CI runs equivalent build, browser-test,
 accessibility, and visual-smoke steps, although workflow wiring may call package
@@ -66,29 +77,63 @@ scripts directly.
 
 ## Shared validation structure
 
-Shared behavior helpers should live in a private, framework-neutral workspace
-module rather than under either implementation package. The intended structure
-is:
+Shared renderer-neutral behavior helpers live in
+[`packages/storybook-contracts/`](../../packages/storybook-contracts/), a private,
+framework-neutral workspace module rather than under either implementation
+package:
 
 ```text
 packages/
   storybook-contracts/
     src/
-      accordion.ts
-      modal.ts
+      accordion/
+        manifest.ts
+        types.ts
+        _lib.ts
+        verifyEnterExpandsDisclosure.ts
+        verifySpaceCollapsesDisclosure.ts
+        verifySingleOpenBehavior.ts
+        verifyDisclosurePanelAssociation.ts
+        verifyPanelAvailability.ts
+        verifyFocusRetention.ts
       index.ts
 ```
 
-The exact package has not yet been added. Until it exists, do not duplicate a
-new cross-package behavior silently. Record the parity requirement and add the
-shared module as part of the change that first needs it.
+Every helper is named for one capability (for example `verifyEnterExpandsDisclosure`),
+never one broad "verify accordion" function. Helpers accept an `HTMLElement` (or a
+minimal structural harness) plus the `storybook/test` primitives; they never take
+framework props, renderer context types, CSS selectors, or package internals.
+`apps/storybook` builds this package before building the styles catalog so
+`packages/styles` stories can consume it without leaking anything into either
+publishable package's npm payload.
 
-The existing top-level `behavior-contracts/` directory is a Cucumber pilot. It
-builds and serves Storybook through custom orchestration and currently registers
-only the styles target. The preferred direction for component-level parity is
-to reuse renderer-neutral Storybook validation helpers directly from each
-package's stories. Gherkin remains appropriate only when the feature files have
-a distinct stakeholder-facing role that justifies the additional translation
-and execution layer.
+Accordion is the only component in the shared package during Phase 1. The
+Accordion capability manifest (`src/accordion/manifest.ts`) records the initial
+shared contract, the deliberately package-specific behaviors, and the unresolved
+shared scope (disabled and multiple-open until the styles package documents the
+same promise).
+
+The former top-level `behavior-contracts/` Cucumber pilot was retired: the
+shared renderer-neutral helpers, proven Styles-first by
+`test:storybook-styles`, now provide equivalent Accordion coverage directly
+from each package's stories. Gherkin remains appropriate only when feature
+files have a distinct stakeholder-facing role that justifies the additional
+translation and execution layer; component-level parity uses the helpers.
+
+## Accessibility exceptions and evidence
+
+Axe exceptions are recorded in
+[`scripts/accessibility-exceptions.mjs`](../../scripts/accessibility-exceptions.mjs),
+scoped to a target, story, and single rule with a rationale and a tracking
+reference — never a catalog-wide disablement. The catalog currently still carries
+some broad exclusions; the registry records the narrow conversion target so they
+can be ratcheted without broadening failures.
+
+[`scripts/storybook-evidence-report.mjs`](../../scripts/storybook-evidence-report.mjs)
+reports three separate measures for the shared Accordion contract: deterministic
+state fixtures (story presence), executable behavior-contract adoption (read from
+the runner's evidence file), and automated Axe execution. It does not label any
+result WCAG certification, and visual smoke and manual keyboard/focus/
+assistive-technology review remain separate evidence.
 
 Next: [Adding tests for a component](adding-component-tests.md).

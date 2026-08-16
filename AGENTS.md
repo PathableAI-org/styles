@@ -2,50 +2,63 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/040-react-dashboard-overview/plan.md
+at specs/041-component-test-infra/plan.md
 
-## Storybook conventions
+## Shared component-contract conventions
 
-When editing or adding React component stories in `packages/react/src/stories/`:
+This feature establishes a Styles-first component-testing path for shared,
+renderer-neutral Accordion behavior.
 
-- Every supported component state should normally have a fixed named story.
-- Controls (`Playground` story) are for exploratory use, not regression coverage.
-- Interactive components require keyboard-focused `play` tests using `@storybook/test`.
-- Prefer accessible queries (`getByRole`, `getByLabelText`, `getByText`) over `getByTestId` or CSS selectors in interaction tests.
-- Stable stories must be deterministic — no dates, random values, or live network data.
-- Broad a11y rule exceptions are prohibited. Story-level exceptions require narrow, documented justification.
-- Story documentation must explain semantic intent (what the component is for, when to use it, when not to use it).
-- Component stories (exhaustive supported states) and pattern/composition stories (realistic integrations) serve different purposes.
-- New components must follow the canonical reference: `packages/react/src/stories/components/Basic/Button.stories.tsx`.
-- Full conventions are documented in `packages/react/STORYBOOK_STANDARD.md`.
+- Shared validators live in the private `packages/storybook-contracts` package
+  and exercise one capability each (e.g. `verifyEnterExpandsDisclosure`), never
+  one broad "verify component" helper.
+- Helpers accept an `HTMLElement` or a small structural interface only — never
+  React props, Storybook renderer context types, CSS selectors, or package
+  internals.
+- `packages/styles` is the first and only executable owner of a shared behavior
+  in this phase: a shared capability must be proven by the Styles Storybook
+  (against the built public `@pathableai/styles` JS/CSS) before any framework
+  package adopts it.
+- Styles Accordion stories are deterministic, fixed fixtures (collapsed and
+  initially expanded) with `play` functions that call the shared helpers.
+- Interaction and assertions use accessible queries (`getByRole`,
+  `getByLabelText`, `getByText`) and observable semantic outcomes; generated IDs
+  may vary, but disclosure-to-panel relationships must resolve correctly.
+- The interaction run must assert the runtime initialized before interacting and
+  fail with target/story/capability context instead of silently skipping.
+- Broad a11y rule exceptions are prohibited. Any exception lives in a shared,
+  reviewable registry scoped to the narrowest target, story, and rule with a
+  rationale and a tracking reference.
+- An evidence report keeps three measures separate: deterministic fixtures,
+  executable contract adoption, and automated Axe execution. Visual smoke and
+  manual keyboard/focus/assistive-technology review remain separate evidence;
+  no automated aggregate is labeled WCAG certification.
+- The target-aware `scripts/test-storybook.mjs` runner drives a consistent
+  build → serve → ready → test → report → cleanup lifecycle per target, with
+  `styles` registered first and hard failures for unknown targets, occupied
+  ports, missing builds/stories, or test failures.
+- React adoption (Phase 2) and broader component coverage (Phase 3) are out of
+  scope for this feature.
 
 ### Story checklist
 
-When adding a new React component, ensure:
+When adding a Styles story with a shared contract, ensure:
 
-- [ ] Meta uses `satisfies Meta<typeof Component>`
-- [ ] `tags: ['autodocs']` is present
-- [ ] Component description explains semantic purpose and usage guidance
-- [ ] `Playground` story exists with all controls
-- [ ] One fixed story per meaningful visual/behavioral variant
-- [ ] Interaction tests for keyboard activation, focus management, and disabled behavior
-- [ ] Stories use accessible queries (`getByRole`, `getByLabelText`)
-- [ ] Narrow/mobile viewport story exists where layout could break
-- [ ] Long content story exists where text overflow is relevant
-- [ ] At least one composition story showing realistic usage
-- [ ] Stories are deterministic (no random content, network calls)
+- [ ] Deterministic, named fixture per shared starting state
+- [ ] Fixed `play` function calling the shared helper for each shared capability
+- [ ] Accessible queries (`getByRole`, `getByLabelText`, `getByText`)
+- [ ] Runtime-initialized assertion before interaction
+- [ ] Narrow story-level a11y exception only where justified
+- [ ] Stories are deterministic (no dates, random values, or network calls)
 
-### Running React Storybook
+### Running the focused Styles command
 
 ```bash
-# Start the React Storybook (port 6007)
-pnpm docs:react
+# Build the Styles package
+pnpm --filter @pathableai/styles build
 
-# Build React Storybook
-pnpm build:docs-react
-
-# Run React Storybook tests (build + test-runner)
-pnpm test:storybook-react
+# Focused Styles Storybook/contract run (no React build)
+pnpm test:storybook-styles
 ```
 
 <!-- SPECKIT END -->

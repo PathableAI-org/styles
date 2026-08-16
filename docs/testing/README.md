@@ -8,6 +8,15 @@ Parity means that equivalent components provide the same user-facing and
 assistive-technology-facing capabilities. It does not require each package to
 use the same markup generator, state model, or event implementation.
 
+Shared component behavior is authored once in the private
+[`packages/storybook-contracts/`](../../packages/storybook-contracts/) package as
+renderer-neutral, single-capability validation helpers, and it follows the
+**Styles-first rule**: a shared validation must be proven first by the styles
+catalog through the published `@pathableai/styles` runtime
+(`pnpm test:storybook-styles`) before any framework package adopts it. See
+[Behavioral parity](behavior-parity.md) and
+[Tooling and structure](tooling-and-structure.md).
+
 ## Start here
 
 - [Testing principles](principles.md) explains the values behind the test
