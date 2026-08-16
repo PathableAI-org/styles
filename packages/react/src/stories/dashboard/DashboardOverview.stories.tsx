@@ -37,6 +37,7 @@ function DashboardOverviewDemo(): JSX.Element {
 }
 
 function kpiCard(
+  id: string,
   value: string,
   label: string,
   trend?: 'up' | 'down' | 'neutral',
@@ -49,7 +50,11 @@ function kpiCard(
   if (unavailable) classes.push('pathable-kpi-card--unavailable')
 
   return (
-    <div key={label} className={classes.join(' ')}>
+    <div
+      key={id}
+      className={classes.join(' ')}
+      aria-hidden={loading ? true : undefined}
+    >
       {loading ? (
         <>
           <div className="pathable-kpi-card__value" aria-hidden="true" />
@@ -75,22 +80,64 @@ function kpiCard(
 }
 
 const populatedKpis = [
-  kpiCard('1,247', 'Active Participants', 'up', '+12% from last month'),
-  kpiCard('86%', 'Placement Rate', 'up', '+5% from last quarter'),
-  kpiCard('342', 'New Enrollments', 'down', '-5% from last month'),
-  kpiCard('28', 'Partner Organizations', 'neutral', 'No change'),
+  kpiCard(
+    'active-participants',
+    '1,247',
+    'Active Participants',
+    'up',
+    '+12% from last month',
+  ),
+  kpiCard(
+    'placement-rate',
+    '86%',
+    'Placement Rate',
+    'up',
+    '+5% from last quarter',
+  ),
+  kpiCard(
+    'enrollments',
+    '342',
+    'New Enrollments',
+    'down',
+    '-5% from last month',
+  ),
+  kpiCard('partners', '28', 'Partner Organizations', 'neutral', 'No change'),
 ]
 
 const loadingKpis = [
-  kpiCard('', '', undefined, undefined, true),
-  kpiCard('', '', undefined, undefined, true),
-  kpiCard('', '', undefined, undefined, true),
+  kpiCard('loading-1', '', '', undefined, undefined, true),
+  kpiCard('loading-2', '', '', undefined, undefined, true),
+  kpiCard('loading-3', '', '', undefined, undefined, true),
 ]
 
 const unavailableKpis = [
-  kpiCard('N/A', 'Active Participants', undefined, undefined, undefined, true),
-  kpiCard('N/A', 'Placement Rate', undefined, undefined, undefined, true),
-  kpiCard('N/A', 'New Enrollments', undefined, undefined, undefined, true),
+  kpiCard(
+    'unavailable-1',
+    'N/A',
+    'Active Participants',
+    undefined,
+    undefined,
+    undefined,
+    true,
+  ),
+  kpiCard(
+    'unavailable-2',
+    'N/A',
+    'Placement Rate',
+    undefined,
+    undefined,
+    undefined,
+    true,
+  ),
+  kpiCard(
+    'unavailable-3',
+    'N/A',
+    'New Enrollments',
+    undefined,
+    undefined,
+    undefined,
+    true,
+  ),
 ]
 
 const todayActivities = [
@@ -152,6 +199,7 @@ export const Populated: Story = {
   render: () => <DashboardOverviewDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    addProgram.mockClear()
 
     await step('title is the single primary heading', async () => {
       const heading = canvas.getByRole('heading', {
