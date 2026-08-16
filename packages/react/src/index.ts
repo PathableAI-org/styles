@@ -85,6 +85,13 @@ export type {
   IconButtonShape,
   IconButtonSize,
 } from './components/IconButton/IconButton.js'
+export { IconTile } from './components/IconTile/IconTile.js'
+export type {
+  IconTileProps,
+  IconTileShape,
+  IconTileSize,
+  IconTileStatus,
+} from './components/IconTile/IconTile.js'
 export { Icon } from './components/Icon/Icon.js'
 export type { IconProps } from './components/Icon/Icon.js'
 export { Label } from './components/Label/Label.js'
