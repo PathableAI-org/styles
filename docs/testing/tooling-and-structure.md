@@ -113,14 +113,12 @@ shared contract, the deliberately package-specific behaviors, and the unresolved
 shared scope (disabled and multiple-open until the styles package documents the
 same promise).
 
-The existing top-level `behavior-contracts/` directory is a Cucumber pilot. It
-builds and serves Storybook through custom orchestration and currently registers
-only the styles target. The preferred path for component-level parity is to reuse
-renderer-neutral Storybook validation helpers directly from each package's
-stories (as the Styles Accordion story does now). Gherkin remains appropriate
-only when the feature files have a distinct stakeholder-facing role that
-justifies the additional translation and execution layer. The pilot is retained
-until the shared-helpers validation is proven equivalent, then retired.
+The former top-level `behavior-contracts/` Cucumber pilot was retired: the
+shared renderer-neutral helpers, proven Styles-first by
+`test:storybook-styles`, now provide equivalent Accordion coverage directly
+from each package's stories. Gherkin remains appropriate only when feature
+files have a distinct stakeholder-facing role that justifies the additional
+translation and execution layer; component-level parity uses the helpers.
 
 ## Accessibility exceptions and evidence
 

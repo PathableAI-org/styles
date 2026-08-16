@@ -30,26 +30,28 @@ initial shared contract:
 
 ## Reconciliation notes
 
-This manifest reconciles four pre-existing surfaces so no currently-supported
+This manifest reconciles the pre-existing surfaces so no currently-supported
 shared assertion disappears silently:
 
-- `behavior-contracts/features/accordion.feature` — the top-level Cucumber pilot
-  (`@SCN-ACC-001` Enter, `@SCN-ACC-002` Space, `@SCN-ACC-003` single-open). All
-  three are represented above; Enter/Space/single-open plus panel availability
-  and focus retention map 1:1, and panel association is asserted inside each
-  scenario.
+- `behavior-contracts/features/accordion.feature` — the former top-level
+  Cucumber pilot (`@SCN-ACC-001` Enter, `@SCN-ACC-002` Space, `@SCN-ACC-003`
+  single-open) that was retired when the shared-contract stories proved
+  equivalent behavior. Its three scenarios map 1:1 to the shared capabilities
+  below; panel association and focus are asserted inside the matching helpers.
 - `packages/styles/src/stories/components/Communication/Accordion.stories.ts` —
   the collapsed (`Default`) and initially-expanded (`InitiallyExpanded`)
   fixtures, matching the shared `accordion.default` and
-  `accordion.first-expanded` fixtures.
+  `accordion.first-expanded` fixtures, with `play` functions that exercise the
+  helpers against the published runtime.
 - `packages/react/src/stories/components/Communication/Accordion.stories.tsx` —
   the React `PointerToggle`, `KeyboardToggle`, `SingleSelectBehavior`, and focus
   interactions confirm the same observable surface.
 - The published `@pathableai/styles/js` runtime that enhances the Styles
   catalog and drives Enter/Space/`aria-expanded`/panel availability.
 
-Nothing that previously passed is dropped: the pilot's assertions, both Styles
-fixtures, and the React interactions all map to a shared capability above.
+Nothing that the pilot asserted is dropped: Enter, Space, single-open, panel
+association, panel availability, and focus retention all map to a shared
+capability above, proven by the Styles-first `test:storybook-styles` command.
 
 ## Package-specific (outside the shared contract)
 

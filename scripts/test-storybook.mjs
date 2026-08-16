@@ -7,13 +7,13 @@
  * shared component-behavior contracts (`@pathable/storybook-contracts`).
  *
  * This consolidates the duplicate lifecycle logic that previously lived in
- * `scripts/test-storybook.sh`, `behavior-contracts/run.mjs`, and CI YAML.
- * Unknown targets, occupied ports, missing build output, missing stories, and
- * test failures are hard failures (never silently skipped).
+ * `scripts/test-storybook.sh` and CI YAML. Unknown targets, occupied ports,
+ * missing build output, missing stories, and test failures are hard failures
+ * (never silently skipped).
  *
- * NOTE: `scripts/test-storybook.sh`, the `behavior-contracts/` Cucumber pilot,
- * and the associated CI job are intentionally left in place during Phase 1;
- * they are retired only after evidence equivalence review.
+ * NOTE: the top-level `behavior-contracts/` Cucumber pilot was retired once the
+ * Styles-first helpers proved equivalent coverage; `test:storybook-styles` is
+ * now the mandatory Styles proof.
  *
  * Usage:
  *   node scripts/test-storybook.mjs              # run all targets sequentially

@@ -5,9 +5,9 @@ import type { AccordionManifest } from './types.js'
  *
  * Records the initial shared (renderer-neutral) Accordion contract plus the
  * deliberately package-specific behaviors and the unresolved shared scope.
- * This reconciles the existing `behavior-contracts/` Gherkin scenarios, the
- * Styles fixtures, the React stories, and the component documentation into one
- * place. Refer to the attached `README.md` for the reconciliation notes.
+ * This reconciles the retired `behavior-contracts/` Gherkin pilot, the Styles
+ * fixtures, the React stories, and the component documentation into one place.
+ * Refer to the attached `README.md` for the reconciliation notes.
  */
 export const accordionManifest: AccordionManifest = {
   shared: [
