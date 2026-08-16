@@ -492,8 +492,9 @@ export const UnsupportedValuesFallback: Story = {
   play: async ({ canvasElement }) => {
     const tile = canvasElement.querySelector('.pathable-icon-tile')
 
+    await expect(tile).toBeTruthy()
     await expect(tile).toHaveClass('pathable-icon-tile')
-    await expect(tile?.className).not.toContain('unsupported')
+    await expect(tile.className).not.toContain('unsupported')
   },
 }
 
