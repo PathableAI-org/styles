@@ -60,10 +60,11 @@ class ContractWorld extends World {
 
   /**
    * Wait (bounded) until the Styles JS enhancement is demonstrably bound to
-   * the disclosure. The USWDS accordion binds toggles on click, and the pilot
-   * keys in immediately after the story mounts; probing a reversible toggle
-   * guarantees the handler is attached before any keyboard interaction so the
-   * shared keyboard scenarios are deterministic instead of racing init.
+   * the disclosure. The USWDS accordion toggles on activation; the pilot keys
+   * in immediately after the story mounts, and browser keyboard activation of a
+   * native button must be reliably synthesized. Probing a reversible click then
+   * keyboard toggle guarantees both paths are live before any scenario runs so
+   * the shared keyboard scenarios are deterministic instead of racing init.
    */
   async waitForBinding() {
     const first = this.disclosure('first')
@@ -78,20 +79,30 @@ class ContractWorld extends World {
         )
       }
 
+      // Click activation must toggle, then restore.
       await first.click()
-      const after = await first.getAttribute('aria-expanded')
-
-      if (after !== before) {
-        // Restore the initial state so scenarios observe a deterministic start.
-        await first.click()
-        return
+      if ((await first.getAttribute('aria-expanded')) === before) {
+        await new Promise((resolveWaiting) => setTimeout(resolveWaiting, 150))
+        continue
       }
+      await first.click()
 
-      await new Promise((resolveWaiting) => setTimeout(resolveWaiting, 150))
+      // Keyboard activation (Enter on the focused button) must toggle, then
+      // restore so scenarios observe a deterministic start.
+      await first.focus()
+      await this.page.keyboard.press('Enter')
+      if ((await first.getAttribute('aria-expanded')) === before) {
+        await new Promise((resolveWaiting) => setTimeout(resolveWaiting, 150))
+        continue
+      }
+      await first.focus()
+      await this.page.keyboard.press('Enter')
+
+      return
     }
 
     throw new Error(
-      `Target "${this.target.name}" Styles JS enhancement did not bind within 10s; keyboard scenarios cannot run deterministically.`,
+      `Target "${this.target.name}" Styles JS enhancement did not become keyboard-activatable within 10s; keyboard scenarios cannot run deterministically.`,
     )
   }
 

@@ -20,7 +20,7 @@
  *   node scripts/test-storybook.mjs styles       # run only the styles target
  */
 import { spawn } from 'node:child_process'
-import { access, writeFile } from 'node:fs/promises'
+import { access, readFile, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:net'
 import { dirname, resolve } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
@@ -258,6 +258,40 @@ async function runTest(target, url) {
   )
 }
 
+/**
+ * Preflight: ensure every registered fixture story ID exists in the built
+ * Storybook index. A registered-but-missing story must be a hard failure,
+ * never silently skipped.
+ */
+async function validateFixturesExist(target) {
+  const indexPath = resolve(
+    repositoryRoot,
+    target.staticDirectory,
+    'index.json',
+  )
+
+  let index
+  try {
+    index = JSON.parse(await readFile(indexPath, 'utf8'))
+  } catch (error) {
+    throw new Error(
+      `Target "${target.name}" has no readable built Storybook index at ${indexPath}: ${error.message}`,
+      { cause: error },
+    )
+  }
+
+  const entries = index.entries ?? index.stories ?? {}
+  const missing = Object.values(target.fixtures ?? {}).filter(
+    (storyId) => !entries[storyId],
+  )
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Target "${target.name}" registers fixtures whose story IDs are missing from the built catalog: ${missing.join(', ')}`,
+    )
+  }
+}
+
 async function runTarget(targetName) {
   const target = getTarget(targetName)
   validateTarget(target)
@@ -277,6 +311,8 @@ async function runTarget(targetName) {
       )
     },
   )
+
+  await validateFixturesExist(target)
 
   let server
   try {
