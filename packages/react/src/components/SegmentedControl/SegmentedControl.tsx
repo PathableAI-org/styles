@@ -220,7 +220,6 @@ function SegmentedControlMulti({
       {...rest}
       className={getRootClassName({ className, mode: 'multi', orientation })}
       role="group"
-      aria-orientation={orientation === 'vertical' ? 'vertical' : undefined}
     >
       {options.map((option) => {
         const selected = values.includes(option.value)
