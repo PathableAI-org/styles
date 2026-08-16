@@ -15,7 +15,10 @@ Feature: Accordion disclosure behavior
 
   @SCN-ACC-002 @accordion-keyboard-space
   Scenario: Collapsing an expanded disclosure with Space
-    Given an Accordion with the first disclosure expanded
+    Given an Accordion with all disclosures collapsed
+    When the user focuses the first disclosure
+    And the user presses Enter
+    Then the first disclosure is expanded
     When the user focuses the first disclosure
     And the user presses Space
     Then the first disclosure is collapsed
