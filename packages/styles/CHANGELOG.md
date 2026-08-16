@@ -1,5 +1,12 @@
 # @pathableai/styles
 
+## 0.0.3-alpha.0
+
+### Patch Changes
+
+- 5841748: Make Activity List status labels visible and accessible, constrain row metadata,
+  and add the typed React ActivityList wrapper.
+
 ## 0.0.2
 
 ### Patch Changes
