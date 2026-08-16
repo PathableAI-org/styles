@@ -55,6 +55,44 @@ class ContractWorld extends World {
 
     await this.page.goto(url.toString(), { waitUntil: 'domcontentloaded' })
     await this.disclosure('first').waitFor({ state: 'visible' })
+    await this.waitForBinding()
+  }
+
+  /**
+   * Wait (bounded) until the Styles JS enhancement is demonstrably bound to
+   * the disclosure. The USWDS accordion binds toggles on click, and the pilot
+   * keys in immediately after the story mounts; probing a reversible toggle
+   * guarantees the handler is attached before any keyboard interaction so the
+   * shared keyboard scenarios are deterministic instead of racing init.
+   */
+  async waitForBinding() {
+    const first = this.disclosure('first')
+    const deadline = Date.now() + 10_000
+
+    while (Date.now() < deadline) {
+      const before = await first.getAttribute('aria-expanded')
+
+      if (before === null) {
+        throw new Error(
+          `Target "${this.target.name}" disclosure has no aria-expanded; the Styles JS enhancement did not initialize.`,
+        )
+      }
+
+      await first.click()
+      const after = await first.getAttribute('aria-expanded')
+
+      if (after !== before) {
+        // Restore the initial state so scenarios observe a deterministic start.
+        await first.click()
+        return
+      }
+
+      await new Promise((resolveWaiting) => setTimeout(resolveWaiting, 150))
+    }
+
+    throw new Error(
+      `Target "${this.target.name}" Styles JS enhancement did not bind within 10s; keyboard scenarios cannot run deterministically.`,
+    )
   }
 
   disclosure(position) {
