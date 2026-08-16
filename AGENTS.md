@@ -2,7 +2,7 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/037-react-dashboard-header/plan.md
+at specs/040-react-dashboard-overview/plan.md
 
 ## Storybook conventions
 
