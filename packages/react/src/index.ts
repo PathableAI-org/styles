@@ -110,6 +110,15 @@ export { Skipnav } from './components/Skipnav/Skipnav.js'
 export type { SkipnavProps } from './components/Skipnav/Skipnav.js'
 export { Select } from './components/Select/Select.js'
 export type { SelectProps } from './components/Select/Select.js'
+export { SegmentedControl } from './components/SegmentedControl/SegmentedControl.js'
+export type {
+  SegmentedControlButtonAttributes,
+  SegmentedControlMultiProps,
+  SegmentedControlOption,
+  SegmentedControlOrientation,
+  SegmentedControlProps,
+  SegmentedControlSingleProps,
+} from './components/SegmentedControl/SegmentedControl.js'
 export { Sidenav } from './components/Sidenav/Sidenav.js'
 export type {
   SidenavItem,
