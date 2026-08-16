@@ -4,7 +4,7 @@
 
 ### U1: Loading State in Pure CSS
 
-**Decision**: Use a CSS-only spinner approach via an `::after` pseudo-element toggled by a `.pathable-icon-button--loading` modifier class. The loading indicator replaces the icon content by making the SVG invisible (`opacity: 0` or `visibility: hidden`) and rendering a CSS border-based spinner in the pseudo-element that occupies the same dimensions. This prevents layout shift since the pseudo-element is positioned absolutely within the icon button's existing box.
+**Decision**: Use a CSS-only spinner approach via an `::after` pseudo-element toggled by a loading class. The loading indicator replaces the icon content by making the SVG invisible (`opacity: 0` or `visibility: hidden`) and rendering a CSS border-based spinner in the pseudo-element that occupies the same dimensions. This prevents layout shift since the pseudo-element is positioned absolutely within the icon button's existing box.
 
 **Rationale**:
 - No JavaScript is needed for rendering the loading state — CSS alone can toggle the visual state via class application (consumer JavaScript would toggle the class, but the style logic is pure CSS).
@@ -36,18 +36,18 @@
 
 ### U3: Segmented Control Keyboard Accessibility
 
-**Decision**: Single-select segmented controls follow the ARIA `radiogroup` pattern using `role="radiogroup"` on the container and `role="radio"` + `aria-checked` on each segment. Arrow key navigation (Left/Right or Up/Down) moves focus between options. Multi-select (toggle button) variants follow the ARIA `toolbar` or `group` pattern with `role="button"` and `aria-pressed` on each segment, navigated via Tab key.
+**Decision**: Single-select segmented controls follow the ARIA `radiogroup` pattern using `role="radiogroup"` on the container and `role="radio"` + `aria-checked` on each segment. Consumer-provided Arrow key navigation (Left/Right or Up/Down) moves focus between options. Multi-select (toggle button) variants follow the ARIA `group` pattern with `aria-pressed` on each segment, navigated via Tab key.
 
 **Rationale**:
 - The ARIA Authoring Practices Guide (APG) specifies `radiogroup` for mutually exclusive options within a set — this exactly matches single-select segmented controls.
 - The APG specifies `aria-pressed` for toggle buttons that are not mutually exclusive — this matches multi-select segmented controls.
 - For single-select: Left/Right arrow navigation with wrapping (from last to first and vice versa) matches user expectations and APG patterns.
-- For multi-select: Tab to enter/exit the group, Space to toggle individual items, follows APG toolbar/group patterns.
+- For multi-select: Tab to enter/exit the group, Space to toggle individual items, follows APG group patterns.
 - The ARIA pattern is documented in examples so consumers can implement it in their framework of choice. The CSS classes handle the visual state; the consumer is responsible for toggling `aria-checked`/`aria-pressed` and managing keyboard event handlers.
 
 **Alternatives considered**:
 1. Native `<select>` styling — loses the visual compactness and immediate-availability UX of a segmented control.
-2. Custom CSS-only keyboard handling — impossible without JavaScript; the spec accepts that keyboard behavior requires consumer JS (FR-016 says "MUST support keyboard navigation" meaning the CSS must not prevent it, not that CSS provides the JS).
+2. Custom CSS-only keyboard handling — impossible without JavaScript; the spec accepts that keyboard behavior requires consumer JS (FR-016 says "MUST support keyboard navigation" meaning the CSS must not prevent it, and Storybook must provide a working reference fixture, not that CSS provides the JS).
 3. Using `<input type="radio">` styling — possible for single-select but not for multi-select toggle buttons; limited styling control.
 
 ### U4: Selected vs. Pressed State Distinguishability
@@ -94,7 +94,7 @@
 
 | Property | Token(s) |
 |---|---|
-| Spacing (gap, padding, margins) | `--space-{2,4,8,12,16,24}` |
+| Spacing (gap, padding, margins) | `--space-{4,8,12,16,24}` |
 | Border radius | `--radius-{sm,md,lg,pill}` (4px, 8px, 12px, 9999px) |
 | Elevation (shadows) | `--elevation-{none,sm,md}` |
 | Surface backgrounds | `--pathable-color-surface` (white), `--pathable-color-bg` (Shilling Silver), `--pathable-color-accent` (Jade), `--pathable-color-text` (PathAble Blue) |

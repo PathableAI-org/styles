@@ -2,7 +2,7 @@
 
 ## Domain Model Overview
 
-This feature defines CSS-only patterns (no runtime data flow). The "entities" below represent the logical object model that consumers compose in their markup; the SCSS classes and mixins provide the visual behavior.
+This feature defines CSS-only package patterns. The "entities" below represent the logical object model that consumers compose in their markup; the SCSS classes and mixins provide the visual behavior, while consumers own runtime state changes and keyboard event handling.
 
 ## Entities
 
@@ -16,17 +16,18 @@ A reusable SCSS abstraction that consumers `@include` in their own component sel
 | `focus-visible` | CSS state | Visible outline ring using `--pathable-color-focus-ring` |
 | `focus-within` | CSS state | Same focus ring on parent when child receives focus |
 | `active` | CSS state | Pressed emphasis via elevation drop or border inset |
-| `selected` | CSS state | Persistent visual marker (border/weight change + background tint) |
+| `selected` | CSS state | Persistent visual marker (current-color border/weight change + background tint) |
 | `pressed` | CSS state | Momentary elevation drop (distinct from selected by lack of border change) |
-| `disabled` | CSS state | Reduced opacity, suppressed hover/focus/active responses |
-| `loading` | CSS state | Spinner via `::after` pseudo-element, prevents duplicate activation |
+| `disabled` | CSS state | Contrast-safe disabled presentation with suppressed hover/active responses |
+| `loading` | CSS state | Spinner via `::after` pseudo-element; activation prevention is consumer-owned |
 
 **State transition rules**:
-- `disabled` takes precedence over all other states (hover, focus, active, selected, pressed suppressed)
-- `loading` implies disabled behavior (interaction suppressed)
+- `disabled` takes precedence over hover, active, and pressed responses; selected identity remains visibly identifiable when a selected value is disabled
+- Native `disabled` controls are not focusable; focusable `aria-disabled="true"` controls retain visible focus and require consumer-owned activation guards
+- `loading` implies disabled presentation; preventing duplicate keyboard or programmatic activation requires native `disabled`, `aria-disabled` with event guards, or another consumer-owned guard
 - `selected` + `hover`: selected background persists, hover adds elevation increase
 - `selected` + `pressed`: pressed elevation drop is momentary; selected visual markers (border/weight) persist
-- `focus-visible` always overrides focus ring color regardless of other active states
+- `focus-visible` always overrides focus ring color for focusable elements regardless of other active states
 
 ### IconButton
 
@@ -51,25 +52,32 @@ A compact, square (or optionally circular) button for single-action SVG icon tri
 
 ### SegmentedControl
 
-A grouped set of 2–5 option buttons as a contiguous horizontal control.
+A grouped set of 2-5 option buttons as a contiguous horizontal control. Constrained horizontal controls scroll internally; one-option presentations use a static indicator.
 
 | Attribute | Type | Values | Description |
 |---|---|---|---|
 | selection mode | semantic | `single-select`, `multi-select` | Whether options are mutually exclusive |
-| segment state | modifier | `--selected`, `:hover`, `:focus-visible`, `:disabled` | State of individual segment |
+| segment state | modifier/ARIA | `--selected`, `aria-checked`, `aria-pressed`, `:hover`, `:focus-visible`, `:disabled`, `aria-disabled` | State of individual segment |
 | orientation | modifier | `horizontal` (default), `vertical` | Layout direction |
+| layout spacing | token | `--space-4` | Compact gap and padding foundation |
+| static mode | modifier | `--static` | Noninteractive one-option indicator |
 
 **Single-select (radiogroup) properties**:
 - Container: `role="radiogroup"`, `.pathable-segmented-control`
 - Segment: `role="radio"`, `aria-checked="true/false"`, `.pathable-segmented-control__option`
-- Keyboard: Arrow keys navigate between options, wrapping allowed
+- Keyboard: Consumer JavaScript handles Arrow key navigation between options, wrapping allowed
 - At least one option must always be selected
 
 **Multi-select (toggle button) properties**:
 - Container: `role="group"`, `.pathable-segmented-control--multi`
 - Segment: `role="button"`, `aria-pressed="true/false"`, `.pathable-segmented-control__option`
-- Keyboard: Tab to enter/exit group, Space to toggle individual option
+- Keyboard: Tab enters/exits group; native button activation or consumer JavaScript toggles individual options
 - Zero or more options may be selected independently
+
+**Static one-option properties**:
+- Container classes: `.pathable-segmented-control` and `.pathable-segmented-control--static`
+- Segment classes: noninteractive text element with `.pathable-segmented-control__option` and `.pathable-segmented-control__option--selected`
+- Keyboard: no radio role, button role, or tab stop
 
 ### IconTile
 
@@ -109,16 +117,17 @@ A meaningful icon that conveys application state (success, error, warning, info,
                          │
                          ▼
                    ┌─────────┐
-                   │ DISABLED│ (overrides all)
+                   │ DISABLED│ (suppresses interaction)
                    └─────────┘
                          ▲
                    ┌─────┴──────┐
-                   │  LOADING   │ (implies disabled)
+                   │  LOADING   │ (disabled presentation)
                    └────────────┘
 ```
 
 **Notes**:
-- Selected persists until explicitly deselected (class toggled off)
+- Selected persists until explicitly deselected (ARIA state or class toggled off)
 - Pressed is momentary (active pseudo-class only)
 - Hover and focus can coexist with selected
-- Disabled and loading suppress all interaction responses
+- Disabled suppresses interaction responses while preserving meaningful selected identity
+- Loading presentation does not by itself prevent keyboard or programmatic activation

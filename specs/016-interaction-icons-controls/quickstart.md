@@ -35,7 +35,9 @@ Use this guide to verify each pattern works correctly after implementation.
 - [ ] Focus-visible: visible outline ring using `--pathable-color-focus-ring`
 - [ ] Active: elevation drops
 - [ ] Selected (add `.is-selected`): border/weight change visible
-- [ ] Disabled (add `disabled` attr): no hover/focus response, reduced opacity
+- [ ] Native disabled (add `disabled` attr where valid): no hover or active response, contrast-safe disabled presentation
+- [ ] ARIA disabled (add `aria-disabled="true"`): no hover or active response, contrast-safe disabled presentation, visible focus retained if the element remains focusable
+- [ ] Loading (add `.is-loading` plus native `disabled` or an event guard): stable visual indicator with duplicate activation prevented by consumer-owned behavior
 
 ### 2. Icon Button
 
@@ -64,12 +66,18 @@ Use this guide to verify each pattern works correctly after implementation.
 </div>
 ```
 
+The CSS provides the visual contract. Interactive single-select groups require consumer-owned JavaScript for roving focus, Arrow key navigation, and synchronized `aria-checked`. Interactive multi-select groups require synchronized `aria-pressed`. Storybook fixtures should demonstrate the required behavior, but the published styles package does not ship runtime JavaScript for segmented controls.
+
 **Verify**:
 - [ ] Selected option visually distinct via background + border + weight
 - [ ] Focus ring visible on each segment
+- [ ] Selected styling works from either `.pathable-segmented-control__option--selected`, `aria-checked="true"`, or `aria-pressed="true"`
+- [ ] Focus ring uses `--pathable-segmented-control-focus-ring` and remains visible against the control track
+- [ ] Constrained horizontal controls scroll internally without page-level horizontal overflow
 - [ ] Multi-select variant (`--multi`) allows independent toggling
 - [ ] Forced-colors mode preserves selected segment boundary
 - [ ] Vertical (`--vertical`) orientation renders correctly
+- [ ] Single-option usage renders as `.pathable-segmented-control--static` with noninteractive text markup, not a button or radio
 
 ### 4. Icon Tile
 

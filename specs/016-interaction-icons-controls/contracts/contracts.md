@@ -23,13 +23,13 @@
 
 | Mixin | Selectors Generated | CSS Custom Properties Consumed |
 |---|---|---|
-| `interaction-states` | `&:hover`, `&:focus-visible`, `&:focus-within`, `&:active`, `&.is-selected`, `&:disabled`, `&[aria-disabled="true"]`, `&.is-loading` | `--pathable-color-focus-ring`, `--elevation-md`, `--pathable-color-surface`, `--pathable-color-bg`, `--pathable-color-border` |
+| `interaction-states` | `&:hover`, `&:focus-visible`, `&:focus-within`, `&:active`, `&.is-selected`, `&[aria-selected="true"]`, `&:disabled`, `&[aria-disabled="true"]`, `&.is-loading` | `--pathable-color-focus-ring`, `--elevation-md`, `--pathable-color-surface`, `--pathable-color-bg`, `--pathable-color-text`, `--pathable-font-weight-bold` |
 | `state-hover` | `&:hover` | `--elevation-md`, `--pathable-color-bg` |
 | `state-focus` | `&:focus-visible`, `&:focus-within` | `--pathable-color-focus-ring` |
 | `state-active` | `&:active` | none (uses `box-shadow: none`) |
-| `state-selected` | `&.is-selected`, `&[aria-selected="true"]` | `--pathable-color-surface`, `--pathable-color-border` |
+| `state-selected` | `&.is-selected`, `&[aria-selected="true"]` | `--pathable-color-surface`, `currentColor`, `--pathable-font-weight-bold` |
 | `state-pressed` | `&:active` (alt style) | `--elevation-sm` (inset), `--pathable-color-border` |
-| `state-disabled` | `&:disabled`, `&[aria-disabled="true"]` | none (opacity/cursor/box-shadow/background) |
+| `state-disabled` | `&:disabled`, `&[aria-disabled="true"]` | `--pathable-color-bg`, `--pathable-color-text` |
 | `state-loading` | `&.is-loading` | `--pathable-color-border` (spinner border) |
 
 ### 2. Icon Button Classes
@@ -67,6 +67,7 @@
 |---|---|
 | `.pathable-segmented-control` | Base class for container (single-select) |
 | `.pathable-segmented-control--multi` | Multi-select variant |
+| `.pathable-segmented-control--static` | Noninteractive one-option indicator |
 | `.pathable-segmented-control__option` | Individual segment |
 | `.pathable-segmented-control__option--selected` | Selected state |
 | `.pathable-segmented-control--vertical` | Vertical orientation |
@@ -76,7 +77,12 @@
 | Property | Default | Description |
 |---|---|---|
 | `--pathable-segmented-control-radius` | `var(--radius-md)` | Container border radius |
-| `--pathable-segmented-control-gap` | `var(--space-2)` | Gap between segments |
+| `--pathable-segmented-control-gap` | `var(--space-4)` | Gap between segments |
+| `--pathable-segmented-control-focus-ring` | `var(--pathable-color-text)` | Focus outline color for segmented options |
+
+**State source**: Interactive segmented controls use `aria-checked="true"` for single-select state and `aria-pressed="true"` for multi-select state. These ARIA attributes and `.pathable-segmented-control__option--selected` MUST produce equivalent selected presentation. Consumers remain responsible for synchronizing state when they use both.
+
+**Layout**: Horizontal segmented controls use internal horizontal scrolling when constrained and MUST NOT create page-level horizontal overflow. Normal usage remains 2-5 options; longer sets should use another control such as a native `select` when comparison at a glance is not required.
 
 ### 4. Icon Tile Classes
 
@@ -103,11 +109,14 @@
 | Pattern | ARIA Role | Keyboard | States |
 |---|---|---|---|
 | Icon button (action) | `button` | Enter/Space to activate | hover, focus-visible, active, disabled, loading |
-| Icon button (toggle) | `button` + `aria-pressed` | Enter/Space to toggle | + pressed/selected |
-| Segmented control (single) | `radiogroup` + `radio` + `aria-checked` | Arrow keys between options, wrapping | + selected, disabled |
-| Segmented control (multi) | `group` + `button` + `aria-pressed` | Tab between groups, Space to toggle | + pressed, disabled |
+| Icon button (toggle) | `button` + `aria-pressed` | Enter/Space to toggle | + pressed |
+| Segmented control (single) | `radiogroup` + `radio` + `aria-checked` | Consumer-owned Arrow key handling between options, wrapping | + selected, disabled |
+| Segmented control (multi) | `group` + button + `aria-pressed` | Tab between buttons, Space/Enter to toggle | + pressed, disabled |
+| Segmented control (static) | none beyond text semantics | N/A | selected presentation only |
 | Decorative icon | `aria-hidden="true"` | N/A | N/A |
 | Meaningful icon | `role="img"` + `aria-label` | N/A | N/A |
+
+Native `disabled` controls are removed from the sequential focus order. Controls using `aria-disabled="true"` may remain focusable and therefore MUST retain a visible focus indicator; CSS presentation alone does not prevent their activation. Loading presentation likewise requires native disabled state, `aria-disabled` plus event guards, or another consumer-owned activation guard when duplicate activation must be prevented.
 
 ## Import Contract
 
