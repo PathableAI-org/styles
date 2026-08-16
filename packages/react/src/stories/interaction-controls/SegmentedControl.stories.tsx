@@ -36,7 +36,7 @@ const meta = {
       options: ['horizontal', 'vertical'],
       control: { type: 'select' },
       description:
-        'Visual orientation. Vertical orientation stacks options and exposes `aria-orientation="vertical"`.',
+        'Visual orientation. Vertical orientation stacks options. In single-select mode, vertical orientation also exposes `aria-orientation="vertical"` on the radiogroup.',
     },
     value: {
       control: { type: 'text' },
@@ -95,6 +95,19 @@ const formattingOptions: readonly SegmentedControlOption[] = [
   { value: 'italic', label: 'Italic', icon: italicIcon },
   { value: 'underline', label: 'Underline', icon: underlineIcon },
 ]
+
+const defaultMultiValues: readonly string[] = ['bold']
+
+type PlaygroundArgs = {
+  readonly mode?: 'single' | 'multi'
+  readonly orientation?: 'horizontal' | 'vertical'
+  readonly options?: readonly SegmentedControlOption[]
+  readonly value?: string
+  readonly values?: readonly string[]
+  readonly onValueChange?: (value: string) => void
+  readonly onValuesChange?: (values: readonly string[]) => void
+  readonly 'aria-label'?: string
+}
 
 const alignmentOptions: readonly SegmentedControlOption[] = [
   {
@@ -164,7 +177,52 @@ function ControlledMultiSelect({
   )
 }
 
+function PlaygroundRender(args: PlaygroundArgs) {
+  const mode = args.mode === 'multi' ? 'multi' : 'single'
+  const options =
+    args.options && args.options.length > 0
+      ? args.options
+      : mode === 'multi'
+        ? formattingOptions
+        : viewModeOptions
+  const controlledValue = args.value ?? 'list'
+  const controlledValues = args.values ?? defaultMultiValues
+  const [value, setValue] = useState(controlledValue)
+  const [values, setValues] = useState<readonly string[]>(controlledValues)
+
+  if (mode === 'multi') {
+    return (
+      <SegmentedControl
+        mode="multi"
+        aria-label={args['aria-label'] ?? 'Text formatting'}
+        orientation={args.orientation}
+        options={options}
+        values={values}
+        onValuesChange={(nextValues) => {
+          setValues(nextValues)
+          args.onValuesChange?.(nextValues)
+        }}
+      />
+    )
+  }
+
+  return (
+    <SegmentedControl
+      mode="single"
+      aria-label={args['aria-label'] ?? 'View mode'}
+      orientation={args.orientation}
+      options={options}
+      value={value}
+      onValueChange={(nextValue) => {
+        setValue(nextValue)
+        args.onValueChange?.(nextValue)
+      }}
+    />
+  )
+}
+
 export const Playground: Story = {
+  render: (args) => <PlaygroundRender {...(args as PlaygroundArgs)} />,
   args: {
     options: viewModeOptions,
     value: 'list',
