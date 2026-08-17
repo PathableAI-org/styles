@@ -102,7 +102,9 @@ export function validateTarget(target) {
     )
   }
 
-  if (target.sharedContracts && !target.capabilities?.length) {
+  const capabilityCount = Object.keys(target.capabilities ?? {}).length
+
+  if (target.sharedContracts && capabilityCount === 0) {
     throw new Error(`Target "${target.name}" declares no shared capabilities.`)
   }
 }
