@@ -68,7 +68,7 @@ function AllStatesDemo() {
           fontSize: '0.875rem',
         }}
       >
-        Hover or focus the rest example. Selected and disabled states are fixed
+        Hover or focus the Rest example. Selected and disabled states are fixed
         fixtures.
       </p>
       <div
