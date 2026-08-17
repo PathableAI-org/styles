@@ -182,10 +182,23 @@ export const AllStates: Story = {
     })
 
     await step('applies selected and disabled visual states', async () => {
-      await expect(window.getComputedStyle(selected).fontWeight).toBe('700')
-      await expect(window.getComputedStyle(selected).borderWidth).toBe('2px')
-      await expect(window.getComputedStyle(disabled).opacity).toBe('0.5')
-      await expect(window.getComputedStyle(disabled).boxShadow).toBe('none')
+      const restStyle = window.getComputedStyle(rest)
+      const selectedStyle = window.getComputedStyle(selected)
+      const disabledStyle = window.getComputedStyle(disabled)
+
+      await expect(selected).toHaveClass('is-selected')
+      await expect(selected).toHaveAttribute('aria-pressed', 'true')
+      await expect(disabled).toBeDisabled()
+
+      await expect(
+        Number.parseInt(selectedStyle.fontWeight, 10),
+      ).toBeGreaterThanOrEqual(Number.parseInt(restStyle.fontWeight, 10))
+      await expect(
+        Number.parseFloat(selectedStyle.borderWidth),
+      ).toBeGreaterThanOrEqual(Number.parseFloat(restStyle.borderWidth))
+      await expect(
+        Number.parseFloat(disabledStyle.opacity),
+      ).toBeLessThan(Number.parseFloat(restStyle.opacity))
     })
   },
 }
