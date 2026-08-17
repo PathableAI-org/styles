@@ -9,6 +9,16 @@ const addRecord = fn()
 const exportRecords = fn()
 const notifications = fn()
 const settings = fn()
+const deleteRecord = fn()
+
+function clearActionMocks() {
+  searchRecords.mockClear()
+  addRecord.mockClear()
+  exportRecords.mockClear()
+  notifications.mockClear()
+  settings.mockClear()
+  deleteRecord.mockClear()
+}
 
 type IconName =
   | 'alertTriangle'
@@ -237,7 +247,11 @@ function ToolbarActions() {
           display: 'inline-block',
         }}
       />
-      <IconButton appearance="bordered" aria-label="Delete">
+      <IconButton
+        appearance="bordered"
+        aria-label="Delete"
+        onClick={deleteRecord}
+      >
         <AppIcon name="trash" />
       </IconButton>
       <IconButton
@@ -443,7 +457,21 @@ export const ToolbarPanel: Story = {
   render: () => <ToolbarPanelDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    searchRecords.mockClear()
+    clearActionMocks()
+
+    await step('surface and icon buttons use the class contract', async () => {
+      const surface = canvasElement.querySelector('.pathable-surface')
+      const searchButton = canvas.getByRole('button', { name: 'Search' })
+
+      await expect(surface).toHaveClass(
+        'pathable-surface',
+        'pathable-surface--raised',
+      )
+      await expect(searchButton).toHaveClass(
+        'pathable-icon-button',
+        'pathable-icon-button--bare',
+      )
+    })
 
     await step('icon buttons are named and keyboard activatable', async () => {
       const searchButton = canvas.getByRole('button', { name: 'Search' })
@@ -451,6 +479,7 @@ export const ToolbarPanel: Story = {
       await expect(searchButton).toHaveFocus()
       await userEvent.keyboard('{Enter}')
       await expect(searchRecords).toHaveBeenCalledTimes(1)
+      await expect(searchButton).toHaveFocus()
     })
   },
 }
@@ -459,6 +488,16 @@ export const StatusRow: Story = {
   render: () => <StatusRowDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+
+    await step('status tiles use the class contract', async () => {
+      const tile = canvasElement.querySelector('.pathable-icon-tile')
+
+      await expect(tile).toHaveClass(
+        'pathable-icon-tile',
+        'pathable-icon-tile--circle',
+        'pathable-icon-tile--success',
+      )
+    })
 
     await step('status text is visible next to decorative tiles', async () => {
       await expect(canvas.getByText('Compliance Training')).toBeVisible()
@@ -475,7 +514,14 @@ export const ViewSwitcher: Story = {
     const canvas = within(canvasElement)
 
     await step('view switcher exposes radiogroup semantics', async () => {
+      const group = canvas.getByRole('radiogroup', { name: 'View mode' })
       const list = canvas.getByRole('radio', { name: 'List' })
+
+      await expect(group).toHaveClass('pathable-segmented-control')
+      await expect(list).toHaveClass(
+        'pathable-segmented-control__option',
+        'pathable-segmented-control__option--selected',
+      )
       await expect(list).toHaveAttribute('aria-checked', 'true')
     })
 
@@ -495,11 +541,17 @@ export const FullComposition: Story = {
   render: () => <FullCompositionDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    exportRecords.mockClear()
+    clearActionMocks()
 
     await step(
       'composition renders all interaction-control regions',
       async () => {
+        const surface = canvasElement.querySelector('.pathable-surface')
+
+        await expect(surface).toHaveClass(
+          'pathable-surface',
+          'pathable-surface--raised',
+        )
         await expect(canvas.getByText('Training Records')).toBeVisible()
         await expect(
           canvas.getByRole('button', { name: 'Download' }),
@@ -516,8 +568,10 @@ export const FullComposition: Story = {
       async () => {
         const exportButton = canvas.getByRole('button', { name: 'Download' })
         exportButton.focus()
+        await expect(exportButton).toHaveFocus()
         await userEvent.keyboard(' ')
         await expect(exportRecords).toHaveBeenCalledTimes(1)
+        await expect(exportButton).toHaveFocus()
       },
     )
   },
