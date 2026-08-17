@@ -175,10 +175,21 @@ export const AllStates: Story = {
     })
 
     await step('applies observable keyboard focus feedback', async () => {
-      await expect(window.getComputedStyle(rest).boxShadow).not.toBe('none')
+      const restStyleBeforeFocus = window.getComputedStyle(rest)
+      const boxShadowBeforeFocus = restStyleBeforeFocus.boxShadow
+      const outlineStyleBeforeFocus = restStyleBeforeFocus.outlineStyle
+
       await userEvent.tab()
       await expect(rest).toHaveFocus()
-      await expect(window.getComputedStyle(rest).outlineStyle).not.toBe('none')
+
+      const restStyleAfterFocus = window.getComputedStyle(rest)
+      const boxShadowAfterFocus = restStyleAfterFocus.boxShadow
+      const outlineStyleAfterFocus = restStyleAfterFocus.outlineStyle
+
+      await expect(
+        boxShadowAfterFocus !== boxShadowBeforeFocus ||
+          outlineStyleAfterFocus !== outlineStyleBeforeFocus,
+      ).toBe(true)
     })
 
     await step('applies selected and disabled visual states', async () => {
