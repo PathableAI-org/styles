@@ -4,20 +4,13 @@ import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { IconButton, IconTile, SegmentedControl } from '../../index'
 
-const searchRecords = fn()
-const addRecord = fn()
-const exportRecords = fn()
-const notifications = fn()
-const settings = fn()
-const deleteRecord = fn()
-
-function clearActionMocks() {
-  searchRecords.mockClear()
-  addRecord.mockClear()
-  exportRecords.mockClear()
-  notifications.mockClear()
-  settings.mockClear()
-  deleteRecord.mockClear()
+type ToolbarActionHandlers = {
+  readonly onSearch?: () => void
+  readonly onNotifications?: () => void
+  readonly onEdit?: () => void
+  readonly onDownload?: () => void
+  readonly onDelete?: () => void
+  readonly onSettings?: () => void
 }
 
 type IconName =
@@ -164,10 +157,16 @@ const viewOptions = [
   { value: 'detail', label: 'Detail', icon: <AppIcon name="eye" size={16} /> },
 ] as const
 
+type ViewValue = (typeof viewOptions)[number]['value']
+
+function isViewValue(value: string): value is ViewValue {
+  return viewOptions.some((option) => option.value === value)
+}
+
 function ViewSwitcherControl({
   initialValue = 'list',
 }: {
-  readonly initialValue?: string
+  readonly initialValue?: ViewValue
 }) {
   const [value, setValue] = useState(initialValue)
 
@@ -176,7 +175,9 @@ function ViewSwitcherControl({
       aria-label="View mode"
       options={viewOptions}
       value={value}
-      onValueChange={setValue}
+      onValueChange={(nextValue) => {
+        if (isViewValue(nextValue)) setValue(nextValue)
+      }}
     />
   )
 }
@@ -206,16 +207,23 @@ function StoryIntro({
   )
 }
 
-function ToolbarActions() {
+function ToolbarActions({
+  onSearch,
+  onNotifications,
+  onEdit,
+  onDownload,
+  onDelete,
+  onSettings,
+}: ToolbarActionHandlers) {
   return (
     <div className="pathable-cluster" style={{ alignItems: 'center' }}>
-      <IconButton appearance="bare" aria-label="Search" onClick={searchRecords}>
+      <IconButton appearance="bare" aria-label="Search" onClick={onSearch}>
         <AppIcon name="search" />
       </IconButton>
       <IconButton
         appearance="bare"
         aria-label="Notifications"
-        onClick={notifications}
+        onClick={onNotifications}
       >
         <AppIcon name="bell" />
       </IconButton>
@@ -228,13 +236,13 @@ function ToolbarActions() {
           display: 'inline-block',
         }}
       />
-      <IconButton appearance="subtle" aria-label="Edit" onClick={addRecord}>
+      <IconButton appearance="subtle" aria-label="Edit" onClick={onEdit}>
         <AppIcon name="edit" />
       </IconButton>
       <IconButton
         appearance="subtle"
         aria-label="Download"
-        onClick={exportRecords}
+        onClick={onDownload}
       >
         <AppIcon name="download" />
       </IconButton>
@@ -247,17 +255,13 @@ function ToolbarActions() {
           display: 'inline-block',
         }}
       />
-      <IconButton
-        appearance="bordered"
-        aria-label="Delete"
-        onClick={deleteRecord}
-      >
+      <IconButton appearance="bordered" aria-label="Delete" onClick={onDelete}>
         <AppIcon name="trash" />
       </IconButton>
       <IconButton
         appearance="bordered"
         aria-label="Settings"
-        onClick={settings}
+        onClick={onSettings}
       >
         <AppIcon name="settings" />
       </IconButton>
@@ -320,7 +324,7 @@ function StatusRowContent() {
   )
 }
 
-function ToolbarPanelDemo() {
+function ToolbarPanelDemo(actions: ToolbarActionHandlers) {
   return (
     <>
       <StoryIntro title="Toolbar Panel with Actions">
@@ -331,7 +335,7 @@ function ToolbarPanelDemo() {
         className="pathable-surface pathable-surface--raised"
         style={{ padding: '0.75rem 1rem' }}
       >
-        <ToolbarActions />
+        <ToolbarActions {...actions} />
       </div>
     </>
   )
@@ -378,7 +382,7 @@ function ViewSwitcherDemo() {
   )
 }
 
-function FullCompositionDemo() {
+function FullCompositionDemo(actions: ToolbarActionHandlers) {
   return (
     <>
       <StoryIntro title="Full Integration">
@@ -409,7 +413,7 @@ function FullCompositionDemo() {
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
-          <ToolbarActions />
+          <ToolbarActions {...actions} />
         </div>
 
         <div
@@ -454,15 +458,18 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const ToolbarPanel: Story = {
-  render: () => <ToolbarPanelDemo />,
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onSearch: fn(),
+  },
+  render: (args) => <ToolbarPanelDemo {...args} />,
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    clearActionMocks()
 
     await step('surface and icon buttons use the class contract', async () => {
       const surface = canvasElement.querySelector('.pathable-surface')
       const searchButton = canvas.getByRole('button', { name: 'Search' })
 
+      await expect(surface).not.toBeNull()
       await expect(surface).toHaveClass(
         'pathable-surface',
         'pathable-surface--raised',
@@ -478,7 +485,7 @@ export const ToolbarPanel: Story = {
       searchButton.focus()
       await expect(searchButton).toHaveFocus()
       await userEvent.keyboard('{Enter}')
-      await expect(searchRecords).toHaveBeenCalledTimes(1)
+      await expect(args.onSearch).toHaveBeenCalledTimes(1)
       await expect(searchButton).toHaveFocus()
     })
   },
@@ -492,6 +499,7 @@ export const StatusRow: Story = {
     await step('status tiles use the class contract', async () => {
       const tile = canvasElement.querySelector('.pathable-icon-tile')
 
+      await expect(tile).not.toBeNull()
       await expect(tile).toHaveClass(
         'pathable-icon-tile',
         'pathable-icon-tile--circle',
@@ -538,16 +546,19 @@ export const ViewSwitcher: Story = {
 }
 
 export const FullComposition: Story = {
-  render: () => <FullCompositionDemo />,
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onDownload: fn(),
+  },
+  render: (args) => <FullCompositionDemo {...args} />,
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    clearActionMocks()
 
     await step(
       'composition renders all interaction-control regions',
       async () => {
         const surface = canvasElement.querySelector('.pathable-surface')
 
+        await expect(surface).not.toBeNull()
         await expect(surface).toHaveClass(
           'pathable-surface',
           'pathable-surface--raised',
@@ -569,8 +580,8 @@ export const FullComposition: Story = {
         const exportButton = canvas.getByRole('button', { name: 'Download' })
         exportButton.focus()
         await expect(exportButton).toHaveFocus()
-        await userEvent.keyboard('{Space}')
-        await expect(exportRecords).toHaveBeenCalledTimes(1)
+        await userEvent.keyboard('[Space]')
+        await expect(args.onDownload).toHaveBeenCalledTimes(1)
         await expect(exportButton).toHaveFocus()
       },
     )
@@ -583,5 +594,12 @@ export const Narrow: Story = {
     viewport: {
       defaultViewport: 'mobile1',
     },
+  },
+}
+
+export const Default: Story = {
+  ...FullComposition,
+  args: {
+    onDownload: fn(),
   },
 }
