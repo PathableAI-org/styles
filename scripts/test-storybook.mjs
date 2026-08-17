@@ -67,6 +67,7 @@ export const targets = {
     buildCommands: [
       [pnpmCommand, '--filter', '@pathable/storybook-contracts', 'build'],
       [pnpmCommand, '--filter', '@pathableai/react', 'build'],
+      [pnpmCommand, '--filter', '@pathableai/styles', 'build'],
       [pnpmCommand, '--filter', '@pathable/storybook-react', 'build-storybook'],
     ],
     staticDirectory: 'apps/storybook-react/storybook-static',
