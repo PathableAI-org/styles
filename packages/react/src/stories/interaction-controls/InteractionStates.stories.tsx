@@ -30,7 +30,6 @@ function StateCard({
     <button
       type="button"
       className={classes}
-      aria-label={`${label} interaction state`}
       aria-busy={busy || undefined}
       aria-pressed={pressed}
       disabled={disabled}
