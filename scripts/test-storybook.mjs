@@ -18,19 +18,17 @@
  * Usage:
  *   node scripts/test-storybook.mjs              # run all targets sequentially
  *   node scripts/test-storybook.mjs styles       # run only the styles target
- *   node scripts/test-storybook.mjs react        # run only the React target
  */
 import { spawn } from 'node:child_process'
 import { access, readFile, writeFile } from 'node:fs/promises'
-import { createServer } from 'node:http'
+import { createServer } from 'node:net'
 import { dirname, resolve } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
-import serveHandler from 'serve-handler'
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const isWindows = process.platform === 'win32'
-const pnpmCommand = 'pnpm'
+const pnpmCommand = isWindows ? 'pnpm.cmd' : 'pnpm'
 
 /**
  * Registered targets. The `styles` target is first (Styles-first ownership).
@@ -62,18 +60,6 @@ export const targets = {
       'accordion.first-expanded':
         'components-communication-accordion--initially-expanded',
     },
-    sharedContracts: true,
-  },
-  react: {
-    name: 'react',
-    storybookWorkspace: '@pathable/storybook-react',
-    buildCommands: [
-      [pnpmCommand, '--filter', '@pathableai/styles', 'build'],
-      [pnpmCommand, '--filter', '@pathableai/react', 'build'],
-      [pnpmCommand, '--filter', '@pathable/storybook-react', 'build-storybook'],
-    ],
-    staticDirectory: 'apps/storybook-react/storybook-static',
-    port: 6007,
   },
 }
 
@@ -102,9 +88,7 @@ export function validateTarget(target) {
     )
   }
 
-  const capabilityCount = Object.keys(target.capabilities ?? {}).length
-
-  if (target.sharedContracts && capabilityCount === 0) {
+  if (!target.capabilities?.length) {
     throw new Error(`Target "${target.name}" declares no shared capabilities.`)
   }
 }
@@ -118,7 +102,6 @@ function runCommand(command, args, { env = process.env } = {}) {
     const child = spawn(command, args, {
       cwd: repositoryRoot,
       env,
-      shell: isWindows,
       stdio: 'inherit',
     })
 
@@ -146,47 +129,53 @@ function runCommand(command, args, { env = process.env } = {}) {
   })
 }
 
-function startServer(target) {
-  const publicDirectory = resolve(repositoryRoot, target.staticDirectory)
-  const server = createServer((request, response) => {
-    void serveHandler(request, response, { public: publicDirectory }).catch(
-      (error) => {
-        console.error(
-          `Target "${target.name}" static server request failed: ${error.message}`,
-        )
-        if (!response.headersSent) response.writeHead(500)
-        response.end('Internal Server Error')
-      },
-    )
-  })
+/**
+ * Deterministic port-availability check. Only a listener that actually binds
+ * (`EADDRINUSE`) is treated as occupied; transient probe errors surface as a
+ * clear reason rather than being misclassified as "in use".
+ */
+async function assertPortFree(port) {
+  return new Promise((resolveProbe) => {
+    const probe = createServer()
 
-  return new Promise((resolveServer, rejectServer) => {
-    server.once('error', (error) => {
+    probe.once('error', (error) => {
       if (error.code === 'EADDRINUSE') {
-        rejectServer(
-          new Error(
-            `Target "${target.name}" port ${target.port} is already in use. Stop the existing process or choose another port.`,
-          ),
-        )
+        resolveProbe(false)
         return
       }
-
-      rejectServer(
-        new Error(
-          `Target "${target.name}" static server failed to start: ${error.message}`,
-        ),
-      )
+      resolveProbe({ error: `Port probe failed: ${error.message}` })
     })
 
-    server.listen(target.port, '127.0.0.1', () => resolveServer(server))
+    probe.listen(port, '127.0.0.1', () => {
+      probe.close(() => resolveProbe(true))
+    })
   })
 }
 
-async function waitForReady(target) {
+function startServer(port, staticDirectory) {
+  return spawn(
+    pnpmCommand,
+    ['exec', 'serve', '-n', '-l', `tcp://127.0.0.1:${port}`, staticDirectory],
+    {
+      cwd: repositoryRoot,
+      env: process.env,
+      stdio: 'inherit',
+      detached: !isWindows,
+    },
+  )
+}
+
+async function waitForReady(target, server) {
   const url = `http://127.0.0.1:${target.port}`
   const deadline = Date.now() + 30_000
 
   while (Date.now() < deadline) {
+    if (server.exitCode !== null || server.signalCode !== null) {
+      throw new Error(
+        `Target "${target.name}" static server exited before becoming ready.`,
+      )
+    }
+
     try {
       const response = await fetch(`${url}/index.html`, {
         signal: AbortSignal.timeout(1_000),
@@ -205,18 +194,46 @@ async function waitForReady(target) {
 }
 
 async function stopServer(server) {
-  if (!server?.listening) return
+  if (!server || server.exitCode !== null || server.signalCode !== null) return
 
-  await new Promise((resolveClose, rejectClose) => {
-    server.close((error) => {
-      if (error) {
-        rejectClose(error)
-        return
-      }
-      resolveClose()
-    })
-    server.closeAllConnections()
-  })
+  if (isWindows) {
+    await runCommand('taskkill.exe', ['/PID', String(server.pid), '/T', '/F'])
+    return
+  }
+
+  try {
+    process.kill(-server.pid, 'SIGTERM')
+  } catch (error) {
+    if (error.code !== 'ESRCH') throw error
+    return
+  }
+
+  await waitForExit(server, 5_000)
+
+  if (server.exitCode === null && server.signalCode === null) {
+    try {
+      process.kill(-server.pid, 'SIGKILL')
+    } catch (error) {
+      if (error.code !== 'ESRCH') throw error
+    }
+    await waitForExit(server, 1_000)
+  }
+
+  if (server.exitCode === null && server.signalCode === null) {
+    throw new Error(
+      `Static server process group ${server.pid} did not stop after teardown.`,
+    )
+  }
+}
+
+function waitForExit(child, timeoutMs) {
+  if (child.exitCode !== null || child.signalCode !== null)
+    return Promise.resolve()
+
+  return Promise.race([
+    new Promise((resolveExit) => child.once('close', resolveExit)),
+    delay(timeoutMs),
+  ])
 }
 
 async function runTest(target, url) {
@@ -299,41 +316,39 @@ async function runTarget(targetName) {
 
   let server
   try {
-    server = await startServer(target)
+    const portResult = await assertPortFree(target.port)
+
+    if (typeof portResult === 'object') {
+      throw new Error(
+        `Target "${target.name}" port probe failed on ${target.port}: ${portResult.error}`,
+      )
+    }
+
+    if (!portResult) {
+      throw new Error(
+        `Target "${target.name}" port ${target.port} is already in use. Stop the existing process or choose another port.`,
+      )
+    }
+
+    server = startServer(target.port, target.staticDirectory)
     activeServer = server
 
-    const url = await waitForReady(target)
+    const url = await waitForReady(target, server)
     await runTest(target, url)
 
     console.log(`✓ Target "${target.name}" passed.`)
   } finally {
-    if (activeServer === server) {
-      await cleanupActiveServer()
-    } else {
-      await stopServer(server)
-    }
+    await stopServer(server)
+    activeServer = undefined
   }
 }
 
 let activeServer
-let cleanupPromise
-
-function cleanupActiveServer() {
-  if (!activeServer) return Promise.resolve()
-  if (cleanupPromise) return cleanupPromise
-
-  const server = activeServer
-  cleanupPromise = stopServer(server).finally(() => {
-    if (activeServer === server) activeServer = undefined
-    cleanupPromise = undefined
-  })
-  return cleanupPromise
-}
 
 async function handleSignal(signal) {
   console.error(`\nReceived ${signal}; stopping Storybook processes.`)
   try {
-    await cleanupActiveServer()
+    await stopServer(activeServer)
   } finally {
     process.exit(signal === 'SIGINT' ? 130 : 143)
   }
