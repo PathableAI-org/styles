@@ -46,7 +46,7 @@ pnpm test:storybook-styles
 # Run both Storybook suites (documented aggregate)
 pnpm test:storybook
 
-# Run the React Storybook suite (package-specific)
+# Run the React Storybook suite (target-aware runner)
 pnpm test:storybook-react
 
 # Build the styles Storybook
@@ -62,13 +62,13 @@ pnpm test
 pnpm test:visual
 ```
 
-`test:storybook-styles` drives `scripts/test-storybook.mjs styles`, which builds
-the shared-contract package, the styles package, and the styles Storybook, serves
-it, waits for readiness, runs the test-runner in a browser, writes a labeled
-evidence file, and cleans up every process it started. `test:storybook` is the
-documented aggregate: it runs the styles target through the runner and then the
-React Storybook through its package-specific script. A skipped, missing, or
-unregistered target is a hard failure, never hidden by a green overall result.
+`test:storybook-styles` and `test:storybook-react` drive the corresponding
+targets in `scripts/test-storybook.mjs`. The runner builds each target, serves it
+with an in-process HTTP server, waits for readiness, runs the test-runner in a
+browser, writes labeled evidence, and awaits server cleanup before exiting.
+`test:storybook` runs both registered targets sequentially. A skipped, missing,
+or unregistered target is a hard failure, never hidden by a green overall
+result.
 
 The current Storybook test command builds each catalog, serves it locally, and
 runs its stories in a browser. CI runs equivalent build, browser-test,
