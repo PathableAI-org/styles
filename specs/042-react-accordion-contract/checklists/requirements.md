@@ -41,7 +41,7 @@
 - React-specific behavior (controlled/uncontrolled state, `onExpandedChange`,
   disabled props, refs, server rendering) is kept out of the shared contract
   and in separate React tests, matching the plan and Phase 1 boundary.
-- The `@pathable/styles/js` reference in User Story 2 is quoted directly from
+- The `@pathableai/styles/js` reference in User Story 2 is quoted directly from
   the plan's gap analysis to explain the isolation rationale; it is context for
   the non-technical requirement rather than prescribing implementation.
 - Scope is explicitly bounded to Phase 2 with Accordion the only component;

@@ -65,7 +65,7 @@ enhancement runtime, so that React conformance proves native behavior rather
 than masking a broken implementation.
 
 **Why this priority**: Today the React Storybook preview imports
-`@pathable/styles/js`, which can enhance markup and hide broken native React
+`@pathableai/styles/js`, which can enhance markup and hide broken native React
 behavior. Without an explicit isolation assertion, React conformance is not
 trustworthy.
 

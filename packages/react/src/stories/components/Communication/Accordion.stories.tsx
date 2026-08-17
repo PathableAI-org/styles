@@ -313,9 +313,17 @@ function harnessFor(root: HTMLElement): StoryHarness {
  * (i.e. it is a `.usa-accordion__button`), instead of silently skipping.
  */
 async function assertNativeOwned(harness: StoryHarness) {
-  const button = harness
-    .within(harness.root)
-    .getByRole('button', { name: FIRST_AMENDMENT })
+  let button: HTMLElement
+  try {
+    button = harness.within(harness.root).getByRole('button', {
+      name: FIRST_AMENDMENT,
+    })
+  } catch (error) {
+    throw new Error(
+      '[storybook-contracts:accordion:react] Runtime not initialized: no disclosure button found for the React Accordion. The React runtime did not mount the expected disclosure.',
+      { cause: error },
+    )
+  }
 
   const expanded = button.getAttribute('aria-expanded')
   if (expanded === null) {
@@ -431,10 +439,11 @@ export const ExpandedChangeCallback: Story = {
     items: ACCORDION_ITEMS,
     onExpandedChange: fn(),
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
     const button = canvas.getByRole('button', { name: FIRST_AMENDMENT })
     await userEvent.click(button)
     await expect(button).toHaveAttribute('aria-expanded', 'true')
+    await expect(args.onExpandedChange).toHaveBeenCalledWith(['first'])
   },
 }
