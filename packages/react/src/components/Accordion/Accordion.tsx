@@ -1,5 +1,14 @@
 import { HTMLAttributes, ReactNode, useCallback, useState, useId } from 'react'
 
+/**
+ * Isolation contract: this component owns its own disclosure state and renders
+ * only `pathable-accordion` classes (never the USWDS `usa-accordion__button`
+ * enhancement selectors). The Styles `/js` DOM enhancement runtime therefore
+ * cannot bind to it; native React must remain the sole owner of every Accordion
+ * interaction. Do not add `usa-accordion__*` classes here, or a dual-owner
+ * ambiguity will break the shared behavior-contract guard.
+ */
+
 interface AccordionItem {
   id: string
   heading: ReactNode

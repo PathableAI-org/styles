@@ -61,6 +61,31 @@ export const targets = {
         'components-communication-accordion--initially-expanded',
     },
   },
+  react: {
+    name: 'react',
+    storybookWorkspace: '@pathable/storybook-react',
+    buildCommands: [
+      [pnpmCommand, '--filter', '@pathable/storybook-contracts', 'build'],
+      [pnpmCommand, '--filter', '@pathableai/react', 'build'],
+      [pnpmCommand, '--filter', '@pathable/storybook-react', 'build-storybook'],
+    ],
+    staticDirectory: 'apps/storybook-react/storybook-static',
+    port: 6007,
+    capabilities: [
+      'accordion.keyboard-enter',
+      'accordion.keyboard-space',
+      'accordion.single-open',
+      'accordion.panel-association',
+      'accordion.panel-availability',
+      'accordion.focus-retention',
+    ],
+    fixtures: {
+      'accordion.default':
+        'components-communication-accordion--contract-default',
+      'accordion.first-expanded':
+        'components-communication-accordion--contract-initially-expanded',
+    },
+  },
 }
 
 function getTarget(name) {
