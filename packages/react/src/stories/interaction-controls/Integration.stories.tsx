@@ -569,7 +569,7 @@ export const FullComposition: Story = {
         const exportButton = canvas.getByRole('button', { name: 'Download' })
         exportButton.focus()
         await expect(exportButton).toHaveFocus()
-        await userEvent.keyboard(' ')
+        await userEvent.keyboard('{Space}')
         await expect(exportRecords).toHaveBeenCalledTimes(1)
         await expect(exportButton).toHaveFocus()
       },
