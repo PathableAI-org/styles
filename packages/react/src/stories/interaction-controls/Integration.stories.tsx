@@ -438,7 +438,7 @@ const meta = {
 
 **Purpose**: Mirror the styles catalog's Interaction Controls/Integration examples using the public React components: \`IconButton\`, \`IconTile\`, and \`SegmentedControl\`.
 
-**When to use**: As a reference for composing compact toolbar actions, status indicators, and view-mode controls inside PathAble surfaces.
+**When to use**: As a reference for composing compact toolbar actions, status indicators, and view-mode controls inside Pathable surfaces.
 
 **When not to use**: For single-component API details, use each component's dedicated story. This story defines no new production API.
 
