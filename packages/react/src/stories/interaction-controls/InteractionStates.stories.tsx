@@ -1,0 +1,218 @@
+import type { Meta, StoryObj } from '@storybook/react'
+import { expect, userEvent, within } from 'storybook/test'
+
+type StateCardProps = {
+  readonly label: string
+  readonly state: string
+  readonly className?: string
+  readonly disabled?: boolean
+  readonly pressed?: boolean
+  readonly busy?: boolean
+}
+
+function StateCard({
+  label,
+  state,
+  className,
+  disabled,
+  pressed,
+  busy,
+}: StateCardProps) {
+  const classes = [
+    'pathable-interaction-states-demo',
+    'pathable-text-left',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <button
+      type="button"
+      className={classes}
+      aria-label={`${label} interaction state`}
+      aria-busy={busy || undefined}
+      aria-pressed={pressed}
+      disabled={disabled}
+      style={{ minWidth: 200, fontFamily: 'inherit' }}
+    >
+      <span
+        className="pathable-display-block pathable-text-semibold"
+        style={{ fontSize: '0.875rem' }}
+      >
+        {label}
+      </span>
+      <span
+        className="pathable-display-block pathable-margin-top-1"
+        style={{ fontSize: '0.75rem', opacity: 0.7 }}
+      >
+        {state}
+      </span>
+    </button>
+  )
+}
+
+function AllStatesDemo() {
+  return (
+    <section aria-labelledby="interaction-states-heading">
+      <h3
+        id="interaction-states-heading"
+        className="pathable-margin-top-0 pathable-margin-bottom-1"
+        style={{ fontSize: '1rem' }}
+      >
+        Interaction States
+      </h3>
+      <p
+        className="pathable-text-base pathable-margin-top-0 pathable-margin-bottom-3"
+        style={{
+          color: 'var(--pathable-color-text-muted)',
+          fontSize: '0.875rem',
+        }}
+      >
+        Hover or focus the rest example. Selected and disabled states are fixed
+        fixtures.
+      </p>
+      <div
+        className="pathable-cluster"
+        role="group"
+        aria-label="Interaction state examples"
+        style={{ alignItems: 'stretch' }}
+      >
+        <StateCard label="Rest" state="Hover or focus me" />
+        <StateCard
+          label="Selected"
+          state="Persistent selection"
+          className="is-selected"
+          pressed
+        />
+        <StateCard label="Disabled" state="Unavailable" disabled />
+      </div>
+    </section>
+  )
+}
+
+function LoadingStateDemo() {
+  return (
+    <section aria-labelledby="loading-state-heading">
+      <h3
+        id="loading-state-heading"
+        className="pathable-margin-top-0 pathable-margin-bottom-1"
+        style={{ fontSize: '1rem' }}
+      >
+        Loading State
+      </h3>
+      <p
+        className="pathable-text-base pathable-margin-top-0 pathable-margin-bottom-3"
+        style={{
+          color: 'var(--pathable-color-text-muted)',
+          fontSize: '0.875rem',
+        }}
+      >
+        The CSS class supplies the spinner and blocks pointer events. Native
+        disabled semantics prevent keyboard activation, and aria-busy exposes
+        the pending state.
+      </p>
+      <div className="pathable-cluster" style={{ alignItems: 'stretch' }}>
+        <StateCard
+          label="Loading"
+          state="Saving preferences"
+          className="is-loading"
+          disabled
+          busy
+        />
+      </div>
+    </section>
+  )
+}
+
+const meta = {
+  title: 'Interaction Controls/Interaction States',
+  component: AllStatesDemo,
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `Documentation-only examples of the framework-neutral interaction-state SCSS mixins from \`@pathableai/styles\`.
+
+**When to use**: Include the appropriate mixins in component SCSS to provide consistent hover, focus, active, selected, disabled, and loading feedback.
+
+**React API**: This catalog entry does not define or export an InteractionStates component. The \`pathable-interaction-states-demo\` class exists only to document the compiled mixin behavior.
+
+**Accessibility**: Pair visual state classes with semantics appropriate to the underlying control. Selected controls need a semantic state such as \`aria-pressed\` or \`aria-selected\`; unavailable buttons should use native \`disabled\`.
+
+**Loading constraint**: \`.is-loading\` supplies visual feedback and blocks pointer events, but CSS alone does not prevent keyboard activation. Disable native controls or prevent activation in application logic, and expose the pending state with \`aria-busy\`.`,
+      },
+    },
+  },
+} satisfies Meta<typeof AllStatesDemo>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const AllStates: Story = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const rest = canvas.getByRole('button', {
+      name: 'Rest interaction state',
+    })
+    const selected = canvas.getByRole('button', {
+      name: 'Selected interaction state',
+    })
+    const disabled = canvas.getByRole('button', {
+      name: 'Disabled interaction state',
+    })
+
+    await step('renders fixed semantic state fixtures', async () => {
+      await expect(
+        canvas.getByRole('group', { name: 'Interaction state examples' }),
+      ).toBeVisible()
+      await expect(rest).toHaveClass('pathable-interaction-states-demo')
+      await expect(selected).toHaveClass(
+        'pathable-interaction-states-demo',
+        'is-selected',
+      )
+      await expect(selected).toHaveAttribute('aria-pressed', 'true')
+      await expect(disabled).toBeDisabled()
+    })
+
+    await step('applies observable keyboard focus feedback', async () => {
+      await expect(window.getComputedStyle(rest).boxShadow).not.toBe('none')
+      await userEvent.tab()
+      await expect(rest).toHaveFocus()
+      await expect(window.getComputedStyle(rest).outlineStyle).not.toBe('none')
+    })
+
+    await step('applies selected and disabled visual states', async () => {
+      await expect(window.getComputedStyle(selected).fontWeight).toBe('700')
+      await expect(window.getComputedStyle(selected).borderWidth).toBe('2px')
+      await expect(window.getComputedStyle(disabled).opacity).toBe('0.5')
+      await expect(window.getComputedStyle(disabled).boxShadow).toBe('none')
+    })
+  },
+}
+
+export const LoadingState: Story = {
+  render: () => <LoadingStateDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const loading = canvas.getByRole('button', {
+      name: 'Loading interaction state',
+    })
+    const style = window.getComputedStyle(loading)
+    const spinner = window.getComputedStyle(loading, '::after')
+
+    await expect(loading).toHaveClass(
+      'pathable-interaction-states-demo',
+      'is-loading',
+    )
+    await expect(loading).toBeDisabled()
+    await expect(loading).toHaveAttribute('aria-busy', 'true')
+    await expect(style.pointerEvents).toBe('none')
+    await expect(style.cursor).toBe('wait')
+    await expect(style.position).toBe('relative')
+    await expect(spinner.content).toBe('""')
+    await expect(spinner.position).toBe('absolute')
+  },
+}
+
+export const Default: Story = AllStates
