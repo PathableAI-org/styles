@@ -68,17 +68,6 @@ export const targets = {
     name: 'react',
     storybookWorkspace: '@pathable/storybook-react',
     buildCommands: [
-      [pnpmCommand, '--filter', '@pathableai/styles', 'build'],
-      [pnpmCommand, '--filter', '@pathableai/react', 'build'],
-      [pnpmCommand, '--filter', '@pathable/storybook-react', 'build-storybook'],
-    ],
-    staticDirectory: 'apps/storybook-react/storybook-static',
-    port: 6007,
-  },
-  react: {
-    name: 'react',
-    storybookWorkspace: '@pathable/storybook-react',
-    buildCommands: [
       [pnpmCommand, '--filter', '@pathable/storybook-contracts', 'build'],
       [pnpmCommand, '--filter', '@pathableai/react', 'build'],
       [pnpmCommand, '--filter', '@pathableai/styles', 'build'],
