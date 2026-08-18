@@ -152,13 +152,13 @@ export const AllStates: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const rest = canvas.getByRole('button', {
-      name: 'Rest interaction state',
+      name: 'Rest Hover or focus me',
     })
     const selected = canvas.getByRole('button', {
-      name: 'Selected interaction state',
+      name: 'Selected Persistent selection',
     })
     const disabled = canvas.getByRole('button', {
-      name: 'Disabled interaction state',
+      name: 'Disabled Unavailable',
     })
 
     await step('renders fixed semantic state fixtures', async () => {
@@ -207,9 +207,9 @@ export const AllStates: Story = {
       await expect(
         Number.parseFloat(selectedStyle.borderWidth),
       ).toBeGreaterThanOrEqual(Number.parseFloat(restStyle.borderWidth))
-      await expect(
-        Number.parseFloat(disabledStyle.opacity),
-      ).toBeLessThan(Number.parseFloat(restStyle.opacity))
+      await expect(Number.parseFloat(disabledStyle.opacity)).toBeLessThan(
+        Number.parseFloat(restStyle.opacity),
+      )
     })
   },
 }
@@ -219,7 +219,7 @@ export const LoadingState: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const loading = canvas.getByRole('button', {
-      name: 'Loading interaction state',
+      name: 'Loading Saving preferences',
     })
     const style = window.getComputedStyle(loading)
     const spinner = window.getComputedStyle(loading, '::after')
