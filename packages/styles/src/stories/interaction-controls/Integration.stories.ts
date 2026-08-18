@@ -1,3 +1,5 @@
+import { expect, userEvent, within } from 'storybook/test'
+
 export default {
   title: 'Interaction Controls/Integration',
   tags: ['autodocs'],
@@ -5,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
+          '**Interaction Model**: CSS presentation with consumer-owned SegmentedControl behavior.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Segmented radiogroups also require application JavaScript for selection state and Arrow-key navigation; use the React wrapper or implement the documented ARIA behavior.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
       },
     },
   },
@@ -49,6 +51,73 @@ const ICONS = {
   list: '<line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />',
   grid: '<rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />',
   eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />',
+}
+
+function initializeViewSwitcher(canvasElement: HTMLElement) {
+  const group = within(canvasElement).getByRole('radiogroup', {
+    name: 'View mode',
+  })
+  const radios = within(group).getAllByRole<HTMLButtonElement>('radio')
+  const select = (selected: HTMLButtonElement) => {
+    radios.forEach((radio) => {
+      const isSelected = radio === selected
+      radio.setAttribute('aria-checked', String(isSelected))
+      radio.tabIndex = isSelected ? 0 : -1
+      radio.classList.toggle(
+        'pathable-segmented-control__option--selected',
+        isSelected,
+      )
+    })
+  }
+
+  if (group.dataset.segmentedControlReady !== 'true') {
+    group.dataset.segmentedControlReady = 'true'
+    group.addEventListener('click', (event) => {
+      const selected = (
+        event.target as HTMLElement
+      ).closest?.<HTMLButtonElement>('.pathable-segmented-control__option')
+      if (selected && radios.includes(selected)) select(selected)
+    })
+    group.addEventListener('keydown', (event) => {
+      const direction =
+        event.key === 'ArrowRight' || event.key === 'ArrowDown'
+          ? 1
+          : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+            ? -1
+            : 0
+
+      if (direction === 0) return
+
+      event.preventDefault()
+      const activeElement = group.ownerDocument.activeElement
+      const current = radios.includes(activeElement as HTMLButtonElement)
+        ? (activeElement as HTMLButtonElement)
+        : (radios.find(
+            (radio) => radio.getAttribute('aria-checked') === 'true',
+          ) ?? radios[0])
+      const next =
+        radios[
+          (radios.indexOf(current) + direction + radios.length) % radios.length
+        ]
+
+      select(next)
+      next.focus()
+    })
+  }
+
+  return radios
+}
+
+async function verifyViewSwitcher(canvasElement: HTMLElement) {
+  const radios = initializeViewSwitcher(canvasElement)
+  radios[0].focus()
+
+  await userEvent.keyboard('{ArrowRight}')
+
+  await expect(radios[1]).toHaveFocus()
+  await expect(radios[1]).toHaveAttribute('aria-checked', 'true')
+  await expect(radios[1]).toHaveAttribute('tabindex', '0')
+  await expect(radios[0]).toHaveAttribute('tabindex', '-1')
 }
 
 export const ToolbarPanel = {
@@ -123,19 +192,19 @@ export const ViewSwitcher = {
       <div class="pathable-cluster" style="align-items: center; justify-content: space-between;">
         <span style="font-size: 0.875rem; font-weight: 600;">Documents</span>
         <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
-          <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true">
+          <button type="button" class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" tabindex="0">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.list}
             </svg>
             List
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
+          <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.grid}
             </svg>
             Grid
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
+          <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.eye}
             </svg>
@@ -145,6 +214,9 @@ export const ViewSwitcher = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await verifyViewSwitcher(canvasElement)
+  },
 }
 
 export const FullComposition = {
@@ -167,19 +239,19 @@ export const FullComposition = {
         </div>
 
         <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
-          <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true">
+          <button type="button" class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" tabindex="0">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.list}
             </svg>
             List
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
+          <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.grid}
             </svg>
             Grid
           </button>
-          <button class="pathable-segmented-control__option" role="radio" aria-checked="false">
+          <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               ${ICONS.eye}
             </svg>
@@ -236,6 +308,9 @@ export const FullComposition = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await verifyViewSwitcher(canvasElement)
+  },
 }
 
 export const Default = FullComposition

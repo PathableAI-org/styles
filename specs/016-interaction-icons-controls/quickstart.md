@@ -58,11 +58,13 @@ Use this guide to verify each pattern works correctly after implementation.
 
 ```html
 <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
-  <button class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true">List</button>
-  <button class="pathable-segmented-control__option" role="radio" aria-checked="false">Grid</button>
-  <button class="pathable-segmented-control__option" role="radio" aria-checked="false">Detail</button>
+  <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="true" tabindex="0">List</button>
+  <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">Grid</button>
+  <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">Detail</button>
 </div>
 ```
+
+The CSS package provides presentation only. Application JavaScript must update `aria-checked` and roving `tabindex` while moving focus with Arrow keys, or consumers can use the React wrapper.
 
 **Verify**:
 - [ ] Selected option visually distinct via background + border + weight
@@ -70,6 +72,8 @@ Use this guide to verify each pattern works correctly after implementation.
 - [ ] Multi-select variant (`--multi`) allows independent toggling
 - [ ] Forced-colors mode preserves selected segment boundary
 - [ ] Vertical (`--vertical`) orientation renders correctly
+- [ ] Long or exceptional option sets scroll internally without page overflow
+- [ ] One-option usage renders as a noninteractive `--static` indicator
 
 ### 4. Icon Tile
 

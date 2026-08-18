@@ -8,11 +8,13 @@
 //
 // CSS custom properties:
 //   --pathable-segmented-control-radius      (default: var(--radius-md)) — container radius
-//   --pathable-segmented-control-gap         (default: var(--space-2))  — gap between segments
+//   --pathable-segmented-control-gap         (default: var(--space-4))  — gap between segments
+//   --pathable-segmented-control-focus-ring  (default: var(--pathable-color-text))
 //
 // Variant classes:
 //   .pathable-segmented-control                         — base class (single-select, horizontal)
 //   .pathable-segmented-control--multi                  — multi-select toggle mode
+//   .pathable-segmented-control--static                 — noninteractive one-option indicator
 //   .pathable-segmented-control--vertical               — vertical orientation
 //   .pathable-segmented-control__option                 — individual segment
 //   .pathable-segmented-control__option--selected       — selected state
@@ -20,17 +22,21 @@
 // Accessibility:
 // - Single-select: role="radiogroup" on container, role="radio" + aria-checked on options
 // - Multi-select: role="group" on container, aria-pressed on options
-// - Keyboard: Arrow keys for single-select, Tab for multi-select
+// - Keyboard behavior is consumer-owned; these classes provide the visual contract
 
 @use 'pathable-interaction-states' as states;
 
 // --- Base: single-select horizontal strip ---
 .pathable-segmented-control {
+  box-sizing: border-box;
   display: inline-flex;
-  gap: var(--pathable-segmented-control-gap, var(--space-2));
+  max-width: 100%;
+  gap: var(--pathable-segmented-control-gap, var(--space-4));
   border-radius: var(--pathable-segmented-control-radius, var(--radius-md));
   background: var(--pathable-color-bg);
-  padding: var(--space-2);
+  padding: var(--space-4);
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 // --- Option segment ---
@@ -39,14 +45,22 @@
   @include states.state-focus;
   @include states.state-disabled;
 
+  box-sizing: border-box;
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   min-height: 44px;
   min-width: 44px;
-  padding: var(--space-2) var(--space-4);
-  border-radius: calc(
-    var(--pathable-segmented-control-radius, var(--radius-md)) - var(--space-2)
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-8);
+  border-radius: max(
+    0px,
+    calc(
+      var(--pathable-segmented-control-radius, var(--radius-md)) - var(
+          --space-4
+        )
+    )
   );
   border: 2px solid transparent;
   background: transparent;
@@ -57,30 +71,72 @@
   transition:
     background-color 0.2s,
     border-color 0.2s,
-    color 0.2s,
-    font-weight 0.2s;
+    color 0.2s;
+
+  &:focus-visible,
+  &:focus-within {
+    outline-color: var(
+      --pathable-segmented-control-focus-ring,
+      var(--pathable-color-text)
+    );
+  }
 }
 
 // --- Selected state ---
-.pathable-segmented-control__option--selected {
+.pathable-segmented-control__option--selected,
+.pathable-segmented-control__option[aria-checked='true'],
+.pathable-segmented-control__option[aria-pressed='true'] {
   background: var(--pathable-color-surface);
   border-color: var(--pathable-color-border);
   font-weight: 700;
 }
 
+// Keep the persistent selected state visible when transient states apply.
+.pathable-segmented-control__option--selected:hover,
+.pathable-segmented-control__option[aria-checked='true']:hover,
+.pathable-segmented-control__option[aria-pressed='true']:hover {
+  background: var(--pathable-color-surface);
+}
+
+// The shared disabled mixin uses opacity for general-purpose controls. Segments
+// use explicit semantic colors so text remains readable and selected identity
+// is not lost.
+.pathable-segmented-control__option:disabled,
+.pathable-segmented-control__option[aria-disabled='true'] {
+  opacity: 1;
+  color: var(--pathable-color-text-muted);
+}
+
+.pathable-segmented-control__option--selected:disabled,
+.pathable-segmented-control__option--selected[aria-disabled='true'],
+.pathable-segmented-control__option[aria-checked='true']:disabled,
+.pathable-segmented-control__option[aria-checked='true'][aria-disabled='true'],
+.pathable-segmented-control__option[aria-pressed='true']:disabled,
+.pathable-segmented-control__option[aria-pressed='true'][aria-disabled='true'] {
+  background: var(--pathable-color-surface);
+  border-color: var(--pathable-color-border);
+}
+
 // --- Variant: multi-select (same visual as single-select, semantic difference documented) ---
-// Uses @extend to inherit base container styles without duplicating declarations
 .pathable-segmented-control--multi {
   display: inline-flex;
-  gap: var(--pathable-segmented-control-gap, var(--space-2));
-  border-radius: var(--pathable-segmented-control-radius, var(--radius-md));
-  background: var(--pathable-color-bg);
-  padding: var(--space-2);
+}
+
+// --- Variant: static single-option indicator ---
+.pathable-segmented-control--static .pathable-segmented-control__option {
+  cursor: default;
+}
+
+.pathable-segmented-control--static .pathable-segmented-control__option:hover,
+.pathable-segmented-control--static .pathable-segmented-control__option:active {
+  box-shadow: none;
+  background: var(--pathable-color-surface);
 }
 
 // --- Variant: vertical orientation ---
 .pathable-segmented-control--vertical {
   flex-direction: column;
+  overflow: visible;
 }
 .pathable-segmented-control--vertical .pathable-segmented-control__option {
   width: 100%;
@@ -88,7 +144,9 @@
 
 // --- Accessibility: forced colors ---
 @media (forced-colors: active) {
-  .pathable-segmented-control__option--selected {
+  .pathable-segmented-control__option--selected,
+  .pathable-segmented-control__option[aria-checked='true'],
+  .pathable-segmented-control__option[aria-pressed='true'] {
     border: 2px solid Highlight;
   }
   .pathable-segmented-control__option:focus-visible {

@@ -67,8 +67,9 @@
 |---|---|
 | `.pathable-segmented-control` | Base class for container (single-select) |
 | `.pathable-segmented-control--multi` | Multi-select variant |
+| `.pathable-segmented-control--static` | Noninteractive one-option presentation |
 | `.pathable-segmented-control__option` | Individual segment |
-| `.pathable-segmented-control__option--selected` | Selected state |
+| `.pathable-segmented-control__option--selected`, `[aria-checked="true"]`, `[aria-pressed="true"]` | Equivalent selected-state sources |
 | `.pathable-segmented-control--vertical` | Vertical orientation |
 
 **CSS Custom Properties**:
@@ -76,7 +77,10 @@
 | Property | Default | Description |
 |---|---|---|
 | `--pathable-segmented-control-radius` | `var(--radius-md)` | Container border radius |
-| `--pathable-segmented-control-gap` | `var(--space-2)` | Gap between segments |
+| `--pathable-segmented-control-gap` | `var(--space-4)` | Gap between segments |
+| `--pathable-segmented-control-focus-ring` | `var(--pathable-color-text)` | Focus indicator color; override with a reviewed semantic token when surface context requires it |
+
+Horizontal controls are limited to `max-width: 100%` and use internal horizontal scrolling in constrained layouts. Runtime selection and keyboard behavior are consumer-owned; the Styles Storybook fixtures are executable references, not package runtime.
 
 ### 4. Icon Tile Classes
 
