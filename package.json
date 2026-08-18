@@ -21,6 +21,7 @@
     "test:storybook": "node scripts/test-storybook.mjs",
     "test:storybook-styles": "node scripts/test-storybook.mjs styles",
     "test:storybook-react": "node scripts/test-storybook.mjs react",
+    "test:storybook-react:all": "pnpm --filter @pathable/storybook-contracts build && pnpm --filter @pathableai/styles build && pnpm --filter @pathableai/react build && bash scripts/test-storybook.sh apps/storybook-react 6007",
     "test:contracts": "pnpm test:storybook-styles",
     "test:contracts:styles": "pnpm test:storybook-styles",
     "test:storybook-react-server": "node scripts/check-react-server-compatibility.mjs",

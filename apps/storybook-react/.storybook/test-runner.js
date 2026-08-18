@@ -2,6 +2,15 @@ import { injectAxe, checkA11y } from 'axe-playwright'
 
 /** @type { import('@storybook/test-runner').TestRunnerConfig } */
 const config = {
+  // When driven as a target by scripts/test-storybook.mjs (STORYBOOK_TARGET set),
+  // scope execution to the registered behavior-contract fixtures so unrelated
+  // enhancement-runtime stories (with pre-existing Axe exceptions) do not gate
+  // the Accordion conformance target. The package-specific test:storybook-react
+  // path (no STORYBOOK_TARGET) continues to run every story.
+  tags:
+    process.env.STORYBOOK_TARGET === 'react'
+      ? { include: ['behavior-contract'] }
+      : undefined,
   async preVisit(page) {
     await injectAxe(page)
   },
