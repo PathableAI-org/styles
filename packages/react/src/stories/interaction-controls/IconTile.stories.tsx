@@ -197,6 +197,13 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
+type StatusFixture =
+  | { status: 'default'; label: string; accessibleName: undefined }
+  | {
+      status: Exclude<IconTileStatus, 'default'>
+      label: string
+      accessibleName: string
+    }
 
 const tileShapes = ['square', 'circle'] satisfies IconTileShape[]
 const sizeFixtures = [
@@ -222,11 +229,7 @@ const statusFixtures = [
     accessibleName: 'Approval pending review',
   },
   { status: 'info', label: 'Info', accessibleName: 'Three new messages' },
-] satisfies {
-  status: IconTileStatus
-  label: string
-  accessibleName: string | undefined
-}[]
+] satisfies StatusFixture[]
 const allVariantFixtures = [
   { size: 'default', status: 'default' },
   { size: 'compact', status: 'default' },
@@ -423,9 +426,9 @@ export const StatusVariants: Story = {
           aria-label={`${shape} icon tile statuses`}
           className="pathable-cluster pathable-cluster--gap-lg"
         >
-          {statusFixtures.map(({ status, label, accessibleName }) => (
+          {statusFixtures.map((fixture) => (
             <span
-              key={status}
+              key={fixture.status}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -434,19 +437,19 @@ export const StatusVariants: Story = {
             >
               <IconTile
                 shape={shape}
-                status={status}
-                aria-hidden={status === 'default' ? true : undefined}
+                status={fixture.status}
+                aria-hidden={fixture.status === 'default' ? true : undefined}
               >
-                {status === 'default' ? (
+                {fixture.status === 'default' ? (
                   <BellIcon />
                 ) : (
                   <MeaningfulStatusIcon
-                    status={status}
-                    label={`${accessibleName} ${shape}`}
+                    status={fixture.status}
+                    label={fixture.accessibleName}
                   />
                 )}
               </IconTile>
-              <span>{label}</span>
+              <span>{fixture.label}</span>
             </span>
           ))}
         </div>
@@ -474,11 +477,11 @@ export const StatusVariants: Story = {
       }
       await expect(group.queryAllByRole('img')).toHaveLength(4)
 
-      for (const { status, accessibleName } of statusFixtures) {
-        if (status === 'default') continue
+      for (const fixture of statusFixtures) {
+        if (fixture.status === 'default') continue
 
         const icon = group.getByRole('img', {
-          name: `${accessibleName} ${shape}`,
+          name: fixture.accessibleName,
         })
         const tile = icon.parentElement
 
@@ -486,7 +489,7 @@ export const StatusVariants: Story = {
         await expect(icon).toHaveAttribute('focusable', 'false')
         await expect(tile).toHaveClass(
           'pathable-icon-tile',
-          `pathable-icon-tile--${status}`,
+          `pathable-icon-tile--${fixture.status}`,
         )
         if (shape === 'circle') {
           await expect(tile).toHaveClass('pathable-icon-tile--circle')
