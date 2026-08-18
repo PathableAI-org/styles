@@ -124,7 +124,11 @@ const setupSingleSelect = (canvasElement: HTMLElement) => {
     const buttons = getButtons(group)
 
     group.addEventListener('click', (event) => {
-      const button = (event.target as Element).closest<HTMLButtonElement>(
+      if (!(event.target instanceof Element)) {
+        return
+      }
+
+      const button = event.target.closest<HTMLButtonElement>(
         '.pathable-segmented-control__option',
       )
 
