@@ -427,4 +427,4 @@ export const InToolbar: Story = {
   ),
 }
 
-export const Default: Story = { ...SingleSelect }
+export const Default: Story = SingleSelect
