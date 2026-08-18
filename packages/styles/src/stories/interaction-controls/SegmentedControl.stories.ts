@@ -1,3 +1,20 @@
+import { expect, userEvent, within } from 'storybook/test'
+
+type PlayContext = {
+  canvasElement: HTMLElement
+}
+
+type SegmentOption = {
+  label: string
+  iconSvg: string
+  checked?: boolean
+  pressed?: boolean
+  selectedClass?: boolean
+  disabled?: boolean
+}
+
+const selectedClass = 'pathable-segmented-control__option--selected'
+
 export default {
   title: 'Interaction Controls/SegmentedControl',
   tags: ['autodocs'],
@@ -5,60 +22,181 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (visual presentation; keyboard behavior requires application JavaScript)\n\n**Consumers must**: Import `@pathableai/styles` CSS. **IMPORTANT — ARIA roles without JavaScript keyboard handling create an accessibility gap.** The CSS layer provides visual styling for `role="radiogroup"`, `role="radio"`, and `aria-pressed` states, but the ARIA Authoring Practices require arrow-key keyboard navigation that CSS cannot provide.\n\n**Single-select (role="radiogroup")**: Each option uses `role="radio"` and `aria-checked`. Consumers MUST implement arrow-key navigation (Left/Right for horizontal, Up/Down for vertical). Tab moves focus into the radiogroup; focus moves to the checked option on first entry. When focus is within the group, arrow keys move focus and selection to the previous/next option.\n\n**Multi-select (role="group")**: Each option uses `aria-pressed`. Consumers MUST implement Tab navigation between segments. Pressing Space or Enter toggles the pressed state. Unlike radiogroup, arrow keys do NOT move focus between options.\n\n**CSS-only story disclaimer**: The stories below demonstrate correct ARIA markup and visual states. Keyboard navigation is inert — `role="radio"` without keyboard handling does not provide a complete accessible experience. Copying this markup into a production page without adding JavaScript keyboard handlers will result in an accessibility violation.',
+          'Segmented controls present short option sets as compact single-select radio groups or multi-select toggle groups. The styles package provides the framework-neutral visual contract; runtime state updates and keyboard handling are consumer-owned, and these stories include deterministic reference fixtures for that behavior.',
       },
     },
   },
 }
 
-const svgIcon = (d, _label) =>
-  `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}"/></svg>`
+const svgIcon = (path: string) =>
+  `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="${path}"/></svg>`
 
-const listIcon = svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z', 'List')
-const gridIcon = svgIcon(
-  'M1 1h6v6H1V1zm8 0h6v6H9V1zM1 9h6v6H1V9zm8 0h6v6H9V9z',
-  'Grid',
-)
+const listIcon = svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z')
+const gridIcon = svgIcon('M1 1h6v6H1V1zm8 0h6v6H9V1zM1 9h6v6H1V9zm8 0h6v6H9V9z')
 const detailIcon = svgIcon(
   'M1 3h10v2H1V3zm0 4h14v2H1V7zm0 4h10v2H1v-2zm12-4h2v2h-2V7zm0 4h2v2h-2v-2z',
-  'Detail',
 )
-
 const boldIcon = svgIcon(
   'M4 2h4.5a3.5 3.5 0 012.8 5.6A3.5 3.5 0 019 14H4V2zm2 4.5V5h2.5a1 1 0 010 2H6zm0 2.5V13h3a1 1 0 000-2H6z',
-  'Bold',
 )
-const italicIcon = svgIcon('M9.5 2l-3 12H5l3-12h1.5z', 'Italic')
+const italicIcon = svgIcon('M9.5 2l-3 12H5l3-12h1.5z')
 const underlineIcon = svgIcon(
   'M2 13h12v2H2v-2zM4 2h2v6a2 2 0 004 0V2h2v6a4 4 0 01-8 0V2z',
-  'Underline',
 )
 
-const option = (label, iconSvg, selected = false, disabled = false) => {
-  const selectedClass = selected
-    ? ' pathable-segmented-control__option--selected'
-    : ''
+const storyIntro = (heading: string, body: string) => `
+  <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">${heading}</h3>
+  <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">${body}</p>
+`
+
+const singleOption = ({
+  label,
+  iconSvg,
+  checked = false,
+  selectedClass: includeSelectedClass = false,
+  disabled = false,
+}: SegmentOption) => {
+  const className = includeSelectedClass ? ` ${selectedClass}` : ''
   const disabledAttr = disabled ? ' disabled' : ''
-  const ariaChecked = selected ? 'true' : 'false'
+  const tabIndex = checked && !disabled ? '0' : '-1'
+
   return `
-    <button class="pathable-segmented-control__option${selectedClass}" role="radio" aria-checked="${ariaChecked}"${disabledAttr}>
+    <button type="button" class="pathable-segmented-control__option${className}" role="radio" aria-checked="${checked}" tabindex="${tabIndex}"${disabledAttr}>
       ${iconSvg}
-      <span style="margin-left: 4px;">${label}</span>
+      <span>${label}</span>
     </button>
   `
 }
 
-const multiOption = (label, iconSvg, pressed = false) => {
-  const selectedClass = pressed
-    ? ' pathable-segmented-control__option--selected'
-    : ''
-  const ariaPressed = pressed ? 'true' : 'false'
+const multiOption = ({
+  label,
+  iconSvg,
+  pressed = false,
+  selectedClass: includeSelectedClass = false,
+  disabled = false,
+}: SegmentOption) => {
+  const className = includeSelectedClass ? ` ${selectedClass}` : ''
+  const disabledAttr = disabled ? ' disabled' : ''
+
   return `
-    <button class="pathable-segmented-control__option${selectedClass}" aria-pressed="${ariaPressed}">
+    <button type="button" class="pathable-segmented-control__option${className}" aria-pressed="${pressed}"${disabledAttr}>
       ${iconSvg}
-      <span style="margin-left: 4px;">${label}</span>
+      <span>${label}</span>
     </button>
   `
+}
+
+const assert = (condition: boolean, message: string) => {
+  if (!condition) {
+    throw new Error(message)
+  }
+}
+
+const getButtons = (container: ParentNode) =>
+  Array.from(
+    container.querySelectorAll<HTMLButtonElement>(
+      '.pathable-segmented-control__option',
+    ),
+  )
+
+const setSingleSelection = (
+  buttons: HTMLButtonElement[],
+  selectedButton: HTMLButtonElement,
+) => {
+  buttons.forEach((button) => {
+    const isSelected = button === selectedButton
+    button.setAttribute('aria-checked', String(isSelected))
+    button.tabIndex = isSelected && !button.disabled ? 0 : -1
+  })
+}
+
+const setupSingleSelect = (canvasElement: HTMLElement) => {
+  const groups = Array.from(
+    canvasElement.querySelectorAll<HTMLElement>('[role="radiogroup"]'),
+  )
+
+  groups.forEach((group) => {
+    if (group.dataset.segmentedControlReady === 'true') {
+      return
+    }
+
+    group.dataset.segmentedControlReady = 'true'
+    const buttons = getButtons(group)
+
+    group.addEventListener('click', (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>(
+        '.pathable-segmented-control__option',
+      )
+
+      if (button && buttons.includes(button) && !button.disabled) {
+        setSingleSelection(buttons, button)
+      }
+    })
+
+    group.addEventListener('keydown', (event) => {
+      const direction =
+        event.key === 'ArrowRight' || event.key === 'ArrowDown'
+          ? 1
+          : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+            ? -1
+            : 0
+
+      if (direction === 0) {
+        return
+      }
+
+      const enabledButtons = buttons.filter((button) => !button.disabled)
+
+      if (enabledButtons.length === 0) {
+        return
+      }
+
+      event.preventDefault()
+
+      const activeButton = group.ownerDocument.activeElement
+      const checkedButton = enabledButtons.find(
+        (button) => button.getAttribute('aria-checked') === 'true',
+      )
+      const currentButton = enabledButtons.includes(
+        activeButton as HTMLButtonElement,
+      )
+        ? (activeButton as HTMLButtonElement)
+        : checkedButton || enabledButtons[0]
+      const currentIndex = enabledButtons.indexOf(currentButton)
+      const nextButton =
+        enabledButtons[
+          (currentIndex + direction + enabledButtons.length) %
+            enabledButtons.length
+        ]
+
+      setSingleSelection(buttons, nextButton)
+      nextButton.focus()
+    })
+  })
+}
+
+const togglePressed = (button: HTMLButtonElement) => {
+  const nextPressed = button.getAttribute('aria-pressed') !== 'true'
+  button.setAttribute('aria-pressed', String(nextPressed))
+}
+
+const setupMultiSelect = (canvasElement: HTMLElement) => {
+  const buttons = getButtons(canvasElement).filter((button) =>
+    button.hasAttribute('aria-pressed'),
+  )
+
+  buttons.forEach((button) => {
+    if (button.dataset.segmentedControlReady === 'true') {
+      return
+    }
+
+    button.dataset.segmentedControlReady = 'true'
+    button.addEventListener('click', () => {
+      if (!button.disabled) {
+        togglePressed(button)
+      }
+    })
+  })
 }
 
 export const SingleSelect = {
@@ -66,76 +204,270 @@ export const SingleSelect = {
     docs: {
       description: {
         story:
-          'Mutually exclusive options using ARIA radiogroup semantics. **Keyboard behavior**: Tab into the radiogroup (focus lands on checked option), then Left/Right Arrow keys move selection between options. This requires consumer JavaScript — CSS alone cannot implement arrow-key navigation.',
+          'Single-select segmented controls use `role="radiogroup"`, option `role="radio"`, and `aria-checked`. This fixture demonstrates consumer-owned Arrow key behavior and intentionally relies on ARIA-selected styling rather than the selected class.',
       },
     },
   },
   render: () => `
-    <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Single-Select (View Mode)</h3>
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      Mutually exclusive options using ARIA radiogroup semantics. Keyboard navigation (Arrow keys) requires consumer-provided JavaScript per ARIA APG.
-    </p>
+    ${storyIntro(
+      'Single Select',
+      'Arrow keys move focus and selection between enabled radio options. Selected styling is driven by aria-checked.',
+    )}
     <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
-      ${option('List', listIcon, true)}
-      ${option('Grid', gridIcon)}
-      ${option('Detail', detailIcon)}
+      ${singleOption({ label: 'List', iconSvg: listIcon, checked: true })}
+      ${singleOption({ label: 'Grid', iconSvg: gridIcon })}
+      ${singleOption({ label: 'Detail', iconSvg: detailIcon })}
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    setupSingleSelect(canvasElement)
+
+    const canvas = within(canvasElement)
+    const buttons = canvas.getAllByRole('radio')
+    buttons[0].focus()
+    await userEvent.keyboard('{ArrowRight}')
+
+    await expect(buttons[1]).toHaveAttribute('aria-checked', 'true')
+    await expect(buttons[1]).toHaveFocus()
+  },
 }
 
 export const MultiSelect = {
   render: () => `
-    <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Multi-Select (Text Formatting)</h3>
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      Independently toggleable options using aria-pressed. Use Tab to move between segments.
-    </p>
+    ${storyIntro(
+      'Multi Select',
+      'Space or Enter toggles each option independently. Selected styling is driven by aria-pressed.',
+    )}
     <div class="pathable-segmented-control pathable-segmented-control--multi" role="group" aria-label="Text formatting">
-      ${multiOption('Bold', boldIcon)}
-      ${multiOption('Italic', italicIcon)}
-      ${multiOption('Underline', underlineIcon)}
+      ${multiOption({ label: 'Bold', iconSvg: boldIcon })}
+      ${multiOption({ label: 'Italic', iconSvg: italicIcon, pressed: true })}
+      ${multiOption({ label: 'Underline', iconSvg: underlineIcon })}
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    setupMultiSelect(canvasElement)
+
+    const canvas = within(canvasElement)
+    const buttons = canvas.getAllByRole('button')
+    buttons[0].focus()
+    await userEvent.keyboard(' ')
+
+    await expect(buttons[0]).toHaveAttribute('aria-pressed', 'true')
+    await expect(buttons[1]).toHaveAttribute('aria-pressed', 'true')
+  },
 }
 
 export const Vertical = {
   render: () => `
-    <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Vertical Orientation</h3>
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      Options stack vertically with full-width segments. Ideal for sidebars or narrow containers.
-    </p>
-    <div class="pathable-segmented-control pathable-segmented-control--vertical" role="radiogroup" aria-label="Alignment">
-      ${option('Left', svgIcon('M1 3h14v2H1V3zm0 4h10v2H1V7zm0 4h14v2H1v-2z', 'Left'), true)}
-      ${option('Center', svgIcon('M1 3h14v2H1V3zm2 4h10v2H3V7zm1 4h12v2H4v-2z', 'Center'))}
-      ${option('Right', svgIcon('M1 3h14v2H1V3zm4 4h10v2H5V7zm0 4h14v2H5v-2z', 'Right'))}
-      ${option('Justify', svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z', 'Justify'))}
+    ${storyIntro(
+      'Vertical Orientation',
+      'Vertical segmented controls stack options for narrow sidebars or dense settings panels.',
+    )}
+    <div class="pathable-segmented-control pathable-segmented-control--vertical" role="radiogroup" aria-label="Alignment" aria-orientation="vertical">
+      ${singleOption({ label: 'Left', iconSvg: listIcon, checked: true })}
+      ${singleOption({ label: 'Center', iconSvg: detailIcon })}
+      ${singleOption({ label: 'Right', iconSvg: gridIcon })}
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    setupSingleSelect(canvasElement)
+
+    const canvas = within(canvasElement)
+    const group = canvas.getByRole('radiogroup', { name: 'Alignment' })
+    const buttons = within(group).getAllByRole('radio')
+    buttons[0].focus()
+    await userEvent.keyboard('{ArrowDown}')
+
+    await expect(group).toHaveAttribute('aria-orientation', 'vertical')
+    await expect(buttons[1]).toHaveAttribute('aria-checked', 'true')
+    for (const button of buttons) {
+      await expect(button.offsetWidth).toBeLessThanOrEqual(group.clientWidth)
+    }
+  },
 }
 
 export const DisabledOption = {
   render: () => `
-    <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">With Disabled Option</h3>
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      One segment is disabled to show the disabled state styling.
-    </p>
+    ${storyIntro(
+      'Disabled Option',
+      'Disabled options remain visually present but are skipped by keyboard selection behavior.',
+    )}
     <div class="pathable-segmented-control" role="radiogroup" aria-label="Page size">
-      ${option('10', svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z', '10'), true)}
-      ${option('25', svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z', '25'))}
-      ${option('50', svgIcon('M1 3h14v2H1V3zm0 4h14v2H1V7zm0 4h14v2H1v-2z', '50'), false, true)}
+      ${singleOption({ label: '10', iconSvg: listIcon, checked: true })}
+      ${singleOption({ label: '25', iconSvg: detailIcon, disabled: true })}
+      ${singleOption({ label: '50', iconSvg: gridIcon })}
+    </div>
+  `,
+  play: async ({ canvasElement }: PlayContext) => {
+    setupSingleSelect(canvasElement)
+
+    const canvas = within(canvasElement)
+    const buttons = canvas.getAllByRole('radio')
+    buttons[0].focus()
+    await userEvent.keyboard('{ArrowRight}')
+
+    await expect(buttons[1]).toBeDisabled()
+    await expect(buttons[2]).toHaveAttribute('aria-checked', 'true')
+    await expect(buttons[2]).toHaveFocus()
+  },
+}
+
+export const ClassSelected = {
+  render: () => `
+    ${storyIntro(
+      'Class Selected State',
+      'Consumers may apply the selected modifier class when ARIA state is managed elsewhere. The class and ARIA state sources produce equivalent styling.',
+    )}
+    <div class="pathable-segmented-control" role="radiogroup" aria-label="Density">
+      ${singleOption({ label: 'Compact', iconSvg: listIcon, checked: true, selectedClass: true })}
+      ${singleOption({ label: 'Comfortable', iconSvg: detailIcon })}
+      ${singleOption({ label: 'Spacious', iconSvg: gridIcon })}
     </div>
   `,
 }
 
-export const SingleOption = {
+export const StaticSingleOption = {
   render: () => `
-    <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Single Option Edge Case</h3>
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      A segmented control with only one option. The container still renders correctly with proper border-radius and padding.
-    </p>
-    <div class="pathable-segmented-control" role="radiogroup" aria-label="Single option">
-      ${option('Enable Feature', svgIcon('M6 12l-4-4 1.5-1.5L6 9l6.5-6.5L14 4l-8 8z', 'Enable'), true)}
+    ${storyIntro(
+      'Static Single Option',
+      'A one-option presentation is a noninteractive indicator, not a radiogroup, radio, or button.',
+    )}
+    <div class="pathable-segmented-control pathable-segmented-control--static" aria-label="Current mode">
+      <span class="pathable-segmented-control__option pathable-segmented-control__option--selected">
+        ${listIcon}
+        <span>List view</span>
+      </span>
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    assert(
+      canvasElement.querySelector('button') === null,
+      'Static single-option usage should not render a button.',
+    )
+    assert(
+      canvasElement.querySelector('[role="radio"]') === null,
+      'Static single-option usage should not render radio semantics.',
+    )
+  },
+}
+
+export const ConstrainedHorizontal = {
+  render: () => `
+    ${storyIntro(
+      'Constrained Horizontal Layout',
+      'Long labels and more than five options scroll inside the control instead of creating page-level horizontal overflow.',
+    )}
+    <div style="max-width: 20rem; border: 1px dashed var(--pathable-color-border); padding: var(--space-4);">
+      <div class="pathable-segmented-control" role="radiogroup" aria-label="Reporting timeframe">
+        ${singleOption({ label: 'Today', iconSvg: listIcon, checked: true })}
+        ${singleOption({ label: 'This week', iconSvg: detailIcon })}
+        ${singleOption({ label: 'This month', iconSvg: gridIcon })}
+        ${singleOption({ label: 'Previous quarter', iconSvg: listIcon })}
+        ${singleOption({ label: 'Year to date', iconSvg: detailIcon })}
+        ${singleOption({ label: 'Custom localized reporting period', iconSvg: gridIcon })}
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: PlayContext) => {
+    const canvas = within(canvasElement)
+    const control = canvas.getByRole('radiogroup', {
+      name: 'Reporting timeframe',
+    })
+    const constraint = control.parentElement
+
+    assert(constraint !== null, 'Constrained story should render its wrapper.')
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
+
+    await expect(getStoryComputedStyle(control).overflowX).toBe('auto')
+    await expect(control.scrollWidth).toBeGreaterThan(control.clientWidth)
+    await expect(control.getBoundingClientRect().width).toBeLessThanOrEqual(
+      constraint.getBoundingClientRect().width,
+    )
+  },
+}
+
+export const SelectedInteractionStates = {
+  render: () => `
+    ${storyIntro(
+      'Selected Interaction States',
+      'Selected identity persists during hover and when an option is disabled.',
+    )}
+    <div class="pathable-segmented-control pathable-segmented-control--multi" role="group" aria-label="Selected state examples">
+      ${multiOption({ label: 'Selected', iconSvg: boldIcon, pressed: true })}
+      ${multiOption({ label: 'Selected and disabled', iconSvg: italicIcon, pressed: true, disabled: true })}
+    </div>
+  `,
+  play: async ({ canvasElement }: PlayContext) => {
+    const canvas = within(canvasElement)
+    const selected = canvas.getByRole('button', { name: 'Selected' })
+    const disabled = canvas.getByRole('button', {
+      name: 'Selected and disabled',
+    })
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
+    const selectedBackground = getStoryComputedStyle(selected).backgroundColor
+
+    await userEvent.hover(selected)
+
+    await expect(getStoryComputedStyle(selected).backgroundColor).toBe(
+      selectedBackground,
+    )
+    await expect(disabled).toBeDisabled()
+    await expect(getStoryComputedStyle(disabled).opacity).toBe('1')
+    await expect(getStoryComputedStyle(disabled).backgroundColor).toBe(
+      selectedBackground,
+    )
+  },
+}
+
+export const FocusSurfaces = {
+  render: () => `
+    ${storyIntro(
+      'Focus Across Surfaces',
+      'The component-scoped focus color remains visible on base, brand, and inverse surfaces.',
+    )}
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      ${['base', 'brand', 'inverse']
+        .map(
+          (surface) => `
+            <div class="pathable-surface pathable-surface--${surface}" style="padding: var(--space-8);">
+              <div class="pathable-segmented-control" role="radiogroup" aria-label="${surface} surface view">
+                ${singleOption({ label: 'List', iconSvg: listIcon, checked: true })}
+                ${singleOption({ label: 'Grid', iconSvg: gridIcon })}
+              </div>
+            </div>
+          `,
+        )
+        .join('')}
+    </div>
+  `,
+  play: async ({ canvasElement }: PlayContext) => {
+    const canvas = within(canvasElement)
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
+
+    for (const surface of ['base', 'brand', 'inverse']) {
+      const group = canvas.getByRole('radiogroup', {
+        name: `${surface} surface view`,
+      })
+      const selected = within(group).getByRole('radio', { name: 'List' })
+      selected.focus()
+
+      const selectedStyle = getStoryComputedStyle(selected)
+      const trackStyle = getStoryComputedStyle(group)
+
+      await expect(selected).toHaveFocus()
+      await expect(selectedStyle.outlineStyle).toBe('solid')
+      await expect(selectedStyle.outlineWidth).toBe('2px')
+      await expect(selectedStyle.outlineColor).not.toBe(
+        trackStyle.backgroundColor,
+      )
+    }
+  },
 }
 
 export const Default = SingleSelect

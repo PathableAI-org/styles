@@ -56,8 +56,9 @@ A grouped set of 2–5 option buttons as a contiguous horizontal control.
 | Attribute | Type | Values | Description |
 |---|---|---|---|
 | selection mode | semantic | `single-select`, `multi-select` | Whether options are mutually exclusive |
-| segment state | modifier | `--selected`, `:hover`, `:focus-visible`, `:disabled` | State of individual segment |
+| segment state | modifier or ARIA state | `--selected`, `aria-checked`, `aria-pressed`, `:hover`, `:focus-visible`, `:disabled` | State of individual segment; ARIA and modifier-driven selection share the same visual contract |
 | orientation | modifier | `horizontal` (default), `vertical` | Layout direction |
+| presentation | modifier | `--static` | Noninteractive one-option indicator with no radio/button semantics |
 
 **Single-select (radiogroup) properties**:
 - Container: `role="radiogroup"`, `.pathable-segmented-control`
@@ -70,6 +71,11 @@ A grouped set of 2–5 option buttons as a contiguous horizontal control.
 - Segment: `role="button"`, `aria-pressed="true/false"`, `.pathable-segmented-control__option`
 - Keyboard: Tab to enter/exit group, Space to toggle individual option
 - Zero or more options may be selected independently
+
+**Responsive and edge-case properties**:
+- Horizontal controls have `max-width: 100%` and scroll internally when their options exceed the available width.
+- A one-option presentation uses `.pathable-segmented-control--static` with a noninteractive option element.
+- Native disabled options remain readable and preserve selected identity while suppressing interaction responses.
 
 ### IconTile
 

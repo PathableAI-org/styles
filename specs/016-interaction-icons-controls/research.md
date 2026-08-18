@@ -44,6 +44,9 @@
 - For single-select: Left/Right arrow navigation with wrapping (from last to first and vice versa) matches user expectations and APG patterns.
 - For multi-select: Tab to enter/exit the group, Space to toggle individual items, follows APG toolbar/group patterns.
 - The ARIA pattern is documented in examples so consumers can implement it in their framework of choice. The CSS classes handle the visual state; the consumer is responsible for toggling `aria-checked`/`aria-pressed` and managing keyboard event handlers.
+- The canonical Styles stories provide executable reference fixtures for this consumer-owned behavior without adding SegmentedControl runtime code to the published package.
+- Constrained horizontal controls use internal scrolling so long localized labels or exceptional sets do not create page-level overflow.
+- A single option is presentation, not a choice, and is rendered as a noninteractive static indicator.
 
 **Alternatives considered**:
 1. Native `<select>` styling — loses the visual compactness and immediate-availability UX of a segmented control.
@@ -99,7 +102,7 @@
 | Elevation (shadows) | `--elevation-{none,sm,md}` |
 | Surface backgrounds | `--pathable-color-surface` (white), `--pathable-color-bg` (Shilling Silver), `--pathable-color-accent` (Jade), `--pathable-color-text` (PathAble Blue) |
 | Borders | `--pathable-color-border`, `--pathable-color-focus-ring` |
-| Focus ring | `--pathable-color-focus-ring` |
+| Focus ring | `--pathable-segmented-control-focus-ring` with `--pathable-color-text` default; consumers may override it with another reviewed semantic token for their surface |
 | Text colors | `--pathable-color-text`, `--pathable-color-text-muted`, `--pathable-color-on-accent` |
 | Danger | `--pathable-color-danger` |
 | Breakpoints | `mobile-lg` (480px), `tablet` (640px), `desktop` (1024px) |

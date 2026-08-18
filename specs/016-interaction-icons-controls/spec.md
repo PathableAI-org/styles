@@ -67,7 +67,7 @@ As a consumer, I want a segmented-control component for presenting short sets of
 2. **Given** a multi-select (toggle-button) segmented control, **When** the user clicks an unselected option, **Then** it becomes selected without deselecting other options.
 3. **Given** a segmented control on a base surface, **When** inspected, **Then** the selected segment(s) are visually distinct from unselected segments using a combination of background, border, and weight (not color alone).
 4. **Given** any segmented control, **When** a segment is focused, **Then** it displays a visible focus ring.
-5. **Given** a segmented control with more than 5 options, **When** rendered, **Then** it gracefully wraps or scrolls (recommendation: max 5 visible options in a single row).
+5. **Given** a segmented control with more than 5 options in constrained space, **When** rendered, **Then** it scrolls internally without causing page-level horizontal overflow (recommendation: max 5 visible options in a single row).
 
 ---
 
@@ -117,7 +117,7 @@ As a consumer, I want standard icon tiles (square and circular) and status icon 
 - **FR-013**: The icon button MUST be framework-neutral — no JavaScript dependency.
 - **FR-014**: The system MUST provide a `pathable-segmented-control` pattern supporting both single-select (radio group semantics) and multi-select (toggle button group semantics) usage.
 - **FR-015**: The segmented control selected state MUST be distinguishable via a combination of background, border, and weight — not color alone.
-- **FR-016**: The segmented control MUST support keyboard navigation: arrow keys for single-select, Tab for multi-select.
+- **FR-016**: The segmented control contract MUST support keyboard navigation: arrow keys for single-select and Tab for multi-select. Runtime state and focus management are consumer-owned and MUST be demonstrated by executable reference fixtures.
 - **FR-017**: Focus rings on icon buttons and segmented controls MUST be visible on all background surfaces: base (light), brand (accent), and inverse (dark).
 - **FR-018**: All transitions MUST respect `prefers-reduced-motion`.
 - **FR-019**: Forced-colors mode MUST preserve selected and focused state boundaries for all new components.
@@ -153,6 +153,7 @@ As a consumer, I want standard icon tiles (square and circular) and status icon 
 - Interaction states will be delivered as reusable style abstractions that consumers apply to custom components (e.g., via shared include or forward), rather than requiring markup-level classes on every interactive element.
 - Icon buttons will be pure CSS (no JavaScript) and assume the consumer provides the SVG icon markup and the accessible name attribute.
 - The existing USWDS icon component (`.usa-icon` / `.pathable-icon`) provides the base SVG sizing pattern that icon buttons and icon tiles will build upon.
-- Framework-specific components (React icon-button, Vue segmented-control, etc.) are explicitly out of scope — this feature covers only framework-neutral SCSS.
+- Framework-specific components were out of scope for this original Styles feature. The later React SegmentedControl wrapper adopts this framework-neutral CSS and accessibility contract.
 - Segmented controls are intended for short option sets (2–5 options); consumers needing long lists should use a native `<select>` element instead.
+- Segmented-control CSS does not ship runtime selection behavior. Consumers must use a framework wrapper or implement the documented ARIA state and keyboard contract.
 - Loading indicators within icon buttons will use a CSS-only approach (e.g., a toggled class that swaps icon visibility or adds a spinner via pseudo-element) since JavaScript-driven loading behavior is out of scope.
