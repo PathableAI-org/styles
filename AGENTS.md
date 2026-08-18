@@ -2,7 +2,7 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/042-react-accordion-contract/plan.md
+at specs/043-component-test-rollout/plan.md
 
 ## Shared component-contract conventions
 
@@ -39,6 +39,25 @@ renderer-neutral Accordion behavior.
   ports, missing builds/stories, or test failures.
 - React adoption (Phase 2) and broader component coverage (Phase 3) are out of
   scope for this feature.
+
+### Component rollout conventions (this feature)
+
+Phase 3 applies the Styles-first sequence across the component catalog in risk
+order (stateful keyboard/focus → form controls → navigation/collections →
+status/feedback → visual and composition-led).
+
+- A component rollout ledger in `packages/storybook-contracts` records each
+  component's wave, Styles-proven status, shared capabilities (or Styles-only),
+  and downstream-adoption order; a component is `adopted` only after a Styles
+  proof exists.
+- Shared helpers generalize into small capability groups (disclosure, overlay,
+  composite-widget, focus) — one capability per helper, promoted only when two
+  or more components share the observable promise. Styles-only surfaces stay
+  fixtures (`FR-013`).
+- Components are proven in place in their existing `.stories.ts` files; a
+  narrow per-component/wave focused filter keeps the Styles loop fast.
+- Live/status announcement quality in Wave D remains a separate manual review
+  item, never an automated conformance result.
 
 ### Story checklist
 
