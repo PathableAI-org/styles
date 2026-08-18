@@ -117,6 +117,29 @@ function InfoIcon({ label = 'Information' }) {
   )
 }
 
+function MeaningfulStatusIcon({
+  status,
+  label,
+}: {
+  status: Exclude<IconTileStatus, 'default'>
+  label: string
+}) {
+  switch (status) {
+    case 'success':
+      return <CheckCircleIcon label={label} />
+    case 'error':
+      return <XCircleIcon label={label} />
+    case 'warning':
+      return <AlertTriangleIcon label={label} />
+    case 'info':
+      return <InfoIcon label={label} />
+    default: {
+      const exhaustiveStatus: never = status
+      throw new Error(`Unsupported IconTile status: ${exhaustiveStatus}`)
+    }
+  }
+}
+
 const meta = {
   title: 'Interaction Controls/Icon Tile',
   component: IconTile,
@@ -184,6 +207,73 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
+type StatusFixture =
+  | { status: 'default'; label: string; accessibleName: undefined }
+  | {
+      status: Exclude<IconTileStatus, 'default'>
+      label: string
+      accessibleName: string
+    }
+
+const tileShapes = ['square', 'circle'] satisfies IconTileShape[]
+const sizeFixtures = [
+  ['compact', 'Compact'],
+  ['default', 'Default'],
+  ['large', 'Large'],
+] satisfies [IconTileSize, string][]
+const statusFixtures = [
+  { status: 'default', label: 'Default', accessibleName: undefined },
+  {
+    status: 'success',
+    label: 'Success',
+    accessibleName: 'Training record verified',
+  },
+  {
+    status: 'error',
+    label: 'Error',
+    accessibleName: 'Missing required documentation',
+  },
+  {
+    status: 'warning',
+    label: 'Warning',
+    accessibleName: 'Approval pending review',
+  },
+  { status: 'info', label: 'Info', accessibleName: 'Three new messages' },
+] satisfies StatusFixture[]
+const allVariantFixtures = [
+  { size: 'default', status: 'default' },
+  { size: 'compact', status: 'default' },
+  { size: 'large', status: 'default' },
+  { size: 'default', status: 'success' },
+  { size: 'default', status: 'error' },
+  { size: 'default', status: 'warning' },
+  { size: 'default', status: 'info' },
+] satisfies { size: IconTileSize; status: IconTileStatus }[]
+const meaningfulStatusIconCount = statusFixtures.filter(
+  (fixture) => fixture.status !== 'default',
+).length
+
+function getIconTileForLabel(labelElement: HTMLElement) {
+  const tile = labelElement.parentElement?.querySelector<HTMLElement>(
+    '.pathable-icon-tile',
+  )
+
+  if (!tile) {
+    throw new Error(`Expected IconTile next to ${labelElement.textContent}`)
+  }
+
+  return tile
+}
+
+function getSvgIcon(tile: HTMLElement) {
+  const icon = tile.querySelector<SVGElement>('svg')
+
+  if (!icon) {
+    throw new Error('Expected IconTile to contain an svg icon')
+  }
+
+  return icon
+}
 
 function LongContentExample() {
   return (
@@ -201,9 +291,7 @@ function LongContentExample() {
   )
 }
 
-export const Playground: Story = {}
-
-export const Default: Story = {
+export const Playground: Story = {
   play: async ({ canvasElement }) => {
     const tile = canvasElement.querySelector('.pathable-icon-tile')
     const icon = tile?.querySelector('svg')
@@ -243,38 +331,90 @@ export const SquareAndCircle: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const squareLabel = canvas.getByText('Square tile')
+    const circleLabel = canvas.getByText('Circle tile')
+    const squareTile = getIconTileForLabel(squareLabel)
+    const circleTile = getIconTileForLabel(circleLabel)
 
-    await expect(canvas.getByText('Square tile')).toBeVisible()
-    await expect(canvas.getByText('Circle tile')).toBeVisible()
+    await expect(squareLabel).toBeVisible()
+    await expect(circleLabel).toBeVisible()
+    await expect(squareTile).toHaveClass('pathable-icon-tile')
+    await expect(squareTile).not.toHaveClass('pathable-icon-tile--circle')
+    await expect(circleTile).toHaveClass(
+      'pathable-icon-tile',
+      'pathable-icon-tile--circle',
+    )
+    await expect(squareTile).toHaveAttribute('aria-hidden', 'true')
+    await expect(circleTile).toHaveAttribute('aria-hidden', 'true')
   },
 }
 
 export const SizeVariants: Story = {
   render: () => (
-    <div className="pathable-cluster pathable-cluster--gap-lg">
-      {(
-        [
-          ['compact', 'Compact'],
-          ['default', 'Default'],
-          ['large', 'Large'],
-        ] satisfies [IconTileSize, string][]
-      ).map(([size, label]) => (
-        <span
-          key={size}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-          }}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      {tileShapes.map((shape) => (
+        <div
+          key={shape}
+          role="group"
+          aria-label={`${shape} icon tile sizes`}
+          className="pathable-cluster pathable-cluster--gap-lg"
         >
-          <IconTile size={size} aria-hidden="true">
-            <BellIcon />
-          </IconTile>
-          <span>{label}</span>
-        </span>
+          {sizeFixtures.map(([size, label]) => (
+            <span
+              key={size}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}
+            >
+              <IconTile size={size} shape={shape} aria-hidden="true">
+                <BellIcon />
+              </IconTile>
+              <span>
+                {label}
+                {shape === 'circle' ? ' Circle' : ''}
+              </span>
+            </span>
+          ))}
+        </div>
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const shape of tileShapes) {
+      const group = within(
+        canvas.getByRole('group', { name: `${shape} icon tile sizes` }),
+      )
+
+      for (const [size, label] of sizeFixtures) {
+        const visibleLabel = group.getByText(
+          `${label}${shape === 'circle' ? ' Circle' : ''}`,
+        )
+        const tile = getIconTileForLabel(visibleLabel)
+        const icon = getSvgIcon(tile)
+
+        await expect(tile).toHaveClass('pathable-icon-tile')
+        await expect(tile).toHaveAttribute('aria-hidden', 'true')
+        await expect(icon).toHaveAttribute('aria-hidden', 'true')
+        if (size === 'default') {
+          await expect(tile).not.toHaveClass(
+            'pathable-icon-tile--compact',
+            'pathable-icon-tile--large',
+          )
+        } else {
+          await expect(tile).toHaveClass(`pathable-icon-tile--${size}`)
+        }
+        if (shape === 'circle') {
+          await expect(tile).toHaveClass('pathable-icon-tile--circle')
+        } else {
+          await expect(tile).not.toHaveClass('pathable-icon-tile--circle')
+        }
+      }
+    }
+  },
 }
 
 export const CircleSizes: Story = {
@@ -307,64 +447,86 @@ export const CircleSizes: Story = {
 
 export const StatusVariants: Story = {
   render: () => (
-    <div className="pathable-cluster pathable-cluster--gap-lg">
-      <span
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        <IconTile status="default">
-          <BellIcon meaningful label="Default notification status" />
-        </IconTile>
-        <span>Default</span>
-      </span>
-      <span
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        <IconTile status="success">
-          <CheckCircleIcon label="Training record verified" />
-        </IconTile>
-        <span>Success</span>
-      </span>
-      <span
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        <IconTile status="error">
-          <XCircleIcon label="Missing required documentation" />
-        </IconTile>
-        <span>Error</span>
-      </span>
-      <span
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        <IconTile status="warning">
-          <AlertTriangleIcon label="Approval pending review" />
-        </IconTile>
-        <span>Warning</span>
-      </span>
-      <span
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        <IconTile status="info">
-          <InfoIcon label="Three new messages" />
-        </IconTile>
-        <span>Info</span>
-      </span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      {tileShapes.map((shape) => (
+        <div
+          key={shape}
+          role="group"
+          aria-label={`${shape} icon tile statuses`}
+          className="pathable-cluster pathable-cluster--gap-lg"
+        >
+          {statusFixtures.map((fixture) => (
+            <span
+              key={fixture.status}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}
+            >
+              <IconTile
+                shape={shape}
+                status={fixture.status}
+                aria-hidden={fixture.status === 'default' ? true : undefined}
+              >
+                {fixture.status === 'default' ? (
+                  <BellIcon />
+                ) : (
+                  <MeaningfulStatusIcon
+                    status={fixture.status}
+                    label={fixture.accessibleName}
+                  />
+                )}
+              </IconTile>
+              <span>{fixture.label}</span>
+            </span>
+          ))}
+        </div>
+      ))}
     </div>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(
-      canvas.getByRole('img', { name: 'Training record verified' }),
-    ).toBeVisible()
-    await expect(
-      canvas.getByRole('img', { name: 'Missing required documentation' }),
-    ).toBeVisible()
-    await expect(
-      canvas.getByRole('img', { name: 'Approval pending review' }),
-    ).toBeVisible()
-    await expect(
-      canvas.getByRole('img', { name: 'Three new messages' }),
-    ).toBeVisible()
+    for (const shape of tileShapes) {
+      const group = within(
+        canvas.getByRole('group', { name: `${shape} icon tile statuses` }),
+      )
+      const defaultLabel = group.getByText('Default')
+      const defaultTile = getIconTileForLabel(defaultLabel)
+
+      await expect(defaultTile).toHaveClass('pathable-icon-tile')
+      await expect(defaultTile).toHaveAttribute('aria-hidden', 'true')
+      if (shape === 'circle') {
+        await expect(defaultTile).toHaveClass('pathable-icon-tile--circle')
+      } else {
+        await expect(defaultTile).not.toHaveClass('pathable-icon-tile--circle')
+      }
+      await expect(group.queryAllByRole('img')).toHaveLength(
+        meaningfulStatusIconCount,
+      )
+
+      for (const fixture of statusFixtures) {
+        if (fixture.status === 'default') continue
+
+        const icon = group.getByRole('img', {
+          name: fixture.accessibleName,
+        })
+        const tile = icon.parentElement
+
+        await expect(icon).toBeVisible()
+        await expect(icon).toHaveAttribute('focusable', 'false')
+        await expect(tile).toHaveClass(
+          'pathable-icon-tile',
+          `pathable-icon-tile--${fixture.status}`,
+        )
+        if (shape === 'circle') {
+          await expect(tile).toHaveClass('pathable-icon-tile--circle')
+        } else {
+          await expect(tile).not.toHaveClass('pathable-icon-tile--circle')
+        }
+      }
+    }
   },
 }
 
@@ -423,41 +585,91 @@ export const Narrow: Story = {
 }
 
 export const AllVariants: Story = {
-  render: () => {
-    const shapes: IconTileShape[] = ['square', 'circle']
-    const statuses: IconTileStatus[] = [
-      'default',
-      'success',
-      'error',
-      'warning',
-      'info',
-    ]
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {shapes.map((shape) => (
-          <div key={shape}>
-            <strong style={{ display: 'block', marginBottom: '0.5rem' }}>
-              {shape === 'square' ? 'Square' : 'Circle'}
-            </strong>
-            <div className="pathable-cluster pathable-cluster--gap-lg">
-              {statuses.map((status) => (
-                <IconTile
-                  key={`${shape}-${status}`}
-                  shape={shape}
-                  status={status}
-                  aria-hidden="true"
-                >
-                  <BellIcon />
-                </IconTile>
-              ))}
-            </div>
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {tileShapes.map((shape) => (
+        <div key={shape}>
+          <strong className="pathable-display-block pathable-margin-bottom-2">
+            {shape === 'square' ? 'Square' : 'Circle'}
+          </strong>
+          <div
+            role="group"
+            aria-label={`${shape} icon tile variants`}
+            className="pathable-cluster pathable-cluster--gap-lg"
+          >
+            {allVariantFixtures.map(({ size, status }) => (
+              <IconTile
+                key={`${size}-${status}`}
+                size={size}
+                shape={shape}
+                status={status}
+                data-variant={`${shape}-${size}-${status}`}
+                aria-hidden="true"
+              >
+                <BellIcon />
+              </IconTile>
+            ))}
           </div>
-        ))}
-      </div>
-    )
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const shape of tileShapes) {
+      const group = canvas.getByRole('group', {
+        name: `${shape} icon tile variants`,
+      })
+      const tiles = group.querySelectorAll('.pathable-icon-tile')
+
+      await expect(tiles).toHaveLength(allVariantFixtures.length)
+      for (const { size, status } of allVariantFixtures) {
+        const tile = group.querySelector<HTMLElement>(
+          `[data-variant="${shape}-${size}-${status}"]`,
+        )
+
+        if (!tile) {
+          throw new Error(
+            `Missing IconTile variant: ${shape}-${size}-${status}`,
+          )
+        }
+
+        const icon = getSvgIcon(tile)
+
+        await expect(tile).toHaveClass('pathable-icon-tile')
+        await expect(tile).toHaveAttribute('aria-hidden', 'true')
+        await expect(icon).toHaveAttribute('aria-hidden', 'true')
+        if (size === 'default') {
+          await expect(tile).not.toHaveClass(
+            'pathable-icon-tile--compact',
+            'pathable-icon-tile--large',
+          )
+        } else {
+          await expect(tile).toHaveClass(`pathable-icon-tile--${size}`)
+        }
+        if (status === 'default') {
+          await expect(tile).not.toHaveClass(
+            'pathable-icon-tile--success',
+            'pathable-icon-tile--error',
+            'pathable-icon-tile--warning',
+            'pathable-icon-tile--info',
+          )
+        } else {
+          await expect(tile).toHaveClass(`pathable-icon-tile--${status}`)
+        }
+        if (shape === 'circle') {
+          await expect(tile).toHaveClass('pathable-icon-tile--circle')
+        } else {
+          await expect(tile).not.toHaveClass('pathable-icon-tile--circle')
+        }
+      }
+    }
+    await expect(canvas.queryAllByRole('img')).toHaveLength(0)
   },
 }
+
+export const Default: Story = AllVariants
 
 export const CustomAttributes: Story = {
   render: () => (
