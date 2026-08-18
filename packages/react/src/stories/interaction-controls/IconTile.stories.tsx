@@ -124,10 +124,20 @@ function MeaningfulStatusIcon({
   status: Exclude<IconTileStatus, 'default'>
   label: string
 }) {
-  if (status === 'success') return <CheckCircleIcon label={label} />
-  if (status === 'error') return <XCircleIcon label={label} />
-  if (status === 'warning') return <AlertTriangleIcon label={label} />
-  return <InfoIcon label={label} />
+  switch (status) {
+    case 'success':
+      return <CheckCircleIcon label={label} />
+    case 'error':
+      return <XCircleIcon label={label} />
+    case 'warning':
+      return <AlertTriangleIcon label={label} />
+    case 'info':
+      return <InfoIcon label={label} />
+    default: {
+      const exhaustiveStatus: never = status
+      throw new Error(`Unsupported IconTile status: ${exhaustiveStatus}`)
+    }
+  }
 }
 
 const meta = {
@@ -239,6 +249,31 @@ const allVariantFixtures = [
   { size: 'default', status: 'warning' },
   { size: 'default', status: 'info' },
 ] satisfies { size: IconTileSize; status: IconTileStatus }[]
+const meaningfulStatusIconCount = statusFixtures.filter(
+  (fixture) => fixture.status !== 'default',
+).length
+
+function getIconTileForLabel(labelElement: HTMLElement) {
+  const tile = labelElement.parentElement?.querySelector<HTMLElement>(
+    '.pathable-icon-tile',
+  )
+
+  if (!tile) {
+    throw new Error(`Expected IconTile next to ${labelElement.textContent}`)
+  }
+
+  return tile
+}
+
+function getSvgIcon(tile: HTMLElement) {
+  const icon = tile.querySelector<SVGElement>('svg')
+
+  if (!icon) {
+    throw new Error('Expected IconTile to contain an svg icon')
+  }
+
+  return icon
+}
 
 function LongContentExample() {
   return (
@@ -298,12 +333,8 @@ export const SquareAndCircle: Story = {
     const canvas = within(canvasElement)
     const squareLabel = canvas.getByText('Square tile')
     const circleLabel = canvas.getByText('Circle tile')
-    const squareTile = squareLabel.parentElement?.querySelector(
-      '.pathable-icon-tile',
-    )
-    const circleTile = circleLabel.parentElement?.querySelector(
-      '.pathable-icon-tile',
-    )
+    const squareTile = getIconTileForLabel(squareLabel)
+    const circleTile = getIconTileForLabel(circleLabel)
 
     await expect(squareLabel).toBeVisible()
     await expect(circleLabel).toBeVisible()
@@ -362,10 +393,8 @@ export const SizeVariants: Story = {
         const visibleLabel = group.getByText(
           `${label}${shape === 'circle' ? ' Circle' : ''}`,
         )
-        const tile = visibleLabel.parentElement?.querySelector(
-          '.pathable-icon-tile',
-        )
-        const icon = tile?.querySelector('svg')
+        const tile = getIconTileForLabel(visibleLabel)
+        const icon = getSvgIcon(tile)
 
         await expect(tile).toHaveClass('pathable-icon-tile')
         await expect(tile).toHaveAttribute('aria-hidden', 'true')
@@ -464,9 +493,7 @@ export const StatusVariants: Story = {
         canvas.getByRole('group', { name: `${shape} icon tile statuses` }),
       )
       const defaultLabel = group.getByText('Default')
-      const defaultTile = defaultLabel.parentElement?.querySelector(
-        '.pathable-icon-tile',
-      )
+      const defaultTile = getIconTileForLabel(defaultLabel)
 
       await expect(defaultTile).toHaveClass('pathable-icon-tile')
       await expect(defaultTile).toHaveAttribute('aria-hidden', 'true')
@@ -475,7 +502,9 @@ export const StatusVariants: Story = {
       } else {
         await expect(defaultTile).not.toHaveClass('pathable-icon-tile--circle')
       }
-      await expect(group.queryAllByRole('img')).toHaveLength(4)
+      await expect(group.queryAllByRole('img')).toHaveLength(
+        meaningfulStatusIconCount,
+      )
 
       for (const fixture of statusFixtures) {
         if (fixture.status === 'default') continue
@@ -574,6 +603,7 @@ export const AllVariants: Story = {
                 size={size}
                 shape={shape}
                 status={status}
+                data-variant={`${shape}-${size}-${status}`}
                 aria-hidden="true"
               >
                 <BellIcon />
@@ -593,10 +623,19 @@ export const AllVariants: Story = {
       })
       const tiles = group.querySelectorAll('.pathable-icon-tile')
 
-      await expect(tiles).toHaveLength(7)
-      for (const [index, { size, status }] of allVariantFixtures.entries()) {
-        const tile = tiles[index]
-        const icon = tile?.querySelector('svg')
+      await expect(tiles).toHaveLength(allVariantFixtures.length)
+      for (const { size, status } of allVariantFixtures) {
+        const tile = group.querySelector<HTMLElement>(
+          `[data-variant="${shape}-${size}-${status}"]`,
+        )
+
+        if (!tile) {
+          throw new Error(
+            `Missing IconTile variant: ${shape}-${size}-${status}`,
+          )
+        }
+
+        const icon = getSvgIcon(tile)
 
         await expect(tile).toHaveClass('pathable-icon-tile')
         await expect(tile).toHaveAttribute('aria-hidden', 'true')
