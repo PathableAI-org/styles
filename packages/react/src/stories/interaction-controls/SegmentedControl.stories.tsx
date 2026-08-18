@@ -21,9 +21,22 @@ const meta = {
 
 **Multi-select semantics**: \`mode="multi"\` renders \`role="group"\` with toggle buttons using \`aria-pressed\`. Tab moves between buttons, and Space or Enter toggles a segment through \`onValuesChange\`.
 
-**Controlled state**: Selection is controlled by consumers through \`value\`/\`onValueChange\` or \`values\`/\`onValuesChange\`. The component provides the CSS class contract, roles, and keyboard focus behavior.`,
+**Controlled state**: Selection is controlled by consumers through \`value\`/\`onValueChange\` or \`values\`/\`onValuesChange\`. Values should match options; an unknown single value falls back to the first enabled option. Consumers must update controlled state when a callback fires. Without the relevant callback, every option is rendered disabled so the noninteractive state is explicit.
+
+**Single option**: A one-option set renders as a noninteractive static indicator because there is no choice to make.
+
+**Accessible name**: Provide \`aria-label\` or \`aria-labelledby\` so the radiogroup or toggle group has a meaningful name.`,
       },
     },
+  },
+  render: (args) => {
+    const playgroundArgs = args as PlaygroundArgs
+    return (
+      <PlaygroundRender
+        key={getPlaygroundKey(playgroundArgs)}
+        {...playgroundArgs}
+      />
+    )
   },
   argTypes: {
     mode: {
@@ -109,6 +122,16 @@ type PlaygroundArgs = {
   readonly 'aria-label'?: string
 }
 
+function getPlaygroundKey(args: PlaygroundArgs) {
+  return JSON.stringify({
+    mode: args.mode,
+    orientation: args.orientation,
+    options: args.options?.map(({ value, disabled }) => ({ value, disabled })),
+    value: args.value,
+    values: args.values,
+  })
+}
+
 const alignmentOptions: readonly SegmentedControlOption[] = [
   {
     value: 'left',
@@ -187,8 +210,17 @@ function PlaygroundRender(args: PlaygroundArgs) {
         : viewModeOptions
   const controlledValue = args.value ?? 'list'
   const controlledValues = args.values ?? defaultMultiValues
-  const [value, setValue] = useState(controlledValue)
-  const [values, setValues] = useState<readonly string[]>(controlledValues)
+  const initialValue = options.some(
+    (option) => option.value === controlledValue && !option.disabled,
+  )
+    ? controlledValue
+    : (options.find((option) => !option.disabled)?.value ?? controlledValue)
+  const optionValues = new Set(options.map((option) => option.value))
+  const initialValues = controlledValues.filter((item) =>
+    optionValues.has(item),
+  )
+  const [value, setValue] = useState(initialValue)
+  const [values, setValues] = useState<readonly string[]>(initialValues)
 
   if (mode === 'multi') {
     return (
@@ -222,7 +254,6 @@ function PlaygroundRender(args: PlaygroundArgs) {
 }
 
 export const Playground: Story = {
-  render: (args) => <PlaygroundRender {...(args as PlaygroundArgs)} />,
   args: {
     options: viewModeOptions,
     value: 'list',
@@ -267,6 +298,22 @@ export const Vertical: Story = {
     options: alignmentOptions,
     value: 'left',
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const group = canvas.getByRole('radiogroup', { name: 'Alignment' })
+    const left = canvas.getByRole('radio', { name: 'Left' })
+    const center = canvas.getByRole('radio', { name: 'Center' })
+
+    left.focus()
+    await userEvent.keyboard('{ArrowDown}')
+
+    await expect(group).toHaveAttribute('aria-orientation', 'vertical')
+    await expect(center).toHaveFocus()
+    await expect(center).toHaveAttribute('aria-checked', 'true')
+    for (const option of canvas.getAllByRole('radio')) {
+      await expect(option.offsetWidth).toBeLessThanOrEqual(group.clientWidth)
+    }
+  },
 }
 
 export const DisabledOption: Story = {
@@ -274,8 +321,8 @@ export const DisabledOption: Story = {
     'aria-label': 'Page size',
     options: [
       { value: '10', label: '10', icon: listIcon },
-      { value: '25', label: '25', icon: listIcon },
-      { value: '50', label: '50', icon: listIcon, disabled: true },
+      { value: '25', label: '25', icon: listIcon, disabled: true },
+      { value: '50', label: '50', icon: listIcon },
     ],
     value: '10',
   },
@@ -283,23 +330,33 @@ export const DisabledOption: Story = {
     const canvas = within(canvasElement)
 
     await step('disabled segment is exposed as disabled', async () => {
-      const option = canvas.getByRole('radio', { name: '50' })
+      const option = canvas.getByRole('radio', { name: '25' })
       await expect(option).toBeDisabled()
+    })
+
+    await step('Arrow navigation skips the disabled segment', async () => {
+      canvas.getByRole('radio', { name: '10' }).focus()
+      await userEvent.keyboard('{ArrowRight}')
+
+      const option = canvas.getByRole('radio', { name: '50' })
+      await expect(option).toHaveFocus()
+      await expect(option).toHaveAttribute('aria-checked', 'true')
     })
   },
 }
 
-export const SingleOption: Story = {
+export const StaticSingleOption: Story = {
   args: {
-    'aria-label': 'Single option',
-    options: [
-      {
-        value: 'enable',
-        label: 'Enable Feature',
-        icon: icon('M6 12l-4-4 1.5-1.5L6 9l6.5-6.5L14 4l-8 8z'),
-      },
-    ],
-    value: 'enable',
+    'aria-label': 'Current mode',
+    options: [{ value: 'list', label: 'List view', icon: listIcon }],
+    value: 'list',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('List view')).toBeInTheDocument()
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument()
+    await expect(canvas.queryByRole('radio')).not.toBeInTheDocument()
   },
 }
 
@@ -328,6 +385,131 @@ export const LongLabels: Story = {
   },
 }
 
+export const ConstrainedOverflow: Story = {
+  render: (args) => (
+    <div style={{ maxWidth: '20rem' }}>
+      <PlaygroundRender
+        key={getPlaygroundKey(args as PlaygroundArgs)}
+        {...(args as PlaygroundArgs)}
+      />
+    </div>
+  ),
+  args: {
+    'aria-label': 'Reporting timeframe',
+    options: [
+      { value: 'today', label: 'Today' },
+      { value: 'week', label: 'This week' },
+      { value: 'month', label: 'This month' },
+      { value: 'quarter', label: 'Previous quarter' },
+      { value: 'year', label: 'Year to date' },
+      { value: 'custom', label: 'Custom localized reporting period' },
+    ],
+    value: 'today',
+  },
+  play: async ({ canvasElement }) => {
+    const control = within(canvasElement).getByRole('radiogroup', {
+      name: 'Reporting timeframe',
+    })
+    const constraint = control.parentElement
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
+
+    await expect(constraint).not.toBeNull()
+    await expect(getStoryComputedStyle(control).overflowX).toBe('auto')
+    await expect(control.scrollWidth).toBeGreaterThan(control.clientWidth)
+    await expect(control.getBoundingClientRect().width).toBeLessThanOrEqual(
+      constraint?.getBoundingClientRect().width ?? 0,
+    )
+  },
+}
+
+export const EmptyStringValue: Story = {
+  args: {
+    'aria-label': 'Optional filter',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: '', label: 'No filter' },
+    ],
+    value: 'active',
+    onValueChange: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('radio', { name: 'Active' }).focus()
+
+    await userEvent.keyboard('{ArrowRight}')
+
+    const noFilter = canvas.getByRole('radio', { name: 'No filter' })
+    await expect(noFilter).toHaveFocus()
+    await expect(noFilter).toHaveAttribute('aria-checked', 'true')
+    await expect(args.onValueChange).toHaveBeenLastCalledWith('')
+  },
+}
+
+export const ReadOnly: Story = {
+  render: () => (
+    <SegmentedControl
+      aria-label="Read-only view mode"
+      options={viewModeOptions}
+      value="list"
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const list = canvas.getByRole('radio', { name: 'List' })
+    const grid = canvas.getByRole('radio', { name: 'Grid' })
+
+    await expect(list).toBeDisabled()
+    await expect(grid).toBeDisabled()
+    await expect(list).toHaveAttribute('aria-checked', 'true')
+    await expect(grid).toHaveAttribute('aria-checked', 'false')
+  },
+}
+
+export const ReadOnlyMultiSelect: Story = {
+  render: () => (
+    <SegmentedControl
+      mode="multi"
+      aria-label="Read-only formatting"
+      options={formattingOptions}
+      values={['bold']}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const option of canvas.getAllByRole('button')) {
+      await expect(option).toBeDisabled()
+    }
+    await expect(canvas.getByRole('button', { name: 'Bold' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+  },
+}
+
+export const InvalidValueFallback: Story = {
+  render: () => (
+    <SegmentedControl
+      aria-label="Fallback view mode"
+      options={viewModeOptions}
+      value="missing"
+      onValueChange={() => undefined}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const list = canvas.getByRole('radio', { name: 'List' })
+
+    await expect(list).toHaveAttribute('aria-checked', 'true')
+    await expect(list).toHaveAttribute('tabindex', '0')
+    await expect(canvas.getAllByRole('radio', { checked: true })).toHaveLength(
+      1,
+    )
+  },
+}
+
 export const KeyboardNavigation: Story = {
   render: (args) => (
     <ControlledSingleSelect onValueChange={args.onValueChange} />
@@ -345,23 +527,20 @@ export const KeyboardNavigation: Story = {
       await expect(list).toHaveAttribute('aria-checked', 'true')
     })
 
-    await step(
-      'ArrowRight moves focus and requests the next value',
-      async () => {
-        await userEvent.keyboard('{ArrowRight}')
-        const grid = canvas.getByRole('radio', { name: 'Grid' })
-        await expect(grid).toHaveFocus()
-        await expect(grid).toHaveAttribute('aria-checked', 'true')
-        await expect(args.onValueChange).toHaveBeenCalledWith('grid')
-      },
-    )
-
     await step('ArrowLeft wraps focus and selection backward', async () => {
       await userEvent.keyboard('{ArrowLeft}')
+      const detail = canvas.getByRole('radio', { name: 'Detail' })
+      await expect(detail).toHaveFocus()
+      await expect(detail).toHaveAttribute('aria-checked', 'true')
+      await expect(args.onValueChange).toHaveBeenNthCalledWith(1, 'detail')
+    })
+
+    await step('ArrowRight wraps focus and selection forward', async () => {
+      await userEvent.keyboard('{ArrowRight}')
       const list = canvas.getByRole('radio', { name: 'List' })
       await expect(list).toHaveFocus()
       await expect(list).toHaveAttribute('aria-checked', 'true')
-      await expect(args.onValueChange).toHaveBeenCalledWith('list')
+      await expect(args.onValueChange).toHaveBeenNthCalledWith(2, 'list')
     })
   },
 }
@@ -388,7 +567,7 @@ export const MultiSelectKeyboardToggle: Story = {
       await userEvent.keyboard(' ')
       const bold = canvas.getByRole('button', { name: 'Bold' })
       await expect(bold).toHaveAttribute('aria-pressed', 'false')
-      await expect(args.onValuesChange).toHaveBeenCalledWith([])
+      await expect(args.onValuesChange).toHaveBeenNthCalledWith(1, [])
     })
 
     await step('Tab and Enter toggle another segment on', async () => {
@@ -396,7 +575,7 @@ export const MultiSelectKeyboardToggle: Story = {
       const italic = canvas.getByRole('button', { name: 'Italic' })
       await userEvent.keyboard('{Enter}')
       await expect(italic).toHaveAttribute('aria-pressed', 'true')
-      await expect(args.onValuesChange).toHaveBeenCalledWith(['italic'])
+      await expect(args.onValuesChange).toHaveBeenNthCalledWith(2, ['italic'])
     })
   },
 }
@@ -417,12 +596,7 @@ export const InToolbar: Story = {
       }}
     >
       <ControlledMultiSelect />
-      <SegmentedControl
-        aria-label="View mode"
-        options={viewModeOptions}
-        value="grid"
-        onValueChange={fn()}
-      />
+      <ControlledSingleSelect initialValue="grid" />
     </div>
   ),
 }
