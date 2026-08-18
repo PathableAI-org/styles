@@ -85,7 +85,7 @@ function contrastRatio(foreground: string, background: string) {
 }
 
 const meta = {
-  title: 'Components/IconButton',
+  title: 'Interaction Controls/IconButton',
   component: IconButton,
   tags: ['autodocs'],
   parameters: {

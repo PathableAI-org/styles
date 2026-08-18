@@ -71,6 +71,9 @@ importers:
       serve:
         specifier: ^14.2.6
         version: 14.2.6
+      serve-handler:
+        specifier: 6.1.7
+        version: 6.1.7
       stylelint:
         specifier: ^16.18.0
         version: 16.26.1(typescript@5.7.3)
