@@ -242,8 +242,21 @@ export const MultiSelect: Story = {
     mode: 'multi',
     'aria-label': 'Text formatting',
     options: formattingOptions,
-    values: ['bold'],
+    values: [],
     onValuesChange: fn(),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByRole('group', { name: 'Text formatting' }),
+    ).toBeVisible()
+    for (const name of ['Bold', 'Italic', 'Underline']) {
+      await expect(canvas.getByRole('button', { name })).toHaveAttribute(
+        'aria-pressed',
+        'false',
+      )
+    }
   },
 }
 
@@ -413,3 +426,5 @@ export const InToolbar: Story = {
     </div>
   ),
 }
+
+export const Default: Story = SingleSelect
