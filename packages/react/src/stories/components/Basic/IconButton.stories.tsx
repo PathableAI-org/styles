@@ -159,9 +159,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Playground: Story = {}
-
-export const Default: Story = {
+export const Playground: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const button = canvas.getByRole('button', { name: 'Close panel' })
@@ -181,6 +179,220 @@ export const Default: Story = {
     await expect(icon).toHaveAttribute('focusable', 'false')
   },
 }
+
+export const AllVariants: Story = {
+  render: () => (
+    <>
+      <h3 className="pathable-margin-top-0 pathable-margin-bottom-1">
+        All Appearance Variants
+      </h3>
+      <p
+        className="pathable-text-base pathable-margin-top-0 pathable-margin-bottom-3"
+        style={{
+          color: 'var(--pathable-color-text-muted)',
+          fontSize: '0.875rem',
+        }}
+      >
+        Icon buttons in all five appearance variants. Hover and focus each
+        button to see the interactive state transitions.
+      </p>
+      <div className="pathable-cluster pathable-cluster--gap-lg">
+        <IconButton appearance="bare" aria-label="Close bare panel">
+          <CloseIcon />
+        </IconButton>
+        <IconButton appearance="subtle" aria-label="Close subtle panel">
+          <CloseIcon />
+        </IconButton>
+        <IconButton appearance="bordered" aria-label="Close bordered panel">
+          <CloseIcon />
+        </IconButton>
+        <IconButton appearance="inverse" aria-label="Close inverse panel">
+          <CloseIcon />
+        </IconButton>
+        <IconButton
+          appearance="destructive"
+          aria-label="Delete participant record"
+        >
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getAllByRole('button')).toHaveLength(5)
+    for (const [name, appearance] of [
+      ['Close bare panel', 'bare'],
+      ['Close subtle panel', 'subtle'],
+      ['Close bordered panel', 'bordered'],
+      ['Close inverse panel', 'inverse'],
+      ['Delete participant record', 'destructive'],
+    ] satisfies [string, IconButtonAppearance][]) {
+      const button = canvas.getByRole('button', { name })
+      const icon = button.querySelector('svg')
+
+      await expect(button).toHaveClass(
+        'pathable-icon-button',
+        `pathable-icon-button--${appearance}`,
+      )
+      await expect(button).toHaveAttribute('type', 'button')
+      await expect(icon).toHaveAttribute('aria-hidden', 'true')
+      await expect(icon).toHaveAttribute('focusable', 'false')
+    }
+  },
+}
+
+export const AllSizes: Story = {
+  render: () => (
+    <>
+      <h3 className="pathable-margin-top-0 pathable-margin-bottom-1">
+        All Size Variants
+      </h3>
+      <p
+        className="pathable-text-base pathable-margin-top-0 pathable-margin-bottom-3"
+        style={{
+          color: 'var(--pathable-color-text-muted)',
+          fontSize: '0.875rem',
+        }}
+      >
+        Compact (32px), default (44px), and large (52px) icon buttons using the
+        subtle variant. The 44px default is preferred for touch targets.
+      </p>
+      <div className="pathable-cluster pathable-cluster--gap-lg">
+        <div className="pathable-text-center">
+          <IconButton
+            appearance="subtle"
+            size="compact"
+            aria-label="Close compact panel"
+          >
+            <CloseIcon />
+          </IconButton>
+          <div className="pathable-margin-top-1">Compact (32px)</div>
+        </div>
+        <div className="pathable-text-center">
+          <IconButton appearance="subtle" aria-label="Close default panel">
+            <CloseIcon />
+          </IconButton>
+          <div className="pathable-margin-top-1">Default (44px)</div>
+        </div>
+        <div className="pathable-text-center">
+          <IconButton
+            appearance="subtle"
+            size="large"
+            aria-label="Close large panel"
+          >
+            <CloseIcon />
+          </IconButton>
+          <div className="pathable-margin-top-1">Large (52px)</div>
+        </div>
+      </div>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const { name, dimension, modifier } of [
+      {
+        name: 'Close compact panel',
+        dimension: '32px',
+        modifier: 'pathable-icon-button--compact',
+      },
+      {
+        name: 'Close default panel',
+        dimension: '44px',
+        modifier: undefined,
+      },
+      {
+        name: 'Close large panel',
+        dimension: '52px',
+        modifier: 'pathable-icon-button--large',
+      },
+    ] satisfies {
+      name: string
+      dimension: string
+      modifier: string | undefined
+    }[]) {
+      const button = canvas.getByRole('button', { name })
+      const style = window.getComputedStyle(button)
+
+      await expect(button).toHaveClass(
+        'pathable-icon-button',
+        'pathable-icon-button--subtle',
+      )
+      if (modifier) {
+        await expect(button).toHaveClass(modifier)
+      } else {
+        await expect(button).not.toHaveClass(
+          'pathable-icon-button--compact',
+          'pathable-icon-button--large',
+        )
+      }
+      await expect(style.width).toBe(dimension)
+      await expect(style.height).toBe(dimension)
+    }
+  },
+}
+
+export const CircleShape: Story = {
+  render: () => (
+    <>
+      <h3 className="pathable-margin-top-0 pathable-margin-bottom-1">
+        Circle Shape
+      </h3>
+      <p
+        className="pathable-text-base pathable-margin-top-0 pathable-margin-bottom-3"
+        style={{
+          color: 'var(--pathable-color-text-muted)',
+          fontSize: '0.875rem',
+        }}
+      >
+        Circular icon buttons in bare, subtle, and bordered variants.
+      </p>
+      <div className="pathable-cluster pathable-cluster--gap-lg">
+        <IconButton
+          appearance="bare"
+          shape="circle"
+          aria-label="Close bare circle panel"
+        >
+          <CloseIcon />
+        </IconButton>
+        <IconButton
+          appearance="subtle"
+          shape="circle"
+          aria-label="Close subtle circle panel"
+        >
+          <CloseIcon />
+        </IconButton>
+        <IconButton
+          appearance="bordered"
+          shape="circle"
+          aria-label="Close bordered circle panel"
+        >
+          <CloseIcon />
+        </IconButton>
+      </div>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getAllByRole('button')).toHaveLength(3)
+    for (const [name, appearance] of [
+      ['Close bare circle panel', 'bare'],
+      ['Close subtle circle panel', 'subtle'],
+      ['Close bordered circle panel', 'bordered'],
+    ] satisfies [string, IconButtonAppearance][]) {
+      await expect(canvas.getByRole('button', { name })).toHaveClass(
+        'pathable-icon-button',
+        `pathable-icon-button--${appearance}`,
+        'pathable-icon-button--circle',
+      )
+    }
+  },
+}
+
+export const Default: Story = AllVariants
 
 export const Subtle: Story = {
   args: { appearance: 'subtle' },
