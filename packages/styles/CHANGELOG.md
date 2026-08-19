@@ -1,5 +1,11 @@
 # @pathableai/styles
 
+## 0.0.3-alpha.1
+
+### Patch Changes
+
+- 647bcbd: Harden canonical SegmentedControl selection, focus, disabled, keyboard-reference, and constrained-layout behavior.
+
 ## 0.0.3-alpha.0
 
 ### Patch Changes

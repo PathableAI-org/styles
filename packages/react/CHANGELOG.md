@@ -1,5 +1,12 @@
 # @pathableai/react
 
+## 0.0.4-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [647bcbd]
+  - @pathableai/styles@0.0.3-alpha.1
+
 ## 0.0.4-alpha.1
 
 ### Patch Changes
