@@ -1,6 +1,6 @@
 // Re-export value types from resolver modules
 import type { Width, MaxWidth } from './sizing'
-import type { SpacingScale } from './spacing'
+import type { SpacingScale, MarginScale } from './spacing'
 import type { Display } from './display'
 import type { AlignItems, JustifyContent, TextAlign } from './alignment'
 import type { Flex } from './flexGrid'
@@ -9,7 +9,7 @@ import type { BackgroundColor, TextColor } from './colorTone'
 
 export type { Width, MaxWidth } from './sizing'
 export type { WidthClass, MaxWidthClass } from './sizing'
-export type { SpacingScale } from './spacing'
+export type { SpacingScale, MarginScale } from './spacing'
 export type {
   PaddingClass,
   PaddingXClass,
@@ -47,8 +47,8 @@ export interface SpacingProps {
   padding?: SpacingScale
   paddingX?: SpacingScale
   paddingY?: SpacingScale
-  margin?: SpacingScale
-  marginX?: SpacingScale
+  margin?: MarginScale
+  marginX?: MarginScale
   marginY?: SpacingScale
   marginTop?: SpacingScale
   marginBottom?: SpacingScale

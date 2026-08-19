@@ -1,8 +1,24 @@
 import { HTMLAttributes, ReactNode } from 'react'
+import {
+  SizingProps,
+  SpacingProps,
+  widthClass,
+  maxWidthClass,
+  marginAllClass,
+  marginXClass,
+  marginYClass,
+  marginTopClass,
+  marginBottomClass,
+} from '../../internal/resolvers'
+import { mergeClasses } from '../../internal/resolvers/mergeClasses'
 
 type CardPresentation = 'base' | 'media' | 'flag' | 'header-first' | 'workflow'
 
-interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+interface CardProps
+  extends
+    Omit<HTMLAttributes<HTMLDivElement>, 'title'>,
+    SizingProps,
+    SpacingProps {
   title?: ReactNode
   footer?: ReactNode
   media?: ReactNode
@@ -137,6 +153,13 @@ export function Card({
   metadata,
   status,
   actions,
+  width,
+  maxWidth,
+  margin,
+  marginX,
+  marginY,
+  marginTop,
+  marginBottom,
   ...rest
 }: CardProps) {
   const resolvedPresentation = resolvePresentation(presentation, {
@@ -146,9 +169,18 @@ export function Card({
     actions,
   })
   const presentationClass = PRESENTATION_CLASS[resolvedPresentation]
-  const classes = ['pathable-card', presentationClass, className]
-    .filter(Boolean)
-    .join(' ')
+  const classes = mergeClasses(
+    'pathable-card',
+    presentationClass,
+    widthClass(width),
+    maxWidthClass(maxWidth),
+    marginAllClass(margin),
+    marginXClass(marginX),
+    marginYClass(marginY),
+    marginTopClass(marginTop),
+    marginBottomClass(marginBottom),
+    className,
+  )
 
   if (resolvedPresentation === 'workflow') {
     return (

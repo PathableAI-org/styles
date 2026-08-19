@@ -264,3 +264,59 @@ export const NarrowWorkflow: Story = {
     },
   },
 }
+
+// ── Sizing & spacing prop stories ──
+
+export const Sizing: Story = {
+  name: 'Sizing (width = full)',
+  render: () => (
+    <Card width="full">
+      <p>This card spans its container's full width.</p>
+    </Card>
+  ),
+}
+
+export const MaxWidthTablet: Story = {
+  name: 'Max Width (tablet)',
+  render: () => (
+    <Card maxWidth="tablet">
+      <p>This card is constrained to the tablet max-width.</p>
+    </Card>
+  ),
+}
+
+export const MaxWidthDesktop: Story = {
+  name: 'Max Width (desktop)',
+  render: () => (
+    <Card maxWidth="desktop">
+      <p>This card is constrained to the desktop max-width.</p>
+    </Card>
+  ),
+}
+
+export const Centered: Story = {
+  name: 'Centered (maxWidth + marginX auto)',
+  render: () => (
+    <Card maxWidth="tablet" marginX="auto">
+      <p>This card is centered within its container.</p>
+    </Card>
+  ),
+}
+
+export const WithMargins: Story = {
+  name: 'With Directional Margins',
+  render: () => (
+    <Card marginTop="4" marginBottom="8">
+      <p>This card has top and bottom margins.</p>
+    </Card>
+  ),
+}
+
+export const WithCustomClass: Story = {
+  name: 'With Custom className',
+  render: () => (
+    <Card width="full" className="custom-card">
+      <p>Semantic props compose with custom className.</p>
+    </Card>
+  ),
+}

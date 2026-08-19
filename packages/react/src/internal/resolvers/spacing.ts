@@ -93,11 +93,13 @@ export const MARGIN_MAP = {
   '9': 'pathable-margin-9',
   '10': 'pathable-margin-10',
   '15': 'pathable-margin-15',
+  auto: 'pathable-margin-auto',
 } as const
 
-export type MarginClass<T extends SpacingScale> = (typeof MARGIN_MAP)[T]
+export type MarginScale = SpacingScale | 'auto'
+export type MarginClass<T extends MarginScale> = (typeof MARGIN_MAP)[T]
 
-export function marginAllClass<T extends SpacingScale>(value: T): MarginClass<T>
+export function marginAllClass<T extends MarginScale>(value: T): MarginClass<T>
 export function marginAllClass(value: string): string | undefined
 export function marginAllClass(value?: string | null): string | undefined
 export function marginAllClass(value?: string | null): string | undefined {
@@ -118,11 +120,12 @@ export const MARGIN_X_MAP = {
   '9': 'pathable-margin-x-9',
   '10': 'pathable-margin-x-10',
   '15': 'pathable-margin-x-15',
+  auto: 'pathable-margin-x-auto',
 } as const
 
-export type MarginXClass<T extends SpacingScale> = (typeof MARGIN_X_MAP)[T]
+export type MarginXClass<T extends MarginScale> = (typeof MARGIN_X_MAP)[T]
 
-export function marginXClass<T extends SpacingScale>(value: T): MarginXClass<T>
+export function marginXClass<T extends MarginScale>(value: T): MarginXClass<T>
 export function marginXClass(value: string): string | undefined
 export function marginXClass(value?: string | null): string | undefined
 export function marginXClass(value?: string | null): string | undefined {

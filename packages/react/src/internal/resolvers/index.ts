@@ -8,6 +8,7 @@ export type {
   MaxWidth,
   MaxWidthClass,
   SpacingScale,
+  MarginScale,
   PaddingClass,
   PaddingXClass,
   PaddingYClass,

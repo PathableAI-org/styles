@@ -92,6 +92,10 @@ describe('marginAllClass', () => {
     })
   })
 
+  it('returns "pathable-margin-auto" for "auto"', () => {
+    expect(marginAllClass('auto')).toBe('pathable-margin-auto')
+  })
+
   it('returns undefined for undefined', () => {
     expect(marginAllClass(undefined)).toBeUndefined()
   })
@@ -110,6 +114,10 @@ describe('marginXClass', () => {
     it(`returns "pathable-margin-x-${v}" for "${v}"`, () => {
       expect(marginXClass(v)).toBe(`pathable-margin-x-${v}`)
     })
+  })
+
+  it('returns "pathable-margin-x-auto" for "auto"', () => {
+    expect(marginXClass('auto')).toBe('pathable-margin-x-auto')
   })
 
   it('returns undefined for undefined', () => {
