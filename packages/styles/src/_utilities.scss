@@ -128,7 +128,12 @@ $pathable-utilities: (
   'margin': (
       'class': 'pathable-margin',
       'property': 'margin',
-      'values': $-spacing-tokens,
+      'values': map.merge(
+          $-spacing-tokens,
+          (
+            'auto': auto,
+          )
+        ),
       'responsive': true,
       'state': (),
     ),
@@ -140,7 +145,12 @@ $pathable-utilities: (
         'margin-left',
         'margin-right',
       ),
-      'values': $-spacing-tokens,
+      'values': map.merge(
+          $-spacing-tokens,
+          (
+            'auto': auto,
+          )
+        ),
       'responsive': true,
       'state': (),
     ),

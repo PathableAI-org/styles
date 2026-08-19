@@ -140,6 +140,10 @@ describe('marginYClass', () => {
     })
   })
 
+  it('returns undefined for "auto"', () => {
+    expect(marginYClass('auto')).toBeUndefined()
+  })
+
   it('returns undefined for undefined', () => {
     expect(marginYClass(undefined)).toBeUndefined()
   })
@@ -160,6 +164,10 @@ describe('marginTopClass', () => {
     })
   })
 
+  it('returns undefined for "auto"', () => {
+    expect(marginTopClass('auto')).toBeUndefined()
+  })
+
   it('returns undefined for undefined', () => {
     expect(marginTopClass(undefined)).toBeUndefined()
   })
@@ -178,6 +186,10 @@ describe('marginBottomClass', () => {
     it(`returns "pathable-margin-bottom-${v}" for "${v}"`, () => {
       expect(marginBottomClass(v)).toBe(`pathable-margin-bottom-${v}`)
     })
+  })
+
+  it('returns undefined for "auto"', () => {
+    expect(marginBottomClass('auto')).toBeUndefined()
   })
 
   it('returns undefined for undefined', () => {

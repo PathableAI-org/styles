@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
+import { renderToString } from 'react-dom/server'
 import { Card } from '../Card'
 
 describe('Card sizing/spacing props', () => {
@@ -140,6 +141,67 @@ describe('Card sizing/spacing props', () => {
       const root = container.firstElementChild as HTMLElement
       expect(root.className).toContain('pathable-card')
       expect(root.className).toContain('legacy')
+    })
+  })
+
+  describe('Invariants', () => {
+    it('does not introduce wrapper elements with sizing and spacing props', () => {
+      const { container } = render(
+        <Card width="full" marginX="auto" margin="4">
+          C
+        </Card>,
+      )
+      const root = container.firstElementChild as HTMLElement
+      expect(root.tagName).toBe('DIV')
+      expect(root.className).toContain('pathable-card')
+      expect(root.children.length).toBe(1)
+      expect(root.children[0].className).toContain('pathable-card__body')
+    })
+
+    it('passes native id attribute to the root element', () => {
+      const { container } = render(<Card id="my-card">C</Card>)
+      const root = container.firstElementChild as HTMLElement
+      expect(root.id).toBe('my-card')
+    })
+
+    it('passes data-* attributes to the root element', () => {
+      const { container } = render(
+        <Card data-testid="card-1" data-custom="x">
+          C
+        </Card>,
+      )
+      const root = container.firstElementChild as HTMLElement
+      expect(root.getAttribute('data-testid')).toBe('card-1')
+      expect(root.getAttribute('data-custom')).toBe('x')
+    })
+
+    it('passes aria-* attributes to the root element', () => {
+      const { container } = render(
+        <Card aria-label="card label" aria-hidden="true">
+          C
+        </Card>,
+      )
+      const root = container.firstElementChild as HTMLElement
+      expect(root.getAttribute('aria-label')).toBe('card label')
+      expect(root.getAttribute('aria-hidden')).toBe('true')
+    })
+
+    it('produces identical output for server and client render', () => {
+      const jsx = (
+        <Card
+          width="full"
+          maxWidth="tablet"
+          margin="2"
+          marginX="auto"
+          className="my-custom"
+        >
+          C
+        </Card>
+      )
+      const serverHtml = renderToString(jsx)
+      const { container } = render(jsx)
+      const clientHtml = container.innerHTML
+      expect(serverHtml).toBe(clientHtml)
     })
   })
 })

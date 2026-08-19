@@ -40,5 +40,3 @@ peerDependencyRules:
   allowAny:
     - eslint-plugin-jsx-a11y>eslint
     - eslint-plugin-storybook>storybook
-
-storeDir: /home/jake/PathableAI/styles/.pnpm-store/v11
