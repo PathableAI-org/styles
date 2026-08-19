@@ -19,9 +19,7 @@ describe('widthClass', () => {
   })
 
   it('returns undefined for unrecognized value', () => {
-    expect(
-      widthClass('nope' as unknown as Parameters<typeof widthClass>[0]),
-    ).toBeUndefined()
+    expect(widthClass('nope')).toBeUndefined()
   })
 })
 
@@ -51,8 +49,6 @@ describe('maxWidthClass', () => {
   })
 
   it('returns undefined for unrecognized value', () => {
-    expect(
-      maxWidthClass('nope' as unknown as Parameters<typeof maxWidthClass>[0]),
-    ).toBeUndefined()
+    expect(maxWidthClass('nope')).toBeUndefined()
   })
 })

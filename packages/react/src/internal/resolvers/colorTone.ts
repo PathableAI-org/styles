@@ -1,6 +1,4 @@
-import type { BackgroundColor, TextColor } from './types'
-
-const BACKGROUND_COLOR_MAP = {
+export const BACKGROUND_COLOR_MAP = {
   primary: 'pathable-bg-primary',
   base: 'pathable-bg-base',
   surface: 'pathable-bg-surface',
@@ -10,25 +8,40 @@ const BACKGROUND_COLOR_MAP = {
   danger: 'pathable-bg-danger',
   success: 'pathable-bg-success',
   transparent: 'pathable-bg-transparent',
-} as const satisfies Record<BackgroundColor, string>
+} as const
 
-const TEXT_COLOR_MAP = {
+export type BackgroundColor = keyof typeof BACKGROUND_COLOR_MAP
+export type BackgroundColorClass<T extends BackgroundColor> =
+  (typeof BACKGROUND_COLOR_MAP)[T]
+
+export function backgroundColorClass<T extends BackgroundColor>(
+  value: T,
+): BackgroundColorClass<T>
+export function backgroundColorClass(value: string): string | undefined
+export function backgroundColorClass(value?: string | null): string | undefined
+export function backgroundColorClass(
+  value?: string | null,
+): string | undefined {
+  if (value == null) return undefined
+  return (BACKGROUND_COLOR_MAP as Record<string, string | undefined>)[value]
+}
+
+export const TEXT_COLOR_MAP = {
   base: 'pathable-text-base',
   primary: 'pathable-text-primary',
   muted: 'pathable-text-muted',
   accent: 'pathable-text-accent',
   link: 'pathable-text-link',
   white: 'pathable-text-white',
-} as const satisfies Record<TextColor, string>
+} as const
 
-export function backgroundColorClass(
-  value?: BackgroundColor | null,
-): string | undefined {
-  if (value == null) return undefined
-  return BACKGROUND_COLOR_MAP[value]
-}
+export type TextColor = keyof typeof TEXT_COLOR_MAP
+export type TextColorClass<T extends TextColor> = (typeof TEXT_COLOR_MAP)[T]
 
-export function textColorClass(value?: TextColor | null): string | undefined {
+export function textColorClass<T extends TextColor>(value: T): TextColorClass<T>
+export function textColorClass(value: string): string | undefined
+export function textColorClass(value?: string | null): string | undefined
+export function textColorClass(value?: string | null): string | undefined {
   if (value == null) return undefined
-  return TEXT_COLOR_MAP[value]
+  return (TEXT_COLOR_MAP as Record<string, string | undefined>)[value]
 }

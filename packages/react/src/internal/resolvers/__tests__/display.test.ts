@@ -31,8 +31,6 @@ describe('displayClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      displayClass('grid' as unknown as Parameters<typeof displayClass>[0]),
-    ).toBeUndefined()
+    expect(displayClass('grid')).toBeUndefined()
   })
 })

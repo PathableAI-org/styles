@@ -19,8 +19,6 @@ describe('flexClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      flexClass('auto' as unknown as Parameters<typeof flexClass>[0]),
-    ).toBeUndefined()
+    expect(flexClass('auto')).toBeUndefined()
   })
 })

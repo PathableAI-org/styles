@@ -41,11 +41,7 @@ describe('paddingAllClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      paddingAllClass(
-        'bad' as unknown as Parameters<typeof paddingAllClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(paddingAllClass('bad')).toBeUndefined()
   })
 })
 
@@ -65,9 +61,7 @@ describe('paddingXClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      paddingXClass('bad' as unknown as Parameters<typeof paddingXClass>[0]),
-    ).toBeUndefined()
+    expect(paddingXClass('bad')).toBeUndefined()
   })
 })
 
@@ -87,9 +81,7 @@ describe('paddingYClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      paddingYClass('bad' as unknown as Parameters<typeof paddingYClass>[0]),
-    ).toBeUndefined()
+    expect(paddingYClass('bad')).toBeUndefined()
   })
 })
 
@@ -109,9 +101,7 @@ describe('marginAllClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      marginAllClass('bad' as unknown as Parameters<typeof marginAllClass>[0]),
-    ).toBeUndefined()
+    expect(marginAllClass('bad')).toBeUndefined()
   })
 })
 
@@ -131,9 +121,7 @@ describe('marginXClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      marginXClass('bad' as unknown as Parameters<typeof marginXClass>[0]),
-    ).toBeUndefined()
+    expect(marginXClass('bad')).toBeUndefined()
   })
 })
 
@@ -153,9 +141,7 @@ describe('marginYClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      marginYClass('bad' as unknown as Parameters<typeof marginYClass>[0]),
-    ).toBeUndefined()
+    expect(marginYClass('bad')).toBeUndefined()
   })
 })
 
@@ -175,9 +161,7 @@ describe('marginTopClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      marginTopClass('bad' as unknown as Parameters<typeof marginTopClass>[0]),
-    ).toBeUndefined()
+    expect(marginTopClass('bad')).toBeUndefined()
   })
 })
 
@@ -197,10 +181,6 @@ describe('marginBottomClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      marginBottomClass(
-        'bad' as unknown as Parameters<typeof marginBottomClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(marginBottomClass('bad')).toBeUndefined()
   })
 })

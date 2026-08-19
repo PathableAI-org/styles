@@ -27,11 +27,7 @@ describe('fontFamilyClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      fontFamilyClass(
-        'serif' as unknown as Parameters<typeof fontFamilyClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(fontFamilyClass('serif')).toBeUndefined()
   })
 })
 
@@ -57,10 +53,6 @@ describe('fontWeightClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      fontWeightClass(
-        'thin' as unknown as Parameters<typeof fontWeightClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(fontWeightClass('thin')).toBeUndefined()
   })
 })

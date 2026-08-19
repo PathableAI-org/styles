@@ -23,11 +23,7 @@ describe('alignItemsClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      alignItemsClass(
-        'space-between' as unknown as Parameters<typeof alignItemsClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(alignItemsClass('space-between')).toBeUndefined()
   })
 })
 
@@ -49,11 +45,7 @@ describe('justifyContentClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      justifyContentClass(
-        'space-evenly' as unknown as Parameters<typeof justifyContentClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(justifyContentClass('space-evenly')).toBeUndefined()
   })
 })
 
@@ -79,10 +71,6 @@ describe('textAlignClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      textAlignClass(
-        'justify' as unknown as Parameters<typeof textAlignClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(textAlignClass('justify')).toBeUndefined()
   })
 })

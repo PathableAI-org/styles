@@ -29,11 +29,7 @@ describe('backgroundColorClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      backgroundColorClass(
-        'unknown' as unknown as Parameters<typeof backgroundColorClass>[0],
-      ),
-    ).toBeUndefined()
+    expect(backgroundColorClass('unknown')).toBeUndefined()
   })
 })
 
@@ -62,8 +58,6 @@ describe('textColorClass', () => {
   })
 
   it('returns undefined for invalid value', () => {
-    expect(
-      textColorClass('pink' as unknown as Parameters<typeof textColorClass>[0]),
-    ).toBeUndefined()
+    expect(textColorClass('pink')).toBeUndefined()
   })
 })
