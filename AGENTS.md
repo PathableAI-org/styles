@@ -2,7 +2,7 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/043-component-test-rollout/plan.md
+at specs/044-semantic-prop-foundation/plan.md
 
 ## Shared component-contract conventions
 
