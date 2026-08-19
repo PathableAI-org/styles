@@ -41,10 +41,10 @@
 
 **Purpose**: Add Vitest test runner and establish directory structure
 
-- [ ] T001 Install Vitest as devDependency in `packages/react/package.json` via `pnpm --filter @pathableai/react add -D vitest @vitest/coverage-v8`
-- [ ] T002 [P] Create `packages/react/vitest.config.ts` with ESM config, test glob pointing to `src/**/*.test.ts`, coverage targeting `src/internal/resolvers/**/*.ts` with 100% functions threshold
-- [ ] T003 [P] Add `test:unit`, `test:unit:watch`, and `test:unit:coverage` scripts to `packages/react/package.json`
-- [ ] T004 Create directory structure: `packages/react/src/internal/resolvers/` and `packages/react/src/internal/resolvers/__tests__/`
+- [x] T001 Install Vitest as devDependency in `packages/react/package.json` via `pnpm --filter @pathableai/react add -D vitest @vitest/coverage-v8`
+- [x] T002 [P] Create `packages/react/vitest.config.ts` with ESM config, test glob pointing to `src/**/*.test.ts`, coverage targeting `src/internal/resolvers/**/*.ts` with 100% functions threshold
+- [x] T003 [P] Add `test:unit`, `test:unit:watch`, and `test:unit:coverage` scripts to `packages/react/package.json`
+- [x] T004 Create directory structure: `packages/react/src/internal/resolvers/` and `packages/react/src/internal/resolvers/__tests__/`
 
 **Checkpoint**: Vitest is installed, config exists, directory structure ready
 
@@ -58,7 +58,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Create capability inventory document at `packages/react/docs/capability-inventory.md` listing all 21 utility families from `packages/styles/src/_utilities.scss` with: SCSS module key, class prefix, CSS property, enumerated values, responsive flag, state variants, owning SCSS source file; organized into the 8 semantic capability groups (sizing, spacing, display, alignment, visibility, flex/grid, typography, color/tone); include a Gaps section recording all documented gaps from data-model.md
+- [x] T005 [US1] Create capability inventory document at `packages/react/docs/capability-inventory.md` listing all 21 utility families from `packages/styles/src/_utilities.scss` with: SCSS module key, class prefix, CSS property, enumerated values, responsive flag, state variants, owning SCSS source file; organized into the 8 semantic capability groups (sizing, spacing, display, alignment, visibility, flex/grid, typography, color/tone); include a Gaps section recording all documented gaps from data-model.md
 
 **Checkpoint**: Inventory document exists, verified against SCSS source, gaps documented — ready for type definition
 
@@ -72,25 +72,25 @@
 
 ### Implementation for User Story 2
 
-- [ ] T006 [US2] Create shared value types and capability interfaces in `packages/react/src/internal/resolvers/types.ts`: `Width`, `MaxWidth`, `SpacingScale`, `Display`, `AlignItems`, `JustifyContent`, `TextAlign`, `Flex`, `FontFamily`, `FontWeight`, `BackgroundColor`, `TextColor` as string-literal unions per data-model.md; `SizingProps`, `SpacingProps`, `DisplayProps`, `AlignmentProps`, `FlexGridProps`, `TypographyProps`, `ColorToneProps` interfaces
+- [x] T006 [US2] Create shared value types and capability interfaces in `packages/react/src/internal/resolvers/types.ts`: `Width`, `MaxWidth`, `SpacingScale`, `Display`, `AlignItems`, `JustifyContent`, `TextAlign`, `Flex`, `FontFamily`, `FontWeight`, `BackgroundColor`, `TextColor` as string-literal unions per data-model.md; `SizingProps`, `SpacingProps`, `DisplayProps`, `AlignmentProps`, `FlexGridProps`, `TypographyProps`, `ColorToneProps` interfaces
 
-- [ ] T007 [P] [US2] Implement sizing resolvers in `packages/react/src/internal/resolvers/sizing.ts`: `widthClass` maps `Width` values to `pathable-width-*` classes; `maxWidthClass` maps `MaxWidth` values to `pathable-maxw-*` classes; each using `Record + as const satisfies` pattern per contracts/resolver-api.md
+- [x] T007 [P] [US2] Implement sizing resolvers in `packages/react/src/internal/resolvers/sizing.ts`: `widthClass` maps `Width` values to `pathable-width-*` classes; `maxWidthClass` maps `MaxWidth` values to `pathable-maxw-*` classes; each using `Record + as const satisfies` pattern per contracts/resolver-api.md
 
-- [ ] T008 [P] [US2] Implement spacing resolvers in `packages/react/src/internal/resolvers/spacing.ts`: `paddingAllClass`, `paddingXClass`, `paddingYClass`, `marginAllClass`, `marginXClass`, `marginYClass`, `marginTopClass`, `marginBottomClass` — each mapping `SpacingScale` values (`0`–`10`, `15`) to the corresponding `pathable-padding-*` / `pathable-margin-*` classes
+- [x] T008 [P] [US2] Implement spacing resolvers in `packages/react/src/internal/resolvers/spacing.ts`: `paddingAllClass`, `paddingXClass`, `paddingYClass`, `marginAllClass`, `marginXClass`, `marginYClass`, `marginTopClass`, `marginBottomClass` — each mapping `SpacingScale` values (`0`–`10`, `15`) to the corresponding `pathable-padding-*` / `pathable-margin-*` classes
 
-- [ ] T009 [P] [US2] Implement display resolver in `packages/react/src/internal/resolvers/display.ts`: `displayClass` mapping `Display` values to `pathable-display-*` classes
+- [x] T009 [P] [US2] Implement display resolver in `packages/react/src/internal/resolvers/display.ts`: `displayClass` mapping `Display` values to `pathable-display-*` classes
 
-- [ ] T010 [P] [US2] Implement alignment resolvers in `packages/react/src/internal/resolvers/alignment.ts`: `alignItemsClass` mapping `AlignItems` values to `pathable-flex-align-*` classes; `justifyContentClass` mapping `JustifyContent` values to `pathable-flex-justify-*` classes; `textAlignClass` mapping `TextAlign` values to `pathable-text-*` classes (note: shared `pathable-text` prefix, disambiguated by function name)
+- [x] T010 [P] [US2] Implement alignment resolvers in `packages/react/src/internal/resolvers/alignment.ts`: `alignItemsClass` mapping `AlignItems` values to `pathable-flex-align-*` classes; `justifyContentClass` mapping `JustifyContent` values to `pathable-flex-justify-*` classes; `textAlignClass` mapping `TextAlign` values to `pathable-text-*` classes (note: shared `pathable-text` prefix, disambiguated by function name)
 
-- [ ] T011 [P] [US2] Implement flex/grid resolver in `packages/react/src/internal/resolvers/flexGrid.ts`: `flexClass` mapping `Flex` values (`1`, `fill`) to `pathable-flex-*` classes
+- [x] T011 [P] [US2] Implement flex/grid resolver in `packages/react/src/internal/resolvers/flexGrid.ts`: `flexClass` mapping `Flex` values (`1`, `fill`) to `pathable-flex-*` classes
 
-- [ ] T012 [P] [US2] Implement typography resolvers in `packages/react/src/internal/resolvers/typography.ts`: `fontFamilyClass` mapping `FontFamily` values to `pathable-font-family-*` classes; `fontWeightClass` mapping `FontWeight` values to `pathable-text-*` classes (shared `pathable-text` prefix; function name `fontWeightClass` disambiguates)
+- [x] T012 [P] [US2] Implement typography resolvers in `packages/react/src/internal/resolvers/typography.ts`: `fontFamilyClass` mapping `FontFamily` values to `pathable-font-family-*` classes; `fontWeightClass` mapping `FontWeight` values to `pathable-text-*` classes (shared `pathable-text` prefix; function name `fontWeightClass` disambiguates)
 
-- [ ] T013 [P] [US2] Implement color/tone resolvers in `packages/react/src/internal/resolvers/colorTone.ts`: `backgroundColorClass` mapping `BackgroundColor` values to `pathable-bg-*` classes; `textColorClass` mapping `TextColor` values to `pathable-text-*` classes (shared `pathable-text` prefix; function name `textColorClass` disambiguates)
+- [x] T013 [P] [US2] Implement color/tone resolvers in `packages/react/src/internal/resolvers/colorTone.ts`: `backgroundColorClass` mapping `BackgroundColor` values to `pathable-bg-*` classes; `textColorClass` mapping `TextColor` values to `pathable-text-*` classes (shared `pathable-text` prefix; function name `textColorClass` disambiguates)
 
-- [ ] T014 [US2] Create internal barrel export at `packages/react/src/internal/resolvers/index.ts` that re-exports all types from `types.ts` and all resolver functions from each module; verify `src/index.ts` does NOT import from this file (package boundary contract)
+- [x] T014 [US2] Create internal barrel export at `packages/react/src/internal/resolvers/index.ts` that re-exports all types from `types.ts` and all resolver functions from each module; verify `src/index.ts` does NOT import from this file (package boundary contract)
 
-- [ ] T015 [US2] Run `pnpm --filter @pathableai/react typecheck` and `pnpm --filter @pathableai/react lint` — fix any errors
+- [x] T015 [US2] Run `pnpm --filter @pathableai/react typecheck` and `pnpm --filter @pathableai/react lint` — fix any errors
 
 **Checkpoint**: All value types, interfaces, and resolvers exist. TypeScript compiles cleanly. No browser globals referenced. Public entry point does not expose internal resolvers.
 
@@ -104,11 +104,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Implement `mergeClasses` in `packages/react/src/internal/resolvers/mergeClasses.ts`: accepts variadic `(string | undefined | null)[]` sources, filters empty/undefined/null, joins with space, returns `undefined` if all sources empty. Add to internal barrel in `index.ts`.
+- [x] T016 [US3] Implement `mergeClasses` in `packages/react/src/internal/resolvers/mergeClasses.ts`: accepts variadic `(string | undefined | null)[]` sources, filters empty/undefined/null, joins with space, returns `undefined` if all sources empty. Add to internal barrel in `index.ts`.
 
-- [ ] T017 [US3] Document conflict policy in `packages/react/src/internal/resolvers/conflictPolicy.md`: shorthand vs directional (directional wins via CSS cascade order), duplicate classes are harmless, consumer `className` always takes final precedence per contracts/resolver-api.md
+- [x] T017 [US3] Document conflict policy in `packages/react/src/internal/resolvers/conflictPolicy.md`: shorthand vs directional (directional wins via CSS cascade order), duplicate classes are harmless, consumer `className` always takes final precedence per contracts/resolver-api.md
 
-- [ ] T018 [US3] Run typecheck and lint — fix any errors
+- [x] T018 [US3] Run typecheck and lint — fix any errors
 
 **Checkpoint**: `mergeClasses` works, conflict policy documented, typecheck and lint pass
 
@@ -122,25 +122,25 @@
 
 ### Implementation for User Story 4
 
-- [ ] T019 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/sizing.test.ts`: test `widthClass` and `maxWidthClass` for each valid value (exact class string), `undefined` input, `null` input, and invalid value — all return expected results
+- [x] T019 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/sizing.test.ts`: test `widthClass` and `maxWidthClass` for each valid value (exact class string), `undefined` input, `null` input, and invalid value — all return expected results
 
-- [ ] T020 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/spacing.test.ts`: test all 8 spacing resolvers (`paddingAllClass`, `paddingXClass`, `paddingYClass`, `marginAllClass`, `marginXClass`, `marginYClass`, `marginTopClass`, `marginBottomClass`) — each for valid values 0–10, 15; undefined; null; invalid
+- [x] T020 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/spacing.test.ts`: test all 8 spacing resolvers (`paddingAllClass`, `paddingXClass`, `paddingYClass`, `marginAllClass`, `marginXClass`, `marginYClass`, `marginTopClass`, `marginBottomClass`) — each for valid values 0–10, 15; undefined; null; invalid
 
-- [ ] T021 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/display.test.ts`: test `displayClass` for each of `flex|block|inline|inline-block|none`, undefined, null, invalid
+- [x] T021 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/display.test.ts`: test `displayClass` for each of `flex|block|inline|inline-block|none`, undefined, null, invalid
 
-- [ ] T022 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/alignment.test.ts`: test `alignItemsClass`, `justifyContentClass`, `textAlignClass` — each for all valid values, undefined, null, invalid
+- [x] T022 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/alignment.test.ts`: test `alignItemsClass`, `justifyContentClass`, `textAlignClass` — each for all valid values, undefined, null, invalid
 
-- [ ] T023 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/flexGrid.test.ts`: test `flexClass` for `1` and `fill`, undefined, null, invalid
+- [x] T023 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/flexGrid.test.ts`: test `flexClass` for `1` and `fill`, undefined, null, invalid
 
-- [ ] T024 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/typography.test.ts`: test `fontFamilyClass` for all 4 values, `fontWeightClass` for all 3 values — undefined, null, invalid for each
+- [x] T024 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/typography.test.ts`: test `fontFamilyClass` for all 4 values, `fontWeightClass` for all 3 values — undefined, null, invalid for each
 
-- [ ] T025 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/colorTone.test.ts`: test `backgroundColorClass` for all 9 values, `textColorClass` for all 6 values — undefined, null, invalid for each
+- [x] T025 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/colorTone.test.ts`: test `backgroundColorClass` for all 9 values, `textColorClass` for all 6 values — undefined, null, invalid for each
 
-- [ ] T026 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/mergeClasses.test.ts`: test merge order (base → semantic → consumer), all undefined inputs, mixed undefined and valid, empty string handling, single input, duplicate classes
+- [x] T026 [P] [US4] Create unit tests in `packages/react/src/internal/resolvers/__tests__/mergeClasses.test.ts`: test merge order (base → semantic → consumer), all undefined inputs, mixed undefined and valid, empty string handling, single input, duplicate classes
 
-- [ ] T027 [P] [US4] Create browser-globals test in `packages/react/src/internal/resolvers/__tests__/purity.test.ts`: import all resolver modules, verify no file references `window`, `document`, `navigator`, `localStorage`, or any DOM API; verify all resolver functions are synchronous and non-throwing for any input
+- [x] T027 [P] [US4] Create browser-globals test in `packages/react/src/internal/resolvers/__tests__/purity.test.ts`: import all resolver modules, verify no file references `window`, `document`, `navigator`, `localStorage`, or any DOM API; verify all resolver functions are synchronous and non-throwing for any input
 
-- [ ] T028 [US4] Run `pnpm --filter @pathableai/react test:unit:coverage` — verify 100% functions coverage and all tests pass; fix any failures or coverage gaps
+- [x] T028 [US4] Run `pnpm --filter @pathableai/react test:unit:coverage` — verify 100% functions coverage and all tests pass; fix any failures or coverage gaps
 
 **Checkpoint**: All unit tests pass, 100% resolver coverage, no browser globals referenced
 
@@ -150,13 +150,13 @@
 
 **Purpose**: Documentation, package boundary verification, final validation
 
-- [ ] T029 [P] Add `className` escape-hatch note to `packages/react/README.md` explaining that when a desired utility lacks a semantic prop mapping, consumers can use `className` directly with the `@pathable/styles` class name
+- [x] T029 [P] Add `className` escape-hatch note to `packages/react/README.md` explaining that when a desired utility lacks a semantic prop mapping, consumers can use `className` directly with the `@pathable/styles` class name
 
-- [ ] T030 [P] Verify package boundary: run `pnpm --filter @pathableai/react build` then `grep -r "widthClass\|mergeClasses\|SizingProps" packages/react/dist/` — confirm no resolver exports leak into public build output
+- [x] T030 [P] Verify package boundary: run `pnpm --filter @pathableai/react build` then `grep -r "widthClass\|mergeClasses\|SizingProps" packages/react/dist/` — confirm no resolver exports leak into public build output
 
-- [ ] T031 Run full quickstart validation per `specs/044-semantic-prop-foundation/quickstart.md`: build styles, typecheck, unit test, lint, full build — all pass
+- [x] T031 Run full quickstart validation per `specs/044-semantic-prop-foundation/quickstart.md`: build styles, typecheck, unit test, lint, full build — all pass
 
-- [ ] T032 [P] Ensure `src/internal/` matches existing pattern: verify `tsconfig.json` includes `src/` (all internal code type-checked), `"files": ["dist"]` excludes from publish, `src/index.ts` has no resolver imports
+- [x] T032 [P] Ensure `src/internal/` matches existing pattern: verify `tsconfig.json` includes `src/` (all internal code type-checked), `"files": ["dist"]` excludes from publish, `src/index.ts` has no resolver imports
 
 ---
 
