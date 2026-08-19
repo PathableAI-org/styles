@@ -27,7 +27,7 @@ Implement `Text`, a typographic primitive that lets applications express semanti
 
 ## Excludes
 
-- `Heading` — that is a separate feature (see [10](./10-heading.md)).
+- `Heading` — that is a separate feature (see [10](./10-heading-primitive.md)).
 - `Surface` tone modeling.
 - Raw font size, font weight, line height, or font family props — these are non-semantic escape hatches that `className` and `style` already provide.
 

@@ -17,8 +17,8 @@ Before implementation begins, at least two concrete application use cases must d
 ## Includes (contingent on precondition)
 
 - Implement a `Surface` component exported from `@pathable/react` with:
-  - A `variant` prop (`"default"`, `"subtle"`, `"primary"`, others verified from SCSS) that selects coordinated foreground, background, border, and focus-ring classes.
-  - Support for the shared surface-tone vocabulary defined in [11](./11-semantic-colors-tones.md).
+  - A `variant` prop (`"default"`, `"subtle"`, `"primary"`, others verified from SCSS) that selects coordinated foreground, background, border, and focus-ring classes. The `variant` value type is the `SurfaceTone` union from the shared tone vocabulary defined in [11](./11-semantic-colors-tones.md); `variant` is chosen over `tone` because the prop selects an entire coordinated surface treatment (background, border, elevation, focus), not a single text or border color.
+  - Support for the shared border-tone vocabulary from [11](./11-semantic-colors-tones.md) via a `borderTone` prop.
   - Optional `elevation` prop mapping to verified elevation/shadow utility classes.
   - Optional `borderTone` prop from the shared border-tone vocabulary.
 - Default rendered element is `div`, with an `as` prop.

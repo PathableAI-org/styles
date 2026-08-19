@@ -27,7 +27,7 @@ Define the shared semantic color and tone vocabulary for React consumers. This f
 
 ## Excludes
 
-- `Surface` component implementation — that is [12](./12-surface.md).
+- `Surface` component implementation — that is [12](./12-surface-primitive.md).
 - Component-level tone adoption beyond `Text` (other components adopt tones in their own features).
 - Palette-level color props (`color`, `background`, `borderColor`) — these remain escape hatches via `className` and `style`.
 

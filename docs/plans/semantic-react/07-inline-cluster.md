@@ -36,7 +36,7 @@ Implement `Inline` and `Cluster`, two related layout primitives that arrange chi
 ## Excludes
 
 - Vertical stacking — that belongs to `Stack` ([06](./06-stack-primitive.md)).
-- Grid layout — that belongs to `Grid` ([08](./08-grid.md)).
+- Grid layout — that belongs to `Grid` ([08](./08-grid-primitive.md)).
 - Typography, color, tone props.
 - Custom breakpoint-based wrapping controls.
 
