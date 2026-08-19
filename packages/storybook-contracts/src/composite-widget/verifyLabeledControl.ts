@@ -13,10 +13,5 @@ export async function verifyLabeledControl(
   harness: StoryHarness,
   labelText: string | RegExp,
 ) {
-  const element = harness.within(harness.root).getByLabelText(labelText)
-  if (!element) {
-    throw new Error(
-      `Expected a control labelled "${String(labelText)}" to be present.`,
-    )
-  }
+  harness.within(harness.root).getByLabelText(labelText)
 }

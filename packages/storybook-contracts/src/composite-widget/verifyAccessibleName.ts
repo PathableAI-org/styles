@@ -13,10 +13,5 @@ export async function verifyAccessibleName(
   role: string,
   name: string | RegExp,
 ) {
-  const element = harness.within(harness.root).getByRole(role, { name })
-  if (!element) {
-    throw new Error(
-      `Expected a "${role}" with accessible name "${String(name)}" to be present.`,
-    )
-  }
+  harness.within(harness.root).getByRole(role, { name })
 }

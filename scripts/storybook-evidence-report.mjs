@@ -54,6 +54,24 @@ const evidence = existsSync(evidencePath)
 
 const targetEvidence = evidence?.targets?.[target] ?? null
 const targetGreen = targetEvidence?.passed === true
+const filterPattern = evidence?.filter ?? null
+
+/**
+ * Whether a ledger entry's proof was exercised by the last green run.
+ * If no filter ran, the full catalog was tested and every entry is covered.
+ * If a filter ran, only entries whose storyId or fixture storyIds match the
+ * pattern are covered.
+ */
+function isCoveredByRun(entry) {
+  if (!targetGreen) return false
+  if (!filterPattern) return true
+  // The filter pattern is a story-id prefix; check the entry's own storyId
+  // and every fixture storyId.
+  if (entry.storyId && entry.storyId.includes(filterPattern)) return true
+  return entry.fixtures.some(
+    (f) => f.storyId && f.storyId.includes(filterPattern),
+  )
+}
 
 // ---- Ledger invariants ----
 const ledgerProblems = validateRolloutLedger(rolloutLedger)
@@ -89,7 +107,7 @@ function axeExecution() {
 
 const axe = axeExecution()
 
-/** A ledger entry claims proof only if a green target run exists. */
+/** A ledger entry claims proof only if the last green run covered it. */
 function adoptionStatus(entry) {
   if (entry.category === 'styles-only') {
     return {
@@ -98,13 +116,14 @@ function adoptionStatus(entry) {
     }
   }
   if (entry.status === 'adopted' || entry.status === 'styles-proven') {
+    const covered = isCoveredByRun(entry)
     return {
-      measure: targetGreen
+      measure: covered
         ? 'play (green run)'
-        : 'styles-proven recorded; no green run yet',
-      adopted: targetGreen
+        : 'styles-proven recorded; no green run covering this entry',
+      adopted: covered
         ? `styles-proven (${entry.status})`
-        : 'recorded but not yet executed',
+        : 'recorded but not covered by the last green run',
     }
   }
   return {
@@ -164,7 +183,10 @@ const anySharedProven = rolloutLedger.some(
   (e) =>
     e.category === 'shared' &&
     (e.status === 'styles-proven' || e.status === 'adopted') &&
-    targetGreen,
+    isCoveredByRun(e),
 )
 process.exitCode =
-  ledgerProblems.length === 0 && (anySharedProven || targetGreen) ? 0 : 1
+  ledgerProblems.length === 0 &&
+  (anySharedProven || (targetGreen && !filterPattern))
+    ? 0
+    : 1

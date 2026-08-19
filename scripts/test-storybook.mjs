@@ -365,10 +365,24 @@ const requestedTargets = []
 for (let i = 0; i < rawArgs.length; i += 1) {
   const arg = rawArgs[i]
   if (arg === '--filter') {
-    filterPattern = rawArgs[i + 1]
+    const next = rawArgs[i + 1]
+    if (!next || next.startsWith('-')) {
+      console.error(
+        'Error: --filter requires a non-empty value (a story-id prefix).',
+      )
+      process.exit(1)
+    }
+    filterPattern = next
     i += 1
   } else if (arg.startsWith('--filter=')) {
-    filterPattern = arg.slice('--filter='.length)
+    const value = arg.slice('--filter='.length)
+    if (!value) {
+      console.error(
+        'Error: --filter requires a non-empty value (a story-id prefix).',
+      )
+      process.exit(1)
+    }
+    filterPattern = value
   } else {
     requestedTargets.push(arg)
   }
@@ -380,9 +394,13 @@ const targetNames =
 const results = {}
 
 async function writeEvidence() {
+  const payload = {
+    targets: results,
+    filter: filterPattern || null,
+  }
   await writeFile(
     resolve(repositoryRoot, 'scripts/.storybook-evidence.json'),
-    JSON.stringify({ targets: results }, null, 2),
+    JSON.stringify(payload, null, 2),
   )
 }
 

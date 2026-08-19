@@ -12,10 +12,5 @@ export async function verifyLandmarkName(
   landmark: string,
   name: string | RegExp,
 ) {
-  const element = harness.within(harness.root).getByRole(landmark, { name })
-  if (!element) {
-    throw new Error(
-      `Expected a ${landmark} landmark with accessible name "${String(name)}" to be present.`,
-    )
-  }
+  harness.within(harness.root).getByRole(landmark, { name })
 }

@@ -12,10 +12,5 @@ export async function verifyDialogName(
   harness: StoryHarness,
   name: string | RegExp,
 ) {
-  const dialog = harness.within(harness.root).getByRole('dialog', { name })
-  if (!dialog) {
-    throw new Error(
-      `Expected a dialog with accessible name "${String(name)}" to be present.`,
-    )
-  }
+  harness.within(harness.root).getByRole('dialog', { name })
 }

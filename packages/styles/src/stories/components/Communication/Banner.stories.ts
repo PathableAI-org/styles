@@ -29,7 +29,7 @@ function renderBanner(expanded = false) {
     <div class="pathable-banner usa-banner">
       <div class="pathable-banner__header">
         <div class="pathable-banner__guidance">
-          <img class="pathable-banner__lock-image" src="https://designsystem.digital.gov/assets/img/lock.svg" alt="" />
+          <img class="pathable-banner__lock-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='20' viewBox='0 0 16 20'%3E%3Cpath fill='%2371737d' d='M8 0a5 5 0 0 0-5 5v3H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V5a5 5 0 0 0-5-5zM4 5a4 4 0 1 1 8 0v3H4V5zm1 8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2z'/%3E%3C/svg%3E" alt="" />
           <span>An official website of the PathAble</span>
         </div>
         <button class="pathable-banner__button" aria-expanded="${expandedAttr}" aria-controls="banner-content">
