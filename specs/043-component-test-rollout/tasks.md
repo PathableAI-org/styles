@@ -57,13 +57,13 @@ output.
 **Purpose**: Confirm the Phase 1/2 baseline that Phase 3 builds on is present
 and green. No new workspace package is created.
 
-- [ ] T001 Verify the private `packages/storybook-contracts` workspace package
+- [x] T001 Verify the private `packages/storybook-contracts` workspace package
       builds (`pnpm --filter @pathable/storybook-contracts build`) and exports
       the Accordion manifest/six helpers from `src/index.ts` unchanged
-- [ ] T002 [P] Verify `scripts/test-storybook.mjs` registers the `styles` (first)
+- [x] T002 [P] Verify `scripts/test-storybook.mjs` registers the `styles` (first)
       and `react` targets and that `pnpm test:storybook-styles` passes from the
       current clean checkout (no React build)
-- [ ] T003 [P] Verify `scripts/storybook-evidence-report.mjs` produces the
+- [x] T003 [P] Verify `scripts/storybook-evidence-report.mjs` produces the
       Accordion report with the three separate measures and the
       `scripts/accessibility-exceptions.mjs` registry is loadable
 
@@ -80,25 +80,25 @@ ledger.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create the rollout ledger module at
+- [x] T004 Create the rollout ledger module at
       `packages/storybook-contracts/src/rollout/rollout.ts` with a
       `RolloutEntry[]` covering every component target in
       `packages/styles/src/stories/components/` (wave A–E, category
       `shared`/`styles-only`, status `not-started`) per
       `contracts/rollout-ledger.md`
-- [ ] T005 [P] Define the `RolloutEntry`, `CapabilityRef`, `FixtureRef`, and
+- [x] T005 [P] Define the `RolloutEntry`, `CapabilityRef`, `FixtureRef`, and
       `DownstreamAdoption` types (with `wave`, `category`, `status`) in
       `packages/storybook-contracts/src/rollout/types.ts` per `data-model.md`
-- [ ] T006 [P] Create the shared-capability group directories and a minimal
+- [x] T006 [P] Create the shared-capability group directories and a minimal
       exported index `packages/storybook-contracts/src/{disclosure,overlay,composite-widget,focus}/index.ts` per `contracts/helper-taxonomy.md`
-- [ ] T007 Export the rollout ledger and capability-group indices from
+- [x] T007 Export the rollout ledger and capability-group indices from
       `packages/storybook-contracts/src/index.ts` with explicit named exports so
       `scripts/storybook-evidence-report.mjs` can read them
-- [ ] T008 [P] Add a narrow per-component/wave filter to
+- [x] T008 [P] Add a narrow per-component/wave filter to
       `scripts/test-storybook.mjs` (`--filter <story-id-prefix>`) that preserves
       the runtime-initialized assertion and target/story/capability failure
       context (`FR-015`)
-- [ ] T009 [P] Update `scripts/storybook-evidence-report.mjs` to read the rollout
+- [x] T009 [P] Update `scripts/storybook-evidence-report.mjs` to read the rollout
       ledger and report per-component (not just Accordion) three separate
       measures: deterministic fixtures, executable contract adoption, automated
       Axe — never labeled WCAG certification
@@ -128,64 +128,64 @@ containment states are covered before Wave B begins.
 
 ### Wave A: Modal (disclosure/overlay/focus helpers)
 
-- [ ] T010 [US1] Add deterministic Modal fixtures (closed, open) to
+- [x] T010 [US1] Add deterministic Modal fixtures (closed, open) to
       `packages/styles/src/stories/components/Communication/Modal.stories.ts`
-- [ ] T011 [P] [US1] Create `verifyOpenCloseViaTrigger` overlay helper in
+- [x] T011 [P] [US1] Create `verifyOpenCloseViaTrigger` overlay helper in
       `packages/storybook-contracts/src/overlay/verifyOpenCloseViaTrigger.ts`
-- [ ] T012 [P] [US1] Create `verifyAccessibleName` and `verifyEscapeClosesOverlay`
+- [x] T012 [P] [US1] Create `verifyAccessibleName` and `verifyEscapeClosesOverlay`
       overlay helpers in `packages/storybook-contracts/src/overlay/`
-- [ ] T013 [P] [US1] Create `verifyInitialFocusPlaced`,
+- [x] T013 [P] [US1] Create `verifyInitialFocusPlaced`,
       `verifyFocusContainedWhileOpen`, `verifyFocusRestoredOnClose` focus helpers
       in `packages/storybook-contracts/src/focus/`
-- [ ] T014 [US1] Export the new overlay/focus helpers from
+- [x] T014 [US1] Export the new overlay/focus helpers from
       `packages/storybook-contracts/src/index.ts`
-- [ ] T015 [US1] Add fixed Modal `play` stories in
+- [x] T015 [US1] Add fixed Modal `play` stories in
       `packages/styles/src/stories/components/Communication/Modal.stories.ts`
       calling the overlay/focus helpers with a runtime-initialized assertion
-- [ ] T016 [US1] Record Modal in the rollout ledger
+- [x] T016 [US1] Record Modal in the rollout ledger
       (`packages/storybook-contracts/src/rollout/rollout.ts`) as
       `styles-proven` after the focused run passes, and add its fixture/capability
       refs
 
 ### Wave A: Banner and Header (disclosure helpers)
 
-- [ ] T017 [P] [US1] Create `verifyDisclosureTogglesPressingButton` disclosure
+- [x] T017 [P] [US1] Create `verifyDisclosureTogglesPressingButton` disclosure
       helper in `packages/storybook-contracts/src/disclosure/`
-- [ ] T018 [P] [US1] Add deterministic Banner fixtures + fixed `play` stories
+- [x] T018 [P] [US1] Add deterministic Banner fixtures + fixed `play` stories
       calling the disclosure helper in
       `packages/styles/src/stories/components/Communication/Banner.stories.ts`
-- [ ] T019 [P] [US1] Add deterministic Header fixtures + fixed `play` stories
+- [x] T019 [P] [US1] Add deterministic Header fixtures + fixed `play` stories
       covering responsive navigation disclosure in
       `packages/styles/src/stories/components/Navigation/Header.stories.ts`
-- [ ] T020 [P] [US1] Add deterministic Sidenav fixtures + fixed `play` stories
+- [x] T020 [P] [US1] Add deterministic Sidenav fixtures + fixed `play` stories
       covering disclosure, current state, and focus in
       `packages/styles/src/stories/components/Navigation/Sidenav.stories.ts`
-- [ ] T021 [US1] Record Banner, Header, and Sidenav in the rollout ledger
+- [x] T021 [US1] Record Banner, Header, and Sidenav in the rollout ledger
       (`packages/storybook-contracts/src/rollout/rollout.ts`) as `styles-proven`
 
 ### Wave A: ComboBox, DatePicker, DateRangePicker (composite-widget/overlay)
 
-- [ ] T022 [P] [US1] Create `verifyOptionNavigable`, `verifyOptionSelectable`,
+- [x] T022 [P] [US1] Create `verifyOptionNavigable`, `verifyOptionSelectable`,
       `verifyEscapeClosesListbox` composite-widget helpers in
       `packages/storybook-contracts/src/composite-widget/`
-- [ ] T023 [P] [US1] Add ComboBox fixtures (default, disabled, invalid) + fixed
+- [x] T023 [P] [US1] Add ComboBox fixtures (default, disabled, invalid) + fixed
       `play` for label, entry, option navigation/selection, Escape in
       `packages/styles/src/stories/components/FormControls/ComboBox.stories.ts`
-- [ ] T024 [P] [US1] Add DatePicker fixtures + fixed `play` covering
+- [x] T024 [P] [US1] Add DatePicker fixtures + fixed `play` covering
       input/calendar synchronization, keyboard navigation, and validation in
       `packages/styles/src/stories/components/FormControls/DatePicker.stories.ts`
-- [ ] T025 [P] [US1] Add DateRangePicker fixtures + fixed `play` covering range
+- [x] T025 [P] [US1] Add DateRangePicker fixtures + fixed `play` covering range
       rules and focus return in
       `packages/styles/src/stories/components/FormControls/DateRangePicker.stories.ts`
-- [ ] T026 [US1] Record ComboBox, DatePicker, and DateRangePicker in the rollout
+- [x] T026 [US1] Record ComboBox, DatePicker, and DateRangePicker in the rollout
       ledger as `styles-proven`
 
 ### Wave A: Search
 
-- [ ] T027 [P] [US1] Add Search fixtures + fixed `play` covering label, entry,
+- [x] T027 [P] [US1] Add Search fixtures + fixed `play` covering label, entry,
       submission, and responsive disclosure where supported in
       `packages/styles/src/stories/components/Navigation/Search.stories.ts`
-- [ ] T028 [US1] Record Search in the rollout ledger as `styles-proven`
+- [x] T028 [US1] Record Search in the rollout ledger as `styles-proven`
 
 **Checkpoint**: All Wave A components are Styles-proven and recorded; the
 disclosure/overlay/composite-widget/focus helpers exist for later waves. Wave B

@@ -1,3 +1,9 @@
+import { userEvent, within, expect } from 'storybook/test'
+import {
+  verifyLabeledControl,
+  type StoryHarness,
+} from '@pathable/storybook-contracts'
+
 export default {
   title: 'Components/Form Controls/Date Picker',
   tags: ['autodocs'],
@@ -5,10 +11,19 @@ export default {
     docs: {
       description: {
         story:
-          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathableai/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Calendar open/close, date selection, keyboard navigation, month/year navigation\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
+          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathableai/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Calendar open/close, date selection, keyboard navigation, month/year navigation\n**Shared semantics verified**: the date input has an accessible name from its label.\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
       },
     },
   },
+}
+
+function harnessFor(root: HTMLElement): StoryHarness {
+  return {
+    root,
+    within,
+    userEvent,
+    expect,
+  }
 }
 
 export const Default = {
@@ -26,4 +41,9 @@ export const Default = {
   </div>
 </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const harness = harnessFor(canvasElement)
+
+    await verifyLabeledControl(harness, /Date/i)
+  },
 }

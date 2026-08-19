@@ -19,6 +19,7 @@
  *   node scripts/test-storybook.mjs              # run all targets sequentially
  *   node scripts/test-storybook.mjs styles       # run only the styles target
  *   node scripts/test-storybook.mjs react        # run only the React target
+ *   node scripts/test-storybook.mjs styles --filter <pattern>   # narrow to matching stories
  */
 import { spawn } from 'node:child_process'
 import { access, readFile, writeFile } from 'node:fs/promises'
@@ -63,17 +64,6 @@ export const targets = {
         'components-communication-accordion--initially-expanded',
     },
     sharedContracts: true,
-  },
-  react: {
-    name: 'react',
-    storybookWorkspace: '@pathable/storybook-react',
-    buildCommands: [
-      [pnpmCommand, '--filter', '@pathableai/styles', 'build'],
-      [pnpmCommand, '--filter', '@pathableai/react', 'build'],
-      [pnpmCommand, '--filter', '@pathable/storybook-react', 'build-storybook'],
-    ],
-    staticDirectory: 'apps/storybook-react/storybook-static',
-    port: 6007,
   },
   react: {
     name: 'react',
@@ -245,26 +235,26 @@ async function stopServer(server) {
   })
 }
 
-async function runTest(target, url) {
-  await runCommand(
-    pnpmCommand,
-    [
-      '--filter',
-      target.storybookWorkspace,
-      'exec',
-      'test-storybook',
-      '--url',
-      url,
-      '--index-json',
-    ],
-    {
-      env: {
-        ...process.env,
-        STORYBOOK_TARGET: target.name,
-        STORYBOOK_URL: url,
-      },
+async function runTest(target, url, filterPrefix) {
+  const args = [
+    '--filter',
+    target.storybookWorkspace,
+    'exec',
+    'test-storybook',
+    '--url',
+    url,
+    '--index-json',
+  ]
+  if (filterPrefix) {
+    args.push('--testNamePattern', filterPrefix)
+  }
+  await runCommand(pnpmCommand, args, {
+    env: {
+      ...process.env,
+      STORYBOOK_TARGET: target.name,
+      STORYBOOK_URL: url,
     },
-  )
+  })
 }
 
 /**
@@ -301,7 +291,7 @@ async function validateFixturesExist(target) {
   }
 }
 
-async function runTarget(targetName) {
+async function runTarget(targetName, filterPrefix) {
   const target = getTarget(targetName)
   validateTarget(target)
 
@@ -329,7 +319,7 @@ async function runTarget(targetName) {
     activeServer = server
 
     const url = await waitForReady(target)
-    await runTest(target, url)
+    await runTest(target, url, filterPrefix)
 
     console.log(`✓ Target "${target.name}" passed.`)
   } finally {
@@ -368,7 +358,22 @@ async function handleSignal(signal) {
 process.once('SIGINT', () => void handleSignal('SIGINT'))
 process.once('SIGTERM', () => void handleSignal('SIGTERM'))
 
-const requestedTargets = process.argv.slice(2)
+const rawArgs = process.argv.slice(2)
+let filterPattern
+const requestedTargets = []
+
+for (let i = 0; i < rawArgs.length; i += 1) {
+  const arg = rawArgs[i]
+  if (arg === '--filter') {
+    filterPattern = rawArgs[i + 1]
+    i += 1
+  } else if (arg.startsWith('--filter=')) {
+    filterPattern = arg.slice('--filter='.length)
+  } else {
+    requestedTargets.push(arg)
+  }
+}
+
 const targetNames =
   requestedTargets.length > 0 ? requestedTargets : Object.keys(targets)
 
@@ -384,7 +389,7 @@ async function writeEvidence() {
 try {
   for (const targetName of targetNames) {
     try {
-      await runTarget(targetName)
+      await runTarget(targetName, filterPattern)
       results[targetName] = { passed: true }
     } catch (error) {
       results[targetName] = { passed: false, error: error.message }

@@ -1,3 +1,10 @@
+import { userEvent, within, expect } from 'storybook/test'
+import {
+  verifyLandmarkName,
+  verifyAccessibleName,
+  type StoryHarness,
+} from '@pathable/storybook-contracts'
+
 export default {
   title: 'Components/Navigation/Search',
   tags: ['autodocs'],
@@ -5,19 +12,27 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: form submission, keyboard navigation\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
+          '**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: form submission, keyboard navigation\n**Shared semantics verified**: the form is a `search` landmark and the input has an accessible label.\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
       },
     },
   },
 }
 
-export const Default = {
-  render: () => `
-<form class="pathable-search" role="search">
-  <label class="pathable-sr-only" for="search-field-default">Search</label>
+function harnessFor(root: HTMLElement): StoryHarness {
+  return {
+    root,
+    within,
+    userEvent,
+    expect,
+  }
+}
+
+const SearchMarkup = (id: string) => `
+<form class="pathable-search" role="search" aria-label="Search">
+  <label class="pathable-sr-only" for="${id}">Search</label>
   <input
     class="pathable-input"
-    id="search-field-default"
+    id="${id}"
     type="search"
     name="search"
     placeholder="Search"
@@ -29,12 +44,21 @@ export const Default = {
     <span class="pathable-sr-only">Search</span>
   </button>
 </form>
-  `,
+`
+
+export const Default = {
+  render: () => SearchMarkup('search-field-default'),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const harness = harnessFor(canvasElement)
+
+    await verifyLandmarkName(harness, 'search', /Search/i)
+    await verifyAccessibleName(harness, 'searchbox', /Search/i)
+  },
 }
 
 export const Big = {
   render: () => `
-<form class="pathable-search pathable-search--big" role="search">
+<form class="pathable-search pathable-search--big" role="search" aria-label="Search">
   <label class="pathable-sr-only" for="search-field-big">Search</label>
   <input
     class="pathable-input"
@@ -51,4 +75,10 @@ export const Big = {
   </button>
 </form>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const harness = harnessFor(canvasElement)
+
+    await verifyLandmarkName(harness, 'search', /Search/i)
+    await verifyAccessibleName(harness, 'searchbox', /Search/i)
+  },
 }

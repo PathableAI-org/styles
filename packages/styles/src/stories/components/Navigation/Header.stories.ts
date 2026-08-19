@@ -1,3 +1,9 @@
+import { userEvent, within, expect } from 'storybook/test'
+import {
+  verifyLandmarkName,
+  type StoryHarness,
+} from '@pathable/storybook-contracts'
+
 export default {
   title: 'Components/Navigation/Header',
   tags: ['autodocs'],
@@ -5,14 +11,22 @@ export default {
     docs: {
       description: {
         story:
-          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathableai/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Mobile menu toggle, responsive navigation\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
+          '**Note:** This component uses USWDS JavaScript for interactivity. Import `@pathableai/styles/js` to enable interactive behavior.\n\n**Interaction Model**: Requires USWDS JS\n**USWDS JS Behaviors**: Mobile menu toggle, responsive navigation\n**Shared semantics verified**: the primary navigation is a `navigation` landmark with an accessible name.\n**Consumers must**: Import `@pathableai/styles/js` to enable interactive behavior.',
       },
     },
   },
 }
 
-export const Default = {
-  render: () => `
+function harnessFor(root: HTMLElement): StoryHarness {
+  return {
+    root,
+    within,
+    userEvent,
+    expect,
+  }
+}
+
+const HeaderMarkup = `
 <div class="pathable-overlay usa-overlay"></div>
 <header class="pathable-header pathable-header--basic usa-header usa-header--basic">
   <div class="pathable-nav-container usa-nav-container">
@@ -32,17 +46,25 @@ export const Default = {
       </button>
       <ul class="pathable-nav__primary usa-nav__primary usa-accordion">
         <li class="pathable-nav__primary-item usa-nav__primary-item">
-          <a class="usa-nav-link" href="#"><span>Participants</span></a>
+          <a class="usa-nav-link" href="#">Participants</a>
         </li>
         <li class="pathable-nav__primary-item usa-nav__primary-item">
-          <a class="usa-nav-link" href="#"><span>Coaching Sessions</span></a>
+          <a class="usa-nav-link" href="#">Coaching Sessions</a>
         </li>
         <li class="pathable-nav__primary-item usa-nav__primary-item">
-          <a class="usa-nav-link" href="#"><span>Support Activities</span></a>
+          <a class="usa-nav-link" href="#">Support Activities</a>
         </li>
       </ul>
     </nav>
   </div>
 </header>
-  `,
+`
+
+export const Default = {
+  render: () => HeaderMarkup,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const harness = harnessFor(canvasElement)
+
+    await verifyLandmarkName(harness, 'navigation', /Primary navigation/i)
+  },
 }

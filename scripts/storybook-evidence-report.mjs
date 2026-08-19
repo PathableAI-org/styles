@@ -2,7 +2,7 @@
 /**
  * Storybook evidence report.
  *
- * Reports three separate measures for the shared Accordion contract, so story
+ * Reports three separate measures per component in the rollout ledger, so story
  * presence is never conflated with capability coverage or accessibility
  * execution:
  *   1. Deterministic state fixtures (story presence).
@@ -15,8 +15,11 @@
  * report.
  *
  * Contract adoption is read from `scripts/.storybook-evidence.json`, written by
- * `scripts/test-storybook.mjs` after a green target run. Without it, adoption is
- * reported as "not yet executed" rather than assumed.
+ * `scripts/test-storybook.mjs` after a green target run. The rollout ledger
+ * (from `@pathable/storybook-contracts`) is validated before it is trusted; a
+ * ledger entry claiming `styles-proven`/`adopted` with no green run, or a
+ * `styles-only` surface shown as shared adoption, is a failure. Without it,
+ * adoption is reported as "not yet executed" rather than assumed.
  *
  * Usage:
  *   node scripts/storybook-evidence-report.mjs
@@ -29,33 +32,43 @@ import { getExceptionsFor } from './accessibility-exceptions.mjs'
 const here = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(here, '..')
 
-const manifestPath = resolve(
+const ledgerPath = resolve(
   repoRoot,
-  'packages/storybook-contracts/dist/accordion/manifest.js',
+  'packages/storybook-contracts/dist/rollout/rollout.js',
 )
 
-if (!existsSync(manifestPath)) {
+if (!existsSync(ledgerPath)) {
   process.stderr.write(
-    'Accordion manifest is not built. Run `pnpm --filter @pathable/storybook-contracts build` (or the styles Storybook command) before generating the evidence report.\n',
+    'Rollout ledger is not built. Run `pnpm --filter @pathable/storybook-contracts build` (or the styles Storybook command) before generating the evidence report.\n',
   )
   process.exit(1)
 }
 
-const manifestModule = await import(manifestPath)
-const manifest = manifestModule.accordionManifest
+const { rolloutLedger, validateRolloutLedger } = await import(ledgerPath)
 
 const target = 'styles'
-const storyId = 'Components/Communication/Accordion'
-const stylesStories = {
-  'accordion.default': 'components-communication-accordion--default',
-  'accordion.first-expanded':
-    'components-communication-accordion--initially-expanded',
-}
-
 const evidencePath = resolve(here, '.storybook-evidence.json')
 const evidence = existsSync(evidencePath)
   ? JSON.parse(readFileSync(evidencePath, 'utf8'))
   : null
+
+const targetEvidence = evidence?.targets?.[target] ?? null
+const targetGreen = targetEvidence?.passed === true
+
+// ---- Ledger invariants ----
+const ledgerProblems = validateRolloutLedger(rolloutLedger)
+if (ledgerProblems.length > 0) {
+  process.stderr.write(
+    `Rollout ledger invariants violated:\n${ledgerProblems
+      .map((p) => `  - ${p}`)
+      .join('\n')}\n`,
+  )
+  process.exitCode = 1
+  // A ledger with invariant violations cannot be trusted; stop.
+  if (!process.env.EVIDENCE_ALLOW_BROKEN) {
+    process.exit(1)
+  }
+}
 
 function axeExecution() {
   const runnerPath = resolve(
@@ -74,60 +87,84 @@ function axeExecution() {
   }
 }
 
-const targetEvidence = evidence?.targets?.[target] ?? null
 const axe = axeExecution()
 
-const fixtures = manifest.fixtures.map((f) => ({
-  ...f,
-  story: stylesStories[f.name] ?? 'UNREGISTERED',
-}))
+/** A ledger entry claims proof only if a green target run exists. */
+function adoptionStatus(entry) {
+  if (entry.category === 'styles-only') {
+    return {
+      measure: 'styles-only (fixtures, semantics, viewport pressure, Axe)',
+      adopted: 'styles-only surface',
+    }
+  }
+  if (entry.status === 'adopted' || entry.status === 'styles-proven') {
+    return {
+      measure: targetGreen
+        ? 'play (green run)'
+        : 'styles-proven recorded; no green run yet',
+      adopted: targetGreen
+        ? `styles-proven (${entry.status})`
+        : 'recorded but not yet executed',
+    }
+  }
+  return {
+    measure: 'not-started',
+    adopted: 'not yet executed',
+  }
+}
 
-const capabilities = manifest.shared.map((c) => ({
-  id: c.id,
-  label: c.label,
-  adopted:
-    targetEvidence?.passed === true ? 'play (green run)' : 'not yet executed',
-}))
+const lines = [
+  `# Storybook evidence report: ${target} — component rollout`,
+  '',
+  'Separate measures; never labeled WCAG certification. Visual smoke and',
+  'manual keyboard/focus/assistive-technology review are separate evidence.',
+  '',
+]
 
-const exceptions = getExceptionsFor(target, storyId)
-const conversionTargets = getExceptionsFor(target, storyId, {
-  includeDisabled: true,
-}).filter((e) => e.enabled !== true)
-
-process.stdout.write(
-  [
-    `# Storybook evidence report: ${target} / ${storyId}`,
+for (const entry of rolloutLedger) {
+  const status = adoptionStatus(entry)
+  const exceptions = getExceptionsFor(target, entry.storyId)
+  lines.push(
+    `## ${entry.name} (${entry.wave}) — ${entry.category} / ${entry.status}`,
     '',
-    'Separate measures; never labeled WCAG certification. Visual smoke and',
-    'manual keyboard/focus/assistive-technology review are separate evidence.',
+    `### 1. Deterministic state fixtures (story presence)`,
+    ...(entry.fixtures.length
+      ? entry.fixtures.map((f) => `- ${f.name} → \`${f.storyId}\``)
+      : entry.category === 'styles-only'
+        ? [
+            '- styles-only surface: deterministic states, semantics, viewport/content pressure, Axe',
+          ]
+        : ['- (none registered)']),
     '',
-    `## 1. Deterministic state fixtures (story presence)`,
-    ...fixtures.map(
-      (f) => `- ${f.name} → \`${f.story}\` (firstExpanded: ${f.firstExpanded})`,
-    ),
+    `### 2. Executable behavior-contract adoption`,
+    ...(entry.capabilities.length
+      ? entry.capabilities.map(
+          (c) => `- ${c.id} — ${c.label}: ${status.adopted}`,
+        )
+      : ['- styles-only surface (no shared capabilities)']),
     '',
-    `## 2. Executable behavior-contract adoption (capabilities)`,
-    ...capabilities.map((c) => `- ${c.id} — ${c.label}: ${c.adopted}`),
-    '',
-    `## 3. Automated accessibility (Axe) execution`,
+    `### 3. Automated accessibility (Axe) execution`,
     `- ${axe.note}`,
     `- Scope: ${axe.bound}`,
     '',
-    `## Exceptions (${exceptions.length})`,
+    `### Exceptions (${exceptions.length})`,
     ...(exceptions.length
       ? exceptions.map(
           (e) => `- ${e.story} :: ${e.rule} :: ${e.rationale} (${e.tracking})`,
         )
       : ['- None']),
     '',
-    `Conversion targets (${conversionTargets.length})`,
-    ...(conversionTargets.length
-      ? conversionTargets.map(
-          (e) => `- ${e.story} :: ${e.rule} (${e.tracking})`,
-        )
-      : ['- None']),
-  ].join('\n') + '\n',
-)
+  )
+}
+
+process.stdout.write(lines.join('\n') + '\n')
 
 // A green run is required to claim adoption: a story ID alone is not coverage.
-process.exitCode = targetEvidence?.passed === true ? 0 : 1
+const anySharedProven = rolloutLedger.some(
+  (e) =>
+    e.category === 'shared' &&
+    (e.status === 'styles-proven' || e.status === 'adopted') &&
+    targetGreen,
+)
+process.exitCode =
+  ledgerProblems.length === 0 && (anySharedProven || targetGreen) ? 0 : 1

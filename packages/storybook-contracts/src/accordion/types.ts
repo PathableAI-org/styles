@@ -44,6 +44,10 @@ export interface AccordionManifest {
 export interface Queryable {
   getByRole(role: string, options?: { name?: string | RegExp }): HTMLElement
   getByText(text: string | RegExp): HTMLElement
+  getByLabelText(
+    text: string | RegExp,
+    options?: { selector?: string },
+  ): HTMLElement
 }
 
 /**
