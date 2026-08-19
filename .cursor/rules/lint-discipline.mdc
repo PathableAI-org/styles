@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+# Lint Discipline
+
+Agents must NEVER disable or suppress any linting check. This includes but is not
+limited to:
+
+- `eslint-disable` / `eslint-disable-next-line` comments
+- `stylelint-disable` / `stylelint-disable-next-line` comments
+- `prettier-ignore` comments
+- `markdownlint-disable` comments
+- `@ts-ignore` / `@ts-expect-error` directives (unless accompanied by
+  a documented rationale approved by a human)
+- Any other comment or directive whose sole purpose is to silence a linter
+  or type-checker warning or error
+
+When a lint rule fires, agents must resolve the root cause by changing the code
+to satisfy the rule. Only humans may decide that a rule is invalid, overly broad,
+or should be suppressed.

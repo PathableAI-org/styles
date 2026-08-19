@@ -1184,6 +1184,17 @@ Use `role="status"` for polite operational updates and `role="alert"` for urgent
 
 ## Development
 
+### Using className as Escape Hatch
+
+When a desired utility from `@pathable/styles` does not yet have a semantic prop mapped in the resolver layer, consumers can use the standard `className` prop directly with the CSS class name from the `@pathable/styles` utility catalog. See `docs/capability-inventory.md` for the full list of available utility classes.
+
+```tsx
+// Direct className usage when no semantic prop exists:
+<Card className="pathable-margin-y-4 pathable-border-2" />
+```
+
+Semantic props and `className` compose together. When both are used, the consumer `className` appears last in the class attribute, giving it the final say via CSS cascade.
+
 ```bash
 # Build the package
 pnpm build
