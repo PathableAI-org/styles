@@ -57,7 +57,7 @@ TypeScript (strict mode), ESM-only, Node-compatible. All resolver code MUST be p
 1. **Test runner**: Vitest (see research.md)
 2. **Directory structure**: `src/internal/resolvers/` mirroring the existing `src/internal/` pattern
 3. **Naming convention**: `{valueType}Class()` for resolvers (e.g., `widthClass`, `marginAllClass`)
-4. **Prefix collision**: `pathable-text` ambiguity resolved by naming resolvers after the CSS property (e.g., `textColorClass`, `textWeightClass`, `textAlignClass`), NOT after the class prefix
+4. **Prefix collision**: `pathable-text` ambiguity resolved by naming resolvers after the CSS property (e.g., `textColorClass`, `fontWeightClass`, `textAlignClass`), NOT after the class prefix
 5. **Class merging**: `mergeClasses()` utility that composes `componentBase | semanticResolved | consumerClassName`
 6. **Conflict policy**: Directional props override shorthand (e.g., `marginTop` + `margin` → directional class wins for that axis)
 

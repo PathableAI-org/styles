@@ -12,6 +12,8 @@
 export function mergeClasses(
   ...sources: (string | undefined | null)[]
 ): string | undefined {
-  const filtered = sources.filter((s): s is string => typeof s === "string" && s.length > 0);
-  return filtered.length > 0 ? filtered.join(" ") : undefined;
+  const filtered = sources.filter(
+    (s): s is string => typeof s === 'string' && s.length > 0,
+  )
+  return filtered.length > 0 ? filtered.join(' ') : undefined
 }

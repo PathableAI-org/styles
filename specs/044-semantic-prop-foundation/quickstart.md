@@ -20,7 +20,7 @@ pnpm --filter @pathable/styles build
 ## Add Vitest to packages/react
 
 ```bash
-pnpm --filter @pathableai/react add -D vitest
+pnpm --filter @pathableai/react add -D vitest @vitest/coverage-v8
 ```
 
 Create `packages/react/vitest.config.ts`:
@@ -32,6 +32,7 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.ts'],
     coverage: {
+      provider: 'v8',
       include: ['src/internal/resolvers/**/*.ts'],
       exclude: ['src/internal/resolvers/__tests__/**'],
       thresholds: {

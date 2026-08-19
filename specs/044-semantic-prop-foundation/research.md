@@ -85,7 +85,7 @@ Resolvers named `{semanticPropName}Class()` where `semanticPropName` is the came
 
 - Directly reflects the prop name component authors will use
 - Self-documenting: `widthClass('full')` needs no explanation
-- Resolves the `pathable-text` prefix collision: three resolvers (`textColorClass`, `textWeightClass`, `textAlignClass`) share the same class prefix but have unambiguous names by CSS property
+- Resolves the `pathable-text` prefix collision: three resolvers (`textColorClass`, `fontWeightClass`, `textAlignClass`) share the same class prefix but have unambiguous names by CSS property
 
 ### Alternatives Considered
 

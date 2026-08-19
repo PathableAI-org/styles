@@ -22,9 +22,9 @@ export type {
   FlexGridProps,
   TypographyProps,
   ColorToneProps,
-} from "./types";
+} from './types'
 
-export { widthClass, maxWidthClass } from "./sizing";
+export { widthClass, maxWidthClass } from './sizing'
 export {
   paddingAllClass,
   paddingXClass,
@@ -34,10 +34,14 @@ export {
   marginYClass,
   marginTopClass,
   marginBottomClass,
-} from "./spacing";
-export { displayClass } from "./display";
-export { alignItemsClass, justifyContentClass, textAlignClass } from "./alignment";
-export { flexClass } from "./flexGrid";
-export { fontFamilyClass, fontWeightClass } from "./typography";
-export { backgroundColorClass, textColorClass } from "./colorTone";
-export { mergeClasses } from "./mergeClasses";
+} from './spacing'
+export { displayClass } from './display'
+export {
+  alignItemsClass,
+  justifyContentClass,
+  textAlignClass,
+} from './alignment'
+export { flexClass } from './flexGrid'
+export { fontFamilyClass, fontWeightClass } from './typography'
+export { backgroundColorClass, textColorClass } from './colorTone'
+export { mergeClasses } from './mergeClasses'

@@ -1190,7 +1190,7 @@ When a desired utility from `@pathable/styles` does not yet have a semantic prop
 
 ```tsx
 // Direct className usage when no semantic prop exists:
-<Card className="pathable-margin-left-4 pathable-border-2" />
+<Card className="pathable-margin-y-4 pathable-border-2" />
 ```
 
 Semantic props and `className` compose together. When both are used, the consumer `className` appears last in the class attribute, giving it the final say via CSS cascade.

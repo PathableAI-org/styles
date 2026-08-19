@@ -24,10 +24,10 @@ When both a shorthand prop (e.g., `margin`) and a directional prop (e.g., `margi
 ```typescript
 // margin="2" marginTop="4"
 mergeClasses(
-  "pathable-card",         // component base
-  marginAllClass("2"),     // pathable-margin-2 (all sides = 2)
-  marginTopClass("4"),     // pathable-margin-top-4 (top = 4)
-  undefined                // consumer className
+  'pathable-card', // component base
+  marginAllClass('2'), // pathable-margin-2 (all sides = 2)
+  marginTopClass('4'), // pathable-margin-top-4 (top = 4)
+  undefined, // consumer className
 )
 // Output: "pathable-card pathable-margin-2 pathable-margin-top-4"
 // Result: margin-top is 4, other margins are 2
