@@ -12,7 +12,7 @@ const meta = {
 
 **When to use**: For wrapping page content in a centered, width-constrained region. Use \`size="standard"\` for content pages, \`size="wide"\` for dashboards and data tables, and \`size="full"\` for full-bleed sections.
 
-**When not to use**: Use \`Box\` with \`maxWidth\` for custom width constraints that do not match the named sizes. Container is opinionated about width and gutter behavior.
+**When not to use**: Container size options are fixed. For arbitrary max-width constraints use a plain element with the \`pathable-maxw-*\` CSS utility classes, or use \`Box\` once that primitive is available. Container is opinionated about width and gutter behavior.
 
 **Underlying element**: \`<div>\` by default; override with \`as\` for semantic landmarks (\`<main>\`, \`<section>\`, \`<nav>\`).
 
