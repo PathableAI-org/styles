@@ -9,8 +9,8 @@ import {
   marginYClass,
   marginTopClass,
   marginBottomClass,
-} from '../../internal/resolvers'
-import { mergeClasses } from '../../internal/resolvers/mergeClasses'
+} from '../../internal/resolvers/index.js'
+import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'
 
 type CardPresentation = 'base' | 'media' | 'flag' | 'header-first' | 'workflow'
 

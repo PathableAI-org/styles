@@ -1,15 +1,15 @@
 // Re-export value types from resolver modules
-import type { Width, MaxWidth } from './sizing'
-import type { SpacingScale, MarginScale } from './spacing'
-import type { Display } from './display'
-import type { AlignItems, JustifyContent, TextAlign } from './alignment'
-import type { Flex } from './flexGrid'
-import type { FontFamily, FontWeight } from './typography'
-import type { BackgroundColor, TextColor } from './colorTone'
+import type { Width, MaxWidth } from './sizing.js'
+import type { SpacingScale, MarginScale } from './spacing.js'
+import type { Display } from './display.js'
+import type { AlignItems, JustifyContent, TextAlign } from './alignment.js'
+import type { Flex } from './flexGrid.js'
+import type { FontFamily, FontWeight } from './typography.js'
+import type { BackgroundColor, TextColor } from './colorTone.js'
 
-export type { Width, MaxWidth } from './sizing'
-export type { WidthClass, MaxWidthClass } from './sizing'
-export type { SpacingScale, MarginScale } from './spacing'
+export type { Width, MaxWidth } from './sizing.js'
+export type { WidthClass, MaxWidthClass } from './sizing.js'
+export type { SpacingScale, MarginScale } from './spacing.js'
 export type {
   PaddingClass,
   PaddingXClass,
@@ -19,21 +19,21 @@ export type {
   MarginYClass,
   MarginTopClass,
   MarginBottomClass,
-} from './spacing'
-export type { Display } from './display'
-export type { DisplayClass } from './display'
-export type { AlignItems, JustifyContent, TextAlign } from './alignment'
+} from './spacing.js'
+export type { Display } from './display.js'
+export type { DisplayClass } from './display.js'
+export type { AlignItems, JustifyContent, TextAlign } from './alignment.js'
 export type {
   AlignItemsClass,
   JustifyContentClass,
   TextAlignClass,
-} from './alignment'
-export type { Flex } from './flexGrid'
-export type { FlexClass } from './flexGrid'
-export type { FontFamily, FontWeight } from './typography'
-export type { FontFamilyClass, FontWeightClass } from './typography'
-export type { BackgroundColor, TextColor } from './colorTone'
-export type { BackgroundColorClass, TextColorClass } from './colorTone'
+} from './alignment.js'
+export type { Flex } from './flexGrid.js'
+export type { FlexClass } from './flexGrid.js'
+export type { FontFamily, FontWeight } from './typography.js'
+export type { FontFamilyClass, FontWeightClass } from './typography.js'
+export type { BackgroundColor, TextColor } from './colorTone.js'
+export type { BackgroundColorClass, TextColorClass } from './colorTone.js'
 
 // Capability interfaces — each is a set of optional props a component can opt into.
 // All props are optional: a component with SizingProps is not required to set width.

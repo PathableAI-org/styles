@@ -42,9 +42,9 @@ export type {
   FlexGridProps,
   TypographyProps,
   ColorToneProps,
-} from './types'
+} from './types.js'
 
-export { widthClass, maxWidthClass } from './sizing'
+export { widthClass, maxWidthClass } from './sizing.js'
 export {
   paddingAllClass,
   paddingXClass,
@@ -54,14 +54,14 @@ export {
   marginYClass,
   marginTopClass,
   marginBottomClass,
-} from './spacing'
-export { displayClass } from './display'
+} from './spacing.js'
+export { displayClass } from './display.js'
 export {
   alignItemsClass,
   justifyContentClass,
   textAlignClass,
-} from './alignment'
-export { flexClass } from './flexGrid'
-export { fontFamilyClass, fontWeightClass } from './typography'
-export { backgroundColorClass, textColorClass } from './colorTone'
-export { mergeClasses } from './mergeClasses'
+} from './alignment.js'
+export { flexClass } from './flexGrid.js'
+export { fontFamilyClass, fontWeightClass } from './typography.js'
+export { backgroundColorClass, textColorClass } from './colorTone.js'
+export { mergeClasses } from './mergeClasses.js'
