@@ -45,6 +45,11 @@ export type {
   DateRangePickerProps,
   DateRangeValue,
 } from './components/DateRangePicker/DateRangePicker.js'
+export { Container } from './components/Container/Container.js'
+export type {
+  ContainerProps,
+  ContainerSize,
+} from './components/Container/Container.js'
 export { DatePicker } from './components/DatePicker/DatePicker.js'
 export type {
   DatePickerInputProps,
