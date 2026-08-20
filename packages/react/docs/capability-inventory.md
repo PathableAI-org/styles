@@ -174,3 +174,23 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | 6   | Flex/Grid  | flex                                                                                 | Yes           |
 | 7   | Typography | font-family, text-weight                                                             | Yes           |
 | 8   | Color/Tone | bg, text (color)                                                                     | Yes           |
+
+---
+
+## Component Semantic-Prop Support Matrix
+
+**Feature**: `specs/046-form-control-button-sizing` (slice 03)
+
+This matrix records which `@pathable/react` components support which semantic sizing props. Supported = ✅, Not yet supported = —, Not applicable = N/A.
+
+| Component | `width` | `maxWidth` | Notes                                             |
+| --------- | ------- | ---------- | ------------------------------------------------- |
+| Card      | ✅      | ✅         | Slice 02 (`specs/045-card-sizing-spacing`)        |
+| Button    | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
+| Input     | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
+| Select    | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
+| Textarea  | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
+| Accordion | —       | —          | Not yet evaluated                                 |
+| Alert     | —       | —          | Not yet evaluated                                 |
+
+**Note**: `minWidth` is not yet supported on any component — no `min-width` utility class exists in `@pathable/styles`. See Gap Summary above.

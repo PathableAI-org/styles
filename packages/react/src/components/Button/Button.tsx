@@ -1,4 +1,10 @@
 import { ButtonHTMLAttributes } from 'react'
+import {
+  SizingProps,
+  widthClass,
+  maxWidthClass,
+} from '../../internal/resolvers/index.js'
+import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'
 
 type ButtonVariant =
   | 'primary'
@@ -17,7 +23,8 @@ type ButtonVariant =
 
 type ButtonSize = 'default' | 'big'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>, SizingProps {
   variant?: ButtonVariant
   size?: ButtonSize
 }
@@ -42,15 +49,22 @@ export function Button({
   children,
   variant = 'primary',
   size = 'default',
-  className = '',
+  width,
+  maxWidth,
+  className,
   ...rest
 }: ButtonProps) {
   const variantClass = VARIANT_CLASS[variant] || VARIANT_CLASS.primary
   const sizeClass = size === 'big' ? 'pathable-button--big' : ''
 
-  const classes = ['pathable-button', variantClass, sizeClass, className]
-    .filter(Boolean)
-    .join(' ')
+  const classes = mergeClasses(
+    'pathable-button',
+    variantClass,
+    sizeClass,
+    widthClass(width),
+    maxWidthClass(maxWidth),
+    className,
+  )
 
   return (
     <button type="button" className={classes} {...rest}>

@@ -1,16 +1,32 @@
 import type { ReactNode, SelectHTMLAttributes } from 'react'
+import {
+  SizingProps,
+  widthClass,
+  maxWidthClass,
+} from '../../internal/resolvers/index.js'
+import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'
 
-export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps
+  extends SelectHTMLAttributes<HTMLSelectElement>, SizingProps {
   children?: ReactNode
 }
 
-const BASE_CLASS = 'pathable-select'
-
-export function Select({ children, className, ...rest }: SelectProps) {
-  const combinedClassName = `${BASE_CLASS} ${className || ''}`.trim()
+export function Select({
+  width,
+  maxWidth,
+  children,
+  className,
+  ...rest
+}: SelectProps) {
+  const classes = mergeClasses(
+    'pathable-select',
+    widthClass(width),
+    maxWidthClass(maxWidth),
+    className,
+  )
 
   return (
-    <select className={combinedClassName} {...rest}>
+    <select className={classes} {...rest}>
       {children}
     </select>
   )
