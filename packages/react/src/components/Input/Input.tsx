@@ -1,15 +1,30 @@
 import type { InputHTMLAttributes } from 'react'
+import {
+  SizingProps,
+  widthClass,
+  maxWidthClass,
+} from '../../internal/resolvers/index.js'
+import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'
 
-export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'children'>
-
-const BASE_CLASS = 'pathable-input'
+export type InputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'children' | 'width' | 'maxWidth'
+> &
+  SizingProps
 
 export function Input({
+  width,
+  maxWidth,
   className,
   children: _children,
   ...rest
 }: InputProps & { children?: never }) {
-  const combinedClassName = `${BASE_CLASS} ${className || ''}`.trim()
+  const classes = mergeClasses(
+    'pathable-input',
+    widthClass(width),
+    maxWidthClass(maxWidth),
+    className,
+  )
 
-  return <input className={combinedClassName} {...rest} />
+  return <input className={classes} {...rest} />
 }

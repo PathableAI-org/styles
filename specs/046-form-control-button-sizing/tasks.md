@@ -20,9 +20,9 @@
 
 **Purpose**: Verify prerequisites and ensure the foundation is ready
 
-- [ ] T001 Verify `@pathable/styles` build output includes `pathable-width-full`, `pathable-width-auto`, and `pathable-maxw-{mobile,mobile-lg,tablet,desktop}` classes; run `pnpm --filter @pathable/styles build`
-- [ ] T002 Verify the semantic-prop resolver layer exports `widthClass`, `maxWidthClass`, and `mergeClasses` from `packages/react/src/internal/resolvers/index.ts` and they are importable from component code
-- [ ] T003 Verify the existing Card sizing test at `packages/react/src/components/Card/__tests__/Card.sizingSpacing.test.tsx` passes as a regression check — run `pnpm --filter @pathable/react test -- --run packages/react/src/components/Card/__tests__/Card.sizingSpacing.test.tsx`
+- [x] T001 Verify `@pathable/styles` build output includes `pathable-width-full`, `pathable-width-auto`, and `pathable-maxw-{mobile,mobile-lg,tablet,desktop}` classes; run `pnpm --filter @pathable/styles build`
+- [x] T002 Verify the semantic-prop resolver layer exports `widthClass`, `maxWidthClass`, and `mergeClasses` from `packages/react/src/internal/resolvers/index.ts` and they are importable from component code
+- [x] T003 Verify the existing Card sizing test at `packages/react/src/components/Card/__tests__/Card.sizingSpacing.test.tsx` passes as a regression check — run `pnpm --filter @pathable/react test -- --run packages/react/src/components/Card/__tests__/Card.sizingSpacing.test.tsx`
 
 **Checkpoint**: Foundation verified — resolver layer and CSS class contracts confirmed ready. No new resolver code or styles changes needed.
 
@@ -34,10 +34,10 @@
 
 **⚠️ CRITICAL**: This audit validates assumptions before any component code is changed
 
-- [ ] T004 [P] Audit `Button` markup at `packages/react/src/components/Button/Button.tsx` — confirm root element is `<button type="button">`, class construction uses `[].filter(Boolean).join(' ')`, note that ref forwarding is not currently used, and confirm no wrapper elements exist
-- [ ] T005 [P] Audit `Input` markup at `packages/react/src/components/Input/Input.tsx` — confirm root element is `<input>`, class construction uses template literal with `.trim()`, note `children` is explicitly rejected via `_children` discard
-- [ ] T006 [P] Audit `Select` markup at `packages/react/src/components/Select/Select.tsx` — confirm root element is `<select>`, class construction uses template literal with `.trim()`, children render `<option>` elements as passed
-- [ ] T007 [P] Audit `Textarea` markup at `packages/react/src/components/Textarea/Textarea.tsx` — confirm root element is `<textarea>`, class construction uses template literal with `.trim()`, note `children` is explicitly rejected
+- [x] T004 [P] Audit `Button` markup at `packages/react/src/components/Button/Button.tsx` — confirm root element is `<button type="button">`, class construction uses `[].filter(Boolean).join(' ')`, note that ref forwarding is not currently used, and confirm no wrapper elements exist
+- [x] T005 [P] Audit `Input` markup at `packages/react/src/components/Input/Input.tsx` — confirm root element is `<input>`, class construction uses template literal with `.trim()`, note `children` is explicitly rejected via `_children` discard
+- [x] T006 [P] Audit `Select` markup at `packages/react/src/components/Select/Select.tsx` — confirm root element is `<select>`, class construction uses template literal with `.trim()`, children render `<option>` elements as passed
+- [x] T007 [P] Audit `Textarea` markup at `packages/react/src/components/Textarea/Textarea.tsx` — confirm root element is `<textarea>`, class construction uses template literal with `.trim()`, note `children` is explicitly rejected
 
 **Checkpoint**: Markup audit complete — all 4 components confirmed safe for sizing-prop addition. No composite or multi-root components in scope.
 
@@ -51,34 +51,34 @@
 
 ### Tests for User Story 1
 
-- [ ] T008 [P] [US1] Create `Button.sizing.test.tsx` at `packages/react/src/components/Button/__tests__/Button.sizing.test.tsx` — cover: width="full" → `pathable-width-full`, width="auto" → `pathable-width-auto`, maxWidth="tablet" → `pathable-maxw-tablet`, maxWidth="desktop" → `pathable-maxw-desktop`, both props together, single root element, class order, SSR parity with `renderToString`
-- [ ] T009 [P] [US1] Create `Input.sizing.test.tsx` at `packages/react/src/components/Input/__tests__/Input.sizing.test.tsx` — cover: same test categories as Button, plus verify `children` rejection preserved
-- [ ] T010 [P] [US1] Create `Select.sizing.test.tsx` at `packages/react/src/components/Select/__tests__/Select.sizing.test.tsx` — cover: same test categories, plus verify children (`<option>` elements) render correctly with sizing classes
-- [ ] T011 [P] [US1] Create `Textarea.sizing.test.tsx` at `packages/react/src/components/Textarea/__tests__/Textarea.sizing.test.tsx` — cover: same test categories, plus verify `children` rejection preserved
+- [x] T008 [P] [US1] Create `Button.sizing.test.tsx` at `packages/react/src/components/Button/__tests__/Button.sizing.test.tsx` — cover: width="full" → `pathable-width-full`, width="auto" → `pathable-width-auto`, maxWidth="tablet" → `pathable-maxw-tablet`, maxWidth="desktop" → `pathable-maxw-desktop`, both props together, single root element, class order, SSR parity with `renderToString`
+- [x] T009 [P] [US1] Create `Input.sizing.test.tsx` at `packages/react/src/components/Input/__tests__/Input.sizing.test.tsx` — cover: same test categories as Button, plus verify `children` rejection preserved
+- [x] T010 [P] [US1] Create `Select.sizing.test.tsx` at `packages/react/src/components/Select/__tests__/Select.sizing.test.tsx` — cover: same test categories, plus verify children (`<option>` elements) render correctly with sizing classes
+- [x] T011 [P] [US1] Create `Textarea.sizing.test.tsx` at `packages/react/src/components/Textarea/__tests__/Textarea.sizing.test.tsx` — cover: same test categories, plus verify `children` rejection preserved
 
 ### Implementation for User Story 1 — Button
 
-- [ ] T012 [US1] Extend `ButtonProps` with `SizingProps` in `packages/react/src/components/Button/Button.tsx` — add `import { SizingProps } from '../../internal/resolvers/types'` and `import { mergeClasses, widthClass, maxWidthClass } from '../../internal/resolvers'`, then change `interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>` to also extend `SizingProps`
-- [ ] T013 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Button/Button.tsx` — extract `width`, `maxWidth` alongside existing destructured props (`children`, `variant`, `size`, `className`, `...rest`); do not spread them as native HTML attributes
-- [ ] T014 [US1] Replace manual class construction with `mergeClasses` in `packages/react/src/components/Button/Button.tsx` — change from `[].filter(Boolean).join(' ')` to `mergeClasses('pathable-button', variantClass, sizeClass, widthClass(width), maxWidthClass(maxWidth), className)`
+- [x] T012 [US1] Extend `ButtonProps` with `SizingProps` in `packages/react/src/components/Button/Button.tsx` — add `import { SizingProps, widthClass, maxWidthClass } from '../../internal/resolvers/index.js'` and `import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'`, then change `interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>` to also extend `SizingProps`
+- [x] T013 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Button/Button.tsx` — extract `width`, `maxWidth` alongside existing destructured props (`children`, `variant`, `size`, `className`, `...rest`); do not spread them as native HTML attributes
+- [x] T014 [US1] Replace manual class construction with `mergeClasses` in `packages/react/src/components/Button/Button.tsx` — change from `[].filter(Boolean).join(' ')` to `mergeClasses('pathable-button', variantClass, sizeClass, widthClass(width), maxWidthClass(maxWidth), className)`
 
 ### Implementation for User Story 1 — Input
 
-- [ ] T015 [US1] Extend `InputProps` with `SizingProps` in `packages/react/src/components/Input/Input.tsx` — add imports for `SizingProps`, `mergeClasses`, `widthClass`, `maxWidthClass` from the internal resolvers; change the type definition to `export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'children'> & SizingProps`
-- [ ] T016 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Input/Input.tsx` — extract alongside `className`, `children: _children`, `...rest`
-- [ ] T017 [US1] Replace template-literal class construction with `mergeClasses` in `packages/react/src/components/Input/Input.tsx` — change from `` `${BASE_CLASS} ${className || ''}`.trim() `` to `mergeClasses('pathable-input', widthClass(width), maxWidthClass(maxWidth), className)`
+- [x] T015 [US1] Extend `InputProps` with `SizingProps` in `packages/react/src/components/Input/Input.tsx` — add imports for `SizingProps`, `widthClass`, `maxWidthClass`, `mergeClasses` from the internal resolvers; change the type definition to `Omit<InputHTMLAttributes<...>, 'children' | 'width' | 'maxWidth'> & SizingProps`
+- [x] T016 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Input/Input.tsx` — extract alongside `className`, `children: _children`, `...rest`
+- [x] T017 [US1] Replace template-literal class construction with `mergeClasses` in `packages/react/src/components/Input/Input.tsx` — change from `` `${BASE_CLASS} ${className || ''}`.trim() `` to `mergeClasses('pathable-input', widthClass(width), maxWidthClass(maxWidth), className)`
 
 ### Implementation for User Story 1 — Select
 
-- [ ] T018 [US1] Extend `SelectProps` with `SizingProps` in `packages/react/src/components/Select/Select.tsx` — add imports for `SizingProps`, `mergeClasses`, `widthClass`, `maxWidthClass`; change the type definition to extend `SizingProps`
-- [ ] T019 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Select/Select.tsx` — extract alongside `children`, `className`, `...rest`
-- [ ] T020 [US1] Replace template-literal class construction with `mergeClasses` in `packages/react/src/components/Select/Select.tsx` — change from `` `${BASE_CLASS} ${className || ''}`.trim() `` to `mergeClasses('pathable-select', widthClass(width), maxWidthClass(maxWidth), className)`
+- [x] T018 [US1] Extend `SelectProps` with `SizingProps` in `packages/react/src/components/Select/Select.tsx` — add imports for `SizingProps`, `widthClass`, `maxWidthClass`, `mergeClasses`; change the type definition to extend `SizingProps`
+- [x] T019 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Select/Select.tsx` — extract alongside `children`, `className`, `...rest`
+- [x] T020 [US1] Replace template-literal class construction with `mergeClasses` in `packages/react/src/components/Select/Select.tsx` — change from `` `${BASE_CLASS} ${className || ''}`.trim() `` to `mergeClasses('pathable-select', widthClass(width), maxWidthClass(maxWidth), className)`
 
 ### Implementation for User Story 1 — Textarea
 
-- [ ] T021 [US1] Extend `TextareaProps` with `SizingProps` in `packages/react/src/components/Textarea/Textarea.tsx` — add imports for `SizingProps`, `mergeClasses`, `widthClass`, `maxWidthClass`; change the type definition to extend `SizingProps`
-- [ ] T022 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Textarea/Textarea.tsx` — extract alongside `className`, `children: _children`, `...rest`
-- [ ] T023 [US1] Replace template-literal class construction with `mergeClasses` in `packages/react/src/components/Textarea/Textarea.tsx` — change from `` `${BASE_CLASS} ${className || ''}`.trim() `` to `mergeClasses('pathable-textarea', widthClass(width), maxWidthClass(maxWidth), className)`
+- [x] T021 [US1] Extend `TextareaProps` with `SizingProps` in `packages/react/src/components/Textarea/Textarea.tsx` — add imports for `SizingProps`, `widthClass`, `maxWidthClass`, `mergeClasses`; change the type definition to extend `SizingProps`
+- [x] T022 [US1] Destructure `width` and `maxWidth` from props in `packages/react/src/components/Textarea/Textarea.tsx` — extract alongside `className`, `children: _children`, `...rest`
+- [x] T023 [US1] Replace template-literal class construction with `mergeClasses` in `packages/react/src/components/Textarea/Textarea.tsx` — change from `` `${BASE_CLASS} ${className || ''}`.trim() `` to `mergeClasses('pathable-textarea', widthClass(width), maxWidthClass(maxWidth), className)`
 
 **Checkpoint**: At this point, all 4 components accept `width` and `maxWidth` semantic props. Run tests (`pnpm --filter @pathable/react test -- --run packages/react/src/components/*/__tests__/*.sizing.test.tsx`) to verify correct class output and no wrapper elements.
 
@@ -94,10 +94,10 @@
 
 ### Tests for User Story 2
 
-- [ ] T024 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Button/__tests__/Button.sizing.test.tsx` — cover all `MaxWidth` values: `mobile`, `mobile-lg`, `tablet`, `desktop`, and combined `width="full" maxWidth="tablet"`
-- [ ] T025 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Input/__tests__/Input.sizing.test.tsx` — verify `<Input maxWidth="desktop" />` renders `pathable-maxw-desktop`, and `<Input width="full" maxWidth="mobile-lg" />` renders both classes
-- [ ] T026 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Select/__tests__/Select.sizing.test.tsx` — verify `<Select width="full" maxWidth="desktop" />` renders both classes with no wrapper
-- [ ] T027 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Textarea/__tests__/Textarea.sizing.test.tsx` — verify `<Textarea maxWidth="mobile-lg" />` renders `pathable-maxw-mobile-lg`
+- [x] T024 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Button/__tests__/Button.sizing.test.tsx` — cover all `MaxWidth` values: `mobile`, `mobile-lg`, `tablet`, `desktop`, and combined `width="full" maxWidth="tablet"`
+- [x] T025 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Input/__tests__/Input.sizing.test.tsx` — verify `<Input maxWidth="desktop" />` renders `pathable-maxw-desktop`, and `<Input width="full" maxWidth="mobile-lg" />` renders both classes
+- [x] T026 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Select/__tests__/Select.sizing.test.tsx` — verify `<Select width="full" maxWidth="desktop" />` renders both classes with no wrapper
+- [x] T027 [P] [US2] Add `maxWidth`-specific test cases to `packages/react/src/components/Textarea/__tests__/Textarea.sizing.test.tsx` — verify `<Textarea maxWidth="mobile-lg" />` renders `pathable-maxw-mobile-lg`
 
 **Checkpoint**: At this point, `maxWidth` is fully covered with component tests across all 4 components. Both `width` and `maxWidth` props work individually and combined.
 
@@ -113,10 +113,10 @@
 
 ### Tests for User Story 3
 
-- [ ] T028 [P] [US3] Add className composition tests to `packages/react/src/components/Button/__tests__/Button.sizing.test.tsx` — verify `<Button width="full" className="my-custom" />` class order: `pathable-button` before `pathable-width-full` before `my-custom`; verify `<Button className="my-custom" />` (no sizing) renders with `pathable-button` and `my-custom`
-- [ ] T029 [P] [US3] Add className composition tests to `packages/react/src/components/Input/__tests__/Input.sizing.test.tsx` — verify `<Input maxWidth="tablet" className="form-input" />` includes both `pathable-maxw-tablet` and `form-input`
-- [ ] T030 [P] [US3] Add className composition tests to `packages/react/src/components/Select/__tests__/Select.sizing.test.tsx` — verify class order in combined sizing + consumer className scenario
-- [ ] T031 [P] [US3] Add className composition tests to `packages/react/src/components/Textarea/__tests__/Textarea.sizing.test.tsx` — verify class order with combined sizing + className
+- [x] T028 [P] [US3] Add className composition tests to `packages/react/src/components/Button/__tests__/Button.sizing.test.tsx` — verify `<Button width="full" className="my-custom" />` class order: `pathable-button` before `pathable-width-full` before `my-custom`; verify `<Button className="my-custom" />` (no sizing) renders with `pathable-button` and `my-custom`
+- [x] T029 [P] [US3] Add className composition tests to `packages/react/src/components/Input/__tests__/Input.sizing.test.tsx` — verify `<Input maxWidth="tablet" className="form-input" />` includes both `pathable-maxw-tablet` and `form-input`
+- [x] T030 [P] [US3] Add className composition tests to `packages/react/src/components/Select/__tests__/Select.sizing.test.tsx` — verify class order in combined sizing + consumer className scenario
+- [x] T031 [P] [US3] Add className composition tests to `packages/react/src/components/Textarea/__tests__/Textarea.sizing.test.tsx` — verify class order with combined sizing + className
 
 **Checkpoint**: ClassName composition contract verified across all 4 components. Consumer classes always appear last.
 
@@ -130,18 +130,18 @@
 
 ### Storybook Stories
 
-- [ ] T032 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/Basic/Button.stories.tsx` — render `<Button width="full">Full Width Button</Button>` with a description explaining the prop replaces manual `className="pathable-width-full"` usage; add `width` and `maxWidth` to the `argTypes` object
-- [ ] T033 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/FormControls/Input.stories.tsx` — render `<Input width="full" placeholder="Full width input" />` with description
-- [ ] T034 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/FormControls/Select.stories.tsx` — render `<Select width="full">...</Select>` with description
-- [ ] T035 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/FormControls/Textarea.stories.tsx` — render `<Textarea width="full" placeholder="Full width textarea" />` with description
+- [x] T032 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/Basic/Button.stories.tsx` — render `<Button width="full">Full Width Button</Button>` with a description explaining the prop replaces manual `className="pathable-width-full"` usage; add `width` and `maxWidth` to the `argTypes` object
+- [x] T033 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/FormControls/Input.stories.tsx` — render `<Input width="full" placeholder="Full width input" />` with description
+- [x] T034 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/FormControls/Select.stories.tsx` — render `<Select width="full">...</Select>` with description
+- [x] T035 [P] [US4] Add `FullWidth` story to `packages/react/src/stories/components/FormControls/Textarea.stories.tsx` — render `<Textarea width="full" placeholder="Full width textarea" />` with description
 
 ### Capability Matrix
 
-- [ ] T036 [US4] Create or update component semantic-prop capability matrix in `packages/react/docs/` — add entries for Button, Input, Select, and Textarea with `width` and `maxWidth` columns marked as supported. Reference the existing `capability-inventory.md` CSS class inventory for the underlying class contracts. Document that `minWidth` is not yet supported (no CSS utility class exists).
+- [x] T036 [US4] Create or update component semantic-prop capability matrix in `packages/react/docs/` — add entries for Button, Input, Select, and Textarea with `width` and `maxWidth` columns marked as supported. Reference the existing `capability-inventory.md` CSS class inventory for the underlying class contracts. Document that `minWidth` is not yet supported (no CSS utility class exists).
 
 ### Storybook Validation
 
-- [ ] T037 [US4] Verify Storybook a11y addon reports no new violations for the FullWidth sizing stories on Button, Input, Select, and Textarea; run `pnpm test:storybook` to confirm automated contract checks pass
+- [x] T037 [US4] Verify Storybook a11y addon reports no new violations for the FullWidth sizing stories on Button, Input, Select, and Textarea; run `pnpm test:storybook` to confirm automated contract checks pass
 
 **Checkpoint**: Documentation complete. Developers can discover sizing props in Storybook and the capability matrix. All stories render correctly and pass a11y/contract checks.
 
@@ -153,13 +153,13 @@
 
 - [ ] T038 Run the full component test suite: `pnpm --filter @pathable/react test` — confirm all new sizing tests and existing tests pass with no regressions
 - [ ] T039 Run static accessibility linting (`eslint-plugin-jsx-a11y`) on modified component source files — verify no new findings; fix any violations without disabling rules
-- [ ] T040 Run TypeScript type-check: `pnpm --filter @pathable/react tsc --noEmit` — verify no type errors
-- [ ] T041 Run ESLint with `--max-warnings=0` on the React package — verify clean output
+- [x] T040 Run TypeScript type-check: `pnpm --filter @pathable/react tsc --noEmit` — verify no type errors
+- [x] T041 Run ESLint with `--max-warnings=0` on the React package — verify clean output
 - [ ] T042 Run `pnpm --filter @pathable/react build` — verify the React package builds successfully
 - [ ] T043 Run `pnpm --filter @pathable/styles build` — verify styles package builds successfully (unchanged, but confirm no regression)
 - [ ] T044 Run `pnpm test:storybook` at root — verify all Storybook interaction and contract tests pass
-- [ ] T045 Run quickstart validation scenarios from `specs/046-form-control-button-sizing/quickstart.md` — verify all end-to-end scenarios described in the quickstart work correctly
-- [ ] T046 Verify server-rendered output matches client-rendered output for all new prop combinations on all 4 components — confirm SSR parity using `renderToString` in test assertions (already covered in component tests; re-verify)
+- [x] T045 Run quickstart validation scenarios from `specs/046-form-control-button-sizing/quickstart.md` — verify all end-to-end scenarios described in the quickstart work correctly
+- [x] T046 Verify server-rendered output matches client-rendered output for all new prop combinations on all 4 components — confirm SSR parity using `renderToString` in test assertions (already covered in component tests; re-verify)
 
 ---
 

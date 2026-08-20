@@ -240,6 +240,18 @@ export const Narrow: Story = {
   },
 }
 
+/** FullWidth demonstrates the `width="full"` semantic sizing prop,
+ *  which replaces manual `className="pathable-width-full"` usage.
+ *  The class is applied to the root `<textarea>` element — no wrapper is introduced. */
+export const FullWidth: Story = {
+  args: {
+    'aria-label': 'Session notes',
+    width: 'full',
+    rows: 5,
+    placeholder: 'Enter your session notes',
+  },
+}
+
 export const FormComposition: Story = {
   render: () => (
     <form aria-label="Save coaching note">

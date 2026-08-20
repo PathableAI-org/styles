@@ -8,7 +8,7 @@ export type SearchSize = 'default' | 'big'
 
 export type SearchInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  'children' | 'id' | 'type'
+  'children' | 'id' | 'type' | 'width' | 'maxWidth'
 > & {
   readonly id?: string
 }

@@ -378,3 +378,14 @@ export const DialogFooter: Story = {
     </div>
   ),
 }
+
+/** FullWidth demonstrates the `width="full"` semantic sizing prop,
+ *  which replaces manual `className="pathable-width-full"` usage.
+ *  The class is applied to the root `<button>` element — no wrapper is introduced. */
+export const FullWidth: Story = {
+  args: {
+    children: 'Full Width Button',
+    variant: 'primary',
+    width: 'full',
+  },
+}
