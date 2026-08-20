@@ -2,53 +2,68 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/048-stack-primitive/plan.md
+at specs/049-inline-cluster-primitives/plan.md
 
-## Stack primitive
+## Inline and Cluster primitives
 
-This feature (slice 06 of the React Semantic Primitives plan) adds a new
-`Stack` layout primitive that renders a vertically-stacked flex container
-(`flex-direction: column`) with token-based spacing between its immediate
-children. It consumes the existing `.pathable-stack` SCSS contract and
-`.pathable-flex-align-*` utility classes from `@pathable/styles` with no
-SCSS changes.
+This feature (slice 07 of the React Semantic Primitives plan) adds two new
+horizontal layout primitives to `@pathable/react`: `Inline` (non-wrapping row,
+`flex-direction: row`) and `Cluster` (wrapping row, `flex-wrap: wrap`). Both
+consume SCSS contracts from `@pathable/styles` with token-based spacing.
 
-- The component follows the PascalCase naming convention: `pathable-stack` →
-  `Stack`.
-- A `gap` prop (`"sm"`, `"md"`, `"lg"`, `"xl"`) maps directly to BEM modifier
-  classes (`.pathable-stack--gap-sm`, etc.).
-- An `align` prop (`"start"`, `"center"`, `"end"`, `"stretch"`, `"baseline"`)
-  maps to existing `align-items` utility classes via the `alignItemsClass`
-  resolver.
-- Sizing (`width`, `maxWidth`) and external spacing (`margin`, `marginX`,
-  `marginY`, directional) props from the shared `SizingProps` and `SpacingProps`
-  capability system.
-- A polymorphic `as` prop follows the established `Container` pattern.
-- Class merging uses `mergeClasses()` with the documented order: base class
-  (`pathable-stack`) → gap modifier → alignment → sizing → spacing → consumer
-  `className`.
-- No wrapper DOM elements — classes apply to the single root element.
-- No SCSS or `packages/styles` changes.
+### Inline
+
+- A new `pathable-inline.scss` SCSS contract provides `display: flex;
+flex-direction: row` with CSS custom property–based gap control.
+- A `gap` prop (`"sm"`, `"md"`, `"lg"`, `"xl"`) maps to
+  `.pathable-inline--gap-{size}` modifier classes. Gap scale: 8px/16px/24px/32px
+  (same as Stack).
+- An `align` prop maps to `.pathable-flex-align-{value}` utility classes via
+  `alignItemsClass()`.
+- A `justify` prop maps to `.pathable-flex-justify-{value}` utility classes via
+  `justifyContentClass()`.
+- Sizing and spacing props from the shared `SizingProps`/`SpacingProps` capability
+  system (padding excluded).
+- Polymorphic `as` prop, ref forwarding, `mergeClasses()` class composition.
+
+### Cluster
+
+- The existing `.pathable-cluster` SCSS contract is modified: add `--gap-xl`
+  modifier (`var(--space-24)`) and `--align-baseline` modifier.
+- A `gap` prop (`"sm"`, `"md"`, `"lg"`, `"xl"`) maps to
+  `.pathable-cluster--gap-{size}` modifier classes. Cluster gap scale is tighter:
+  4px/8px/16px/24px.
+- An `align` prop maps to `.pathable-cluster--align-{value}` SCSS modifier
+  classes (not utility classes). Cluster defaults `align-items: center` via SCSS.
+- No `justify` prop — wrapping behavior interacts non-trivially with
+  `justify-content`.
+- Same sizing, spacing, polymorphic, and ref forwarding patterns as Inline.
 
 ### Key constraints
 
-- Only one new component: `Stack`.
-- The `gap` prop uses named scale values (`"sm"`, `"md"`, `"lg"`, `"xl"`),
-  matching the SCSS modifier class suffixes.
-- No `justifyContent` prop — excluded from initial scope.
+- Two new React components: `Inline` and `Cluster`.
+- One new SCSS file (`pathable-inline.scss`), two SCSS modifications
+  (`pathable-cluster.scss`, `pathable-layout-composition.scss`).
 - No typography, color, tone, display, visibility, or child-wrapping props.
-- No changes to `packages/styles`. Stack consumes the existing SCSS contract
-  and utility classes as-is.
-- The polymorphic `as` pattern follows the established `Container` approach.
+- No wrapper DOM elements — all classes on the single root element.
 
-### Running the focused command
+### Running the focused commands
 
 ```bash
+# Build all packages
+pnpm build
+
 # Build the React package
 pnpm --filter @pathable/react build
 
-# Run Stack component tests
-pnpm --filter @pathable/react test -- --testPathPattern="Stack"
+# Run Inline component tests
+pnpm --filter @pathable/react test -- --testPathPattern="Inline"
+
+# Run Cluster component tests
+pnpm --filter @pathable/react test -- --testPathPattern="Cluster"
+
+# Run all layout primitive tests
+pnpm --filter @pathable/react test -- --testPathPattern="Inline|Cluster|Stack"
 ```
 
 <!-- SPECKIT END -->

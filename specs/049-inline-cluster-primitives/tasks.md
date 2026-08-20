@@ -45,10 +45,10 @@
 
 **⚠️ CRITICAL**: No React component work can begin until this phase is complete.
 
-- [ ] T001 Create Inline SCSS contract in `packages/styles/src/pathable-component-wrappers/pathable-inline.scss` with `.pathable-inline` base class (`display: flex; flex-direction: row; gap: var(--pathable-inline-gap, var(--space-16))`) and four gap modifier classes (`.pathable-inline--gap-sm` = `var(--space-8)`, `--gap-md` = `var(--space-16)`, `--gap-lg` = `var(--space-24)`, `--gap-xl` = `var(--space-32)`)
-- [ ] T002 Add `--gap-xl` modifier to `packages/styles/src/pathable-component-wrappers/pathable-cluster.scss` with `--pathable-cluster-gap: var(--space-24)` and add `--align-baseline` modifier with `--pathable-cluster-align: baseline`
-- [ ] T003 Add `@forward 'pathable-inline'` to `packages/styles/src/pathable-component-wrappers/pathable-layout-composition.scss`
-- [ ] T004 Build the styles package and verify Inline and updated Cluster classes appear in CSS output: `pnpm --filter @pathable/styles build`
+- [x] T001 Create Inline SCSS contract in `packages/styles/src/pathable-component-wrappers/pathable-inline.scss` with `.pathable-inline` base class (`display: flex; flex-direction: row; gap: var(--pathable-inline-gap, var(--space-16))`) and four gap modifier classes (`.pathable-inline--gap-sm` = `var(--space-8)`, `--gap-md` = `var(--space-16)`, `--gap-lg` = `var(--space-24)`, `--gap-xl` = `var(--space-32)`)
+- [x] T002 Add `--gap-xl` modifier to `packages/styles/src/pathable-component-wrappers/pathable-cluster.scss` with `--pathable-cluster-gap: var(--space-24)` and add `--align-baseline` modifier with `--pathable-cluster-align: baseline`
+- [x] T003 Add `@forward 'pathable-inline'` to `packages/styles/src/pathable-component-wrappers/pathable-layout-composition.scss`
+- [x] T004 Build the styles package and verify Inline and updated Cluster classes appear in CSS output: `pnpm --filter @pathable/styles build`
 
 **Checkpoint**: SCSS foundation ready — React component implementation can now begin.
 
@@ -64,13 +64,13 @@
 
 > **NOTE: Write these tests FIRST — ensure they FAIL before implementing Inline.tsx**
 
-- [ ] T005 [P] [US1] Write unit tests for Inline gap behavior in `packages/react/src/components/Inline/__tests__/Inline.test.tsx`: base render (`.pathable-inline` class, single root `<div>`, `flex-direction: row`, no wrapper), each gap value maps to correct modifier class (`--gap-sm` → `.pathable-inline--gap-sm`, etc.), omitted gap produces base class only without gap modifier
+- [x] T005 [P] [US1] Write unit tests for Inline gap behavior in `packages/react/src/components/Inline/__tests__/Inline.test.tsx`: base render (`.pathable-inline` class, single root `<div>`, `flex-direction: row`, no wrapper), each gap value maps to correct modifier class (`--gap-sm` → `.pathable-inline--gap-sm`, etc.), omitted gap produces base class only without gap modifier
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Implement Inline component (gap-only, no align/justify/sizing yet) in `packages/react/src/components/Inline/Inline.tsx` following the Stack pattern: inner function + `forwardRef`, `InlineGap` type, `INLINE_GAP_CLASS` record, `mergeClasses('pathable-inline', gapClass, className)`
-- [ ] T007 [US1] Export Inline component and types from `packages/react/src/index.ts`: `export { Inline } from './components/Inline/Inline.js'` and `export type { InlineProps, InlineGap } from './components/Inline/Inline.js'`
-- [ ] T008 [US1] Verify US1 tests pass: `pnpm --filter @pathable/react test -- --testPathPattern="Inline"`
+- [x] T006 [US1] Implement Inline component (gap-only, no align/justify/sizing yet) in `packages/react/src/components/Inline/Inline.tsx` following the Stack pattern: inner function + `forwardRef`, `InlineGap` type, `INLINE_GAP_CLASS` record, `mergeClasses('pathable-inline', gapClass, className)`
+- [x] T007 [US1] Export Inline component and types from `packages/react/src/index.ts`: `export { Inline } from './components/Inline/Inline.js'` and `export type { InlineProps, InlineGap } from './components/Inline/Inline.js'`
+- [x] T008 [US1] Verify US1 tests pass: `pnpm --filter @pathable/react test -- --testPathPattern="Inline"`
 
 **Checkpoint**: `<Inline gap="sm">` renders a horizontal non-wrapping flex container with correct gap class and no wrappers.
 
@@ -84,13 +84,13 @@
 
 ### Tests for User Story 2
 
-- [ ] T009 [P] [US2] Write unit tests for Cluster gap behavior in `packages/react/src/components/Cluster/__tests__/Cluster.test.tsx`: base render (`.pathable-cluster` class, single root `<div>`, `flex-wrap: wrap`, no wrapper), each gap value maps to correct modifier class (`--gap-sm` → `.pathable-cluster--gap-sm`, `--gap-md`, `--gap-lg`, `--gap-xl`), omitted gap produces base class only
+- [x] T009 [P] [US2] Write unit tests for Cluster gap behavior in `packages/react/src/components/Cluster/__tests__/Cluster.test.tsx`: base render (`.pathable-cluster` class, single root `<div>`, `flex-wrap: wrap`, no wrapper), each gap value maps to correct modifier class (`--gap-sm` → `.pathable-cluster--gap-sm`, `--gap-md`, `--gap-lg`, `--gap-xl`), omitted gap produces base class only
 
 ### Implementation for User Story 2
 
-- [ ] T010 [US2] Implement Cluster component (gap-only, no align/sizing yet) in `packages/react/src/components/Cluster/Cluster.tsx` following the Stack pattern: inner function + `forwardRef`, `ClusterGap` type, `CLUSTER_GAP_CLASS` record, `mergeClasses('pathable-cluster', gapClass, className)`
-- [ ] T011 [US2] Export Cluster component and types from `packages/react/src/index.ts`: `export { Cluster } from './components/Cluster/Cluster.js'` and `export type { ClusterProps, ClusterGap } from './components/Cluster/Cluster.js'`
-- [ ] T012 [US2] Verify US2 tests pass: `pnpm --filter @pathable/react test -- --testPathPattern="Cluster"`
+- [x] T010 [US2] Implement Cluster component (gap-only, no align/sizing yet) in `packages/react/src/components/Cluster/Cluster.tsx` following the Stack pattern: inner function + `forwardRef`, `ClusterGap` type, `CLUSTER_GAP_CLASS` record, `mergeClasses('pathable-cluster', gapClass, className)`
+- [x] T011 [US2] Export Cluster component and types from `packages/react/src/index.ts`: `export { Cluster } from './components/Cluster/Cluster.js'` and `export type { ClusterProps, ClusterGap } from './components/Cluster/Cluster.js'`
+- [x] T012 [US2] Verify US2 tests pass: `pnpm --filter @pathable/react test -- --testPathPattern="Cluster"`
 
 **Checkpoint**: `<Cluster gap="sm">` renders a wrapping horizontal flex container with correct gap class and no wrappers.
 
@@ -104,14 +104,14 @@
 
 ### Tests for User Story 3
 
-- [ ] T013 [P] [US3] Add align/justify tests to `packages/react/src/components/Inline/__tests__/Inline.test.tsx`: each align value maps to correct class (via `alignItemsClass`), each justify value maps to correct class (via `justifyContentClass`), omitted align/justify produces no utility classes, TypeScript rejects invalid align/justify values
-- [ ] T014 [P] [US3] Add align tests to `packages/react/src/components/Cluster/__tests__/Cluster.test.tsx`: each align value maps to correct SCSS modifier class (`.pathable-cluster--align-start`, `--align-center`, `--align-end`, `--align-stretch`, `--align-baseline`), omitted align produces no modifier class (SCSS default `center` takes effect), TypeScript rejects invalid align values
+- [x] T013 [P] [US3] Add align/justify tests to `packages/react/src/components/Inline/__tests__/Inline.test.tsx`: each align value maps to correct class (via `alignItemsClass`), each justify value maps to correct class (via `justifyContentClass`), omitted align/justify produces no utility classes, TypeScript rejects invalid align/justify values
+- [x] T014 [P] [US3] Add align tests to `packages/react/src/components/Cluster/__tests__/Cluster.test.tsx`: each align value maps to correct SCSS modifier class (`.pathable-cluster--align-start`, `--align-center`, `--align-end`, `--align-stretch`, `--align-baseline`), omitted align produces no modifier class (SCSS default `center` takes effect), TypeScript rejects invalid align values
 
 ### Implementation for User Story 3
 
-- [ ] T015 [US3] Add `align` and `justify` props to Inline in `packages/react/src/components/Inline/Inline.tsx`: import `alignItemsClass`, `justifyContentClass`, add props to `InlineProps`, resolve classes before consumer `className` in `mergeClasses` call
-- [ ] T016 [US3] Add `align` prop to Cluster in `packages/react/src/components/Cluster/Cluster.tsx`: define `CLUSTER_ALIGN_CLASS` record mapping AlignItems values to `.pathable-cluster--align-{value}` modifier classes, resolve before consumer `className` in `mergeClasses` call
-- [ ] T017 [US3] Verify all US3 tests pass
+- [x] T015 [US3] Add `align` and `justify` props to Inline in `packages/react/src/components/Inline/Inline.tsx`: import `alignItemsClass`, `justifyContentClass`, add props to `InlineProps`, resolve classes before consumer `className` in `mergeClasses` call
+- [x] T016 [US3] Add `align` prop to Cluster in `packages/react/src/components/Cluster/Cluster.tsx`: define `CLUSTER_ALIGN_CLASS` record mapping AlignItems values to `.pathable-cluster--align-{value}` modifier classes, resolve before consumer `className` in `mergeClasses` call
+- [x] T017 [US3] Verify all US3 tests pass
 
 **Checkpoint**: Both components accept `align`; Inline accepts `justify`; classes map correctly.
 
@@ -125,15 +125,15 @@
 
 ### Tests for User Story 4
 
-- [ ] T018 [P] [US4] Add sizing/spacing tests to Inline tests: width, maxWidth, marginX, margin, marginY, marginTop, marginBottom each map to correct utility classes; combined sizing+spacing+gap+align all on same root element; omitted sizing/spacing produce no utility classes; padding props are type-blocked
-- [ ] T019 [P] [US4] Add sizing/spacing tests to Cluster tests: same coverage as Inline (width, maxWidth, all margin variants, combined, omitted, padding type-blocked)
+- [x] T018 [P] [US4] Add sizing/spacing tests to Inline tests: width, maxWidth, marginX, margin, marginY, marginTop, marginBottom each map to correct utility classes; combined sizing+spacing+gap+align all on same root element; omitted sizing/spacing produce no utility classes; padding props are type-blocked
+- [x] T019 [P] [US4] Add sizing/spacing tests to Cluster tests: same coverage as Inline (width, maxWidth, all margin variants, combined, omitted, padding type-blocked)
 
 ### Implementation for User Story 4
 
-- [ ] T020 [US4] Add sizing and spacing to Inline in `packages/react/src/components/Inline/Inline.tsx`: import `widthClass`, `maxWidthClass`, margin resolver functions; extend `InlineProps` with `Omit<SizingProps & SpacingProps, 'padding' | 'paddingX' | 'paddingY'>` with `@deprecated never` on padding props; resolve sizing/spacing classes before consumer `className`
-- [ ] T021 [US4] Add sizing and spacing to Cluster in `packages/react/src/components/Cluster/Cluster.tsx`: same pattern as Inline — import resolvers, extend props interface with padding exclusions, resolve in mergeClasses
-- [ ] T022 [US4] Verify all US4 tests pass
-- [ ] T023 [US4] Add SSR parity tests to both Inline and Cluster test files: render with `renderToString` for key prop combinations (gap+align+justify+sizing), verify server output matches client output
+- [x] T020 [US4] Add sizing and spacing to Inline in `packages/react/src/components/Inline/Inline.tsx`: import `widthClass`, `maxWidthClass`, margin resolver functions; extend `InlineProps` with `Omit<SizingProps & SpacingProps, 'padding' | 'paddingX' | 'paddingY'>` with `@deprecated never` on padding props; resolve sizing/spacing classes before consumer `className`
+- [x] T021 [US4] Add sizing and spacing to Cluster in `packages/react/src/components/Cluster/Cluster.tsx`: same pattern as Inline — import resolvers, extend props interface with padding exclusions, resolve in mergeClasses
+- [x] T022 [US4] Verify all US4 tests pass
+- [x] T023 [US4] Add SSR parity tests to both Inline and Cluster test files: render with `renderToString` for key prop combinations (gap+align+justify+sizing), verify server output matches client output
 
 **Checkpoint**: Both components accept sizing and spacing props; test coverage includes combined props and SSR parity.
 
@@ -147,14 +147,14 @@
 
 ### Tests for User Story 5
 
-- [ ] T024 [P] [US5] Add `as` prop tests to Inline tests: `as="section"`, `as="nav"`, omitted `as` defaults to `<div>`
-- [ ] T025 [P] [US5] Add `as` prop tests to Cluster tests: `as="ul"` with `<li>` children, `as="section"`, omitted `as` defaults to `<div>`
+- [x] T024 [P] [US5] Add `as` prop tests to Inline tests: `as="section"`, `as="nav"`, omitted `as` defaults to `<div>`
+- [x] T025 [P] [US5] Add `as` prop tests to Cluster tests: `as="ul"` with `<li>` children, `as="section"`, omitted `as` defaults to `<div>`
 
 ### Implementation for User Story 5
 
-- [ ] T026 [US5] Verify Inline already has `as` support from the polymorphic pattern established in US1 (inner function destructures `as`, `const Component = as ?? 'div'`, `<Component ...>`). If not, add it now following the Container pattern.
-- [ ] T027 [US5] Verify Cluster already has `as` support from US2. If not, add it now.
-- [ ] T028 [US5] Verify all US5 tests pass
+- [x] T026 [US5] Verify Inline already has `as` support from the polymorphic pattern established in US1 (inner function destructures `as`, `const Component = as ?? 'div'`, `<Component ...>`). If not, add it now following the Container pattern.
+- [x] T027 [US5] Verify Cluster already has `as` support from US2. If not, add it now.
+- [x] T028 [US5] Verify all US5 tests pass
 
 **Checkpoint**: Both components render the correct element for each `as` value.
 
@@ -168,17 +168,17 @@
 
 ### Tests for User Story 6
 
-- [ ] T029 [P] [US6] Add className composition tests to Inline tests: class ordering (base → gap → align/justify → sizing → spacing → consumer className), consumer className appears last
-- [ ] T030 [P] [US6] Add className composition tests to Cluster tests: class ordering (base → gap → align → sizing → spacing → consumer className)
-- [ ] T031 [P] [US6] Add ref forwarding tests to Inline tests: ref to default `<div>`, ref to `<section>` via `as="section"`
-- [ ] T032 [P] [US6] Add ref forwarding tests to Cluster tests: ref to default `<div>`, ref to `<ul>` via `as="ul"`
-- [ ] T033 [P] [US6] Add edge case tests to both test files: empty children renders root element correctly, native HTML attributes (`id`, `data-*`, `aria-*`) pass through, wrapper element between component and children (becomes sole flex child — document as correct CSS behavior)
+- [x] T029 [P] [US6] Add className composition tests to Inline tests: class ordering (base → gap → align/justify → sizing → spacing → consumer className), consumer className appears last
+- [x] T030 [P] [US6] Add className composition tests to Cluster tests: class ordering (base → gap → align → sizing → spacing → consumer className)
+- [x] T031 [P] [US6] Add ref forwarding tests to Inline tests: ref to default `<div>`, ref to `<section>` via `as="section"`
+- [x] T032 [P] [US6] Add ref forwarding tests to Cluster tests: ref to default `<div>`, ref to `<ul>` via `as="ul"`
+- [x] T033 [P] [US6] Add edge case tests to both test files: empty children renders root element correctly, native HTML attributes (`id`, `data-*`, `aria-*`) pass through, wrapper element between component and children (becomes sole flex child — document as correct CSS behavior)
 
 ### Implementation for User Story 6
 
-- [ ] T034 [US6] Verify class ordering in both Inline.tsx and Cluster.tsx: ensure `mergeClasses` call places consumer `className` as the final argument after all resolved component classes
-- [ ] T035 [US6] Verify ref forwarding in both components: confirm `forwardRef<HTMLElement, Props>(InnerFn)` pattern passes ref to the root `<Component>` element
-- [ ] T036 [US6] Verify all US6 tests pass
+- [x] T034 [US6] Verify class ordering in both Inline.tsx and Cluster.tsx: ensure `mergeClasses` call places consumer `className` as the final argument after all resolved component classes
+- [x] T035 [US6] Verify ref forwarding in both components: confirm `forwardRef<HTMLElement, Props>(InnerFn)` pattern passes ref to the root `<Component>` element
+- [x] T036 [US6] Verify all US6 tests pass
 
 **Checkpoint**: Consumer className composes correctly, ref forwarding works, edge cases covered.
 
@@ -192,9 +192,9 @@
 
 ### Implementation for User Story 7
 
-- [ ] T037 [P] [US7] Create Inline Storybook stories in `packages/react/src/stories/components/Inline/Inline.stories.tsx`: Default story (no props, 3 children), one story per gap value (GapSmall, GapMedium, GapLarge, GapExtraLarge), AlignCenter story, AlignStart story, JustifyBetween story, FullWidthCentered story (combined width/maxWidth/marginX), NestedLayout story (Inline inside Stack)
-- [ ] T038 [P] [US7] Create Cluster Storybook stories in `packages/react/src/stories/components/Cluster/Cluster.stories.tsx`: Default story (no props, 3 children), one story per gap value (GapSmall, GapMedium, GapLarge, GapExtraLarge), AlignStart story, AlignCenter story, ResponsiveWrapping story (constrained container showing items wrapping to new lines), NestedLayout story (Cluster inside Container)
-- [ ] T039 [US7] Verify Storybook builds and stories render: `pnpm --filter @pathable/react build-storybook`
+- [x] T037 [P] [US7] Create Inline Storybook stories in `packages/react/src/stories/components/Inline/Inline.stories.tsx`: Default story (no props, 3 children), one story per gap value (GapSmall, GapMedium, GapLarge, GapExtraLarge), AlignCenter story, AlignStart story, JustifyBetween story, FullWidthCentered story (combined width/maxWidth/marginX), NestedLayout story (Inline inside Stack)
+- [x] T038 [P] [US7] Create Cluster Storybook stories in `packages/react/src/stories/components/Cluster/Cluster.stories.tsx`: Default story (no props, 3 children), one story per gap value (GapSmall, GapMedium, GapLarge, GapExtraLarge), AlignStart story, AlignCenter story, ResponsiveWrapping story (constrained container showing items wrapping to new lines), NestedLayout story (Cluster inside Container)
+- [x] T039 [US7] Verify Storybook builds and stories render: `pnpm --filter @pathable/react build-storybook`
 
 **Checkpoint**: Storybook documentation complete with all required stories; stories pass automated checks.
 
@@ -204,10 +204,10 @@
 
 **Purpose**: Final validation, CI verification, and agent context update.
 
-- [ ] T040 Build the full React package: `pnpm --filter @pathable/react build`
-- [ ] T041 Run full test suite: `pnpm --filter @pathable/react test`
-- [ ] T042 Run CI gates: lint, type-check, and format check — ensure no new suppressions
-- [ ] T043 Update `AGENTS.md` agent context between `<!-- SPECKIT START -->` and `<!-- SPECKIT END -->` markers to point to `specs/049-inline-cluster-primitives/plan.md` with Inline/Cluster context summary
+- [x] T040 Build the full React package: `pnpm --filter @pathable/react build`
+- [x] T041 Run full test suite: `pnpm --filter @pathable/react test`
+- [x] T042 Run CI gates: lint, type-check, and format check — ensure no new suppressions
+- [x] T043 Update `AGENTS.md` agent context between `<!-- SPECKIT START -->` and `<!-- SPECKIT END -->` markers to point to `specs/049-inline-cluster-primitives/plan.md` with Inline/Cluster context summary
 
 ---
 
