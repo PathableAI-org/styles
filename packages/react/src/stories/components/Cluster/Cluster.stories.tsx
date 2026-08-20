@@ -171,7 +171,7 @@ export const GapExtraLarge: Story = {
 export const AlignStart: Story = {
   render: () => (
     <Cluster gap="md" align="start">
-      {tag('JavaScript', '#fff3e0', '#e65100', '#ffe0b2')}
+      {tag('JavaScript', '#fff3e0', '#7a2e00', '#ffe0b2')}
       {tag('TypeScript', '#e8f5e9', '#1b5e20', '#c8e6c9')}
       <div
         style={{
@@ -185,7 +185,7 @@ export const AlignStart: Story = {
       >
         Taller item (start-aligned)
       </div>
-      {tag('React', '#f3e5f5', '#4a148c', '#e1bee7')}
+      {tag('React', '#f3e5f5', '#3a1058', '#e1bee7')}
     </Cluster>
   ),
 }
@@ -193,7 +193,7 @@ export const AlignStart: Story = {
 export const AlignCenter: Story = {
   render: () => (
     <Cluster gap="md" align="center">
-      {tag('CSS', '#fff3e0', '#e65100', '#ffe0b2')}
+      {tag('CSS', '#fff3e0', '#7a2e00', '#ffe0b2')}
       {tag('SCSS', '#e8f5e9', '#1b5e20', '#c8e6c9')}
       <div
         style={{
@@ -207,7 +207,7 @@ export const AlignCenter: Story = {
       >
         Taller item (center-aligned)
       </div>
-      {tag('Design System', '#f3e5f5', '#4a148c', '#e1bee7')}
+      {tag('Design System', '#f3e5f5', '#3a1058', '#e1bee7')}
     </Cluster>
   ),
 }
@@ -230,10 +230,10 @@ export const ResponsiveWrapping: Story = {
       <Cluster gap="sm">
         {tag('Accessibility', '#e8f5e9', '#1b5e20', '#c8e6c9')}
         {tag('WCAG', '#e3f2fd', '#0d47a1', '#bbdefb')}
-        {tag('ARIA', '#f3e5f5', '#4a148c', '#e1bee7')}
-        {tag('Keyboard', '#fff3e0', '#e65100', '#ffe0b2')}
-        {tag('Focus', '#e0f7fa', '#006064', '#b2ebf2')}
-        {tag('Screen Reader', '#fce4ec', '#880e4f', '#f8bbd0')}
+        {tag('ARIA', '#f3e5f5', '#3a1058', '#e1bee7')}
+        {tag('Keyboard', '#fff3e0', '#7a2e00', '#ffe0b2')}
+        {tag('Focus', '#e0f7fa', '#004d4d', '#b2ebf2')}
+        {tag('Screen Reader', '#fce4ec', '#5c0a2f', '#f8bbd0')}
         {tag('Contrast', '#f1f8e9', '#33691e', '#dcedc8')}
         {tag('Semantic HTML', '#ede7f6', '#311b92', '#d1c4e9')}
       </Cluster>
@@ -260,9 +260,9 @@ export const NestedLayout: Story = {
       <Cluster gap="sm">
         {tag('Tag 1', '#e8f5e9', '#1b5e20', '#c8e6c9')}
         {tag('Tag 2', '#e3f2fd', '#0d47a1', '#bbdefb')}
-        {tag('Tag 3', '#f3e5f5', '#4a148c', '#e1bee7')}
-        {tag('Tag 4', '#fff3e0', '#e65100', '#ffe0b2')}
-        {tag('Tag 5', '#e0f7fa', '#006064', '#b2ebf2')}
+        {tag('Tag 3', '#f3e5f5', '#3a1058', '#e1bee7')}
+        {tag('Tag 4', '#fff3e0', '#7a2e00', '#ffe0b2')}
+        {tag('Tag 5', '#e0f7fa', '#004d4d', '#b2ebf2')}
       </Cluster>
     </div>
   ),
