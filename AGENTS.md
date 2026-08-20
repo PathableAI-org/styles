@@ -2,31 +2,34 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/046-form-control-button-sizing/plan.md
+at specs/047-container-primitive/plan.md
 
-## Semantic prop adoption conventions
+## Container primitive
 
-This feature (slice 03 of the React Semantic Primitives plan) adds typed sizing
-props (`width`, `maxWidth`) to the existing form control components (`Button`,
-`Input`, `Select`, `Textarea`) using the shared resolver infrastructure.
+This feature (slice 05 of the React Semantic Primitives plan) adds a new
+`Container` layout primitive that renders a centered, width-constrained content
+region with horizontal gutter padding. It consumes the existing `.pathable-container`
+SCSS contract from `@pathable/styles` with no SCSS changes.
 
-- The shared type system and pure resolvers live in `packages/react/src/internal/resolvers/`.
-- Components adopt semantic props by extending `SizingProps` and calling
-  `mergeClasses()` with the documented merge order: required component classes
-  → resolved semantic classes → consumer `className`.
-- Semantic props must never introduce wrapper DOM elements — they apply classes
-  to the root element the component already owns.
-- `className` remains the escape hatch for application-specific classes; it
-  always appears last in the class attribute and wins on equal CSS specificity.
-- Resolvers are pure and deterministic — no browser-only globals — so
-  server/client rendering output is identical.
-
-### Key constraints for this slice
-
-- Only `Button`, `Input`, `Select`, and `Textarea` are modified.
-- Only `width` and `maxWidth` from `SizingProps` are added.
-- Padding, margin, display, visibility, typography, and color props are excluded.
+- The component follows the PascalCase naming convention: `pathable-container` →
+  `Container`.
+- A `size` prop (`"standard"`, `"wide"`, `"full"`) maps directly to BEM modifier
+  classes (`.pathable-container--standard`, etc.).
+- A polymorphic `as` prop allows rendering as a semantic HTML element (`"main"`,
+  `"section"`, `"nav"`, etc.), establishing the pattern for future primitives
+  (`Box`).
+- Class merging uses `mergeClasses()` with the documented order: base class
+  (`pathable-container`) → modifier class → consumer `className`.
+- No wrapper DOM elements — classes apply to the single root element.
 - No SCSS or `packages/styles` changes.
+
+### Key constraints
+
+- Only one new component: `Container`.
+- No `SizingProps` or `SpacingProps` — `size` is the exclusive width mechanism.
+- No typography, color, tone, display, or visibility props.
+- No changes to `packages/styles`. Container consumes the existing SCSS contract as-is.
+- The polymorphic `as` pattern must be implemented without external libraries.
 
 ### Running the focused command
 
@@ -34,8 +37,8 @@ props (`width`, `maxWidth`) to the existing form control components (`Button`,
 # Build the React package
 pnpm --filter @pathable/react build
 
-# Run component tests
-pnpm --filter @pathable/react test
+# Run Container component tests
+pnpm --filter @pathable/react test -- --testPathPattern="Container"
 ```
 
 <!-- SPECKIT END -->
