@@ -27,13 +27,18 @@ const STACK_GAP_CLASS: Record<StackGap, string> = {
 export interface StackProps
   extends
     Omit<React.HTMLAttributes<HTMLElement>, 'color'>,
-    SizingProps,
-    SpacingProps {
+    Omit<SizingProps & SpacingProps, 'padding' | 'paddingX' | 'paddingY'> {
   as?: ElementType
   gap?: StackGap
   align?: AlignItems
   children?: ReactNode
   className?: string
+  /** @deprecated Stack does not support internal padding. */
+  padding?: never
+  /** @deprecated Stack does not support internal padding. */
+  paddingX?: never
+  /** @deprecated Stack does not support internal padding. */
+  paddingY?: never
 }
 
 function StackInner(

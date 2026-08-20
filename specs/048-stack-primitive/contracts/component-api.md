@@ -34,17 +34,22 @@ export type StackGap = 'sm' | 'md' | 'lg' | 'xl'
 
 export interface StackProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'color'>,
-    SizingProps,
-    SpacingProps {
+    Omit<SizingProps & SpacingProps, 'padding' | 'paddingX' | 'paddingY'> {
   as?: React.ElementType
   gap?: StackGap
   align?: AlignItems
   children?: React.ReactNode
   className?: string
+  /** @deprecated Stack does not support internal padding. */
+  padding?: never
+  /** @deprecated Stack does not support internal padding. */
+  paddingX?: never
+  /** @deprecated Stack does not support internal padding. */
+  paddingY?: never
 }
 ```
 
-Where `SizingProps` and `SpacingProps` are imported from the internal capability system:
+Where `SizingProps` and `SpacingProps` are imported from the internal capability system. `Stack` explicitly omits `padding`, `paddingX`, and `paddingY` from the `SpacingProps` intersection, marking them as `never` to prevent their use. Internal padding is not part of the Stack component's contract.
 
 ```typescript
 interface SizingProps {
@@ -53,6 +58,10 @@ interface SizingProps {
 }
 
 interface SpacingProps {
+  // padding props are explicitly excluded from Stack
+  // padding?: SpacingScale
+  // paddingX?: SpacingScale
+  // paddingY?: SpacingScale
   margin?: MarginScale
   marginX?: MarginScale
   marginY?: SpacingScale

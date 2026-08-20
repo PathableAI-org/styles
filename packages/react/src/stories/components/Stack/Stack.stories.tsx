@@ -71,14 +71,45 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const childBlock = (color: string, label: string) => (
+const childBlock = (label: string) => (
   <div
     style={{
-      background: color,
+      background: '#e8f5e9',
       padding: '1rem 1.5rem',
       borderRadius: 4,
-      color: '#fff',
+      color: '#1b5e20',
       fontWeight: 600,
+      border: '1px solid #c8e6c9',
+    }}
+  >
+    {label}
+  </div>
+)
+
+const childBlockAlt = (label: string) => (
+  <div
+    style={{
+      background: '#e3f2fd',
+      padding: '1rem 1.5rem',
+      borderRadius: 4,
+      color: '#0d47a1',
+      fontWeight: 600,
+      border: '1px solid #bbdefb',
+    }}
+  >
+    {label}
+  </div>
+)
+
+const childBlockAccent = (label: string) => (
+  <div
+    style={{
+      background: '#f3e5f5',
+      padding: '1rem 1.5rem',
+      borderRadius: 4,
+      color: '#4a148c',
+      fontWeight: 600,
+      border: '1px solid #e1bee7',
     }}
   >
     {label}
@@ -90,9 +121,9 @@ const childBlock = (color: string, label: string) => (
 export const Default: Story = {
   render: () => (
     <Stack>
-      {childBlock('#1cae96', 'Stack Item A')}
-      {childBlock('#00365c', 'Stack Item B')}
-      {childBlock('#4899e8', 'Stack Item C')}
+      {childBlock('Stack Item A')}
+      {childBlockAlt('Stack Item B')}
+      {childBlockAccent('Stack Item C')}
     </Stack>
   ),
 }
@@ -103,9 +134,9 @@ export const GapSmall: Story = {
   args: { gap: 'sm' },
   render: (args) => (
     <Stack gap={args.gap}>
-      {childBlock('#1cae96', 'Gap SM (8px)')}
-      {childBlock('#00365c', 'Gap SM (8px)')}
-      {childBlock('#4899e8', 'Gap SM (8px)')}
+      {childBlock('Gap SM (8px)')}
+      {childBlockAlt('Gap SM (8px)')}
+      {childBlockAccent('Gap SM (8px)')}
     </Stack>
   ),
 }
@@ -114,9 +145,9 @@ export const GapMedium: Story = {
   args: { gap: 'md' },
   render: (args) => (
     <Stack gap={args.gap}>
-      {childBlock('#1cae96', 'Gap MD (16px)')}
-      {childBlock('#00365c', 'Gap MD (16px)')}
-      {childBlock('#4899e8', 'Gap MD (16px)')}
+      {childBlock('Gap MD (16px)')}
+      {childBlockAlt('Gap MD (16px)')}
+      {childBlockAccent('Gap MD (16px)')}
     </Stack>
   ),
 }
@@ -125,9 +156,9 @@ export const GapLarge: Story = {
   args: { gap: 'lg' },
   render: (args) => (
     <Stack gap={args.gap}>
-      {childBlock('#1cae96', 'Gap LG (24px)')}
-      {childBlock('#00365c', 'Gap LG (24px)')}
-      {childBlock('#4899e8', 'Gap LG (24px)')}
+      {childBlock('Gap LG (24px)')}
+      {childBlockAlt('Gap LG (24px)')}
+      {childBlockAccent('Gap LG (24px)')}
     </Stack>
   ),
 }
@@ -136,9 +167,9 @@ export const GapExtraLarge: Story = {
   args: { gap: 'xl' },
   render: (args) => (
     <Stack gap={args.gap}>
-      {childBlock('#1cae96', 'Gap XL (32px)')}
-      {childBlock('#00365c', 'Gap XL (32px)')}
-      {childBlock('#4899e8', 'Gap XL (32px)')}
+      {childBlock('Gap XL (32px)')}
+      {childBlockAlt('Gap XL (32px)')}
+      {childBlockAccent('Gap XL (32px)')}
     </Stack>
   ),
 }
@@ -146,31 +177,32 @@ export const GapExtraLarge: Story = {
 // ── Alignment stories ────────────────────────────────────────────
 
 export const AlignCenter: Story = {
-  args: { gap: 'md', align: 'center' },
-  render: (args) => (
-    <Stack gap={args.gap} align={args.align}>
+  render: () => (
+    <Stack gap="md" align="center">
       <div
         style={{
-          background: '#1cae96',
+          background: '#e8f5e9',
           padding: '1rem',
           borderRadius: 4,
-          color: '#fff',
+          color: '#1b5e20',
+          fontWeight: 600,
+          border: '1px solid #c8e6c9',
           width: '60%',
           textAlign: 'center',
-          fontWeight: 600,
         }}
       >
         Centered (60% width)
       </div>
       <div
         style={{
-          background: '#00365c',
+          background: '#e3f2fd',
           padding: '1rem',
           borderRadius: 4,
-          color: '#fff',
+          color: '#0d47a1',
+          fontWeight: 600,
+          border: '1px solid #bbdefb',
           width: '40%',
           textAlign: 'center',
-          fontWeight: 600,
         }}
       >
         Centered (40% width)
@@ -180,29 +212,30 @@ export const AlignCenter: Story = {
 }
 
 export const AlignStart: Story = {
-  args: { gap: 'md', align: 'start' },
-  render: (args) => (
-    <Stack gap={args.gap} align={args.align}>
+  render: () => (
+    <Stack gap="md" align="start">
       <div
         style={{
-          background: '#1cae96',
+          background: '#e8f5e9',
           padding: '1rem',
           borderRadius: 4,
-          color: '#fff',
-          width: '60%',
+          color: '#1b5e20',
           fontWeight: 600,
+          border: '1px solid #c8e6c9',
+          width: '60%',
         }}
       >
         Start-aligned (60% width)
       </div>
       <div
         style={{
-          background: '#00365c',
+          background: '#e3f2fd',
           padding: '1rem',
           borderRadius: 4,
-          color: '#fff',
-          width: '80%',
+          color: '#0d47a1',
           fontWeight: 600,
+          border: '1px solid #bbdefb',
+          width: '80%',
         }}
       >
         Start-aligned (80% width)
@@ -216,13 +249,13 @@ export const AlignStart: Story = {
 export const NestedLayout: Story = {
   render: () => (
     <Stack gap="lg">
-      {childBlock('#1cae96', 'Header Section')}
+      {childBlock('Header Section')}
       <Stack gap="sm">
-        {childBlock('#00365c', 'Sub-item 1')}
-        {childBlock('#00365c', 'Sub-item 2')}
-        {childBlock('#00365c', 'Sub-item 3')}
+        {childBlockAlt('Sub-item 1')}
+        {childBlockAlt('Sub-item 2')}
+        {childBlockAlt('Sub-item 3')}
       </Stack>
-      {childBlock('#4899e8', 'Footer Section')}
+      {childBlockAccent('Footer Section')}
     </Stack>
   ),
 }
@@ -230,17 +263,11 @@ export const NestedLayout: Story = {
 // ── With sizing ──────────────────────────────────────────────────
 
 export const FullWidthCentered: Story = {
-  args: { gap: 'md', width: 'full', maxWidth: 'desktop', marginX: 'auto' },
-  render: (args) => (
-    <Stack
-      gap={args.gap}
-      width={args.width!}
-      maxWidth={args.maxWidth!}
-      marginX={args.marginX! as 'auto'}
-    >
-      {childBlock('#1cae96', 'Full-width, desktop-constrained, centered')}
-      {childBlock('#00365c', 'Item 2')}
-      {childBlock('#4899e8', 'Item 3')}
+  render: () => (
+    <Stack gap="md" width="full" maxWidth="desktop" marginX="auto">
+      {childBlock('Full-width, desktop-constrained, centered')}
+      {childBlockAlt('Item 2')}
+      {childBlockAccent('Item 3')}
     </Stack>
   ),
 }

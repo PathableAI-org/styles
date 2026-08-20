@@ -2,7 +2,7 @@ import React, { createRef } from 'react'
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
-import { Stack } from '../Stack.js'
+import { Stack } from '../Stack'
 
 function classList(element: Element): string[] {
   return element.className.split(/\s+/).filter(Boolean)
