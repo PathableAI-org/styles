@@ -44,7 +44,7 @@
 
 **Purpose**: Create the component directory structure
 
-- [ ] T001 Create directory structure: `packages/react/src/components/Stack/` and `packages/react/src/components/Stack/__tests__/` and `packages/react/src/stories/components/Stack/`
+- [x] T001 Create directory structure: `packages/react/src/components/Stack/` and `packages/react/src/components/Stack/__tests__/` and `packages/react/src/stories/components/Stack/`
 
 ---
 
@@ -54,7 +54,7 @@
 
 **⚠️ CRITICAL**: No user story work can begin until the component skeleton exists.
 
-- [ ] T002 Implement Stack component skeleton with base class `pathable-stack`, default `div` element, and children passthrough in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T002 Implement Stack component skeleton with base class `pathable-stack`, default `div` element, and children passthrough in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: A `<Stack />` renders `<div class="pathable-stack"></div>`. Ready to add props per user story.
 
@@ -72,15 +72,15 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T003 [US1] Add test for base render (no props) verifying single root `<div>` with `pathable-stack` class and no wrapper elements in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T004 [US1] Add tests for each `gap` value (`sm`, `md`, `lg`, `xl`) verifying correct `pathable-stack--gap-{value}` modifier class on root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T005 [US1] Add test for missing `gap` prop verifying only base `pathable-stack` class (no gap modifier) in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T006 [US1] Add test for children rendering in document order with no wrapper between Stack and children in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T003 [US1] Add test for base render (no props) verifying single root `<div>` with `pathable-stack` class and no wrapper elements in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T004 [US1] Add tests for each `gap` value (`sm`, `md`, `lg`, `xl`) verifying correct `pathable-stack--gap-{value}` modifier class on root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T005 [US1] Add test for missing `gap` prop verifying only base `pathable-stack` class (no gap modifier) in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T006 [US1] Add test for children rendering in document order with no wrapper between Stack and children in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Define `StackGap` type (`'sm' | 'md' | 'lg' | 'xl'`) and `STACK_GAP_CLASS` record mapping each gap value to its modifier class in `packages/react/src/components/Stack/Stack.tsx`
-- [ ] T008 [US1] Add `gap` prop to `StackProps` interface and wire gap class resolution in `mergeClasses` call order (base → gap modifier → className) in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T007 [US1] Define `StackGap` type (`'sm' | 'md' | 'lg' | 'xl'`) and `STACK_GAP_CLASS` record mapping each gap value to its modifier class in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T008 [US1] Add `gap` prop to `StackProps` interface and wire gap class resolution in `mergeClasses` call order (base → gap modifier → className) in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: `<Stack gap="sm">` renders with correct gap class. All gap tests pass.
 
@@ -96,13 +96,13 @@
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T009 [US2] Add tests for each `align` value (`start`, `center`, `end`, `stretch`, `baseline`) verifying correct `pathable-flex-align-{value}` utility class on root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T010 [US2] Add test for missing `align` prop verifying no alignment utility class is applied in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T009 [US2] Add tests for each `align` value (`start`, `center`, `end`, `stretch`, `baseline`) verifying correct `pathable-flex-align-{value}` utility class on root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T010 [US2] Add test for missing `align` prop verifying no alignment utility class is applied in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Import `AlignItems` type and `alignItemsClass` resolver from `internal/resolvers/alignment.js` in `packages/react/src/components/Stack/Stack.tsx`
-- [ ] T012 [US2] Add `align` prop (typed as `AlignItems`) to `StackProps` and wire `alignItemsClass(align)` into `mergeClasses` call after gap modifier in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T011 [US2] Import `AlignItems` type and `alignItemsClass` resolver from `internal/resolvers/alignment.js` in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T012 [US2] Add `align` prop (typed as `AlignItems`) to `StackProps` and wire `alignItemsClass(align)` into `mergeClasses` call after gap modifier in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: `<Stack align="center">` applies correct alignment utility class. All align tests pass.
 
@@ -118,15 +118,15 @@
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T013 [US3] Add tests for `width` and `maxWidth` props verifying correct `pathable-width-{value}` and `pathable-maxw-{value}` utility classes in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T014 [US3] Add tests for `margin`, `marginX`, `marginY`, `marginTop`, `marginBottom` props verifying correct `pathable-margin-{n}` utility classes in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T015 [US3] Add test verifying combined gap + align + sizing + spacing props all produce correct classes on single root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T016 [US3] Add test for SSR parity: server-rendered output matches client-rendered output for a full prop combination in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T013 [US3] Add tests for `width` and `maxWidth` props verifying correct `pathable-width-{value}` and `pathable-maxw-{value}` utility classes in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T014 [US3] Add tests for `margin`, `marginX`, `marginY`, `marginTop`, `marginBottom` props verifying correct `pathable-margin-{n}` utility classes in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T015 [US3] Add test verifying combined gap + align + sizing + spacing props all produce correct classes on single root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T016 [US3] Add test for SSR parity: server-rendered output matches client-rendered output for a full prop combination in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Import `SizingProps`, `SpacingProps` types and `widthClass`, `maxWidthClass`, `marginAllClass`, `marginXClass`, `marginYClass`, `marginTopClass`, `marginBottomClass` resolvers in `packages/react/src/components/Stack/Stack.tsx`
-- [ ] T018 [US3] Extend `StackProps` to extend `SizingProps` and `SpacingProps`, destructure sizing/spacing props, and wire resolvers into `mergeClasses` call after alignment utility in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T017 [US3] Import `SizingProps`, `SpacingProps` types and `widthClass`, `maxWidthClass`, `marginAllClass`, `marginXClass`, `marginYClass`, `marginTopClass`, `marginBottomClass` resolvers in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T018 [US3] Extend `StackProps` to extend `SizingProps` and `SpacingProps`, destructure sizing/spacing props, and wire resolvers into `mergeClasses` call after alignment utility in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: `<Stack width="full" maxWidth="desktop" marginX="auto">` applies all utility classes. SSR output matches client.
 
@@ -142,13 +142,13 @@
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T019 [US4] Add tests for `as` prop (`as="section"`, `as="nav"`, `as="ol"`) verifying correct element tag and stack classes present in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T020 [US4] Add test for `as="ol"` with `<li>` children verifying list semantics are preserved in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T021 [US4] Add test for native HTML attribute passthrough (`id`, `data-test`, `aria-label`) on the root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T019 [US4] Add tests for `as` prop (`as="section"`, `as="nav"`, `as="ol"`) verifying correct element tag and stack classes present in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T020 [US4] Add test for `as="ol"` with `<li>` children verifying list semantics are preserved in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T021 [US4] Add test for native HTML attribute passthrough (`id`, `data-test`, `aria-label`) on the root element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T022 [US4] Add `as?: ElementType` prop to `StackProps`, implement `const Component = as ?? 'div'` pattern, and wrap with `forwardRef<HTMLElement, StackProps>` following Container's polymorphic pattern in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T022 [US4] Add `as?: ElementType` prop to `StackProps`, implement `const Component = as ?? 'div'` pattern, and wrap with `forwardRef<HTMLElement, StackProps>` following Container's polymorphic pattern in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: `<Stack as="section">` renders a `<section>`. All `as` tests pass.
 
@@ -164,12 +164,12 @@
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T023 [US5] Add test for `className` prop verifying consumer class appears last in the class string after all component classes in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T024 [US5] Add test for class merge order verifying the documented order: base → gap → align → sizing → spacing → consumer className in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T023 [US5] Add test for `className` prop verifying consumer class appears last in the class string after all component classes in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T024 [US5] Add test for class merge order verifying the documented order: base → gap → align → sizing → spacing → consumer className in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
 
 ### Implementation for User Story 5
 
-- [ ] T025 [US5] Verify `className` is passed as the last argument to `mergeClasses` (this should already be in place from Phase 2 skeleton; confirm correct position) in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T025 [US5] Verify `className` is passed as the last argument to `mergeClasses` (this should already be in place from Phase 2 skeleton; confirm correct position) in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: Consumer `className` always appears last in class string. Class merge order tests pass.
 
@@ -185,12 +185,12 @@
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T026 [US6] Add test for ref forwarding verifying `ref.current` is the root `<div>` DOM element with `pathable-stack` class in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T027 [US6] Add test for ref forwarding with `as="section"` verifying `ref.current` is the `<section>` element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T026 [US6] Add test for ref forwarding verifying `ref.current` is the root `<div>` DOM element with `pathable-stack` class in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T027 [US6] Add test for ref forwarding with `as="section"` verifying `ref.current` is the `<section>` element in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
 
 ### Implementation for User Story 6
 
-- [ ] T028 [US6] Verify `forwardRef` is correctly wired — the `ref` parameter is passed to `<Component ref={ref}>` (this should already be in place from T022; confirm correct wiring) in `packages/react/src/components/Stack/Stack.tsx`
+- [x] T028 [US6] Verify `forwardRef` is correctly wired — the `ref` parameter is passed to `<Component ref={ref}>` (this should already be in place from T022; confirm correct wiring) in `packages/react/src/components/Stack/Stack.tsx`
 
 **Checkpoint**: `ref.current` works correctly for both default `div` and `as` overrides.
 
@@ -206,10 +206,10 @@
 
 ### Implementation for User Story 7
 
-- [ ] T029 [P] [US7] Add deterministic Storybook story for default Stack (no props) showing vertical stacking layout in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
-- [ ] T030 [P] [US7] Add deterministic Storybook stories for each `gap` value (`sm`, `md`, `lg`, `xl`) with visible child blocks to demonstrate spacing in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
-- [ ] T031 [P] [US7] Add deterministic Storybook stories for alignment combinations (`align="center"`, `align="start"`) with varied-width children in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
-- [ ] T032 [US7] Add deterministic Storybook story for nested layout (Stack inside Container, or Stack with mixed child content) demonstrating real-world composition in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
+- [x] T029 [P] [US7] Add deterministic Storybook story for default Stack (no props) showing vertical stacking layout in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
+- [x] T030 [P] [US7] Add deterministic Storybook stories for each `gap` value (`sm`, `md`, `lg`, `xl`) with visible child blocks to demonstrate spacing in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
+- [x] T031 [P] [US7] Add deterministic Storybook stories for alignment combinations (`align="center"`, `align="start"`) with varied-width children in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
+- [x] T032 [US7] Add deterministic Storybook story for nested layout (Stack inside Container, or Stack with mixed child content) demonstrating real-world composition in `packages/react/src/stories/components/Stack/Stack.stories.tsx`
 
 **Checkpoint**: All Stack stories render in Storybook. A11y checks pass.
 
@@ -219,13 +219,13 @@
 
 **Purpose**: Finalize exports, run validation, ensure CI readiness.
 
-- [ ] T033 [P] Add Stack export (`export { Stack }`) and type exports (`export type { StackProps, StackGap }`) to barrel file `packages/react/src/index.ts`
-- [ ] T034 [P] Add component test verifying immediate-child layout contract: a wrapper div between Stack and intended children breaks the gap/alignment relationship in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
-- [ ] T035 Run `pnpm --filter @pathable/react build` and verify build succeeds with Stack in dist output
-- [ ] T036 Run `pnpm --filter @pathable/react lint` and verify no new lint errors
-- [ ] T037 Run full Stack test suite: `pnpm --filter @pathable/react test -- --testPathPattern="Stack"` and verify all tests pass
-- [ ] T038 Run `pnpm storybook` and verify Stack stories build and render without errors
-- [ ] T039 Run quickstart.md validation: verify all checklist items pass (build, tests, types, lint, stories, exports)
+- [x] T033 [P] Add Stack export (`export { Stack }`) and type exports (`export type { StackProps, StackGap }`) to barrel file `packages/react/src/index.ts`
+- [x] T034 [P] Add component test verifying immediate-child layout contract: a wrapper div between Stack and intended children breaks the gap/alignment relationship in `packages/react/src/components/Stack/__tests__/Stack.test.tsx`
+- [x] T035 Run `pnpm --filter @pathable/react build` and verify build succeeds with Stack in dist output
+- [x] T036 Run `pnpm --filter @pathable/react lint` and verify no new lint errors
+- [x] T037 Run full Stack test suite: `pnpm --filter @pathable/react test -- --testPathPattern="Stack"` and verify all tests pass
+- [x] T038 Run `pnpm storybook` and verify Stack stories build and render without errors
+- [x] T039 Run quickstart.md validation: verify all checklist items pass (build, tests, types, lint, stories, exports)
 
 ---
 

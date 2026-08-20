@@ -50,6 +50,8 @@ export type {
   ContainerProps,
   ContainerSize,
 } from './components/Container/Container.js'
+export { Stack } from './components/Stack/Stack.js'
+export type { StackProps, StackGap } from './components/Stack/Stack.js'
 export { DatePicker } from './components/DatePicker/DatePicker.js'
 export type {
   DatePickerInputProps,
