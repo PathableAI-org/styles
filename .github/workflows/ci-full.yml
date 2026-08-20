@@ -36,6 +36,7 @@ jobs:
       md_app_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_app_storybook == 'true' }}
       md_app_storybook_react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_app_storybook_react == 'true' }}
       md_root: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_root == 'true' }}
+      md_docs: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_docs == 'true' }}
       md_config: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_config == 'true' }}
       react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react == 'true' }}
       behavior_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.behavior_contracts == 'true' }}
@@ -60,6 +61,10 @@ jobs:
               - 'packages/**/*.tsx'
               - 'packages/**/*.mjs'
               - 'packages/**/*.cjs'
+              - 'scripts/**'
+              - '*.js'
+              - '*.mjs'
+              - '*.cjs'
               - 'eslint.config.js'
               - 'package.json'
               - 'pnpm-lock.yaml'
@@ -111,6 +116,7 @@ jobs:
             markdown:
               - 'apps/**/*.md'
               - 'packages/**/*.md'
+              - 'docs/**/*.md'
               - '*.md'
               - '.markdownlint.json'
               - '.markdownlintignore'
@@ -126,6 +132,8 @@ jobs:
               - 'apps/storybook-react/**/*.md'
             md_root:
               - '*.md'
+            md_docs:
+              - 'docs/**/*.md'
             md_config:
               - '.markdownlint.json'
               - '.markdownlintignore'
@@ -206,7 +214,7 @@ jobs:
           restore-keys: |
             eslint-${{ runner.os }}-
       - name: JS lint
-        run: pnpm eslint ${{ steps.scope.outputs.path }} --max-warnings=0 --cache --cache-location .eslintcache
+        run: pnpm exec eslint ${{ steps.scope.outputs.path }} --max-warnings=0 --cache --cache-location .eslintcache
       - name: Save ESLint cache
         if: always()
         uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
@@ -233,6 +241,10 @@ jobs:
           fi
 
           if [ "${{ needs.changes.outputs.md_root }}" = "true" ]; then
+            FALLBACK=true
+          fi
+
+          if [ "${{ needs.changes.outputs.md_docs }}" = "true" ]; then
             FALLBACK=true
           fi
 
@@ -263,7 +275,7 @@ jobs:
 
           echo "path=$SCOPE" >> "$GITHUB_OUTPUT"
       - name: Markdownlint
-        run: pnpm markdownlint ${{ steps.scope.outputs.path }} --ignore-path .markdownlintignore
+        run: pnpm exec markdownlint ${{ steps.scope.outputs.path }} --ignore-path .markdownlintignore
 
   react-typecheck:
     needs: changes
