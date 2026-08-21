@@ -33,10 +33,12 @@ Contrast ratios against `--pathable-color-surface` (the standard content backgro
 
 | Tone token | Value | Contrast vs `#ffffff` | WCAG AA normal text (4.5:1) |
 |------------|-------|----------------------|------------------------------|
-| `default` (`--pathable-color-text`) | `#00365c` | ≈12.5:1 | PASS |
-| `muted` (`--pathable-color-text-muted`) | `#015a76` | ≈7.7:1 | PASS |
-| `danger` (`--pathable-color-danger`) | `#dc3545` | ≈4.5:1 | PASS (borderline; re-verify with exact implementation output) |
-| `success` (`--pathable-color-success`) | `#1a9ae6` → `#1cae96` | ≈2.8:1 | **FAIL** |
+| `default` (`--pathable-color-text`) | `#00365c` | 12.48:1 | PASS |
+| `muted` (`--pathable-color-text-muted`) | `#015a76` | 7.71:1 | PASS |
+| `danger` (`--pathable-color-danger`) | `#dc3545` | 4.53:1 | **PASS** (verified programmatically) |
+| `success` (`--pathable-color-text-success`) | `#0d7a63` | 5.27:1 | **PASS** (new AA-safe token) |
+
+> **Verified 2026-08-21** (implementation): all four tone tokens pass WCAG AA (≥ 4.5:1) normal-text contrast on `--pathable-color-surface` (`#ffffff`) when computed with the standard sRGB WCAG luminance formula. Contrast ratios: default 12.48:1, muted 7.71:1, danger 4.53:1, success 5.27:1.
 
 **Finding**: `--pathable-color-success` (Intelligent Jade `#1cae96`) fails WCAG AA for normal text on the default surface. This mirrors the pre-existing KPI-trend contrast exception documented in `apps/storybook-react/.storybook/test-runner.js`. Exposing a `success` tone that fails contrast would violate Constitution Principle X (Accessibility Is a Release Requirement) and SC-006 of this feature's spec.
 

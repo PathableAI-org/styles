@@ -12,6 +12,11 @@ $pathable-color-accent: #1cae96;
 $pathable-color-focus-ring: #4497f5;
 $pathable-color-danger: #dc3545;
 $pathable-color-success: #1cae96;
+// Text-safe success color — deep jade validated to pass WCAG AA (≥ 4.5:1)
+// contrast on --pathable-color-surface, unlike the brand accent
+// --pathable-color-success (#1cae96), which fails. Used by the
+// .pathable-text--tone-success semantic text tone.
+$pathable-color-text-success: #0d7a63;
 
 // Action Role Tokens
 $pathable-color-action-primary-bg: #00365c;
@@ -49,6 +54,7 @@ $semantic-colors: (
   'focus-ring': #4497f5,
   'danger': #dc3545,
   'success': #1cae96,
+  'text-success': #0d7a63,
   // Action Role
   'action-primary-bg': #00365c,
   'action-primary-text': #ffffff,
@@ -80,6 +86,7 @@ $semantic-colors: (
   --pathable-color-focus-ring: #{$pathable-color-focus-ring};
   --pathable-color-danger: #{$pathable-color-danger};
   --pathable-color-success: #{$pathable-color-success};
+  --pathable-color-text-success: #{$pathable-color-text-success};
   // Action Role
   --pathable-color-action-primary-bg: #{$pathable-color-action-primary-bg};
   --pathable-color-action-primary-text: #{$pathable-color-action-primary-text};

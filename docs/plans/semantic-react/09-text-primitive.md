@@ -1,6 +1,14 @@
 # 09 — Text Primitive
 
-Status: NOT STARTED → change to DONE when complete
+Status: DONE
+
+## Audit Notes (implementation evidence)
+
+- SCSS contract: `packages/styles/src/pathable-component-wrappers/pathable-text.scss` (`@forward`ed from `pathable-typography.scss`). Variant modifiers: `pathable-text--body|small|caption`; tone modifiers: `pathable-text--tone-default|muted|danger|success`. All values resolve to `--pathable-*` tokens (no literal px).
+- Audit doc: `specs/051-text-primitive/research.md` — records the typography-token, semantic-color, and utility-class audit plus the contrast analysis.
+- Tokens added (additive): `--pathable-font-line-height-body-sm` (1.43), `--pathable-font-line-height-caption-md` (1.33) in `_typography.scss`; `--pathable-color-text-success` (#0d7a63) in `_semantic.scss`.
+- Contrast (WCAG AA normal text on `--pathable-color-surface` #ffffff): default 12.48:1, muted 7.71:1, danger 4.53:1, success 5.27:1 — all PASS.
+- Forced-colors: tone classes rely on semantic tokens mapping to system colors in forced-colors; color is not the sole signal (roles come from element semantics + typography). Verified in Storybook/high-contrast spot-check.
 
 ## Parent Plan
 

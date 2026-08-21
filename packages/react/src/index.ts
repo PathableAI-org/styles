@@ -151,6 +151,12 @@ export type {
   SearchProps,
   SearchSize,
 } from './components/Search/Search.js'
+export { Text } from './components/Text/Text.js'
+export type {
+  TextProps,
+  TextTone,
+  TextVariant,
+} from './components/Text/Text.js'
 export { Link } from './components/Link/Link.js'
 export { Tag } from './components/Tag/Tag.js'
 
