@@ -2,44 +2,44 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/050-grid-primitive/plan.md
+at specs/051-text-primitive/plan.md
 
-## Grid Primitive
+## Text Primitive
 
-This feature (slice 08 of the React Semantic Primitives plan) adds a new
-CSS Grid layout primitive to `@pathable/react`: `Grid`. It renders a CSS Grid
-container with design-system-approved column configurations and token-based
-spacing, consuming a new SCSS contract from `@pathable/styles`.
+This feature (slice 09 of the React Semantic Primitives plan) adds a semantic
+typographic primitive to `@pathable/react`: `Text`. It renders a text element
+with design-system-approved typography roles and semantic tone colors,
+consuming a new `pathable-text` SCSS contract from `@pathable/styles`.
 
-### Grid
+### Text
 
-- A new `pathable-grid.scss` SCSS contract provides `display: grid` with
-  modifier classes for column counts (2, 3, 4), gap control (sm/md/lg/xl),
-  separate column and row gap, and alignment (start/center/end/stretch/baseline).
-- A `cols` prop (`2`, `3`, or `4`) maps to `.pathable-grid--cols-{n}` modifier
-  classes.
-- A `gap` prop (`"sm"`, `"md"`, `"lg"`, `"xl"`) maps to
-  `.pathable-grid--gap-{size}` modifier classes. Grid gap scale: 8px/16px/24px/32px
-  (same as Stack).
-- Optional `columnGap` and `rowGap` props map to
-  `.pathable-grid--column-gap-{size}` and `.pathable-grid--row-gap-{size}`
-  modifier classes for independent axis gap control.
-- An `align` prop maps to `.pathable-grid--align-{value}` SCSS modifier classes
-  (not utility classes). Grid defaults `align-items: stretch` via browser default.
-- Sizing and spacing props from the shared `SizingProps`/`SpacingProps` capability
-  system (padding excluded).
-- Polymorphic `as` prop, ref forwarding, `mergeClasses()` class composition.
+- A new `pathable-text.scss` SCSS contract provides a `.pathable-text` base
+  class with variant modifiers (`--body`, `--small`, `--caption`) and tone
+  modifiers (`--tone-default`, `--tone-muted`, `--tone-danger`,
+  `--tone-success`).
+- A `variant` prop (`"body"`, `"small"`, `"caption"`) maps to
+  `.pathable-text--{variant}` modifier classes. Variants resolve to the
+  existing typography scale (body-md, body-sm, caption-md).
+- A `tone` prop (`"default"`, `"muted"`, `"danger"`, `"success"`) maps to
+  `.pathable-text--tone-{tone}` modifier classes resolving to semantic color
+  tokens. `success` uses a new AA-safe `--pathable-color-text-success` token.
+- Default rendered element is `p`; `as` supports text elements (`span`,
+  `label`, `figcaption`, …) with native props restricted to the selected
+  element (generic polymorphic typing).
+- No layout props (padding/margin/sizing/display), no raw typography props
+  (font size/weight/line-height/family), no heading semantics (Heading is
+  separate). `className` and `style` remain escape hatches.
+- Ref forwarding and `mergeClasses()` class composition (base → variant →
+  tone → consumer className).
 
 ### Key constraints
 
-- One new React component: `Grid`.
-- One new SCSS file (`pathable-grid.scss`), one SCSS modification
-  (`pathable-layout-composition.scss`).
-- No full CSS Grid language (arbitrary `grid-template-columns`, `grid-area`,
-  named grid lines).
-- No responsive column counts, masonry, or subgrid behavior.
-- No typography, color, tone, display, visibility, or child-wrapping props.
+- One new React component: `Text`.
+- One new SCSS file (`pathable-text.scss`), one SCSS modification
+  (`pathable-typography.scss` @forward), and two additive token changes
+  (`_typography.scss` line-height tokens; `_semantic.scss` text-success token).
 - No wrapper DOM elements — all classes on the single root element.
+- Deterministic server/client output; contrast-safe tone tokens (WCAG AA).
 
 ### Running the focused commands
 
@@ -48,13 +48,13 @@ spacing, consuming a new SCSS contract from `@pathable/styles`.
 pnpm build
 
 # Build the React package
-pnpm --filter @pathable/react build
+pnpm --filter @pathableai/react build
 
-# Run Grid component tests
-pnpm --filter @pathable/react test -- --testPathPattern="Grid"
+# Run Text component tests
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text"
 
-# Run all layout primitive tests
-pnpm --filter @pathable/react test -- --testPathPattern="Grid|Inline|Cluster|Stack"
+# Run all typography/layout primitive tests
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Inline|Cluster|Stack|Container"
 ```
 
 <!-- SPECKIT END -->

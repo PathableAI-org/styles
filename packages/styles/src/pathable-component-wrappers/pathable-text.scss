@@ -1,0 +1,72 @@
+// packages/styles/src/pathable-component-wrappers/pathable-text.scss
+//
+// Semantic typography primitive for text roles and tones. Expresses semantic
+// text roles (body, small, caption) and semantic text colors (default, muted,
+// danger, success) rather than raw font or palette values.
+//
+// CSS custom properties:
+//   --pathable-text-font-size   (default: var(--pathable-font-size-body-md))
+//   --pathable-text-line-height (default: var(--pathable-font-line-height-body))
+//   --pathable-text-font-weight  (default: var(--pathable-font-weight-normal))
+//   --pathable-text-color       (default: var(--pathable-color-text))
+//
+// Variant modifier classes:
+//   .pathable-text--body    — body-md scale (16px/24px, weight 400)
+//   .pathable-text--small   — body-sm scale (14px/20px, weight 400)
+//   .pathable-text--caption — caption-md scale (12px/16px, weight 400)
+//
+// Tone modifier classes:
+//   .pathable-text--tone-default — var(--pathable-color-text)
+//   .pathable-text--tone-muted    — var(--pathable-color-text-muted)
+//   .pathable-text--tone-danger   — var(--pathable-color-danger)
+//   .pathable-text--tone-success  — var(--pathable-color-text-success)
+
+.pathable-text {
+  font-family: var(--pathable-font-body);
+  font-size: var(--pathable-text-font-size, var(--pathable-font-size-body-md));
+  line-height: var(
+    --pathable-text-line-height,
+    var(--pathable-font-line-height-body)
+  );
+  font-weight: var(
+    --pathable-text-font-weight,
+    var(--pathable-font-weight-normal)
+  );
+  color: var(--pathable-text-color, var(--pathable-color-text));
+}
+
+// Variant modifiers
+.pathable-text--body {
+  --pathable-text-font-size: var(--pathable-font-size-body-md);
+  --pathable-text-line-height: var(--pathable-font-line-height-body);
+  --pathable-text-font-weight: var(--pathable-font-weight-normal);
+}
+
+.pathable-text--small {
+  --pathable-text-font-size: var(--pathable-font-size-body-sm);
+  --pathable-text-line-height: var(--pathable-font-line-height-body-sm);
+  --pathable-text-font-weight: var(--pathable-font-weight-normal);
+}
+
+.pathable-text--caption {
+  --pathable-text-font-size: var(--pathable-font-size-caption-md);
+  --pathable-text-line-height: var(--pathable-font-line-height-caption-md);
+  --pathable-text-font-weight: var(--pathable-font-weight-normal);
+}
+
+// Tone modifiers
+.pathable-text--tone-default {
+  --pathable-text-color: var(--pathable-color-text);
+}
+
+.pathable-text--tone-muted {
+  --pathable-text-color: var(--pathable-color-text-muted);
+}
+
+.pathable-text--tone-danger {
+  --pathable-text-color: var(--pathable-color-danger);
+}
+
+.pathable-text--tone-success {
+  --pathable-text-color: var(--pathable-color-text-success);
+}
