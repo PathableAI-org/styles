@@ -153,19 +153,14 @@ export const AsSemanticElements: Story = {
 
 export const Composition: Story = {
   render: () => {
-    const ref = useRef<HTMLParagraphElement>(null)
+    const ref = useRef<HTMLSpanElement>(null)
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <Text variant="body" className="story-intro-copy" id="intro-copy">
           A paragraph with a consumer <code>className</code> and <code>id</code>
           , composed after the Text classes.
         </Text>
-        <Text
-          as="span"
-          variant="caption"
-          tone="danger"
-          ref={ref as React.Ref<HTMLSpanElement>}
-        >
+        <Text as="span" variant="caption" tone="danger" ref={ref}>
           A <code>caption</code> tone, rendered as a <code>span</code> with a
           forwarded ref.
         </Text>

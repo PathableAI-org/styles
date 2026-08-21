@@ -25,18 +25,12 @@ export interface TextOwnProps {
   className?: string
 }
 
-export type TextProps<C extends React.ElementType = 'p'> = TextOwnProps &
-  Omit<React.ComponentPropsWithoutRef<C>, keyof TextOwnProps | 'color'>
+export type TextProps<C extends React.ElementType = 'p'> = TextOwnProps & {
+  as?: C
+} & Omit<React.ComponentPropsWithoutRef<C>, keyof TextOwnProps | 'color' | 'as'>
 
 const TextInner = <C extends React.ElementType = 'p'>(
-  {
-    as,
-    variant,
-    tone,
-    children,
-    className = '',
-    ...rest
-  }: TextProps<C> & { as?: C },
+  { as, variant, tone, children, className = '', ...rest }: TextProps<C>,
   ref: React.ForwardedRef<Element>,
 ) => {
   const Component = (as ?? 'p') as React.ElementType

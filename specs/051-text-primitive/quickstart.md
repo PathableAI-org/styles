@@ -47,7 +47,7 @@ cat packages/styles/dist/css/styles.css | rg "pathable-text"
 pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text"
 
 # Run all primitive tests (regression check)
-pnpm --filter @pathableai/react test -- --testPathPattern="Text|Grid|Stack|Inline|Cluster|Container"
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Stack|Inline|Cluster|Container"
 ```
 
 **Validated outcomes** (see the full matrix in [data-model.md](./data-model.md#test-data-model)):
@@ -156,7 +156,7 @@ git diff -- packages/react | grep -E "eslint-disable|stylelint-disable|prettier-
 
 ```bash
 # All layout/typography primitive tests
-pnpm --filter @pathableai/react test -- --testPathPattern="Text|Grid|Stack|Inline|Cluster|Container"
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Stack|Inline|Cluster|Container"
 
 # Full pipeline
 pnpm build
