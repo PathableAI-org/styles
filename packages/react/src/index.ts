@@ -52,6 +52,10 @@ export type {
 } from './components/Container/Container.js'
 export { Stack } from './components/Stack/Stack.js'
 export type { StackProps, StackGap } from './components/Stack/Stack.js'
+export { Inline } from './components/Inline/Inline.js'
+export type { InlineProps, InlineGap } from './components/Inline/Inline.js'
+export { Cluster } from './components/Cluster/Cluster.js'
+export type { ClusterProps, ClusterGap } from './components/Cluster/Cluster.js'
 export { DatePicker } from './components/DatePicker/DatePicker.js'
 export type {
   DatePickerInputProps,

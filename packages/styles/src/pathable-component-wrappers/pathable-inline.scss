@@ -1,0 +1,37 @@
+// packages/styles/src/pathable-component-wrappers/pathable-inline.scss
+//
+// Horizontal flow layout that arranges children in a single non-wrapping row
+// with token-based spacing between adjacent siblings.
+// Layout responsibility: controls horizontal flow between sibling elements using
+// token-based spacing, eliminating ad hoc margin declarations.
+//
+// CSS custom properties:
+//   --pathable-inline-gap  (default: var(--space-16)) — horizontal gap between children
+//
+// Modifier classes:
+//   .pathable-inline--gap-sm  — gap var(--space-8)
+//   .pathable-inline--gap-md  — gap var(--space-16) (default)
+//   .pathable-inline--gap-lg  — gap var(--space-24)
+//   .pathable-inline--gap-xl  — gap var(--space-32)
+
+.pathable-inline {
+  display: flex;
+  flex-direction: row;
+  gap: var(--pathable-inline-gap, var(--space-16));
+}
+
+.pathable-inline--gap-sm {
+  --pathable-inline-gap: var(--space-8);
+}
+
+.pathable-inline--gap-md {
+  --pathable-inline-gap: var(--space-16);
+}
+
+.pathable-inline--gap-lg {
+  --pathable-inline-gap: var(--space-24);
+}
+
+.pathable-inline--gap-xl {
+  --pathable-inline-gap: var(--space-32);
+}
