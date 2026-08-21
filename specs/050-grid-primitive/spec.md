@@ -172,7 +172,7 @@ A developer needs the grid to render as a semantic HTML element (e.g., `<section
 
 - The gap scale for Grid uses the same spacing tokens (`sm`, `md`, `lg`, `xl`) established by the Stack primitive, with values of 8px, 16px, 24px, and 32px respectively.
 - Column counts are limited to 2, 3, and 4 — these are the design-system-approved column configurations derived from existing grid patterns in the codebase (KPI grid, bento grid).
-- The `align` prop for Grid uses the same `pathable-flex-align-*` utility classes used by Stack and Inline for `align-items`, since CSS Grid also uses `align-items` for vertical alignment.
+- The `align` prop for Grid uses `pathable-grid--align-{value}` SCSS modifier classes (not the `pathable-flex-align-*` utility classes used by Stack and Inline). This keeps the Grid SCSS contract self-contained and allows a Grid-specific default alignment (`stretch`).
 - Responsive column counts are excluded per the plan's explicit direction. If responsive grid behavior is needed in the future, the SCSS contract will be extended first.
 - The `as` prop and ref forwarding follow the same polymorphic patterns established by Box, Stack, Inline, and Cluster.
 - The `mergeClasses()` pattern, `SizingProps`, and `SpacingProps` capability interfaces are already available from the semantic utility type system (slice 01).
