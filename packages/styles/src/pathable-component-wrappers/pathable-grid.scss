@@ -1,0 +1,116 @@
+// packages/styles/src/pathable-component-wrappers/pathable-grid.scss
+//
+// CSS Grid layout primitive for design-system-approved column and gap patterns.
+// Layout responsibility: arranges immediate children in a multi-column grid
+// with token-based spacing and alignment.
+//
+// CSS custom properties:
+//   --pathable-grid-gap         (default: var(--space-16)) — uniform gap between cells
+//   --pathable-grid-column-gap  (default: var(--pathable-grid-gap, var(--space-16))) — horizontal gap
+//   --pathable-grid-row-gap     (default: var(--pathable-grid-gap, var(--space-16))) — vertical gap
+//   --pathable-grid-align       (default: stretch) — align-items value
+//
+// Modifier classes:
+//   Columns: --cols-2, --cols-3, --cols-4
+//   Gap:     --gap-sm (var(--space-8)), --gap-md (var(--space-16)), --gap-lg (var(--space-24)), --gap-xl (var(--space-32))
+//   Column-gap: --column-gap-sm, --column-gap-md, --column-gap-lg, --column-gap-xl
+//   Row-gap:    --row-gap-sm, --row-gap-md, --row-gap-lg, --row-gap-xl
+//   Align:   --align-start, --align-center, --align-end, --align-stretch, --align-baseline
+
+.pathable-grid {
+  display: grid;
+  column-gap: var(
+    --pathable-grid-column-gap,
+    var(--pathable-grid-gap, var(--space-16))
+  );
+  row-gap: var(
+    --pathable-grid-row-gap,
+    var(--pathable-grid-gap, var(--space-16))
+  );
+  align-items: var(--pathable-grid-align, stretch);
+}
+
+// Column modifiers
+.pathable-grid--cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.pathable-grid--cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.pathable-grid--cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+// Uniform gap modifiers
+.pathable-grid--gap-sm {
+  --pathable-grid-gap: var(--space-8);
+}
+
+.pathable-grid--gap-md {
+  --pathable-grid-gap: var(--space-16);
+}
+
+.pathable-grid--gap-lg {
+  --pathable-grid-gap: var(--space-24);
+}
+
+.pathable-grid--gap-xl {
+  --pathable-grid-gap: var(--space-32);
+}
+
+// Column-gap modifiers
+.pathable-grid--column-gap-sm {
+  --pathable-grid-column-gap: var(--space-8);
+}
+
+.pathable-grid--column-gap-md {
+  --pathable-grid-column-gap: var(--space-16);
+}
+
+.pathable-grid--column-gap-lg {
+  --pathable-grid-column-gap: var(--space-24);
+}
+
+.pathable-grid--column-gap-xl {
+  --pathable-grid-column-gap: var(--space-32);
+}
+
+// Row-gap modifiers
+.pathable-grid--row-gap-sm {
+  --pathable-grid-row-gap: var(--space-8);
+}
+
+.pathable-grid--row-gap-md {
+  --pathable-grid-row-gap: var(--space-16);
+}
+
+.pathable-grid--row-gap-lg {
+  --pathable-grid-row-gap: var(--space-24);
+}
+
+.pathable-grid--row-gap-xl {
+  --pathable-grid-row-gap: var(--space-32);
+}
+
+// Alignment modifiers
+.pathable-grid--align-start {
+  --pathable-grid-align: start;
+}
+
+.pathable-grid--align-center {
+  --pathable-grid-align: center;
+}
+
+.pathable-grid--align-end {
+  --pathable-grid-align: end;
+}
+
+.pathable-grid--align-stretch {
+  --pathable-grid-align: stretch;
+}
+
+.pathable-grid--align-baseline {
+  --pathable-grid-align: baseline;
+}
