@@ -7,9 +7,9 @@ at specs/052-heading-primitive/plan.md
 ## Heading Primitive
 
 This feature (slice 10 of the React Semantic Primitives plan) adds a semantic
-heading primitive to `@pathable/react`: `Heading`. It renders a heading element
+heading primitive to `@pathableai/react`: `Heading`. It renders a heading element
 with a design-system-approved typography level, consuming a new
-`pathable-heading` SCSS contract from `@pathable/styles`.
+`pathable-heading` SCSS contract from `@pathableai/styles`.
 
 ### Heading
 

@@ -149,7 +149,7 @@
 
 - [ ] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm --filter @pathableai/react storybook` and `pnpm --filter @pathableai/react test:storybook-react`; ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
 
-- [ ] T019 [P] [US6] Verify heading semantics: run the axe DevTools or Accessibility Insights check on Storybook heading stories; confirm each heading has correct `role="heading"` and `aria-level` matching its `level` prop; confirm no ARIA role override is applied; verify forced-colors mode distinguishes headings by size/weight (spot-check in browser DevTools Rendering tab with `forced-colors: active`).
+- [ ] T019 [P] [US6] Verify heading semantics: run the axe DevTools or Accessibility Insights check on Storybook heading stories; confirm each heading has correct `role="heading"` and the appropriate heading level (implicit from the `h1`–`h6` element — no explicit `aria-level` attribute is needed or expected); confirm no ARIA role override is applied; verify forced-colors mode distinguishes headings by size/weight (spot-check in browser DevTools Rendering tab with `forced-colors: active`).
 
 **Checkpoint**: All user stories complete; accessibility evidence gathered.
 

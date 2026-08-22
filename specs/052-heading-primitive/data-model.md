@@ -83,7 +83,7 @@ Location: `packages/styles/src/pathable-component-wrappers/pathable-heading.scss
 
 .pathable-heading--level-1 {
   font-family: var(--pathable-font-heading);
-  font-size: var(--pathable-font-size-heading-xl, 32px);
+  font-size: var(--pathable-font-size-display-lg);
   font-weight: 400;
   line-height: var(--pathable-font-line-height-heading);
 }
@@ -113,6 +113,6 @@ Heading has no state — it is a pure presentational component. The only "state"
 
 ## Relationships
 
-- **Heading** depends on the **`pathable-heading` SCSS contract** in `@pathable/styles` (per constitution Principle I — styles first).
+- **Heading** depends on the **`pathable-heading` SCSS contract** in `@pathableai/styles` (per constitution Principle I — styles first).
 - **Heading** reuses the **`mergeClasses()` utility** and internal class-resolver patterns from the semantic prop foundation (slice 01).
 - **Heading** is a sibling of **`Text`** — both are typographic primitives, but `Heading` handles outline-level semantics (h1–h6) while `Text` handles body-text roles (body/small/caption) and tone.

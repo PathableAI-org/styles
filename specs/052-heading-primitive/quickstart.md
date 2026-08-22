@@ -89,7 +89,7 @@ pnpm --filter @pathableai/react test:storybook-react
 
 1. Open the `AllLevels` story
 2. Run axe DevTools or Accessibility Insights
-3. Verify each heading has correct `role="heading"` and `aria-level` matching its `level` prop
+3. Verify each heading has correct `role="heading"` and the appropriate heading level (implicit from the `h1`–`h6` element — no explicit `aria-level` attribute is needed or expected)
 4. Verify no ARIA role override is applied (heading elements are natively correct)
 
 ### Forced-colors mode

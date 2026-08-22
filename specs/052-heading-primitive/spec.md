@@ -38,7 +38,7 @@ A developer needs access to all six HTML heading levels (`h1` through `h6`) thro
 **Acceptance Scenarios**:
 
 1. **Given** the Heading component, **When** `level` is set to each value from 1 through 6, **Then** the corresponding `h1` through `h6` element is rendered with the matching heading style class.
-2. **Given** the Heading component, **When** `level` is omitted, **Then** [NEEDS CLARIFICATION: what is the default level? h2 as the most common page-content heading, or require level to be explicit?]
+2. **Given** the Heading component, **When** `level` is omitted, **Then** it is a compile-time error — `level` is required with no default value.
 
 ---
 
@@ -54,7 +54,7 @@ A developer encounters a design where the visual hierarchy of headings does not 
 
 1. **Given** a Heading with `level={3}` and `visualLevel={2}`, **When** the component renders, **Then** the output is an `<h3>` element with the heading-2 visual style class.
 2. **Given** a Heading with `level` only (no `visualLevel`), **When** the component renders, **Then** the visual style defaults to matching the document `level`.
-3. **Given** a Heading, **When** `visualLevel` is set to a value outside the range 1–6 or a non-integer, **Then** the component either ignores it and falls back to the document level, or raises a clear development-time error.
+3. **Given** the Heading component's TypeScript types, **When** `visualLevel` is set to a value outside the range 1–6, **Then** it is a compile-time error — the `HeadingLevel` literal union type (`1 | 2 | 3 | 4 | 5 | 6`) prevents invalid values.
 
 ---
 
@@ -123,14 +123,14 @@ An accessibility auditor verifies that all Heading instances expose correct head
 
 **Source-layer design contracts**:
 
-- **FR-001**: The `@pathable/styles` package MUST provide a SCSS contract (`pathable-heading.scss`) with a `.pathable-heading` base class and level modifiers (e.g., `.pathable-heading--level-1` through `.pathable-heading--level-6`) that apply typography, spacing, and font-weight as appropriate for each heading level.
+- **FR-001**: The `@pathableai/styles` package MUST provide a SCSS contract (`pathable-heading.scss`) with a `.pathable-heading` base class and level modifiers (e.g., `.pathable-heading--level-1` through `.pathable-heading--level-6`) that apply typography, spacing, and font-weight as appropriate for each heading level.
 - **FR-002**: Heading SCSS modifiers MUST resolve exclusively to `--pathable-*` CSS custom property tokens (no literal pixel, rem, or hex values in the modifier classes themselves).
 - **FR-003**: The heading SCSS contract MUST be `@forward`ed from the existing typography module so consumers receive it through the standard typography import path.
 - **FR-004**: Before exposing a React Heading API, the existing SCSS heading styles MUST be audited and any missing level-to-style mappings MUST be formalized in the styles package.
 
 **React wrapper component**:
 
-- **FR-005**: The `Heading` component MUST be exported from `@pathable/react`.
+- **FR-005**: The `Heading` component MUST be exported from `@pathableai/react`.
 - **FR-006**: The `Heading` component MUST accept a required `level` prop constrained to integer values 1 through 6, which determines the rendered HTML heading element (`h1` through `h6`).
 - **FR-007**: The `Heading` component MUST accept an optional `visualLevel` prop constrained to integer values 1 through 6. When provided, the rendered heading element is determined by `level` and the visual style class is determined by `visualLevel`. When omitted, the visual style defaults to matching `level`.
 - **FR-008**: `Heading` MUST NOT accept an `as` prop that would allow rendering as a non-heading element. The rendered element is always `h1`–`h6`.
@@ -163,10 +163,10 @@ An accessibility auditor verifies that all Heading instances expose correct head
 
 ### Key Entities
 
-- **Heading component**: A React component in `@pathable/react` that maps a semantic heading level (1–6) to both an HTML heading element and a design-system heading style class.
+- **Heading component**: A React component in `@pathableai/react` that maps a semantic heading level (1–6) to both an HTML heading element and a design-system heading style class.
 - **Heading level**: An integer value 1–6 representing the document-outline depth. Controls the rendered HTML element (`h1`–`h6`).
 - **Visual heading level**: An optional integer value 1–6 that overrides the visual style class independently of the document-outline level. When absent, defaults to the same value as `level`.
-- **pathable-heading SCSS contract**: The framework-neutral style contract in `@pathable/styles` providing a `.pathable-heading` base class and `.pathable-heading--level-{1..6}` modifier classes.
+- **pathable-heading SCSS contract**: The framework-neutral style contract in `@pathableai/styles` providing a `.pathable-heading` base class and `.pathable-heading--level-{1..6}` modifier classes.
 
 ## Success Criteria *(mandatory)*
 
@@ -182,11 +182,11 @@ An accessibility auditor verifies that all Heading instances expose correct head
 
 ## Assumptions
 
-- The existing `@pathable/styles` typography module already defines heading-level SCSS classes (heading-1 through heading-6). The audit task in this feature will verify completeness and fill gaps if needed before the React component is implemented.
+- The existing `@pathableai/styles` typography module already defines heading-level SCSS classes (heading-1 through heading-6). The audit task in this feature will verify completeness and fill gaps if needed before the React component is implemented.
 - The `level` prop is required (no default). This matches the intentional-design philosophy of the Heading primitive — developers must explicitly choose a heading level.
 - `visualLevel` does not affect accessible name computation or ARIA — the ARIA level is always determined by the rendered heading element (which is controlled by `level`).
 - Heading font sizes, line heights, and weights are defined by the design-system tokens and SCSS contract; the React component does not compute or override typography values.
 - The `level` prop accepts only integer values 1–6. Non-integer or out-of-range values are prevented by TypeScript types at compile time.
 - The Heading component does not render tone/color modifiers (these belong to the Text primitive per the architecture plan). Headings use the default foreground color.
 - Heading elements are block-level by default and respect the document flow.
-- The `@pathable/react` package already has the shared class-merging utility and polymorphic type patterns from the semantic prop foundation (slice 01) and Text primitive (slice 09), and the Heading component reuses those patterns.
+- The `@pathableai/react` package already has the shared class-merging utility and polymorphic type patterns from the semantic prop foundation (slice 01) and Text primitive (slice 09), and the Heading component reuses those patterns.
