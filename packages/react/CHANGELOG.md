@@ -1,5 +1,11 @@
 # @pathableai/react
 
+## 0.0.4-alpha.3
+
+### Patch Changes
+
+- e0eeb31: Harden React SegmentedControl controlled selection, disabled, keyboard, and static one-option behavior.
+
 ## 0.0.4-alpha.2
 
 ### Patch Changes
