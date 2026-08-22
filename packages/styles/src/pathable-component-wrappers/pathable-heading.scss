@@ -1,0 +1,71 @@
+// packages/styles/src/pathable-component-wrappers/pathable-heading.scss
+//
+// Semantic heading primitive. Maps HTML heading levels (h1–h6) to
+// design-system typography scale entries. All values resolve to
+// --pathable-* CSS custom property tokens — no literal px, rem, or hex.
+//
+// Contrast evidence:
+//   --pathable-color-text (#00365c) on --pathable-color-surface (#ffffff)
+//   = 12.48:1 — passes WCAG AA normal-text threshold (≥ 4.5:1).
+//   Confirmed in the Text primitive audit (specs/051-text-primitive/research.md).
+//
+// Level mapping (see data-model.md and research.md Decision 2):
+//   1 → display-lg (Fredoka, --pathable-font-size-display-lg, weight 400)
+//   2 → heading-lg (Poppins, --pathable-font-size-heading-lg, weight 700)
+//   3 → heading-md (Poppins, --pathable-font-size-heading-md, weight 700)
+//   4 → heading-sm (Poppins, --pathable-font-size-heading-sm, weight 700)
+//   5 → body-md bold  (Nunito, --pathable-font-size-body-md, weight 700)
+//   6 → body-sm bold  (Nunito, --pathable-font-size-body-sm, weight 700)
+
+.pathable-heading {
+  color: var(--pathable-color-text);
+  margin: 0;
+}
+
+// Level 1: display-lg scale
+.pathable-heading--level-1 {
+  font-family: var(--pathable-font-heading);
+  font-size: var(--pathable-font-size-display-lg);
+  font-weight: 400;
+  line-height: var(--pathable-font-line-height-heading);
+}
+
+// Level 2: heading-lg scale
+.pathable-heading--level-2 {
+  font-family: var(--pathable-font-subheading);
+  font-size: var(--pathable-font-size-heading-lg);
+  font-weight: var(--pathable-font-weight-bold);
+  line-height: var(--pathable-font-line-height-heading);
+}
+
+// Level 3: heading-md scale
+.pathable-heading--level-3 {
+  font-family: var(--pathable-font-subheading);
+  font-size: var(--pathable-font-size-heading-md);
+  font-weight: var(--pathable-font-weight-bold);
+  line-height: var(--pathable-font-line-height-heading);
+}
+
+// Level 4: heading-sm scale
+.pathable-heading--level-4 {
+  font-family: var(--pathable-font-subheading);
+  font-size: var(--pathable-font-size-heading-sm);
+  font-weight: var(--pathable-font-weight-bold);
+  line-height: var(--pathable-font-line-height-heading);
+}
+
+// Level 5: body-md scale with bold weight
+.pathable-heading--level-5 {
+  font-family: var(--pathable-font-body);
+  font-size: var(--pathable-font-size-body-md);
+  font-weight: var(--pathable-font-weight-bold);
+  line-height: var(--pathable-font-line-height-body);
+}
+
+// Level 6: body-sm scale with bold weight
+.pathable-heading--level-6 {
+  font-family: var(--pathable-font-body);
+  font-size: var(--pathable-font-size-body-sm);
+  font-weight: var(--pathable-font-weight-bold);
+  line-height: var(--pathable-font-line-height-body);
+}

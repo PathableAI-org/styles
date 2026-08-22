@@ -2,44 +2,39 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/051-text-primitive/plan.md
+at specs/052-heading-primitive/plan.md
 
-## Text Primitive
+## Heading Primitive
 
-This feature (slice 09 of the React Semantic Primitives plan) adds a semantic
-typographic primitive to `@pathable/react`: `Text`. It renders a text element
-with design-system-approved typography roles and semantic tone colors,
-consuming a new `pathable-text` SCSS contract from `@pathable/styles`.
+This feature (slice 10 of the React Semantic Primitives plan) adds a semantic
+heading primitive to `@pathableai/react`: `Heading`. It renders a heading element
+with a design-system-approved typography level, consuming a new
+`pathable-heading` SCSS contract from `@pathableai/styles`.
 
-### Text
+### Heading
 
-- A new `pathable-text.scss` SCSS contract provides a `.pathable-text` base
-  class with variant modifiers (`--body`, `--small`, `--caption`) and tone
-  modifiers (`--tone-default`, `--tone-muted`, `--tone-danger`,
-  `--tone-success`).
-- A `variant` prop (`"body"`, `"small"`, `"caption"`) maps to
-  `.pathable-text--{variant}` modifier classes. Variants resolve to the
-  existing typography scale (body-md, body-sm, caption-md).
-- A `tone` prop (`"default"`, `"muted"`, `"danger"`, `"success"`) maps to
-  `.pathable-text--tone-{tone}` modifier classes resolving to semantic color
-  tokens. `success` uses a new AA-safe `--pathable-color-text-success` token.
-- Default rendered element is `p`; `as` supports text elements (`span`,
-  `label`, `figcaption`, …) with native props restricted to the selected
-  element (generic polymorphic typing).
-- No layout props (padding/margin/sizing/display), no raw typography props
-  (font size/weight/line-height/family), no heading semantics (Heading is
-  separate). `className` and `style` remain escape hatches.
-- Ref forwarding and `mergeClasses()` class composition (base → variant →
-  tone → consumer className).
+- A new `pathable-heading.scss` SCSS contract provides a `.pathable-heading`
+  base class with level modifiers (`--level-1` through `--level-6`).
+- A required `level` prop (`1`–`6`) controls the rendered HTML heading
+  element (`h1`–`h6`) and the visual style class.
+- An optional `visualLevel` prop (`1`–`6`) allows visual style to diverge
+  from document outline level when both are provided; when omitted, visual
+  style defaults to matching `level`.
+- Level-to-scale mapping: 1=display-lg (Fredoka), 2=heading-lg, 3=heading-md,
+  4=heading-sm (Poppins), 5=body-md bold, 6=body-sm bold (Nunito).
+- No `as` prop — Heading is always a heading element (`h1`–`h6`).
+- No tone/color props, no raw typography props. `className` and `style`
+  remain escape hatches.
+- Ref forwarding and `mergeClasses()` class composition (base → level
+  modifier → consumer className).
 
 ### Key constraints
 
-- One new React component: `Text`.
-- One new SCSS file (`pathable-text.scss`), one SCSS modification
-  (`pathable-typography.scss` @forward), and two additive token changes
-  (`_typography.scss` line-height tokens; `_semantic.scss` text-success token).
-- No wrapper DOM elements — all classes on the single root element.
-- Deterministic server/client output; contrast-safe tone tokens (WCAG AA).
+- One new React component: `Heading`.
+- One new SCSS file (`pathable-heading.scss`), one SCSS modification
+  (`pathable-typography.scss` @forward). No new tokens required.
+- No wrapper DOM elements — all classes on the single heading element.
+- Deterministic server/client output; `level` is a required prop with no default.
 
 ### Running the focused commands
 
@@ -50,11 +45,11 @@ pnpm build
 # Build the React package
 pnpm --filter @pathableai/react build
 
-# Run Text component tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text"
+# Run Heading component tests
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading"
 
 # Run all typography/layout primitive tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Inline|Cluster|Stack|Container"
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading|Text|Grid|Inline|Cluster|Stack|Container"
 ```
 
 <!-- SPECKIT END -->

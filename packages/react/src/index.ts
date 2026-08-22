@@ -157,6 +157,11 @@ export type {
   TextTone,
   TextVariant,
 } from './components/Text/Text.js'
+export { Heading } from './components/Heading/Heading.js'
+export type {
+  HeadingProps,
+  HeadingLevel,
+} from './components/Heading/Heading.js'
 export { Link } from './components/Link/Link.js'
 export { Tag } from './components/Tag/Tag.js'
 
