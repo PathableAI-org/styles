@@ -42,6 +42,7 @@ import {
   Hint,
   Icon,
   IconButton,
+  IconTile,
   Input,
   Label,
   Link,
@@ -55,6 +56,7 @@ import {
   Radio,
   Range,
   Search,
+  SegmentedControl,
   SiteAlert,
   Skeleton,
   Skipnav,
@@ -681,6 +683,82 @@ Any other standard button attributes, including event handlers, `aria-*`, `data-
 #### IconButton Accessibility
 
 Every IconButton requires an accessible name through `aria-label` or `aria-labelledby`; the icon alone is not a sufficient name. Decorative SVG children should use `aria-hidden="true"` and `focusable="false"`. Use the 44px default size for normal application and touch interfaces. Reserve the 32px compact size for constrained desktop toolbars. IconButton does not add a tooltip, loading behavior, or toggle state; consumers may forward native `aria-pressed` when appropriate, but persistent toggle styling is outside this component's contract.
+
+### IconTile Props
+
+`IconTile` is a non-interactive `<span>` container that gives decorative or meaningful icons consistent sizing, shape, status color, and alignment within the tile. Use `IconButton` instead when the icon performs an action. IconTile applies the existing `pathable-icon-tile` visual contract and does not require separate CSS or JavaScript imports.
+
+```tsx
+<span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+  <IconTile status="success" aria-hidden="true">
+    <Icon>
+      <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+    </Icon>
+  </IconTile>
+  <span>Training record verified</span>
+</span>
+```
+
+| Prop      | Type                                                       | Default     | Description                                                               |
+| --------- | ---------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- |
+| size      | `'compact' \| 'default' \| 'large'`                        | `'default'` | Selects the 32px, 44px, or 52px tile and corresponding icon size.         |
+| shape     | `'square' \| 'circle'`                                     | `'square'`  | Selects the default rounded-square tile or circular treatment.            |
+| status    | `'default' \| 'success' \| 'error' \| 'warning' \| 'info'` | `'default'` | Applies a status foreground treatment; status color must not stand alone. |
+| children  | `React.ReactNode`                                          | required    | Consumer-provided SVG or Icon content.                                    |
+| className | `string`                                                   | —           | Additional class names appended after the PathAble IconTile classes.      |
+
+Any other standard `<span>` attributes, including `id`, `aria-*`, `data-*`, styles, and event handlers, are forwarded to the root element. Unsupported runtime variant values receive no unsupported modifier class.
+
+#### IconTile Accessibility
+
+For a decorative tile that repeats nearby text, set `aria-hidden="true"` on IconTile. When the icon communicates information not available in adjacent text, expose the child SVG with `aria-hidden={false}`, `role="img"`, and an accessible name through `aria-label` or `aria-labelledby`. Reinforce status color with visible text or another non-color visual cue. IconTile does not add focus, button semantics, a tooltip, an accessible name, or a live announcement.
+
+### SegmentedControl Props
+
+`SegmentedControl` presents a compact set of approximately two to five short choices. Its default single-select mode is a controlled radiogroup; `mode="multi"` renders controlled toggle buttons. Use native radio controls or Select for longer choices and larger option sets. Do not use SegmentedControl for navigation or unrelated actions. It does not require USWDS JavaScript.
+
+```tsx
+import { useState } from 'react'
+
+function ViewModeControl() {
+  const [value, setValue] = useState('list')
+
+  return (
+    <SegmentedControl
+      aria-label="View mode"
+      options={[
+        { value: 'list', label: 'List' },
+        { value: 'grid', label: 'Grid' },
+        { value: 'detail', label: 'Detail' },
+      ]}
+      value={value}
+      onValueChange={setValue}
+    />
+  )
+}
+```
+
+| Common prop | Type                                | Default        | Description                                                               |
+| ----------- | ----------------------------------- | -------------- | ------------------------------------------------------------------------- |
+| mode        | `'single' \| 'multi'`               | `'single'`     | Selects mutually exclusive radio behavior or independent toggle behavior. |
+| options     | `readonly SegmentedControlOption[]` | required       | Ordered options with stable, unique values.                               |
+| orientation | `'horizontal' \| 'vertical'`        | `'horizontal'` | Selects a scrolling horizontal row or stacked vertical layout.            |
+| className   | `string`                            | —              | Additional class names appended after the root PathAble classes.          |
+
+| Mode   | Required state              | Change callback                                        |
+| ------ | --------------------------- | ------------------------------------------------------ |
+| Single | `value: string`             | `onValueChange?: (value: string) => void`              |
+| Multi  | `values: readonly string[]` | `onValuesChange?: (values: readonly string[]) => void` |
+
+Each `SegmentedControlOption` requires a unique string `value` and visible `label`. Options may also provide an `icon`, `disabled`, `className`, and native button `attributes`. The component owns button type, role, selected ARIA state, disabled behavior, click handling, children, and option classes, so those fields cannot be replaced through `attributes`.
+
+The component is controlled: consumers update `value` or `values` when the corresponding callback runs. Omitting the relevant callback makes every option in a multi-option control natively disabled. If a single-select `value` does not match an option, the first enabled option is displayed as selected, or the first option when all options are disabled; the fallback is not written back to consumer state. A one-option set renders as a static `<span>` indicator with no button, radio, group, or focus semantics. Common static option metadata such as `id`, `title`, `aria-*`, `data-*`, and styles is preserved, while `tabIndex` is suppressed.
+
+Standard root `<div>` attributes are forwarded, but SegmentedControl always owns the root role. Single mode owns its roving `tabIndex`, and static mode suppresses root and option `tabIndex` values. Multi mode forwards root `tabIndex` and option attributes, including `tabIndex`; consumers that override them remain responsible for preserving a logical focus order. Horizontal controls scroll internally when constrained; vertical controls stack their options.
+
+#### SegmentedControl Accessibility
+
+Give every multi-option SegmentedControl an accessible name with `aria-label` or `aria-labelledby`. Single mode renders a radiogroup whose radio buttons expose `aria-checked`; Arrow keys wrap through enabled options, move focus, and request the corresponding controlled value. Multi mode renders a named group of native toggle buttons with `aria-pressed`; by default, Tab follows the normal button order, and Space or Enter requests a toggle through `onValuesChange`. Decorative option icons should be hidden from assistive technology.
 
 ### ButtonGroup Props
 
