@@ -45,7 +45,7 @@
 
 **Purpose**: Verify the environment and baseline before any changes
 
-- [ ] T001 Verify baseline: run `pnpm install` (if needed), `pnpm --filter @pathableai/styles build`, and `pnpm --filter @pathableai/react test:unit` to confirm a green workspace before changing files
+- [x] T001 Verify baseline: run `pnpm install` (if needed), `pnpm --filter @pathableai/styles build`, and `pnpm --filter @pathableai/react test:unit` to confirm a green workspace before changing files
 
 ---
 
@@ -55,11 +55,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Create `packages/styles/src/pathable-component-wrappers/pathable-heading.scss` with the base `.pathable-heading` class (sets `color: var(--pathable-color-text)`, `margin: 0`) and level modifiers `.pathable-heading--level-1` through `.pathable-heading--level-6`. Level 1 uses display-lg scale (Fredoka, 32px via `--pathable-font-size-display-lg`, weight 400). Levels 2–4 use heading-lg/md/sm scales (Poppins, `--pathable-font-size-heading-lg/md/sm`, weight `--pathable-font-weight-bold`). Levels 5–6 use body-md/sm sizes (Nunito, `--pathable-font-size-body-md/sm`, weight `--pathable-font-weight-bold`). All values MUST resolve to `--pathable-*` tokens — no literal px/rem/hex values. Refer to data-model.md mapping table and research.md Decision 1/2/8.
+- [x] T002 Create `packages/styles/src/pathable-component-wrappers/pathable-heading.scss` with the base `.pathable-heading` class (sets `color: var(--pathable-color-text)`, `margin: 0`) and level modifiers `.pathable-heading--level-1` through `.pathable-heading--level-6`. Level 1 uses display-lg scale (Fredoka, 32px via `--pathable-font-size-display-lg`, weight 400). Levels 2–4 use heading-lg/md/sm scales (Poppins, `--pathable-font-size-heading-lg/md/sm`, weight `--pathable-font-weight-bold`). Levels 5–6 use body-md/sm sizes (Nunito, `--pathable-font-size-body-md/sm`, weight `--pathable-font-weight-bold`). All values MUST resolve to `--pathable-*` tokens — no literal px/rem/hex values. Refer to data-model.md mapping table and research.md Decision 1/2/8.
 
-- [ ] T003 [P] Add `@forward 'pathable-heading';` to `packages/styles/src/pathable-component-wrappers/pathable-typography.scss` so the contract is exported through the typography bundle (which is forwarded by `pathable-all.scss` → `_index.scss` → `index.scss`).
+- [x] T003 [P] Add `@forward 'pathable-heading';` to `packages/styles/src/pathable-component-wrappers/pathable-typography.scss` so the contract is exported through the typography bundle (which is forwarded by `pathable-all.scss` → `_index.scss` → `index.scss`).
 
-- [ ] T004 Run `pnpm --filter @pathableai/styles build` and `pnpm --filter @pathableai/styles lint:styles`; verify compiled output contains `.pathable-heading` and all six `.pathable-heading--level-{N}` modifiers, with no lint violations.
+- [x] T004 Run `pnpm --filter @pathableai/styles build` and `pnpm --filter @pathableai/styles lint:styles`; verify compiled output contains `.pathable-heading` and all six `.pathable-heading--level-{N}` modifiers, with no lint violations.
 
 **Checkpoint**: Foundation ready — user story implementation can now begin. US3/US5 depend on US1 (`Heading.tsx`); US4 is type-level only.
 
@@ -73,13 +73,13 @@
 
 ### Implementation for US1/US2
 
-- [ ] T005 [P] [US1] Create `packages/react/src/components/Heading/Heading.tsx` with `HeadingLevel` type (`1 | 2 | 3 | 4 | 5 | 6`), a local `HEADING_LEVEL_CLASS` record mapping each level to `pathable-heading--level-{N}`, and a `HeadingInner`/`forwardRef` component that renders the HTML heading element determined by `level` (e.g., `level={2}` → `<h2>`) with classes merged via `mergeClasses()` (order: `pathable-heading` base → `pathable-heading--level-{level}` modifier → consumer `className`). `level` is required with no default. Follow the `Text` component pattern (`Text.tsx`).
+- [x] T005 [P] [US1] Create `packages/react/src/components/Heading/Heading.tsx` with `HeadingLevel` type (`1 | 2 | 3 | 4 | 5 | 6`), a local `HEADING_LEVEL_CLASS` record mapping each level to `pathable-heading--level-{N}`, and a `HeadingInner`/`forwardRef` component that renders the HTML heading element determined by `level` (e.g., `level={2}` → `<h2>`) with classes merged via `mergeClasses()` (order: `pathable-heading` base → `pathable-heading--level-{level}` modifier → consumer `className`). `level` is required with no default. Follow the `Text` component pattern (`Text.tsx`).
 
-- [ ] T006 [P] [US1] Write unit tests in `packages/react/src/components/Heading/__tests__/Heading.test.tsx` covering: each `level` (1–6) renders the correct HTML element (`h1`–`h6`); each `level` applies the correct modifier class (`pathable-heading--level-{N}`); default render has both base class and level modifier; `children` renders inside the heading element; no wrapper DOM elements (single root node). Follow existing suite patterns (`@testing-library/react`, `classList` helper).
+- [x] T006 [P] [US1] Write unit tests in `packages/react/src/components/Heading/__tests__/Heading.test.tsx` covering: each `level` (1–6) renders the correct HTML element (`h1`–`h6`); each `level` applies the correct modifier class (`pathable-heading--level-{N}`); default render has both base class and level modifier; `children` renders inside the heading element; no wrapper DOM elements (single root node). Follow existing suite patterns (`@testing-library/react`, `classList` helper).
 
-- [ ] T007 [US1] Export `Heading` and its types from `packages/react/src/index.ts` (`export { Heading } ...` and `export type { HeadingProps, HeadingLevel } from './components/Heading/Heading.js'`).
+- [x] T007 [US1] Export `Heading` and its types from `packages/react/src/index.ts` (`export { Heading } ...` and `export type { HeadingProps, HeadingLevel } from './components/Heading/Heading.js'`).
 
-- [ ] T008 [US1] Create `packages/react/src/stories/components/Heading/Heading.stories.tsx` with `Meta` (autodocs, `argTypes` for `level`, `visualLevel`, `className`), a `Level1` story, a `Level2` story, and an `AllLevels` showcase story showing all six levels. Deterministic, synthetic copy.
+- [x] T008 [US1] Create `packages/react/src/stories/components/Heading/Heading.stories.tsx` with `Meta` (autodocs, `argTypes` for `level`, `visualLevel`, `className`), a `Level1` story, a `Level2` story, and an `AllLevels` showcase story showing all six levels. Deterministic, synthetic copy.
 
 **Checkpoint**: At this point, User Stories 1 & 2 should be fully functional and testable independently. All six heading levels render correctly.
 
@@ -93,11 +93,11 @@
 
 ### Implementation for US3
 
-- [ ] T009 [P] [US3] Extend `packages/react/src/components/Heading/Heading.tsx` with `visualLevel?: HeadingLevel` prop. When `visualLevel` is provided, the HTML element is `h{level}` but the CSS modifier class is `.pathable-heading--level-{visualLevel}`. When omitted, the modifier class defaults to `level`. The class resolution becomes: `pathable-heading--level-{visualLevel ?? level}`.
+- [x] T009 [P] [US3] Extend `packages/react/src/components/Heading/Heading.tsx` with `visualLevel?: HeadingLevel` prop. When `visualLevel` is provided, the HTML element is `h{level}` but the CSS modifier class is `.pathable-heading--level-{visualLevel}`. When omitted, the modifier class defaults to `level`. The class resolution becomes: `pathable-heading--level-{visualLevel ?? level}`.
 
-- [ ] T010 [P] [US3] Add `visualLevel` tests to `packages/react/src/components/Heading/__tests__/Heading.test.tsx`: `level={3} visualLevel={2}` renders `<h3>` with class `pathable-heading--level-2`; `visualLevel` omitted → modifier class matches `level`; `visualLevel` = `level` → same output as omitting it; `visualLevel` out of range is blocked by TS types at compile time.
+- [x] T010 [P] [US3] Add `visualLevel` tests to `packages/react/src/components/Heading/__tests__/Heading.test.tsx`: `level={3} visualLevel={2}` renders `<h3>` with class `pathable-heading--level-2`; `visualLevel` omitted → modifier class matches `level`; `visualLevel` = `level` → same output as omitting it; `visualLevel` out of range is blocked by TS types at compile time.
 
-- [ ] T011 [US3] Add `VisualLevelDivergence` story to `packages/react/src/stories/components/Heading/Heading.stories.tsx`: `<Heading level={3} visualLevel={2}>` demonstrating the h3-in-h2-style scenario. Include a brief description in story docs explaining that `level` controls semantics and `visualLevel` controls only the visual style.
+- [x] T011 [US3] Add `VisualLevelDivergence` story to `packages/react/src/stories/components/Heading/Heading.stories.tsx`: `<Heading level={3} visualLevel={2}>` demonstrating the h3-in-h2-style scenario. Include a brief description in story docs explaining that `level` controls semantics and `visualLevel` controls only the visual style.
 
 **Checkpoint**: User Stories 1–3 independently functional.
 
@@ -111,9 +111,9 @@
 
 ### Implementation for US4
 
-- [ ] T012 [P] [US4] Verify `packages/react/src/components/Heading/Heading.tsx` does not accept an `as` prop in its type signature. The component's element is always `h{level}`, typed via a simple mapping from `level` to the JSX intrinsic element. No polymorphic generic — unlike `Text`, Heading has no `as` override.
+- [x] T012 [P] [US4] Verify `packages/react/src/components/Heading/Heading.tsx` does not accept an `as` prop in its type signature. The component's element is always `h{level}`, typed via a simple mapping from `level` to the JSX intrinsic element. No polymorphic generic — unlike `Text`, Heading has no `as` override.
 
-- [ ] T013 [P] [US4] Add type-level verification to `packages/react/src/components/Heading/__tests__/Heading.test.tsx`: confirm `<Heading level={1} as="div" />` is a TypeScript compile error (use `@ts-expect-error` directive with a comment explaining the expected error); confirm all rendered elements are always `h1`–`h6` (already covered by T006, but add explicit assertion that `querySelector('div')` returns null for any Heading instance).
+- [x] T013 [P] [US4] Add type-level verification to `packages/react/src/components/Heading/__tests__/Heading.test.tsx`: confirm `<Heading level={1} as="div" />` is a TypeScript compile error (use `@ts-expect-error` directive with a comment explaining the expected error); confirm all rendered elements are always `h1`–`h6` (already covered by T006, but add explicit assertion that `querySelector('div')` returns null for any Heading instance).
 
 **Checkpoint**: User Stories 1–4 functional; Heading API is semantically correct with no element-escape hatch.
 
@@ -127,11 +127,11 @@
 
 ### Implementation for US5
 
-- [ ] T014 [P] [US5] Add ref forwarding and native attribute tests to `packages/react/src/components/Heading/__tests__/Heading.test.tsx`: `ref.current` is the rendered heading DOM element with correct `tagName`; `className="my-custom"` appears after design-system classes in the class list (`pathable-heading pathable-heading--level-2 my-custom`); native attributes like `id`, `data-testid`, `hidden` are forwarded to the heading element.
+- [x] T014 [P] [US5] Add ref forwarding and native attribute tests to `packages/react/src/components/Heading/__tests__/Heading.test.tsx`: `ref.current` is the rendered heading DOM element with correct `tagName`; `className="my-custom"` appears after design-system classes in the class list (`pathable-heading pathable-heading--level-2 my-custom`); native attributes like `id`, `data-testid`, `hidden` are forwarded to the heading element.
 
-- [ ] T015 [P] [US5] Add an SSR-purity test to `packages/react/src/components/Heading/__tests__/Heading.test.tsx` using `renderToString`/`renderToStaticMarkup` from `react-dom/server` verifying the class string and markup are identical across renders for a representative prop combination (`level={2}` and `level={3} visualLevel={2}`).
+- [x] T015 [P] [US5] Add an SSR-purity test to `packages/react/src/components/Heading/__tests__/Heading.test.tsx` using `renderToString`/`renderToStaticMarkup` from `react-dom/server` verifying the class string and markup are identical across renders for a representative prop combination (`level={2}` and `level={3} visualLevel={2}`).
 
-- [ ] T016 [US5] Add a `WithCustomClass` story to `packages/react/src/stories/components/Heading/Heading.stories.tsx` showing `className` composition (e.g., `<Heading level={2} className="custom-style">`).
+- [x] T016 [US5] Add a `WithCustomClass` story to `packages/react/src/stories/components/Heading/Heading.stories.tsx` showing `className` composition (e.g., `<Heading level={2} className="custom-style">`).
 
 **Checkpoint**: User Stories 1–5 functional; component is production-composition ready.
 
@@ -145,11 +145,11 @@
 
 ### Implementation for US6
 
-- [ ] T017 [P] [US6] Record contrast evidence: compute and document WCAG AA contrast ratios for `--pathable-color-text` (#00365c) on `--pathable-color-surface` (#ffffff) — confirmed 12.48:1 from the Text primitive audit — verifying all heading levels meet ≥ 4.5:1. Document in a comment in `pathable-heading.scss` and reference in `specs/052-heading-primitive/research.md`.
+- [x] T017 [P] [US6] Record contrast evidence: compute and document WCAG AA contrast ratios for `--pathable-color-text` (#00365c) on `--pathable-color-surface` (#ffffff) — confirmed 12.48:1 from the Text primitive audit — verifying all heading levels meet ≥ 4.5:1. Document in a comment in `pathable-heading.scss` and reference in `specs/052-heading-primitive/research.md`.
 
-- [ ] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm --filter @pathableai/react storybook` and `pnpm --filter @pathableai/react test:storybook-react`; ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
+- [x] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm --filter @pathableai/react storybook` and `pnpm --filter @pathableai/react test:storybook-react`; ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
 
-- [ ] T019 [P] [US6] Verify heading semantics: run the axe DevTools or Accessibility Insights check on Storybook heading stories; confirm each heading has correct `role="heading"` and the appropriate heading level (implicit from the `h1`–`h6` element — no explicit `aria-level` attribute is needed or expected); confirm no ARIA role override is applied; verify forced-colors mode distinguishes headings by size/weight (spot-check in browser DevTools Rendering tab with `forced-colors: active`).
+- [x] T019 [P] [US6] Verify heading semantics: run the axe DevTools or Accessibility Insights check on Storybook heading stories; confirm each heading has correct `role="heading"` and the appropriate heading level (implicit from the `h1`–`h6` element — no explicit `aria-level` attribute is needed or expected); confirm no ARIA role override is applied; verify forced-colors mode distinguishes headings by size/weight (spot-check in browser DevTools Rendering tab with `forced-colors: active`).
 
 **Checkpoint**: All user stories complete; accessibility evidence gathered.
 
@@ -159,15 +159,15 @@
 
 **Purpose**: Full validation, docs, and cross-cutting checks
 
-- [ ] T020 [P] Run build + type + package checks: `pnpm --filter @pathableai/styles build`, `pnpm --filter @pathableai/react build`, `pnpm --filter @pathableai/react exec tsc --noEmit`, `pnpm --filter @pathableai/react check:package`, `pnpm --filter @pathableai/react check:types` — all must pass.
+- [x] T020 [P] Run build + type + package checks: `pnpm --filter @pathableai/styles build`, `pnpm --filter @pathableai/react build`, `pnpm --filter @pathableai/react exec tsc --noEmit`, `pnpm --filter @pathableai/react check:package`, `pnpm --filter @pathableai/react check:types` — all must pass.
 
-- [ ] T021 [P] Run the full unit suite with the primitive regression pattern: `pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading|Text|Grid|Stack|Inline|Cluster|Container"` — all must pass.
+- [x] T021 [P] Run the full unit suite with the primitive regression pattern: `pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading|Text|Grid|Stack|Inline|Cluster|Container"` — all must pass.
 
-- [ ] T022 [P] Run root quality gates: `pnpm lint` (eslint, stylelint, markdownlint, prettier check, token lint) — must pass with ZERO warnings; fix findings without disabling/suppressing any rule.
+- [x] T022 [P] Run root quality gates: `pnpm lint` (eslint, stylelint, markdownlint, prettier check, token lint) — must pass with ZERO warnings; fix findings without disabling/suppressing any rule.
 
-- [ ] T023 Execute the manual and automated checks in `specs/052-heading-primitive/quickstart.md` (SCSS contract content check, manual DOM inspection, forced-colors spot-check, server-compat `server-render` check, type-check compile errors) and record results.
+- [x] T023 Execute the manual and automated checks in `specs/052-heading-primitive/quickstart.md` (SCSS contract content check, manual DOM inspection, forced-colors spot-check, server-compat `server-render` check, type-check compile errors) and record results.
 
-- [ ] T024 Update `docs/plans/semantic-react/10-heading-primitive.md` Status line from `NOT STARTED` to `DONE`, and record the audit/evidence notes (SCSS contract, level mapping, contrast evidence).
+- [x] T024 Update `docs/plans/semantic-react/10-heading-primitive.md` Status line from `NOT STARTED` to `DONE`, and record the audit/evidence notes (SCSS contract, level mapping, contrast evidence).
 
 - [ ] T025 Final review: `git status`/`git diff` — confirm no new lint suppressions, no unintended changes, and everything ready for merge.
 

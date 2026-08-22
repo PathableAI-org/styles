@@ -1,6 +1,6 @@
 # 10 — Heading Primitive
 
-Status: NOT STARTED → change to DONE when complete
+Status: DONE
 
 ## Parent Plan
 
