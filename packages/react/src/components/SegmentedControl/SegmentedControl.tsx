@@ -54,6 +54,7 @@ export type SegmentedControlProps =
 
 const ROOT_CLASS = 'pathable-segmented-control'
 const MULTI_CLASS = 'pathable-segmented-control--multi'
+const STATIC_CLASS = 'pathable-segmented-control--static'
 const VERTICAL_CLASS = 'pathable-segmented-control--vertical'
 const OPTION_CLASS = 'pathable-segmented-control__option'
 const SELECTED_CLASS = 'pathable-segmented-control__option--selected'
@@ -102,7 +103,7 @@ function handleSingleKeyDown(
 ) {
   const direction = getNextArrowDirection(event.key)
 
-  if (direction === 0) {
+  if (direction === 0 || !onValueChange) {
     return
   }
 
@@ -133,8 +134,8 @@ function handleSingleKeyDown(
     ]
   const nextValue = nextButton.dataset.segmentedControlValue
 
-  if (nextValue) {
-    onValueChange?.(nextValue)
+  if (nextValue !== undefined) {
+    onValueChange(nextValue)
   }
 
   nextButton.focus()
@@ -144,10 +145,41 @@ function renderOptionContent(option: SegmentedControlOption) {
   return (
     <>
       {option.icon}
-      <span style={option.icon ? { marginLeft: 4 } : undefined}>
-        {option.label}
-      </span>
+      <span>{option.label}</span>
     </>
+  )
+}
+
+function renderStaticControl(
+  option: SegmentedControlOption,
+  orientation: SegmentedControlOrientation,
+  className: string | undefined,
+  attributes: HTMLAttributes<HTMLDivElement>,
+) {
+  const rootClassName = [
+    ROOT_CLASS,
+    STATIC_CLASS,
+    orientation === 'vertical' ? VERTICAL_CLASS : '',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <div
+      {...attributes}
+      className={rootClassName}
+      role={undefined}
+      tabIndex={undefined}
+    >
+      <span
+        {...option.attributes}
+        className={getOptionClassName(option.className, true)}
+        tabIndex={undefined}
+      >
+        {renderOptionContent(option)}
+      </span>
+    </div>
   )
 }
 
@@ -159,11 +191,24 @@ function SegmentedControlSingle({
   className,
   ...rest
 }: SegmentedControlSingleProps) {
+  if (options.length === 1) {
+    return renderStaticControl(options[0], orientation, className, rest)
+  }
+
+  const interactive = Boolean(onValueChange)
   const enabledOptions = options.filter((option) => !option.disabled)
+  const hasSelectedOption = options.some((option) => option.value === value)
+  const selectedValue = hasSelectedOption
+    ? value
+    : (enabledOptions[0]?.value ?? options[0]?.value)
   const selectedEnabled = enabledOptions.some(
-    (option) => option.value === value,
+    (option) => option.value === selectedValue,
   )
-  const fallbackTabValue = selectedEnabled ? value : enabledOptions[0]?.value
+  const fallbackTabValue = interactive
+    ? selectedEnabled
+      ? selectedValue
+      : enabledOptions[0]?.value
+    : undefined
 
   return (
     <div
@@ -180,7 +225,7 @@ function SegmentedControlSingle({
       }}
     >
       {options.map((option) => {
-        const selected = option.value === value
+        const selected = option.value === selectedValue
         return (
           <button
             {...option.attributes}
@@ -189,14 +234,16 @@ function SegmentedControlSingle({
             className={getOptionClassName(option.className, selected)}
             role="radio"
             aria-checked={selected}
-            disabled={option.disabled}
+            disabled={option.disabled || !interactive}
             tabIndex={option.value === fallbackTabValue ? 0 : -1}
             data-segmented-control-option="true"
             data-segmented-control-value={option.value}
             onClick={() => {
-              if (!option.disabled) {
-                onValueChange?.(option.value)
+              if (option.disabled || !onValueChange) {
+                return
               }
+
+              onValueChange(option.value)
             }}
           >
             {renderOptionContent(option)}
@@ -215,6 +262,12 @@ function SegmentedControlMulti({
   className,
   ...rest
 }: SegmentedControlMultiProps) {
+  if (options.length === 1) {
+    return renderStaticControl(options[0], orientation, className, rest)
+  }
+
+  const interactive = Boolean(onValuesChange)
+
   return (
     <div
       {...rest}
@@ -230,15 +283,15 @@ function SegmentedControlMulti({
             type="button"
             className={getOptionClassName(option.className, selected)}
             aria-pressed={selected}
-            disabled={option.disabled}
+            disabled={option.disabled || !interactive}
             data-segmented-control-option="true"
             data-segmented-control-value={option.value}
             onClick={() => {
-              if (option.disabled) {
+              if (option.disabled || !onValuesChange) {
                 return
               }
 
-              onValuesChange?.(
+              onValuesChange(
                 selected
                   ? values.filter((item) => item !== option.value)
                   : [...values, option.value],
