@@ -16,6 +16,15 @@ export async function verifyVerticalNavigation(
   const from = getNamedOption(harness, group, 'radio', options.fromName)
   const to = getNamedOption(harness, group, 'radio', options.toName)
 
+  if (
+    from.getAttribute('aria-checked') !== 'true' ||
+    to.getAttribute('aria-checked') !== 'false'
+  ) {
+    throw new Error(
+      `[storybook-contracts:segmented-control.vertical-navigation] Expected "${String(options.fromName)}" to start selected and "${String(options.toName)}" to start unselected.`,
+    )
+  }
+
   await harness.expect(group).toHaveAttribute('aria-orientation', 'vertical')
   from.focus()
   await harness.userEvent.keyboard(keyboardDescriptor(options.key))

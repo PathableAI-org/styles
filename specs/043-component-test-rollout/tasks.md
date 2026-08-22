@@ -338,9 +338,9 @@ only when a downstream package exposes the same promise.
 - [ ] T053 [P] [US5] Add Icon fixtures + fixed `play` for accessible naming and
       presentational decoupling in
       `packages/styles/src/stories/components/Layout/Icon.stories.ts`
-- [ ] T054 [US5] Complete Styles-only evidence for interaction-control surfaces
-      (SegmentedControl, IconButton, IconTile, Integration, InteractionStates)
-      as fixtures with deterministic states/semantics/Axe in
+- [ ] T054 [US5] Complete Styles-only evidence for the remaining
+      interaction-control surfaces (IconButton, IconTile, Integration,
+      InteractionStates) as fixtures with deterministic states/semantics/Axe in
       `packages/styles/src/stories/interaction-controls/`
 - [ ] T055 [US5] Complete Styles-only evidence for application-shell, dashboard,
       discovery, structured-workflow, and recipe surfaces as fixtures with

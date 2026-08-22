@@ -8,16 +8,25 @@ export async function verifyArrowNavigationWraps(
 ) {
   const group = getNamedGroup(harness, 'radiogroup', options.groupName)
   const radios = harness.within(group).getAllByRole('radio')
+  const enabledRadios = radios.filter(
+    (radio) =>
+      radio.getAttribute('disabled') === null &&
+      radio.getAttribute('aria-disabled') !== 'true',
+  )
   const from = getNamedOption(harness, group, 'radio', options.fromName)
   const to = getNamedOption(harness, group, 'radio', options.toName)
 
   const movesBackward = options.key === 'ArrowLeft' || options.key === 'ArrowUp'
-  const expectedFrom = movesBackward ? radios[0] : radios[radios.length - 1]
-  const expectedTo = movesBackward ? radios[radios.length - 1] : radios[0]
+  const expectedFrom = movesBackward
+    ? enabledRadios[0]
+    : enabledRadios[enabledRadios.length - 1]
+  const expectedTo = movesBackward
+    ? enabledRadios[enabledRadios.length - 1]
+    : enabledRadios[0]
 
-  if (radios.length < 2 || from !== expectedFrom || to !== expectedTo) {
+  if (enabledRadios.length < 2 || from !== expectedFrom || to !== expectedTo) {
     throw new Error(
-      `[storybook-contracts:segmented-control.arrow-navigation] Expected ${options.key} to wrap between the first and last radio in "${String(options.groupName)}".`,
+      `[storybook-contracts:segmented-control.arrow-navigation] Expected ${options.key} to wrap between the first and last enabled radio in "${String(options.groupName)}".`,
     )
   }
 

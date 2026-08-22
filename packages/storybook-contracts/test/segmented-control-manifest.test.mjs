@@ -3,22 +3,34 @@ import assert from 'node:assert/strict'
 import { segmentedControlManifest } from '../dist/segmented-control/manifest.js'
 import { verifyArrowNavigationWraps } from '../dist/segmented-control/verifyArrowNavigationWraps.js'
 import { verifyDisabledOptionSkipped } from '../dist/segmented-control/verifyDisabledOptionSkipped.js'
+import { verifyMultiKeyboardToggle } from '../dist/segmented-control/verifyMultiKeyboardToggle.js'
 import { verifySingleSelectionSemantics } from '../dist/segmented-control/verifySingleSelectionSemantics.js'
+import { verifyVerticalNavigation } from '../dist/segmented-control/verifyVerticalNavigation.js'
 import { rolloutLedger } from '../dist/rollout/rollout.js'
 
 function option(name, attributes) {
   return {
+    focused: false,
     name,
     getAttribute(attribute) {
       return attributes[attribute] ?? null
     },
-    focus() {},
+    setAttribute(attribute, value) {
+      attributes[attribute] = value
+    },
+    focus() {
+      this.focused = true
+    },
   }
 }
 
-function harnessFor(radios) {
+function harnessFor(radios, { groupAttributes = {}, onKeyboard } = {}) {
   const root = {}
-  const group = {}
+  const group = {
+    getAttribute(attribute) {
+      return groupAttributes[attribute] ?? null
+    },
+  }
 
   return {
     root,
@@ -33,12 +45,15 @@ function harnessFor(radios) {
       }
     },
     userEvent: {
-      keyboard: async () => {},
+      keyboard: async (descriptor) => onKeyboard?.(descriptor),
     },
     expect(element) {
       return {
         async toHaveAttribute(attribute, value) {
           assert.equal(element.getAttribute(attribute), value)
+        },
+        async toHaveFocus() {
+          assert.equal(element.focused, true)
         },
       }
     },
@@ -102,6 +117,7 @@ test('segmented control ledger entry mirrors the manifest without downstream ado
   assert.ok(entry)
   assert.equal(entry.category, 'shared')
   assert.equal(entry.wave, 'E')
+  assert.equal(entry.status, 'styles-proven')
   assert.deepEqual(
     entry.capabilities.map((capability) => capability.id).sort(),
     segmentedControlManifest.shared.map((capability) => capability.id).sort(),
@@ -138,8 +154,85 @@ test('arrow-wrap rejects navigation that does not use both endpoints', async () 
       toName: 'Grid',
       key: 'ArrowLeft',
     }),
-    /wrap between the first and last radio/,
+    /wrap between the first and last enabled radio/,
   )
+})
+
+test('arrow-wrap ignores disabled radios at the sequence endpoints', async () => {
+  const disabled = option('Disabled', {
+    disabled: '',
+    'aria-checked': 'false',
+  })
+  const from = option('List', { 'aria-checked': 'true' })
+  const to = option('Detail', { 'aria-checked': 'false' })
+
+  await verifyArrowNavigationWraps(
+    harnessFor([disabled, from, to], {
+      onKeyboard: () => {
+        from.setAttribute('aria-checked', 'false')
+        to.setAttribute('aria-checked', 'true')
+        to.focus()
+      },
+    }),
+    {
+      groupName: 'View mode',
+      fromName: 'List',
+      toName: 'Detail',
+      key: 'ArrowLeft',
+    },
+  )
+})
+
+test('multi-keyboard toggle rejects a peer without explicit pressed state', async () => {
+  const target = option('Bold', { 'aria-pressed': 'false' })
+  const peer = option('Italic', {})
+  let keyboardCalled = false
+
+  await assert.rejects(
+    verifyMultiKeyboardToggle(
+      harnessFor([target, peer], {
+        onKeyboard: () => {
+          keyboardCalled = true
+          target.setAttribute('aria-pressed', 'true')
+          peer.setAttribute('aria-pressed', 'false')
+        },
+      }),
+      {
+        groupName: 'Text formatting',
+        optionName: 'Bold',
+        key: 'Space',
+      },
+    ),
+    /Every option must expose an initial aria-pressed state/,
+  )
+  assert.equal(keyboardCalled, false)
+})
+
+test('vertical navigation rejects an unselected starting option', async () => {
+  const from = option('Left', { 'aria-checked': 'false' })
+  const to = option('Center', { 'aria-checked': 'false' })
+  let keyboardCalled = false
+
+  await assert.rejects(
+    verifyVerticalNavigation(
+      harnessFor([from, to], {
+        groupAttributes: { 'aria-orientation': 'vertical' },
+        onKeyboard: () => {
+          keyboardCalled = true
+          to.setAttribute('aria-checked', 'true')
+          to.focus()
+        },
+      }),
+      {
+        groupName: 'Alignment',
+        fromName: 'Left',
+        toName: 'Center',
+        key: 'ArrowDown',
+      },
+    ),
+    /to start selected/,
+  )
+  assert.equal(keyboardCalled, false)
 })
 
 test('disabled-option skip rejects a disabled radio outside the navigation path', async () => {

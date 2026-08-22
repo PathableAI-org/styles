@@ -9,9 +9,20 @@ export async function verifyMultiKeyboardToggle(
   const group = getNamedGroup(harness, 'group', options.groupName)
   const buttons = harness.within(group).getAllByRole('button')
   const target = getNamedOption(harness, group, 'button', options.optionName)
-  const initialStates = new Map(
-    buttons.map((button) => [button, button.getAttribute('aria-pressed')]),
-  )
+  const initialStates = new Map<HTMLElement, 'true' | 'false'>()
+
+  for (const button of buttons) {
+    const pressed = button.getAttribute('aria-pressed')
+
+    if (pressed !== 'true' && pressed !== 'false') {
+      throw new Error(
+        '[storybook-contracts:segmented-control.multi-keyboard-toggle] Every option must expose an initial aria-pressed state.',
+      )
+    }
+
+    initialStates.set(button, pressed)
+  }
+
   const targetInitial = initialStates.get(target)
 
   if (targetInitial !== 'true' && targetInitial !== 'false') {
@@ -35,7 +46,7 @@ export async function verifyMultiKeyboardToggle(
     if (button !== target) {
       await harness
         .expect(button)
-        .toHaveAttribute('aria-pressed', initialStates.get(button) ?? 'false')
+        .toHaveAttribute('aria-pressed', initialStates.get(button)!)
     }
   }
 }

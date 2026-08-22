@@ -328,6 +328,11 @@ export const MultiSelect = {
       optionName: 'Bold',
       key: 'Space',
     })
+    await verifyMultiKeyboardToggle(harness, {
+      groupName: 'Text formatting',
+      optionName: 'Underline',
+      key: 'Enter',
+    })
   },
 }
 
