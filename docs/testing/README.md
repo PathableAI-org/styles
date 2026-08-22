@@ -17,6 +17,12 @@ catalog through the published `@pathableai/styles` runtime
 [Behavioral parity](behavior-parity.md) and
 [Tooling and structure](tooling-and-structure.md).
 
+The rollout ledger in
+[`packages/storybook-contracts/src/rollout/rollout.ts`](../../packages/storybook-contracts/src/rollout/rollout.ts)
+records whether each component is not started, Styles-proven, or adopted by a
+downstream package. Fixture presence, shared behavior, Axe execution, visual
+review, and manual review remain separate evidence.
+
 ## Start here
 
 - [Testing principles](principles.md) explains the values behind the test

@@ -88,14 +88,17 @@ packages/
     src/
       accordion/
         manifest.ts
+        _lib.ts
+        verify*.ts
+      segmented-control/
+        manifest.ts
         types.ts
         _lib.ts
-        verifyEnterExpandsDisclosure.ts
-        verifySpaceCollapsesDisclosure.ts
-        verifySingleOpenBehavior.ts
-        verifyDisclosurePanelAssociation.ts
-        verifyPanelAvailability.ts
-        verifyFocusRetention.ts
+        verify*.ts
+      rollout/
+        rollout.ts
+        types.ts
+      types.ts
       index.ts
 ```
 
@@ -107,11 +110,17 @@ framework props, renderer context types, CSS selectors, or package internals.
 `packages/styles` stories can consume it without leaking anything into either
 publishable package's npm payload.
 
-Accordion is the only component in the shared package during Phase 1. The
-Accordion capability manifest (`src/accordion/manifest.ts`) records the initial
-shared contract, the deliberately package-specific behaviors, and the unresolved
-shared scope (disabled and multiple-open until the styles package documents the
-same promise).
+Component-specific manifests record shared capabilities, deliberately
+package-specific behavior, unresolved scope, and bounded fixtures. Accordion is
+the Phase 1 seed. SegmentedControl is the first component promoted through the
+Phase 3 rollout ledger after a downstream React package exposed the same
+user-facing promise. Its Styles reference behavior is story-owned because the
+Styles package publishes the visual contract rather than SegmentedControl
+runtime JavaScript.
+
+`src/rollout/rollout.ts` records each component's risk wave, Styles proof status,
+capabilities, fixtures, and downstream adoption. A shared entry must reach
+`styles-proven` before another package can adopt its unchanged helpers.
 
 The former top-level `behavior-contracts/` Cucumber pilot was retired: the
 shared renderer-neutral helpers, proven Styles-first by
@@ -130,9 +139,9 @@ some broad exclusions; the registry records the narrow conversion target so they
 can be ratcheted without broadening failures.
 
 [`scripts/storybook-evidence-report.mjs`](../../scripts/storybook-evidence-report.mjs)
-reports three separate measures for the shared Accordion contract: deterministic
-state fixtures (story presence), executable behavior-contract adoption (read from
-the runner's evidence file), and automated Axe execution. It does not label any
+reports three separate measures for shared contracts: deterministic state
+fixtures (story presence), executable behavior-contract adoption (read from the
+runner's evidence file), and automated Axe execution. It does not label any
 result WCAG certification, and visual smoke and manual keyboard/focus/
 assistive-technology review remain separate evidence.
 

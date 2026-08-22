@@ -5,6 +5,7 @@ import type {
   RolloutStatus,
   RolloutWave,
 } from './types.js'
+import { segmentedControlManifest } from '../segmented-control/manifest.js'
 
 /**
  * Component rollout ledger (Phase 3 of the component-testing refactor).
@@ -715,6 +716,40 @@ export const rolloutLedger: RolloutEntry[] = [
     'components-layout-media-block',
   ),
   stylesOnly('components-layout-icon', 'Icon', 'E', 'components-layout-icon'),
+  shared(
+    'interaction-controls-segmentedcontrol',
+    'SegmentedControl',
+    'E',
+    'interaction-controls-segmentedcontrol',
+    segmentedControlManifest.shared.map(({ id, label }) => ({
+      id,
+      group: 'composite-widget',
+      label,
+    })),
+    [
+      {
+        name: 'segmented-control.single-select',
+        storyId: 'interaction-controls-segmentedcontrol--single-select',
+      },
+      {
+        name: 'segmented-control.multi-select',
+        storyId: 'interaction-controls-segmentedcontrol--multi-select',
+      },
+      {
+        name: 'segmented-control.vertical',
+        storyId: 'interaction-controls-segmentedcontrol--vertical',
+      },
+      {
+        name: 'segmented-control.disabled-option',
+        storyId: 'interaction-controls-segmentedcontrol--disabled-option',
+      },
+      {
+        name: 'segmented-control.static-single-option',
+        storyId: 'interaction-controls-segmentedcontrol--static-single-option',
+      },
+    ],
+    'styles-proven',
+  ),
   ...stylesOnlySurfaces(),
   // ---- Already-proven from Phase 1 (shared, accordion) ----
   existingAccordion(),
@@ -744,7 +779,6 @@ function stylesOnlySurfaces(): RolloutEntry[] {
     'interaction-controls/IconTile',
     'interaction-controls/Integration',
     'interaction-controls/InteractionStates',
-    'interaction-controls/SegmentedControl',
     'layout-composition/CardGrid',
     'layout-composition/Cluster',
     'layout-composition/Container',

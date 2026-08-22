@@ -17,16 +17,16 @@
  * Contract adoption is read from `scripts/.storybook-evidence.json`, written by
  * `scripts/test-storybook.mjs` after a green target run. The rollout ledger
  * (from `@pathable/storybook-contracts`) is validated before it is trusted; a
- * ledger entry claiming `styles-proven`/`adopted` with no green run, or a
- * `styles-only` surface shown as shared adoption, is a failure. Without it,
- * adoption is reported as "not yet executed" rather than assumed.
+ * filtered run that matches no ledger entry or no proven shared contract, or a
+ * `styles-only` surface shown as shared adoption, is a failure. Entries outside
+ * the latest focused run are reported as not covered by that run.
  *
  * Usage:
  *   node scripts/storybook-evidence-report.mjs
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { getExceptionsFor } from './accessibility-exceptions.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -44,7 +44,9 @@ if (!existsSync(ledgerPath)) {
   process.exit(1)
 }
 
-const { rolloutLedger, validateRolloutLedger } = await import(ledgerPath)
+const { rolloutLedger, validateRolloutLedger } = await import(
+  pathToFileURL(ledgerPath).href
+)
 
 const target = 'styles'
 const evidencePath = resolve(here, '.storybook-evidence.json')
@@ -67,9 +69,9 @@ function isCoveredByRun(entry) {
   if (!filterPattern) return true
   // The filter pattern is a story-id prefix; check the entry's own storyId
   // and every fixture storyId.
-  if (entry.storyId && entry.storyId.includes(filterPattern)) return true
+  if (entry.storyId && entry.storyId.startsWith(filterPattern)) return true
   return entry.fixtures.some(
-    (f) => f.storyId && f.storyId.includes(filterPattern),
+    (f) => f.storyId && f.storyId.startsWith(filterPattern),
   )
 }
 
@@ -178,15 +180,17 @@ for (const entry of rolloutLedger) {
 
 process.stdout.write(lines.join('\n') + '\n')
 
-// A green run is required to claim adoption: a story ID alone is not coverage.
-const anySharedProven = rolloutLedger.some(
-  (e) =>
-    e.category === 'shared' &&
-    (e.status === 'styles-proven' || e.status === 'adopted') &&
-    isCoveredByRun(e),
+// A focused green run must map to a ledger entry and prove a shared contract;
+// otherwise a stale or mistyped filter could be reported as adoption evidence.
+const coveredEntries = rolloutLedger.filter(isCoveredByRun)
+const coveredSharedProof = coveredEntries.some(
+  (entry) =>
+    entry.category === 'shared' &&
+    (entry.status === 'styles-proven' || entry.status === 'adopted'),
 )
+const validCoverage = filterPattern
+  ? coveredEntries.length > 0 && coveredSharedProof
+  : targetGreen
+
 process.exitCode =
-  ledgerProblems.length === 0 &&
-  (anySharedProven || (targetGreen && !filterPattern))
-    ? 0
-    : 1
+  ledgerProblems.length === 0 && targetGreen && validCoverage ? 0 : 1
