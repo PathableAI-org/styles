@@ -1,4 +1,4 @@
-import type { StoryHarness } from '../accordion/types.js'
+import type { StoryHarness } from '../types.js'
 
 /**
  * Shared capability: a form control has an accessible label via `<label for>`

@@ -1,4 +1,4 @@
-import type { StoryHarness } from './types.js'
+import type { StoryHarness } from '../types.js'
 import { getDisclosureButton, getAssociatedPanel } from './_lib.js'
 
 /**

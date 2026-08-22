@@ -1,3 +1,14 @@
+import {
+  segmentedControlManifest,
+  verifyArrowNavigationWraps,
+  verifyDisabledOptionSkipped,
+  verifyMultiKeyboardToggle,
+  verifyMultiSelectionSemantics,
+  verifySingleSelectionSemantics,
+  verifyStaticSingleOption,
+  verifyVerticalNavigation,
+  type StoryHarness,
+} from '@pathable/storybook-contracts'
 import { expect, userEvent, within } from 'storybook/test'
 
 type PlayContext = {
@@ -17,12 +28,11 @@ const selectedClass = 'pathable-segmented-control__option--selected'
 
 export default {
   title: 'Interaction Controls/SegmentedControl',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'contract-segmented-control'],
   parameters: {
     docs: {
       description: {
-        story:
-          'Segmented controls present short option sets as compact single-select radio groups or multi-select toggle groups. The styles package provides the framework-neutral visual contract; runtime state updates and keyboard handling are consumer-owned, and these stories include deterministic reference fixtures for that behavior.',
+        story: `Segmented controls present short option sets as compact single-select radio groups or multi-select toggle groups. The styles package provides the framework-neutral visual contract; runtime state updates and keyboard handling are consumer-owned. These deterministic reference fixtures prove all ${segmentedControlManifest.shared.length} shared renderer-neutral capabilities before a framework package adopts the unchanged helpers.`,
       },
     },
   },
@@ -89,6 +99,41 @@ const multiOption = ({
 const assert = (condition: boolean, message: string) => {
   if (!condition) {
     throw new Error(message)
+  }
+}
+
+function harnessFor(root: HTMLElement): StoryHarness {
+  return {
+    root,
+    within,
+    userEvent,
+    expect,
+  }
+}
+
+function assertReferenceRuntimeInitialized(
+  harness: StoryHarness,
+  mode: 'single' | 'multi',
+  groupName: string,
+  storyId: string,
+  capabilities: string[],
+) {
+  const role = mode === 'single' ? 'radiogroup' : 'group'
+  const group = harness
+    .within(harness.root)
+    .getByRole(role, { name: groupName })
+  const initialized =
+    mode === 'single'
+      ? group.dataset.segmentedControlReady === 'true'
+      : harness
+          .within(group)
+          .getAllByRole('button')
+          .every((button) => button.dataset.segmentedControlReady === 'true')
+
+  if (!initialized) {
+    throw new Error(
+      `[storybook-contracts:${capabilities.join(',')}] Target "styles" story "${storyId}" did not initialize its ${mode} reference runtime for fixture "${groupName}".`,
+    )
   }
 }
 
@@ -225,14 +270,25 @@ export const SingleSelect = {
   `,
   play: async ({ canvasElement }: PlayContext) => {
     setupSingleSelect(canvasElement)
+    const harness = harnessFor(canvasElement)
+    assertReferenceRuntimeInitialized(
+      harness,
+      'single',
+      'View mode',
+      'interaction-controls-segmentedcontrol--single-select',
+      [
+        'segmented-control.single-selection',
+        'segmented-control.arrow-navigation',
+      ],
+    )
 
-    const canvas = within(canvasElement)
-    const buttons = canvas.getAllByRole('radio')
-    buttons[0].focus()
-    await userEvent.keyboard('{ArrowRight}')
-
-    await expect(buttons[1]).toHaveAttribute('aria-checked', 'true')
-    await expect(buttons[1]).toHaveFocus()
+    await verifySingleSelectionSemantics(harness, 'View mode', 'List')
+    await verifyArrowNavigationWraps(harness, {
+      groupName: 'View mode',
+      fromName: 'List',
+      toName: 'Detail',
+      key: 'ArrowLeft',
+    })
   },
 }
 
@@ -250,14 +306,28 @@ export const MultiSelect = {
   `,
   play: async ({ canvasElement }: PlayContext) => {
     setupMultiSelect(canvasElement)
+    const harness = harnessFor(canvasElement)
+    assertReferenceRuntimeInitialized(
+      harness,
+      'multi',
+      'Text formatting',
+      'interaction-controls-segmentedcontrol--multi-select',
+      [
+        'segmented-control.multi-selection',
+        'segmented-control.multi-keyboard-toggle',
+      ],
+    )
 
-    const canvas = within(canvasElement)
-    const buttons = canvas.getAllByRole('button')
-    buttons[0].focus()
-    await userEvent.keyboard(' ')
-
-    await expect(buttons[0]).toHaveAttribute('aria-pressed', 'true')
-    await expect(buttons[1]).toHaveAttribute('aria-pressed', 'true')
+    await verifyMultiSelectionSemantics(harness, 'Text formatting', [
+      'Bold',
+      'Italic',
+      'Underline',
+    ])
+    await verifyMultiKeyboardToggle(harness, {
+      groupName: 'Text formatting',
+      optionName: 'Bold',
+      key: 'Space',
+    })
   },
 }
 
@@ -275,15 +345,25 @@ export const Vertical = {
   `,
   play: async ({ canvasElement }: PlayContext) => {
     setupSingleSelect(canvasElement)
+    const harness = harnessFor(canvasElement)
+    assertReferenceRuntimeInitialized(
+      harness,
+      'single',
+      'Alignment',
+      'interaction-controls-segmentedcontrol--vertical',
+      ['segmented-control.vertical-navigation'],
+    )
+    await verifyVerticalNavigation(harness, {
+      groupName: 'Alignment',
+      fromName: 'Left',
+      toName: 'Center',
+      key: 'ArrowDown',
+    })
 
-    const canvas = within(canvasElement)
-    const group = canvas.getByRole('radiogroup', { name: 'Alignment' })
+    const group = within(canvasElement).getByRole('radiogroup', {
+      name: 'Alignment',
+    })
     const buttons = within(group).getAllByRole('radio')
-    buttons[0].focus()
-    await userEvent.keyboard('{ArrowDown}')
-
-    await expect(group).toHaveAttribute('aria-orientation', 'vertical')
-    await expect(buttons[1]).toHaveAttribute('aria-checked', 'true')
     for (const button of buttons) {
       await expect(button.offsetWidth).toBeLessThanOrEqual(group.clientWidth)
     }
@@ -304,15 +384,22 @@ export const DisabledOption = {
   `,
   play: async ({ canvasElement }: PlayContext) => {
     setupSingleSelect(canvasElement)
+    const harness = harnessFor(canvasElement)
+    assertReferenceRuntimeInitialized(
+      harness,
+      'single',
+      'Page size',
+      'interaction-controls-segmentedcontrol--disabled-option',
+      ['segmented-control.disabled-option-skip'],
+    )
 
-    const canvas = within(canvasElement)
-    const buttons = canvas.getAllByRole('radio')
-    buttons[0].focus()
-    await userEvent.keyboard('{ArrowRight}')
-
-    await expect(buttons[1]).toBeDisabled()
-    await expect(buttons[2]).toHaveAttribute('aria-checked', 'true')
-    await expect(buttons[2]).toHaveFocus()
+    await verifyDisabledOptionSkipped(harness, {
+      groupName: 'Page size',
+      fromName: '10',
+      disabledName: '25',
+      toName: '50',
+      key: 'ArrowRight',
+    })
   },
 }
 
@@ -344,14 +431,7 @@ export const StaticSingleOption = {
     </div>
   `,
   play: async ({ canvasElement }: PlayContext) => {
-    assert(
-      canvasElement.querySelector('button') === null,
-      'Static single-option usage should not render a button.',
-    )
-    assert(
-      canvasElement.querySelector('[role="radio"]') === null,
-      'Static single-option usage should not render radio semantics.',
-    )
+    await verifyStaticSingleOption(harnessFor(canvasElement), 'List view')
   },
 }
 

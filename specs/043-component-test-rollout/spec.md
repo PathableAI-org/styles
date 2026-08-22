@@ -249,7 +249,10 @@ component in a later wave is proven before its wave's qualifying prerequisites.
 - **FR-001**: The repository MUST cover components in risk order, beginning with
   stateful keyboard and focus behavior, then form controls, then navigation and
   collections, then status and feedback, and finally visual and
-  composition-led components.
+  composition-led components. A later-wave component MAY be reprioritized only
+  through a documented exception that preserves its independent Styles-first
+  proof and downstream adoption order without claiming completion of skipped
+  waves.
 - **FR-002**: For each component, the Styles-first sequence MUST be applied
   independently and the component's contract and Styles proof MUST complete
   before any downstream adapter for that component starts.
