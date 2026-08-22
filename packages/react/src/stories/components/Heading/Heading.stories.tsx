@@ -31,7 +31,7 @@ const meta = {
       options: [1, 2, 3, 4, 5, 6],
       control: { type: 'select' },
       description:
-        'Optional visual style override. When set, the element is h{level} but the CSS class is heading--level-{visualLevel}. Defaults to level.',
+        'Optional visual style override. When set, the element is h{level} but the CSS class is pathable-heading--level-{visualLevel}. Defaults to level.',
     },
     className: {
       control: { type: 'text' },

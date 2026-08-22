@@ -12,7 +12,10 @@ const HEADING_LEVEL_CLASS: Record<HeadingLevel, string> = {
   6: 'pathable-heading--level-6',
 }
 
-export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
+export interface HeadingProps extends Omit<
+  React.HTMLAttributes<HTMLHeadingElement>,
+  'color'
+> {
   /** Document outline level. Controls rendered HTML element (h1–h6). Required. */
   level: HeadingLevel
   /** Optional visual style override. When set, the CSS class uses this level
