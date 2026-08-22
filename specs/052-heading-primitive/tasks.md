@@ -147,7 +147,7 @@
 
 - [x] T017 [P] [US6] Record contrast evidence: compute and document WCAG AA contrast ratios for `--pathable-color-text` (#00365c) on `--pathable-color-surface` (#ffffff) — confirmed 12.48:1 from the Text primitive audit — verifying all heading levels meet ≥ 4.5:1. Document in a comment in `pathable-heading.scss` and reference in `specs/052-heading-primitive/research.md`.
 
-- [x] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm --filter @pathableai/react storybook` and `pnpm --filter @pathableai/react test:storybook-react`; ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
+- [x] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm test:storybook-react` and `pnpm test:storybook-react:all`; ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
 
 - [x] T019 [P] [US6] Verify heading semantics: run the axe DevTools or Accessibility Insights check on Storybook heading stories; confirm each heading has correct `role="heading"` and the appropriate heading level (implicit from the `h1`–`h6` element — no explicit `aria-level` attribute is needed or expected); confirm no ARIA role override is applied; verify forced-colors mode distinguishes headings by size/weight (spot-check in browser DevTools Rendering tab with `forced-colors: active`).
 
@@ -161,7 +161,7 @@
 
 - [x] T020 [P] Run build + type + package checks: `pnpm --filter @pathableai/styles build`, `pnpm --filter @pathableai/react build`, `pnpm --filter @pathableai/react exec tsc --noEmit`, `pnpm --filter @pathableai/react check:package`, `pnpm --filter @pathableai/react check:types` — all must pass.
 
-- [x] T021 [P] Run the full unit suite with the primitive regression pattern: `pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading|Text|Grid|Stack|Inline|Cluster|Container"` — all must pass.
+- [x] T021 [P] Run the full unit suite with the primitive regression filters: `pnpm --filter @pathableai/react test:unit -- Heading Text Grid Stack Inline Cluster Container` — all must pass.
 
 - [x] T022 [P] Run root quality gates: `pnpm lint` (eslint, stylelint, markdownlint, prettier check, token lint) — must pass with ZERO warnings; fix findings without disabling/suppressing any rule.
 
@@ -169,7 +169,7 @@
 
 - [x] T024 Update `docs/plans/semantic-react/10-heading-primitive.md` Status line from `NOT STARTED` to `DONE`, and record the audit/evidence notes (SCSS contract, level mapping, contrast evidence).
 
-- [ ] T025 Final review: `git status`/`git diff` — confirm no new lint suppressions, no unintended changes, and everything ready for merge.
+- [x] T025 Final review: `git status`/`git diff` — confirm no new lint suppressions, no unintended changes, and everything ready for merge.
 
 ---
 

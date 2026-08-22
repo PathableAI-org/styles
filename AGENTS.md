@@ -46,10 +46,10 @@ pnpm build
 pnpm --filter @pathableai/react build
 
 # Run Heading component tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading"
+pnpm --filter @pathableai/react test:unit -- Heading
 
 # Run all typography/layout primitive tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading|Text|Grid|Inline|Cluster|Stack|Container"
+pnpm --filter @pathableai/react test:unit -- Heading Text Grid Inline Cluster Stack Container
 ```
 
 <!-- SPECKIT END -->

@@ -123,15 +123,23 @@ No `Heading` component exists in `packages/react/src/components/` or anywhere el
 
 **Rationale**: The spec and source plan both explicitly exclude this. The semantic integrity of headings depends on them being actual heading elements. Unlike `Text` which supports `as` for text-content elements, Heading has no legitimate use case for rendering as a non-heading element.
 
-### Decision 7: Polymorphic Type Pattern — Per-Level Element Props
+### Decision 7: Shared Native Heading Props
 
-**Decision**: Rather than a generic polymorphic `as` pattern, use a discriminated mapping from `level` to the correct JSX intrinsic element type. Since `level` determines exactly which heading element renders, the component accepts native props for that specific heading element.
+**Decision**: Use `HTMLAttributes<HTMLHeadingElement>` for native props while
+mapping `level` to the exact `h1`–`h6` intrinsic element at render time. Heading
+does not use a generic polymorphic `as` pattern.
 
-**Rationale**: Unlike `Text` where `as` can be any of several text-content elements, Heading's element is determined by `level`. A discriminated type approach is simpler: `level={1}` means `h1` props, `level={3}` means `h3` props.
+**Rationale**: Unlike `Text`, Heading's element is determined by `level`. All six
+heading elements share the `HTMLHeadingElement` interface and the same native
+attribute set, so a discriminated union would duplicate identical prop types
+without increasing safety. Invalid non-heading props such as `href` and `as`
+remain compile-time errors.
 
 **Alternatives considered**:
 - Generic polymorphic like `Text`: Over-engineered — Heading has no `as` prop, and the element is always known from `level`.
-- Accept `HTMLAttributes<HTMLHeadingElement>` for all levels: Rejected — this is overly permissive; props specific to a given heading level would not be type-checked.
+- Per-level discriminated unions: Rejected — `h1` through `h6` do not expose
+  different native React attribute interfaces, so the union adds complexity
+  without narrowing accepted props.
 
 ### Decision 8: SCSS Contract Structure
 

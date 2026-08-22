@@ -21,10 +21,10 @@ pnpm --filter @pathableai/react build
 
 ```bash
 # Run Heading component tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading"
+pnpm --filter @pathableai/react test:unit -- Heading
 
 # Run all typography/layout primitive tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Heading|Text|Grid|Inline|Cluster|Stack|Container"
+pnpm --filter @pathableai/react test:unit -- Heading Text Grid Inline Cluster Stack Container
 ```
 
 ### Expected test coverage
@@ -55,11 +55,14 @@ pnpm --filter @pathableai/react check:types
 ## Storybook
 
 ```bash
-# Start Storybook
-pnpm --filter @pathableai/react storybook
+# Start the React Storybook
+pnpm --filter @pathable/storybook-react storybook
 
-# Run Storybook tests
-pnpm --filter @pathableai/react test:storybook-react
+# Run the registered React Storybook target
+pnpm test:storybook-react
+
+# Run every React Storybook story
+pnpm test:storybook-react:all
 ```
 
 ### Expected stories
@@ -106,16 +109,37 @@ pnpm --filter @pathableai/react test:storybook-react
 
 ## Manual Inspection Checklist
 
-- [ ] `<Heading level={1}>` → `<h1 class="pathable-heading pathable-heading--level-1">`
-- [ ] `<Heading level={2}>` → `<h2 class="pathable-heading pathable-heading--level-2">`
-- [ ] `<Heading level={3}>` → `<h3 class="pathable-heading pathable-heading--level-3">`
-- [ ] `<Heading level={4}>` → `<h4 class="pathable-heading pathable-heading--level-4">`
-- [ ] `<Heading level={5}>` → `<h5 class="pathable-heading pathable-heading--level-5">`
-- [ ] `<Heading level={6}>` → `<h6 class="pathable-heading pathable-heading--level-6">`
-- [ ] `<Heading level={3} visualLevel={2}>` → `<h3 class="pathable-heading pathable-heading--level-2">`
-- [ ] `<Heading level={2} className="my-class">` → class list is `pathable-heading pathable-heading--level-2 my-class`
-- [ ] No extra wrapper elements (single DOM node)
-- [ ] Server and client output identical (no hydration mismatch)
-- [ ] TypeScript errors for missing `level` prop
-- [ ] TypeScript errors for out-of-range `level` values
-- [ ] TypeScript errors for invalid `as` prop
+- [x] `<Heading level={1}>` → `<h1 class="pathable-heading pathable-heading--level-1">`
+- [x] `<Heading level={2}>` → `<h2 class="pathable-heading pathable-heading--level-2">`
+- [x] `<Heading level={3}>` → `<h3 class="pathable-heading pathable-heading--level-3">`
+- [x] `<Heading level={4}>` → `<h4 class="pathable-heading pathable-heading--level-4">`
+- [x] `<Heading level={5}>` → `<h5 class="pathable-heading pathable-heading--level-5">`
+- [x] `<Heading level={6}>` → `<h6 class="pathable-heading pathable-heading--level-6">`
+- [x] `<Heading level={3} visualLevel={2}>` → `<h3 class="pathable-heading pathable-heading--level-2">`
+- [x] `<Heading level={2} className="my-class">` → class list is `pathable-heading pathable-heading--level-2 my-class`
+- [x] No extra wrapper elements (single DOM node)
+- [x] Server and client output identical (no hydration mismatch)
+- [x] TypeScript errors for missing `level` prop
+- [x] TypeScript errors for out-of-range `level` values
+- [x] TypeScript errors for invalid `as` prop
+
+### Final audit evidence
+
+- All nine Heading stories passed the registered Storybook Axe target with no
+  exceptions; the full React Storybook run passed 59 suites and 654 stories.
+- Browser inspection confirmed native `h1`–`h6` elements with no explicit
+  `role` or `aria-level` overrides.
+- Chromium forced-colors emulation preserved six distinct typography styles
+  and visible text for all levels.
+- At 200% zoom, every level remained readable, wrapped without clipping, and
+  introduced no horizontal overflow.
+
+#### Browser captures
+
+Forced-colors mode:
+
+![All Heading levels in forced-colors mode](heading-forced-colors.png)
+
+200% zoom at a 640 px viewport:
+
+![All Heading levels at 200 percent zoom](heading-zoom-200.png)

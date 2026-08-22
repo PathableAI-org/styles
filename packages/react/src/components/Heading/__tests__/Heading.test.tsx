@@ -84,6 +84,33 @@ describe('Heading', () => {
     }
   })
 
+  it('rejects missing, invalid, and non-heading props at compile time', () => {
+    const invalidExamples = [
+      // @ts-expect-error -- level is required.
+      <Heading>Missing level</Heading>,
+      // @ts-expect-error -- level must be between 1 and 6.
+      <Heading level={0}>Invalid level</Heading>,
+      // @ts-expect-error -- level must be between 1 and 6.
+      <Heading level={7}>Invalid level</Heading>,
+      // @ts-expect-error -- level must be numeric.
+      <Heading level="2">Invalid level</Heading>,
+      // @ts-expect-error -- visualLevel must be between 1 and 6.
+      <Heading level={2} visualLevel={7}>
+        Invalid visual level
+      </Heading>,
+      // @ts-expect-error -- Heading never accepts an element override.
+      <Heading level={2} as="div">
+        Invalid element
+      </Heading>,
+      // @ts-expect-error -- href is not a heading attribute.
+      <Heading level={2} href="/invalid">
+        Invalid native prop
+      </Heading>,
+    ]
+
+    expect(invalidExamples).toHaveLength(7)
+  })
+
   // ── US5: ref forwarding, className composition, native attributes, SSR ──
 
   it('forwards a ref to the rendered heading DOM element', () => {
@@ -123,12 +150,23 @@ describe('Heading', () => {
     expect(root.hasAttribute('hidden')).toBe(true)
   })
 
-  it('produces identical server and client output', () => {
-    const jsx = <Heading level={2}>Server / Client</Heading>
+  it.each([
+    {
+      name: 'matching semantic and visual levels',
+      jsx: <Heading level={2}>Server / Client</Heading>,
+    },
+    {
+      name: 'diverging semantic and visual levels',
+      jsx: (
+        <Heading level={3} visualLevel={2}>
+          Server / Client
+        </Heading>
+      ),
+    },
+  ])('produces identical server and client output for $name', ({ jsx }) => {
     const serverHtml = renderToString(jsx)
     const { container } = render(jsx)
-    const clientHtml = container.innerHTML
-    expect(serverHtml).toBe(clientHtml)
+    expect(serverHtml).toBe(container.innerHTML)
   })
 
   // ── Edge cases ─────────────────────────────────────────────────
