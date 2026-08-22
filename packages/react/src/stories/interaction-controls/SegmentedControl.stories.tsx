@@ -348,15 +348,36 @@ export const DisabledOption: Story = {
 export const StaticSingleOption: Story = {
   args: {
     'aria-label': 'Current mode',
-    options: [{ value: 'list', label: 'List view', icon: listIcon }],
+    role: 'radiogroup',
+    tabIndex: 0,
+    options: [
+      {
+        value: 'list',
+        label: 'List view',
+        icon: listIcon,
+        attributes: {
+          id: 'static-list-option',
+          title: 'Current list view',
+          'data-display-mode': 'list',
+        },
+      },
+    ],
     value: 'list',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const control = canvas.getByLabelText('Current mode')
+    const option = canvas.getByTitle('Current list view')
 
     await expect(canvas.getByText('List view')).toBeInTheDocument()
     await expect(canvas.queryByRole('button')).not.toBeInTheDocument()
     await expect(canvas.queryByRole('radio')).not.toBeInTheDocument()
+    await expect(canvas.queryByRole('radiogroup')).not.toBeInTheDocument()
+    await expect(control).not.toHaveAttribute('role')
+    await expect(control).not.toHaveAttribute('tabindex')
+    await expect(option).toHaveAttribute('id', 'static-list-option')
+    await expect(option).toHaveAttribute('data-display-mode', 'list')
+    await expect(option).not.toHaveAttribute('tabindex')
   },
 }
 
@@ -504,6 +525,32 @@ export const InvalidValueFallback: Story = {
 
     await expect(list).toHaveAttribute('aria-checked', 'true')
     await expect(list).toHaveAttribute('tabindex', '0')
+    await expect(canvas.getAllByRole('radio', { checked: true })).toHaveLength(
+      1,
+    )
+  },
+}
+
+export const ReadOnlyInvalidValueFallback: Story = {
+  render: () => (
+    <SegmentedControl
+      aria-label="Read-only fallback"
+      options={[
+        { value: 'unavailable', label: 'Unavailable', disabled: true },
+        { value: 'available', label: 'Available' },
+      ]}
+      value="missing"
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const unavailable = canvas.getByRole('radio', { name: 'Unavailable' })
+    const available = canvas.getByRole('radio', { name: 'Available' })
+
+    await expect(unavailable).toBeDisabled()
+    await expect(unavailable).toHaveAttribute('aria-checked', 'false')
+    await expect(available).toBeDisabled()
+    await expect(available).toHaveAttribute('aria-checked', 'true')
     await expect(canvas.getAllByRole('radio', { checked: true })).toHaveLength(
       1,
     )

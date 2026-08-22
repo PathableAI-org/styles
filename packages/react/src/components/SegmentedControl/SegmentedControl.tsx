@@ -166,8 +166,17 @@ function renderStaticControl(
     .join(' ')
 
   return (
-    <div {...attributes} className={rootClassName}>
-      <span className={getOptionClassName(option.className, true)}>
+    <div
+      {...attributes}
+      className={rootClassName}
+      role={undefined}
+      tabIndex={undefined}
+    >
+      <span
+        {...option.attributes}
+        className={getOptionClassName(option.className, true)}
+        tabIndex={undefined}
+      >
         {renderOptionContent(option)}
       </span>
     </div>
@@ -187,9 +196,7 @@ function SegmentedControlSingle({
   }
 
   const interactive = Boolean(onValueChange)
-  const enabledOptions = interactive
-    ? options.filter((option) => !option.disabled)
-    : []
+  const enabledOptions = options.filter((option) => !option.disabled)
   const hasSelectedOption = options.some((option) => option.value === value)
   const selectedValue = hasSelectedOption
     ? value
@@ -197,9 +204,11 @@ function SegmentedControlSingle({
   const selectedEnabled = enabledOptions.some(
     (option) => option.value === selectedValue,
   )
-  const fallbackTabValue = selectedEnabled
-    ? selectedValue
-    : enabledOptions[0]?.value
+  const fallbackTabValue = interactive
+    ? selectedEnabled
+      ? selectedValue
+      : enabledOptions[0]?.value
+    : undefined
 
   return (
     <div
