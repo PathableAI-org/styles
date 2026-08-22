@@ -754,11 +754,11 @@ Each `SegmentedControlOption` requires a unique string `value` and visible `labe
 
 The component is controlled: consumers update `value` or `values` when the corresponding callback runs. Omitting the relevant callback makes every option in a multi-option control natively disabled. If a single-select `value` does not match an option, the first enabled option is displayed as selected, or the first option when all options are disabled; the fallback is not written back to consumer state. A one-option set renders as a static `<span>` indicator with no button, radio, group, or focus semantics. Common static option metadata such as `id`, `title`, `aria-*`, `data-*`, and styles is preserved, while `tabIndex` is suppressed.
 
-Standard root `<div>` attributes are forwarded. SegmentedControl reserves root roles and focus behavior so consumer attributes cannot replace its interactive or static semantics. Horizontal controls scroll internally when constrained; vertical controls stack their options.
+Standard root `<div>` attributes are forwarded, but SegmentedControl always owns the root role. Single mode owns its roving `tabIndex`, and static mode suppresses root and option `tabIndex` values. Multi mode forwards root `tabIndex` and option attributes, including `tabIndex`; consumers that override them remain responsible for preserving a logical focus order. Horizontal controls scroll internally when constrained; vertical controls stack their options.
 
 #### SegmentedControl Accessibility
 
-Give every multi-option SegmentedControl an accessible name with `aria-label` or `aria-labelledby`. Single mode renders a radiogroup whose radio buttons expose `aria-checked`; Arrow keys wrap through enabled options, move focus, and request the corresponding controlled value. Multi mode renders a named group of native toggle buttons with `aria-pressed`; Tab follows the normal button order, and Space or Enter requests a toggle through `onValuesChange`. Decorative option icons should be hidden from assistive technology.
+Give every multi-option SegmentedControl an accessible name with `aria-label` or `aria-labelledby`. Single mode renders a radiogroup whose radio buttons expose `aria-checked`; Arrow keys wrap through enabled options, move focus, and request the corresponding controlled value. Multi mode renders a named group of native toggle buttons with `aria-pressed`; by default, Tab follows the normal button order, and Space or Enter requests a toggle through `onValuesChange`. Decorative option icons should be hidden from assistive technology.
 
 ### ButtonGroup Props
 
