@@ -61,7 +61,7 @@ pnpm --filter @pathable/storybook-react storybook
 # Run the registered React Storybook target
 pnpm test:storybook-react
 
-# Run every React Storybook story
+# Run every React Storybook story (requires Bash; use WSL or Git Bash on Windows)
 pnpm test:storybook-react:all
 ```
 

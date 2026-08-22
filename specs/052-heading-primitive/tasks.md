@@ -147,7 +147,7 @@
 
 - [x] T017 [P] [US6] Record contrast evidence: compute and document WCAG AA contrast ratios for `--pathable-color-text` (#00365c) on `--pathable-color-surface` (#ffffff) — confirmed 12.48:1 from the Text primitive audit — verifying all heading levels meet ≥ 4.5:1. Document in a comment in `pathable-heading.scss` and reference in `specs/052-heading-primitive/research.md`.
 
-- [x] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm test:storybook-react` and `pnpm test:storybook-react:all`; ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
+- [x] T018 [US6] Verify rendered accessibility in the React Storybook: run `pnpm test:storybook-react` and `pnpm test:storybook-react:all` (the full-story command requires Bash; use WSL or Git Bash on Windows); ensure NO `Heading` stories appear in `skipA11yStoryIds` or `colorContrastExceptionStoryIds` in `apps/storybook-react/.storybook/test-runner.js`. All heading stories must pass automated axe checks. No a11y rule exceptions.
 
 - [x] T019 [P] [US6] Verify heading semantics: run the axe DevTools or Accessibility Insights check on Storybook heading stories; confirm each heading has correct `role="heading"` and the appropriate heading level (implicit from the `h1`–`h6` element — no explicit `aria-level` attribute is needed or expected); confirm no ARIA role override is applied; verify forced-colors mode distinguishes headings by size/weight (spot-check in browser DevTools Rendering tab with `forced-colors: active`).
 
