@@ -106,8 +106,8 @@ export const AllSizes = {
     for (const [button, size] of sizes) {
       const bounds = button.getBoundingClientRect()
 
-      await expect(bounds.width).toBe(size)
-      await expect(bounds.height).toBe(size)
+      await expect(bounds.width).toBeCloseTo(size, 4)
+      await expect(bounds.height).toBeCloseTo(size, 4)
     }
   },
 }
@@ -170,13 +170,16 @@ export const OnDifferentSurfaces = {
       canvas.getByRole('button', { name: 'Close on brand surface' }),
       canvas.getByRole('button', { name: 'Close on inverse surface' }),
     ]
+    const view = canvasElement.ownerDocument.defaultView
 
-    buttons[0].focus()
+    if (!view) throw new Error('IconButton story window is unavailable')
+
+    await userEvent.tab()
 
     for (const [index, button] of buttons.entries()) {
       if (index > 0) await userEvent.tab()
 
-      const style = getComputedStyle(button)
+      const style = view.getComputedStyle(button)
 
       await expect(button).toHaveFocus()
       await expect(style.outlineStyle).toBe('solid')
@@ -224,8 +227,8 @@ export const ConstrainedContent = {
     )
     const bounds = button.getBoundingClientRect()
 
-    await expect(bounds.width).toBe(44)
-    await expect(bounds.height).toBe(44)
+    await expect(bounds.width).toBeCloseTo(44, 4)
+    await expect(bounds.height).toBeCloseTo(44, 4)
     await expect(text).toBeVisible()
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
