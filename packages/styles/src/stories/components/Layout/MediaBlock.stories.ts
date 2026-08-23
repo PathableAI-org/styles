@@ -51,11 +51,17 @@ export const Default = {
       level: 3,
       name: 'Jordan Lee',
     })
+    const description = canvas.getByText(
+      'Employment support coordinator for the central region.',
+    )
 
     await expect(mediaBlock).toHaveClass('pathable-media-block')
     await expect(media).toHaveClass('pathable-media-block__img')
     await expect(media).toHaveAttribute('focusable', 'false')
     await expect(heading.parentElement).toHaveClass(
+      'pathable-media-block__body',
+    )
+    await expect(description.parentElement).toHaveClass(
       'pathable-media-block__body',
     )
   },
