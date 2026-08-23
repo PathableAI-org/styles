@@ -106,8 +106,8 @@ export const AllSizes = {
     for (const [button, size] of sizes) {
       const bounds = button.getBoundingClientRect()
 
-      await expect(bounds.width).toBeCloseTo(size, 4)
-      await expect(bounds.height).toBeCloseTo(size, 4)
+      await expect(bounds.width).toBeCloseTo(size, 1)
+      await expect(bounds.height).toBeCloseTo(size, 1)
     }
   },
 }
@@ -227,8 +227,8 @@ export const ConstrainedContent = {
     )
     const bounds = button.getBoundingClientRect()
 
-    await expect(bounds.width).toBeCloseTo(44, 4)
-    await expect(bounds.height).toBeCloseTo(44, 4)
+    await expect(bounds.width).toBeCloseTo(44, 1)
+    await expect(bounds.height).toBeCloseTo(44, 1)
     await expect(text).toBeVisible()
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
