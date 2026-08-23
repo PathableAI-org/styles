@@ -205,7 +205,7 @@ validators and confirm accessible labeling and error association are validated
 for every named state, with framework-controlled state left to package-specific
 tests.
 
-- [ ] T029 [P] [US2] Create form-control helpers
+- [x] T029 [P] [US2] Create form-control helpers
       `verifyAccessibleLabel`, `verifyRequiredInvalidAssociation`,
       `verifyHintErrorAssociation` in `packages/storybook-contracts/src/` (a
       single capability per helper) and export from `src/index.ts`
