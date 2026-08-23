@@ -21,6 +21,7 @@ import {
 import { flexClass } from '../flexGrid'
 import { fontFamilyClass, fontWeightClass } from '../typography'
 import { backgroundColorClass, textColorClass } from '../colorTone'
+import { textToneClass } from '../tone'
 import { mergeClasses } from '../mergeClasses'
 
 const resolvers = {
@@ -43,6 +44,7 @@ const resolvers = {
   fontWeightClass,
   backgroundColorClass,
   textColorClass,
+  textToneClass,
   mergeClasses,
 }
 
@@ -69,6 +71,7 @@ const FILE_FOR_RESOLVER: Record<string, string> = {
   fontWeightClass: 'typography',
   backgroundColorClass: 'colorTone',
   textColorClass: 'colorTone',
+  textToneClass: 'tone',
   mergeClasses: 'mergeClasses',
 }
 

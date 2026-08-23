@@ -1,6 +1,15 @@
 # 11 — Semantic Color and Tone Model
 
-Status: NOT STARTED → change to DONE when complete
+Status: DONE
+
+## Audit Notes (implementation evidence)
+
+- SCSS contract (text tones, verified): `packages/styles/src/pathable-component-wrappers/pathable-text.scss` (feature 09). Tone modifiers `pathable-text--tone-default|muted|danger|success` resolve to `--pathable-color-text`, `--pathable-color-text-muted`, `--pathable-color-danger`, `--pathable-color-text-success` — no literal hex in the contract.
+- Vocabulary + decisions: `specs/053-semantic-color-tones/research.md` (canonical tone → SCSS source → resolved class / gap table, plus contrast evidence).
+- Types added (internal layer): `packages/react/src/internal/resolvers/tone.ts` defines `TextTone` (`default|muted|danger|success`), `SurfaceTone` (`default|subtle|primary`), `BorderTone` (`default|danger`), and the pure `textToneClass` resolver. Re-exported through `types.ts` and `index.ts` (internal barrel only — NOT the public `src/index.ts`).
+- `Text` migration: `packages/react/src/components/Text/Text.tsx` now consumes the shared `TextTone` type and `textToneClass` resolver (removed inline union + map); `TextTone` remains a public re-export for compatibility. Rendered tone classes are byte-for-byte unchanged.
+- Surface/border tones: **tracked gaps** (no `pathable-surface--tone-*` / border-tone contract exists). `SurfaceTone` gap owned by feature 12 (`Surface`), with the `primary` token mapping (`--pathable-color-accent` vs `--pathable-color-action-primary-bg`) unresolved; `BorderTone` gap has no owner yet.
+- Contrast (WCAG AA normal text on `--pathable-color-surface` #ffffff): default 12.48:1, muted 7.71:1, danger 4.53:1, success 5.27:1 — all PASS (re-recorded from feature 09). Forced-colors: tone classes resolve to semantic tokens; color is never the sole signal.
 
 ## Parent Plan
 
