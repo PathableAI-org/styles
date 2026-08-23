@@ -63,6 +63,8 @@ const CANONICAL_STORIES = [
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
+  // Components - Layout
+  { id: 'components-layout-icon--all-icons', mode: 'both' },
   // Marketing patterns
   { id: 'marketing-patterns-combined--hero-section', mode: 'desktop' },
   { id: 'marketing-patterns-combined--feature-showcase', mode: 'desktop' },
