@@ -1,4 +1,4 @@
-import type { StoryHarness } from './types.js'
+import type { StoryHarness } from '../types.js'
 
 /**
  * Resolve a disclosure button (a `button` with `aria-controls`) by its

@@ -8,6 +8,8 @@ import type { FontFamily, FontWeight } from './typography.js'
 import type { BackgroundColor, TextColor } from './colorTone.js'
 
 export type { Width, MaxWidth } from './sizing.js'
+
+export type { TextTone, SurfaceTone, BorderTone } from './tone.js'
 export type { WidthClass, MaxWidthClass } from './sizing.js'
 export type { SpacingScale, MarginScale } from './spacing.js'
 export type {
