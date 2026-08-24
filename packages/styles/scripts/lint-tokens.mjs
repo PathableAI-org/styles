@@ -499,7 +499,13 @@ function checkThemeTokenSync() {
   const missing = [...scssTokens]
     .filter((token) => !tsKebabSet.has(token))
     .sort()
-  const extraneous = tsKeys.filter((key) => !scssTokens.has(camelToKebab(key)))
+  const extraneous = [
+    ...new Set(tsKeys.filter((key) => !scssTokens.has(camelToKebab(key)))),
+  ].sort()
+
+  const duplicateKeys = tsKeys.filter(
+    (key, index) => tsKeys.indexOf(key) !== index,
+  )
 
   if (missing.length > 0) {
     issues.push(
@@ -509,6 +515,11 @@ function checkThemeTokenSync() {
   if (extraneous.length > 0) {
     issues.push(
       `Extraneous THEME_COLOR_KEYS entry/entries with no SCSS token: ${extraneous.join(', ')}`,
+    )
+  }
+  if (duplicateKeys.length > 0) {
+    issues.push(
+      `Duplicate THEME_COLOR_KEYS entry/entries: ${[...new Set(duplicateKeys)].join(', ')}`,
     )
   }
 

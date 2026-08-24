@@ -25,7 +25,6 @@ Expected: exit `0`. The following snippet must compile (put it in a scratch
 ```ts
 import type {
   ThemeColors,
-  ThemeConfig,
   TextTone,
   SurfaceTone,
   BorderTone,
@@ -33,7 +32,6 @@ import type {
 } from '@pathableai/react'
 
 const overrides: Partial<ThemeColors> = { accent: '#7c3aed' } // ok
-const config: ThemeConfig = { colors: { accent: '#7c3aed' } } // type-checks as partial? see note
 const t: TextTone = 'muted'
 const s: SurfaceTone = 'subtle'
 const b: BorderTone = 'danger'
