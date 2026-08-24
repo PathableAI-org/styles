@@ -3,4 +3,4 @@
 '@pathableai/react': patch
 ---
 
-Add the semantic Heading SCSS contract and typed React primitive with independent document and visual levels.
+Publish the semantic Heading SCSS and typed React contracts with independent document and visual levels, tokenized level-1 weight, and verified accessibility behavior.
