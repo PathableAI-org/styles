@@ -4,10 +4,6 @@
 
 **Input**: Feature specification from `/specs/016-interaction-icons-controls/spec.md`
 
-**Feature identity**: `024-interaction-icons-controls` is the historical branch
-alias for feature directory `016-interaction-icons-controls`. The current
-corrective branch is `fix/icon-button-loading-contract`.
-
 **Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Table of Contents
@@ -21,22 +17,6 @@ corrective branch is `fix/icon-button-loading-contract`.
 ## Summary
 
 Add a set of SCSS interaction-state mixins, an accessible icon-button component, a segmented/toggle-button control, and icon tile/status-icon conventions to the `@pathable/styles` package. These patterns follow the existing pathable-component-wrapper pattern: new SCSS files under `src/pathable-component-wrappers/`, bundled via `pathable-interaction-controls` bundle package forwarded from `pathable-all.scss`. All spacing, color, elevation, and radius values use existing PathAble design tokens. No new runtime dependencies are introduced.
-
-### Post-Merge Corrective Scope (2026-08-24)
-
-A post-merge review found that the documented
-`.pathable-icon-button--loading` modifier was absent even though the shared
-`.is-loading` state existed. This follow-up is limited to aligning that
-published IconButton contract with FR-005 and the loading decision in
-`research.md`: expose the modifier, preserve the generic state, hide the
-decorative SVG while an icon-sized spinner is shown, document native
-`disabled` plus `aria-busy="true"` usage, and add deterministic Storybook
-evidence that loading suppresses activation without changing dimensions or
-reducing the spinner below 3:1 contrast across appearances.
-
-Focus-contrast strengthening, other IconButton visual assertions, other
-interaction-control surfaces, and aggregate rollout-ledger completion remain
-outside this corrective scope.
 
 ## Technical Context
 
