@@ -1,7 +1,7 @@
 import type { StoryHarness } from '../types.js'
 
 /**
- * Shared capability: a labeled control references its visible hint and error.
+ * Shared capability: a labeled control references its hint and error.
  */
 export async function verifyHintErrorAssociation(
   harness: StoryHarness,
@@ -24,9 +24,7 @@ export async function verifyHintErrorAssociation(
     ['error', error],
   ] as const) {
     if (!element.id) {
-      throw new Error(
-        `Expected ${description} "${element.textContent?.trim() ?? ''}" to have an id.`,
-      )
+      throw new Error(`Expected ${description} element to have an id.`)
     }
 
     if (!describedBy.has(element.id)) {
