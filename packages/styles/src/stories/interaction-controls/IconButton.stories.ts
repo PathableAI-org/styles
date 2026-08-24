@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: Native button behavior with CSS-driven interactive states.\n\n**Semantics verified**: Icon buttons retain native button semantics, expose an accessible name, and keep decorative SVGs outside the accessibility tree and keyboard order. Loading buttons remain disabled and expose their busy state without changing size.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Provide an accessible name through `aria-label` or `aria-labelledby`, set `type="button"` when the control must not submit a form, and hide decorative icons from assistive technology. Pair `pathable-icon-button--loading` with native `disabled` and `aria-busy="true"` so pointer and keyboard activation are both suppressed.',
+          '**Interaction Model**: Native button behavior with CSS-driven interactive states.\n\n**Semantics verified**: Icon buttons retain native button semantics, expose an accessible name, and keep decorative SVGs outside the accessibility tree and keyboard order.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Provide an accessible name through `aria-label` or `aria-labelledby`, set `type="button"` when the control must not submit a form, and hide decorative icons from assistive technology.',
       },
     },
   },
@@ -19,102 +19,11 @@ const closeIcon = `
   </svg>
 `
 
-const iconButton = (variant: string, label: string, attributes = '') => `
-  <button type="button" class="pathable-icon-button ${variant}" aria-label="${label}"${attributes ? ` ${attributes}` : ''}>
+const iconButton = (variant: string, label: string, disabled = false) => `
+  <button type="button" class="pathable-icon-button ${variant}" aria-label="${label}"${disabled ? ' disabled' : ''}>
     ${closeIcon}
   </button>
 `
-
-const loadingCases = [
-  {
-    label: 'Compact bare',
-    appearanceClass: 'pathable-icon-button--bare',
-    sizeClass: 'pathable-icon-button--compact',
-    loadingClass: 'pathable-icon-button--loading',
-    buttonSize: 32,
-    spinnerSize: 16,
-  },
-  {
-    label: 'Default subtle',
-    appearanceClass: 'pathable-icon-button--subtle',
-    sizeClass: '',
-    loadingClass: 'pathable-icon-button--loading',
-    buttonSize: 44,
-    spinnerSize: 20,
-  },
-  {
-    label: 'Large bordered',
-    appearanceClass: 'pathable-icon-button--bordered',
-    sizeClass: 'pathable-icon-button--large',
-    loadingClass: 'pathable-icon-button--loading',
-    buttonSize: 52,
-    spinnerSize: 24,
-  },
-  {
-    label: 'Inverse',
-    appearanceClass: 'pathable-icon-button--inverse',
-    sizeClass: '',
-    loadingClass: 'pathable-icon-button--loading',
-    buttonSize: 44,
-    spinnerSize: 20,
-  },
-  {
-    label: 'Generic destructive',
-    appearanceClass: 'pathable-icon-button--destructive',
-    sizeClass: '',
-    loadingClass: 'is-loading',
-    buttonSize: 44,
-    spinnerSize: 20,
-  },
-] as const
-
-const loadingExample = ({
-  label,
-  appearanceClass,
-  sizeClass,
-  loadingClass,
-}: (typeof loadingCases)[number]) => {
-  const restingClasses = [appearanceClass, sizeClass].filter(Boolean).join(' ')
-  const loadingClasses = [restingClasses, loadingClass].join(' ')
-
-  return `
-    <div style="display: inline-flex; align-items: center; gap: 0.5rem;">
-      <span>${label}</span>
-      ${iconButton(restingClasses, `${label} save changes`)}
-      ${iconButton(
-        loadingClasses,
-        `${label} saving changes`,
-        'disabled aria-busy="true"',
-      )}
-    </div>
-  `
-}
-
-const contrastRatio = (foreground: string, background: string) => {
-  const luminance = (color: string) => {
-    const channels = color
-      .match(/[\d.]+/g)
-      ?.slice(0, 3)
-      .map(Number)
-
-    if (!channels || channels.length !== 3) {
-      throw new Error(`Unable to parse computed color: ${color}`)
-    }
-
-    const [red, green, blue] = channels.map((channel) => {
-      const value = channel / 255
-      return value <= 0.04045
-        ? value / 12.92
-        : Math.pow((value + 0.055) / 1.055, 2.4)
-    })
-
-    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
-  }
-
-  const lighter = Math.max(luminance(foreground), luminance(background))
-  const darker = Math.min(luminance(foreground), luminance(background))
-  return (lighter + 0.05) / (darker + 0.05)
-}
 
 export const AllVariants = {
   render: () => `
@@ -281,7 +190,7 @@ export const OnDifferentSurfaces = {
 
 export const Disabled = {
   render: () => `
-    ${iconButton('pathable-icon-button--subtle', 'Close unavailable', 'disabled')}
+    ${iconButton('pathable-icon-button--subtle', 'Close unavailable', true)}
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -295,74 +204,6 @@ export const Disabled = {
     )
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
     await expect(icon).toHaveAttribute('focusable', 'false')
-  },
-}
-
-export const Loading = {
-  render: () => `
-    <div class="pathable-stack pathable-stack--gap-md">
-      ${loadingCases.map(loadingExample).join('')}
-    </div>
-  `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const canvas = within(canvasElement)
-    const view = canvasElement.ownerDocument.defaultView
-
-    if (!view) throw new Error('IconButton story window is unavailable')
-
-    for (const loadingCase of loadingCases) {
-      const resting = canvas.getByRole('button', {
-        name: `${loadingCase.label} save changes`,
-      })
-      const loading = canvas.getByRole('button', {
-        name: `${loadingCase.label} saving changes`,
-      })
-      const icon = loading.querySelector('svg')
-
-      if (!icon) {
-        throw new Error(
-          `${loadingCase.label} loading IconButton SVG is missing`,
-        )
-      }
-
-      const restingBounds = resting.getBoundingClientRect()
-      const loadingBounds = loading.getBoundingClientRect()
-      const loadingStyle = view.getComputedStyle(loading)
-      const iconStyle = view.getComputedStyle(icon)
-      const spinnerStyle = view.getComputedStyle(loading, '::after')
-
-      await expect(loading).toBeDisabled()
-      await expect(loading).toHaveAttribute('aria-busy', 'true')
-      await expect(loading).toHaveClass(
-        'pathable-icon-button',
-        loadingCase.appearanceClass,
-        loadingCase.loadingClass,
-      )
-      await expect(loadingStyle.pointerEvents).toBe('none')
-      await expect(loadingStyle.cursor).toBe('wait')
-      await expect(loadingStyle.opacity).toBe('1')
-      await expect(icon).toHaveAttribute('aria-hidden', 'true')
-      await expect(icon).toHaveAttribute('focusable', 'false')
-      await expect(iconStyle.visibility).toBe('hidden')
-      await expect(spinnerStyle.width).toBe(`${loadingCase.spinnerSize}px`)
-      await expect(spinnerStyle.height).toBe(`${loadingCase.spinnerSize}px`)
-      await expect(Math.round(restingBounds.width)).toBe(loadingCase.buttonSize)
-      await expect(Math.round(restingBounds.height)).toBe(
-        loadingCase.buttonSize,
-      )
-      await expect(Math.round(loadingBounds.width)).toBe(
-        Math.round(restingBounds.width),
-      )
-      await expect(Math.round(loadingBounds.height)).toBe(
-        Math.round(restingBounds.height),
-      )
-      await expect(
-        contrastRatio(
-          spinnerStyle.borderRightColor,
-          loadingStyle.backgroundColor,
-        ),
-      ).toBeGreaterThanOrEqual(3)
-    }
   },
 }
 

@@ -43,7 +43,7 @@
     "@fontsource/nunito": "^5.2.7",
     "@fontsource/poppins": "^5.2.7",
     "@pathable/storybook-contracts": "workspace:*",
-    "esbuild": "^0.25.12",
+    "esbuild": "^0.28.0",
     "sass": "^1.86.3",
     "typescript": "^7.0.2"
   }

@@ -114,8 +114,8 @@
 }
 
 // Loading: suppressed interaction + CSS-only border spinner pseudo-element
-@mixin state-loading($selector: '.is-loading') {
-  &#{$selector} {
+@mixin state-loading {
+  &.is-loading {
     pointer-events: none;
     cursor: wait;
     position: relative;
