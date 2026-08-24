@@ -1,6 +1,14 @@
 # 12 — Surface Primitive
 
-Status: NOT STARTED → change to DONE when complete
+Status: DONE
+
+## Audit Notes (implementation evidence)
+
+- Precondition MET: `specs/054-surface-primitive/research.md` (Decision 0) records three concrete application composition families that repeatedly consume the coordinated `pathable-surface` treatment (operational dashboard, intake wizard, app-shell/layout). The feature proceeds on this evidence.
+- SCSS contract: `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` extended with token-driven tone/elevation/border modifiers — `pathable-surface--tone-{default|subtle|primary}` (background/foreground/border), `pathable-surface--elevation-{sm|md|lg|xl}` (`--elevation-*`), `pathable-surface--border-{default|danger}` — plus `@media (forced-colors: active)` outline fallbacks. No new tokens, no literal values.
+- Tone reconciliation: the shared `SurfaceTone` (`default|subtle|primary`) is the semantic _tone_ axis; `elevation` is the _depth_ axis; `borderTone` is the _boundary_ axis. `primary` resolves to `--pathable-color-accent` + `--pathable-color-on-accent` (Decision 3); the legacy depth variants (`base|raised|inset|interactive|brand|inverse`) remain unchanged.
+- React: `packages/react/src/components/Surface/Surface.tsx` (`variant`, `borderTone`, `elevation`, `as`, sizing/external-spacing), exported from `@pathableai/react`. Resolvers in `internal/resolvers/tone.ts` (`surfaceToneClass`, `surfaceBorderToneClass`) and `internal/resolvers/surface.ts` (`SurfaceElevation`, `surfaceElevationClass`).
+- Tests: 43 passing (21 resolver + 22 component, including SSR-parity and class-merge order); 196 existing primitive tests pass with no regressions. Lint, typecheck, build, and package-content checks all pass.
 
 ## Parent Plan
 

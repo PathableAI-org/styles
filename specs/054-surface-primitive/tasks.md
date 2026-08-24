@@ -34,7 +34,7 @@
 
 **Purpose**: Verify the conditional precondition (spec FR-001/FR-002) before any implementation. This phase serves User Story 7 (P1) — the feature ships only if at least two concrete application use cases demonstrate repeated coordinated surface behavior.
 
-- [ ] T001 Verify the precondition: confirm `specs/054-surface-primitive/research.md` records at least two concrete application use cases of repeated, coordinated surface behavior, and record the go/no-go decision in the branch. If fewer than two use cases exist, mark the feature CANCELLED and stop — nothing ships.
+- [X] T001 Verify the precondition: confirm `specs/054-surface-primitive/research.md` records at least two concrete application use cases of repeated, coordinated surface behavior, and record the go/no-go decision in the branch. If fewer than two use cases exist, mark the feature CANCELLED and stop — nothing ships.
 
 ---
 
@@ -44,11 +44,11 @@
 
 **⚠️ CRITICAL**: No React wrapper work can begin until this phase is complete.
 
-- [ ] T002 Extend `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` with tone-role modifiers `.pathable-surface--tone-default`, `.pathable-surface--tone-subtle`, `.pathable-surface--tone-primary`, resolving background to `--pathable-color-surface` / `--pathable-color-bg` / `--pathable-color-accent`, foreground to `--pathable-color-text` / `--pathable-color-on-accent`, and default border to `--pathable-color-border` / `--pathable-color-accent` — no literal hex/px/rem values.
-- [ ] T003 Extend `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` with elevation modifiers `.pathable-surface--elevation-sm`, `--md`, `--lg`, `--xl` resolving to the existing `--elevation-*` tokens.
-- [ ] T004 Extend `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` with border-tone modifiers `.pathable-surface--border-default` and `.pathable-surface--border-danger` resolving to `--pathable-color-border` / `--pathable-color-danger`.
-- [ ] T005 Add `@media (forced-colors: active)` outline fallbacks and a `prefers-reduced-motion` transition guard for the new tone/elevation/border modifiers in `packages/styles/src/pathable-component-wrappers/pathable-surface.scss`.
-- [ ] T006 Verify the surface contract is exported through the shared `@pathableai/styles` entrypoint and build it: run `pnpm --filter @pathableai/styles build` and confirm the compiled classes are present.
+- [X] T002 Extend `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` with tone-role modifiers `.pathable-surface--tone-default`, `.pathable-surface--tone-subtle`, `.pathable-surface--tone-primary`, resolving background to `--pathable-color-surface` / `--pathable-color-bg` / `--pathable-color-accent`, foreground to `--pathable-color-text` / `--pathable-color-on-accent`, and default border to `--pathable-color-border` / `--pathable-color-accent` — no literal hex/px/rem values.
+- [X] T003 Extend `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` with elevation modifiers `.pathable-surface--elevation-sm`, `--md`, `--lg`, `--xl` resolving to the existing `--elevation-*` tokens.
+- [X] T004 Extend `packages/styles/src/pathable-component-wrappers/pathable-surface.scss` with border-tone modifiers `.pathable-surface--border-default` and `.pathable-surface--border-danger` resolving to `--pathable-color-border` / `--pathable-color-danger`.
+- [X] T005 Add `@media (forced-colors: active)` outline fallbacks and a `prefers-reduced-motion` transition guard for the new tone/elevation/border modifiers in `packages/styles/src/pathable-component-wrappers/pathable-surface.scss`.
+- [X] T006 Verify the surface contract is exported through the shared `@pathableai/styles` entrypoint and build it: run `pnpm --filter @pathableai/styles build` and confirm the compiled classes are present.
 
 **Checkpoint**: Source contract ready — React wrapper implementation can now begin.
 
@@ -62,12 +62,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Add a pure `surfaceToneClass()` resolver to `packages/react/src/internal/resolvers/tone.ts` mapping `default`/`subtle`/`primary` to `pathable-surface--tone-*` (return `undefined` for null/unknown).
-- [ ] T008 [US1] Create the `Surface` component in `packages/react/src/components/Surface/Surface.tsx` with a `variant?: SurfaceTone` prop, rendering `<div className={mergeClasses('pathable-surface', surfaceToneClass(variant), className)}>` with children passthrough and no wrapper nodes.
-- [ ] T009 [US1] Export `Surface` and its `SurfaceProps` type from `packages/react/src/index.ts`.
-- [ ] T010 [US1] Add resolver tests for `surfaceToneClass` in `packages/react/src/internal/resolvers/__tests__/surface.test.ts`.
-- [ ] T011 [US1] Add component tests for `variant`→class output in `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
-- [ ] T012 [US1] Add one deterministic Storybook story per supported `variant` in `packages/react/src/stories/components/Surface/Surface.stories.tsx`.
+- [X] T007 [US1] Add a pure `surfaceToneClass()` resolver to `packages/react/src/internal/resolvers/tone.ts` mapping `default`/`subtle`/`primary` to `pathable-surface--tone-*` (return `undefined` for null/unknown).
+- [X] T008 [US1] Create the `Surface` component in `packages/react/src/components/Surface/Surface.tsx` with a `variant?: SurfaceTone` prop, rendering `<div className={mergeClasses('pathable-surface', surfaceToneClass(variant), className)}>` with children passthrough and no wrapper nodes.
+- [X] T009 [US1] Export `Surface` and its `SurfaceProps` type from `packages/react/src/index.ts`.
+- [X] T010 [US1] Add resolver tests for `surfaceToneClass` in `packages/react/src/internal/resolvers/__tests__/surface.test.ts`.
+- [X] T011 [US1] Add component tests for `variant`→class output in `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
+- [X] T012 [US1] Add one deterministic Storybook story per supported `variant` in `packages/react/src/stories/components/Surface/Surface.stories.tsx`.
 
 **Checkpoint**: A minimal `Surface` with `variant` is fully functional and independently testable (MVP).
 
@@ -81,8 +81,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Add an `as?: ElementType` prop, `forwardRef` wrapping, and native attribute passthrough to `packages/react/src/components/Surface/Surface.tsx` (default `div`, no wrapper nodes).
-- [ ] T014 [US2] Add component tests for `as` element selection, ref forwarding, native prop passthrough, class merge order, and single-DOM-node in `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
+- [X] T013 [US2] Add an `as?: ElementType` prop, `forwardRef` wrapping, and native attribute passthrough to `packages/react/src/components/Surface/Surface.tsx` (default `div`, no wrapper nodes).
+- [X] T014 [US2] Add component tests for `as` element selection, ref forwarding, native prop passthrough, class merge order, and single-DOM-node in `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
 
 **Checkpoint**: The primitive's core element contract is complete.
 
@@ -96,10 +96,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T015 [US3] Add a pure `surfaceBorderToneClass()` resolver to `packages/react/src/internal/resolvers/tone.ts` mapping `default`/`danger` to `pathable-surface--border-*`.
-- [ ] T016 [US3] Add a `borderTone?: BorderTone` prop to `packages/react/src/components/Surface/Surface.tsx` merged after the tone class.
-- [ ] T017 [US3] Add resolver + component tests for `borderTone` combination in `packages/react/src/internal/resolvers/__tests__/surface.test.ts` and `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
-- [ ] T018 [US3] Add a deterministic `borderTone` Storybook story in `packages/react/src/stories/components/Surface/Surface.stories.tsx`.
+- [X] T015 [US3] Add a pure `surfaceBorderToneClass()` resolver to `packages/react/src/internal/resolvers/tone.ts` mapping `default`/`danger` to `pathable-surface--border-*`.
+- [X] T016 [US3] Add a `borderTone?: BorderTone` prop to `packages/react/src/components/Surface/Surface.tsx` merged after the tone class.
+- [X] T017 [US3] Add resolver + component tests for `borderTone` combination in `packages/react/src/internal/resolvers/__tests__/surface.test.ts` and `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
+- [X] T018 [US3] Add a deterministic `borderTone` Storybook story in `packages/react/src/stories/components/Surface/Surface.stories.tsx`.
 
 **Checkpoint**: `borderTone` is functional and independently testable.
 
@@ -113,10 +113,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T019 [US4] Create `packages/react/src/internal/resolvers/surface.ts` with the `SurfaceElevation` type (`'sm' | 'md' | 'lg' | 'xl'`) and a pure `surfaceElevationClass()` resolver; re-export from `packages/react/src/internal/resolvers/index.ts`.
-- [ ] T020 [US4] Add an `elevation?: SurfaceElevation` prop to `packages/react/src/components/Surface/Surface.tsx` merged after the tone class.
-- [ ] T021 [US4] Add resolver + component tests for `elevation` combination in `packages/react/src/internal/resolvers/__tests__/surface.test.ts` and `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
-- [ ] T022 [US4] Add a deterministic `elevation` Storybook story in `packages/react/src/stories/components/Surface/Surface.stories.tsx`.
+- [X] T019 [US4] Create `packages/react/src/internal/resolvers/surface.ts` with the `SurfaceElevation` type (`'sm' | 'md' | 'lg' | 'xl'`) and a pure `surfaceElevationClass()` resolver; re-export from `packages/react/src/internal/resolvers/index.ts`.
+- [X] T020 [US4] Add an `elevation?: SurfaceElevation` prop to `packages/react/src/components/Surface/Surface.tsx` merged after the tone class.
+- [X] T021 [US4] Add resolver + component tests for `elevation` combination in `packages/react/src/internal/resolvers/__tests__/surface.test.ts` and `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
+- [X] T022 [US4] Add a deterministic `elevation` Storybook story in `packages/react/src/stories/components/Surface/Surface.stories.tsx`.
 
 **Checkpoint**: `elevation` is functional and independently testable.
 
@@ -130,8 +130,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T023 [US5] Extend `SurfaceProps` with `SizingProps` (`width`, `maxWidth`) and external `SpacingProps` (`margin`, `marginX`, `marginY`, `marginTop`, `marginBottom`) in `packages/react/src/components/Surface/Surface.tsx`, resolving via existing `widthClass`/`maxWidthClass`/`margin*Class`.
-- [ ] T024 [US5] Add component tests for sizing/spacing class output in `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
+- [X] T023 [US5] Extend `SurfaceProps` with `SizingProps` (`width`, `maxWidth`) and external `SpacingProps` (`margin`, `marginX`, `marginY`, `marginTop`, `marginBottom`) in `packages/react/src/components/Surface/Surface.tsx`, resolving via existing `widthClass`/`maxWidthClass`/`margin*Class`.
+- [X] T024 [US5] Add component tests for sizing/spacing class output in `packages/react/src/components/Surface/__tests__/Surface.test.tsx`.
 
 **Checkpoint**: Shared sizing/spacing capability is functional.
 
@@ -145,9 +145,9 @@
 
 ### Implementation for User Story 6
 
-- [ ] T025 [US6] Confirm per-variant contrast evidence (default 12.48:1, subtle ~9.6:1, primary ~5.5:1) and forced-colors/reduced-motion notes are recorded in `specs/054-surface-primitive/research.md` (spec FR-025/FR-026/FR-027); update if any ratio was left as "confirm during implementation".
-- [ ] T026 [US6] Run static accessibility linting on `packages/react/src/components/Surface/Surface.tsx` and fix findings without disabling rules.
-- [ ] T027 [US6] Verify the Storybook axe addon reports no new violations for Surface stories; document and justify any narrow, story-level exception.
+- [X] T025 [US6] Confirm per-variant contrast evidence (default 12.48:1, subtle ~9.6:1, primary ~5.5:1) and forced-colors/reduced-motion notes are recorded in `specs/054-surface-primitive/research.md` (spec FR-025/FR-026/FR-027); update if any ratio was left as "confirm during implementation".
+- [X] T026 [US6] Run static accessibility linting on `packages/react/src/components/Surface/Surface.tsx` and fix findings without disabling rules.
+- [X] T027 [US6] Verify the Storybook axe addon reports no new violations for Surface stories; document and justify any narrow, story-level exception.
 
 **Checkpoint**: Accessibility obligations are verified and recorded.
 
@@ -157,11 +157,11 @@
 
 **Purpose**: Full validation gates and documentation that span all user stories.
 
-- [ ] T028 Run lint, format, typecheck, and build for both packages (`pnpm build`, `pnpm --filter @pathableai/react lint`, `pnpm --filter @pathableai/react typecheck`), fixing findings without suppression or file exclusions.
-- [ ] T029 [P] Run package-content validation (`pnpm --filter @pathableai/react check:package` and `check:types`) to confirm the `Surface` export and transitive `@pathableai/styles` import are publishable.
-- [ ] T030 [P] Update `packages/react/src/stories/components/Surface/Surface.stories.tsx` metadata with semantic intent, usage guidance, misuse warnings, and accessibility obligations (canonical source: Storybook; derive/link package README).
-- [ ] T031 Run the `specs/054-surface-primitive/quickstart.md` validation scenarios end-to-end and confirm expected outcomes.
-- [ ] T032 Review visual-regression snapshots for the new Surface stories; approve intentional changes only — do not use snapshot approval to conceal regressions.
+- [X] T028 Run lint, format, typecheck, and build for both packages (`pnpm build`, `pnpm --filter @pathableai/react lint`, `pnpm --filter @pathableai/react typecheck`), fixing findings without suppression or file exclusions.
+- [X] T029 [P] Run package-content validation (`pnpm --filter @pathableai/react check:package` and `check:types`) to confirm the `Surface` export and transitive `@pathableai/styles` import are publishable.
+- [X] T030 [P] Update `packages/react/src/stories/components/Surface/Surface.stories.tsx` metadata with semantic intent, usage guidance, misuse warnings, and accessibility obligations (canonical source: Storybook; derive/link package README).
+- [X] T031 Run the `specs/054-surface-primitive/quickstart.md` validation scenarios end-to-end and confirm expected outcomes.
+- [X] T032 Review visual-regression snapshots for the new Surface stories; approve intentional changes only — do not use snapshot approval to conceal regressions.
 
 ---
 
