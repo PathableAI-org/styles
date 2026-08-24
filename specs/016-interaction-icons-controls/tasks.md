@@ -27,6 +27,7 @@
 - [Phase 4: User Story 3 - Segmented Control](#phase-4-user-story-3---segmented-control-priority-p2)
 - [Phase 5: User Story 4 - Icon Tiles and Status Icons](#phase-5-user-story-4---icon-tiles-and-status-icons-priority-p2)
 - [Phase 6: Polish & Cross-Cutting Concerns](#phase-6-polish--cross-cutting-concerns)
+- [Phase 7: Post-Merge IconButton Loading Correction](#phase-7-post-merge-iconbutton-loading-correction)
 - [Dependencies & Execution Order](#dependencies--execution-order)
 
 ## Phase 1: Setup (Shared Infrastructure)
@@ -128,6 +129,30 @@
 - [x] T027 Verify all new patterns enforce the "no product-specific content styling" constraint (FR-010) — scan each new SCSS file for `font-family`, `font-size` (on content), `line-height`, `color` (on arbitrary text), or any property that would style content instead of layout/state. Fix any violations by removing the offending declaration.
 - [x] T028 Validate that no hardcoded values exist in any new SCSS file — every color, spacing, radius, and elevation value must reference a `var(--pathable-*)` or `var(--elevation-*)` or `var(--radius-*)` or `var(--space-*)` CSS custom property. Replace any raw values found.
 - [x] T029 Add documentation comments to each new SCSS file header: description of the pattern, its responsibility per spec, list of CSS custom properties with defaults, and usage examples (following the existing wrapper pattern seen in `pathable-surface.scss` and `pathable-button.scss`).
+
+---
+
+## Phase 7: Post-Merge IconButton Loading Correction
+
+**Purpose**: Close the audited gap between the documented IconButton loading
+modifier and the published CSS/evidence while preserving the generic loading
+state.
+
+- [x] T030 Add `.pathable-icon-button--loading` through the shared loading mixin,
+      preserve `.is-loading`, hide decorative SVG content, and size the spinner
+      from `--pathable-icon-button-icon-size` without changing button dimensions
+- [x] T031 Add deterministic IconButton loading evidence for compact, default,
+      and large modifier cases plus the generic `.is-loading` case, verifying
+      disabled/busy semantics, 32px/44px/52px targets, 16px/20px/24px spinners,
+      hidden decorative content, pointer suppression, and stable geometry
+- [x] T032 Update the SCSS contract, consumer quickstart, corrective plan scope,
+      branch feature metadata, and patch changeset; run Styles build, lint,
+      formatting, Storybook/Axe, visual smoke, Changesets, and diff validation
+
+**Checkpoint**: The dedicated and generic IconButton loading selectors are
+documented and executable across all configured sizes. Aggregate rollout task
+T054 remains open for focused registration, canonical visual evidence, and
+ledger completion.
 
 ---
 

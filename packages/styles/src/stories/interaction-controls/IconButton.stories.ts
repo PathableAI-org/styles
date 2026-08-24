@@ -25,6 +25,60 @@ const iconButton = (variant: string, label: string, attributes = '') => `
   </button>
 `
 
+const loadingCases = [
+  {
+    label: 'Compact',
+    sizeClass: 'pathable-icon-button--compact',
+    loadingClass: 'pathable-icon-button--loading',
+    buttonSize: 32,
+    spinnerSize: 16,
+  },
+  {
+    label: 'Default',
+    sizeClass: '',
+    loadingClass: 'pathable-icon-button--loading',
+    buttonSize: 44,
+    spinnerSize: 20,
+  },
+  {
+    label: 'Large',
+    sizeClass: 'pathable-icon-button--large',
+    loadingClass: 'pathable-icon-button--loading',
+    buttonSize: 52,
+    spinnerSize: 24,
+  },
+  {
+    label: 'Generic state',
+    sizeClass: '',
+    loadingClass: 'is-loading',
+    buttonSize: 44,
+    spinnerSize: 20,
+  },
+] as const
+
+const loadingExample = ({
+  label,
+  sizeClass,
+  loadingClass,
+}: (typeof loadingCases)[number]) => {
+  const restingClasses = ['pathable-icon-button--subtle', sizeClass]
+    .filter(Boolean)
+    .join(' ')
+  const loadingClasses = [restingClasses, loadingClass].join(' ')
+
+  return `
+    <div style="display: inline-flex; align-items: center; gap: 0.5rem;">
+      <span>${label}</span>
+      ${iconButton(restingClasses, `${label} save changes`)}
+      ${iconButton(
+        loadingClasses,
+        `${label} saving changes`,
+        'disabled aria-busy="true"',
+      )}
+    </div>
+  `
+}
+
 export const AllVariants = {
   render: () => `
     <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">All Appearance Variants</h3>
@@ -209,45 +263,61 @@ export const Disabled = {
 
 export const Loading = {
   render: () => `
-    <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: center;">
-      ${iconButton('pathable-icon-button--subtle', 'Save changes')}
-      ${iconButton(
-        'pathable-icon-button--subtle pathable-icon-button--loading',
-        'Saving changes',
-        'disabled aria-busy="true"',
-      )}
+    <div class="pathable-stack pathable-stack--gap-md">
+      ${loadingCases.map(loadingExample).join('')}
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
-    const resting = canvas.getByRole('button', { name: 'Save changes' })
-    const loading = canvas.getByRole('button', { name: 'Saving changes' })
-    const icon = loading.querySelector('svg')
     const view = canvasElement.ownerDocument.defaultView
 
     if (!view) throw new Error('IconButton story window is unavailable')
-    if (!icon) throw new Error('Loading IconButton SVG is unavailable')
 
-    const restingBounds = resting.getBoundingClientRect()
-    const loadingBounds = loading.getBoundingClientRect()
-    const loadingStyle = view.getComputedStyle(loading)
-    const iconStyle = view.getComputedStyle(icon)
-    const spinnerStyle = view.getComputedStyle(loading, '::after')
+    for (const loadingCase of loadingCases) {
+      const resting = canvas.getByRole('button', {
+        name: `${loadingCase.label} save changes`,
+      })
+      const loading = canvas.getByRole('button', {
+        name: `${loadingCase.label} saving changes`,
+      })
+      const icon = loading.querySelector('svg')
 
-    await expect(loading).toBeDisabled()
-    await expect(loading).toHaveAttribute('aria-busy', 'true')
-    await expect(loading).toHaveClass('pathable-icon-button--loading')
-    await expect(loadingStyle.pointerEvents).toBe('none')
-    await expect(loadingStyle.cursor).toBe('wait')
-    await expect(iconStyle.visibility).toBe('hidden')
-    await expect(spinnerStyle.width).toBe('20px')
-    await expect(spinnerStyle.height).toBe('20px')
-    await expect(Math.round(loadingBounds.width)).toBe(
-      Math.round(restingBounds.width),
-    )
-    await expect(Math.round(loadingBounds.height)).toBe(
-      Math.round(restingBounds.height),
-    )
+      if (!icon) {
+        throw new Error(
+          `${loadingCase.label} loading IconButton SVG is missing`,
+        )
+      }
+
+      const restingBounds = resting.getBoundingClientRect()
+      const loadingBounds = loading.getBoundingClientRect()
+      const loadingStyle = view.getComputedStyle(loading)
+      const iconStyle = view.getComputedStyle(icon)
+      const spinnerStyle = view.getComputedStyle(loading, '::after')
+
+      await expect(loading).toBeDisabled()
+      await expect(loading).toHaveAttribute('aria-busy', 'true')
+      await expect(loading).toHaveClass(
+        'pathable-icon-button',
+        loadingCase.loadingClass,
+      )
+      await expect(loadingStyle.pointerEvents).toBe('none')
+      await expect(loadingStyle.cursor).toBe('wait')
+      await expect(icon).toHaveAttribute('aria-hidden', 'true')
+      await expect(icon).toHaveAttribute('focusable', 'false')
+      await expect(iconStyle.visibility).toBe('hidden')
+      await expect(spinnerStyle.width).toBe(`${loadingCase.spinnerSize}px`)
+      await expect(spinnerStyle.height).toBe(`${loadingCase.spinnerSize}px`)
+      await expect(Math.round(restingBounds.width)).toBe(loadingCase.buttonSize)
+      await expect(Math.round(restingBounds.height)).toBe(
+        loadingCase.buttonSize,
+      )
+      await expect(Math.round(loadingBounds.width)).toBe(
+        Math.round(restingBounds.width),
+      )
+      await expect(Math.round(loadingBounds.height)).toBe(
+        Math.round(restingBounds.height),
+      )
+    }
   },
 }
 
