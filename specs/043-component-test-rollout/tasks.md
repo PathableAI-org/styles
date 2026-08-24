@@ -338,9 +338,9 @@ only when a downstream package exposes the same promise.
 - [x] T053 [P] [US5] Add Icon fixtures + fixed `play` for accessible naming and
       presentational decoupling in
       `packages/styles/src/stories/components/Layout/Icon.stories.ts`
-- [ ] T054 [US5] Complete Styles-only evidence for interaction-control surfaces
-      (SegmentedControl, IconButton, IconTile, Integration, InteractionStates)
-      as fixtures with deterministic states/semantics/Axe in
+- [ ] T054 [US5] Complete Styles-only evidence for the remaining
+      interaction-control surfaces (IconButton, IconTile, Integration,
+      InteractionStates) as fixtures with deterministic states/semantics/Axe in
       `packages/styles/src/stories/interaction-controls/`
 - [ ] T055 [US5] Complete Styles-only evidence for application-shell, dashboard,
       discovery, structured-workflow, and recipe surfaces as fixtures with
@@ -350,6 +350,24 @@ only when a downstream package exposes the same promise.
       `styles-only` (empty `capabilities`/`downstream`), and promote to a shared
       contract only if a downstream package exposes the same user-facing promise
       (`FR-013`)
+
+### Approved focused continuation: SegmentedControl
+
+- [x] T054A [US5] Record the approved SegmentedControl Wave E reprioritization
+      and its renderer-neutral/package-specific boundary in the Phase 3 research,
+      data model, and helper/ledger contracts.
+- [x] T054B [US5] Add the SegmentedControl manifest and seven single-capability
+      renderer-neutral helpers under `packages/storybook-contracts/src/`, with
+      focused manifest tests and no publishable-package leakage.
+- [x] T054C [US5] Invoke the shared helpers from the canonical Styles
+      SegmentedControl fixtures while preserving story-owned runtime setup and
+      Styles-only visual/layout assertions.
+- [x] T056A [US5] Register the seven capabilities and five fixtures in the Styles
+      runner target and replace the stale Styles-only ledger row with an explicit
+      shared `styles-proven` entry only after a green focused Styles run.
+- [ ] T056B [US5] In a later pull request after the Styles proof is merged, adopt
+      the unchanged helpers in React, register the React target fixtures, and
+      transition the ledger entry from `styles-proven` to `adopted`.
 
 **Checkpoint**: All Wave E surfaces are Styles-only-proven and recorded, with no
 shared contract promoted without a downstream promise.
@@ -381,9 +399,10 @@ is reported as shared adoption.
       `packages/storybook-contracts/src/rollout/` (e.g. a `validate()` guard):
       `shared` ⇒ non-empty `capabilities`; `adopted` ⇒ `styles-proven` exists; a
       `not-started` component must not be reported as proven
-- [ ] T059 [US6] Make `scripts/storybook-evidence-report.mjs` fail when a ledger
-      entry claims `styles-proven`/`adopted` with no green focused run, and when
-      a `styles-only` entry is shown as shared adoption
+- [ ] T059 [US6] Make `scripts/storybook-evidence-report.mjs` fail when the latest
+      focused run matches no ledger entry or proven shared contract, and when a
+      `styles-only` entry is shown as shared adoption; report entries outside the
+      latest focused run as not covered by that run
 - [ ] T060 [US6] Confirm the evidence report lists, per component, the three
       separate measures and any accessibility exception from
       `scripts/accessibility-exceptions.mjs`, and never labels an aggregate as

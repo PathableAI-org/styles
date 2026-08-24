@@ -38,7 +38,10 @@ Rules carried by the ledger:
 - Wave order is A (stateful keyboard/focus) → B (form controls) → C (navigation,
   collections, activation) → D (status, feedback, progress) → E (visual and
   composition-led). A later-wave component is not proven ahead of its wave's
-  reusable helpers unless those helpers are already green.
+  reusable helpers unless those helpers are already green or a documented,
+  component-scoped reprioritization preserves Styles-first proof. SegmentedControl
+  is the first such exception because a downstream React wrapper now exposes the
+  same user-facing promise.
 
 ## Component and helper taxonomy
 
@@ -59,6 +62,11 @@ The Accordion `disclosure` helpers (`verifyEnterExpandsDisclosure`,
 `verifyFocusRetention`) are the first seed of the `disclosure` group. A helper
 is promoted to a shared group only when two or more components share the exact
 observable promise.
+
+SegmentedControl keeps component-specific helpers under a dedicated
+`segmented-control` contract domain while its ledger capability references use
+the `composite-widget` group. This avoids prematurely generalizing radio-group
+and toggle-group behavior into helpers for unrelated component types.
 
 ## Entities
 

@@ -12,7 +12,7 @@ import {
 
 export default {
   title: 'Components/Communication/Accordion',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'contract-accordion'],
   parameters: {
     docs: {
       description: {

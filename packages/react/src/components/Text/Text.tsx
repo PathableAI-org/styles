@@ -1,21 +1,16 @@
 import React, { ReactNode, forwardRef } from 'react'
 import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'
+import { textToneClass } from '../../internal/resolvers/tone.js'
+import type { TextTone } from '../../internal/resolvers/tone.js'
+
+export type { TextTone } from '../../internal/resolvers/tone.js'
 
 export type TextVariant = 'body' | 'small' | 'caption'
-
-export type TextTone = 'default' | 'muted' | 'danger' | 'success'
 
 const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
   body: 'pathable-text--body',
   small: 'pathable-text--small',
   caption: 'pathable-text--caption',
-}
-
-const TEXT_TONE_CLASS: Record<TextTone, string> = {
-  default: 'pathable-text--tone-default',
-  muted: 'pathable-text--tone-muted',
-  danger: 'pathable-text--tone-danger',
-  success: 'pathable-text--tone-success',
 }
 
 export interface TextOwnProps {
@@ -37,7 +32,7 @@ const TextInner = <C extends React.ElementType = 'p'>(
   const classes = mergeClasses(
     'pathable-text',
     variant ? TEXT_VARIANT_CLASS[variant] : undefined,
-    tone ? TEXT_TONE_CLASS[tone] : undefined,
+    tone ? textToneClass(tone) : undefined,
     className,
   )
   return (

@@ -60,6 +60,11 @@ RolloutEntry
 A component is proven one at a time within a wave (`FR-003`); parallel work is
 limited to components sharing only non-overlapping infrastructure.
 
+SegmentedControl is an approved component-scoped exception to the default wave
+sequence because a downstream React package now exposes the same promise. The
+exception does not relax proof order: its entry must reach `styles-proven` with
+no downstream adoption before a separate React change can mark it `adopted`.
+
 ## Downstream adoption contract
 
 For each framework that adopts a shared component (`status: adopted`):
@@ -79,8 +84,10 @@ component until an adopting framework registers (`FR-001`..`FR-006`,
 
 ## Failure semantics
 
-- A ledger entry claiming `styles-proven` or `adopted` with no green focused run
-  is an evidence-report failure, not a warning.
+- A filtered green run that matches no ledger entry or no proven shared contract
+  is an evidence-report failure, not a warning. Entries outside the latest
+  focused run are reported as not covered by that run; the PR or CI run that
+  advances an entry to `styles-proven` remains its durable review evidence.
 - A `shared` entry referenced by a downstream target before `styles-proven` is a
   hard failure.
 - A `styles-only` entry must not be reported as shared-contract adoption.

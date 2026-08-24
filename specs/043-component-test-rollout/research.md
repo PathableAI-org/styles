@@ -172,8 +172,30 @@ field is what makes "Styles-proven before adoption" auditable.
   capabilities today); whichever flag is chosen must preserve the runtime-
   initialized assertion and target/story/capability failure context required by
   `FR-015`.
-- Wave ordering (A → E) and the specific components per wave are prescribed by
-  the plan and reproduced in the ledger; no reordering is proposed here.
+- Wave ordering (A → E) remains the default. SegmentedControl is the approved
+  narrow exception: its React wrapper now exposes the same user-facing promise,
+  so its Wave E shared-contract promotion proceeds before unfinished Waves B–D
+  while preserving Styles proof before React adoption in separate pull requests.
 - The conformance proofs (break a component's behavior → its contract fails while
   unrelated targets stay green; break a shared helper → every adopting target
   fails) are execution-time proofs and are not committed.
+
+## Decision 7: Reprioritize SegmentedControl as a two-step shared promotion
+
+**Decision**: Promote SegmentedControl from its stale Styles-only ledger entry to
+a shared Wave E contract now that `@pathableai/react` exposes the same observable
+semantics and keyboard behavior. Land the renderer-neutral helpers and focused
+Styles proof first; adopt the unchanged helpers in React only in a later pull
+request after the Styles proof is merged.
+
+The initial shared boundary is single-select semantics, wrapped Arrow-key
+navigation, disabled-option skipping, vertical navigation, multi-select
+semantics, independent keyboard toggling, and static one-option semantics.
+Styles-owned visual/layout behavior and React props, callback payloads,
+controlled-state mechanics, fallback policy, and attribute forwarding remain
+package-specific.
+
+**Rationale**: The downstream-promise promotion condition in `FR-013` is now
+satisfied. Keeping proof and adoption separate preserves the auditable
+`not-started → styles-proven → adopted` transition despite the approved wave
+reprioritization.

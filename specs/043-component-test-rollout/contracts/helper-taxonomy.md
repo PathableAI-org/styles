@@ -62,6 +62,25 @@ shared by at least two components. Styles-only surfaces stay fixtures and must
 not gain shared helpers until a downstream package exposes the same promise
 (`FR-013`). No helper is invented for a purely static structure (`FR-009`).
 
+## SegmentedControl promotion
+
+SegmentedControl is a `composite-widget` ledger member, but its first helpers are
+kept in a component-specific `segmented-control` domain until another component
+shares the exact same radio/toggle-group promise. Its initial shared capability
+IDs are:
+
+- `segmented-control.single-selection`
+- `segmented-control.arrow-navigation`
+- `segmented-control.disabled-option-skip`
+- `segmented-control.vertical-navigation`
+- `segmented-control.multi-selection`
+- `segmented-control.multi-keyboard-toggle`
+- `segmented-control.static-single-option`
+
+CSS classes, computed visual values, overflow dimensions, React props,
+controlled-state mechanics, callback payloads, fallback policy, and attribute
+forwarding are explicitly outside these helpers.
+
 ## Compliance with Phase 1 contracts
 
 - Helpers remain renderer-neutral (Phase 1 runner contract).
