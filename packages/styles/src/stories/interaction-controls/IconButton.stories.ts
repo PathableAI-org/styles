@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: Native button behavior with CSS-driven interactive states.\n\n**Semantics verified**: Icon buttons retain native button semantics, expose an accessible name, and keep decorative SVGs outside the accessibility tree and keyboard order.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Provide an accessible name through `aria-label` or `aria-labelledby`, set `type="button"` when the control must not submit a form, and hide decorative icons from assistive technology.',
+          '**Interaction Model**: Native button behavior with CSS-driven interactive states.\n\n**Semantics verified**: Icon buttons retain native button semantics, expose an accessible name, and keep decorative SVGs outside the accessibility tree and keyboard order. Loading buttons remain disabled and expose their busy state without changing size.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Provide an accessible name through `aria-label` or `aria-labelledby`, set `type="button"` when the control must not submit a form, and hide decorative icons from assistive technology. Pair `pathable-icon-button--loading` with native `disabled` and `aria-busy="true"` so pointer and keyboard activation are both suppressed.',
       },
     },
   },
@@ -19,8 +19,8 @@ const closeIcon = `
   </svg>
 `
 
-const iconButton = (variant: string, label: string, disabled = false) => `
-  <button type="button" class="pathable-icon-button ${variant}" aria-label="${label}"${disabled ? ' disabled' : ''}>
+const iconButton = (variant: string, label: string, attributes = '') => `
+  <button type="button" class="pathable-icon-button ${variant}" aria-label="${label}"${attributes ? ` ${attributes}` : ''}>
     ${closeIcon}
   </button>
 `
@@ -190,7 +190,7 @@ export const OnDifferentSurfaces = {
 
 export const Disabled = {
   render: () => `
-    ${iconButton('pathable-icon-button--subtle', 'Close unavailable', true)}
+    ${iconButton('pathable-icon-button--subtle', 'Close unavailable', 'disabled')}
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -204,6 +204,50 @@ export const Disabled = {
     )
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
     await expect(icon).toHaveAttribute('focusable', 'false')
+  },
+}
+
+export const Loading = {
+  render: () => `
+    <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: center;">
+      ${iconButton('pathable-icon-button--subtle', 'Save changes')}
+      ${iconButton(
+        'pathable-icon-button--subtle pathable-icon-button--loading',
+        'Saving changes',
+        'disabled aria-busy="true"',
+      )}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const resting = canvas.getByRole('button', { name: 'Save changes' })
+    const loading = canvas.getByRole('button', { name: 'Saving changes' })
+    const icon = loading.querySelector('svg')
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('IconButton story window is unavailable')
+    if (!icon) throw new Error('Loading IconButton SVG is unavailable')
+
+    const restingBounds = resting.getBoundingClientRect()
+    const loadingBounds = loading.getBoundingClientRect()
+    const loadingStyle = view.getComputedStyle(loading)
+    const iconStyle = view.getComputedStyle(icon)
+    const spinnerStyle = view.getComputedStyle(loading, '::after')
+
+    await expect(loading).toBeDisabled()
+    await expect(loading).toHaveAttribute('aria-busy', 'true')
+    await expect(loading).toHaveClass('pathable-icon-button--loading')
+    await expect(loadingStyle.pointerEvents).toBe('none')
+    await expect(loadingStyle.cursor).toBe('wait')
+    await expect(iconStyle.visibility).toBe('hidden')
+    await expect(spinnerStyle.width).toBe('20px')
+    await expect(spinnerStyle.height).toBe('20px')
+    await expect(Math.round(loadingBounds.width)).toBe(
+      Math.round(restingBounds.width),
+    )
+    await expect(Math.round(loadingBounds.height)).toBe(
+      Math.round(restingBounds.height),
+    )
   },
 }
 

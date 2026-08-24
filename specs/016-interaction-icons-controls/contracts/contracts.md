@@ -49,6 +49,7 @@
 | `.pathable-icon-button--compact` | 32px target (or `--size-compact`) |
 | `.pathable-icon-button--large` | 52px target (or `--size-large`) |
 | `.pathable-icon-button--circle` | Circular shape |
+| `.pathable-icon-button--loading` | Icon-sized loading indicator; pair with native `disabled` and `aria-busy="true"` |
 
 **CSS Custom Properties**:
 
