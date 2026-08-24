@@ -7,21 +7,21 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS presentation with consumer-owned SegmentedControl behavior.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Segmented radiogroups also require application JavaScript for selection state and Arrow-key navigation; use the React wrapper or implement the documented ARIA behavior.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
+          '**Interaction Model**: CSS presentation with consumer-owned SegmentedControl behavior.\n\n**States verified**: Toolbar actions retain native button semantics and accessible names, status icons remain decorative beside visible text, and the view switcher maintains selection and roving focus during Arrow-key navigation.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Segmented radiogroups also require application JavaScript for selection state and Arrow-key navigation; use the React wrapper or implement the documented ARIA behavior.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
       },
     },
   },
 }
 
-const iconButton = (modifiers, label, iconContent) => `
-  <button class="pathable-icon-button ${modifiers}" aria-label="${label}">
+const iconButton = (modifiers: string, label: string, iconContent: string) => `
+  <button type="button" class="pathable-icon-button ${modifiers}" aria-label="${label}">
     <svg class="pathable-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       ${iconContent}
     </svg>
   </button>
 `
 
-const iconTile = (modifiers, label, iconContent) => `
+const iconTile = (modifiers: string, iconContent: string) => `
   <span class="pathable-icon-tile ${modifiers}" aria-hidden="true">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       ${iconContent}
@@ -120,6 +120,37 @@ async function verifyViewSwitcher(canvasElement: HTMLElement) {
   await expect(radios[0]).toHaveAttribute('tabindex', '-1')
 }
 
+async function verifyIconButtonSemantics(
+  canvasElement: HTMLElement,
+  names: readonly string[],
+) {
+  const canvas = within(canvasElement)
+
+  for (const name of names) {
+    const button = canvas.getByRole('button', { name })
+    const icon = button.querySelector('svg')
+
+    await expect(button).toHaveAttribute('type', 'button')
+    await expect(icon).toHaveAttribute('aria-hidden', 'true')
+  }
+}
+
+async function verifyDecorativeStatusTiles(
+  canvasElement: HTMLElement,
+  labels: readonly string[],
+) {
+  const canvas = within(canvasElement)
+  const tiles = canvasElement.querySelectorAll('.pathable-icon-tile--circle')
+
+  await expect(tiles).toHaveLength(labels.length)
+  for (const tile of tiles) {
+    await expect(tile).toHaveAttribute('aria-hidden', 'true')
+  }
+  for (const label of labels) {
+    await expect(canvas.getByText(label)).toBeVisible()
+  }
+}
+
 export const ToolbarPanel = {
   render: () => `
     <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Toolbar Panel with Actions</h3>
@@ -139,6 +170,16 @@ export const ToolbarPanel = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await verifyIconButtonSemantics(canvasElement, [
+      'Search',
+      'Notifications',
+      'Edit',
+      'Download',
+      'Delete',
+      'Settings',
+    ])
+  },
 }
 
 export const StatusRow = {
@@ -150,28 +191,28 @@ export const StatusRow = {
     <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
       <div class="pathable-cluster" style="align-items: center;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', 'Completed', ICONS.checkCircle)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', ICONS.checkCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Compliance Training</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Completed Apr 12</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', 'Pending Review', ICONS.alertTriangle)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', ICONS.alertTriangle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Safety Certification</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Pending review</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', 'Missing', ICONS.xCircle)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', ICONS.xCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Fire Safety Drill</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Overdue 14 days</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', 'Info', ICONS.info)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', ICONS.info)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">HIPAA Update</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Available Aug 1</div>
@@ -180,6 +221,14 @@ export const StatusRow = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await verifyDecorativeStatusTiles(canvasElement, [
+      'Compliance Training',
+      'Safety Certification',
+      'Fire Safety Drill',
+      'HIPAA Update',
+    ])
+  },
 }
 
 export const ViewSwitcher = {
@@ -278,28 +327,28 @@ export const FullComposition = {
       <!-- Status row with labeled items -->
       <div class="pathable-cluster" style="align-items: center;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', 'Completed', ICONS.checkCircle)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', ICONS.checkCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Compliance</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">12 records</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', 'Pending', ICONS.alertTriangle)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', ICONS.alertTriangle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Pending Review</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">5 records</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', 'Overdue', ICONS.xCircle)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', ICONS.xCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Overdue</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">3 records</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', 'Upcoming', ICONS.info)}
+          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', ICONS.info)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Upcoming</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">8 records</div>
@@ -310,6 +359,19 @@ export const FullComposition = {
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     await verifyViewSwitcher(canvasElement)
+    await verifyIconButtonSemantics(canvasElement, [
+      'Search records',
+      'Add record',
+      'Export',
+      'Notifications',
+      'Settings',
+    ])
+    await verifyDecorativeStatusTiles(canvasElement, [
+      'Compliance',
+      'Pending Review',
+      'Overdue',
+      'Upcoming',
+    ])
   },
 }
 
