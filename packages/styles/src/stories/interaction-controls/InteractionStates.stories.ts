@@ -57,7 +57,7 @@ export const AllStates = {
     await expect(restStyle.outlineStyle).toBe('solid')
     await expect(restStyle.outlineWidth).toBe('2px')
     await expect(selected).toHaveClass('is-selected')
-    await expect(selectedStyle.borderWidth).toBe('2px')
+    await expect(selectedStyle.borderColor).not.toBe(restStyle.borderColor)
     await expect(selectedStyle.fontWeight).toBe('700')
     await expect(disabled).toHaveAttribute('aria-disabled', 'true')
     await expect(disabled).not.toHaveAttribute('tabindex')
