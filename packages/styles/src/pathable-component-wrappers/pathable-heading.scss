@@ -26,7 +26,7 @@
 .pathable-heading--level-1 {
   font-family: var(--pathable-font-heading);
   font-size: var(--pathable-font-size-display-lg);
-  font-weight: 400;
+  font-weight: var(--pathable-font-weight-normal);
   line-height: var(--pathable-font-line-height-heading);
 }
 

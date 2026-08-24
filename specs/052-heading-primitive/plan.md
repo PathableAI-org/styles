@@ -35,7 +35,8 @@ Implement the `Heading` typographic primitive — a React component that maps a 
 - Level-to-scale mapping → 1=display-lg, 2=heading-lg, 3=heading-md, 4=heading-sm, 5=body-md bold, 6=body-sm bold (Decision 2).
 - Font-family assignment → follows the typography scale: display-lg uses Fredoka, heading-lg/md/sm use Poppins, body-md/sm use Nunito (Decision 3).
 - `level` default → required, no default (Decision 4).
-- Polymorphic typing approach → discriminated element type based on `level` (Decision 7).
+- Native prop typing → shared `HTMLAttributes<HTMLHeadingElement>` with the
+  rendered intrinsic element selected from `level` (Decision 7).
 
 ## Constitution Check
 
