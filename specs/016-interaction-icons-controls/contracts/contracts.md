@@ -16,7 +16,6 @@
   @include states.interaction-states;
   // or granular: @include states.state-hover;
   //              @include states.state-focus;
-  //              @include states.state-loading('.my-custom-card--loading');
 }
 ```
 
@@ -31,7 +30,7 @@
 | `state-selected` | `&.is-selected`, `&[aria-selected="true"]` | `--pathable-color-surface`, `--pathable-color-border` |
 | `state-pressed` | `&:active` (alt style) | `--elevation-sm` (inset), `--pathable-color-border` |
 | `state-disabled` | `&:disabled`, `&[aria-disabled="true"]` | none (opacity/cursor/box-shadow/background) |
-| `state-loading($selector: '.is-loading')` | `&#{$selector}`; defaults to `&.is-loading` and accepts a component modifier such as `.my-custom-card--loading` | `--pathable-color-border` (spinner border) |
+| `state-loading` | `&.is-loading` | `--pathable-color-border` (spinner border) |
 
 ### 2. Icon Button Classes
 
@@ -50,7 +49,6 @@
 | `.pathable-icon-button--compact` | 32px target (or `--size-compact`) |
 | `.pathable-icon-button--large` | 52px target (or `--size-large`) |
 | `.pathable-icon-button--circle` | Circular shape |
-| `.pathable-icon-button--loading` | Opaque, current-color, icon-sized loading indicator with an inverse appearance override; pair with native `disabled` and `aria-busy="true"` |
 
 **CSS Custom Properties**:
 
