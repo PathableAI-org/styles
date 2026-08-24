@@ -27,6 +27,7 @@
   justify-content: center;
   width: var(--pathable-icon-tile-size, 44px);
   height: var(--pathable-icon-tile-size, 44px);
+  flex-shrink: 0;
   border-radius: var(--radius-sm);
   background: var(--pathable-color-bg);
   color: var(--pathable-color-text);
