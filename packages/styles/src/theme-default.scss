@@ -1,0 +1,12 @@
+// Theme token entry point.
+// Compiles the default :root token declarations (brand + semantic color and
+// all non-color tokens) into dist/theme-default.css.
+@forward 'uswds-theme';
+@forward '_colors';
+@forward '_typography';
+@forward '_spacing';
+@forward '_elevation';
+@forward '_radius';
+@forward '_semantic';
+@forward '_utilities-tokens';
+@forward 'components-custom-properties';

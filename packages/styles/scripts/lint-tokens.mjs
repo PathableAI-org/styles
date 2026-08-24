@@ -11,7 +11,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from 'node:fs'
-import { resolve, relative, dirname } from 'node:path'
+import { resolve, relative, dirname, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -342,7 +342,64 @@ function walkDir(dir, filterFn) {
 // Main
 // ---------------------------------------------------------------------------
 
+/**
+ * Enforce the consolidated theme token invariant: exactly one :root block
+ * across the SCSS source may declare --pathable-color-* properties, and that
+ * block must live in _semantic.scss (the source of truth for semantic colors).
+ */
+function checkColorTokenConsolidation() {
+  const scssFiles = walkDir(SRC, (name) => name.endsWith('.scss'))
+  const colorBlockFiles = []
+
+  for (const file of scssFiles) {
+    const content = readFileSync(file, 'utf-8')
+    const rootRe = /:root\s*\{/g
+    let rm
+    while ((rm = rootRe.exec(content)) !== null) {
+      const startIdx = rm.index + rm[0].length
+      let depth = 1
+      let endIdx = startIdx
+      while (depth > 0 && endIdx < content.length) {
+        if (content[endIdx] === '{') {
+          depth++
+        } else if (content[endIdx] === '}') {
+          depth--
+        }
+        endIdx++
+      }
+      const block = content.slice(startIdx, endIdx - 1)
+      if (/--pathable-color-[a-z0-9-]+\s*:/.test(block)) {
+        colorBlockFiles.push(file)
+      }
+    }
+  }
+
+  const issues = []
+  if (colorBlockFiles.length !== 1) {
+    issues.push(
+      `Expected exactly 1 :root block declaring --pathable-color-* tokens, found ${colorBlockFiles.length}.`,
+    )
+  }
+  for (const file of colorBlockFiles) {
+    if (basename(file) !== '_semantic.scss') {
+      issues.push(
+        `--pathable-color-* tokens must be declared only in _semantic.scss; found in ${relative(process.cwd(), file)}.`,
+      )
+    }
+  }
+  return issues
+}
+
 function main() {
+  const consolidationIssues = checkColorTokenConsolidation()
+  if (consolidationIssues.length > 0) {
+    console.log('--pathable-color-* :root consolidation check failed:\n')
+    for (const issue of consolidationIssues) {
+      console.log(`  ${issue}`)
+    }
+    process.exit(1)
+  }
+
   const definedTokens = extractDefinedTokens()
   const definedSet = new Set(definedTokens)
 

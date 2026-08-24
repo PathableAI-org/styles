@@ -19,6 +19,9 @@
     ".": "./dist/styles.css",
     "./js": "./dist/pathable.js",
     "./js/init": "./dist/pathable-init.js",
+    "./components": "./dist/components.css",
+    "./utilities": "./dist/utilities.css",
+    "./theme": "./dist/theme-default.css",
     "./dist/*": "./dist/*",
     "./src/*": "./src/*"
   },
@@ -26,7 +29,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs",
+    "build": "node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs",
     "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
     "lint:styles": "stylelint 'src/**/*.scss'",
     "lint:tokens": "node scripts/lint-tokens.mjs"
