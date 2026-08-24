@@ -1,4 +1,4 @@
-import type { StoryHarness } from '../accordion/types.js'
+import type { StoryHarness } from '../types.js'
 
 /**
  * Shared capability: a labeled required control exposes its invalid state.

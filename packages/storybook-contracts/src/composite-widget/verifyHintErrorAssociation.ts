@@ -1,4 +1,4 @@
-import type { StoryHarness } from '../accordion/types.js'
+import type { StoryHarness } from '../types.js'
 
 /**
  * Shared capability: a labeled control references its visible hint and error.
