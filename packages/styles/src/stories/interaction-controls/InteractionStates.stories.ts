@@ -40,18 +40,18 @@ export const AllStates = {
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
-    const view = canvasElement.ownerDocument.defaultView
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
     const rest = canvas.getByTestId('rest-state')
     const selected = canvas.getByTestId('selected-state')
     const disabled = canvas.getByTestId('disabled-state')
 
-    if (!view) throw new Error('InteractionStates story window is unavailable')
-
     await userEvent.tab()
 
-    const restStyle = view.getComputedStyle(rest)
-    const selectedStyle = view.getComputedStyle(selected)
-    const disabledStyle = view.getComputedStyle(disabled)
+    const restStyle = getStoryComputedStyle(rest)
+    const selectedStyle = getStoryComputedStyle(selected)
+    const disabledStyle = getStoryComputedStyle(disabled)
 
     await expect(rest).toHaveFocus()
     await expect(restStyle.outlineStyle).toBe('solid')
@@ -60,7 +60,7 @@ export const AllStates = {
     await expect(selectedStyle.borderColor).not.toBe(restStyle.borderColor)
     await expect(selectedStyle.fontWeight).toBe('700')
     await expect(disabled).toHaveAttribute('aria-disabled', 'true')
-    await expect(disabled).not.toHaveAttribute('tabindex')
+    await expect(disabled.tabIndex).toBe(-1)
     await expect(disabledStyle.cursor).toBe('default')
     await expect(disabledStyle.opacity).toBe('0.5')
   },
@@ -78,12 +78,12 @@ export const LoadingState = {
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
-    const view = canvasElement.ownerDocument.defaultView
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
     const loading = canvas.getByTestId('loading-state')
 
-    if (!view) throw new Error('InteractionStates story window is unavailable')
-
-    const loadingStyle = view.getComputedStyle(loading)
+    const loadingStyle = getStoryComputedStyle(loading)
 
     await expect(loading).toHaveClass('is-loading')
     await expect(loading).toHaveAttribute('aria-busy', 'true')
