@@ -130,6 +130,7 @@ async function verifyIconButtonSemantics(
     const button = canvas.getByRole('button', { name })
     const icon = button.querySelector('svg')
 
+    await expect(button.tagName).toBe('BUTTON')
     await expect(button).toHaveAttribute('type', 'button')
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
   }
@@ -139,15 +140,19 @@ async function verifyDecorativeStatusTiles(
   canvasElement: HTMLElement,
   labels: readonly string[],
 ) {
-  const canvas = within(canvasElement)
   const tiles = canvasElement.querySelectorAll('.pathable-icon-tile--circle')
 
   await expect(tiles).toHaveLength(labels.length)
-  for (const tile of tiles) {
+  for (const [index, tile] of Array.from(tiles).entries()) {
+    const statusItem = tile.parentElement
+    const label = labels[index]
+
+    if (!statusItem || !label) {
+      throw new Error('Each status tile must have a corresponding label')
+    }
+
     await expect(tile).toHaveAttribute('aria-hidden', 'true')
-  }
-  for (const label of labels) {
-    await expect(canvas.getByText(label)).toBeVisible()
+    await expect(within(statusItem).getByText(label)).toBeVisible()
   }
 }
 
