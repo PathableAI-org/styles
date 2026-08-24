@@ -1,3 +1,6 @@
-For additional context about technologies to be used, project structure,  
-shell commands, and other important information, read the current plan  
-at specs/058-theme-token-types/plan.md
+<!-- SPECKIT START -->
+
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+at specs/059-default-theme-create-theme/plan.md
+<!-- SPECKIT END -->
