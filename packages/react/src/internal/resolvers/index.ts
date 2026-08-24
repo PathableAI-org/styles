@@ -35,6 +35,9 @@ export type {
   BackgroundColorClass,
   TextColor,
   TextColorClass,
+  TextTone,
+  SurfaceTone,
+  BorderTone,
   SizingProps,
   SpacingProps,
   DisplayProps,
@@ -64,4 +67,5 @@ export {
 export { flexClass } from './flexGrid.js'
 export { fontFamilyClass, fontWeightClass } from './typography.js'
 export { backgroundColorClass, textColorClass } from './colorTone.js'
+export { textToneClass } from './tone.js'
 export { mergeClasses } from './mergeClasses.js'
