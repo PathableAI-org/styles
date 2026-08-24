@@ -7,6 +7,10 @@ import '@pathableai/styles'
 export { themeColorToken } from './theme/index.js'
 export type { ThemeColors, ThemeConfig } from './theme/index.js'
 
+// Export theme data layer
+export { defaultTheme, createTheme } from './theme/index.js'
+export type { DeepPartial } from './theme/index.js'
+
 // Export semantic tone and elevation types
 export type {
   TextTone,

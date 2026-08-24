@@ -32,7 +32,7 @@
 
 **Purpose**: Verify the environment state this feature builds on. No new infrastructure is created — feature 058 already established `packages/react/src/theme/` (plan.md Project Structure).
 
-- [ ] T001 Confirm `packages/react/src/theme/` and the barrel `packages/react/src/theme/index.ts` exist and export the feature-058 vocabulary (`THEME_COLOR_KEYS`, `themeColorToken`, `ThemeColorKey`, `ThemeColors`, `ThemeConfig`), and confirm `packages/styles/src/_semantic.scss` defines all 25 `$semantic-colors` entries from the `data-model.md` value table — the two sources this feature derives from
+- [X] T001 Confirm `packages/react/src/theme/` and the barrel `packages/react/src/theme/index.ts` exist and export the feature-058 vocabulary (`THEME_COLOR_KEYS`, `themeColorToken`, `ThemeColorKey`, `ThemeColors`, `ThemeConfig`), and confirm `packages/styles/src/_semantic.scss` defines all 25 `$semantic-colors` entries from the `data-model.md` value table — the two sources this feature derives from
 
 ---
 
@@ -42,7 +42,7 @@
 
 **⚠️ CRITICAL**: No user story work can be completed until this phase is complete.
 
-- [ ] T002 Create `packages/react/src/theme/color.ts` with the internal pure predicate `export function isValidCssColor(value: unknown): value is string` — rejects non-strings (`null`, `undefined`, numbers, booleans, objects, arrays, functions), empty/whitespace-only strings, and (after trimming surrounding whitespace) accepts only: hex `#rgb` / `#rgba` / `#rrggbb` / `#rrggbbaa`; `rgb()`/`rgba()` and `hsl()`/`hsla()` in both comma and modern space syntax with optional alpha; `hwb()` comma/space syntax; and the frozen lowercase `Set` of the 148 CSS named-color keywords including `transparent`. Pure, deterministic, and NO DOM/browser globals (per `contracts/color-validation.md` and `research.md` §3 — modern color functions like `lab()`, `lch()`, `oklch()`, `color()`, `color-mix()` are intentionally rejected)
+- [X] T002 Create `packages/react/src/theme/color.ts` with the internal pure predicate `export function isValidCssColor(value: unknown): value is string` — rejects non-strings (`null`, `undefined`, numbers, booleans, objects, arrays, functions), empty/whitespace-only strings, and (after trimming surrounding whitespace) accepts only: hex `#rgb` / `#rgba` / `#rrggbb` / `#rrggbbaa`; `rgb()`/`rgba()` and `hsl()`/`hsla()` in both comma and modern space syntax with optional alpha; `hwb()` comma/space syntax; and the frozen lowercase `Set` of the 148 CSS named-color keywords including `transparent`. Pure, deterministic, and NO DOM/browser globals (per `contracts/color-validation.md` and `research.md` §3 — modern color functions like `lab()`, `lch()`, `oklch()`, `color()`, `color-mix()` are intentionally rejected)
 
 **Checkpoint**: The value validator is ready — user story implementation can now begin in parallel.
 
@@ -58,14 +58,14 @@
 
 > **NOTE: Write the test FIRST, ensure it FAILS before implementation** (test file is new; importing a not-yet-existing `defaultTheme` fails vitest resolution)
 
-- [ ] T003 [P] [US1] Create `packages/react/src/theme/__tests__/defaultTheme.test.ts` (alongside the existing `__tests__/tokens.test.ts`) with vitest tests asserting `Object.keys(defaultTheme.colors).length === 25` and each of the 25 values deep-equals the authoritative lowercase-`#rrggbb` table from `specs/059-default-theme-create-theme/data-model.md` "Canonical default value table" — including named spot-checks `accent === '#1cae96'`, `bg === '#dde2e8'`, `text === '#00365c'` (SC-001/SC-003), mirroring the existing `expected`-map pattern in `packages/react/src/theme/__tests__/tokens.test.ts`
+- [X] T003 [P] [US1] Create `packages/react/src/theme/__tests__/defaultTheme.test.ts` (alongside the existing `__tests__/tokens.test.ts`) with vitest tests asserting `Object.keys(defaultTheme.colors).length === 25` and each of the 25 values deep-equals the authoritative lowercase-`#rrggbb` table from `specs/059-default-theme-create-theme/data-model.md` "Canonical default value table" — including named spot-checks `accent === '#1cae96'`, `bg === '#dde2e8'`, `text === '#00365c'` (SC-001/SC-003), mirroring the existing `expected`-map pattern in `packages/react/src/theme/__tests__/tokens.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Create `packages/react/src/theme/defaultTheme.ts` with `export const defaultTheme: ThemeConfig = { colors: { ... } }` — exactly 25 entries keyed by `THEME_COLOR_KEYS` (`bg: '#dde2e8'`, `surface: '#ffffff'`, `text: '#00365c'`, `textMuted: '#015a76'`, `border: '#dde2e8'`, `link: '#4899e8'`, `accent: '#1cae96'`, `focusRing: '#4497f5'`, `danger: '#dc3545'`, `success: '#1cae96'`, `textSuccess: '#0d7a63'`, `actionPrimaryBg: '#00365c'`, `actionPrimaryText: '#ffffff'`, `actionSecondaryBg: '#1cae96'`, `actionSecondaryText: '#001a33'`, `statusSuccessBg: '#1cae96'`, `statusSuccessText: '#001a33'`, `statusWarningBg: '#f5a623'`, `statusWarningText: '#001a33'`, `statusDangerBg: '#dc3545'`, `statusDangerText: '#ffffff'`, `workflowActive: '#4899e8'`, `workflowComplete: '#1cae96'`, `workflowBlocked: '#dc3545'`, `onAccent: '#001a33'`), each value copied verbatim from `$semantic-colors` in `packages/styles/src/_semantic.scss` (FR-001/FR-002)
-- [ ] T005 [US1] Add `export { defaultTheme } from './defaultTheme.js'` to the barrel `packages/react/src/theme/index.ts` alongside the existing `./tokens.js` re-exports
-- [ ] T006 [US1] Add `export { defaultTheme } from './theme/index.js'` to `packages/react/src/index.ts` (public entry point; consumers get defaults with no separate `@pathableai/styles` import — constitution V)
-- [ ] T007 [US1] Run `pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react typecheck` — `defaultTheme.test.ts` passes with all 25 keys covered and the package type-checks
+- [X] T004 [US1] Create `packages/react/src/theme/defaultTheme.ts` with `export const defaultTheme: ThemeConfig = { colors: { ... } }` — exactly 25 entries keyed by `THEME_COLOR_KEYS` (`bg: '#dde2e8'`, `surface: '#ffffff'`, `text: '#00365c'`, `textMuted: '#015a76'`, `border: '#dde2e8'`, `link: '#4899e8'`, `accent: '#1cae96'`, `focusRing: '#4497f5'`, `danger: '#dc3545'`, `success: '#1cae96'`, `textSuccess: '#0d7a63'`, `actionPrimaryBg: '#00365c'`, `actionPrimaryText: '#ffffff'`, `actionSecondaryBg: '#1cae96'`, `actionSecondaryText: '#001a33'`, `statusSuccessBg: '#1cae96'`, `statusSuccessText: '#001a33'`, `statusWarningBg: '#f5a623'`, `statusWarningText: '#001a33'`, `statusDangerBg: '#dc3545'`, `statusDangerText: '#ffffff'`, `workflowActive: '#4899e8'`, `workflowComplete: '#1cae96'`, `workflowBlocked: '#dc3545'`, `onAccent: '#001a33'`), each value copied verbatim from `$semantic-colors` in `packages/styles/src/_semantic.scss` (FR-001/FR-002)
+- [X] T005 [US1] Add `export { defaultTheme } from './defaultTheme.js'` to the barrel `packages/react/src/theme/index.ts` alongside the existing `./tokens.js` re-exports
+- [X] T006 [US1] Add `export { defaultTheme } from './theme/index.js'` to `packages/react/src/index.ts` (public entry point; consumers get defaults with no separate `@pathableai/styles` import — constitution V)
+- [X] T007 [US1] Run `pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react typecheck` — `defaultTheme.test.ts` passes with all 25 keys covered and the package type-checks
 
 **Checkpoint**: The canonical default theme is public via `@pathableai/react` and its tests pass — deployable increment.
 
@@ -79,14 +79,14 @@
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T008 [P] [US2] Create `packages/react/src/theme/__tests__/createTheme.test.ts` with vitest tests for US2: single-token override (`createTheme({ colors: { accent: '#7c3aed' } })` → `accent` overridden, all 24 others deep-equal `defaultTheme` values), multi-token override (deep-merge, no whole-object replacement), full-config passthrough (exactly matches the provided config), and empty partial (`createTheme({})` deep-equals `defaultTheme`) — scenarios from `quickstart.md` §2 and `contracts/create-theme.md`; follow vitest conventions in `packages/react/src/theme/__tests__/tokens.test.ts`
+- [X] T008 [P] [US2] Create `packages/react/src/theme/__tests__/createTheme.test.ts` with vitest tests for US2: single-token override (`createTheme({ colors: { accent: '#7c3aed' } })` → `accent` overridden, all 24 others deep-equal `defaultTheme` values), multi-token override (deep-merge, no whole-object replacement), full-config passthrough (exactly matches the provided config), and empty partial (`createTheme({})` deep-equals `defaultTheme`) — scenarios from `quickstart.md` §2 and `contracts/create-theme.md`; follow vitest conventions in `packages/react/src/theme/__tests__/tokens.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T009 [US2] Create `packages/react/src/theme/createTheme.ts` with the exported utility type `DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] }` (co-located with its only consumer per `research.md` §5) and `export function createTheme(input: DeepPartial<ThemeConfig>): ThemeConfig` that (1) rejects non-plain-object input, (2) deep-merges `input` over `defaultTheme` into a fresh object via a small recursive `deepMerge` helper (`{ ...defaultTheme.colors, ...input.colors }` semantics, `research.md` §1 — never writes to `input` or `defaultTheme`), (3) validates presence of all 25 keys, (4) validates each value with `isValidCssColor` from `./color.js`. Throws plain `Error`s: non-object input → `createTheme: expected a plain object, received <type>`; missing token → `createTheme: missing required color token "<key>"`; invalid value → `createTheme: invalid color value for "<key>": <value>` (`research.md` §4)
-- [ ] T010 [US2] Run `pnpm --filter @pathableai/react test:unit` — the `createTheme.test.ts` US2 suite passes (deep-merge, fall-through, passthrough) (SC-002)
-- [ ] T011 [US2] Add `export { createTheme } from './createTheme.js'` and `export type { DeepPartial } from './createTheme.js'` (type needed in generated `.d.ts`) to the barrel `packages/react/src/theme/index.ts`; then add `export { createTheme }` and `export type { DeepPartial } from './theme/index.js'` to `packages/react/src/index.ts`
-- [ ] T012 [US2] Run `pnpm --filter @pathableai/react typecheck` — `createTheme` and `DeepPartial` import from the package entry point and type-check in a consumer-style snippet (`createTheme({ colors: { accent: '#000' } })` compiles; `createTheme(42)` is a type error)
+- [X] T009 [US2] Create `packages/react/src/theme/createTheme.ts` with the exported utility type `DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] }` (co-located with its only consumer per `research.md` §5) and `export function createTheme(input: DeepPartial<ThemeConfig>): ThemeConfig` that (1) rejects non-plain-object input, (2) deep-merges `input` over `defaultTheme` into a fresh object via a small recursive `deepMerge` helper (`{ ...defaultTheme.colors, ...input.colors }` semantics, `research.md` §1 — never writes to `input` or `defaultTheme`), (3) validates presence of all 25 keys, (4) validates each value with `isValidCssColor` from `./color.js`. Throws plain `Error`s: non-object input → `createTheme: expected a plain object, received <type>`; missing token → `createTheme: missing required color token "<key>"`; invalid value → `createTheme: invalid color value for "<key>": <value>` (`research.md` §4)
+- [X] T010 [US2] Run `pnpm --filter @pathableai/react test:unit` — the `createTheme.test.ts` US2 suite passes (deep-merge, fall-through, passthrough) (SC-002)
+- [X] T011 [US2] Add `export { createTheme } from './createTheme.js'` and `export type { DeepPartial } from './createTheme.js'` (type needed in generated `.d.ts`) to the barrel `packages/react/src/theme/index.ts`; then add `export { createTheme }` and `export type { DeepPartial } from './theme/index.js'` to `packages/react/src/index.ts`
+- [X] T012 [US2] Run `pnpm --filter @pathableai/react typecheck` — `createTheme` and `DeepPartial` import from the package entry point and type-check in a consumer-style snippet (`createTheme({ colors: { accent: '#000' } })` compiles; `createTheme(42)` is a type error)
 
 **Checkpoint**: The factory merges partial overrides over `defaultTheme` and is publicly importable.
 
@@ -100,12 +100,12 @@
 
 **Tests**: Added to the same `createTheme.test.ts` file created in US2 (separate describe block).
 
-- [ ] T013 [P] [US3] Add a validation suite to `packages/react/src/theme/__tests__/createTheme.test.ts`: non-object inputs (`null`, `'text'`, `42`, `true`, `[]`, `() => {}`) throw `createTheme: expected a plain object, received <type>`; a full-`colors` override that omits a required key throws `createTheme: missing required color token "<key>"`; invalid values (`{ colors: { accent: 42 } }`, `{ colors: { accent: '#12' } }`, `{ colors: { accent: 'not-a-color' } }`) throw `createTheme: invalid color value for "<key>": <value>` — each asserted with `toThrow()` and the exact documented message (SC-004; `quickstart.md` §2)
+- [X] T013 [P] [US3] Add a validation suite to `packages/react/src/theme/__tests__/createTheme.test.ts`: non-object inputs (`null`, `'text'`, `42`, `true`, `[]`, `() => {}`) throw `createTheme: expected a plain object, received <type>`; a full-`colors` override that omits a required key throws `createTheme: missing required color token "<key>"`; invalid values (`{ colors: { accent: 42 } }`, `{ colors: { accent: '#12' } }`, `{ colors: { accent: 'not-a-color' } }`) throw `createTheme: invalid color value for "<key>": <value>` — each asserted with `toThrow()` and the exact documented message (SC-004; `quickstart.md` §2)
 
 ### Implementation for User Story 3
 
-- [ ] T014 [US3] Review the throw paths in `packages/react/src/theme/createTheme.ts` against the `contracts/create-theme.md` message table and align every message verbatim (no API/export change; `isValidCssColor` stays internal per `contracts/color-validation.md`)
-- [ ] T015 [US3] Run `pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react typecheck` — the US3 validation suite passes with exact messages at call time (SC-004)
+- [X] T014 [US3] Review the throw paths in `packages/react/src/theme/createTheme.ts` against the `contracts/create-theme.md` message table and align every message verbatim (no API/export change; `isValidCssColor` stays internal per `contracts/color-validation.md`)
+- [X] T015 [US3] Run `pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react typecheck` — the US3 validation suite passes with exact messages at call time (SC-004)
 
 **Checkpoint**: All invalid inputs fail immediately with descriptive, token-naming errors.
 
@@ -119,8 +119,8 @@
 
 **Test-only story**: purity guarantees are verified by tests; the implementation already produces fresh plain objects structurally (`research.md` §6–§7).
 
-- [ ] T016 [P] [US4] Add a purity/determinism/serializability suite to `packages/react/src/theme/__tests__/createTheme.test.ts`: (a) `defaultTheme` and `input` are deeply unchanged after a call (snapshot with `JSON.parse(JSON.stringify(...))` before/after, since `defaultTheme` and input are plain data); (b) two calls with the same input return deep-equal results; (c) `JSON.parse(JSON.stringify(result))` deep-equals `result` (SC-005/SC-006; `quickstart.md` §3)
-- [ ] T017 [US4] Run `pnpm --filter @pathableai/react test:unit` — the US4 suite passes (no mutation, deterministic, serializable)
+- [X] T016 [P] [US4] Add a purity/determinism/serializability suite to `packages/react/src/theme/__tests__/createTheme.test.ts`: (a) `defaultTheme` and `input` are deeply unchanged after a call (snapshot with `JSON.parse(JSON.stringify(...))` before/after, since `defaultTheme` and input are plain data); (b) two calls with the same input return deep-equal results; (c) `JSON.parse(JSON.stringify(result))` deep-equals `result` (SC-005/SC-006; `quickstart.md` §3)
+- [X] T017 [US4] Run `pnpm --filter @pathableai/react test:unit` — the US4 suite passes (no mutation, deterministic, serializable)
 
 **Checkpoint**: `createTheme` is proven pure, deterministic, and safe to share.
 
@@ -134,8 +134,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T018 [P] [US5] Extend `packages/styles/scripts/lint-tokens.mjs` `main()` loop (alongside the existing checks) with a value-drift check that reads the 25 `colors` literal values from `packages/react/src/theme/defaultTheme.ts` (path resolved like the existing `tokens.ts` read in the same script) and the `$semantic-colors` map via `parseScssMap()`; compare each value and on mismatch log `defaultTheme value mismatch for "<token>": expected <scss>, found <ts>` and exit non-zero
-- [ ] T019 [US5] Run `pnpm lint:tokens` — exit 0 with pristine `defaultTheme`; then temporarily edit `packages/react/src/theme/defaultTheme.ts` (e.g. `accent: '#111111'`), rerun `pnpm lint:tokens` and confirm exit 1 with the descriptive mismatch naming `accent`; revert the edit and confirm exit 0 again
+- [X] T018 [P] [US5] Extend `packages/styles/scripts/lint-tokens.mjs` `main()` loop (alongside the existing checks) with a value-drift check that reads the 25 `colors` literal values from `packages/react/src/theme/defaultTheme.ts` (path resolved like the existing `tokens.ts` read in the same script) and the `$semantic-colors` map via `parseScssMap()`; compare each value and on mismatch log `defaultTheme value mismatch for "<token>": expected <scss>, found <ts>` and exit non-zero
+- [X] T019 [US5] Run `pnpm lint:tokens` — exit 0 with pristine `defaultTheme`; then temporarily edit `packages/react/src/theme/defaultTheme.ts` (e.g. `accent: '#111111'`), rerun `pnpm lint:tokens` and confirm exit 1 with the descriptive mismatch naming `accent`; revert the edit and confirm exit 0 again
 
 **Checkpoint**: Value drift between SCSS and `defaultTheme` is caught at lint time.
 
@@ -145,9 +145,9 @@
 
 **Purpose**: Full-stack validation of the changed package, publishability of the new exports, and end-to-end scenario coverage.
 
-- [ ] T020 [P] Run the full react-package validation chain plus the sync check: `pnpm --filter @pathableai/react lint && pnpm --filter @pathableai/react typecheck && pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react build && pnpm lint:tokens` — all exit 0, with no lint/type-check suppression anywhere
-- [ ] T021 [P] Run publishable validation: `pnpm --filter @pathableai/react check:types && pnpm --filter @pathableai/react check:package` — `defaultTheme`, `createTheme`, and `DeepPartial` resolve through the entry point without attw/publint failures
-- [ ] T022 Validate `specs/059-default-theme-create-theme/quickstart.md` end-to-end: the `defaultTheme` spot-checks (§1), `createTheme` merge/error scenarios (§2), purity/serializability suite (§3), `pnpm lint:tokens` regression (§4), quality gates (§5), and publishable checks (§6) all pass; confirm no feature-058 regression (`tokens.test.ts` still green)
+- [X] T020 [P] Run the full react-package validation chain plus the sync check: `pnpm --filter @pathableai/react lint && pnpm --filter @pathableai/react typecheck && pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react build && pnpm lint:tokens` — all exit 0, with no lint/type-check suppression anywhere
+- [X] T021 [P] Run publishable validation: `pnpm --filter @pathableai/react check:types && pnpm --filter @pathableai/react check:package` — `defaultTheme`, `createTheme`, and `DeepPartial` resolve through the entry point without attw/publint failures
+- [X] T022 Validate `specs/059-default-theme-create-theme/quickstart.md` end-to-end: the `defaultTheme` spot-checks (§1), `createTheme` merge/error scenarios (§2), purity/serializability suite (§3), `pnpm lint:tokens` regression (§4), quality gates (§5), and publishable checks (§6) all pass; confirm no feature-058 regression (`tokens.test.ts` still green)
 
 ---
 
