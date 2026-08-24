@@ -15,7 +15,8 @@ implemented or covered by executable evidence.
 - Implement the documented `.pathable-icon-button--loading` modifier.
 - Preserve the existing generic `.is-loading` state.
 - Add deterministic Storybook evidence for disabled/busy semantics, stable
-  dimensions, hidden decorative icon content, and the icon-sized spinner.
+  dimensions, hidden decorative icon content, and the contrast-preserving
+  icon-sized spinner.
 - Record the published Styles behavior in a patch changeset.
 
 ### Key Constraints

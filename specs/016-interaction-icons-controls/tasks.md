@@ -141,10 +141,11 @@ state.
 - [x] T030 Add `.pathable-icon-button--loading` through the shared loading mixin,
       preserve `.is-loading`, hide decorative SVG content, and size the spinner
       from `--pathable-icon-button-icon-size` without changing button dimensions
-- [x] T031 Add deterministic IconButton loading evidence for compact, default,
-      and large modifier cases plus the generic `.is-loading` case, verifying
-      disabled/busy semantics, 32px/44px/52px targets, 16px/20px/24px spinners,
-      hidden decorative content, pointer suppression, and stable geometry
+- [x] T031 Add deterministic IconButton loading evidence across all five
+      appearances, compact/default/large modifier cases, and the generic
+      `.is-loading` case, verifying disabled/busy semantics, 32px/44px/52px
+      targets, 16px/20px/24px spinners, at least 3:1 spinner contrast, hidden
+      decorative content, pointer suppression, and stable geometry
 - [x] T032 Update the SCSS contract, consumer quickstart, corrective plan scope,
       branch feature metadata, and patch changeset; run Styles build, lint,
       formatting, Storybook/Axe, visual smoke, Changesets, and diff validation
@@ -166,6 +167,7 @@ ledger completion.
 - **US3 (Phase 4)**: Depends on Phase 1 + US1 (segmented control uses state-focus and state-selected from US1).
 - **US4 (Phase 5)**: Depends on Phase 1 only (icon tile is standalone, no dependency on interaction states).
 - **Polish (Phase 6)**: Depends on all phases completing.
+- **Loading correction (Phase 7)**: Post-merge phase that depends on the completed US1 and US2 implementation. Execute T030, then T031, then T032; aggregate rollout task T054 remains separate.
 
 ### User Story Dependencies
 
@@ -191,6 +193,7 @@ With a single developer, recommended order:
 4. Phase 5 (US4) — T020–T024 (can be done before or alongside US3)
 5. Phase 4 (US3) — T015–T019
 6. Phase 6 (Polish) — T025–T029
+7. Phase 7 (post-merge loading correction) — T030–T032
 
 With multiple developers:
 - Developer A: Phase 1 + Phase 2 (US1 — MVP: interaction states)

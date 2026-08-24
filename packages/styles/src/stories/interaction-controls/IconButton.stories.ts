@@ -27,28 +27,40 @@ const iconButton = (variant: string, label: string, attributes = '') => `
 
 const loadingCases = [
   {
-    label: 'Compact',
+    label: 'Compact bare',
+    appearanceClass: 'pathable-icon-button--bare',
     sizeClass: 'pathable-icon-button--compact',
     loadingClass: 'pathable-icon-button--loading',
     buttonSize: 32,
     spinnerSize: 16,
   },
   {
-    label: 'Default',
+    label: 'Default subtle',
+    appearanceClass: 'pathable-icon-button--subtle',
     sizeClass: '',
     loadingClass: 'pathable-icon-button--loading',
     buttonSize: 44,
     spinnerSize: 20,
   },
   {
-    label: 'Large',
+    label: 'Large bordered',
+    appearanceClass: 'pathable-icon-button--bordered',
     sizeClass: 'pathable-icon-button--large',
     loadingClass: 'pathable-icon-button--loading',
     buttonSize: 52,
     spinnerSize: 24,
   },
   {
-    label: 'Generic state',
+    label: 'Inverse',
+    appearanceClass: 'pathable-icon-button--inverse',
+    sizeClass: '',
+    loadingClass: 'pathable-icon-button--loading',
+    buttonSize: 44,
+    spinnerSize: 20,
+  },
+  {
+    label: 'Generic destructive',
+    appearanceClass: 'pathable-icon-button--destructive',
     sizeClass: '',
     loadingClass: 'is-loading',
     buttonSize: 44,
@@ -58,12 +70,11 @@ const loadingCases = [
 
 const loadingExample = ({
   label,
+  appearanceClass,
   sizeClass,
   loadingClass,
 }: (typeof loadingCases)[number]) => {
-  const restingClasses = ['pathable-icon-button--subtle', sizeClass]
-    .filter(Boolean)
-    .join(' ')
+  const restingClasses = [appearanceClass, sizeClass].filter(Boolean).join(' ')
   const loadingClasses = [restingClasses, loadingClass].join(' ')
 
   return `
@@ -77,6 +88,32 @@ const loadingExample = ({
       )}
     </div>
   `
+}
+
+const contrastRatio = (foreground: string, background: string) => {
+  const luminance = (color: string) => {
+    const channels = color
+      .match(/[\d.]+/g)
+      ?.slice(0, 3)
+      .map(Number)
+
+    if (!channels || channels.length !== 3) {
+      throw new Error(`Unable to parse computed color: ${color}`)
+    }
+
+    const [red, green, blue] = channels.map((channel) => {
+      const value = channel / 255
+      return value <= 0.04045
+        ? value / 12.92
+        : Math.pow((value + 0.055) / 1.055, 2.4)
+    })
+
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+  }
+
+  const lighter = Math.max(luminance(foreground), luminance(background))
+  const darker = Math.min(luminance(foreground), luminance(background))
+  return (lighter + 0.05) / (darker + 0.05)
 }
 
 export const AllVariants = {
@@ -298,10 +335,12 @@ export const Loading = {
       await expect(loading).toHaveAttribute('aria-busy', 'true')
       await expect(loading).toHaveClass(
         'pathable-icon-button',
+        loadingCase.appearanceClass,
         loadingCase.loadingClass,
       )
       await expect(loadingStyle.pointerEvents).toBe('none')
       await expect(loadingStyle.cursor).toBe('wait')
+      await expect(loadingStyle.opacity).toBe('1')
       await expect(icon).toHaveAttribute('aria-hidden', 'true')
       await expect(icon).toHaveAttribute('focusable', 'false')
       await expect(iconStyle.visibility).toBe('hidden')
@@ -317,6 +356,12 @@ export const Loading = {
       await expect(Math.round(loadingBounds.height)).toBe(
         Math.round(restingBounds.height),
       )
+      await expect(
+        contrastRatio(
+          spinnerStyle.borderRightColor,
+          loadingStyle.backgroundColor,
+        ),
+      ).toBeGreaterThanOrEqual(3)
     }
   },
 }

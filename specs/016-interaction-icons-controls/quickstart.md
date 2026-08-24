@@ -76,6 +76,7 @@ update an appropriate live status region.
 - [ ] Loading keeps compact/default/large targets at 32px/44px/52px
 - [ ] Loading spinner follows compact/default/large icon sizes at 16px/20px/24px
 - [ ] Loading hides the decorative SVG and preserves the button dimensions
+- [ ] Loading spinner retains at least 3:1 contrast across all appearances
 - [ ] Loading uses native `disabled` and `aria-busy="true"`
 - [ ] Existing `.is-loading` usage retains the same IconButton presentation
 - [ ] Forced-colors mode preserves focus boundary

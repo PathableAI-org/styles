@@ -4,6 +4,10 @@
 
 **Input**: Feature specification from `/specs/016-interaction-icons-controls/spec.md`
 
+**Feature identity**: `024-interaction-icons-controls` is the historical branch
+alias for feature directory `016-interaction-icons-controls`. The current
+corrective branch is `fix/icon-button-loading-contract`.
+
 **Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Table of Contents
@@ -27,7 +31,8 @@ published IconButton contract with FR-005 and the loading decision in
 `research.md`: expose the modifier, preserve the generic state, hide the
 decorative SVG while an icon-sized spinner is shown, document native
 `disabled` plus `aria-busy="true"` usage, and add deterministic Storybook
-evidence that loading suppresses activation without changing dimensions.
+evidence that loading suppresses activation without changing dimensions or
+reducing the spinner below 3:1 contrast across appearances.
 
 Focus-contrast strengthening, other IconButton visual assertions, other
 interaction-control surfaces, and aggregate rollout-ledger completion remain
