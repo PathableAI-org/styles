@@ -25,6 +25,13 @@ export type {
 export { Button } from './components/Button/Button.js'
 export { ButtonGroup } from './components/button-group/ButtonGroup.js'
 export { Card } from './components/Card/Card.js'
+export { CardGrid } from './components/CardGrid/CardGrid.js'
+export type {
+  CardGridClusterGap,
+  CardGridAutoGap,
+  CardGridProps,
+  CardGridVariant,
+} from './components/CardGrid/CardGrid.js'
 export { DashboardHeader } from './components/DashboardHeader/DashboardHeader.js'
 export type { DashboardHeaderProps } from './components/DashboardHeader/DashboardHeader.js'
 export { AppShell } from './components/AppShell/AppShell.js'
@@ -79,6 +86,12 @@ export { Form } from './components/Form/Form.js'
 export type { FormProps } from './components/Form/Form.js'
 export { FormGroup } from './components/FormGroup/FormGroup.js'
 export type { FormGroupProps } from './components/FormGroup/FormGroup.js'
+export { FormStack } from './components/FormStack/FormStack.js'
+export type {
+  FormStackGap,
+  FormStackMaxWidth,
+  FormStackProps,
+} from './components/FormStack/FormStack.js'
 export { Fieldset } from './components/Fieldset/Fieldset.js'
 export type { FieldsetProps } from './components/Fieldset/Fieldset.js'
 export { Hint } from './components/Hint/Hint.js'
@@ -130,6 +143,12 @@ export { Skipnav } from './components/Skipnav/Skipnav.js'
 export type { SkipnavProps } from './components/Skipnav/Skipnav.js'
 export { Select } from './components/Select/Select.js'
 export type { SelectProps } from './components/Select/Select.js'
+export { SplitLayout } from './components/SplitLayout/SplitLayout.js'
+export type {
+  SplitAlign,
+  SplitLayoutProps,
+  SplitRatio,
+} from './components/SplitLayout/SplitLayout.js'
 export { SegmentedControl } from './components/SegmentedControl/SegmentedControl.js'
 export type {
   SegmentedControlButtonAttributes,
@@ -147,6 +166,11 @@ export type {
   SidenavListAttributes,
   SidenavProps,
 } from './components/Sidenav/Sidenav.js'
+export { SidebarLayout } from './components/SidebarLayout/SidebarLayout.js'
+export type {
+  SidebarLayoutProps,
+  SidebarRatio,
+} from './components/SidebarLayout/SidebarLayout.js'
 export { Search } from './components/Search/Search.js'
 export type {
   SearchInputProps,
@@ -173,6 +197,8 @@ export type { AccordionItem } from './components/Accordion/Accordion.js'
 export { Alert } from './components/Alert/Alert.js'
 export { Banner } from './components/Banner/Banner.js'
 export { Modal } from './components/Modal/Modal.js'
+export { Page } from './components/Page/Page.js'
+export type { PageGap, PageProps, PageSize } from './components/Page/Page.js'
 export { PageError } from './components/PageError/PageError.js'
 export type {
   PageErrorLayout,

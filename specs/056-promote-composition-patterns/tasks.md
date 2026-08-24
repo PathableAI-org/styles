@@ -43,10 +43,10 @@
 
 **Purpose**: Confirm that all required SCSS contracts and existing primitives are available before building promoted components
 
-- [ ] T001 Verify all required SCSS contracts exist: `pathable-cluster`, `pathable-surface`, `pathable-sidebar-layout`, `pathable-split`, `pathable-stack`, `pathable-card-grid`, `pathable-sticky-panel`, `pathable-container`, `pathable-form-group` in `packages/styles/src/pathable-component-wrappers/`
-- [ ] T002 Verify existing layout primitives (`Container`, `Stack`, `Inline`, `Cluster`, `Surface`) are exported and importable from `packages/react/src/index.ts`
-- [ ] T003 Verify internal resolvers (`mergeClasses`, sizing, spacing, alignment) are available in `packages/react/src/internal/resolvers/`
-- [ ] T004 [P] Run `pnpm --filter @pathable/react build` and `pnpm --filter @pathable/react test:unit` to confirm existing projects pass clean
+- [x] T001 Verify all required SCSS contracts exist: `pathable-cluster`, `pathable-surface`, `pathable-sidebar-layout`, `pathable-split`, `pathable-stack`, `pathable-card-grid`, `pathable-sticky-panel`, `pathable-container`, `pathable-form-group` in `packages/styles/src/pathable-component-wrappers/`
+- [x] T002 Verify existing layout primitives (`Container`, `Stack`, `Inline`, `Cluster`, `Surface`) are exported and importable from `packages/react/src/index.ts`
+- [x] T003 Verify internal resolvers (`mergeClasses`, sizing, spacing, alignment) are available in `packages/react/src/internal/resolvers/`
+- [x] T004 [P] Run `pnpm --filter @pathable/react build` and `pnpm --filter @pathable/react test:unit` to confirm existing projects pass clean
 
 **Checkpoint**: Infrastructure ready — all SCSS contracts and primitives confirmed. Proceed to Foundational phase.
 
@@ -58,7 +58,7 @@
 
 **⚠️ CRITICAL**: The export barrel must follow the existing pattern in `packages/react/src/index.ts` before components can be consumed publicly.
 
-- [ ] T005 Review existing export pattern in `packages/react/src/index.ts` (component + type export pairs, `.js` extension imports, alphabetical ordering) for reference
+- [x] T005 Review existing export pattern in `packages/react/src/index.ts` (component + type export pairs, `.js` extension imports, alphabetical ordering) for reference
 
 **Checkpoint**: Foundation ready — user story implementation can now begin in parallel
 
@@ -72,9 +72,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T006 [P] [US1] Create `CardGrid` component in `packages/react/src/components/CardGrid/CardGrid.tsx` with `variant` (`cluster` | `auto-fit`), `gap`, `as`, `className`, `children` props per `contracts/component-api.md`
-- [ ] T007 [P] [US1] Create `CardGrid` unit tests in `packages/react/src/components/CardGrid/__tests__/CardGrid.test.tsx` covering: default render, cluster mode classes, auto-fit mode classes, gap modifiers (both scales), empty children, custom className, `as` polymorphic, SSR parity
-- [ ] T008 [US1] Create `CardGrid` Storybook stories in `packages/react/src/stories/components/CardGrid/CardGrid.stories.tsx` (CSF 3 format) with: Playground, ClusterMode, AutoFitMode, NarrowViewport, Composition (cluster of Surface cards), migration guide docs
+- [x] T006 [P] [US1] Create `CardGrid` component in `packages/react/src/components/CardGrid/CardGrid.tsx` with `variant` (`cluster` | `auto-fit`), `gap`, `as`, `className`, `children` props per `contracts/component-api.md`
+- [x] T007 [P] [US1] Create `CardGrid` unit tests in `packages/react/src/components/CardGrid/__tests__/CardGrid.test.tsx` covering: default render, cluster mode classes, auto-fit mode classes, gap modifiers (both scales), empty children, custom className, `as` polymorphic, SSR parity
+- [x] T008 [US1] Create `CardGrid` Storybook stories in `packages/react/src/stories/components/CardGrid/CardGrid.stories.tsx` (CSF 3 format) with: Playground, ClusterMode, AutoFitMode, NarrowViewport, Composition (cluster of Surface cards), migration guide docs
 
 **Checkpoint**: `CardGrid` component is fully functional, tested, and documented. Can be independently validated.
 
@@ -88,9 +88,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T009 [P] [US2] Create `Page` component in `packages/react/src/components/Page/Page.tsx` composing `Container` + `Stack` with `size`, `gap`, `as` (default `"main"`), `className`, `children` props per `contracts/component-api.md`
-- [ ] T010 [P] [US2] Create `Page` unit tests in `packages/react/src/components/Page/__tests__/Page.test.tsx` covering: default render with `<main>` + `pathable-container` + `pathable-stack`, size variants (`standard`/`wide`/`full`), gap modifiers, single child, empty children, custom className, `as` polymorphic, SSR parity
-- [ ] T011 [US2] Create `Page` Storybook stories in `packages/react/src/stories/components/Page/Page.stories.tsx` (CSF 3 format) with: Playground, StandardWidth, WideWidth, FullWidth, NarrowViewport, Composition (page with header + sections), migration guide docs
+- [x] T009 [P] [US2] Create `Page` component in `packages/react/src/components/Page/Page.tsx` composing `Container` + `Stack` with `size`, `gap`, `as` (default `"main"`), `className`, `children` props per `contracts/component-api.md`
+- [x] T010 [P] [US2] Create `Page` unit tests in `packages/react/src/components/Page/__tests__/Page.test.tsx` covering: default render with `<main>` + `pathable-container` + `pathable-stack`, size variants (`standard`/`wide`/`full`), gap modifiers, single child, empty children, custom className, `as` polymorphic, SSR parity
+- [x] T011 [US2] Create `Page` Storybook stories in `packages/react/src/stories/components/Page/Page.stories.tsx` (CSF 3 format) with: Playground, StandardWidth, WideWidth, FullWidth, NarrowViewport, Composition (page with header + sections), migration guide docs
 
 **Checkpoint**: `Page` component is fully functional, tested, and documented. US1 + US2 both work independently.
 
@@ -104,9 +104,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T012 [P] [US3] Create `SidebarLayout` component in `packages/react/src/components/SidebarLayout/SidebarLayout.tsx` with `ratio`, `sidebarFirst`, `sidebarSticky`, `className`, `children` props per `contracts/component-api.md`
-- [ ] T013 [P] [US3] Create `SidebarLayout` unit tests in `packages/react/src/components/SidebarLayout/__tests__/SidebarLayout.test.tsx` covering: default render with `<main>` + `<aside>`, ratio modifiers (`1-1`/`2-1`/`3-1`/`4-1`), `sidebarFirst` DOM order, sticky panel wrapper, empty sidebar fallback, custom className, SSR parity
-- [ ] T014 [US3] Create `SidebarLayout` Storybook stories in `packages/react/src/stories/components/SidebarLayout/SidebarLayout.stories.tsx` (CSF 3 format) with: Playground, Ratio2to1, Ratio1to1, SidebarFirst, StickySidebar, NarrowViewport (1023px collapse), Composition (settings page layout), a11y interaction test for landmarks, migration guide docs
+- [x] T012 [P] [US3] Create `SidebarLayout` component in `packages/react/src/components/SidebarLayout/SidebarLayout.tsx` with `ratio`, `sidebarFirst`, `sidebarSticky`, `className`, `children` props per `contracts/component-api.md`
+- [x] T013 [P] [US3] Create `SidebarLayout` unit tests in `packages/react/src/components/SidebarLayout/__tests__/SidebarLayout.test.tsx` covering: default render with `<main>` + `<aside>`, ratio modifiers (`1-1`/`2-1`/`3-1`/`4-1`), `sidebarFirst` DOM order, sticky panel wrapper, empty sidebar fallback, custom className, SSR parity
+- [x] T014 [US3] Create `SidebarLayout` Storybook stories in `packages/react/src/stories/components/SidebarLayout/SidebarLayout.stories.tsx` (CSF 3 format) with: Playground, Ratio2to1, Ratio1to1, SidebarFirst, StickySidebar, NarrowViewport (1023px collapse), Composition (settings page layout), a11y interaction test for landmarks, migration guide docs
 
 **Checkpoint**: `SidebarLayout` component is fully functional, tested, and documented. US1+US2+US3 all work independently.
 
@@ -120,9 +120,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T015 [P] [US4] Create `FormStack` component in `packages/react/src/components/FormStack/FormStack.tsx` composing `Stack` with `gap`, `maxWidth`, `as` (default `"form"`), `className`, `children` props per `contracts/component-api.md`
-- [ ] T016 [P] [US4] Create `FormStack` unit tests in `packages/react/src/components/FormStack/__tests__/FormStack.test.tsx` covering: default render as `<form>` with `pathable-stack`, gap modifiers, maxWidth variants (`tablet`/`content`/undefined), non-FormGroup children, empty form, custom className, `as` polymorphic, SSR parity
-- [ ] T017 [US4] Create `FormStack` Storybook stories in `packages/react/src/stories/components/FormStack/FormStack.stories.tsx` (CSF 3 format) with: Playground, WithFormGroups, MaxWidthTablet, MaxWidthContent, FullWidth, NarrowViewport, Composition (contact form), migration guide docs
+- [x] T015 [P] [US4] Create `FormStack` component in `packages/react/src/components/FormStack/FormStack.tsx` composing `Stack` with `gap`, `maxWidth`, `as` (default `"form"`), `className`, `children` props per `contracts/component-api.md`
+- [x] T016 [P] [US4] Create `FormStack` unit tests in `packages/react/src/components/FormStack/__tests__/FormStack.test.tsx` covering: default render as `<form>` with `pathable-stack`, gap modifiers, maxWidth variants (`tablet`/`content`/undefined), non-FormGroup children, empty form, custom className, `as` polymorphic, SSR parity
+- [x] T017 [US4] Create `FormStack` Storybook stories in `packages/react/src/stories/components/FormStack/FormStack.stories.tsx` (CSF 3 format) with: Playground, WithFormGroups, MaxWidthTablet, MaxWidthContent, FullWidth, NarrowViewport, Composition (contact form), migration guide docs
 
 **Checkpoint**: `FormStack` component is fully functional, tested, and documented. US1-US4 all work independently.
 
@@ -136,9 +136,9 @@
 
 ### Implementation for User Story 5
 
-- [ ] T018 [P] [US5] Create `SplitLayout` component in `packages/react/src/components/SplitLayout/SplitLayout.tsx` with `ratio`, `align`, `as`, `className`, `children` props per `contracts/component-api.md`
-- [ ] T019 [P] [US5] Create `SplitLayout` unit tests in `packages/react/src/components/SplitLayout/__tests__/SplitLayout.test.tsx` covering: default render with `pathable-split`, ratio modifiers (`1-1`/`1-2`/`2-1`/`1-3`), align variants (`center`/`start`/`end`/`stretch`), single child, empty children, custom className, `as` polymorphic, SSR parity
-- [ ] T020 [US5] Create `SplitLayout` Storybook stories in `packages/react/src/stories/components/SplitLayout/SplitLayout.stories.tsx` (CSF 3 format) with: Playground, Ratio2to1, AlignStretch, AlignStart, NarrowViewport (1023px collapse), Composition (hero section), migration guide docs
+- [x] T018 [P] [US5] Create `SplitLayout` component in `packages/react/src/components/SplitLayout/SplitLayout.tsx` with `ratio`, `align`, `as`, `className`, `children` props per `contracts/component-api.md`
+- [x] T019 [P] [US5] Create `SplitLayout` unit tests in `packages/react/src/components/SplitLayout/__tests__/SplitLayout.test.tsx` covering: default render with `pathable-split`, ratio modifiers (`1-1`/`1-2`/`2-1`/`1-3`), align variants (`center`/`start`/`end`/`stretch`), single child, empty children, custom className, `as` polymorphic, SSR parity
+- [x] T020 [US5] Create `SplitLayout` Storybook stories in `packages/react/src/stories/components/SplitLayout/SplitLayout.stories.tsx` (CSF 3 format) with: Playground, Ratio2to1, AlignStretch, AlignStart, NarrowViewport (1023px collapse), Composition (hero section), migration guide docs
 
 **Checkpoint**: All five user story components are fully functional, tested, and documented.
 
@@ -148,14 +148,14 @@
 
 **Purpose**: Register exports, run CI validation, and verify all cross-cutting requirements
 
-- [ ] T021 Register `CardGrid`, `Page`, `SidebarLayout`, `FormStack`, `SplitLayout` exports (component + type) in `packages/react/src/index.ts` following alphabetical ordering and existing `.js` import convention
-- [ ] T022 Run `pnpm --filter @pathable/react typecheck` and fix any type errors
-- [ ] T023 [P] Run `pnpm lint` and `pnpm format --check` across all new files; fix any lint/format issues
-- [ ] T024 [P] Run `pnpm --filter @pathable/react test:unit` and verify all new + existing tests pass
+- [x] T021 Register `CardGrid`, `Page`, `SidebarLayout`, `FormStack`, `SplitLayout` exports (component + type) in `packages/react/src/index.ts` following alphabetical ordering and existing `.js` import convention
+- [x] T022 Run `pnpm --filter @pathable/react typecheck` and fix any type errors
+- [x] T023 [P] Run `pnpm lint` and `pnpm format --check` across all new files; fix any lint/format issues
+- [x] T024 [P] Run `pnpm --filter @pathable/react test:unit` and verify all new + existing tests pass
 - [ ] T025 Run `pnpm --filter @pathable/react storybook:build` (or equivalent) to verify stories compile without errors
 - [ ] T026 [P] Run automated accessibility validation on Storybook stories for all five primitives; fix any violations
-- [ ] T027 [P] Verify no new SCSS files were created via `git diff --stat origin/main... -- packages/styles/src/pathable-component-wrappers/` (SC-007)
-- [ ] T028 Run full CI gates per `quickstart.md`: lint, format, typecheck, build, test:unit
+- [x] T027 [P] Verify no new SCSS files were created via `git diff --stat origin/main... -- packages/styles/src/pathable-component-wrappers/` (SC-007)
+- [x] T028 Run full CI gates per `quickstart.md`: lint, format, typecheck, build, test:unit
 
 ---
 
