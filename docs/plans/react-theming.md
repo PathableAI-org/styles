@@ -34,15 +34,17 @@ default-themed page).
 These principles from the existing React architecture plan apply equally to
 theming:
 
-1. **SCSS is the source of truth.** The React package must not duplicate token
-   values, reimplement CSS rules in JavaScript, or invent tokens not emitted by
-   the styles package.
+1. **SCSS is the source of truth.** The React package must not _manually_
+   duplicate token values, reimplement CSS rules in JavaScript, or invent tokens
+   not emitted by the styles package. The one deliberate exception is the
+   `defaultTheme` constant (see below), whose values are _generated from_ the
+   SCSS token definitions rather than hand-maintained, so the two cannot drift.
 
 2. **Typed semantic props form the foundation.** The theming API should be
    strongly typed, with autocomplete and compile-time errors for invalid keys.
 
 3. **Prefer semantic intent over raw CSS.** The theme interface should expose
-   the *design tokens* (colors, spacing, typography), not raw CSS declarations.
+   the _design tokens_ (colors, spacing, typography), not raw CSS declarations.
 
 4. **Server-safe.** Theming must remain compatible with server rendering. Token
    resolution and class generation must be pure and deterministic.
@@ -55,25 +57,25 @@ theming:
 
 Additional principles specific to theming:
 
-6. **CSS custom properties remain the transport.** The `ThemeProvider` emits
+1. **CSS custom properties remain the transport.** The `ThemeProvider` emits
    resolved token values as CSS custom properties on its DOM subtree. Components
    continue to reference `var(--pathable-*)` as they do today. The provider
-   is a typed *control layer* above the existing CSS variable mechanism, not a
+   is a typed _control layer_ above the existing CSS variable mechanism, not a
    replacement for it.
 
-7. **Partial overrides, full defaults.** Consumers override only the tokens they
+2. **Partial overrides, full defaults.** Consumers override only the tokens they
    care about. All unspecified tokens fall through to the Pathable defaults.
-   This is the "indented consumer" model: Pathable's design system is the base,
-   with brand/context-specific overrides on top.
+   This is the "default-plus-overrides" model: Pathable's design system is the
+   base, with brand/context-specific overrides on top.
 
-8. **Scoped by default, not global.** The provider emits tokens on its wrapper
+3. **Scoped by default, not global.** The provider emits tokens on its wrapper
    element's `style` attribute (or a scoped selector), not on `:root`. This
    means multiple themes can coexist on one page, and overrides do not require
    winning a cascade-order fight against the package's own stylesheet.
 
 ## Architecture Overview
 
-```
+```text
 Consumer application
   │
   ├── import { ThemeProvider, createTheme } from "@pathableai/react"
@@ -83,14 +85,14 @@ Consumer application
   └── <ThemeProvider theme={theme}>
         <AppShell>...</AppShell>
       </ThemeProvider>
-      
+
 ThemeProvider
   │
   ├── Deep-merges partial theme with defaultTheme
   ├── Resolves all token values
   └── Renders a wrapper <div> with:
         style={{ "--pathable-color-accent": "#7c3aed", ... }}
-        
+
 CSS (unchanged)
   │
   └── Components reference var(--pathable-color-accent) as before
@@ -107,11 +109,15 @@ against defaults, and emits the resolved tokens as CSS custom properties on a
 wrapper `<div>` (or configurable element) via the `style` prop.
 
 ```tsx
-import { ThemeProvider } from "@pathableai/react";
+import { ThemeProvider } from '@pathableai/react'
 
-<ThemeProvider theme={nlpreetsTheme}>
-  <AppShell>...</AppShell>
-</ThemeProvider>
+export function RootLayout({ children }) {
+  return (
+    <ThemeProvider theme={nlpreetsTheme}>
+      <AppShell>{children}</AppShell>
+    </ThemeProvider>
+  )
+}
 ```
 
 **Behavior:**
@@ -154,35 +160,35 @@ override."
 ```ts
 // Color tokens — the primary theming surface
 interface ThemeColors {
-  bg: string;
-  surface: string;
-  text: string;
-  textMuted: string;
-  border: string;
-  link: string;
-  accent: string;
-  focusRing: string;
-  danger: string;
-  success: string;
-  textSuccess: string;
-  actionPrimaryBg: string;
-  actionPrimaryText: string;
-  actionSecondaryBg: string;
-  actionSecondaryText: string;
-  statusSuccessBg: string;
-  statusSuccessText: string;
-  statusWarningBg: string;
-  statusWarningText: string;
-  statusDangerBg: string;
-  statusDangerText: string;
-  workflowActive: string;
-  workflowComplete: string;
-  workflowBlocked: string;
-  onAccent: string;
+  bg: string
+  surface: string
+  text: string
+  textMuted: string
+  border: string
+  link: string
+  accent: string
+  focusRing: string
+  danger: string
+  success: string
+  textSuccess: string
+  actionPrimaryBg: string
+  actionPrimaryText: string
+  actionSecondaryBg: string
+  actionSecondaryText: string
+  statusSuccessBg: string
+  statusSuccessText: string
+  statusWarningBg: string
+  statusWarningText: string
+  statusDangerBg: string
+  statusDangerText: string
+  workflowActive: string
+  workflowComplete: string
+  workflowBlocked: string
+  onAccent: string
 }
 
 interface ThemeConfig {
-  colors: ThemeColors;
+  colors: ThemeColors
   // Future: typography, spacing, etc.
 }
 ```
@@ -209,7 +215,7 @@ interface ThemeConfig {
 A constant export containing the complete, resolved Pathable default theme.
 
 ```ts
-import { defaultTheme } from "@pathableai/react";
+import { defaultTheme } from '@pathableai/react'
 
 // defaultTheme.colors.accent === "#1cae96"
 // defaultTheme.colors.bg === "#dde2e8"
@@ -225,8 +231,8 @@ This serves three purposes:
    ```ts
    const myTheme = {
      ...defaultTheme,
-     colors: { ...defaultTheme.colors, accent: "#7c3aed" },
-   };
+     colors: { ...defaultTheme.colors, accent: '#7c3aed' },
+   }
    ```
 
 3. **Runtime reference.** Components or tests can import it to inspect defaults
@@ -238,15 +244,15 @@ A factory function that accepts a partial `ThemeConfig` and returns a complete,
 validated `ThemeConfig` by deep-merging with `defaultTheme`.
 
 ```ts
-import { createTheme } from "@pathableai/react";
+import { createTheme } from '@pathableai/react'
 
 const nlpreetsTheme = createTheme({
   colors: {
-    accent: "#7c3aed",
-    actionPrimaryBg: "#7c3aed",
-    bg: "#f5f7fa",
+    accent: '#7c3aed',
+    actionPrimaryBg: '#7c3aed',
+    bg: '#f5f7fa',
   },
-});
+})
 ```
 
 **Behavior:**
@@ -256,7 +262,7 @@ const nlpreetsTheme = createTheme({
 - Returns a fully-resolved `ThemeConfig`. The return type is `ThemeConfig`, not
   `Partial<ThemeConfig>`, so consumers never need to null-check individual
   tokens.
-- Throws a descriptive error at *call time* (not render time) if a required
+- Throws a descriptive error at _call time_ (not render time) if a required
   token is missing after merging or if a value fails validation (e.g. not a
   valid CSS color string).
 - Is serializable — a theme can be defined in a module and passed to
@@ -271,7 +277,7 @@ re-exported from the public entry point so consumers can share the vocabulary
 between component props and theme configuration.
 
 ```ts
-import type { TextTone, SurfaceTone, BorderTone } from "@pathableai/react";
+import type { TextTone, SurfaceTone, BorderTone } from '@pathableai/react'
 ```
 
 These types are already defined and used internally. Exporting them is a
@@ -301,7 +307,7 @@ between scattered blocks.
 The `@pathableai/styles` package will offer subpath exports so consumers can
 import component styles without also importing the default theme tokens:
 
-```
+```text
 dist/
   components.css       # component styles referencing var(--pathable-*)
   utilities.css        # utility classes
@@ -315,7 +321,7 @@ Package `exports` map:
   "./components": "./dist/components.css",
   "./utilities": "./dist/utilities.css",
   "./theme": "./dist/theme-default.css",
-  ".": "./dist/styles.css"  // unchanged — imports everything
+  ".": "./dist/styles.css" // unchanged — imports everything
 }
 ```
 
@@ -323,12 +329,12 @@ Package `exports` map:
 
 ```ts
 // Consumer with ThemeProvider (skips default tokens):
-import "@pathableai/styles/components";
-import "@pathableai/styles/utilities";
+import '@pathableai/styles/components'
+import '@pathableai/styles/utilities'
 // theme tokens provided by <ThemeProvider>
 
 // Consumer who just wants defaults (unchanged):
-import "@pathableai/styles";
+import '@pathableai/styles'
 ```
 
 `@pathableai/react`'s entry point will change from:
@@ -362,7 +368,7 @@ These are explicitly out of scope for the initial theming API:
    of the initial scope.
 
 3. **Dark mode token generation.** The `colorScheme` prop on `ThemeProvider`
-   provides the *hook* for dark mode, and the `ThemeColors` interface could be
+   provides the _hook_ for dark mode, and the `ThemeColors` interface could be
    extended with a parallel `dark` key. But generating dark-mode tokens from
    light-mode tokens (e.g. inverting luminance) is a separate, design-intensive
    feature. The initial implementation supports a consumer-provided dark
@@ -381,33 +387,33 @@ These are explicitly out of scope for the initial theming API:
 The mapping from `ThemeColors` keys (camelCase) to CSS custom property names
 (kebab-case) is:
 
-| ThemeColors key | CSS custom property |
-|---|---|
-| `bg` | `--pathable-color-bg` |
-| `surface` | `--pathable-color-surface` |
-| `text` | `--pathable-color-text` |
-| `textMuted` | `--pathable-color-text-muted` |
-| `border` | `--pathable-color-border` |
-| `link` | `--pathable-color-link` |
-| `accent` | `--pathable-color-accent` |
-| `focusRing` | `--pathable-color-focus-ring` |
-| `danger` | `--pathable-color-danger` |
-| `success` | `--pathable-color-success` |
-| `textSuccess` | `--pathable-color-text-success` |
-| `actionPrimaryBg` | `--pathable-color-action-primary-bg` |
-| `actionPrimaryText` | `--pathable-color-action-primary-text` |
-| `actionSecondaryBg` | `--pathable-color-action-secondary-bg` |
+| ThemeColors key       | CSS custom property                      |
+| --------------------- | ---------------------------------------- |
+| `bg`                  | `--pathable-color-bg`                    |
+| `surface`             | `--pathable-color-surface`               |
+| `text`                | `--pathable-color-text`                  |
+| `textMuted`           | `--pathable-color-text-muted`            |
+| `border`              | `--pathable-color-border`                |
+| `link`                | `--pathable-color-link`                  |
+| `accent`              | `--pathable-color-accent`                |
+| `focusRing`           | `--pathable-color-focus-ring`            |
+| `danger`              | `--pathable-color-danger`                |
+| `success`             | `--pathable-color-success`               |
+| `textSuccess`         | `--pathable-color-text-success`          |
+| `actionPrimaryBg`     | `--pathable-color-action-primary-bg`     |
+| `actionPrimaryText`   | `--pathable-color-action-primary-text`   |
+| `actionSecondaryBg`   | `--pathable-color-action-secondary-bg`   |
 | `actionSecondaryText` | `--pathable-color-action-secondary-text` |
-| `statusSuccessBg` | `--pathable-color-status-success-bg` |
-| `statusSuccessText` | `--pathable-color-status-success-text` |
-| `statusWarningBg` | `--pathable-color-status-warning-bg` |
-| `statusWarningText` | `--pathable-color-status-warning-text` |
-| `statusDangerBg` | `--pathable-color-status-danger-bg` |
-| `statusDangerText` | `--pathable-color-status-danger-text` |
-| `workflowActive` | `--pathable-color-workflow-active` |
-| `workflowComplete` | `--pathable-color-workflow-complete` |
-| `workflowBlocked` | `--pathable-color-workflow-blocked` |
-| `onAccent` | `--pathable-color-on-accent` |
+| `statusSuccessBg`     | `--pathable-color-status-success-bg`     |
+| `statusSuccessText`   | `--pathable-color-status-success-text`   |
+| `statusWarningBg`     | `--pathable-color-status-warning-bg`     |
+| `statusWarningText`   | `--pathable-color-status-warning-text`   |
+| `statusDangerBg`      | `--pathable-color-status-danger-bg`      |
+| `statusDangerText`    | `--pathable-color-status-danger-text`    |
+| `workflowActive`      | `--pathable-color-workflow-active`       |
+| `workflowComplete`    | `--pathable-color-workflow-complete`     |
+| `workflowBlocked`     | `--pathable-color-workflow-blocked`      |
+| `onAccent`            | `--pathable-color-on-accent`             |
 
 ## Value Drift Between Token Layers
 
@@ -428,10 +434,12 @@ not in scope for the React theming API.
 ### SCSS remains the source of truth
 
 The `ThemeColors` interface and `defaultTheme` export are derived from
-`_semantic.scss`, not the other way around. When a token is added to SCSS, the
-corresponding key must be added to `ThemeColors`. A build-time or lint-time
-check that the two stay in sync is desirable but not required for the initial
-implementation.
+`_semantic.scss`, not the other way around. `defaultTheme` necessarily holds the
+same color values as the SCSS tokens, so those values are _generated from_ the
+SCSS source (the single source of truth) rather than manually re-typed, to avoid
+drift. When a token is added to SCSS, the corresponding key must be added to
+`ThemeColors`. A build-time or lint-time check that the two stay in sync is
+desirable but not required for the initial implementation.
 
 ### Components are unchanged
 

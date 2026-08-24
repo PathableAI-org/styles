@@ -25,7 +25,7 @@ Harden the `@pathableai/styles` output contract before the React theming API sit
 
 ## Excludes
 
-- Changing any token *value* (hex, font, spacing, etc.).
+- Changing any token _value_ (hex, font, spacing, etc.).
 - Adding, removing, or renaming tokens.
 - Any React package changes.
 - Removing the default `import '@pathableai/styles'` path or changing what `.` resolves to.

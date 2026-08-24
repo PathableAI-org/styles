@@ -12,7 +12,7 @@ Establish the typed theme vocabulary in `@pathableai/react`: the `ThemeColors` a
 
 ## Includes
 
-- Define a `ThemeColors` interface whose keys correspond 1:1 with the semantic color tokens in `_semantic.scss` (all 26 `--pathable-color-*` tokens), using camelCase keys (e.g. `actionPrimaryBg`, `textSuccess`, `onAccent`).
+- Define a `ThemeColors` interface whose keys correspond 1:1 with the semantic color tokens in `_semantic.scss` (all 25 `--pathable-color-*` tokens), using camelCase keys (e.g. `actionPrimaryBg`, `textSuccess`, `onAccent`).
 - Define a `ThemeConfig` interface with a single `colors: ThemeColors` field (structured to allow future token categories such as typography and spacing).
 - Define and document the camelCase → kebab-case mapping (the table in the parent plan § "CSS Custom Property Mapping"), plus a pure mapping function that converts a `ThemeColors` key to its `--pathable-color-*` name.
 - Re-export the semantic tone types (`TextTone`, `SurfaceTone`, `BorderTone`, and `SurfaceElevation`) from the public entry point (`packages/react/src/index.ts`) so consumers share one vocabulary between component props and theme configuration.
@@ -25,7 +25,7 @@ Establish the typed theme vocabulary in `@pathableai/react`: the `ThemeColors` a
 - The `createTheme` factory (see [03](./03-default-theme-create-theme.md)).
 - The `ThemeProvider` component (see [04](./04-theme-provider.md)).
 - Emitting CSS custom properties at runtime.
-- Any token *value* changes.
+- Any token _value_ changes.
 
 ## Dependencies
 

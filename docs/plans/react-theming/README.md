@@ -6,7 +6,7 @@ sequence of phases, ordered by dependency and risk. A separate implementation
 plan will break each phase into concrete, testable work items.
 
 > **Source of truth:** the target API and design principles live in
-> [`../react-theming.md`](../react-theming.md). This README only describes *how*
+> [`../react-theming.md`](../react-theming.md). This README only describes _how_
 > we get there.
 
 ---
@@ -48,7 +48,7 @@ The work splits into two layers:
   CSS, which hardens the underlying contract the React API will sit on.
 - **React package (API layer)** — introduces the typed theming surface.
 
-The React API can technically be built *before* the styles package is split,
+The React API can technically be built _before_ the styles package is split,
 because inline `style` values win the cascade over `:root` regardless of how the
 stylesheet is organized. However, doing the styles-package work first:
 
@@ -62,8 +62,18 @@ the **core API**, then the **wiring/hardening**, and finally **validation and
 documentation**.
 
 Backward compatibility is preserved throughout: at every phase boundary the
-default path (`import '@pathableai/styles'` with no `ThemeProvider`) must render
-identically to today.
+default _rendered output_ is unchanged. Concretely, a consumer who already
+imports `@pathableai/styles` (directly or transitively) must see identical
+rendering with no `ThemeProvider`.
+
+One deliberate exception is the Phase 2 entry-point change: `@pathableai/react`
+stops implicitly importing the default theme tokens as a side effect (today
+`packages/react/src/index.ts` imports `@pathableai/styles` in full). A consumer
+who relied on that implicit import without importing `@pathableai/styles`
+themselves must add `import '@pathableai/styles'` (or
+`@pathableai/styles/theme`). This is a one-line, documented migration — see
+feature [05](./05-react-entry-point-wiring.md) — and is a breaking change only
+in the sense that the default-token import is no longer implicit.
 
 ---
 
@@ -72,14 +82,14 @@ identically to today.
 The transition is broken into six PR-sized features, one file each in this
 directory. They are ordered by dependency and map onto the phases below.
 
-| # | Feature | Phase | Layer |
-|---|---|---|---|
-| [01](./01-consolidated-theme-token-css.md) | Consolidated theme token CSS and granular exports | 0 | styles |
-| [02](./02-theme-token-types.md) | Theme token types and vocabulary | 1 | react |
-| [03](./03-default-theme-create-theme.md) | Default theme and `createTheme` | 1 | react |
-| [04](./04-theme-provider.md) | `ThemeProvider` | 1 | react |
-| [05](./05-react-entry-point-wiring.md) | React entry point wiring | 2 | react |
-| [06](./06-theming-documentation.md) | Theming documentation and end-to-end validation | 3 | cross-cutting |
+| #                                          | Feature                                           | Phase | Layer         |
+| ------------------------------------------ | ------------------------------------------------- | ----- | ------------- |
+| [01](./01-consolidated-theme-token-css.md) | Consolidated theme token CSS and granular exports | 0     | styles        |
+| [02](./02-theme-token-types.md)            | Theme token types and vocabulary                  | 1     | react         |
+| [03](./03-default-theme-create-theme.md)   | Default theme and `createTheme`                   | 1     | react         |
+| [04](./04-theme-provider.md)               | `ThemeProvider`                                   | 1     | react         |
+| [05](./05-react-entry-point-wiring.md)     | React entry point wiring                          | 2     | react         |
+| [06](./06-theming-documentation.md)        | Theming documentation and end-to-end validation   | 3     | cross-cutting |
 
 Each feature file follows the same Scope / Includes / Excludes / Dependencies /
 DONE Means structure used elsewhere in `docs/plans/`.
@@ -88,7 +98,7 @@ DONE Means structure used elsewhere in `docs/plans/`.
 
 ## Phase 0 — Contract consolidation (styles package)
 
-**Goal:** produce a single, legible theme token layer and a splitable stylesheet.
+**Goal:** produce a single, legible theme token layer and a splittable stylesheet.
 
 **Key changes:**
 
@@ -220,14 +230,14 @@ token layer, so consumers who supply their own tokens don't fight the cascade.
 
 ## Consumer-facing change summary
 
-| Before | After |
-| --- | --- |
-| Hand-write CSS re-declaring `--pathable-color-*` on `:root` | `createTheme({ colors: {...} })` + `<ThemeProvider theme={...}>` |
-| Tokens undiscoverable (reverse-engineered from compiled CSS) | `defaultTheme` + documented `ThemeColors` type |
-| Typos fail silently | Typos fail at type-check time |
-| Global-only, order-dependent overrides | Scoped, cascade-free overrides |
-| One monolithic stylesheet import | Granular `components` / `utilities` / `theme` subpaths |
-| Tone types inaccessible | `TextTone`, `SurfaceTone`, `BorderTone` importable |
+| Before                                                       | After                                                            |
+| ------------------------------------------------------------ | ---------------------------------------------------------------- |
+| Hand-write CSS re-declaring `--pathable-color-*` on `:root`  | `createTheme({ colors: {...} })` + `<ThemeProvider theme={...}>` |
+| Tokens undiscoverable (reverse-engineered from compiled CSS) | `defaultTheme` + documented `ThemeColors` type                   |
+| Typos fail silently                                          | Typos fail at type-check time                                    |
+| Global-only, order-dependent overrides                       | Scoped, cascade-free overrides                                   |
+| One monolithic stylesheet import                             | Granular `components` / `utilities` / `theme` subpaths           |
+| Tone types inaccessible                                      | `TextTone`, `SurfaceTone`, `BorderTone` importable               |
 
 ## Risks and mitigations
 
@@ -240,6 +250,6 @@ token layer, so consumers who supply their own tokens don't fight the cascade.
 - **Inline-style scoping surprises.** Mitigation: `ThemeProvider` renders no
   wrapper when the theme equals `defaultTheme`, and tests assert the exact DOM
   structure.
-- **`colorScheme` scope creep.** Mitigation: dark-mode token *generation* is a
+- **`colorScheme` scope creep.** Mitigation: dark-mode token _generation_ is a
   non-goal; only the hook is provided. A consumer-supplied dark `ThemeColors`
   object is the supported mechanism.

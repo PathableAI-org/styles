@@ -8,7 +8,7 @@ Status: NOT STARTED
 
 ## Scope
 
-Provide the theme *data* layer in `@pathableai/react`: an exported `defaultTheme` constant containing the complete default color token set, and a `createTheme` factory that deep-merges a partial theme with those defaults and returns a fully resolved, validated `ThemeConfig`. This feature is pure data and pure functions — no React components and no DOM.
+Provide the theme _data_ layer in `@pathableai/react`: an exported `defaultTheme` constant containing the complete default color token set, and a `createTheme` factory that deep-merges a partial theme with those defaults and returns a fully resolved, validated `ThemeConfig`. This feature is pure data and pure functions — no React components and no DOM.
 
 ## Includes
 

@@ -23,7 +23,7 @@ Make `@pathableai/react` structurally independent of the default theme token lay
 - Verify backward compatibility for the two existing consumer paths:
   - `@pathableai/react` + `import '@pathableai/styles'` (full default path) renders identically to today.
   - `@pathableai/react` + `import '@pathableai/styles/theme'` renders the default tokens.
-- Document the required consumer setup for each path (default vs. ThemeProvider-driven) in the package README or a migration note.
+- Document the required consumer setup for each path (default vs. ThemeProvider-driven) in the package README or a migration note, including the explicit breaking change: consumers who relied on `@pathableai/react`'s implicit side-effect import of `@pathableai/styles` (without importing it themselves) must now add `import '@pathableai/styles'` (or `@pathableai/styles/theme`) to keep the default token layer.
 - Add/adjust any package-content or build checks (`publint`/`attw`) so the new subpath imports resolve in the published package.
 
 ## Excludes
