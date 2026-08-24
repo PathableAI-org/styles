@@ -28,7 +28,7 @@ A single CSS utility module from the SCSS `$pathable-utilities` config map. Each
 | `values` | `UtilityValue[]` | All supported values observed in SCSS source |
 | `responsive` | `boolean` | Whether responsive breakpoint variants are emitted |
 | `stateVariants` | `("hover"\|"focus")[]` | State pseudo-class variants (bg/text only) |
-| `owningSource` | `string` | SCSS source file path (e.g., `src/_utilities.scss`) |
+| `owningSource` | `string` | SCSS source file path for the config map (e.g., `src/_utilities-config.scss`); `src/_utilities.scss` generates the utility classes |
 | `capability` | `string` | Parent capability group name |
 
 ### UtilityValue

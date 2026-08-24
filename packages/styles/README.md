@@ -37,12 +37,41 @@ This package is the implementation source for PathAble visual design foundations
 
 Install the package:
 
-```bash
+````bash
 pnpm add @pathableai/styles
 
-Import the SCSS entrypoint:
+Import the compiled CSS entry point to get all default styles, tokens, and utilities:
 
-@use "@pathableai/styles";
+```css
+/* Full import — components, utilities, and default theme tokens */
+@import '@pathableai/styles';
+````
+
+For consumers who supply their own theme tokens (e.g., via a `ThemeProvider`),
+import only the component and utility layers to avoid a cascade fight with the
+package's default token declarations:
+
+```css
+/* Component styles and utilities only — no default :root theme tokens */
+@import '@pathableai/styles/components';
+@import '@pathableai/styles/utilities';
+/* Supply your own theme tokens, or import the defaults separately: */
+@import '@pathableai/styles/theme';
+```
+
+All three subpath imports resolve to the corresponding file under `dist/`:
+
+| Import                          | Resolves to              |
+| ------------------------------- | ------------------------ |
+| `@pathableai/styles`            | `dist/styles.css`        |
+| `@pathableai/styles/components` | `dist/components.css`    |
+| `@pathableai/styles/utilities`  | `dist/utilities.css`     |
+| `@pathableai/styles/theme`      | `dist/theme-default.css` |
+
+### SCSS (`@use`)
+
+```scss
+@use '@pathableai/styles';
 ```
 
 ### USWDS Integration

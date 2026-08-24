@@ -1,0 +1,7 @@
+// Component entry point.
+// Compiles component styles (fonts, component wrappers, and the USWDS layout
+// grid) into dist/components.css, without the default :root theme tokens.
+@forward 'fonts';
+@forward 'uswds-theme';
+@forward 'pathable-component-wrappers';
+@forward 'usa-layout-grid/src/styles';
