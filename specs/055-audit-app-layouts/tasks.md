@@ -41,8 +41,8 @@ This feature produces no source code. All paths below refer to:
 
 **Purpose**: Establish the search environment and identify target application repositories before running any pattern searches.
 
-- [ ] T001 Identify and document the list of application repositories that consume `@pathable/react` as a dependency. Record the repository list at the top of the audit deliverable at `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T002 Verify read access to each identified application repository and document any unavailable repositories as limitations in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T001 Identify and document the list of application repositories that consume `@pathable/react` as a dependency. Record the repository list at the top of the audit deliverable at `docs/plans/semantic-react/audit-findings.md`.
+- [x] T002 Verify read access to each identified application repository and document any unavailable repositories as limitations in `docs/plans/semantic-react/audit-findings.md`.
 
 **Checkpoint**: Target repositories identified and accessible — pattern searches can begin.
 
@@ -56,13 +56,13 @@ This feature produces no source code. All paths below refer to:
 
 ### Implementation for User Story 1
 
-- [ ] T003 [P] [US1] Search all target application repositories for repeated `className` strings combining `pathable-` utility classes (FR-001). Record each distinct combination and its frequency in `docs/plans/semantic-react/audit-findings.md`. Use `rg "pathable-"` queries per the search strategy in `specs/055-audit-app-layouts/research.md`.
-- [ ] T004 [P] [US1] Search all target application repositories for repeated nesting of `Box` and layout primitives (`Container`, `Stack`, `Inline`, `Cluster`, `Grid`) with the same prop configurations (FR-002). Record each recurring structure in `docs/plans/semantic-react/audit-findings.md`. Use `rg "<Container" -A 10` and similar queries per `specs/055-audit-app-layouts/quickstart.md`.
-- [ ] T005 [P] [US1] Search all target application repositories for common page-level structures such as `header` + `main` + `footer` inside a `Container` (FR-003). Record each distinct structure in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T006 [P] [US1] Search all target application repositories for repeated `Stack` + form-control patterns (FR-004). Record each distinct form layout pattern in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T007 [P] [US1] Search all target application repositories for action-bar and button-group arrangements used repeatedly (FR-005). Record each distinct action-grouping pattern in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T008 [US1] For each pattern recorded in T003–T007, fill in the intent field: a semantic description of what the pattern expresses (FR-006). Update `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T009 [US1] For each pattern recorded in T003–T007, classify it as domain-specific, reusable, or incidental using the decision tree in `specs/055-audit-app-layouts/research.md` Decision 1 (FR-006, FR-011). Update `docs/plans/semantic-react/audit-findings.md`.
+- [x] T003 [P] [US1] Search all target application repositories for repeated `className` strings combining `pathable-` utility classes (FR-001). Record each distinct combination and its frequency in `docs/plans/semantic-react/audit-findings.md`. Use `rg "pathable-"` queries per the search strategy in `specs/055-audit-app-layouts/research.md`.
+- [x] T004 [P] [US1] Search all target application repositories for repeated nesting of `Box` and layout primitives (`Container`, `Stack`, `Inline`, `Cluster`, `Grid`) with the same prop configurations (FR-002). Record each recurring structure in `docs/plans/semantic-react/audit-findings.md`. Use `rg "<Container" -A 10` and similar queries per `specs/055-audit-app-layouts/quickstart.md`.
+- [x] T005 [P] [US1] Search all target application repositories for common page-level structures such as `header` + `main` + `footer` inside a `Container` (FR-003). Record each distinct structure in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T006 [P] [US1] Search all target application repositories for repeated `Stack` + form-control patterns (FR-004). Record each distinct form layout pattern in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T007 [P] [US1] Search all target application repositories for action-bar and button-group arrangements used repeatedly (FR-005). Record each distinct action-grouping pattern in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T008 [US1] For each pattern recorded in T003–T007, fill in the intent field: a semantic description of what the pattern expresses (FR-006). Update `docs/plans/semantic-react/audit-findings.md`.
+- [x] T009 [US1] For each pattern recorded in T003–T007, classify it as domain-specific, reusable, or incidental using the decision tree in `specs/055-audit-app-layouts/research.md` Decision 1 (FR-006, FR-011). Update `docs/plans/semantic-react/audit-findings.md`.
 
 **Checkpoint**: Raw pattern inventory complete — at least 5 distinct patterns recorded with frequency, intent, and classification.
 
@@ -78,10 +78,10 @@ This feature produces no source code. All paths below refer to:
 
 ### Implementation for User Story 2
 
-- [ ] T010 [US2] Group all patterns from Phase 2 into intent categories. Categories must emerge from the actual patterns found, not a predefined list (FR-007). Document each category as a top-level section in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T011 [US2] Within each category, rank patterns by frequency (primary) and reusability (secondary). Reusable candidates must appear first within their category (FR-008). Reorder the pattern entries in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T012 [US2] For each pattern classified as reusable, add a brief rationale explaining why it is reusable rather than domain-specific. Update `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T013 [US2] Identify at least one pattern explicitly classified as incidental with rationale explaining it is a one-off styling choice or copy-paste artifact (SC-006, FR-011). Document in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T010 [US2] Group all patterns from Phase 2 into intent categories. Categories must emerge from the actual patterns found, not a predefined list (FR-007). Document each category as a top-level section in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T011 [US2] Within each category, rank patterns by frequency (primary) and reusability (secondary). Reusable candidates must appear first within their category (FR-008). Reorder the pattern entries in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T012 [US2] For each pattern classified as reusable, add a brief rationale explaining why it is reusable rather than domain-specific. Update `docs/plans/semantic-react/audit-findings.md`.
+- [x] T013 [US2] Identify at least one pattern explicitly classified as incidental with rationale explaining it is a one-off styling choice or copy-paste artifact (SC-006, FR-011). Document in `docs/plans/semantic-react/audit-findings.md`.
 
 **Checkpoint**: Patterns are categorized and ranked — the audit document has a structured, scannable format ready for API sketches.
 
@@ -97,9 +97,9 @@ This feature produces no source code. All paths below refer to:
 
 ### Implementation for User Story 3
 
-- [ ] T014 [US3] For each pattern classified as reusable, draft a rough API sketch including a proposed component name and brief prop signature (FR-009). Add each sketch to the pattern entry in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T015 [US3] For each reusable pattern, assess the SCSS contract: identify whether owning `pathable-*` classes already exist in `@pathable/styles` or need to be created (FR-010). Document the status for each pattern in `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T016 [US3] Verify every reusable pattern in the audit has both an API sketch and an SCSS contract note (SC-002). Add any missing entries.
+- [x] T014 [US3] For each pattern classified as reusable, draft a rough API sketch including a proposed component name and brief prop signature (FR-009). Add each sketch to the pattern entry in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T015 [US3] For each reusable pattern, assess the SCSS contract: identify whether owning `pathable-*` classes already exist in `@pathable/styles` or need to be created (FR-010). Document the status for each pattern in `docs/plans/semantic-react/audit-findings.md`.
+- [x] T016 [US3] Verify every reusable pattern in the audit has both an API sketch and an SCSS contract note (SC-002). Add any missing entries.
 
 **Checkpoint**: All reusable candidates have API sketches and SCSS contract assessments — the audit is ready for slice 14.
 
@@ -109,10 +109,10 @@ This feature produces no source code. All paths below refer to:
 
 **Purpose**: Validate the audit document against all success criteria and link it to the slice 14 composition-patterns document.
 
-- [ ] T017 Run a spot-check verification: pick 3 patterns from the audit document, re-run the search command in source repositories, and confirm frequency counts match within a reasonable margin (SC-005). Document verification results at the bottom of `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T018 Validate the audit against all six success criteria (SC-001 through SC-006). Document the pass/fail status for each criterion in a validation section at the bottom of `docs/plans/semantic-react/audit-findings.md`.
-- [ ] T019 Update `docs/plans/semantic-react/14-promote-composition-patterns.md` to reference the audit deliverable and populate or update its candidate list with the reusable patterns found (FR-012, SC-004).
-- [ ] T020 Run Markdown linting on `docs/plans/semantic-react/audit-findings.md` and fix any findings without disabling rules or adding ignore entries.
+- [x] T017 Run a spot-check verification: pick 3 patterns from the audit document, re-run the search command in source repositories, and confirm frequency counts match within a reasonable margin (SC-005). Document verification results at the bottom of `docs/plans/semantic-react/audit-findings.md`.
+- [x] T018 Validate the audit against all six success criteria (SC-001 through SC-006). Document the pass/fail status for each criterion in a validation section at the bottom of `docs/plans/semantic-react/audit-findings.md`.
+- [x] T019 Update `docs/plans/semantic-react/14-promote-composition-patterns.md` to reference the audit deliverable and populate or update its candidate list with the reusable patterns found (FR-012, SC-004).
+- [x] T020 Run Markdown linting on `docs/plans/semantic-react/audit-findings.md` and fix any findings without disabling rules or adding ignore entries.
 
 **Checkpoint**: Audit document is validated and linked to slice 14. Feature is complete.
 

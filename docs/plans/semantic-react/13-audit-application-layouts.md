@@ -1,6 +1,6 @@
 # 13 — Audit of Real Application Layouts
 
-Status: NOT STARTED → change to DONE when complete
+Status: DONE — audit findings available at [audit-findings.md](./audit-findings.md)
 
 ## Parent Plan
 
