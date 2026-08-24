@@ -36,7 +36,7 @@ For a narrow per-component or per-wave iteration (when the runner supports
 stable filtering):
 
 ```bash
-node scripts/test-storybook.mjs styles --filter components-form-controls-combobox
+node scripts/test-storybook.mjs styles --filter interaction-controls-segmentedcontrol
 ```
 
 **Expected**: the `styles` target serves `apps/storybook/storybook-static`,
@@ -59,8 +59,9 @@ measures —
 3. automated Axe execution —
 
 plus the accessibility exceptions for each story. No aggregate is labeled WCAG
-certification. A ledger entry claiming proof with no green focused run is a
-report failure.
+certification. A focused run that matches no ledger entry or proven shared
+contract is a report failure. Entries outside the latest focused run are shown
+as not covered by that run rather than treated as newly executed evidence.
 
 ## Full aggregate (after coverage grows)
 

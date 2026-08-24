@@ -74,9 +74,15 @@ If more than one package implements the behavior:
 1. Give each package a deterministic story with the required initial state.
 2. Extract the renderer-neutral interaction and assertions into a focused
    shared helper.
-3. Call that helper from each package's story.
-4. Confirm that each story exercises its package's real public implementation.
-5. Keep framework APIs, callbacks, refs, and state-model tests in the framework
+3. Prove the helper from the canonical Styles story and record `styles-proven`
+   in the rollout ledger.
+4. Merge and observe the Styles proof before changing a downstream package.
+5. Call the unchanged helper from each downstream package's story and then
+   record its adoption.
+6. Confirm that each story exercises its package's real implementation. For a
+   CSS-only pattern, document when the Styles story owns a reference runtime
+   rather than implying the package publishes behavior JavaScript.
+7. Keep framework APIs, callbacks, refs, and state-model tests in the framework
    package.
 
 See [Behavioral parity](behavior-parity.md) for the expected boundary.
@@ -89,6 +95,9 @@ pnpm test:storybook
 
 # React-only iteration
 pnpm test:storybook-react
+
+# Focus one registered shared component by story-id prefix
+pnpm test:storybook-styles --filter interaction-controls-segmentedcontrol
 
 # Default repository test suite
 pnpm test

@@ -95,4 +95,11 @@ runtime a consumer would use.
 Passing the same helper is useful only when each story reaches its package
 through a representative public entry point.
 
+For CSS-only patterns such as SegmentedControl, the Styles story may install a
+deterministic, story-owned reference runtime to demonstrate consumer-owned
+keyboard and state behavior. The story and contract documentation must say that
+the runtime is fixture code rather than published package JavaScript. Framework
+adoption still waits for that Styles reference proof and invokes the unchanged
+renderer-neutral helper.
+
 Next: [Tooling and structure](tooling-and-structure.md).
