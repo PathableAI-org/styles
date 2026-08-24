@@ -111,7 +111,7 @@ A developer creating a hero section, comparison panel, or call-to-action layout 
 
 **Build from existing primitives**:
 
-- **FR-001**: Each promoted primitive MUST be composed from existing lower-level primitives (`Container`, `Stack`, `Inline`, `Cluster`, `Grid`, `Box`, `Surface`) and system props — not raw `pathable-*` CSS utility strings applied to generic `<div>` elements.
+- **FR-001**: Each promoted primitive MUST be composed from existing lower-level primitives (`Container`, `Stack`, `Inline`, `Cluster`, `Surface`) and system props where typed primitives exist. When no typed primitive covers a needed SCSS contract (e.g., `pathable-sidebar-layout`, `pathable-split`), the primitive MAY apply the SCSS contract class directly to a root element.
 - **FR-002**: Each promoted primitive MUST use the existing SCSS contracts from `packages/styles` for visual presentation. No new SCSS contracts may be introduced unless a gap is explicitly identified and documented.
 - **FR-003**: The `Box` and `Grid` primitives MUST be implemented and available in `@pathable/react` before higher-level composition primitives that depend on them are built.
 
@@ -119,7 +119,7 @@ A developer creating a hero section, comparison panel, or call-to-action layout 
 
 - **FR-004**: Each promoted primitive MUST specify ownership of: responsive behavior (when columns stack, when items wrap), ARIA landmarks/roles where applicable, heading level integration, focus order, and child constraints (what type of children are expected).
 - **FR-005**: Each promoted primitive MUST preserve the ability to override via a `className` prop for consumer-specific styling.
-- **FR-006**: Each promoted primitive MUST support an `as` polymorphic prop where safe (allowing consumers to change the root HTML element) — unless changing the element would break semantics or accessibility (e.g., a `<main>` landmark MUST NOT be overridden to a `<div>`).
+- **FR-006**: Each promoted primitive MUST support an `as` polymorphic prop where safe (allowing consumers to change the root HTML element). Primitives that default to a landmark element (`<main>`, `<form>`) MUST document the semantic trade-off when consumers override `as` to a non-landmark element.
 
 **Primitive-specific requirements**:
 

@@ -41,8 +41,8 @@ describe('FormStack', () => {
     expect(classList(root)).toContain('pathable-maxw-tablet')
   })
 
-  it('applies pathable-maxw-desktop when maxWidth="content"', () => {
-    const { container } = render(<FormStack maxWidth="content" />)
+  it('applies pathable-maxw-desktop when maxWidth="desktop"', () => {
+    const { container } = render(<FormStack maxWidth="desktop" />)
     const root = container.firstElementChild!
     expect(classList(root)).toContain('pathable-maxw-desktop')
   })

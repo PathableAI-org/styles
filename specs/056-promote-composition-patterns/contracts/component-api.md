@@ -37,8 +37,8 @@ export interface CardGridProps
   /** Consumer class name appended after design-system classes. */
   className?: string
 
-  /** Card children. In cluster mode, each child receives pathable-surface
-   *  visual treatment. In auto-fit mode, children are rendered directly. */
+  /** Card children. Rendered directly without modification.
+   *  Apply Surface or Card treatment to individual children as needed. */
   children?: ReactNode
 }
 
@@ -173,7 +173,7 @@ export const SplitLayout: React.ForwardRefExoticComponent<
 import type { ElementType, ReactNode, FormHTMLAttributes } from 'react'
 
 export type FormStackGap = 'sm' | 'md' | 'lg' | 'xl'
-export type FormStackMaxWidth = 'tablet' | 'content'
+export type FormStackMaxWidth = 'tablet' | 'desktop'
 
 export interface FormStackProps
   extends Omit<FormHTMLAttributes<HTMLFormElement>, 'color'> {
@@ -182,7 +182,7 @@ export interface FormStackProps
   gap?: FormStackGap
 
   /** Optional maximum width for form readability.
-   *  tablet = 640px, content = 768px. */
+   *  Uses the shared MaxWidth scale (tablet, desktop). */
   maxWidth?: FormStackMaxWidth
 
   /** Polymorphic root element override. Default: "form". */

@@ -43,8 +43,14 @@ function CardGridInner(
 ) {
   const Component = as ?? 'div'
 
+  const validClusterGaps: string[] = ['sm', 'md', 'lg', 'xl']
+  const validAutoGaps: string[] = ['sm', 'md', 'lg']
+
   if (variant === 'auto-fit') {
-    const gapVal = (gap as CardGridAutoGap | undefined) ?? 'md'
+    const gapVal =
+      gap != null && validAutoGaps.includes(gap)
+        ? (gap as CardGridAutoGap)
+        : 'md'
     const classes = mergeClasses(
       'pathable-card-grid',
       AUTO_GAP_CLASS[gapVal],
@@ -58,7 +64,10 @@ function CardGridInner(
   }
 
   // cluster mode: uses pathable-cluster flex-wrap layout
-  const gapVal = (gap as CardGridClusterGap | undefined) ?? 'md'
+  const gapVal =
+    gap != null && validClusterGaps.includes(gap)
+      ? (gap as CardGridClusterGap)
+      : 'md'
   const classes = mergeClasses(
     'pathable-cluster',
     CLUSTER_GAP_CLASS[gapVal],

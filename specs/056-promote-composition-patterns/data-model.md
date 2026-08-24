@@ -15,7 +15,7 @@ Each promoted primitive maps prop values to `pathable-*` BEM CSS class modifiers
 |------|------|---------|---------------|-------------|
 | `variant` | `"cluster" \| "auto-fit"` | `"cluster"` | — | Switches between `pathable-cluster` / `pathable-card-grid` root |
 | `gap` | `CardGridClusterGap \| CardGridAutoGap` | varies by variant | `pathable-cluster` / `pathable-card-grid` | `pathable-cluster--gap-{value}` or `pathable-card-grid--gap-{value}` |
-| `children` | `ReactNode` | — | — | Each child in cluster mode is automatically wrapped with `pathable-surface` visual treatment |
+| `children` | `ReactNode` | — | — | Rendered directly without modification |
 | `className` | `string?` | — | — | Appended after design-system classes |
 | `as` | `ElementType?` | `"div"` | — | Root element override |
 
@@ -142,7 +142,7 @@ interface CardGridProps extends Omit<React.HTMLAttributes<HTMLElement>, 'color'>
 ### Rendered HTML
 
 ```html
-<form class="pathable-stack pathable-stack--gap-md pathable-s-maxw-tablet">
+<form class="pathable-stack pathable-stack--gap-md pathable-maxw-tablet">
   <div class="pathable-form-group">...</div>
   <div class="pathable-form-group">...</div>
 </form>

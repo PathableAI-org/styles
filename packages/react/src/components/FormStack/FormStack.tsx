@@ -2,7 +2,7 @@ import React, { ReactNode, ElementType, forwardRef } from 'react'
 import { mergeClasses } from '../../internal/resolvers/mergeClasses.js'
 
 export type FormStackGap = 'sm' | 'md' | 'lg' | 'xl'
-export type FormStackMaxWidth = 'tablet' | 'content'
+export type FormStackMaxWidth = 'tablet' | 'desktop'
 
 const GAP_CLASS: Record<FormStackGap, string> = {
   sm: 'pathable-stack--gap-sm',
@@ -13,7 +13,7 @@ const GAP_CLASS: Record<FormStackGap, string> = {
 
 const MAX_WIDTH_CLASS: Record<FormStackMaxWidth, string> = {
   tablet: 'pathable-maxw-tablet',
-  content: 'pathable-maxw-desktop',
+  desktop: 'pathable-maxw-desktop',
 }
 
 export interface FormStackProps extends Omit<
@@ -36,7 +36,7 @@ function FormStackInner(
     className = '',
     ...rest
   }: FormStackProps,
-  ref: React.ForwardedRef<HTMLFormElement>,
+  ref: React.ForwardedRef<HTMLElement>,
 ) {
   const Component = as ?? 'form'
   const maxWidthClass = maxWidth != null ? MAX_WIDTH_CLASS[maxWidth] : undefined
@@ -55,6 +55,4 @@ function FormStackInner(
   )
 }
 
-export const FormStack = forwardRef<HTMLFormElement, FormStackProps>(
-  FormStackInner,
-)
+export const FormStack = forwardRef<HTMLElement, FormStackProps>(FormStackInner)

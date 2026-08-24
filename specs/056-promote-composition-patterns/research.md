@@ -57,9 +57,8 @@ Each scale encodes different semantic intent (stack spacing ≠ cluster spacing 
 - A single component with a variant prop is clearer than two separate components (`CardGrid` and `AutoGrid`) because the consumer intent is the same ("render a grid of cards").
 
 **Implementation**:
-- **Cluster mode**: Composes `Cluster` as the outer wrapper, with children implicitly rendered as `Surface` cards. The `gap` prop maps to `ClusterGap` values.
-- **Auto-fit mode**: Renders a `<div>` with `pathable-card-grid` class. The `gap` prop maps to `CardGridGap` values (different scale!). Children are rendered directly — they are responsible for their own surface treatment.
-- Each child in either mode receives `pathable-surface` class treatment.
+- **Cluster mode**: Renders a `<div>` with `pathable-cluster` class. Children are rendered directly — consumers apply `Surface` or `Card` treatment to individual children. The `gap` prop maps to `ClusterGap` values.
+- **Auto-fit mode**: Renders a `<div>` with `pathable-card-grid` class. The `gap` prop maps to `CardGridGap` values (different scale!). Children are rendered directly.
 
 **Alternatives considered**:
 - **Two separate components (`CardGrid` + `AutoGrid`)**: Rejected — splits user intent unnecessarily.
