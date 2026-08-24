@@ -12,7 +12,7 @@ const meta = {
 
 **When to use**: For any container that expresses a coordinated surface treatment — a card, panel, region, or boundary — where background, foreground, border, and depth must stay in sync. Use \`variant\` to select the semantic tone, \`elevation\` to control depth, and \`borderTone\` to signal boundary meaning.
 
-**When not to use**: For raw color or shadow overrides (use \`className\`/\\\`style\\\` as the escape hatch), for card structure with title/media/footer (use \`Card\`), or for page-width layout constraints (use \`Container\`). \`Surface\` is a layout-agnostic treatment, not a layout primitive.
+**When not to use**: For raw color or shadow overrides (use \`className\`/\`style\` as the escape hatch), for card structure with title/media/footer (use \`Card\`), or for page-width layout constraints (use \`Container\`). \`Surface\` is a layout-agnostic treatment, not a layout primitive.
 
 **Underlying element**: \`<div>\` by default; override with \`as\` for semantic landmarks (\`<section>\`, \`<article>\`, \`<aside>\`).
 

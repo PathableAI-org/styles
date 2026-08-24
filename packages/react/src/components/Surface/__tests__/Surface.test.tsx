@@ -31,11 +31,11 @@ describe('Surface', () => {
       expect(root.className).toContain('pathable-surface--tone-default')
     })
 
-    it('omits the tone class when variant is absent', () => {
+    it('applies the default tone class when variant is absent', () => {
       const { container } = render(<Surface>Content</Surface>)
       const root = container.firstElementChild as HTMLElement
       expect(root.className).toContain('pathable-surface')
-      expect(root.className).not.toContain('pathable-surface--tone-')
+      expect(root.className).toContain('pathable-surface--tone-default')
     })
 
     it('renders children as direct children with no wrapper nodes', () => {

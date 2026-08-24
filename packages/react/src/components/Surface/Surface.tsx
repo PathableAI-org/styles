@@ -63,10 +63,11 @@ function SurfaceInner(
   ref: React.ForwardedRef<HTMLElement>,
 ) {
   const Component = as ?? 'div'
+  const tone = variant ?? 'default'
 
   const classes = mergeClasses(
     'pathable-surface',
-    surfaceToneClass(variant),
+    surfaceToneClass(tone),
     surfaceElevationClass(elevation),
     surfaceBorderToneClass(borderTone),
     widthClass(width),

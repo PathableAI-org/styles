@@ -21,7 +21,7 @@ single `variant` prop plus optional `borderTone` and `elevation` refinements.
 The semantic surface *tone* selectors, typed by the shared `SurfaceTone` union.
 
 - **Type**: `'default' | 'subtle' | 'primary'` (from `internal/resolvers/tone.ts`).
-- **Optional**: yes — omitted means no tone modifier class is applied.
+- **Optional**: yes — omitted means the default tone modifier (`pathable-surface--tone-default`) is applied.
 - **Validation**: closed string-literal union; TypeScript rejects unknown values.
 - **Mapping**: a `surfaceToneClass()` resolver maps each value to a
   `pathable-surface--tone-*` modifier (see mapping tables below).
