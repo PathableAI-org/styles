@@ -2,54 +2,41 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/054-surface-primitive/plan.md
+at specs/055-audit-app-layouts/plan.md
 
-## Surface Primitive
+## Audit of Real Application Layouts
 
-This feature (slice 12 of the React Semantic Primitives plan) implements the
-`Surface` semantic visual-container primitive. `Surface` coordinates
-foreground, background, border, elevation, and focus treatment into a single
-semantic `variant` prop, plus optional `borderTone` and `elevation`
-refinements. It ships only because the conditional precondition is met:
-concrete application compositions repeatedly consume the coordinated
-`pathable-surface` treatment (see `research.md`).
+This feature (slice 13 of the React Semantic Primitives plan) performs a
+research and documentation audit of real application code consuming
+`@pathable/react`. The audit identifies repeated layout patterns, common
+utility-class combinations, and candidates for higher-level composition
+primitives in slice 14. No new components, code changes, or API modifications
+ship here — it is exclusively a research and documentation feature.
 
-### Surface model
+### Deliverable
 
-- `variant` = `SurfaceTone` = `default | subtle | primary` — the semantic tone
-  axis (background + foreground + default border), resolved by new
-  `pathable-surface--tone-*` modifiers on the existing `pathable-surface.scss`
-  contract.
-- `borderTone` = `BorderTone` = `default | danger` — the boundary meaning axis,
-  resolved by new `pathable-surface--border-*` modifiers.
-- `elevation` = `sm | md | lg | xl` — the depth axis, resolved by new
-  `pathable-surface--elevation-*` modifiers mapping to `--elevation-*` tokens.
-- Tone types (`SurfaceTone`/`BorderTone`) and the tone resolvers are internal;
-  `Surface` and `SurfaceProps` are public exports. `variant` is chosen over
-  `tone` because it selects an entire coordinated treatment.
+- An audit document in `docs/plans/semantic-react/` listing identified
+  patterns grouped by intent category, ranked by frequency and reusability,
+  with API sketches and SCSS contract notes for reusable candidates.
 
 ### Key constraints
 
-- Source-first: extend the `packages/styles` `pathable-surface.scss` contract
-  before exposing the React `Surface` wrapper; no new tokens, no forked values.
-- No raw `color`/`background`/`borderColor` props; no arbitrary `box-shadow`;
-  no internal padding (external spacing only).
-- Deterministic server/client output; no browser dependencies in resolvers.
+- No code changes, no new components, no API modifications (FR-013).
+- The audit must cover: className combinations, component nesting patterns,
+  page-level structures, form patterns, and action/button groups.
+- Patterns are classified as reusable, domain-specific, or incidental.
+- The findings directly inform the candidate list in slice 14.
 
-### Running the focused commands
+### Running the audit
 
 ```bash
-# Build all packages
-pnpm build
+# Search for className patterns in an application repo
+rg "pathable-" --only-matching
 
-# Build the React package
-pnpm --filter @pathableai/react build
+# Search for component nesting patterns
+rg "<Container" -A 10
 
-# Run the surface resolver/component tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Surface"
-
-# Run the existing primitive suite (no regressions)
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Inline|Cluster|Stack|Container|Heading|Card"
+# The audit is manual — no automated scripts are produced
 ```
 
 <!-- SPECKIT END -->
