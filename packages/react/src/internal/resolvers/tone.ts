@@ -56,3 +56,38 @@ export function textToneClass(value?: string | null): string | undefined {
   if (value == null) return undefined
   return (TEXT_TONE_CLASS as Record<string, string | undefined>)[value]
 }
+
+const SURFACE_TONE_CLASS: Record<SurfaceTone, string> = {
+  default: 'pathable-surface--tone-default',
+  subtle: 'pathable-surface--tone-subtle',
+  primary: 'pathable-surface--tone-primary',
+}
+
+/**
+ * Pure resolver mapping a `SurfaceTone` value to its coordinated tone modifier.
+ * Returns undefined for null / undefined / unknown values (runtime fallback).
+ * No browser globals; deterministic server/client output.
+ */
+export function surfaceToneClass(value?: string | null): string | undefined {
+  if (value == null) return undefined
+  return (SURFACE_TONE_CLASS as Record<string, string | undefined>)[value]
+}
+
+const SURFACE_BORDER_TONE_CLASS: Record<BorderTone, string> = {
+  default: 'pathable-surface--border-default',
+  danger: 'pathable-surface--border-danger',
+}
+
+/**
+ * Pure resolver mapping a `BorderTone` value to its boundary modifier.
+ * Returns undefined for null / undefined / unknown values (runtime fallback).
+ * No browser globals; deterministic server/client output.
+ */
+export function surfaceBorderToneClass(
+  value?: string | null,
+): string | undefined {
+  if (value == null) return undefined
+  return (SURFACE_BORDER_TONE_CLASS as Record<string, string | undefined>)[
+    value
+  ]
+}

@@ -100,6 +100,53 @@
   box-shadow: var(--elevation-md);
 }
 
+// Tone-role variants (feature 12 — Surface primitive).
+// `variant` selects a coordinated foreground/background/border treatment from
+// the shared SurfaceTone vocabulary (default | subtle | primary).
+.pathable-surface--tone-default {
+  background: var(--pathable-color-surface);
+  color: var(--pathable-color-text);
+  border: 1px solid var(--pathable-color-border);
+}
+
+.pathable-surface--tone-subtle {
+  background: var(--pathable-color-bg);
+  color: var(--pathable-color-text);
+  border: 1px solid var(--pathable-color-border);
+}
+
+.pathable-surface--tone-primary {
+  background: var(--pathable-color-accent);
+  color: var(--pathable-color-on-accent);
+  border: 1px solid var(--pathable-color-accent);
+}
+
+// Elevation modifiers — the depth axis, mapped to the verified elevation tokens.
+.pathable-surface--elevation-sm {
+  box-shadow: var(--elevation-sm);
+}
+
+.pathable-surface--elevation-md {
+  box-shadow: var(--elevation-md);
+}
+
+.pathable-surface--elevation-lg {
+  box-shadow: var(--elevation-lg);
+}
+
+.pathable-surface--elevation-xl {
+  box-shadow: var(--elevation-xl);
+}
+
+// Border-tone modifiers — the boundary meaning axis, mapped to semantic tokens.
+.pathable-surface--border-default {
+  border-color: var(--pathable-color-border);
+}
+
+.pathable-surface--border-danger {
+  border-color: var(--pathable-color-danger);
+}
+
 // Accessibility: forced-colors / high-contrast mode
 @media (forced-colors: active) {
   .pathable-surface--base {
@@ -129,6 +176,12 @@
   }
 
   .pathable-surface--inverse {
+    outline: 2px solid CanvasText;
+  }
+
+  .pathable-surface--tone-default,
+  .pathable-surface--tone-subtle,
+  .pathable-surface--tone-primary {
     outline: 2px solid CanvasText;
   }
 }
