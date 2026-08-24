@@ -50,6 +50,8 @@ export type {
   ContainerProps,
   ContainerSize,
 } from './components/Container/Container.js'
+export { Surface } from './components/Surface/Surface.js'
+export type { SurfaceProps } from './components/Surface/Surface.js'
 export { Stack } from './components/Stack/Stack.js'
 export type { StackProps, StackGap } from './components/Stack/Stack.js'
 export { Inline } from './components/Inline/Inline.js'

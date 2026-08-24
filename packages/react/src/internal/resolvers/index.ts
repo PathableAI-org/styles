@@ -38,6 +38,8 @@ export type {
   TextTone,
   SurfaceTone,
   BorderTone,
+  SurfaceElevation,
+  SurfaceElevationClass,
   SizingProps,
   SpacingProps,
   DisplayProps,
@@ -67,5 +69,10 @@ export {
 export { flexClass } from './flexGrid.js'
 export { fontFamilyClass, fontWeightClass } from './typography.js'
 export { backgroundColorClass, textColorClass } from './colorTone.js'
-export { textToneClass } from './tone.js'
+export {
+  textToneClass,
+  surfaceToneClass,
+  surfaceBorderToneClass,
+} from './tone.js'
+export { surfaceElevationClass } from './surface.js'
 export { mergeClasses } from './mergeClasses.js'
