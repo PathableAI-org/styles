@@ -2,32 +2,38 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/053-semantic-color-tones/plan.md
+at specs/054-surface-primitive/plan.md
 
-## Semantic Color and Tone Model
+## Surface Primitive
 
-This feature (slice 11 of the React Semantic Primitives plan) formalizes the
-shared semantic color/tone vocabulary consumed by `Text` (09), future
-`Surface` (12), and other primitives. It delivers a tone vocabulary document,
-shared internal TypeScript types (`TextTone`, `SurfaceTone`, `BorderTone`),
-and migration of `Text`'s inline `tone` union onto the shared type.
+This feature (slice 12 of the React Semantic Primitives plan) implements the
+`Surface` semantic visual-container primitive. `Surface` coordinates
+foreground, background, border, elevation, and focus treatment into a single
+semantic `variant` prop, plus optional `borderTone` and `elevation`
+refinements. It ships only because the conditional precondition is met:
+concrete application compositions repeatedly consume the coordinated
+`pathable-surface` treatment (see `research.md`).
 
-### Tone vocabulary
+### Surface model
 
-- `TextTone` = `default | muted | danger | success` — fully grounded in the
-  existing `pathable-text.scss` tone contract (`pathable-text--tone-*`),
-  all token-driven with WCAG AA contrast on `--pathable-color-surface`.
-- `SurfaceTone` = `default | subtle | primary` and `BorderTone` =
-  `default | danger` are forward-declared types; their SCSS contracts are
-  tracked gaps owned by feature 12 (`Surface`) and future boundary work.
-- Tone types: `SurfaceTone`/`BorderTone` and the `textToneClass` resolver are internal; `TextTone` remains publicly re-exported through `Text` for compatibility. Tone types are distinct from the flat utility color types in `colorTone.ts`.
+- `variant` = `SurfaceTone` = `default | subtle | primary` — the semantic tone
+  axis (background + foreground + default border), resolved by new
+  `pathable-surface--tone-*` modifiers on the existing `pathable-surface.scss`
+  contract.
+- `borderTone` = `BorderTone` = `default | danger` — the boundary meaning axis,
+  resolved by new `pathable-surface--border-*` modifiers.
+- `elevation` = `sm | md | lg | xl` — the depth axis, resolved by new
+  `pathable-surface--elevation-*` modifiers mapping to `--elevation-*` tokens.
+- Tone types (`SurfaceTone`/`BorderTone`) and the tone resolvers are internal;
+  `Surface` and `SurfaceProps` are public exports. `variant` is chosen over
+  `tone` because it selects an entire coordinated treatment.
 
 ### Key constraints
 
-- No new SCSS files, no new tokens, no new React components.
-- `Text`'s `tone` prop consumes the shared `TextTone` with no change to
-  rendered classes; the tone→class mapping moves to a pure `textToneClass`
-  resolver in `internal/resolvers/tone.ts`.
+- Source-first: extend the `packages/styles` `pathable-surface.scss` contract
+  before exposing the React `Surface` wrapper; no new tokens, no forked values.
+- No raw `color`/`background`/`borderColor` props; no arbitrary `box-shadow`;
+  no internal padding (external spacing only).
 - Deterministic server/client output; no browser dependencies in resolvers.
 
 ### Running the focused commands
@@ -39,14 +45,11 @@ pnpm build
 # Build the React package
 pnpm --filter @pathableai/react build
 
-# Run the tone resolver tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="tone"
+# Run the surface resolver/component tests
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Surface"
 
-# Run the Text component tests (unchanged after type migration)
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text"
-
-# Run all typography/layout primitive tests
-pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Inline|Cluster|Stack|Container|Heading"
+# Run the existing primitive suite (no regressions)
+pnpm --filter @pathableai/react test:unit -- --testPathPattern="Text|Grid|Inline|Cluster|Stack|Container|Heading|Card"
 ```
 
 <!-- SPECKIT END -->
