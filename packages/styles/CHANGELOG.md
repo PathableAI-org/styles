@@ -1,5 +1,12 @@
 # @pathableai/styles
 
+## 0.0.3-alpha.2
+
+### Patch Changes
+
+- cd6d566: Publish the semantic Heading SCSS and typed React contracts with independent document and visual levels, tokenized level-1 weight, and verified accessibility behavior.
+- aad62f4: Prevent icon tiles from shrinking below their configured size in constrained flex layouts.
+
 ## 0.0.3-alpha.1
 
 ### Patch Changes
