@@ -1,3 +1,5 @@
+import { expect, userEvent, within } from 'storybook/test'
+
 export default {
   title: 'Interaction Controls/Interaction States',
   tags: ['autodocs'],
@@ -5,13 +7,18 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only (SCSS mixins)\n\n**Consumers must**: Include the `interaction-states` mixin in their component SCSS. No JavaScript required.\n\nReusable interaction state mixins that provide consistent hover, focus, active, selected, disabled, and loading behavior across all custom PathAble components.',
+          '**Interaction Model**: CSS-only (SCSS mixins)\n\n**States verified**: Keyboard focus remains visible, selected and disabled fixtures expose their intended visual states, and loading content communicates that it is busy while suppressing pointer interaction. These are deterministic CSS reference fixtures, not standalone application controls.\n\n**Consumers must**: Include the `interaction-states` mixin in their component SCSS and apply semantics appropriate to the interactive component. No JavaScript is required for the visual states.',
       },
     },
   },
 }
 
-const demoCard = (state, label, extraClasses = '', extraAttrs = '') => `
+const demoCard = (
+  state: string,
+  label: string,
+  extraClasses = '',
+  extraAttrs = '',
+) => `
   <div class="pathable-interaction-states-demo${extraClasses ? ' ' + extraClasses : ''}" ${extraAttrs} style="min-width: 200px;">
     <div style="font-size: 0.875rem; font-weight: 600;">${label}</div>
     <div style="font-size: 0.75rem; margin-top: 0.25rem; opacity: 0.7;">${state}</div>
@@ -26,11 +33,37 @@ export const AllStates = {
       Selected and disabled states are shown below.
     </p>
     <div class="pathable-cluster" style="align-items: stretch;">
-      ${demoCard('Rest', 'Rest (hover/focus me)', '', 'tabindex="0"')}
-      ${demoCard('Selected', 'Selected', 'is-selected', 'tabindex="0"')}
-      ${demoCard('Disabled', 'Disabled', '', 'aria-disabled="true"')}
+      ${demoCard('Rest', 'Rest (hover/focus me)', '', 'tabindex="0" data-testid="rest-state"')}
+      ${demoCard('Selected', 'Selected', 'is-selected', 'tabindex="0" data-testid="selected-state"')}
+      ${demoCard('Disabled', 'Disabled', '', 'aria-disabled="true" data-testid="disabled-state"')}
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
+    const rest = canvas.getByTestId('rest-state')
+    const selected = canvas.getByTestId('selected-state')
+    const disabled = canvas.getByTestId('disabled-state')
+
+    await userEvent.tab()
+
+    const restStyle = getStoryComputedStyle(rest)
+    const selectedStyle = getStoryComputedStyle(selected)
+    const disabledStyle = getStoryComputedStyle(disabled)
+
+    await expect(rest).toHaveFocus()
+    await expect(restStyle.outlineStyle).toBe('solid')
+    await expect(restStyle.outlineWidth).toBe('2px')
+    await expect(selected).toHaveClass('is-selected')
+    await expect(selectedStyle.borderColor).not.toBe(restStyle.borderColor)
+    await expect(selectedStyle.fontWeight).toBe('700')
+    await expect(disabled).toHaveAttribute('aria-disabled', 'true')
+    await expect(disabled.tabIndex).toBe(-1)
+    await expect(disabledStyle.cursor).toBe('default')
+    await expect(disabledStyle.opacity).toBe('0.5')
+  },
 }
 
 export const LoadingState = {
@@ -40,9 +73,23 @@ export const LoadingState = {
       The loading state shows a CSS-only border spinner and prevents interaction.
     </p>
     <div class="pathable-cluster" style="align-items: stretch;">
-      ${demoCard('Loading', 'Loading', 'is-loading')}
+      ${demoCard('Loading', 'Loading', 'is-loading', 'aria-busy="true" data-testid="loading-state"')}
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const getStoryComputedStyle =
+      canvasElement.ownerDocument.defaultView?.getComputedStyle ||
+      getComputedStyle
+    const loading = canvas.getByTestId('loading-state')
+
+    const loadingStyle = getStoryComputedStyle(loading)
+
+    await expect(loading).toHaveClass('is-loading')
+    await expect(loading).toHaveAttribute('aria-busy', 'true')
+    await expect(loadingStyle.cursor).toBe('wait')
+    await expect(loadingStyle.pointerEvents).toBe('none')
+  },
 }
 
 export const Default = AllStates
