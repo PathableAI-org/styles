@@ -2,41 +2,37 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/055-audit-app-layouts/plan.md
+at specs/016-interaction-icons-controls/plan.md
 
-## Audit of Real Application Layouts
+## IconButton Loading Contract Follow-Up
 
-This feature (slice 13 of the React Semantic Primitives plan) performs a
-research and documentation audit of real application code consuming
-`@pathable/react`. The audit identifies repeated layout patterns, common
-utility-class combinations, and candidates for higher-level composition
-primitives in slice 14. No new components, code changes, or API modifications
-ship here — it is exclusively a research and documentation feature.
+This maintenance branch returns to the interaction-controls feature after a
+post-merge review found that the documented IconButton loading modifier was not
+implemented or covered by executable evidence.
 
 ### Deliverable
 
-- An audit document in `docs/plans/semantic-react/` listing identified
-  patterns grouped by intent category, ranked by frequency and reusability,
-  with API sketches and SCSS contract notes for reusable candidates.
+- Implement the documented `.pathable-icon-button--loading` modifier.
+- Preserve the existing generic `.is-loading` state.
+- Add deterministic Storybook evidence for disabled/busy semantics, stable
+  dimensions, hidden decorative icon content, and the icon-sized spinner.
+- Record the published Styles behavior in a patch changeset.
 
-### Key constraints
+### Key Constraints
 
-- No code changes, no new components, no API modifications (FR-013).
-- The audit must cover: className combinations, component nesting patterns,
-  page-level structures, form patterns, and action/button groups.
-- Patterns are classified as reusable, domain-specific, or incidental.
-- The findings directly inform the candidate list in slice 14.
+- Keep the change limited to the audited IconButton loading defect.
+- Loading remains CSS-only and framework-neutral.
+- Consumers pair the visual modifier with native `disabled` and
+  `aria-busy="true"` to suppress pointer and keyboard activation.
+- Preserve reduced-motion behavior and the configured button/icon dimensions.
+- Do not close the aggregate interaction-controls rollout task in this branch.
 
-### Running the audit
+### Validation
 
 ```bash
-# Search for className patterns in an application repo
-rg "pathable-" --only-matching
-
-# Search for component nesting patterns
-rg "<Container" -A 10
-
-# The audit is manual — no automated scripts are produced
+pnpm --filter @pathableai/styles build
+pnpm test:storybook-styles
+pnpm test:visual
 ```
 
 <!-- SPECKIT END -->
