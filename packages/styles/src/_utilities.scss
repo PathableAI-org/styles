@@ -13,8 +13,8 @@
 @use 'sass:meta';
 @use '_utilities-config' as uc;
 
-@forward '_utilities-config'
-  show $pathable-utilities, $pathable-utility-breakpoints;
+@forward '_utilities-config' show $pathable-utilities,
+  $pathable-utility-breakpoints;
 
 // ==========================================
 // Utility Class Generation
