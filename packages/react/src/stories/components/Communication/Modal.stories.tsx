@@ -314,8 +314,9 @@ export const TabContainment: Story = {
         name: 'Cancel',
       })
 
-      // Close button should be first focused initially
-      await expect(closeButton).toHaveFocus()
+      // Close button should be first focused initially. React 19 flushes
+      // passive effects asynchronously, so wait for the initial focus to land.
+      await waitFor(() => expect(closeButton).toHaveFocus())
 
       // Tab should go to Confirm
       await userEvent.tab()
