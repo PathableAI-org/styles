@@ -1,5 +1,11 @@
 # @pathableai/styles
 
+## 0.0.3-alpha.3
+
+### Patch Changes
+
+- 7eab2bd: Add the documented IconButton loading modifier with a stable, contrast-preserving icon-sized spinner and disabled-state usage guidance.
+
 ## 0.0.3-alpha.2
 
 ### Patch Changes
