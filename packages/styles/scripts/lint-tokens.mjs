@@ -442,7 +442,89 @@ function checkColorTokenConsolidation() {
   return issues
 }
 
+/**
+ * Enforce the theme token sync invariant:
+ * the `THEME_COLOR_KEYS` array in `packages/react/src/theme/tokens.ts` must
+ * stay 1:1 with the `$semantic-colors` map in `_semantic.scss` (the source of
+ * truth). TS keys are normalized to kebab-case and compared against the SCSS
+ * map keys. Any missing or extraneous key is reported by name.
+ */
+function checkThemeTokenSync() {
+  const issues = []
+  const reactThemeFile = resolve(STYLES_ROOT, '../react/src/theme/tokens.ts')
+
+  let tsSource
+  try {
+    tsSource = readFileSync(reactThemeFile, 'utf-8')
+  } catch {
+    issues.push(
+      `Could not read the react theme file ${reactThemeFile}; the ThemeColors key set cannot be verified.`,
+    )
+    return issues
+  }
+
+  const keyArrayM = tsSource.match(
+    /THEME_COLOR_KEYS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/,
+  )
+  if (!keyArrayM) {
+    issues.push(
+      'Could not locate the THEME_COLOR_KEYS array in packages/react/src/theme/tokens.ts.',
+    )
+    return issues
+  }
+
+  const tsKeys = []
+  const literalRe = /'([^']*)'/g
+  let lm
+  while ((lm = literalRe.exec(keyArrayM[1])) !== null) {
+    tsKeys.push(lm[1])
+  }
+
+  if (tsKeys.length === 0) {
+    issues.push(
+      'THEME_COLOR_KEYS array in packages/react/src/theme/tokens.ts contains no single-quoted key literals.',
+    )
+    return issues
+  }
+
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
+  const semanticMap = parseScssMap(semantic, 'semantic-colors')
+  const scssTokens = new Set(semanticMap.keys())
+
+  const camelToKebab = (value) =>
+    value.replace(/[A-Z]/g, (ch) => '-' + ch.toLowerCase())
+
+  const tsKebabSet = new Set(tsKeys.map(camelToKebab))
+
+  const missing = [...scssTokens]
+    .filter((token) => !tsKebabSet.has(token))
+    .sort()
+  const extraneous = tsKeys.filter((key) => !scssTokens.has(camelToKebab(key)))
+
+  if (missing.length > 0) {
+    issues.push(
+      `Missing ThemeColors key(s) for SCSS token(s): ${missing.join(', ')}`,
+    )
+  }
+  if (extraneous.length > 0) {
+    issues.push(
+      `Extraneous THEME_COLOR_KEYS entry/entries with no SCSS token: ${extraneous.join(', ')}`,
+    )
+  }
+
+  return issues
+}
+
 function main() {
+  const themeSyncIssues = checkThemeTokenSync()
+  if (themeSyncIssues.length > 0) {
+    console.log('Theme token sync check failed:\n')
+    for (const issue of themeSyncIssues) {
+      console.log(`  ${issue}`)
+    }
+    process.exit(1)
+  }
+
   const consolidationIssues = checkColorTokenConsolidation()
   if (consolidationIssues.length > 0) {
     console.log('--pathable-color-* :root consolidation check failed:\n')

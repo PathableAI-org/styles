@@ -31,7 +31,7 @@
 
 **Purpose**: Create the new module directory structure
 
-- [ ] T001 Create the directory `packages/react/src/theme/`
+- [X] T001 Create the directory `packages/react/src/theme/`
 
 ---
 
@@ -41,8 +41,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T002 Create `packages/react/src/theme/tokens.ts` with the `THEME_COLOR_KEYS` `as const` array (25 camelCase keys: `bg`, `surface`, `text`, `textMuted`, `border`, `link`, `accent`, `focusRing`, `danger`, `success`, `textSuccess`, `actionPrimaryBg`, `actionPrimaryText`, `actionSecondaryBg`, `actionSecondaryText`, `statusSuccessBg`, `statusSuccessText`, `statusWarningBg`, `statusWarningText`, `statusDangerBg`, `statusDangerText`, `workflowActive`, `workflowComplete`, `workflowBlocked`, `onAccent`), the derived `ThemeColorKey` and `ThemeColors` mapped types, the `ThemeConfig` interface (`{ colors: ThemeColors }`), a precomputed `THEME_COLOR_TOKEN_MAP` (`Record<ThemeColorKey, string>`) derived from the keys via camelCase→kebab-case transform with `--pathable-color-` prefix, and the pure `themeColorToken(value?: string | null): string | undefined` function that returns `undefined` for nullish/unknown inputs and the CSS property name otherwise
-- [ ] T003 Create `packages/react/src/theme/index.ts` barrel re-exporting `THEME_COLOR_KEYS`, `ThemeColorKey`, `ThemeColors`, `ThemeConfig`, `THEME_COLOR_TOKEN_MAP`, and `themeColorToken` from `./tokens.js`
+- [X] T002 Create `packages/react/src/theme/tokens.ts` with the `THEME_COLOR_KEYS` `as const` array (25 camelCase keys: `bg`, `surface`, `text`, `textMuted`, `border`, `link`, `accent`, `focusRing`, `danger`, `success`, `textSuccess`, `actionPrimaryBg`, `actionPrimaryText`, `actionSecondaryBg`, `actionSecondaryText`, `statusSuccessBg`, `statusSuccessText`, `statusWarningBg`, `statusWarningText`, `statusDangerBg`, `statusDangerText`, `workflowActive`, `workflowComplete`, `workflowBlocked`, `onAccent`), the derived `ThemeColorKey` and `ThemeColors` mapped types, the `ThemeConfig` interface (`{ colors: ThemeColors }`), a precomputed `THEME_COLOR_TOKEN_MAP` (`Record<ThemeColorKey, string>`) derived from the keys via camelCase→kebab-case transform with `--pathable-color-` prefix, and the pure `themeColorToken(value?: string | null): string | undefined` function that returns `undefined` for nullish/unknown inputs and the CSS property name otherwise
+- [X] T003 Create `packages/react/src/theme/index.ts` barrel re-exporting `THEME_COLOR_KEYS`, `ThemeColorKey`, `ThemeColors`, `ThemeConfig`, `THEME_COLOR_TOKEN_MAP`, and `themeColorToken` from `./tokens.js`
 
 **Checkpoint**: Theme vocabulary module is ready — user story implementation can now begin
 
@@ -56,8 +56,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Export `ThemeColors` and `ThemeConfig` from `packages/react/src/index.ts` via `./theme/index.js`
-- [ ] T005 [US1] Run `pnpm --filter @pathableai/react typecheck` and verify `ThemeColors` exports 25 accessible keys with autocomplete, invalid keys produce compile-time errors, and `ThemeConfig` accepts a `colors: ThemeColors` field
+- [X] T004 [US1] Export `ThemeColors` and `ThemeConfig` from `packages/react/src/index.ts` via `./theme/index.js`
+- [X] T005 [US1] Run `pnpm --filter @pathableai/react typecheck` and verify `ThemeColors` exports 25 accessible keys with autocomplete, invalid keys produce compile-time errors, and `ThemeConfig` accepts a `colors: ThemeColors` field
 
 **Checkpoint**: Type-safe theme color vocabulary is public and type-checks
 
@@ -71,9 +71,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T006 [P] [US2] Create `packages/react/src/theme/__tests__/tokens.test.ts` with vitest tests covering `themeColorToken` for all 25 `THEME_COLOR_KEYS` (happy path asserting exact `--pathable-color-*` output per the mapping table in `specs/058-theme-token-types/data-model.md`) and edge cases (`null` returns `undefined`, `undefined` returns `undefined`, unrecognized strings like `'accentColour'` return `undefined`). Follow existing conventions in `packages/react/src/internal/resolvers/__tests__/tone.test.ts`
-- [ ] T007 [US2] Export `themeColorToken` from `packages/react/src/index.ts` via `./theme/index.js`
-- [ ] T008 [US2] Run `pnpm --filter @pathableai/react test:unit` and verify all mapping function tests pass with 100% key coverage
+- [X] T006 [P] [US2] Create `packages/react/src/theme/__tests__/tokens.test.ts` with vitest tests covering `themeColorToken` for all 25 `THEME_COLOR_KEYS` (happy path asserting exact `--pathable-color-*` output per the mapping table in `specs/058-theme-token-types/data-model.md`) and edge cases (`null` returns `undefined`, `undefined` returns `undefined`, unrecognized strings like `'accentColour'` return `undefined`). Follow existing conventions in `packages/react/src/internal/resolvers/__tests__/tone.test.ts`
+- [X] T007 [US2] Export `themeColorToken` from `packages/react/src/index.ts` via `./theme/index.js`
+- [X] T008 [US2] Run `pnpm --filter @pathableai/react test:unit` and verify all mapping function tests pass with 100% key coverage
 
 **Checkpoint**: Mapping function is tested and publicly exported
 
@@ -87,9 +87,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T009 [US4] Add `checkThemeTokenSync()` function to `packages/styles/scripts/lint-tokens.mjs` that reuses the existing `parseScssMap()` to read the 25 `--pathable-color-*` tokens from `_semantic.scss` `$semantic-colors`, reads `packages/react/src/theme/tokens.ts` (resolved relative to `STYLES_ROOT`), regex-extracts the `THEME_COLOR_KEYS` single-quoted string literals, normalizes TS keys to kebab-case, diffs the sets, and on mismatch logs descriptive names (missing SCSS tokens by kebab name, extraneous TS keys by camelCase name) then exits non-zero. If the react theme file is absent or unparseable, exit non-zero with a clear error
-- [ ] T010 [US4] Wire `checkThemeTokenSync()` into the `main()` flow of `packages/styles/scripts/lint-tokens.mjs` so it runs under the existing `pnpm lint:tokens` command (no new scripts or root `package.json` changes)
-- [ ] T011 [US4] Run `pnpm lint:tokens` and verify the sync check passes with exit code 0 when all 25 keys match; then temporarily add an extraneous key to `THEME_COLOR_KEYS` (e.g. `'accentColour'`), run `pnpm lint:tokens`, confirm it fails non-zero naming `accentColour`, and revert the temporary edit
+- [X] T009 [US4] Add `checkThemeTokenSync()` function to `packages/styles/scripts/lint-tokens.mjs` that reuses the existing `parseScssMap()` to read the 25 `--pathable-color-*` tokens from `_semantic.scss` `$semantic-colors`, reads `packages/react/src/theme/tokens.ts` (resolved relative to `STYLES_ROOT`), regex-extracts the `THEME_COLOR_KEYS` single-quoted string literals, normalizes TS keys to kebab-case, diffs the sets, and on mismatch logs descriptive names (missing SCSS tokens by kebab name, extraneous TS keys by camelCase name) then exits non-zero. If the react theme file is absent or unparseable, exit non-zero with a clear error
+- [X] T010 [US4] Wire `checkThemeTokenSync()` into the `main()` flow of `packages/styles/scripts/lint-tokens.mjs` so it runs under the existing `pnpm lint:tokens` command (no new scripts or root `package.json` changes)
+- [X] T011 [US4] Run `pnpm lint:tokens` and verify the sync check passes with exit code 0 when all 25 keys match; then temporarily add an extraneous key to `THEME_COLOR_KEYS` (e.g. `'accentColour'`), run `pnpm lint:tokens`, confirm it fails non-zero naming `accentColour`, and revert the temporary edit
 
 **Checkpoint**: Token drift between SCSS and TypeScript is caught automatically at lint time
 
@@ -103,10 +103,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T012 [US3] Remove `TextTone` from the `Text` component barrel export line in `packages/react/src/index.ts` (change `export type { TextProps, TextTone, TextVariant } from './components/Text/Text.js'` to `export type { TextProps, TextVariant } from './components/Text/Text.js'`). The `Text.tsx` file itself must not change — its own `export type { TextTone }` on line 6 is preserved
-- [ ] T013 [US3] Add `export type { TextTone, SurfaceTone, BorderTone } from './internal/resolvers/tone.js'` to `packages/react/src/index.ts`
-- [ ] T014 [US3] Add `export type { SurfaceElevation } from './internal/resolvers/surface.js'` to `packages/react/src/index.ts`
-- [ ] T015 [US3] Run `pnpm --filter @pathableai/react typecheck` and verify all four tone/elevation types (`TextTone`, `SurfaceTone`, `BorderTone`, `SurfaceElevation`) resolve from the package entry point without duplicate-export TypeScript errors and reject values outside their defined unions
+- [X] T012 [US3] Remove `TextTone` from the `Text` component barrel export line in `packages/react/src/index.ts` (change `export type { TextProps, TextTone, TextVariant } from './components/Text/Text.js'` to `export type { TextProps, TextVariant } from './components/Text/Text.js'`). The `Text.tsx` file itself must not change — its own `export type { TextTone }` on line 6 is preserved
+- [X] T013 [US3] Add `export type { TextTone, SurfaceTone, BorderTone } from './internal/resolvers/tone.js'` to `packages/react/src/index.ts`
+- [X] T014 [US3] Add `export type { SurfaceElevation } from './internal/resolvers/surface.js'` to `packages/react/src/index.ts`
+- [X] T015 [US3] Run `pnpm --filter @pathableai/react typecheck` and verify all four tone/elevation types (`TextTone`, `SurfaceTone`, `BorderTone`, `SurfaceElevation`) resolve from the package entry point without duplicate-export TypeScript errors and reject values outside their defined unions
 
 **Checkpoint**: All tone and elevation types are publicly importable
 
@@ -116,9 +116,9 @@
 
 **Purpose**: Full-stack validation of all changes
 
-- [ ] T016 Run the complete validation chain: `pnpm --filter @pathableai/react lint && pnpm --filter @pathableai/react typecheck && pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react build && pnpm lint:tokens` — all must exit 0
-- [ ] T017 [P] Run publishable-validation checks: `pnpm --filter @pathableai/react check:types && pnpm --filter @pathableai/react check:package`
-- [ ] T018 Validate the scenarios described in `specs/058-theme-token-types/quickstart.md` all pass: type surface (§1), mapping function (§2), token sync (§3), and full quality gates (§4)
+- [X] T016 Run the complete validation chain: `pnpm --filter @pathableai/react lint && pnpm --filter @pathableai/react typecheck && pnpm --filter @pathableai/react test:unit && pnpm --filter @pathableai/react build && pnpm lint:tokens` — all must exit 0
+- [X] T017 [P] Run publishable-validation checks: `pnpm --filter @pathableai/react check:types && pnpm --filter @pathableai/react check:package`
+- [X] T018 Validate the scenarios described in `specs/058-theme-token-types/quickstart.md` all pass: type surface (§1), mapping function (§2), token sync (§3), and full quality gates (§4)
 
 ---
 
