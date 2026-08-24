@@ -128,7 +128,7 @@ A maintainer needs documented evidence that every tone role, in a forced-colors 
 - **FR-011**: The internal type layer (established by feature 01) MUST define a `TextTone` type whose values match the verified text tone roles.
 - **FR-012**: The internal type layer MUST define a `SurfaceTone` type whose values match the verified surface tone roles.
 - **FR-013**: The internal type layer MUST define a `BorderTone` type whose values match the verified border tone roles.
-- **FR-014**: The shared tone types MUST remain internal (not part of the public `@pathable/react` export surface), consistent with the type layer established by feature 01.
+- **FR-014**: `SurfaceTone`, `BorderTone`, and the `textToneClass` resolver MUST remain internal (not exported from the public `@pathable/react` entry point). `TextTone` MAY remain publicly re-exported through the `Text` component's public API for backward compatibility, since it was already a public export before this feature.
 
 #### Text Adoption
 
@@ -171,7 +171,7 @@ A maintainer needs documented evidence that every tone role, in a forced-colors 
 
 - The design system's semantic color tokens (`--pathable-color-text`, `--pathable-color-text-muted`, `--pathable-color-danger`, `--pathable-color-success`, surface, and border tokens) largely exist; the audit formalizes their tone mappings and identifies any missing contracts.
 - The tone values `"default"`, `"muted"`, `"danger"`, `"success"` (text), `"default"`, `"subtle"`, `"primary"` (surface), and `"default"`, `"danger"` (border) are the baseline; additional roles are added only after the SCSS audit verifies them.
-- The shared tone types are internal to the type layer established by feature 01 and are not public exports, matching feature 01's "not a public export" scope.
+- The shared tone types live in the internal type layer established by feature 01. `SurfaceTone`, `BorderTone`, and `textToneClass` are not public exports; `TextTone` remains a public re-export through the `Text` component's API for backward compatibility.
 - When a tone lacks an authoritative SCSS contract, the default resolution is to create the contract in `@pathable/styles`; a gap is recorded with a tracking reference only when creating the contract is not feasible within this feature.
 - The `Surface` component (feature 12) will consume `SurfaceTone` in its own feature; this feature only defines the type and vocabulary, not the `Surface` component.
 - `Heading` has no tone prop and does not adopt the shared tone types in this feature.

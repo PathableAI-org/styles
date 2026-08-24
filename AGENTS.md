@@ -20,8 +20,7 @@ and migration of `Text`'s inline `tone` union onto the shared type.
 - `SurfaceTone` = `default | subtle | primary` and `BorderTone` =
   `default | danger` are forward-declared types; their SCSS contracts are
   tracked gaps owned by feature 12 (`Surface`) and future boundary work.
-- Tone types are internal (not part of the public `@pathable/react` export),
-  distinct from the flat utility color types in `colorTone.ts`.
+- Tone types: `SurfaceTone`/`BorderTone` and the `textToneClass` resolver are internal; `TextTone` remains publicly re-exported through `Text` for compatibility. Tone types are distinct from the flat utility color types in `colorTone.ts`.
 
 ### Key constraints
 

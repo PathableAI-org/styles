@@ -9,8 +9,8 @@ This contract defines the shared semantic tone vocabulary and the internal TypeS
 
 ## Public vs. internal
 
-- **Internal** — the tone types (`TextTone`, `SurfaceTone`, `BorderTone`) and the `textToneClass` resolver live in `packages/react/src/internal/resolvers/` and are **not** re-exported from the public `packages/react/src/index.ts` entry point.
-- **Public** — the `Text` component's `tone` prop is the only public consumer surface. Its value set is unchanged by this feature.
+- **Internal** — `SurfaceTone`, `BorderTone`, and the `textToneClass` resolver live in `packages/react/src/internal/resolvers/` and are **not** re-exported from the public `packages/react/src/index.ts` entry point.
+- **Public** — `TextTone` is re-exported through the `Text` component's public API (`export type { TextTone } from './components/Text/Text.js'`) for backward compatibility. The `Text` component's `tone` prop value set is unchanged by this feature.
 
 ## Type contracts
 

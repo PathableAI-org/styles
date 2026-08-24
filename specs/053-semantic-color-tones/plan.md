@@ -26,7 +26,7 @@ Formalize the shared semantic color/tone vocabulary that `Text` (09), future `Su
 
 **Performance Goals**: No measurable impact — component resolves a class string at render time; type changes are erased at compile time
 
-**Constraints**: Zero browser dependencies in class resolution; deterministic server/client output; shared tone types remain internal (not part of the public `@pathable/react` export surface); source-first sequencing (`packages/styles` contract before wrapper exposure); no new React components; no wrapper DOM elements
+**Constraints**: Zero browser dependencies in class resolution; deterministic server/client output; `SurfaceTone`/`BorderTone`/`textToneClass` remain internal (not part of the public `@pathable/react` export surface) while `TextTone` stays public via `Text`; source-first sequencing (`packages/styles` contract before wrapper exposure); no new React components; no wrapper DOM elements
 
 **Scale/Scope**: 1 new internal type module (`tone.ts`) plus `types.ts`/`index.ts` re-export edits, 1 modified React component (`Text.tsx` — import shared type), ~40 lines of test code, 1 vocabulary document (in `research.md` + code comments). No new SCSS files, no new tokens, no new components.
 
@@ -49,7 +49,7 @@ Formalize the shared semantic color/tone vocabulary that `Text` (09), future `Su
 ### Consumer and Publishable Validation
 
 - **PASS** — No package-entrypoint, dependency-graph, or asset changes. `Text` continues to import `@pathableai/styles` transitively as before.
-- **PASS** — The shared tone types remain internal (per spec FR-014), so the public `@pathable/react` export surface and generated declarations are unchanged; `Text`'s public `tone` prop type is preserved (same union values).
+- **PASS** — `SurfaceTone`/`BorderTone`/`textToneClass` remain internal (per spec FR-014), so no new internal-only surface leaks into the public `@pathable/react` export. `TextTone` stays public via the `Text` API re-export, preserving its pre-existing public type. `Text`'s public `tone` prop type is preserved (same union values).
 - **PASS** — No breaking changes to public APIs, markup, CSS, or package exports.
 
 ### Validation Gates

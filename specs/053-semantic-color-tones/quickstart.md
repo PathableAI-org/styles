@@ -14,19 +14,20 @@ Validation guide proving the shared tone vocabulary and the `Text` type migratio
 
 ## Validation scenarios
 
-### 1. Internal tone types exist and are internal (not public)
+### 1. Tone types: public vs. internal boundary
 
-Confirm the shared types are defined in the internal resolver layer and are **not** re-exported from the public entry point.
+Confirm the shared types are defined in the internal resolver layer, and that the public entry point exports only `TextTone` (via the `Text` API re-export) — not `SurfaceTone`/`BorderTone`/`textToneClass`.
 
 ```bash
 # The tone types live in the internal layer
 rg "TextTone|SurfaceTone|BorderTone" packages/react/src/internal/resolvers/
 
-# The public entry point must NOT export them
-rg "TextTone|SurfaceTone|BorderTone" packages/react/src/index.ts || echo "PASS: not in public entry point"
+# Only TextTone may appear in the public entry point (via the Text API re-export)
+rg "SurfaceTone|BorderTone|textToneClass" packages/react/src/index.ts || echo "PASS: SurfaceTone/BorderTone/textToneClass are internal-only"
+rg "TextTone" packages/react/src/index.ts && echo "PASS: TextTone is public via Text"
 ```
 
-Expected: `tone.ts`, `types.ts`, and `index.ts` (internal barrel) reference the types; the public `index.ts` does not.
+Expected: `tone.ts`, `types.ts`, and `index.ts` (internal barrel) define/re-export the types; the public `index.ts` re-exports `TextTone` (through `Text`) but not `SurfaceTone`/`BorderTone`/`textToneClass`.
 
 ### 2. `Text` consumes the shared `TextTone` type
 
@@ -34,7 +35,7 @@ Expected: `tone.ts`, `types.ts`, and `index.ts` (internal barrel) reference the 
 rg "TextTone" packages/react/src/components/Text/Text.tsx
 ```
 
-Expected: `Text.tsx` imports `TextTone` from the internal barrel; the inline `export type TextTone = ...` declaration is gone.
+Expected: `Text.tsx` imports `TextTone` from `../../internal/resolvers/tone.js` (or the internal barrel); the inline `export type TextTone = ...` declaration is gone, replaced by a re-export from the internal layer.
 
 ### 3. Unit tests pass
 

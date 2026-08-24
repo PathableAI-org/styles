@@ -107,4 +107,4 @@ No state. The feature is a pure type/type-relocation change plus a vocabulary re
 - **SurfaceTone** is a forward-declaration for the **`Surface` primitive** (feature 12); its SCSS contract is a tracked gap owned by that feature.
 - **BorderTone** is a forward-declaration for future boundary/surface work; no owning feature yet.
 - The tone vocabulary lives alongside the existing **utility color types** (`BackgroundColor`, `TextColor`) but is a distinct semantic concept — see `research.md` Decision 1.
-- All tone types remain **internal** (not exported from `packages/react/src/index.ts`), per spec FR-014 and feature 01's "not a public export" scope.
+- `SurfaceTone`, `BorderTone`, and `textToneClass` remain **internal** (not exported from `packages/react/src/index.ts`). `TextTone` stays public via the `Text` API re-export (spec FR-014).

@@ -111,7 +111,7 @@
 
 ## Phase 5: User Story 4 - Shared TypeScript Types Exist for Consumers (Priority: P2)
 
-**Goal**: Component authors can import `TextTone`, `SurfaceTone`, `BorderTone` from the internal layer; each union has the agreed values and remains internal (not a public export).
+**Goal**: Component authors can import `TextTone`, `SurfaceTone`, `BorderTone` from the internal layer; each union has the agreed values. `SurfaceTone`/`BorderTone`/`textToneClass` stay internal while `TextTone` remains public via `Text`.
 
 **Story tests**: Spec FR-011 (TextTone), FR-012 (SurfaceTone), FR-013 (BorderTone), FR-014 (internal, not public).
 
@@ -119,9 +119,9 @@
 
 - [x] T009 [P] [US4] Add type-level assertions to `packages/react/src/internal/resolvers/__tests__/tone.test.ts` using Vitest's `expectTypeOf` (from `vitest`): `expectTypeOf<'default' | 'muted' | 'danger' | 'success'>().toEqualTypeOf<TextTone>()`; similarly for `SurfaceTone` and `BorderTone`. Import the types from `../tone`. Do NOT use `@ts-expect-error` (repo lint-discipline rule prohibits it without human approval); compile-time rejection of out-of-union values is the union type's inherent behavior, verified by `tsc --noEmit` in the Polish phase.
 
-- [x] T010 [US4] Verify internal-only surface: confirm `packages/react/src/index.ts` does NOT export `TextTone`, `SurfaceTone`, `BorderTone`, or `textToneClass` (grep the public entry point). If the public `Text` component previously re-exported `TextTone`, that is acceptable (public prop type must remain); but the raw internal types must not be top-level public exports. Record the finding in `specs/053-semantic-color-tones/research.md` (Decision 4 / FR-014).
+- [x] T010 [US4] Verify the public/internal boundary: confirm `packages/react/src/index.ts` exports `TextTone` only via the `Text` API re-export (for compatibility) and does NOT export `SurfaceTone`, `BorderTone`, or `textToneClass` (grep the public entry point). Record the finding in `specs/053-semantic-color-tones/research.md` (Decision 4 / FR-014).
 
-**Checkpoint**: User Stories 1–4 complete — shared types exist, are validated, and remain internal.
+**Checkpoint**: User Stories 1–4 complete — shared types exist and are validated; `SurfaceTone`/`BorderTone`/`textToneClass` are internal, `TextTone` is public via `Text`.
 
 ---
 
@@ -163,11 +163,11 @@
 
 - [x] T015 [P] Run root quality gates: `pnpm lint` (eslint, stylelint, markdownlint, prettier check, token lint) — must pass with ZERO warnings; fix findings without disabling/suppressing any rule. No SCSS changed in this feature, so stylelint/token-lint impact is nil but still run.
 
-- [x] T016 Execute the checks in `specs/053-semantic-color-tones/quickstart.md`: internal types present but not in the public entry point (`rg` checks), `Text` imports the shared type, `tone`/`Text` unit tests pass, `purity` test passes, build succeeds. Record results.
+- [x] T016 Execute the checks in `specs/053-semantic-color-tones/quickstart.md`: tone types present in the internal layer, only `TextTone` public (via `Text`), `Text` imports the shared type, `tone`/`Text` unit tests pass, `purity` test passes, build succeeds. Record results.
 
 - [x] T017 Update `docs/plans/semantic-react/11-semantic-colors-tones.md`: set Status `NOT STARTED` → `DONE`, and add Audit Notes mirroring the research findings (text tone contract verified from `pathable-text.scss`; `TextTone`/`SurfaceTone`/`BorderTone` types added in `internal/resolvers/tone.ts`; surface/border tones recorded as tracked gaps owned by feature 12 / future boundary work; contrast evidence).
 
-- [x] T018 Final review: `git status`/`git diff` — confirm no new lint suppressions, no unintended changes to `packages/styles`, no public export of internal tone types, and everything ready for merge.
+- [x] T018 Final review: `git status`/`git diff` — confirm no new lint suppressions, no unintended changes to `packages/styles`, no public export of `SurfaceTone`/`BorderTone`/`textToneClass`, and everything ready for merge.
 
 ---
 
@@ -262,6 +262,6 @@ Task: "Re-export types + resolver from index.ts (T004)"   # parallel with T003
 - `Text.tsx` must render byte-for-byte identical class output for all four tones after the migration (FR-020).
 - `SurfaceTone`/`BorderTone` are type-only forward declarations — no resolvers until their SCSS contracts exist (feature 12).
 - Do NOT use `@ts-expect-error` / `@ts-ignore` in tests (repo `.cursor/rules/lint-discipline.mdc` prohibits it without human approval); verify compile-time rejection via the union type + `tsc --noEmit`.
-- The tone types remain internal — do NOT export them from `packages/react/src/index.ts` (spec FR-014).
+- `SurfaceTone`/`BorderTone` and `textToneClass` remain internal — do NOT export them from `packages/react/src/index.ts` (spec FR-014). `TextTone` stays public via the `Text` API re-export.
 - Do not disable or suppress any lint rule; fix findings at the source (Constitution + lint-discipline rule).
 - Commit after each logical group or story.
