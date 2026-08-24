@@ -3,6 +3,18 @@
 // Retain the styles package's public CSS entry as a consumer-visible side effect.
 import '@pathableai/styles'
 
+// Export theme vocabulary
+export { themeColorToken } from './theme/index.js'
+export type { ThemeColors, ThemeConfig } from './theme/index.js'
+
+// Export semantic tone and elevation types
+export type {
+  TextTone,
+  SurfaceTone,
+  BorderTone,
+} from './internal/resolvers/tone.js'
+export type { SurfaceElevation } from './internal/resolvers/surface.js'
+
 // Export core components
 export { Breadcrumb } from './components/Breadcrumb/Breadcrumb.js'
 export type {
@@ -178,11 +190,7 @@ export type {
   SearchSize,
 } from './components/Search/Search.js'
 export { Text } from './components/Text/Text.js'
-export type {
-  TextProps,
-  TextTone,
-  TextVariant,
-} from './components/Text/Text.js'
+export type { TextProps, TextVariant } from './components/Text/Text.js'
 export { Heading } from './components/Heading/Heading.js'
 export type {
   HeadingProps,
