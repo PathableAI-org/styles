@@ -40,14 +40,14 @@ jobs:
         run: pnpm --filter @pathable/storybook-react build-storybook
 
       - name: Upload HTML Storybook static
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: storybook-html-static
           path: apps/storybook/storybook-static/
           retention-days: 1
 
       - name: Upload React Storybook static
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: storybook-react-static
           path: apps/storybook-react/storybook-static/
@@ -66,7 +66,7 @@ jobs:
 
       - name: Upload compatibility report
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: react-server-compatibility
           path: apps/storybook-react/test-results/server-compatibility.*
@@ -83,13 +83,13 @@ jobs:
           install_playwright: 'true'
 
       - name: Download HTML Storybook static
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: storybook-html-static
           path: apps/storybook/storybook-static/
 
       - name: Download React Storybook static
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: storybook-react-static
           path: apps/storybook-react/storybook-static/
@@ -149,7 +149,7 @@ jobs:
           install_playwright: 'true'
 
       - name: Download HTML Storybook static
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: storybook-html-static
           path: apps/storybook/storybook-static/
@@ -159,7 +159,7 @@ jobs:
 
       - name: Upload failure artifacts
         if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: visual-failures
           path: apps/storybook/test-results/visual-failures/
@@ -174,7 +174,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Download HTML Storybook static
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: storybook-html-static
           path: apps/storybook/storybook-static/
@@ -184,7 +184,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: storybook-coverage
           path: apps/storybook/test-results/storybook-coverage.*
@@ -201,7 +201,7 @@ jobs:
           install_playwright: 'true'
 
       - name: Download HTML Storybook static
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: storybook-html-static
           path: apps/storybook/storybook-static/
