@@ -206,7 +206,9 @@ registered before its Styles proof.
 **Independent Test**: Read the ledger and confirm each component lists a Styles
 proof before any downstream adoption, one component is taken at a time within a
 wave unless components share only non-overlapping infrastructure, and no
-component in a later wave is proven before its wave's qualifying prerequisites.
+component in a later wave is proven before its wave's qualifying prerequisites
+unless a documented exception preserves its independent Styles-first proof and
+downstream adoption order without claiming completion of skipped waves.
 
 **Acceptance Scenarios**:
 
@@ -234,7 +236,8 @@ component in a later wave is proven before its wave's qualifying prerequisites.
 - A live/status role is asserted as automated conformance without manual
   announcement review.
 - A later-wave component is proven before its wave's reusable helpers or
-  prerequisites exist.
+  prerequisites exist without a documented exception that preserves its
+  independent Styles-first proof and downstream adoption order.
 - An accessibility exception broadens beyond the narrowest justified rule scope
   to make a component pass.
 - A deterministic fixture relies on a current date, random value, or live
@@ -249,7 +252,10 @@ component in a later wave is proven before its wave's qualifying prerequisites.
 - **FR-001**: The repository MUST cover components in risk order, beginning with
   stateful keyboard and focus behavior, then form controls, then navigation and
   collections, then status and feedback, and finally visual and
-  composition-led components.
+  composition-led components. A later-wave component MAY be reprioritized only
+  through a documented exception that preserves its independent Styles-first
+  proof and downstream adoption order without claiming completion of skipped
+  waves.
 - **FR-002**: For each component, the Styles-first sequence MUST be applied
   independently and the component's contract and Styles proof MUST complete
   before any downstream adapter for that component starts.

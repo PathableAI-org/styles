@@ -19,7 +19,7 @@
  *   node scripts/test-storybook.mjs              # run all targets sequentially
  *   node scripts/test-storybook.mjs styles       # run only the styles target
  *   node scripts/test-storybook.mjs react        # run only the React target
- *   node scripts/test-storybook.mjs styles --filter <pattern>   # narrow to matching stories
+ *   node scripts/test-storybook.mjs styles --filter <registered-prefix> # narrow to tagged stories
  */
 import { spawn } from 'node:child_process'
 import { access, readFile, writeFile } from 'node:fs/promises'
@@ -36,8 +36,8 @@ const pnpmCommand = 'pnpm'
 /**
  * Registered targets. The `styles` target is first (Styles-first ownership).
  * Each target drives its own Storybook workspace and static output. Capabilities
- * and fixtures mirror the shared Accordion contract in `behavior-contracts`; they
- * are declared here so target selection and contract ownership are explicit.
+ * and fixtures mirror the registered shared behavior contracts; they are
+ * declared here so target selection and contract ownership are explicit.
  */
 export const targets = {
   styles: {
@@ -57,11 +57,32 @@ export const targets = {
       'accordion.panel-association',
       'accordion.panel-availability',
       'accordion.focus-retention',
+      'segmented-control.single-selection',
+      'segmented-control.arrow-navigation',
+      'segmented-control.disabled-option-skip',
+      'segmented-control.vertical-navigation',
+      'segmented-control.multi-selection',
+      'segmented-control.multi-keyboard-toggle',
+      'segmented-control.static-single-option',
     ],
     fixtures: {
       'accordion.default': 'components-communication-accordion--default',
       'accordion.first-expanded':
         'components-communication-accordion--initially-expanded',
+      'segmented-control.single-select':
+        'interaction-controls-segmentedcontrol--single-select',
+      'segmented-control.multi-select':
+        'interaction-controls-segmentedcontrol--multi-select',
+      'segmented-control.vertical':
+        'interaction-controls-segmentedcontrol--vertical',
+      'segmented-control.disabled-option':
+        'interaction-controls-segmentedcontrol--disabled-option',
+      'segmented-control.static-single-option':
+        'interaction-controls-segmentedcontrol--static-single-option',
+    },
+    filters: {
+      'components-communication-accordion': 'contract-accordion',
+      'interaction-controls-segmentedcontrol': 'contract-segmented-control',
     },
     sharedContracts: true,
   },
@@ -246,7 +267,8 @@ async function runTest(target, url, filterPrefix) {
     '--index-json',
   ]
   if (filterPrefix) {
-    args.push('--testNamePattern', filterPrefix)
+    const filterTag = getFilterTag(target, filterPrefix)
+    args.push('--includeTags', filterTag)
   }
   await runCommand(pnpmCommand, args, {
     env: {
@@ -257,12 +279,22 @@ async function runTest(target, url, filterPrefix) {
   })
 }
 
+function getFilterTag(target, filterPrefix) {
+  const filterTag = target.filters?.[filterPrefix]
+  if (!filterTag) {
+    throw new Error(
+      `Target "${target.name}" has no registered filter for story-id prefix "${filterPrefix}". Known filters: ${Object.keys(target.filters ?? {}).join(', ') || '(none)'}`,
+    )
+  }
+  return filterTag
+}
+
 /**
  * Preflight: ensure every registered fixture story ID exists in the built
  * Storybook index. A registered-but-missing story must be a hard failure,
  * never silently skipped.
  */
-async function validateFixturesExist(target) {
+async function validateFixturesExist(target, filterPrefix) {
   const indexPath = resolve(
     repositoryRoot,
     target.staticDirectory,
@@ -289,6 +321,28 @@ async function validateFixturesExist(target) {
       `Target "${target.name}" registers fixtures whose story IDs are missing from the built catalog: ${missing.join(', ')}`,
     )
   }
+
+  if (filterPrefix) {
+    const filterTag = getFilterTag(target, filterPrefix)
+    const matchingFixtureIds = Object.values(target.fixtures ?? {}).filter(
+      (storyId) => storyId.startsWith(filterPrefix),
+    )
+
+    if (matchingFixtureIds.length === 0) {
+      throw new Error(
+        `Target "${target.name}" filter "${filterPrefix}" does not match any registered fixture story ID.`,
+      )
+    }
+
+    const untagged = matchingFixtureIds.filter(
+      (storyId) => !entries[storyId]?.tags?.includes(filterTag),
+    )
+    if (untagged.length > 0) {
+      throw new Error(
+        `Target "${target.name}" filter "${filterPrefix}" maps to tag "${filterTag}", but these registered fixtures do not carry it: ${untagged.join(', ')}`,
+      )
+    }
+  }
 }
 
 async function runTarget(targetName, filterPrefix) {
@@ -311,7 +365,7 @@ async function runTarget(targetName, filterPrefix) {
     },
   )
 
-  await validateFixturesExist(target)
+  await validateFixturesExist(target, filterPrefix)
 
   let server
   try {
@@ -367,9 +421,7 @@ for (let i = 0; i < rawArgs.length; i += 1) {
   if (arg === '--filter') {
     const next = rawArgs[i + 1]
     if (!next || next.startsWith('-')) {
-      console.error(
-        'Error: --filter requires a non-empty value (a story-id prefix).',
-      )
+      console.error('Error: --filter requires a registered story-id prefix.')
       process.exit(1)
     }
     filterPattern = next
@@ -377,9 +429,7 @@ for (let i = 0; i < rawArgs.length; i += 1) {
   } else if (arg.startsWith('--filter=')) {
     const value = arg.slice('--filter='.length)
     if (!value) {
-      console.error(
-        'Error: --filter requires a non-empty value (a story-id prefix).',
-      )
+      console.error('Error: --filter requires a registered story-id prefix.')
       process.exit(1)
     }
     filterPattern = value
