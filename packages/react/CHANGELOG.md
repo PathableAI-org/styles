@@ -1,5 +1,15 @@
 # @pathableai/react
 
+## 0.0.4-alpha.4
+
+### Patch Changes
+
+- cd6d566: Publish the semantic Heading SCSS and typed React contracts with independent document and visual levels, tokenized level-1 weight, and verified accessibility behavior.
+- b7cb803: Document IconTile and SegmentedControl usage, props, behavior, and accessibility requirements.
+- Updated dependencies [cd6d566]
+- Updated dependencies [aad62f4]
+  - @pathableai/styles@0.0.3-alpha.2
+
 ## 0.0.4-alpha.3
 
 ### Patch Changes

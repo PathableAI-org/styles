@@ -10,7 +10,7 @@ This maintenance branch returns to the interaction-controls feature after a
 post-merge review found that the documented IconButton loading modifier was not
 implemented or covered by executable evidence.
 
-### Deliverable
+### Deliverables
 
 - Implement the documented `.pathable-icon-button--loading` modifier.
 - Preserve the existing generic `.is-loading` state.
