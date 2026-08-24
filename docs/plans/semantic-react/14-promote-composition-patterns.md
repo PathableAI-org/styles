@@ -12,15 +12,18 @@ Promote repeated, proven composition patterns identified in the [audit](./13-aud
 
 ## Includes
 
-- From the audit document in [13](./13-audit-application-layouts.md), select candidates ranked as reusable composition patterns.
-- For each promoted candidate, specify and implement a component. Likely candidates (to be confirmed by audit) include:
-  - `Page` — a full-page shell: `Container` + consistent structure.
-  - `PageHeader` — a page-top region with title, description, and action slots.
-  - `PageContent` — the main content region within a page.
-  - `SidebarLayout` — a two-column layout with a sidebar and main content area.
-  - `Section` — a semantic page section with consistent spacing and optional heading integration.
-  - `FormStack` — a vertical form layout with consistent field spacing.
-  - `ActionGroup` — a horizontal cluster of actions/buttons with consistent spacing and alignment.
+- From the audit document in [13](./13-audit-application-layouts.md) (findings at [audit-findings.md](./audit-findings.md)), select candidates ranked as reusable composition patterns. The audit confirmed the following prioritized candidates:
+  1. `CardGrid` / `SurfaceGroup` — responsive card/tile grid (Cluster → Surface composition). Most frequent reusable pattern (10 files). SCSS contract exists (`pathable-cluster`, `pathable-surface`).
+  2. `SidebarLayout` — two-column sidebar + main content layout (6 files). SCSS contract exists (`pathable-sidebar-layout`).
+  3. `Page` — full-page shell: `Container` + `Stack` wrapper (12 files). SCSS contract exists (pure composition, no new CSS needed).
+  4. `SplitLayout` — two-column side-by-side layout (5 files). SCSS contract exists (`pathable-split`).
+  5. `FormStack` — vertical form layout with consistent field spacing (8 files). SCSS contract exists (pure composition).
+  6. `CardGrid` (auto-fit CSS Grid variant) — auto-fitting card grid (4 files). SCSS contract exists (`pathable-card-grid`).
+- The following candidates from the original speculative list were **downgraded by audit findings**:
+  - `PageHeader` / `PageContent` — not identified as a distinct repeated pattern; served by `Stack` composition.
+  - `Section` — the "nested Surface" pattern was found but is better positioned as a recipe documented in Storybook, not a new primitive.
+  - `ActionGroup` — already exists as `ButtonGroup` in React. Audit confirmed it is used (6 files). No new component needed.
+- **Preconditions for implementation**: `Box` and `Grid` primitives (slices 4 and 8) should be implemented first. Many patterns currently rely on raw `<div>` elements with `pathable-*` CSS classes. Implementing `Box` gives these patterns a typed target for composition.
 - Each new primitive must:
   - Be built from existing lower-level primitives (`Container`, `Stack`, `Inline`, `Grid`, `Box`) and system props, not raw utility strings.
   - Specify ownership of responsive behavior, landmarks (ARIA roles), heading integration, focus order, and child constraints.
