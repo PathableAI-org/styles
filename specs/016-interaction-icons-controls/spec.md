@@ -2,6 +2,10 @@
 
 **Feature Branch**: `024-interaction-icons-controls`
 
+**Feature identity**: This historical branch alias maps to feature directory
+`016-interaction-icons-controls`; the loading correction is implemented on
+`fix/icon-button-loading-contract`.
+
 **Created**: 2026-07-10
 
 **Status**: Draft

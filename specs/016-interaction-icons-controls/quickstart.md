@@ -45,12 +45,40 @@ Use this guide to verify each pattern works correctly after implementation.
 </button>
 ```
 
+Apply loading presentation with the dedicated modifier and native busy/disabled
+semantics:
+
+```html
+<button
+  class="pathable-icon-button pathable-icon-button--subtle pathable-icon-button--loading"
+  type="button"
+  aria-label="Saving changes"
+  aria-busy="true"
+  disabled
+>
+  <svg class="pathable-icon" aria-hidden="true" focusable="false">
+    <use href="#save"/>
+  </svg>
+</button>
+```
+
+The modifier supplies visual presentation only. Native `disabled` prevents
+pointer and keyboard activation, while `aria-busy="true"` exposes the busy
+state. Applications that require an announced completion message should also
+update an appropriate live status region.
+
 **Verify**:
 - [ ] Default size is 44px square
 - [ ] Focus ring visible on tab
 - [ ] `--circle` modifier makes it circular
 - [ ] All appearance variants render: bare, subtle, bordered, inverse, destructive
 - [ ] Compact (32px) and large (52px) variants render correctly
+- [ ] Loading keeps compact/default/large targets at 32px/44px/52px
+- [ ] Loading spinner follows compact/default/large icon sizes at 16px/20px/24px
+- [ ] Loading hides the decorative SVG and preserves the button dimensions
+- [ ] Loading spinner retains at least 3:1 contrast across all appearances
+- [ ] Loading uses native `disabled` and `aria-busy="true"`
+- [ ] Existing `.is-loading` usage retains the same IconButton presentation
 - [ ] Forced-colors mode preserves focus boundary
 - [ ] `prefers-reduced-motion` removes non-essential transitions
 
