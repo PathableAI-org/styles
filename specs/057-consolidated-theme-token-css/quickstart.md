@@ -35,13 +35,19 @@ const fs = require("fs");
 const read = (f) => fs.readFileSync(`packages/styles/dist/${f}`, "utf8");
 const parts = read("components.css") + "\n" + read("utilities.css") + "\n" + read("theme-default.css");
 const combined = read("styles.css");
-// Compare the set of declarations (rendered behavior), not raw order.
-const tokens = (css) => (css.match(/--[a-z0-9-]+/g) || []).sort().join("\n");
-if (tokens(parts) !== tokens(combined)) {
-  console.error("Mismatch between split files and combined styles.css");
+// Normalise whitespace and strip source-map comments so the comparison is
+// about CSS content, not formatting or line-ending variation.
+const normalise = (css) =>
+  css
+    .replace(/\s+/g, " ")
+    .replace(/\/\*# sourceMappingURL=.*?\*\//g, "")
+    .replace(/\/\*\*?\*[\s\S]*?\*\/|\/\/.*$/gm, "")
+    .trim();
+if (normalise(parts) !== normalise(combined)) {
+  console.error("Mismatch between split-file union and combined styles.css");
   process.exit(1);
 }
-console.log("Split files reproduce the combined output token set.");
+console.log("Split files reproduce the combined output.");
 '
 ```
 

@@ -128,8 +128,9 @@ visually and behaviorally identical, and the default import path must remain unc
   `var(--pathable-*)` and MUST NOT contain the default `:root` theme token declarations.
 - **FR-005**: `dist/utilities.css` MUST contain utility classes and MUST NOT contain the
   default `:root` theme token declarations.
-- **FR-006**: `dist/theme-default.css` MUST contain the single consolidated `:root` token
-  block, including brand and semantic color tokens.
+- **FR-006**: `dist/theme-default.css` MUST contain all default `:root` token
+  declarations (brand, semantic color, typography, spacing, elevation, radius,
+  utilities, and component custom properties) in a single file.
 - **FR-007**: `packages/styles/package.json` MUST add `exports` subpaths `./components`,
   `./utilities`, and `./theme` resolving to the three new files, while keeping `.` resolving
   to `dist/styles.css`.

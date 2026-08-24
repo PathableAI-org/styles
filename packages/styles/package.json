@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs",
-    "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css",
+    "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss:dist/styles.css src/components.scss:dist/components.css src/utilities.scss:dist/utilities.css src/theme-default.scss:dist/theme-default.css",
     "lint:styles": "stylelint 'src/**/*.scss'",
     "lint:tokens": "node scripts/lint-tokens.mjs"
   },

@@ -251,11 +251,16 @@ function extractDefinedTokens() {
     tokens.add(`--pathable-space-${step}`)
   }
 
-  // _utilities.scss — @each over $pathable-utilities (nested)
-  const utilities = readFileSync(resolve(SRC, '_utilities.scss'), 'utf-8')
-  extractStaticTokens(utilities, tokens)
+  // _utilities-config.scss contains $pathable-utilities — the map source of truth
+  // (extracted from _utilities.scss in this feature). Parse it for dynamically
+  // generated utility tokens; _utilities-tokens.scss emits them from the same map.
+  const utilConfig = readFileSync(
+    resolve(SRC, '_utilities-config.scss'),
+    'utf-8',
+  )
+  extractStaticTokens(utilConfig, tokens)
 
-  const utilEntries = parseNestedMapValues(utilities, 'pathable-utilities')
+  const utilEntries = parseNestedMapValues(utilConfig, 'pathable-utilities')
   for (const [moduleName, valueKeys] of utilEntries) {
     for (const vk of valueKeys) {
       tokens.add(`--pathable-${moduleName}-${vk}`)
@@ -343,16 +348,36 @@ function walkDir(dir, filterFn) {
 // ---------------------------------------------------------------------------
 
 /**
- * Enforce the consolidated theme token invariant: exactly one :root block
- * across the SCSS source may declare --pathable-color-* properties, and that
- * block must live in _semantic.scss (the source of truth for semantic colors).
+ * Enforce the consolidated theme token invariant:
+ *   1. Exactly one SCSS source file may declare --pathable-color-* properties
+ *      (in a :root block), and that file must be _semantic.scss.
+ *   2. The canonical block must declare the complete semantic color set
+ *      (the same count of distinct token names produced by the $semantic-colors
+ *      map in _semantic.scss).
  */
 function checkColorTokenConsolidation() {
   const scssFiles = walkDir(SRC, (name) => name.endsWith('.scss'))
   const colorBlockFiles = []
+  const allDeclarations = new Set()
 
   for (const file of scssFiles) {
     const content = readFileSync(file, 'utf-8')
+
+    // Find any --pathable-color-* declaration anywhere in the file (not just
+    // inside :root — a declaration accidentally nested under a selector would
+    // still violate the single-block invariant).
+    const declRe = /--pathable-color-[a-z0-9-]+\s*:/g
+    let dm
+    while ((dm = declRe.exec(content)) !== null) {
+      const token = dm[0].replace(/\s*:\s*$/, '').trim()
+      if (basename(file) !== '_semantic.scss') {
+        // Only report non-semantic-scss declarations as violations;
+        // _semantic.scss is the canonical source.
+        allDeclarations.add(token)
+      }
+    }
+
+    // Check :root blocks for the canonical declaration source.
     const rootRe = /:root\s*\{/g
     let rm
     while ((rm = rootRe.exec(content)) !== null) {
@@ -387,6 +412,33 @@ function checkColorTokenConsolidation() {
       )
     }
   }
+
+  // Report any --pathable-color-* declarations outside _semantic.scss.
+  if (allDeclarations.size > 0) {
+    issues.push(
+      `Found ${allDeclarations.size} --pathable-color-* declaration(s) outside _semantic.scss.`,
+    )
+  }
+
+  // Completeness check: parse the $semantic-colors map from _semantic.scss
+  // and verify the number of distinct color tokens it defines is unchanged.
+  // The map is the single source of truth for the expected color token set.
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
+  const semanticMap = parseScssMap(semantic, 'semantic-colors')
+  const expectedCount = semanticMap.size
+  // Count distinct --pathable-color-* tokens from the semantic :root block.
+  const rootDeclRe = /(--pathable-color-[a-z0-9-]+)\s*:/g
+  const declaredColorTokens = new Set()
+  let rdm
+  while ((rdm = rootDeclRe.exec(semantic)) !== null) {
+    declaredColorTokens.add(rdm[1])
+  }
+  if (declaredColorTokens.size !== expectedCount) {
+    issues.push(
+      `_semantic.scss :root block declares ${declaredColorTokens.size} --pathable-color-* token(s); expected ${expectedCount} from the $semantic-colors map.`,
+    )
+  }
+
   return issues
 }
 
