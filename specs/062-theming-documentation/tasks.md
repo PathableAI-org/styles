@@ -42,7 +42,7 @@
 
 **Purpose**: Create the documentation directory and verify existing infrastructure.
 
-- [ ] T001 Create `docs/theming/` directory (all three docs artifacts will live here per plan.md § Project Structure)
+- [X] T001 Create `docs/theming/` directory (all three docs artifacts will live here per plan.md § Project Structure)
 
 ---
 
@@ -56,9 +56,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T002 [US1] Add `AppShellUnderPartialTheme` story in `packages/react/src/stories/components/theme/ThemeProvider.stories.tsx` — renders React `AppShell` wrapped in `<ThemeProvider theme={brand}>` where `brand = createTheme({ colors: { accent: '#7c3aed', actionPrimaryBg: '#7c3aed' } })`. Use deterministic synthetic content, no dates/randomness/network. Include a sibling element outside the provider subtree to enable scoping assertion (FR-008). The story must include a `parameters.docs.description` explaining its intent as a partial-theme resolution proof.
-- [ ] T003 [US1] Wire browser-executed assertion in `apps/storybook-react/.storybook/test-runner.js` keyed to the new story id (`components-themeprovider--app-shell-under-partial-theme`). Assert: (a) overridden tokens resolve to `#7c3aed` via `getComputedStyle(el).getPropertyValue('--pathable-color-accent')` (FR-006), (b) unspecified tokens resolve to defaults via `getComputedStyle(el).getPropertyValue('--pathable-color-text')` equals `#00365c` (FR-007), (c) element inside provider subtree resolves override while sibling outside resolves default (FR-008), (d) `ThemeProvider` with `defaultTheme` renders children with no wrapper element (backward-compat supplement). Use semantic selectors (role/label/visible text) over `data-testid` where possible. For tokens with no convenient rendered consumer, inspect the provider wrapper's inline custom property and document the limitation in a comment.
-- [ ] T004 [US1] Run `pnpm build --filter @pathableai/styles` and `pnpm build --filter @pathableai/react`, then `pnpm test:storybook-react` to confirm the new story renders, all browser assertions pass, a11y checks pass, and the story does not appear in the a11y-exception lists already present in `test-runner.js`.
+- [X] T002 [US1] Add `AppShellUnderPartialTheme` story in `packages/react/src/stories/components/theme/ThemeProvider.stories.tsx` — renders React `AppShell` wrapped in `<ThemeProvider theme={brand}>` where `brand = createTheme({ colors: { accent: '#7c3aed', actionPrimaryBg: '#7c3aed' } })`. Use deterministic synthetic content, no dates/randomness/network. Include a sibling element outside the provider subtree to enable scoping assertion (FR-008). The story must include a `parameters.docs.description` explaining its intent as a partial-theme resolution proof.
+- [X] T003 [US1] Wire browser-executed assertion in `apps/storybook-react/.storybook/test-runner.js` keyed to the new story id (`components-themeprovider--app-shell-under-partial-theme`). Assert: (a) overridden tokens resolve to `#7c3aed` via `getComputedStyle(el).getPropertyValue('--pathable-color-accent')` (FR-006), (b) unspecified tokens resolve to defaults via `getComputedStyle(el).getPropertyValue('--pathable-color-text')` equals `#00365c` (FR-007), (c) element inside provider subtree resolves override while sibling outside resolves default (FR-008), (d) `ThemeProvider` with `defaultTheme` renders children with no wrapper element (backward-compat supplement). Use semantic selectors (role/label/visible text) over `data-testid` where possible. For tokens with no convenient rendered consumer, inspect the provider wrapper's inline custom property and document the limitation in a comment.
+- [X] T004 [US1] Run `pnpm build --filter @pathableai/styles` and `pnpm build --filter @pathableai/react`, then `pnpm test:storybook-react` to confirm the new story renders, all browser assertions pass, a11y checks pass, and the story does not appear in the a11y-exception lists already present in `test-runner.js`.
 
 **Checkpoint**: The rendered end-to-end test passes — overridden tokens resolve to provided values, unspecified tokens fall through to defaults, and overrides stay scoped.
 
@@ -74,8 +74,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T005 [US2] Run `pnpm test:visual` on the no-provider path — confirm all canonical stories pass visual smoke at three viewports with no regressions. Record the result as backward-compat evidence.
-- [ ] T006 [US2] Run `pnpm test:storybook-react` on the no-provider path — confirm all story contract and a11y checks pass identically to the pre-theming baseline. Record the result as backward-compat evidence.
+- [X] T005 [US2] Run `pnpm test:visual` on the no-provider path — confirm all canonical stories pass visual smoke at three viewports with no regressions. Record the result as backward-compat evidence.
+- [X] T006 [US2] Run `pnpm test:storybook-react` on the no-provider path — confirm all story contract and a11y checks pass identically to the pre-theming baseline. Record the result as backward-compat evidence.
 
 **Checkpoint**: Backward compatibility is verified — the no-provider rendering path is confirmed identical to the pre-theming state by existing gates.
 
@@ -91,8 +91,8 @@
 
 ### Implementation for User Story 3
 
-- [ ] T007 [US3] Create token vocabulary reference at `docs/theming/token-vocabulary.md` per contract `contracts/token-vocabulary.md`. Include one markdown table with columns: Key (camelCase `ThemeColors` key), CSS Custom Property (`--pathable-color-*` in kebab-case), Default Value (lowercase hex from `defaultTheme.colors`), and Role (plain-language description of what each token controls). All 25 keys in `THEME_COLOR_KEYS` order (authoritative order in `packages/react/src/theme/tokens.ts`). Key-to-property mapping must match the existing `THEME_COLOR_TOKEN_MAP` (feature 058 `contracts/theme-types.md`). Add an introductory section explaining what this reference is and linking to the consumer guide.
-- [ ] T008 [US3] Verify vocabulary completeness and accuracy — run `pnpm lint:tokens` to confirm the 25-key set hasn't drifted, then spot-check that every `defaultTheme.colors` key appears exactly once in the table with the correct hex value and CSS property per `contracts/token-vocabulary.md` accuracy invariants.
+- [X] T007 [US3] Create token vocabulary reference at `docs/theming/token-vocabulary.md` per contract `contracts/token-vocabulary.md`. Include one markdown table with columns: Key (camelCase `ThemeColors` key), CSS Custom Property (`--pathable-color-*` in kebab-case), Default Value (lowercase hex from `defaultTheme.colors`), and Role (plain-language description of what each token controls). All 25 keys in `THEME_COLOR_KEYS` order (authoritative order in `packages/react/src/theme/tokens.ts`). Key-to-property mapping must match the existing `THEME_COLOR_TOKEN_MAP` (feature 058 `contracts/theme-types.md`). Add an introductory section explaining what this reference is and linking to the consumer guide.
+- [X] T008 [US3] Verify vocabulary completeness and accuracy — run `pnpm lint:tokens` to confirm the 25-key set hasn't drifted, then spot-check that every `defaultTheme.colors` key appears exactly once in the table with the correct hex value and CSS property per `contracts/token-vocabulary.md` accuracy invariants.
 
 **Checkpoint**: The token vocabulary reference is complete (25/25 keys) and accurate — zero omissions, zero invented tokens, default values match `defaultTheme`.
 
@@ -108,7 +108,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T009 [US4] Create consumer guide at `docs/theming/consumer-guide.md` per contract `contracts/consumer-guide.md`. Include exactly three sections in order: (1) Override a few colors with `createTheme` + `ThemeProvider` — show the `brand` example with the explanation that `createTheme` deep-merges with `defaultTheme` and unspecified tokens fall through (FR-003). (2) Extend `defaultTheme` directly — show the spread pattern `{ ...defaultTheme, colors: { ...defaultTheme.colors, accent: '#7c3aed' } }` (FR-004). (3) Choose between the default import and the provider-driven path — present the three-path table (Default, Theme subpath, Provider-driven) with import syntax, default-token behavior, and when-to-use guidance (FR-005). Every example must use only exported, already-published APIs. No hand-written CSS in any example. Link to `token-vocabulary.md` for the full token list. Reference but do not duplicate the runtime API contracts from features 058–061.
+- [X] T009 [US4] Create consumer guide at `docs/theming/consumer-guide.md` per contract `contracts/consumer-guide.md`. Include exactly three sections in order: (1) Override a few colors with `createTheme` + `ThemeProvider` — show the `brand` example with the explanation that `createTheme` deep-merges with `defaultTheme` and unspecified tokens fall through (FR-003). (2) Extend `defaultTheme` directly — show the spread pattern `{ ...defaultTheme, colors: { ...defaultTheme.colors, accent: '#7c3aed' } }` (FR-004). (3) Choose between the default import and the provider-driven path — present the three-path table (Default, Theme subpath, Provider-driven) with import syntax, default-token behavior, and when-to-use guidance (FR-005). Every example must use only exported, already-published APIs. No hand-written CSS in any example. Link to `token-vocabulary.md` for the full token list. Reference but do not duplicate the runtime API contracts from features 058–061.
 
 **Checkpoint**: The consumer guide covers all three scenarios — override, extend, and choose-a-path — with no hand-written CSS.
 
@@ -124,8 +124,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T010 [US5] Create acceptance-verification record at `docs/theming/acceptance-verification.md` per data-model § 4. List each of the 11 parent-plan acceptance criteria from `docs/plans/react-theming.md` with status ("satisfied" or "addressed") and evidence pointer (a gate command, a contract, a story, or a compile-failure assertion). Include: (FR-011) compile-failure assertion for invalid token keys, (FR-012) `defaultTheme`/token-list export verification, (FR-013) tone-type imports (`TextTone`, `SurfaceTone`, `BorderTone`) from public entry point, (FR-014) structural-subpath import independence, plus the 7 criteria evidenced by earlier stories (US1 rendered test, US2 backward compat, existing gates).
-- [ ] T011 [US5] Run cross-cutting verification gates to confirm FR-011/FR-013/FR-014 evidence is current: `pnpm --filter @pathableai/react typecheck`, `pnpm --filter @pathableai/react check:types`, `pnpm test:next-consumer`.
+- [X] T010 [US5] Create acceptance-verification record at `docs/theming/acceptance-verification.md` per data-model § 4. List each of the 11 parent-plan acceptance criteria from `docs/plans/react-theming.md` with status ("satisfied" or "addressed") and evidence pointer (a gate command, a contract, a story, or a compile-failure assertion). Include: (FR-011) compile-failure assertion for invalid token keys, (FR-012) `defaultTheme`/token-list export verification, (FR-013) tone-type imports (`TextTone`, `SurfaceTone`, `BorderTone`) from public entry point, (FR-014) structural-subpath import independence, plus the 7 criteria evidenced by earlier stories (US1 rendered test, US2 backward compat, existing gates).
+- [X] T011 [US5] Run cross-cutting verification gates to confirm FR-011/FR-013/FR-014 evidence is current: `pnpm --filter @pathableai/react typecheck`, `pnpm --filter @pathableai/react check:types`, `pnpm test:next-consumer`.
 
 **Checkpoint**: All 11 parent-plan acceptance criteria are checked off with evidence in the verification record.
 
@@ -135,10 +135,10 @@
 
 **Purpose**: Cross-link documentation from package READMEs and run full quality gates.
 
-- [ ] T012 [P] Add theming docs cross-link to `packages/react/README.md` — add a "Theming" section (or extend the existing import-path section) linking to `docs/theming/consumer-guide.md` and `docs/theming/token-vocabulary.md` as the canonical theming documentation per constitution XII.
-- [ ] T013 [P] Add theming docs cross-link to `packages/styles/README.md` — add a "Theming" section linking to `docs/theming/consumer-guide.md` and `docs/theming/token-vocabulary.md` as the canonical theming documentation per constitution XII.
-- [ ] T014 Run full quality gates: `pnpm lint` (js + styles + markdownlint on new docs + tokens + format), `pnpm typecheck`, `pnpm test:storybook-react`, `pnpm test:visual`. All must exit 0 per SC-006.
-- [ ] T015 Run quickstart validation — execute steps from `quickstart.md` §1–§7 to confirm all gates and manual checks pass end-to-end.
+- [X] T012 [P] Add theming docs cross-link to `packages/react/README.md` — add a "Theming" section (or extend the existing import-path section) linking to `docs/theming/consumer-guide.md` and `docs/theming/token-vocabulary.md` as the canonical theming documentation per constitution XII.
+- [X] T013 [P] Add theming docs cross-link to `packages/styles/README.md` — add a "Theming" section linking to `docs/theming/consumer-guide.md` and `docs/theming/token-vocabulary.md` as the canonical theming documentation per constitution XII.
+- [X] T014 Run full quality gates: `pnpm lint` (js + styles + markdownlint on new docs + tokens + format), `pnpm typecheck`, `pnpm test:storybook-react`, `pnpm test:visual`. All must exit 0 per SC-006.
+- [X] T015 Run quickstart validation — execute steps from `quickstart.md` §1–§7 to confirm all gates and manual checks pass end-to-end.
 
 ---
 

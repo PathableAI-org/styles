@@ -116,6 +116,18 @@ Use exported tokens instead of hardcoded colors or font names whenever possible.
 }
 ```
 
+## Theming
+
+Override semantic color tokens with the typed theming API in
+`@pathableai/react` instead of redeclaring `--pathable-color-*` on `:root`.
+The canonical theming documentation lives under `docs/theming/`:
+
+- [Consumer guide](../../docs/theming/consumer-guide.md) — override with
+  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and choose an import
+  path.
+- [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
+  color token with its CSS custom property, default value, and role.
+
 ## Guidance
 
 See BRAND_RULES.md for full color and typography guidance.

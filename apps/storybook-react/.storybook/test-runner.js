@@ -75,7 +75,88 @@ const config = {
         rules,
       },
     })
+
+    await assertThemeResolution(page, context)
   },
+}
+
+/**
+ * Fail with a descriptive message when two values differ.
+ */
+function assertEqual(actual, expected, label) {
+  if (actual !== expected) {
+    throw new Error(
+      `${label}: expected ${JSON.stringify(expected)} but received ${JSON.stringify(actual)}`,
+    )
+  }
+}
+
+/**
+ * Rendered theming-resolution assertions (feature 062). These run in a real
+ * Chromium page so `getComputedStyle` resolves `var(--pathable-color-*)` to
+ * concrete values — jsdom cannot resolve CSS custom properties, so a Vitest
+ * test cannot prove resolution. Keyed to specific story ids.
+ */
+async function assertThemeResolution(page, context) {
+  if (
+    context.id === 'components-themeprovider--app-shell-under-partial-theme'
+  ) {
+    // The active sidebar nav item resolves both the overridden accent (via its
+    // border-left indicator) and the default text token (via its color). The
+    // `aria-current="page"` state is an observable, viewport-independent
+    // outcome; the link is a semantic target regardless of sidebar visibility.
+    const activeNav = page.locator('a[aria-current="page"]')
+
+    // (a) FR-006 — the overridden token resolves to the provided value.
+    const accent = await activeNav.evaluate((el) =>
+      getComputedStyle(el).getPropertyValue('--pathable-color-accent'),
+    )
+    assertEqual(accent, '#7c3aed', 'overridden --pathable-color-accent')
+
+    // Real cascade resolution: the active indicator actually paints the
+    // overridden accent. Chromium reports resolved colors as rgb().
+    const borderLeftColor = await activeNav.evaluate(
+      (el) => getComputedStyle(el).borderLeftColor,
+    )
+    assertEqual(
+      borderLeftColor,
+      'rgb(124, 58, 237)',
+      'resolved active-nav border-left color',
+    )
+
+    // (b) FR-007 — an unspecified token falls through to the default.
+    const text = await activeNav.evaluate((el) =>
+      getComputedStyle(el).getPropertyValue('--pathable-color-text'),
+    )
+    assertEqual(text, '#00365c', 'default --pathable-color-text')
+
+    // (c) FR-008 — the override is scoped to the provider subtree: a sibling
+    // rendered outside the provider resolves the :root default, not the override.
+    const outsideAccent = await page
+      .getByText('Outside the provider subtree')
+      .evaluate((el) =>
+        getComputedStyle(el).getPropertyValue('--pathable-color-accent'),
+      )
+    assertEqual(
+      outsideAccent,
+      '#1cae96',
+      'scoped --pathable-color-accent outside provider',
+    )
+  }
+
+  if (context.id === 'components-themeprovider--default') {
+    // (d) Backward-compat supplement — a `ThemeProvider` with `defaultTheme`
+    // (or an omitted `theme`) renders children directly with no wrapper element
+    // carrying `--pathable-color-*` inline custom properties.
+    const themeWrapperCount = await page
+      .locator('#storybook-root [style*="--pathable-color-"]')
+      .count()
+    assertEqual(
+      themeWrapperCount,
+      0,
+      'default-theme provider renders no wrapper',
+    )
+  }
 }
 
 export default config
