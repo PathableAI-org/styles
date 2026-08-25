@@ -158,8 +158,13 @@ async function assertReactPackage(reactRoot) {
   )
   assert.match(
     runtime,
-    /import\s+['"]@pathableai\/styles\/(?:components|utilities)['"]/u,
-    'Packed React runtime does not retain the structural styles imports',
+    /import\s+['"]@pathableai\/styles\/components['"]/u,
+    'Packed React runtime does not retain the components styles import',
+  )
+  assert.match(
+    runtime,
+    /import\s+['"]@pathableai\/styles\/utilities['"]/u,
+    'Packed React runtime does not retain the utilities styles import',
   )
   assert.match(
     runtime,
