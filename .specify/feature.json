@@ -1,1 +1,3 @@
-{"feature_directory":"specs/059-default-theme-create-theme"}
+{
+  "feature_directory": "specs/060-theme-provider"
+}
