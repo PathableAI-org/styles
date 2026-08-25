@@ -1,5 +1,18 @@
 # @pathableai/react
 
+## 0.0.4-alpha.7
+
+### Patch Changes
+
+- e8ffe78: Change the package entry point to import only the structural style layers (`@pathableai/styles/components` and `@pathableai/styles/utilities`) instead of the full default theme token layer.
+
+  - Consumers who provide their own tokens via `ThemeProvider` no longer import the default token layer, so their tokens are not overridden by a package stylesheet.
+  - **Breaking change**: consumers who relied on `@pathableai/react`'s implicit side-effect import of `@pathableai/styles` must now add `import '@pathableai/styles'` (or `import '@pathableai/styles/theme'`) at the application boundary to keep the default token layer.
+
+- f8cee08: Added theming documentation: token vocabulary reference, consumer guide, and acceptance criteria verification (`docs/theming/`). Updated READMEs in both packages with cross-links to the new theming docs. Added Storybook end-to-end test asserting partial-theme color resolution via `ThemeProvider`.
+- Updated dependencies [f8cee08]
+  - @pathableai/styles@0.0.3-alpha.4
+
 ## 0.0.4-alpha.6
 
 ### Patch Changes

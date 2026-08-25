@@ -1,5 +1,11 @@
 # @pathableai/styles
 
+## 0.0.3-alpha.4
+
+### Patch Changes
+
+- f8cee08: Added theming documentation: token vocabulary reference, consumer guide, and acceptance criteria verification (`docs/theming/`). Updated READMEs in both packages with cross-links to the new theming docs. Added Storybook end-to-end test asserting partial-theme color resolution via `ThemeProvider`.
+
 ## 0.0.3-alpha.3
 
 ### Patch Changes
