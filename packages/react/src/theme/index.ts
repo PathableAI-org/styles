@@ -8,3 +8,6 @@ export type { ThemeColorKey, ThemeColors, ThemeConfig } from './tokens.js'
 export { defaultTheme } from './defaultTheme.js'
 export { createTheme } from './createTheme.js'
 export type { DeepPartial } from './createTheme.js'
+
+export { ThemeProvider } from './ThemeProvider.js'
+export type { ThemeProviderProps, ColorScheme } from './ThemeProvider.js'

@@ -51,7 +51,7 @@ implementation.
 
 **Purpose**: Confirm the working environment is ready.
 
-- [ ] T001 Confirm the `060-theme-provider` branch is checked out and run `pnpm install` at the repo root so `packages/react` dev dependencies (`vitest`, `@testing-library/react`, `@testing-library/jest-dom`) are present.
+- [X] T001 Confirm the `060-theme-provider` branch is checked out and run `pnpm install` at the repo root so `packages/react` dev dependencies (`vitest`, `@testing-library/react`, `@testing-library/jest-dom`) are present.
 
 ---
 
@@ -62,9 +62,9 @@ user story depends on this phase.
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Create the `ThemeProvider` component plus the `ColorScheme` type and `ThemeProviderProps` interface in `packages/react/src/theme/ThemeProvider.tsx` — `forwardRef<HTMLElement, ThemeProviderProps>` with `as?: ElementType` defaulting to `'div'`, `theme?: ThemeConfig` defaulting to `defaultTheme`, and `colorScheme?: ColorScheme` as a documented no-op; emit all 25 `--pathable-color-*` custom properties from `theme.colors` via `THEME_COLOR_KEYS` and `THEME_COLOR_TOKEN_MAP` (from `tokens.ts`); return `children` with no wrapper when `theme.colors` key-wise equals `defaultTheme.colors`; otherwise render the wrapper with `ref`, `className`, and forwarded native props.
-- [ ] T003 [P] Re-export `ThemeProvider`, `ThemeProviderProps`, and `ColorScheme` from `packages/react/src/theme/index.ts`.
-- [ ] T004 [P] Re-export `ThemeProvider`, `ThemeProviderProps`, and `ColorScheme` from `packages/react/src/index.ts`.
+- [X] T002 Create the `ThemeProvider` component plus the `ColorScheme` type and `ThemeProviderProps` interface in `packages/react/src/theme/ThemeProvider.tsx` — `forwardRef<HTMLElement, ThemeProviderProps>` with `as?: ElementType` defaulting to `'div'`, `theme?: ThemeConfig` defaulting to `defaultTheme`, and `colorScheme?: ColorScheme` as a documented no-op; emit all 25 `--pathable-color-*` custom properties from `theme.colors` via `THEME_COLOR_KEYS` and `THEME_COLOR_TOKEN_MAP` (from `tokens.ts`); return `children` with no wrapper when `theme.colors` key-wise equals `defaultTheme.colors`; otherwise render the wrapper with `ref`, `className`, and forwarded native props.
+- [X] T003 [P] Re-export `ThemeProvider`, `ThemeProviderProps`, and `ColorScheme` from `packages/react/src/theme/index.ts`.
+- [X] T004 [P] Re-export `ThemeProvider`, `ThemeProviderProps`, and `ColorScheme` from `packages/react/src/index.ts`.
 
 **Checkpoint**: The component renders and is importable from `@pathableai/react`.
 
@@ -82,13 +82,13 @@ defaults render outside; verify the no-wrapper path adds no DOM node.
 
 ### Tests for User Story 1
 
-- [ ] T005 [P] [US1] Create `packages/react/src/theme/__tests__/ThemeProvider.test.tsx` with emission + scoping tests: a partial theme via `createTheme({ colors: { accent: '#7c3aed', actionPrimaryBg: '#7c3aed' } })` renders a wrapper whose `style` carries `--pathable-color-accent` and `--pathable-color-action-primary-bg` set to `#7c3aed` and the remaining 23 tokens at `defaultTheme` values, and those custom properties appear only on the wrapper element.
-- [ ] T006 [US1] Add no-wrapper tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: `theme={defaultTheme}` and an omitted `theme` render children with no wrapper element (assert no extra DOM node — FR-006 / SC-003).
-- [ ] T007 [US1] Add `as`/ref/native-prop forwarding tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: `as="section"` renders a `<section>`; forwarded `id`, `aria-label`, `className`, and `ref` land on the wrapper (FR-005).
+- [X] T005 [P] [US1] Create `packages/react/src/theme/__tests__/ThemeProvider.test.tsx` with emission + scoping tests: a partial theme via `createTheme({ colors: { accent: '#7c3aed', actionPrimaryBg: '#7c3aed' } })` renders a wrapper whose `style` carries `--pathable-color-accent` and `--pathable-color-action-primary-bg` set to `#7c3aed` and the remaining 23 tokens at `defaultTheme` values, and those custom properties appear only on the wrapper element.
+- [X] T006 [US1] Add no-wrapper tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: `theme={defaultTheme}` and an omitted `theme` render children with no wrapper element (assert no extra DOM node — FR-006 / SC-003).
+- [X] T007 [US1] Add `as`/ref/native-prop forwarding tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: `as="section"` renders a `<section>`; forwarded `id`, `aria-label`, `className`, and `ref` land on the wrapper (FR-005).
 
 ### Stories for User Story 1
 
-- [ ] T008 [P] [US1] Create `Default` and `PartialOverride` stories in `packages/react/src/stories/components/theme/ThemeProvider.stories.tsx` following existing story conventions (deterministic named stories, `satisfies Meta`, `tags: ['autodocs']`, semantic docs describing intent, resolve-partials-via-`createTheme` usage, and the wrapper/no-wrapper contract).
+- [X] T008 [P] [US1] Create `Default` and `PartialOverride` stories in `packages/react/src/stories/components/theme/ThemeProvider.stories.tsx` following existing story conventions (deterministic named stories, `satisfies Meta`, `tags: ['autodocs']`, semantic docs describing intent, resolve-partials-via-`createTheme` usage, and the wrapper/no-wrapper contract).
 
 **Checkpoint**: User Story 1 is fully functional and independently testable.
 
@@ -104,11 +104,11 @@ components resolve the inner overrides while outer components resolve the defaul
 
 ### Tests for User Story 2
 
-- [ ] T009 [P] [US2] Add nesting-precedence tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: an outer `defaultTheme` plus an inner partial provider emits the inner override value on the inner wrapper; three nested providers resolve the innermost value with fallthrough to middle, outer, and root defaults (FR-007).
+- [X] T009 [P] [US2] Add nesting-precedence tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: an outer `defaultTheme` plus an inner partial provider emits the inner override value on the inner wrapper; three nested providers resolve the innermost value with fallthrough to middle, outer, and root defaults (FR-007).
 
 ### Stories for User Story 2
 
-- [ ] T010 [P] [US2] Create the `NestedBrandedSection` story in `packages/react/src/stories/components/theme/ThemeProvider.stories.tsx` (an inner provider within a default outer).
+- [X] T010 [P] [US2] Create the `NestedBrandedSection` story in `packages/react/src/stories/components/theme/ThemeProvider.stories.tsx` (an inner provider within a default outer).
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -124,7 +124,7 @@ without error and produce the same token output.
 
 ### Tests for User Story 3
 
-- [ ] T011 [US3] Add `colorScheme` no-op tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: `colorScheme="light"` and `colorScheme="dark"` both render without error, produce the same output, and the prop is not forwarded to the DOM (FR-008).
+- [X] T011 [US3] Add `colorScheme` no-op tests to `packages/react/src/theme/__tests__/ThemeProvider.test.tsx`: `colorScheme="light"` and `colorScheme="dark"` both render without error, produce the same output, and the prop is not forwarded to the DOM (FR-008).
 
 **Checkpoint**: All three user stories are independently functional.
 
@@ -134,11 +134,11 @@ without error and produce the same token output.
 
 **Purpose**: Full validation gates and end-to-end verification per `quickstart.md`.
 
-- [ ] T012 Run the `packages/react` quality gates from `specs/060-theme-provider/quickstart.md` section 7: `pnpm --filter @pathableai/react lint`, `typecheck`, `test:unit`, and `build` — all must exit `0`.
-- [ ] T013 [P] Run `pnpm lint:tokens` to confirm the 25-key color vocabulary is unchanged (feature 058 guard).
-- [ ] T014 [P] Run publishable-validation from `specs/060-theme-provider/quickstart.md` section 8: `pnpm --filter @pathableai/react check:types` (attw) and `check:package` (publint).
-- [ ] T015 [P] Run the Storybook gates from `specs/060-theme-provider/quickstart.md` sections 5-6: `pnpm test:storybook-react` and `pnpm test:storybook-react-server`.
-- [ ] T016 Run the full `specs/060-theme-provider/quickstart.md` validation trace end-to-end and confirm every acceptance scenario is covered.
+- [X] T012 Run the `packages/react` quality gates from `specs/060-theme-provider/quickstart.md` section 7: `pnpm --filter @pathableai/react lint`, `typecheck`, `test:unit`, and `build` — all must exit `0`.
+- [X] T013 [P] Run `pnpm lint:tokens` to confirm the 25-key color vocabulary is unchanged (feature 058 guard).
+- [X] T014 [P] Run publishable-validation from `specs/060-theme-provider/quickstart.md` section 8: `pnpm --filter @pathableai/react check:types` (attw) and `check:package` (publint).
+- [X] T015 [P] Run the Storybook gates from `specs/060-theme-provider/quickstart.md` sections 5-6: `pnpm test:storybook-react` and `pnpm test:storybook-react-server`.
+- [X] T016 Run the full `specs/060-theme-provider/quickstart.md` validation trace end-to-end and confirm every acceptance scenario is covered.
 
 ---
 
