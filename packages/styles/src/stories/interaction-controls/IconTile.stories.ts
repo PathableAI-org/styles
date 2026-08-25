@@ -339,6 +339,7 @@ export const StatusVariants = {
         if (status.modifier) await expect(tile).toHaveClass(status.modifier)
         await expect(tileStyle.color).toBe(expectedColor)
         await expect(iconStyle.color).toBe(expectedColor)
+        await expect(iconStyle.stroke).toBe(expectedColor)
         await expect(tileStyle.backgroundColor).toBe(background)
         await expect(bounds.width).toBeCloseTo(44, 3)
         await expect(bounds.height).toBeCloseTo(44, 3)
@@ -356,45 +357,53 @@ export const InlineAlignment = {
     <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
       Icon tiles align naturally with text in an inline flow. Use <code>display: inline-flex</code> on the wrapper with <code>gap</code> for spacing.
     </p>
-    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
-        <span class="pathable-icon-tile pathable-icon-tile--success" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
+    <div>
+      <div style="margin-bottom: 0.75rem;">
+        <span data-testid="inline-alignment-row" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <span class="pathable-icon-tile pathable-icon-tile--success" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </span>
+          <span style="font-size: 0.875rem;">Training record verified</span>
         </span>
-        <span style="font-size: 0.875rem;">Training record verified</span>
       </div>
-      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
-        <span class="pathable-icon-tile pathable-icon-tile--error" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="15" y1="9" x2="9" y2="15" />
-            <line x1="9" y1="9" x2="15" y2="15" />
-          </svg>
+      <div style="margin-bottom: 0.75rem;">
+        <span data-testid="inline-alignment-row" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <span class="pathable-icon-tile pathable-icon-tile--error" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </span>
+          <span style="font-size: 0.875rem;">Missing required documentation</span>
         </span>
-        <span style="font-size: 0.875rem;">Missing required documentation</span>
       </div>
-      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
-        <span class="pathable-icon-tile pathable-icon-tile--warning" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
+      <div style="margin-bottom: 0.75rem;">
+        <span data-testid="inline-alignment-row" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <span class="pathable-icon-tile pathable-icon-tile--warning" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </span>
+          <span style="font-size: 0.875rem;">Approval pending review</span>
         </span>
-        <span style="font-size: 0.875rem;">Approval pending review</span>
       </div>
-      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
-        <span class="pathable-icon-tile pathable-icon-tile--circle pathable-icon-tile--info" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="16" x2="12" y2="12" />
-            <line x1="12" y1="8" x2="12.01" y2="8" />
-          </svg>
+      <div>
+        <span data-testid="inline-alignment-row" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <span class="pathable-icon-tile pathable-icon-tile--circle pathable-icon-tile--info" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          </span>
+          <span style="font-size: 0.875rem;">3 new messages</span>
         </span>
-        <span style="font-size: 0.875rem;">3 new messages</span>
       </div>
     </div>
   `,
@@ -419,7 +428,7 @@ export const InlineAlignment = {
       const tileBounds = tile.getBoundingClientRect()
       const textBounds = text.getBoundingClientRect()
 
-      await expect(rowStyle.display).toBe('flex')
+      await expect(rowStyle.display).toBe('inline-flex')
       await expect(rowStyle.alignItems).toBe('center')
       await expect(tileBounds.width).toBeCloseTo(44, 3)
       await expect(tileBounds.height).toBeCloseTo(44, 3)
