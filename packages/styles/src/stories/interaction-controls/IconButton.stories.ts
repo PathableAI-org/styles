@@ -111,6 +111,19 @@ const parseComputedColor = (color: string) => {
   }
 }
 
+const findOpaqueBackground = (element: HTMLElement, view: Window) => {
+  let current: HTMLElement | null = element
+
+  while (current) {
+    const background = view.getComputedStyle(current).backgroundColor
+
+    if (parseComputedColor(background).alpha === 1) return background
+    current = current.parentElement
+  }
+
+  throw new Error('Loading IconButton has no opaque background')
+}
+
 const contrastRatio = (foreground: string, background: string) => {
   const luminance = (color: string) => {
     const { channels } = parseComputedColor(color)
@@ -314,8 +327,10 @@ export const Disabled = {
 
 export const Loading = {
   render: () => `
-    <div class="pathable-stack pathable-stack--gap-md">
-      ${loadingCases.map(loadingExample).join('')}
+    <div class="pathable-surface pathable-surface--tone-default">
+      <div class="pathable-stack pathable-stack--gap-md">
+        ${loadingCases.map(loadingExample).join('')}
+      </div>
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -382,7 +397,7 @@ export const Loading = {
       await expect(
         contrastRatio(
           spinnerStyle.borderRightColor,
-          loadingStyle.backgroundColor,
+          findOpaqueBackground(loading, view),
         ),
       ).toBeGreaterThanOrEqual(3)
     }
