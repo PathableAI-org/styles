@@ -47,6 +47,11 @@ const EXPECTED_COVERAGE = {
     'components-navigation-search--default',
     'components-navigation-sidenav--default',
   ],
+  'Interaction controls': [
+    'interaction-controls-icon-tile--all-variants',
+    'interaction-controls-icon-tile--inline-content-pressure',
+    'interaction-controls-icon-tile--increased-text',
+  ],
   Feedback: [
     'components-feedback-emptystate--no-data',
     'components-feedback-loading--default',

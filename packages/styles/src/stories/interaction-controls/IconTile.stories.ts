@@ -2,7 +2,7 @@ import { expect, within } from 'storybook/test'
 
 export default {
   title: 'Interaction Controls/Icon Tile',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'contract-icon-tile'],
   parameters: {
     docs: {
       description: {
@@ -44,10 +44,89 @@ const sectionHeading = (text: string) => `
   <h3 style="margin: 1.5rem 0 0.5rem; font-size: 1rem; font-weight: 600;">${text}</h3>
 `
 
+const shapes = ['square', 'circle'] as const
+const sizes = [
+  {
+    name: 'compact',
+    modifier: 'pathable-icon-tile--compact',
+    tile: 32,
+    icon: 16,
+  },
+  { name: 'default', modifier: '', tile: 44, icon: 20 },
+  { name: 'large', modifier: 'pathable-icon-tile--large', tile: 52, icon: 24 },
+] as const
+const statuses = [
+  { name: 'default', modifier: '', token: '--pathable-color-text' },
+  {
+    name: 'success',
+    modifier: 'pathable-icon-tile--success',
+    token: '--pathable-color-success',
+  },
+  {
+    name: 'error',
+    modifier: 'pathable-icon-tile--error',
+    token: '--pathable-color-danger',
+  },
+  {
+    name: 'warning',
+    modifier: 'pathable-icon-tile--warning',
+    token: '--pathable-color-status-warning-text',
+  },
+  {
+    name: 'info',
+    modifier: 'pathable-icon-tile--info',
+    token: '--pathable-color-link',
+  },
+] as const
+
+const getTileIcon = (tile: HTMLElement) => {
+  const icon = tile.querySelector<SVGElement>('svg')
+
+  if (!icon) throw new Error('IconTile SVG is missing')
+  return icon
+}
+
+const expectCentered = async (tile: HTMLElement, icon: SVGElement) => {
+  const tileBounds = tile.getBoundingClientRect()
+  const iconBounds = icon.getBoundingClientRect()
+
+  await expect(iconBounds.left + iconBounds.width / 2).toBeCloseTo(
+    tileBounds.left + tileBounds.width / 2,
+    2,
+  )
+  await expect(iconBounds.top + iconBounds.height / 2).toBeCloseTo(
+    tileBounds.top + tileBounds.height / 2,
+    2,
+  )
+}
+
+const resolveColorToken = (
+  canvasElement: HTMLElement,
+  token: string,
+): string => {
+  const view = canvasElement.ownerDocument.defaultView
+  const tokenValue = view
+    ?.getComputedStyle(canvasElement)
+    .getPropertyValue(token)
+    .trim()
+
+  if (!tokenValue) throw new Error(`IconTile token ${token} is undefined`)
+
+  const probe = canvasElement.ownerDocument.createElement('span')
+  probe.style.color = `var(${token})`
+  probe.hidden = true
+  canvasElement.append(probe)
+  const color = view?.getComputedStyle(probe).color
+  probe.remove()
+
+  if (!color) throw new Error(`Unable to resolve ${token}`)
+  return color
+}
+
 export const SquareAndCircle = {
   render: () => `
     ${sectionHeading('Square (default) vs Circular (--circle)')}
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
       Use for decorative icons that don't convey semantic meaning. Add <code>aria-hidden="true"</code> to the tile.
     </p>
     <div class="pathable-cluster" style="align-items: center;">
@@ -59,6 +138,11 @@ export const SquareAndCircle = {
     const canvas = within(canvasElement)
     const square = canvas.getByTestId('square-icon-tile')
     const circle = canvas.getByTestId('circle-icon-tile')
+    const squareIcon = getTileIcon(square)
+    const circleIcon = getTileIcon(circle)
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('IconTile story window is unavailable')
 
     await expect(square).toHaveClass('pathable-icon-tile')
     await expect(square).not.toHaveClass('pathable-icon-tile--circle')
@@ -68,38 +152,84 @@ export const SquareAndCircle = {
     )
     await expect(square).toHaveAttribute('aria-hidden', 'true')
     await expect(circle).toHaveAttribute('aria-hidden', 'true')
+    await expect(square.tagName).toBe('SPAN')
+    await expect(circle.tagName).toBe('SPAN')
+    await expect(square).not.toHaveAttribute('role')
+    await expect(circle).not.toHaveAttribute('role')
+    await expect(square).not.toHaveAttribute('tabindex')
+    await expect(circle).not.toHaveAttribute('tabindex')
+    await expect(view.getComputedStyle(square).display).toBe('flex')
+    await expect(view.getComputedStyle(square).alignItems).toBe('center')
+    await expect(view.getComputedStyle(square).justifyContent).toBe('center')
+    await expect(view.getComputedStyle(square).borderRadius).not.toBe('50%')
+    await expect(view.getComputedStyle(circle).borderRadius).toBe('50%')
+    await expectCentered(square, squareIcon)
+    await expectCentered(circle, circleIcon)
   },
 }
 
 export const SizeVariants = {
   render: () => `
     ${sectionHeading('Compact / Default / Large')}
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
       Three predefined sizes: compact (32px), default (44px), and large (52px).
     </p>
-    <div class="pathable-cluster" style="align-items: center;">
-      ${iconTileWithText('pathable-icon-tile--compact', 'bell - compact', 'Compact', false, 'compact-icon-tile')}
-      ${iconTileWithText('', 'bell - default', 'Default', false, 'default-icon-tile')}
-      ${iconTileWithText('pathable-icon-tile--large', 'bell - large', 'Large', false, 'large-icon-tile')}
-    </div>
-    <div class="pathable-cluster" style="align-items: center; margin-top: 0.5rem;">
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--compact', 'bell - circle compact', 'Compact Circle')}
-      ${iconTileWithText('pathable-icon-tile--circle', 'bell - circle default', 'Default Circle')}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--large', 'bell - circle large', 'Large Circle')}
-    </div>
+    ${shapes
+      .map(
+        (shape) => `
+          <div class="pathable-cluster" style="align-items: center; margin-top: 0.5rem;">
+            ${sizes
+              .map(({ name, modifier }) => {
+                const shapeModifier =
+                  shape === 'circle' ? 'pathable-icon-tile--circle' : ''
+                const modifiers = [shapeModifier, modifier]
+                  .filter(Boolean)
+                  .join(' ')
+                return iconTileWithText(
+                  modifiers,
+                  `bell - ${shape} ${name}`,
+                  `${name} ${shape}`,
+                  false,
+                  `${shape}-${name}-icon-tile`,
+                )
+              })
+              .join('')}
+          </div>
+        `,
+      )
+      .join('')}
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
-    const compact = canvas.getByTestId('compact-icon-tile')
-    const defaultTile = canvas.getByTestId('default-icon-tile')
-    const large = canvas.getByTestId('large-icon-tile')
+    const view = canvasElement.ownerDocument.defaultView
 
-    await expect(compact).toHaveClass('pathable-icon-tile--compact')
-    await expect(defaultTile).toHaveClass('pathable-icon-tile')
-    await expect(large).toHaveClass('pathable-icon-tile--large')
-    await expect(compact.getBoundingClientRect().width).toBe(32)
-    await expect(defaultTile.getBoundingClientRect().width).toBe(44)
-    await expect(large.getBoundingClientRect().width).toBe(52)
+    if (!view) throw new Error('IconTile story window is unavailable')
+
+    for (const shape of shapes) {
+      for (const size of sizes) {
+        const tile = canvas.getByTestId(`${shape}-${size.name}-icon-tile`)
+        const icon = getTileIcon(tile)
+        const tileBounds = tile.getBoundingClientRect()
+        const iconBounds = icon.getBoundingClientRect()
+        const tileStyle = view.getComputedStyle(tile)
+
+        await expect(tile).toHaveClass('pathable-icon-tile')
+        if (size.modifier) await expect(tile).toHaveClass(size.modifier)
+        if (shape === 'circle') {
+          await expect(tile).toHaveClass('pathable-icon-tile--circle')
+          await expect(tileStyle.borderRadius).toBe('50%')
+        } else {
+          await expect(tile).not.toHaveClass('pathable-icon-tile--circle')
+          await expect(tileStyle.borderRadius).not.toBe('50%')
+        }
+        await expect(tileBounds.width).toBeCloseTo(size.tile, 3)
+        await expect(tileBounds.height).toBeCloseTo(size.tile, 3)
+        await expect(iconBounds.width).toBeCloseTo(size.icon, 3)
+        await expect(iconBounds.height).toBeCloseTo(size.icon, 3)
+        await expect(tileStyle.flexShrink).toBe('0')
+        await expectCentered(tile, icon)
+      }
+    }
   },
 }
 
@@ -124,6 +254,11 @@ export const DecorativeWithStatusText = {
     await expect(icon).toHaveAttribute('focusable', 'false')
     await expect(canvas.getByText('Application approved')).toBeVisible()
     await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument()
+    await expect(canvas.queryByRole('link')).not.toBeInTheDocument()
+    await expect(tile.tagName).toBe('SPAN')
+    await expect(tile).not.toHaveAttribute('role')
+    await expect(tile).not.toHaveAttribute('tabindex')
   },
 }
 
@@ -144,36 +279,81 @@ export const MeaningfulStatusIcon = {
     await expect(tile).not.toHaveAttribute('aria-hidden')
     await expect(icon).toHaveAttribute('focusable', 'false')
     await expect(icon.parentElement).toBe(tile)
+    await expect(canvas.getAllByRole('img')).toHaveLength(1)
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument()
+    await expect(canvas.queryByRole('link')).not.toBeInTheDocument()
+    await expect(tile.tagName).toBe('SPAN')
+    await expect(tile).not.toHaveAttribute('role')
+    await expect(tile).not.toHaveAttribute('tabindex')
   },
 }
 
 export const StatusVariants = {
   render: () => `
     ${sectionHeading('Status Color Variants')}
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      Foreground color tokens for status indicators. Use with meaningful icons: add <code>role="img"</code> and <code>aria-label</code> on the SVG.
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
+      Foreground color tokens for status indicators with adjacent text. These icons are decorative and hidden from assistive technology.
     </p>
-    <div class="pathable-cluster" style="align-items: center;">
-      ${iconTileWithText('', 'default icon', 'Default', undefined)}
-      ${iconTileWithText('pathable-icon-tile--success', 'success icon', 'Success', true)}
-      ${iconTileWithText('pathable-icon-tile--error', 'error icon', 'Error', true)}
-      ${iconTileWithText('pathable-icon-tile--warning', 'warning icon', 'Warning', true)}
-      ${iconTileWithText('pathable-icon-tile--info', 'info icon', 'Info', true)}
-    </div>
-    <div class="pathable-cluster" style="align-items: center; margin-top: 0.5rem;">
-      ${iconTileWithText('pathable-icon-tile--circle', 'default circle', 'Default', undefined)}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--success', 'success circle', 'Success', true)}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--error', 'error circle', 'Error', true)}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--warning', 'warning circle', 'Warning', true)}
-      ${iconTileWithText('pathable-icon-tile--circle pathable-icon-tile--info', 'info circle', 'Info', true)}
-    </div>
+    ${shapes
+      .map(
+        (shape) => `
+          <div class="pathable-cluster" style="align-items: center; margin-top: 0.5rem;">
+            ${statuses
+              .map(({ name, modifier }) => {
+                const shapeModifier =
+                  shape === 'circle' ? 'pathable-icon-tile--circle' : ''
+                const modifiers = [shapeModifier, modifier]
+                  .filter(Boolean)
+                  .join(' ')
+                return iconTileWithText(
+                  modifiers,
+                  `${name} ${shape}`,
+                  `${name} ${shape}`,
+                  false,
+                  `${shape}-${name}-status-tile`,
+                )
+              })
+              .join('')}
+          </div>
+        `,
+      )
+      .join('')}
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView
+    const background = resolveColorToken(canvasElement, '--pathable-color-bg')
+
+    if (!view) throw new Error('IconTile story window is unavailable')
+
+    for (const shape of shapes) {
+      for (const status of statuses) {
+        const tile = canvas.getByTestId(`${shape}-${status.name}-status-tile`)
+        const icon = getTileIcon(tile)
+        const tileStyle = view.getComputedStyle(tile)
+        const iconStyle = view.getComputedStyle(icon)
+        const expectedColor = resolveColorToken(canvasElement, status.token)
+        const bounds = tile.getBoundingClientRect()
+
+        await expect(tile).toHaveClass('pathable-icon-tile')
+        if (status.modifier) await expect(tile).toHaveClass(status.modifier)
+        await expect(tileStyle.color).toBe(expectedColor)
+        await expect(iconStyle.color).toBe(expectedColor)
+        await expect(tileStyle.backgroundColor).toBe(background)
+        await expect(bounds.width).toBeCloseTo(44, 3)
+        await expect(bounds.height).toBeCloseTo(44, 3)
+        await expect(tile).toHaveAttribute('aria-hidden', 'true')
+      }
+    }
+
+    await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
+  },
 }
 
 export const InlineAlignment = {
   render: () => `
     ${sectionHeading('Inline Icon with Text Alignment')}
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
       Icon tiles align naturally with text in an inline flow. Use <code>display: inline-flex</code> on the wrapper with <code>gap</code> for spacing.
     </p>
     <div style="display: flex; flex-direction: column; gap: 0.75rem;">
@@ -237,51 +417,149 @@ export const InlineContentPressure = {
       'Approval pending regional documentation and eligibility review',
     )
     const bounds = tile.getBoundingClientRect()
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('IconTile story window is unavailable')
 
     await expect(tile).toHaveClass(
       'pathable-icon-tile',
       'pathable-icon-tile--warning',
     )
-    await expect(bounds.width).toBe(44)
-    await expect(bounds.height).toBe(44)
+    await expect(bounds.width).toBeCloseTo(44, 3)
+    await expect(bounds.height).toBeCloseTo(44, 3)
+    await expect(view.getComputedStyle(tile).flexShrink).toBe('0')
     await expect(text).toBeVisible()
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+  },
+}
+
+export const IncreasedText = {
+  render: () => `
+    <div data-testid="icon-tile-increased-text" style="width: 20rem; max-width: 100%;">
+      <div data-testid="icon-tile-increased-text-row" style="display: flex; align-items: center; gap: 0.5rem;">
+        ${iconTile('pathable-icon-tile--success', 'Training verified', false, 'increased-text-icon-tile')}
+        <span data-testid="icon-tile-increased-text-label" style="font-size: 2rem; line-height: 1.25;">Training record verified</span>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const fixture = canvas.getByTestId('icon-tile-increased-text')
+    const tile = canvas.getByTestId('increased-text-icon-tile')
+    const text = canvas.getByTestId('icon-tile-increased-text-label')
+    const tileBounds = tile.getBoundingClientRect()
+    const textBounds = text.getBoundingClientRect()
+
+    await expect(tileBounds.width).toBeCloseTo(44, 3)
+    await expect(tileBounds.height).toBeCloseTo(44, 3)
+    await expect(tileBounds.top + tileBounds.height / 2).toBeCloseTo(
+      textBounds.top + textBounds.height / 2,
+      2,
+    )
+    await expect(text).toBeVisible()
+    await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+  },
+}
+
+export const CustomSizing = {
+  render: () => `
+    <span
+      class="pathable-icon-tile pathable-icon-tile--circle"
+      aria-hidden="true"
+      data-testid="custom-sized-icon-tile"
+      style="--pathable-icon-tile-size: 48px; --pathable-icon-tile-icon-size: 28px;"
+    >
+      <svg data-testid="custom-sized-icon" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false" aria-hidden="true">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      </svg>
+    </span>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const tile = canvas.getByTestId('custom-sized-icon-tile')
+    const icon = canvas.getByTestId(
+      'custom-sized-icon',
+    ) as unknown as SVGElement
+    const tileBounds = tile.getBoundingClientRect()
+    const iconBounds = icon.getBoundingClientRect()
+
+    await expect(tileBounds.width).toBeCloseTo(48, 3)
+    await expect(tileBounds.height).toBeCloseTo(48, 3)
+    await expect(iconBounds.width).toBeCloseTo(28, 3)
+    await expect(iconBounds.height).toBeCloseTo(28, 3)
+    await expectCentered(tile, icon)
   },
 }
 
 export const AllVariants = {
   render: () => `
     ${sectionHeading('All Icon Tile Variants')}
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      An overview of all available icon tile shapes, sizes, and status colors.
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
+      Every shape, size, and status combination in the IconTile contract.
     </p>
     <div style="display: flex; flex-direction: column; gap: 1rem;">
       <div>
-        <span style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">Square</span>
-        <div class="pathable-cluster" style="align-items: center;">
-          ${iconTile('', 'default square')}
-          ${iconTile('pathable-icon-tile--compact', 'compact square')}
-          ${iconTile('pathable-icon-tile--large', 'large square')}
-          ${iconTile('pathable-icon-tile--success', 'success square')}
-          ${iconTile('pathable-icon-tile--error', 'error square')}
-          ${iconTile('pathable-icon-tile--warning', 'warning square')}
-          ${iconTile('pathable-icon-tile--info', 'info square')}
-        </div>
-      </div>
-      <div>
-        <span style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">Circle</span>
-        <div class="pathable-cluster" style="align-items: center;">
-          ${iconTile('pathable-icon-tile--circle', 'default circle')}
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--compact', 'compact circle')}
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--large', 'large circle')}
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', 'success circle')}
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', 'error circle')}
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', 'warning circle')}
-          ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', 'info circle')}
-        </div>
+        ${shapes
+          .map(
+            (shape) => `
+              <span style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">${shape}</span>
+              <div class="pathable-cluster" style="align-items: center;">
+                ${sizes
+                  .flatMap((size) =>
+                    statuses.map((status) => {
+                      const modifiers = [
+                        shape === 'circle' ? 'pathable-icon-tile--circle' : '',
+                        size.modifier,
+                        status.modifier,
+                      ]
+                        .filter(Boolean)
+                        .join(' ')
+                      const id = `${shape}-${size.name}-${status.name}-variant`
+                      return iconTile(
+                        modifiers,
+                        `${shape} ${size.name} ${status.name}`,
+                        false,
+                        id,
+                      )
+                    }),
+                  )
+                  .join('')}
+              </div>
+            `,
+          )
+          .join('')}
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    let count = 0
+
+    for (const shape of shapes) {
+      for (const size of sizes) {
+        for (const status of statuses) {
+          const tile = canvas.getByTestId(
+            `${shape}-${size.name}-${status.name}-variant`,
+          )
+          const bounds = tile.getBoundingClientRect()
+
+          count += 1
+          await expect(tile).toHaveClass('pathable-icon-tile')
+          if (shape === 'circle') {
+            await expect(tile).toHaveClass('pathable-icon-tile--circle')
+          }
+          if (size.modifier) await expect(tile).toHaveClass(size.modifier)
+          if (status.modifier) await expect(tile).toHaveClass(status.modifier)
+          await expect(bounds.width).toBeCloseTo(size.tile, 3)
+          await expect(bounds.height).toBeCloseTo(size.tile, 3)
+          await expect(tile).toHaveAttribute('aria-hidden', 'true')
+        }
+      }
+    }
+
+    await expect(count).toBe(30)
+    await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
+  },
 }
 
 export const Default = AllVariants

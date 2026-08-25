@@ -65,6 +65,13 @@ const CANONICAL_STORIES = [
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
   // Components - Layout
   { id: 'components-layout-icon--all-icons', mode: 'both' },
+  // Interaction controls
+  { id: 'interaction-controls-icon-tile--all-variants', mode: 'both' },
+  {
+    id: 'interaction-controls-icon-tile--inline-content-pressure',
+    mode: 'both',
+  },
+  { id: 'interaction-controls-icon-tile--increased-text', mode: 'both' },
   // Marketing patterns
   { id: 'marketing-patterns-combined--hero-section', mode: 'desktop' },
   { id: 'marketing-patterns-combined--feature-showcase', mode: 'desktop' },
