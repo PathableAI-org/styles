@@ -107,6 +107,7 @@ const EXPECTED_STORIES = [
 
 const VIEWPORTS = {
   desktop: { width: 1280, height: 900 },
+  tablet: { width: 768, height: 1024 },
   mobile: { width: 375, height: 812 },
 }
 
