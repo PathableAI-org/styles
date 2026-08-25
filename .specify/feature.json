@@ -1,3 +1,1 @@
-{
-  "feature_directory": "specs/060-theme-provider"
-}
+{ "feature_directory": "specs/061-react-entry-point-wiring" }
