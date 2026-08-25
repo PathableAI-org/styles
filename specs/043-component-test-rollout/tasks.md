@@ -376,9 +376,9 @@ only when a downstream package exposes the same promise.
       compact/default/large sizing, status token variants, constrained and
       increased-text content pressure, SVG normalization, and public
       custom-property sizing; register canonical aggregate fixtures while
-      keeping the shared contract and rollout ledger unchanged until downstream
-      React adopts equivalent evidence, and leave parent T054 open while
-      Integration and InteractionStates remain.
+      keeping the shared contract unchanged and deferring rollout-ledger status
+      and fixture recording to T056 after this focused proof; leave parent T054
+      open while Integration and InteractionStates remain.
 
 **Checkpoint**: All Wave E surfaces are Styles-only-proven and recorded, with no
 shared contract promoted without a downstream promise.

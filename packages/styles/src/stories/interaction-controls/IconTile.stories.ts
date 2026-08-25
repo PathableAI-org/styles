@@ -357,7 +357,7 @@ export const InlineAlignment = {
       Icon tiles align naturally with text in an inline flow. Use <code>display: inline-flex</code> on the wrapper with <code>gap</code> for spacing.
     </p>
     <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
         <span class="pathable-icon-tile pathable-icon-tile--success" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -366,7 +366,7 @@ export const InlineAlignment = {
         </span>
         <span style="font-size: 0.875rem;">Training record verified</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
         <span class="pathable-icon-tile pathable-icon-tile--error" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
             <circle cx="12" cy="12" r="10" />
@@ -376,7 +376,7 @@ export const InlineAlignment = {
         </span>
         <span style="font-size: 0.875rem;">Missing required documentation</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
         <span class="pathable-icon-tile pathable-icon-tile--warning" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
@@ -386,7 +386,7 @@ export const InlineAlignment = {
         </span>
         <span style="font-size: 0.875rem;">Approval pending review</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div data-testid="inline-alignment-row" style="display: flex; align-items: center; gap: 0.5rem;">
         <span class="pathable-icon-tile pathable-icon-tile--circle pathable-icon-tile--info" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
             <circle cx="12" cy="12" r="10" />
@@ -398,6 +398,43 @@ export const InlineAlignment = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const rows = canvas.getAllByTestId('inline-alignment-row')
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('IconTile story window is unavailable')
+
+    await expect(rows).toHaveLength(4)
+
+    for (const row of rows) {
+      const tile = row.querySelector<HTMLElement>('.pathable-icon-tile')
+      const text = tile?.nextElementSibling as HTMLElement | null
+
+      if (!tile || !text) {
+        throw new Error('Inline IconTile row is missing its tile or label')
+      }
+
+      const rowStyle = view.getComputedStyle(row)
+      const tileBounds = tile.getBoundingClientRect()
+      const textBounds = text.getBoundingClientRect()
+
+      await expect(rowStyle.display).toBe('flex')
+      await expect(rowStyle.alignItems).toBe('center')
+      await expect(tileBounds.width).toBeCloseTo(44, 3)
+      await expect(tileBounds.height).toBeCloseTo(44, 3)
+      await expect(tileBounds.top + tileBounds.height / 2).toBeCloseTo(
+        textBounds.top + textBounds.height / 2,
+        2,
+      )
+      await expect(tile).toHaveAttribute('aria-hidden', 'true')
+      await expect(tile).not.toHaveAttribute('role')
+      await expect(tile).not.toHaveAttribute('tabindex')
+      await expect(text).toBeVisible()
+    }
+
+    await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
+  },
 }
 
 export const InlineContentPressure = {
