@@ -59,12 +59,13 @@ export function createTheme(input: DeepPartial<ThemeConfig>): ThemeConfig {
   }
 
   const merged = deepMerge(defaultTheme, input) as { colors?: unknown }
-  const colors: Record<string, unknown> = isPlainObject(merged.colors)
+  const mergedColors: Record<string, unknown> = isPlainObject(merged.colors)
     ? { ...merged.colors }
     : {}
 
+  const colors: Record<string, string> = {}
   for (const key of THEME_COLOR_KEYS) {
-    const value = colors[key]
+    const value = mergedColors[key]
     if (value === undefined || value === null) {
       throw new Error(`createTheme: missing required color token "${key}"`)
     }
@@ -73,6 +74,7 @@ export function createTheme(input: DeepPartial<ThemeConfig>): ThemeConfig {
         `createTheme: invalid color value for "${key}": ${String(value)}`,
       )
     }
+    colors[key] = String(value)
   }
 
   return { colors: colors as ThemeColors }

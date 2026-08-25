@@ -534,8 +534,8 @@ function checkThemeTokenSync() {
  * Enforce the defaultTheme value sync invariant:
  * the 25 `colors` literal values in `packages/react/src/theme/defaultTheme.ts`
  * must match the `$semantic-colors` map values in `_semantic.scss` (the source
- * of truth). TS keys are normalized to kebab-case and compared against the
- * SCSS map; any value drift is reported by name.
+ * of truth). SCSS kebab-case tokens are converted to camelCase to look up
+ * TypeScript keys; any value drift is reported by name.
  */
 function checkDefaultThemeValueSync() {
   const issues = []

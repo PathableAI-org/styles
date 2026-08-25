@@ -14,6 +14,9 @@ const HEX_RE = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
 // A number or percentage channel (`0`, `0.5`, `29%`, `100%`, `-.5`, …).
 const NUM = String.raw`[+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:%)?`
+// A number that must end with `%` — for saturation, lightness, whiteness,
+// and blackness channels that only accept percentages (CSS Spec § 8.1).
+const PCT = String.raw`[+-]?(?:\d+(?:\.\d+)?|\.\d+)%`
 // A hue with an optional angle unit (`210`, `210deg`, `0.5turn`, `3.14rad`, …).
 const HUE = String.raw`[+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:deg|rad|grad|turn)?`
 
@@ -29,24 +32,24 @@ const FUNCTION_PATTERNS: RegExp[] = [
     `^rgba?\\(\\s*${NUM}\\s+${NUM}\\s+${NUM}(?:\\s*/\\s*${NUM})?\\s*\\)$`,
     'i',
   ),
-  // hsl()/hsla() — legacy comma syntax.
-  new RegExp(`^hsl\\(\\s*${HUE}\\s*,\\s*${NUM}\\s*,\\s*${NUM}\\s*\\)$`, 'i'),
+  // hsl()/hsla() — legacy comma syntax. Saturation and lightness must be %.
+  new RegExp(`^hsl\\(\\s*${HUE}\\s*,\\s*${PCT}\\s*,\\s*${PCT}\\s*\\)$`, 'i'),
   new RegExp(
-    `^hsla\\(\\s*${HUE}\\s*,\\s*${NUM}\\s*,\\s*${NUM}\\s*,\\s*${NUM}\\s*\\)$`,
+    `^hsla\\(\\s*${HUE}\\s*,\\s*${PCT}\\s*,\\s*${PCT}\\s*,\\s*${NUM}\\s*\\)$`,
     'i',
   ),
   // hsl()/hsla() — modern space syntax with optional `/ alpha`.
   new RegExp(
-    `^hsla?\\(\\s*${HUE}\\s+${NUM}\\s+${NUM}(?:\\s*/\\s*${NUM})?\\s*\\)$`,
+    `^hsla?\\(\\s*${HUE}\\s+${PCT}\\s+${PCT}(?:\\s*/\\s*${NUM})?\\s*\\)$`,
     'i',
   ),
-  // hwb() — comma and space syntax.
+  // hwb() — comma and space syntax. Whiteness and blackness must be %.
   new RegExp(
-    `^hwb\\(\\s*${HUE}\\s*,\\s*${NUM}\\s*,\\s*${NUM}(?:\\s*,\\s*${NUM})?\\s*\\)$`,
+    `^hwb\\(\\s*${HUE}\\s*,\\s*${PCT}\\s*,\\s*${PCT}(?:\\s*,\\s*${NUM})?\\s*\\)$`,
     'i',
   ),
   new RegExp(
-    `^hwb\\(\\s*${HUE}\\s+${NUM}\\s+${NUM}(?:\\s*/\\s*${NUM})?\\s*\\)$`,
+    `^hwb\\(\\s*${HUE}\\s+${PCT}\\s+${PCT}(?:\\s*/\\s*${NUM})?\\s*\\)$`,
     'i',
   ),
 ]
