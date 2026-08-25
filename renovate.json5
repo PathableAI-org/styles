@@ -110,8 +110,7 @@
       automerge: false,
     },
     {
-      description:
-        'Defer TypeScript major upgrades until typescript-eslint supports them. Its current peer range is <6.1.0 and it crashes at runtime against TS 7.',
+      description: 'Defer TypeScript major upgrades until typescript-eslint supports them. Its current peer range is <6.1.0 and it crashes at runtime against TS 7.',
       matchManagers: ['npm'],
       matchPackageNames: ['typescript'],
       matchUpdateTypes: ['major'],

@@ -96,13 +96,17 @@ function parseScssMap(content, mapName) {
   let pm
   const matches = []
   while ((pm = pairRe.exec(cleaned)) !== null) {
-    matches.push({ key: pm[2], start: pm.index + pm[0].length })
+    matches.push({
+      key: pm[2],
+      index: pm.index,
+      start: pm.index + pm[0].length,
+    })
   }
 
   for (let i = 0; i < matches.length; i++) {
     const { key, start } = matches[i]
     const nextStart =
-      i + 1 < matches.length ? matches[i + 1].start : cleaned.length
+      i + 1 < matches.length ? matches[i + 1].index : cleaned.length
     let value = cleaned.slice(start, nextStart).trim()
     // Remove trailing comma
     if (value.endsWith(',')) value = value.slice(0, -1).trim()
@@ -526,11 +530,88 @@ function checkThemeTokenSync() {
   return issues
 }
 
+/**
+ * Enforce the defaultTheme value sync invariant:
+ * the 25 `colors` literal values in `packages/react/src/theme/defaultTheme.ts`
+ * must match the `$semantic-colors` map values in `_semantic.scss` (the source
+ * of truth). SCSS kebab-case tokens are converted to camelCase to look up
+ * TypeScript keys; any value drift is reported by name.
+ */
+function checkDefaultThemeValueSync() {
+  const issues = []
+  const defaultThemeFile = resolve(
+    STYLES_ROOT,
+    '../react/src/theme/defaultTheme.ts',
+  )
+
+  let tsSource
+  try {
+    tsSource = readFileSync(defaultThemeFile, 'utf-8')
+  } catch {
+    issues.push(
+      `Could not read the react theme file ${defaultThemeFile}; defaultTheme values cannot be verified.`,
+    )
+    return issues
+  }
+
+  const colorsBlockM = tsSource.match(/colors\s*:\s*\{([\s\S]*?)\n\s*\}/)
+  if (!colorsBlockM) {
+    issues.push(
+      'Could not locate the colors object in packages/react/src/theme/defaultTheme.ts.',
+    )
+    return issues
+  }
+
+  const tsValues = new Map()
+  const entryRe = /([a-zA-Z0-9_]+)\s*:\s*'([^']*)'/g
+  let em
+  while ((em = entryRe.exec(colorsBlockM[1])) !== null) {
+    tsValues.set(em[1], em[2])
+  }
+
+  if (tsValues.size === 0) {
+    issues.push(
+      'The colors object in packages/react/src/theme/defaultTheme.ts contains no key/value entries.',
+    )
+    return issues
+  }
+
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
+  const semanticMap = parseScssMap(semantic, 'semantic-colors')
+
+  const kebabToCamel = (value) =>
+    value.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase())
+
+  for (const [scssToken, scssValue] of semanticMap) {
+    const tsValue = tsValues.get(kebabToCamel(scssToken))
+    if (tsValue === undefined) {
+      issues.push(
+        `defaultTheme is missing a value for SCSS token "${scssToken}".`,
+      )
+    } else if (tsValue.toLowerCase() !== scssValue.toLowerCase()) {
+      issues.push(
+        `defaultTheme value mismatch for "${scssToken}": expected ${scssValue}, found ${tsValue}`,
+      )
+    }
+  }
+
+  return issues
+}
+
 function main() {
   const themeSyncIssues = checkThemeTokenSync()
   if (themeSyncIssues.length > 0) {
     console.log('Theme token sync check failed:\n')
     for (const issue of themeSyncIssues) {
+      console.log(`  ${issue}`)
+    }
+    process.exit(1)
+  }
+
+  const valueSyncIssues = checkDefaultThemeValueSync()
+  if (valueSyncIssues.length > 0) {
+    console.log('defaultTheme value sync check failed:\n')
+    for (const issue of valueSyncIssues) {
       console.log(`  ${issue}`)
     }
     process.exit(1)
