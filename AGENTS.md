@@ -2,5 +2,5 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/059-default-theme-create-theme/plan.md
+at specs/060-theme-provider/plan.md
 <!-- SPECKIT END -->
