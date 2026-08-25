@@ -59,6 +59,14 @@ const loadingCases = [
     spinnerSize: 20,
   },
   {
+    label: 'Generic inverse',
+    appearanceClass: 'pathable-icon-button--inverse',
+    sizeClass: '',
+    loadingClass: 'is-loading',
+    buttonSize: 44,
+    spinnerSize: 20,
+  },
+  {
     label: 'Generic destructive',
     appearanceClass: 'pathable-icon-button--destructive',
     sizeClass: '',
@@ -90,16 +98,22 @@ const loadingExample = ({
   `
 }
 
+const parseComputedColor = (color: string) => {
+  const channels = color.match(/[\d.]+/g)?.map(Number)
+
+  if (!channels || channels.length < 3) {
+    throw new Error(`Unable to parse computed color: ${color}`)
+  }
+
+  return {
+    channels: channels.slice(0, 3),
+    alpha: channels[3] ?? 1,
+  }
+}
+
 const contrastRatio = (foreground: string, background: string) => {
   const luminance = (color: string) => {
-    const channels = color
-      .match(/[\d.]+/g)
-      ?.slice(0, 3)
-      .map(Number)
-
-    if (!channels || channels.length !== 3) {
-      throw new Error(`Unable to parse computed color: ${color}`)
-    }
+    const { channels } = parseComputedColor(color)
 
     const [red, green, blue] = channels.map((channel) => {
       const value = channel / 255
@@ -330,8 +344,17 @@ export const Loading = {
       const loadingStyle = view.getComputedStyle(loading)
       const iconStyle = view.getComputedStyle(icon)
       const spinnerStyle = view.getComputedStyle(loading, '::after')
+      let activations = 0
+
+      loading.addEventListener('click', () => {
+        activations += 1
+      })
+      loading.click()
+      loading.focus()
 
       await expect(loading).toBeDisabled()
+      await expect(activations).toBe(0)
+      await expect(loading).not.toHaveFocus()
       await expect(loading).toHaveAttribute('aria-busy', 'true')
       await expect(loading).toHaveClass(
         'pathable-icon-button',
@@ -344,18 +367,18 @@ export const Loading = {
       await expect(icon).toHaveAttribute('aria-hidden', 'true')
       await expect(icon).toHaveAttribute('focusable', 'false')
       await expect(iconStyle.visibility).toBe('hidden')
+      await expect(spinnerStyle.content).toBe('""')
       await expect(spinnerStyle.width).toBe(`${loadingCase.spinnerSize}px`)
       await expect(spinnerStyle.height).toBe(`${loadingCase.spinnerSize}px`)
-      await expect(Math.round(restingBounds.width)).toBe(loadingCase.buttonSize)
-      await expect(Math.round(restingBounds.height)).toBe(
-        loadingCase.buttonSize,
-      )
-      await expect(Math.round(loadingBounds.width)).toBe(
-        Math.round(restingBounds.width),
-      )
-      await expect(Math.round(loadingBounds.height)).toBe(
-        Math.round(restingBounds.height),
-      )
+      await expect(spinnerStyle.borderRightStyle).toBe('solid')
+      await expect(spinnerStyle.borderRightWidth).toBe('2px')
+      await expect(
+        parseComputedColor(spinnerStyle.borderRightColor).alpha,
+      ).toBe(1)
+      await expect(restingBounds.width).toBeCloseTo(loadingCase.buttonSize, 3)
+      await expect(restingBounds.height).toBeCloseTo(loadingCase.buttonSize, 3)
+      await expect(loadingBounds.width).toBeCloseTo(restingBounds.width, 3)
+      await expect(loadingBounds.height).toBeCloseTo(restingBounds.height, 3)
       await expect(
         contrastRatio(
           spinnerStyle.borderRightColor,

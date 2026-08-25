@@ -44,7 +44,7 @@ auto_commit:
     message: "[Spec Kit] Clarify specification"
   after_plan:
     enabled: true
-    message: "[Spec Kit] Add implementation plan"
+    message: "docs(speckit): add implementation plan"
   after_tasks:
     enabled: true
     message: "docs(speckit): add tasks"

@@ -1,7 +1,30 @@
 // Entry point for @pathableai/react
 
-// Retain the styles package's public CSS entry as a consumer-visible side effect.
-import '@pathableai/styles'
+// Import only the structural style layers (component wrappers + utilities),
+// not the default theme token layer. Consumers who want default tokens import
+// '@pathableai/styles' or '@pathableai/styles/theme' at the application boundary.
+import '@pathableai/styles/components'
+import '@pathableai/styles/utilities'
+
+// Export theme vocabulary
+export { themeColorToken } from './theme/index.js'
+export type { ThemeColors, ThemeConfig } from './theme/index.js'
+
+// Export theme data layer
+export { defaultTheme, createTheme } from './theme/index.js'
+export type { DeepPartial } from './theme/index.js'
+
+// Export theme provider
+export { ThemeProvider } from './theme/index.js'
+export type { ThemeProviderProps, ColorScheme } from './theme/index.js'
+
+// Export semantic tone and elevation types
+export type {
+  TextTone,
+  SurfaceTone,
+  BorderTone,
+} from './internal/resolvers/tone.js'
+export type { SurfaceElevation } from './internal/resolvers/surface.js'
 
 // Export core components
 export { Breadcrumb } from './components/Breadcrumb/Breadcrumb.js'
@@ -178,11 +201,7 @@ export type {
   SearchSize,
 } from './components/Search/Search.js'
 export { Text } from './components/Text/Text.js'
-export type {
-  TextProps,
-  TextTone,
-  TextVariant,
-} from './components/Text/Text.js'
+export type { TextProps, TextVariant } from './components/Text/Text.js'
 export { Heading } from './components/Heading/Heading.js'
 export type {
   HeadingProps,

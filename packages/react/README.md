@@ -9,9 +9,52 @@ React components for the PathAble design system, wrapping `@pathableai/styles` w
 pnpm add @pathableai/react
 ```
 
-No separate installation or stylesheet import is required. Importing
-`@pathableai/react` loads the public `@pathableai/styles` stylesheet through the
-package dependency and includes its published fonts and images automatically.
+`@pathableai/react` declares `@pathableai/styles` as a runtime dependency and
+imports the structural stylesheet layers (component wrappers and utilities) at
+its entry point, so component styling and published fonts load automatically.
+It does **not** import the default theme token layer.
+
+Choose one of three supported stylesheet-import paths:
+
+### 1. Provider-driven (ThemeProvider)
+
+For `ThemeProvider` consumers who supply their own tokens, import only the React
+package — no additional stylesheet import is required. Structural styles load
+automatically; default tokens are omitted so provider-supplied tokens are not
+overridden by the package.
+
+```tsx
+import { ThemeProvider, createTheme } from '@pathableai/react'
+
+const brand = createTheme({ colors: { accent: '#7c3aed' } })
+```
+
+### 2. Default path
+
+To retain the full default token layer, import the styles package root at the
+application boundary (unchanged from previous behavior):
+
+```tsx
+import '@pathableai/styles'
+import { Button } from '@pathableai/react'
+```
+
+### 3. Theme-subpath path
+
+To load default tokens via the theme subpath:
+
+```tsx
+import '@pathableai/styles/theme'
+import { Button } from '@pathableai/react'
+```
+
+> **Breaking change**: Consumers who previously relied on the React package's
+> implicit default-theme side-effect import — that is, who imported
+> `@pathableai/react` without any `@pathableai/styles` import and expected the
+> default theme tokens — must now add `import '@pathableai/styles'` or
+> `import '@pathableai/styles/theme'` at the application boundary to retain
+> default tokens. Importing only `@pathableai/react` now loads structural
+> styles without the default token layer.
 
 In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset

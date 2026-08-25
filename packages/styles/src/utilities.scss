@@ -1,0 +1,4 @@
+// Utility entry point.
+// Compiles utility classes (no default :root theme tokens) into dist/utilities.css.
+@forward 'uswds-theme';
+@forward '_utilities';

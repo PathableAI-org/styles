@@ -27,7 +27,7 @@
 - [Phase 4: User Story 3 - Segmented Control](#phase-4-user-story-3---segmented-control-priority-p2)
 - [Phase 5: User Story 4 - Icon Tiles and Status Icons](#phase-5-user-story-4---icon-tiles-and-status-icons-priority-p2)
 - [Phase 6: Polish & Cross-Cutting Concerns](#phase-6-polish--cross-cutting-concerns)
-- [Phase 7: Post-Merge IconButton Loading Correction](#phase-7-post-merge-iconbutton-loading-correction)
+- [Phase 7: Post-Revert IconButton Loading Restoration](#phase-7-post-revert-iconbutton-loading-restoration)
 - [Dependencies & Execution Order](#dependencies--execution-order)
 
 ## Phase 1: Setup (Shared Infrastructure)
@@ -132,11 +132,11 @@
 
 ---
 
-## Phase 7: Post-Merge IconButton Loading Correction
+## Phase 7: Post-Revert IconButton Loading Restoration
 
-**Purpose**: Close the audited gap between the documented IconButton loading
-modifier and the published CSS/evidence while preserving the generic loading
-state.
+**Purpose**: Restore the reviewed source for the already-published IconButton
+loading contract after PR #179 was merged before review and reverted by PR
+#196, while preserving the generic loading state.
 
 - [x] T030 Add `.pathable-icon-button--loading` through the shared loading mixin,
       preserve `.is-loading`, hide decorative SVG content, and size the spinner
@@ -146,14 +146,14 @@ state.
       `.is-loading` case, verifying disabled/busy semantics, 32px/44px/52px
       targets, 16px/20px/24px spinners, at least 3:1 spinner contrast, hidden
       decorative content, pointer suppression, and stable geometry
-- [x] T032 Update the SCSS contract, consumer quickstart, corrective plan scope,
-      branch feature metadata, and patch changeset; run Styles build, lint,
+- [x] T032 Update the SCSS contract, consumer quickstart, restoration plan scope,
+      and branch history; add an empty changeset because the behavior was
+      published in `@pathableai/styles@0.0.3-alpha.3`; run Styles build, lint,
       formatting, Storybook/Axe, visual smoke, Changesets, and diff validation
 
 **Checkpoint**: The dedicated and generic IconButton loading selectors are
 documented and executable across all configured sizes. Aggregate rollout task
-T054 remains open for focused registration, canonical visual evidence, and
-ledger completion.
+T054 remains open for the remaining interaction-control fixture evidence.
 
 ---
 
@@ -167,7 +167,7 @@ ledger completion.
 - **US3 (Phase 4)**: Depends on Phase 1 + US1 (segmented control uses state-focus and state-selected from US1).
 - **US4 (Phase 5)**: Depends on Phase 1 only (icon tile is standalone, no dependency on interaction states).
 - **Polish (Phase 6)**: Depends on all phases completing.
-- **Loading correction (Phase 7)**: Post-merge phase that depends on the completed US1 and US2 implementation. Execute T030, then T031, then T032; aggregate rollout task T054 remains separate.
+- **Loading restoration (Phase 7)**: Post-revert phase that depends on the completed US1 and US2 implementation. Execute T030, then T031, then T032; aggregate rollout task T054 remains separate.
 
 ### User Story Dependencies
 
@@ -193,7 +193,7 @@ With a single developer, recommended order:
 4. Phase 5 (US4) — T020–T024 (can be done before or alongside US3)
 5. Phase 4 (US3) — T015–T019
 6. Phase 6 (Polish) — T025–T029
-7. Phase 7 (post-merge loading correction) — T030–T032
+7. Phase 7 (post-revert loading restoration) — T030–T032
 
 With multiple developers:
 - Developer A: Phase 1 + Phase 2 (US1 — MVP: interaction states)

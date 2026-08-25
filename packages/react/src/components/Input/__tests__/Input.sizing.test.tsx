@@ -122,7 +122,11 @@ describe('Input sizing props', () => {
       const serverHtml = renderToString(jsx)
       const { container } = render(jsx)
       const clientHtml = container.innerHTML
-      expect(serverHtml).toBe(clientHtml)
+      // React 19 renderToString omits the self-closing / on void
+      // elements while jsdom innerHTML includes it; both forms
+      // are semantically identical HTML5.
+      const normalize = (html: string) => html.replace(/\/>/g, '>')
+      expect(normalize(serverHtml)).toBe(normalize(clientHtml))
     })
   })
 })

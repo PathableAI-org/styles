@@ -11,7 +11,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from 'node:fs'
-import { resolve, relative, dirname } from 'node:path'
+import { resolve, relative, dirname, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -96,13 +96,17 @@ function parseScssMap(content, mapName) {
   let pm
   const matches = []
   while ((pm = pairRe.exec(cleaned)) !== null) {
-    matches.push({ key: pm[2], start: pm.index + pm[0].length })
+    matches.push({
+      key: pm[2],
+      index: pm.index,
+      start: pm.index + pm[0].length,
+    })
   }
 
   for (let i = 0; i < matches.length; i++) {
     const { key, start } = matches[i]
     const nextStart =
-      i + 1 < matches.length ? matches[i + 1].start : cleaned.length
+      i + 1 < matches.length ? matches[i + 1].index : cleaned.length
     let value = cleaned.slice(start, nextStart).trim()
     // Remove trailing comma
     if (value.endsWith(',')) value = value.slice(0, -1).trim()
@@ -251,11 +255,16 @@ function extractDefinedTokens() {
     tokens.add(`--pathable-space-${step}`)
   }
 
-  // _utilities.scss — @each over $pathable-utilities (nested)
-  const utilities = readFileSync(resolve(SRC, '_utilities.scss'), 'utf-8')
-  extractStaticTokens(utilities, tokens)
+  // _utilities-config.scss contains $pathable-utilities — the map source of truth
+  // (extracted from _utilities.scss in this feature). Parse it for dynamically
+  // generated utility tokens; _utilities-tokens.scss emits them from the same map.
+  const utilConfig = readFileSync(
+    resolve(SRC, '_utilities-config.scss'),
+    'utf-8',
+  )
+  extractStaticTokens(utilConfig, tokens)
 
-  const utilEntries = parseNestedMapValues(utilities, 'pathable-utilities')
+  const utilEntries = parseNestedMapValues(utilConfig, 'pathable-utilities')
   for (const [moduleName, valueKeys] of utilEntries) {
     for (const vk of valueKeys) {
       tokens.add(`--pathable-${moduleName}-${vk}`)
@@ -342,7 +351,281 @@ function walkDir(dir, filterFn) {
 // Main
 // ---------------------------------------------------------------------------
 
+/**
+ * Enforce the consolidated theme token invariant:
+ *   1. Exactly one SCSS source file may declare --pathable-color-* properties
+ *      (in a :root block), and that file must be _semantic.scss.
+ *   2. The canonical block must declare the complete semantic color set
+ *      (the same count of distinct token names produced by the $semantic-colors
+ *      map in _semantic.scss).
+ */
+function checkColorTokenConsolidation() {
+  const scssFiles = walkDir(SRC, (name) => name.endsWith('.scss'))
+  const colorBlockFiles = []
+  const allDeclarations = new Set()
+
+  for (const file of scssFiles) {
+    const content = readFileSync(file, 'utf-8')
+
+    // Find any --pathable-color-* declaration anywhere in the file (not just
+    // inside :root — a declaration accidentally nested under a selector would
+    // still violate the single-block invariant).
+    const declRe = /--pathable-color-[a-z0-9-]+\s*:/g
+    let dm
+    while ((dm = declRe.exec(content)) !== null) {
+      const token = dm[0].replace(/\s*:\s*$/, '').trim()
+      if (basename(file) !== '_semantic.scss') {
+        // Only report non-semantic-scss declarations as violations;
+        // _semantic.scss is the canonical source.
+        allDeclarations.add(token)
+      }
+    }
+
+    // Check :root blocks for the canonical declaration source.
+    const rootRe = /:root\s*\{/g
+    let rm
+    while ((rm = rootRe.exec(content)) !== null) {
+      const startIdx = rm.index + rm[0].length
+      let depth = 1
+      let endIdx = startIdx
+      while (depth > 0 && endIdx < content.length) {
+        if (content[endIdx] === '{') {
+          depth++
+        } else if (content[endIdx] === '}') {
+          depth--
+        }
+        endIdx++
+      }
+      const block = content.slice(startIdx, endIdx - 1)
+      if (/--pathable-color-[a-z0-9-]+\s*:/.test(block)) {
+        colorBlockFiles.push(file)
+      }
+    }
+  }
+
+  const issues = []
+  if (colorBlockFiles.length !== 1) {
+    issues.push(
+      `Expected exactly 1 :root block declaring --pathable-color-* tokens, found ${colorBlockFiles.length}.`,
+    )
+  }
+  for (const file of colorBlockFiles) {
+    if (basename(file) !== '_semantic.scss') {
+      issues.push(
+        `--pathable-color-* tokens must be declared only in _semantic.scss; found in ${relative(process.cwd(), file)}.`,
+      )
+    }
+  }
+
+  // Report any --pathable-color-* declarations outside _semantic.scss.
+  if (allDeclarations.size > 0) {
+    issues.push(
+      `Found ${allDeclarations.size} --pathable-color-* declaration(s) outside _semantic.scss.`,
+    )
+  }
+
+  // Completeness check: parse the $semantic-colors map from _semantic.scss
+  // and verify the number of distinct color tokens it defines is unchanged.
+  // The map is the single source of truth for the expected color token set.
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
+  const semanticMap = parseScssMap(semantic, 'semantic-colors')
+  const expectedCount = semanticMap.size
+  // Count distinct --pathable-color-* tokens from the semantic :root block.
+  const rootDeclRe = /(--pathable-color-[a-z0-9-]+)\s*:/g
+  const declaredColorTokens = new Set()
+  let rdm
+  while ((rdm = rootDeclRe.exec(semantic)) !== null) {
+    declaredColorTokens.add(rdm[1])
+  }
+  if (declaredColorTokens.size !== expectedCount) {
+    issues.push(
+      `_semantic.scss :root block declares ${declaredColorTokens.size} --pathable-color-* token(s); expected ${expectedCount} from the $semantic-colors map.`,
+    )
+  }
+
+  return issues
+}
+
+/**
+ * Enforce the theme token sync invariant:
+ * the `THEME_COLOR_KEYS` array in `packages/react/src/theme/tokens.ts` must
+ * stay 1:1 with the `$semantic-colors` map in `_semantic.scss` (the source of
+ * truth). TS keys are normalized to kebab-case and compared against the SCSS
+ * map keys. Any missing or extraneous key is reported by name.
+ */
+function checkThemeTokenSync() {
+  const issues = []
+  const reactThemeFile = resolve(STYLES_ROOT, '../react/src/theme/tokens.ts')
+
+  let tsSource
+  try {
+    tsSource = readFileSync(reactThemeFile, 'utf-8')
+  } catch {
+    issues.push(
+      `Could not read the react theme file ${reactThemeFile}; the ThemeColors key set cannot be verified.`,
+    )
+    return issues
+  }
+
+  const keyArrayM = tsSource.match(
+    /THEME_COLOR_KEYS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/,
+  )
+  if (!keyArrayM) {
+    issues.push(
+      'Could not locate the THEME_COLOR_KEYS array in packages/react/src/theme/tokens.ts.',
+    )
+    return issues
+  }
+
+  const tsKeys = []
+  const literalRe = /'([^']*)'/g
+  let lm
+  while ((lm = literalRe.exec(keyArrayM[1])) !== null) {
+    tsKeys.push(lm[1])
+  }
+
+  if (tsKeys.length === 0) {
+    issues.push(
+      'THEME_COLOR_KEYS array in packages/react/src/theme/tokens.ts contains no single-quoted key literals.',
+    )
+    return issues
+  }
+
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
+  const semanticMap = parseScssMap(semantic, 'semantic-colors')
+  const scssTokens = new Set(semanticMap.keys())
+
+  const camelToKebab = (value) =>
+    value.replace(/[A-Z]/g, (ch) => '-' + ch.toLowerCase())
+
+  const tsKebabSet = new Set(tsKeys.map(camelToKebab))
+
+  const missing = [...scssTokens]
+    .filter((token) => !tsKebabSet.has(token))
+    .sort()
+  const extraneous = [
+    ...new Set(tsKeys.filter((key) => !scssTokens.has(camelToKebab(key)))),
+  ].sort()
+
+  const duplicateKeys = tsKeys.filter(
+    (key, index) => tsKeys.indexOf(key) !== index,
+  )
+
+  if (missing.length > 0) {
+    issues.push(
+      `Missing ThemeColors key(s) for SCSS token(s): ${missing.join(', ')}`,
+    )
+  }
+  if (extraneous.length > 0) {
+    issues.push(
+      `Extraneous THEME_COLOR_KEYS entry/entries with no SCSS token: ${extraneous.join(', ')}`,
+    )
+  }
+  if (duplicateKeys.length > 0) {
+    issues.push(
+      `Duplicate THEME_COLOR_KEYS entry/entries: ${[...new Set(duplicateKeys)].join(', ')}`,
+    )
+  }
+
+  return issues
+}
+
+/**
+ * Enforce the defaultTheme value sync invariant:
+ * the 25 `colors` literal values in `packages/react/src/theme/defaultTheme.ts`
+ * must match the `$semantic-colors` map values in `_semantic.scss` (the source
+ * of truth). SCSS kebab-case tokens are converted to camelCase to look up
+ * TypeScript keys; any value drift is reported by name.
+ */
+function checkDefaultThemeValueSync() {
+  const issues = []
+  const defaultThemeFile = resolve(
+    STYLES_ROOT,
+    '../react/src/theme/defaultTheme.ts',
+  )
+
+  let tsSource
+  try {
+    tsSource = readFileSync(defaultThemeFile, 'utf-8')
+  } catch {
+    issues.push(
+      `Could not read the react theme file ${defaultThemeFile}; defaultTheme values cannot be verified.`,
+    )
+    return issues
+  }
+
+  const colorsBlockM = tsSource.match(/colors\s*:\s*\{([\s\S]*?)\n\s*\}/)
+  if (!colorsBlockM) {
+    issues.push(
+      'Could not locate the colors object in packages/react/src/theme/defaultTheme.ts.',
+    )
+    return issues
+  }
+
+  const tsValues = new Map()
+  const entryRe = /([a-zA-Z0-9_]+)\s*:\s*'([^']*)'/g
+  let em
+  while ((em = entryRe.exec(colorsBlockM[1])) !== null) {
+    tsValues.set(em[1], em[2])
+  }
+
+  if (tsValues.size === 0) {
+    issues.push(
+      'The colors object in packages/react/src/theme/defaultTheme.ts contains no key/value entries.',
+    )
+    return issues
+  }
+
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
+  const semanticMap = parseScssMap(semantic, 'semantic-colors')
+
+  const kebabToCamel = (value) =>
+    value.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase())
+
+  for (const [scssToken, scssValue] of semanticMap) {
+    const tsValue = tsValues.get(kebabToCamel(scssToken))
+    if (tsValue === undefined) {
+      issues.push(
+        `defaultTheme is missing a value for SCSS token "${scssToken}".`,
+      )
+    } else if (tsValue.toLowerCase() !== scssValue.toLowerCase()) {
+      issues.push(
+        `defaultTheme value mismatch for "${scssToken}": expected ${scssValue}, found ${tsValue}`,
+      )
+    }
+  }
+
+  return issues
+}
+
 function main() {
+  const themeSyncIssues = checkThemeTokenSync()
+  if (themeSyncIssues.length > 0) {
+    console.log('Theme token sync check failed:\n')
+    for (const issue of themeSyncIssues) {
+      console.log(`  ${issue}`)
+    }
+    process.exit(1)
+  }
+
+  const valueSyncIssues = checkDefaultThemeValueSync()
+  if (valueSyncIssues.length > 0) {
+    console.log('defaultTheme value sync check failed:\n')
+    for (const issue of valueSyncIssues) {
+      console.log(`  ${issue}`)
+    }
+    process.exit(1)
+  }
+
+  const consolidationIssues = checkColorTokenConsolidation()
+  if (consolidationIssues.length > 0) {
+    console.log('--pathable-color-* :root consolidation check failed:\n')
+    for (const issue of consolidationIssues) {
+      console.log(`  ${issue}`)
+    }
+    process.exit(1)
+  }
+
   const definedTokens = extractDefinedTokens()
   const definedSet = new Set(definedTokens)
 

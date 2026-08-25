@@ -1,7 +1,7 @@
 # Capability Inventory: @pathable/styles Utility Classes
 
 **Feature**: `specs/044-semantic-prop-foundation`
-**Source**: `packages/styles/src/_utilities.scss` (`$pathable-utilities` config map)
+**Source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` config map); `_utilities.scss` generates the utility classes
 **Generated**: 2026-08-19
 
 This document inventories every utility CSS class family emitted by `@pathable/styles`, organized by semantic capability. Each entry is verified against the SCSS source (not assumed). Gaps are recorded where a recognized semantic role lacks a corresponding utility class.
@@ -15,7 +15,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | `width`    | `pathable-width` | `width`      | `auto`, `full`                                                              | Yes        |
 | `maxw`     | `pathable-maxw`  | `max-width`  | `mobile` (320px), `mobile-lg` (480px), `tablet` (640px), `desktop` (1024px) | No         |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 ---
 
@@ -39,7 +39,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | `margin-top`    | `pathable-margin-top`    | `margin-top`                  | `0`–`10`, `15` | Yes        |
 | `margin-bottom` | `pathable-margin-bottom` | `margin-bottom`               | `0`–`10`, `15` | Yes        |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 ---
 
@@ -49,7 +49,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | ---------- | ------------------ | ------------ | ------------------------------------------------- | ---------- |
 | `display`  | `pathable-display` | `display`    | `flex`, `block`, `inline`, `inline-block`, `none` | Yes        |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 ---
 
@@ -61,7 +61,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | `justify-content` | `pathable-flex-justify` | `justify-content` | `center`, `start`, `end`, `between`, `around`   | Yes        |
 | `text-align`      | `pathable-text`         | `text-align`      | `center`, `left`, `right`                       | Yes        |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 > **Note**: `pathable-text` class prefix is shared with text-color and text-weight modules. Disambiguation is by function name in the resolver layer (`textColorClass`, `fontWeightClass`, `textAlignClass`).
 
@@ -79,7 +79,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | ---------- | --------------- | ------------ | ----------------------------------- | ---------- |
 | `flex`     | `pathable-flex` | `flex`       | `1` (`1 1 0%`), `fill` (`1 1 auto`) | Yes        |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 **Gaps**:
 
@@ -95,7 +95,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | `font-family` | `pathable-font-family` | `font-family` | `heading`, `body`, `mono`, `alt` | No         |
 | `text-weight` | `pathable-text`        | `font-weight` | `normal`, `semibold`, `bold`     | No         |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 **Gaps**:
 
@@ -123,7 +123,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | ---------- | --------------- | ------------ | ----------------------------------------------------- | ---------- | ---------------- |
 | `text`     | `pathable-text` | `color`      | `base`, `primary`, `muted`, `accent`, `link`, `white` | No         | `hover`, `focus` |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 > **Note**: `hover:` and `focus:` state variants are emitted in CSS but are NOT handled by the initial resolver layer (see research.md Decision 7: Responsive Variant Handling).
 
@@ -136,7 +136,7 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 | `border`        | `pathable-border`        | `border`        | `0`–`5` (px)     | No         |
 | `border-radius` | `pathable-border-radius` | `border-radius` | `sm`, `md`, `lg` | No         |
 
-**Owning source**: `packages/styles/src/_utilities.scss`
+**Config source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` map); **Class generation**: `packages/styles/src/_utilities.scss`
 
 > **Note**: Border and border-radius utilities are present in SCSS but are not yet mapped to semantic props in this feature. They represent a future semantic capability group.
 
