@@ -1,5 +1,26 @@
 # @pathableai/react
 
+## 0.0.4-alpha.6
+
+### Patch Changes
+
+- 0e9d4d0: Add `defaultTheme` export and `createTheme` factory for typed theming.
+
+  - `defaultTheme`: a complete ThemeConfig constant with the 25 default semantic color token values matching the CSS custom properties.
+  - `createTheme(input)`: accepts a partial ThemeConfig, deep-merges with defaultTheme, validates all required tokens and color values, and returns a fully resolved ThemeConfig.
+
+- cfbcb6d: Add `ThemeProvider` component, `ThemeProviderProps`, and `ColorScheme` types.
+
+  - `ThemeProvider` accepts an optional `theme?: ThemeConfig` (defaults to `defaultTheme`) and an optional `colorScheme` hook, plus optional `as` prop (defaults to `div`) for the wrapper element.
+  - Renders a wrapper element with every resolved `--pathable-color-*` CSS custom property applied as inline `style`.
+  - Suppresses the wrapper element when the provided theme deep-equals `defaultTheme`.
+  - Supports nesting; an inner `ThemeProvider` overrides its ancestor's resolved tokens.
+  - New public exports: `ColorScheme` and `ThemeProviderProps` types.
+
+- 982ee6a: Add the typed theme vocabulary: `ThemeColors` and `ThemeConfig` types, a pure
+  `themeColorToken` camelCase-to-kebab-case mapping function, and public re-exports
+  of the `TextTone`, `SurfaceTone`, `BorderTone`, and `SurfaceElevation` types.
+
 ## 0.0.4-alpha.5
 
 ### Patch Changes
