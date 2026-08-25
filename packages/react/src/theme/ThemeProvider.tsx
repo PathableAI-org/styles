@@ -36,6 +36,7 @@ function ThemeProviderInner(
     colorScheme: _colorScheme,
     as,
     children,
+    style,
     ...rest
   }: ThemeProviderProps,
   ref: React.ForwardedRef<HTMLElement>,
@@ -47,7 +48,7 @@ function ThemeProviderInner(
   )
 
   // No-wrapper path: no element, no ref attachment.
-  if (isDefault) return children as React.ReactElement | null
+  if (isDefault) return <>{children}</>
 
   const cssVars: Record<string, string> = {}
   for (const key of THEME_COLOR_KEYS) {
@@ -57,7 +58,11 @@ function ThemeProviderInner(
   const Component = (as ?? 'div') as React.ElementType
 
   return (
-    <Component ref={ref} style={cssVars as React.CSSProperties} {...rest}>
+    <Component
+      ref={ref}
+      style={{ ...style, ...cssVars } as React.CSSProperties}
+      {...rest}
+    >
       {children}
     </Component>
   )

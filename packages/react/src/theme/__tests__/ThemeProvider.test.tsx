@@ -208,7 +208,7 @@ describe('ThemeProvider', () => {
       expect(wrapper.getAttribute('as')).toBeNull()
     })
 
-    it('does not forward style when merging with inline styles — inline styles are the token vars only', () => {
+    it('applies only token vars when no style prop is supplied', () => {
       const { container } = render(
         <ThemeProvider theme={brand}>
           <span>child</span>
@@ -219,6 +219,30 @@ describe('ThemeProvider', () => {
       // The style attribute should contain only the 25 token properties.
       expect(wrapper.getAttribute('style')).toContain('--pathable-color-')
       expect(wrapper.getAttribute('style')).not.toContain('--invalid')
+    })
+
+    it('merges consumer style and lets token vars win', () => {
+      const { container } = render(
+        <ThemeProvider
+          theme={brand}
+          style={
+            {
+              color: 'red',
+              '--pathable-color-accent': '#000000',
+            } as React.CSSProperties
+          }
+        >
+          <span>child</span>
+        </ThemeProvider>,
+      )
+
+      const wrapper = container.firstElementChild as HTMLElement
+      // Consumer non-token styles pass through.
+      expect(wrapper.style.color).toBe('red')
+      // Token vars win over any consumer-provided token key.
+      expect(wrapper.style.getPropertyValue('--pathable-color-accent')).toBe(
+        '#7c3aed',
+      )
     })
   })
 
@@ -250,7 +274,7 @@ describe('ThemeProvider', () => {
         innerWrapper.style.getPropertyValue('--pathable-color-accent'),
       ).toBe('#0000ff')
 
-      // The outer wrapper should have its own acent.
+      // The outer wrapper should have its own accent.
       const outerWrapper = wrappers[0]
       expect(
         outerWrapper.style.getPropertyValue('--pathable-color-accent'),
