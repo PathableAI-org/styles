@@ -43,9 +43,9 @@
 
 **Purpose**: Confirm the starting state and ensure dependencies are available before any code change.
 
-- [ ] T001 Verify current entry-point state: read `packages/react/src/index.ts` and confirm it contains the single side-effect import `import '@pathableai/styles'` plus the comment "Retain the styles package's public CSS entry as a consumer-visible side effect"
-- [ ] T002 [P] Verify current build config: read `packages/react/vite.config.ts` and confirm `rollupOptions.external` currently lists the exact string `'@pathableai/styles'` (not a regex)
-- [ ] T003 [P] Install workspace dependencies with `pnpm install` from the repository root
+- [X] T001 Verify current entry-point state: read `packages/react/src/index.ts` and confirm it contains the single side-effect import `import '@pathableai/styles'` plus the comment "Retain the styles package's public CSS entry as a consumer-visible side effect"
+- [X] T002 [P] Verify current build config: read `packages/react/vite.config.ts` and confirm `rollupOptions.external` currently lists the exact string `'@pathableai/styles'` (not a regex)
+- [X] T003 [P] Install workspace dependencies with `pnpm install` from the repository root
 
 **Checkpoint**: Starting state is understood and dependencies are installed.
 
@@ -57,8 +57,8 @@
 
 **⚠️ CRITICAL**: The react entry-point change consumes `@pathableai/styles/components` and `@pathableai/styles/utilities`; without these subpaths built, the react build and all verifications fail.
 
-- [ ] T004 Verify the styles subpath contract: read `packages/styles/package.json` and confirm the `exports` map contains `"./components": "./dist/components.css"`, `"./utilities": "./dist/utilities.css"`, `".": "./dist/styles.css"`, and `"./theme": "./dist/theme-default.css"` (do NOT modify)
-- [ ] T005 Build the styles package with `pnpm --filter @pathableai/styles build` and confirm it emits `dist/components.css` and `dist/utilities.css`
+- [X] T004 Verify the styles subpath contract: read `packages/styles/package.json` and confirm the `exports` map contains `"./components": "./dist/components.css"`, `"./utilities": "./dist/utilities.css"`, `".": "./dist/styles.css"`, and `"./theme": "./dist/theme-default.css"` (do NOT modify)
+- [X] T005 Build the styles package with `pnpm --filter @pathableai/styles build` and confirm it emits `dist/components.css` and `dist/utilities.css`
 
 **Checkpoint**: Foundation ready — the structural subpaths exist and are compiled; react-package work can proceed.
 
@@ -72,11 +72,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T006 [P] [US1] Edit `packages/react/src/index.ts` to replace `import '@pathableai/styles'` with `import '@pathableai/styles/components'` and `import '@pathableai/styles/utilities'`, and update the comment to state the package now imports only structural layers (not the default theme token layer)
-- [ ] T007 [P] [US1] Edit `packages/react/vite.config.ts` to replace the exact external string `'@pathableai/styles'` with the regex `/^@pathableai\/styles(\/|$)/` in `rollupOptions.external`
-- [ ] T008 [US1] Build the react package with `pnpm --filter @pathableai/react build` (depends on T006, T007)
-- [ ] T009 [US1] Inspect `packages/react/dist/index.js` and confirm it begins with `import "@pathableai/styles/components";` and `import "@pathableai/styles/utilities";`, contains no `import "@pathableai/styles";` (root), and emits no bundled `.css` asset
-- [ ] T010 [US1] Run `pnpm --filter @pathableai/react test:unit` and confirm the existing `ThemeProvider` unit tests pass (provider-only token rendering, no interleaved default tokens)
+- [X] T006 [P] [US1] Edit `packages/react/src/index.ts` to replace `import '@pathableai/styles'` with `import '@pathableai/styles/components'` and `import '@pathableai/styles/utilities'`, and update the comment to state the package now imports only structural layers (not the default theme token layer)
+- [X] T007 [P] [US1] Edit `packages/react/vite.config.ts` to replace the exact external string `'@pathableai/styles'` with the regex `/^@pathableai\/styles(\/|$)/` in `rollupOptions.external`
+- [X] T008 [US1] Build the react package with `pnpm --filter @pathableai/react build` (depends on T006, T007)
+- [X] T009 [US1] Inspect `packages/react/dist/index.js` and confirm it begins with `import "@pathableai/styles/components";` and `import "@pathableai/styles/utilities";`, contains no `import "@pathableai/styles";` (root), and emits no bundled `.css` asset
+- [X] T010 [US1] Run `pnpm --filter @pathableai/react test:unit` and confirm the existing `ThemeProvider` unit tests pass (provider-only token rendering, no interleaved default tokens)
 
 **Checkpoint**: The react entry point is structurally independent of the default theme token layer; provider-driven rendering is verified.
 
@@ -118,8 +118,8 @@
 
 ### Implementation for User Story 4
 
-- [ ] T013 [P] [US4] Update `packages/react/README.md` to document the three consumer paths (provider-driven: react import only; default: react + `import '@pathableai/styles'`; theme-subpath: react + `import '@pathableai/styles/theme'`) and add an explicit breaking-change note for consumers who previously relied on the react package's implicit default-theme side-effect import
-- [ ] T014 [P] [US4] Create a changeset file `.changeset/react-entry-point-wiring.md` recording the breaking change for `@pathableai/react` (frontmatter `'@pathableai/react': minor`, summary describing the structural-subpath entry-point change and the migration instruction to add `import '@pathableai/styles'` or `@pathableai/styles/theme` to retain default tokens)
+- [X] T013 [P] [US4] Update `packages/react/README.md` to document the three consumer paths (provider-driven: react import only; default: react + `import '@pathableai/styles'`; theme-subpath: react + `import '@pathableai/styles/theme'`) and add an explicit breaking-change note for consumers who previously relied on the react package's implicit default-theme side-effect import
+- [X] T014 [P] [US4] Create a changeset file `.changeset/react-entry-point-wiring.md` recording the breaking change for `@pathableai/react` (frontmatter `'@pathableai/react': patch`, summary describing the structural-subpath entry-point change and the migration instruction to add `import '@pathableai/styles'` or `@pathableai/styles/theme` to retain default tokens)
 
 **Checkpoint**: All supported consumer paths are documented and the breaking change is explicitly recorded.
 
@@ -133,10 +133,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T015 [P] [US5] Run `pnpm --filter @pathableai/react check:package` (`publint --pack false`) and confirm zero failures for the react package exports/entry points
-- [ ] T016 [P] [US5] Run `pnpm --filter @pathableai/react check:types` (`attw --pack --profile esm-only`) and confirm zero type-resolution failures
-- [ ] T017 [P] [US5] Run `pnpm --filter @pathableai/styles pack --dry-run` and confirm the styles tarball still contains `dist/components.css` and `dist/utilities.css` with the `exports` map intact
-- [ ] T018 [US5] Run `pnpm test:next-consumer` and confirm the generated Next.js consumer installs the packed packages and renders (transitive-installability evidence)
+- [X] T015 [P] [US5] Run `pnpm --filter @pathableai/react check:package` (`publint --pack false`) and confirm zero failures for the react package exports/entry points
+- [X] T016 [P] [US5] Run `pnpm --filter @pathableai/react check:types` (`attw --pack --profile esm-only`) and confirm zero type-resolution failures
+- [X] T017 [P] [US5] Run `pnpm --filter @pathableai/styles pack --dry-run` and confirm the styles tarball still contains `dist/components.css` and `dist/utilities.css` with the `exports` map intact
+- [X] T018 [US5] Run `pnpm test:next-consumer` and confirm the generated Next.js consumer installs the packed packages and renders (transitive-installability evidence)
 
 **Checkpoint**: The published package is validated as publishable with the new structural subpath imports.
 
@@ -146,9 +146,9 @@
 
 **Purpose**: Full quality gates and cross-cutting verification that span all stories.
 
-- [ ] T019 [P] Run `pnpm --filter @pathableai/react lint` (eslint, `--max-warnings=0`) and `pnpm --filter @pathableai/react typecheck` and confirm both pass
-- [ ] T020 [P] Run `pnpm lint:tokens` and confirm the token vocabulary is untouched (FR-008)
-- [ ] T021 [P] Run `pnpm test:storybook-react-server` and confirm the server-compatibility audit reports no new findings
+- [X] T019 [P] Run `pnpm --filter @pathableai/react lint` (eslint, `--max-warnings=0`) and `pnpm --filter @pathableai/react typecheck` and confirm both pass
+- [X] T020 [P] Run `pnpm lint:tokens` and confirm the token vocabulary is untouched (FR-008)
+- [X] T021 [P] Run `pnpm test:storybook-react-server` and confirm the server-compatibility audit reports no new findings
 - [ ] T022 Run the `quickstart.md` validation path end-to-end (`specs/061-react-entry-point-wiring/quickstart.md`) and confirm all sections exit `0`
 
 **Checkpoint**: All quality gates pass; the feature is complete.
@@ -248,6 +248,6 @@ With multiple developers:
 - [P] tasks = different files, no dependencies.
 - [Story] label maps each task to its user story for traceability.
 - No new test files are required; existing gates (vitest, Storybook contract, `publint`, `attw`, packed-consumer) are the validation surface.
-- The `.changeset` bump level (`minor`) reflects the plan's "patch/minor changeset recording the breaking change"; the implementer should confirm the bump level against the repo's release policy before merging (see `.changeset/README.md`).
+- The `.changeset` bump level (`patch`) reflects the plan's "patch/minor changeset recording the breaking change"; the implementer should confirm the bump level against the repo's release policy before merging (see `.changeset/README.md`).
 - Commit after each task or logical group; the repo's `after_tasks` auto-commit hook runs after this file is generated.
 - Avoid: modifying `packages/styles` source, disabling lint/type checks, or adding new subpaths to the styles package.

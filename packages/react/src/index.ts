@@ -1,7 +1,10 @@
 // Entry point for @pathableai/react
 
-// Retain the styles package's public CSS entry as a consumer-visible side effect.
-import '@pathableai/styles'
+// Import only the structural style layers (component wrappers + utilities),
+// not the default theme token layer. Consumers who want default tokens import
+// '@pathableai/styles' or '@pathableai/styles/theme' at the application boundary.
+import '@pathableai/styles/components'
+import '@pathableai/styles/utilities'
 
 // Export theme vocabulary
 export { themeColorToken } from './theme/index.js'
