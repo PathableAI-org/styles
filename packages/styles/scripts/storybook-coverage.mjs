@@ -49,6 +49,7 @@ const EXPECTED_COVERAGE = {
   ],
   'Interaction controls': [
     'interaction-controls-icon-tile--all-variants',
+    'interaction-controls-icon-tile--custom-sizing',
     'interaction-controls-icon-tile--inline-content-pressure',
     'interaction-controls-icon-tile--increased-text',
   ],
