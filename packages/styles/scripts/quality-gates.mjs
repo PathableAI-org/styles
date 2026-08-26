@@ -91,6 +91,14 @@ const CANONICAL_STORIES = [
     mode: 'both',
   },
   { id: 'interaction-controls-icon-tile--increased-text', mode: 'both' },
+  {
+    id: 'interaction-controls-integration--full-composition',
+    mode: 'both',
+  },
+  {
+    id: 'interaction-controls-integration--content-pressure',
+    mode: 'desktop',
+  },
   // Marketing patterns
   { id: 'marketing-patterns-combined--hero-section', mode: 'desktop' },
   { id: 'marketing-patterns-combined--feature-showcase', mode: 'desktop' },

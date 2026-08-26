@@ -176,6 +176,10 @@ field is what makes "Styles-proven before adoption" auditable.
   narrow exception: its React wrapper now exposes the same user-facing promise,
   so its Wave E shared-contract promotion proceeds before unfinished Waves B–D
   while preserving Styles proof before React adoption in separate pull requests.
+- The remaining interaction-control surfaces may continue as individually
+  approved Wave E exceptions after SegmentedControl. IconTile and Integration
+  remain Styles-only, receive independent focused proofs, do not start downstream
+  adoption, and do not claim completion of skipped Waves B–D.
 - The conformance proofs (break a component's behavior → its contract fails while
   unrelated targets stay green; break a shared helper → every adopting target
   fails) are execution-time proofs and are not committed.

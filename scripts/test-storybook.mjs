@@ -119,6 +119,15 @@ export const targets = {
       'icon-button.content-pressure':
         'interaction-controls-iconbutton--constrained-content',
       'icon-button.default': 'interaction-controls-iconbutton--default',
+      'integration.toolbar': 'interaction-controls-integration--toolbar-panel',
+      'integration.status-row': 'interaction-controls-integration--status-row',
+      'integration.view-switcher':
+        'interaction-controls-integration--view-switcher',
+      'integration.full-composition':
+        'interaction-controls-integration--full-composition',
+      'integration.content-pressure':
+        'interaction-controls-integration--content-pressure',
+      'integration.default': 'interaction-controls-integration--default',
     },
     filters: {
       'components-communication-accordion': 'contract-accordion',
@@ -126,6 +135,7 @@ export const targets = {
       'interaction-controls-icon-tile': 'contract-icon-tile',
       'components-form-controls-checkbox': 'contract-checkbox',
       'interaction-controls-iconbutton': 'contract-icon-button',
+      'interaction-controls-integration': 'contract-integration',
     },
     sharedContracts: true,
   },
