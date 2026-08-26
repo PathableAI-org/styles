@@ -21,6 +21,7 @@
 //   .pathable-icon-button--compact   — 32px target
 //   .pathable-icon-button--large     — 52px target
 //   .pathable-icon-button--circle    — circular shape (border-radius: 50%)
+//   .pathable-icon-button--loading   — icon-sized loading indicator
 //
 // States: hover, focus-visible, focus-within, active, disabled, loading
 //   (via @include interaction-states in pathable-interaction-states.scss)
@@ -35,6 +36,7 @@
 .pathable-icon-button {
   // Shared interaction states
   @include states.interaction-states;
+  @include states.state-loading('.pathable-icon-button--loading');
 
   // Base dimensions
   width: var(--pathable-icon-button-size, 44px);
@@ -64,6 +66,24 @@
     width: var(--pathable-icon-button-icon-size, 20px);
     height: var(--pathable-icon-button-icon-size, 20px);
     pointer-events: none;
+  }
+
+  // Preserve the shared state class while exposing the documented modifier.
+  &.is-loading,
+  &.pathable-icon-button--loading {
+    svg {
+      visibility: hidden;
+    }
+
+    &::after {
+      inset: 0;
+      width: var(--pathable-icon-button-icon-size, 20px);
+      height: var(--pathable-icon-button-icon-size, 20px);
+      box-sizing: border-box;
+      margin: auto;
+      border-color: currentColor;
+      border-top-color: transparent;
+    }
   }
 }
 
@@ -141,6 +161,21 @@
 .pathable-icon-button:disabled,
 .pathable-icon-button[aria-disabled='true'] {
   color: var(--pathable-color-text);
+}
+
+// Keep the progress indicator opaque while native disabled semantics suppress
+// activation. The inverse loading state retains its contrasting appearance.
+.pathable-icon-button:disabled.is-loading,
+.pathable-icon-button:disabled.pathable-icon-button--loading,
+.pathable-icon-button[aria-disabled='true'].is-loading,
+.pathable-icon-button[aria-disabled='true'].pathable-icon-button--loading {
+  opacity: 1;
+}
+
+.pathable-icon-button--inverse.is-loading,
+.pathable-icon-button--inverse.pathable-icon-button--loading {
+  background: var(--pathable-color-text);
+  color: var(--pathable-color-surface);
 }
 
 // The default blue focus ring does not contrast sufficiently with the brand
