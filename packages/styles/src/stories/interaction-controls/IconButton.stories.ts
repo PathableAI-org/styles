@@ -121,7 +121,7 @@ const findOpaqueBackground = (element: HTMLElement, view: Window) => {
     current = current.parentElement
   }
 
-  throw new Error('Loading IconButton has no opaque background')
+  throw new Error('IconButton has no opaque background')
 }
 
 const contrastRatio = (foreground: string, background: string) => {
