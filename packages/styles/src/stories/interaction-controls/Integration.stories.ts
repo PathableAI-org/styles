@@ -562,4 +562,7 @@ export const ContentPressure = {
   },
 }
 
-export const Default = FullComposition
+export const Default = {
+  render: FullComposition.render,
+  play: FullComposition.play,
+}
