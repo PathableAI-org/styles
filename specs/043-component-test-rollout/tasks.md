@@ -209,7 +209,7 @@ tests.
       `verifyAccessibleLabel`, `verifyRequiredInvalidAssociation`,
       `verifyHintErrorAssociation` in `packages/storybook-contracts/src/` (a
       single capability per helper) and export from `src/index.ts`
-- [ ] T030 [US2] Add Checkbox fixtures (default, disabled, required, invalid,
+- [x] T030 [US2] Add Checkbox fixtures (default, disabled, required, invalid,
       with hint/error) + fixed `play` in
       `packages/styles/src/stories/components/FormControls/Checkbox.stories.ts`
 - [ ] T031 [US2] Add Radio fixtures + fixed `play` for grouping/labeling and
