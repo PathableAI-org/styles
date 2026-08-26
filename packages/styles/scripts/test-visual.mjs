@@ -3,8 +3,9 @@
 /**
  * Visual Smoke Tests
  *
- * Metric-based Playwright smoke tests for canonical stories at 375, 768,
- * and 1280 viewport widths. Uses the same canonical story list and VIEWPORTS
+ * Metric-based Playwright smoke tests for responsive canonical stories at 375,
+ * 768, and 1280 viewport widths. Desktop-only and mobile-only stories remain at
+ * their designated viewport. Uses the canonical story list and VIEWPORTS
  * constant from quality-gates.mjs.
  *
  * For each story at each viewport:
@@ -281,7 +282,7 @@ async function main() {
 
     for (const story of CANONICAL_STORIES) {
       const viewports =
-        story.mode === 'both' ? ['desktop', 'mobile'] : [story.mode]
+        story.mode === 'both' ? ['desktop', 'tablet', 'mobile'] : [story.mode]
 
       for (const vpName of viewports) {
         totalChecks++

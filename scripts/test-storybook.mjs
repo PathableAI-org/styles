@@ -79,10 +79,28 @@ export const targets = {
         'interaction-controls-segmentedcontrol--disabled-option',
       'segmented-control.static-single-option':
         'interaction-controls-segmentedcontrol--static-single-option',
+      'icon-tile.shape': 'interaction-controls-icon-tile--square-and-circle',
+      'icon-tile.sizes': 'interaction-controls-icon-tile--size-variants',
+      'icon-tile.decorative':
+        'interaction-controls-icon-tile--decorative-with-status-text',
+      'icon-tile.meaningful':
+        'interaction-controls-icon-tile--meaningful-status-icon',
+      'icon-tile.statuses': 'interaction-controls-icon-tile--status-variants',
+      'icon-tile.inline-alignment':
+        'interaction-controls-icon-tile--inline-alignment',
+      'icon-tile.content-pressure':
+        'interaction-controls-icon-tile--inline-content-pressure',
+      'icon-tile.increased-text':
+        'interaction-controls-icon-tile--increased-text',
+      'icon-tile.custom-sizing':
+        'interaction-controls-icon-tile--custom-sizing',
+      'icon-tile.matrix': 'interaction-controls-icon-tile--all-variants',
+      'icon-tile.default': 'interaction-controls-icon-tile--default',
     },
     filters: {
       'components-communication-accordion': 'contract-accordion',
       'interaction-controls-segmentedcontrol': 'contract-segmented-control',
+      'interaction-controls-icon-tile': 'contract-icon-tile',
     },
     sharedContracts: true,
   },
