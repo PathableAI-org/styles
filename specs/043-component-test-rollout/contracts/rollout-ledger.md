@@ -67,7 +67,7 @@ no downstream adoption before a separate React change can mark it `adopted`.
 
 IconTile, IconButton, and Integration are approved component-scoped Wave E
 exceptions that remain Styles-only. Their independent focused proofs do not
-start downstream adoption or imply completion of unfinished Waves B-D.
+start downstream adoption or imply completion of unfinished Waves B–D.
 
 ## Downstream adoption contract
 
