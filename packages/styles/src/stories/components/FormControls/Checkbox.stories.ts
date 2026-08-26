@@ -168,6 +168,14 @@ export const WithHintAndError = {
       'Confirm that the participant reviewed the consent terms.',
       'Confirm consent before continuing.',
     )
+    await expect(
+      within(canvasElement).getByRole('checkbox', {
+        name: 'Consent terms reviewed',
+      }),
+    ).toHaveAttribute(
+      'aria-describedby',
+      'participation-consent-hint participation-consent-error',
+    )
     await expect(within(canvasElement).getByRole('alert')).toHaveTextContent(
       'Confirm consent before continuing.',
     )
