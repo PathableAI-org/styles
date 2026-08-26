@@ -5,7 +5,8 @@ const config = {
   async preVisit(page) {
     await injectAxe(page)
   },
-  async postVisit(page) {
+  async postVisit(page, context) {
+    await assertInteractionStatesPointerFeedback(page, context)
     await checkA11y(page, 'body', {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -38,6 +39,103 @@ const config = {
       },
     })
   },
+}
+
+async function assertInteractionStatesPointerFeedback(page, context) {
+  if (context.id !== 'interaction-controls-interaction-states--all-states') {
+    return
+  }
+
+  const fail = (capability, message) => {
+    throw new Error(`[styles/${context.id}/${capability}] ${message}`)
+  }
+  const rest = page.getByRole('button', {
+    name: 'Rest Hover, focus, or press',
+  })
+  const disabled = page.getByRole('button', {
+    name: 'Disabled Unavailable',
+  })
+  const restingStyle = await rest.evaluate((element) => {
+    const style = getComputedStyle(element)
+    const probe = element.ownerDocument.createElement('span')
+    probe.style.backgroundColor = 'var(--pathable-color-bg)'
+    probe.style.position = 'fixed'
+    probe.style.visibility = 'hidden'
+    element.append(probe)
+    const hoverBackground = getComputedStyle(probe).backgroundColor
+    probe.remove()
+
+    return {
+      background: style.backgroundColor,
+      hoverBackground,
+      shadow: style.boxShadow,
+    }
+  })
+
+  await rest.hover()
+  const hoverStyle = await rest.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      background: style.backgroundColor,
+      shadow: style.boxShadow,
+    }
+  })
+  if (hoverStyle.shadow === restingStyle.shadow) {
+    fail('interaction-states.hover', 'hover did not change elevation')
+  }
+  if (
+    hoverStyle.background === restingStyle.background ||
+    hoverStyle.background !== restingStyle.hoverBackground
+  ) {
+    fail(
+      'interaction-states.hover',
+      `hover background was ${JSON.stringify(hoverStyle.background)}, expected token value ${JSON.stringify(restingStyle.hoverBackground)} distinct from rest`,
+    )
+  }
+
+  const restBounds = await rest.boundingBox()
+  if (!restBounds)
+    fail('interaction-states.active', 'rest control has no bounds')
+  await page.mouse.move(
+    restBounds.x + restBounds.width / 2,
+    restBounds.y + restBounds.height / 2,
+  )
+  await page.mouse.down()
+  const activeShadow = await rest.evaluate(
+    (element) => getComputedStyle(element).boxShadow,
+  )
+  await page.mouse.up()
+  if (activeShadow !== 'none') {
+    fail(
+      'interaction-states.active',
+      `active elevation was ${JSON.stringify(activeShadow)}, expected "none"`,
+    )
+  }
+
+  const disabledBeforeHover = await disabled.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      background: style.backgroundColor,
+      shadow: style.boxShadow,
+    }
+  })
+  await disabled.hover()
+  const disabledAfterHover = await disabled.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      background: style.backgroundColor,
+      shadow: style.boxShadow,
+    }
+  })
+  if (
+    disabledAfterHover.background !== disabledBeforeHover.background ||
+    disabledAfterHover.shadow !== disabledBeforeHover.shadow
+  ) {
+    fail(
+      'interaction-states.disabled-hover',
+      'disabled control changed appearance on hover',
+    )
+  }
 }
 
 export default config

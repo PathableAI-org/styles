@@ -75,6 +75,20 @@ export const targets = {
       'accordion.default': 'components-communication-accordion--default',
       'accordion.first-expanded':
         'components-communication-accordion--initially-expanded',
+      'interaction-states.aggregate':
+        'interaction-controls-interaction-states--all-states',
+      'interaction-states.focus-within':
+        'interaction-controls-interaction-states--focus-within',
+      'interaction-states.loading':
+        'interaction-controls-interaction-states--loading-state',
+      'interaction-states.precedence':
+        'interaction-controls-interaction-states--state-precedence',
+      'interaction-states.content-pressure':
+        'interaction-controls-interaction-states--content-pressure',
+      'interaction-states.increased-text':
+        'interaction-controls-interaction-states--increased-text',
+      'interaction-states.default':
+        'interaction-controls-interaction-states--default',
       'segmented-control.single-select':
         'interaction-controls-segmentedcontrol--single-select',
       'segmented-control.multi-select':
@@ -131,6 +145,7 @@ export const targets = {
     },
     filters: {
       'components-communication-accordion': 'contract-accordion',
+      'interaction-controls-interaction-states': 'contract-interaction-states',
       'interaction-controls-segmentedcontrol': 'contract-segmented-control',
       'interaction-controls-icon-tile': 'contract-icon-tile',
       'components-form-controls-checkbox': 'contract-checkbox',

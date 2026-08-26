@@ -35,6 +35,9 @@ Rules carried by the ledger:
 - A `styles-only` component has empty `capabilities` and NO `downstream`; it is
   proven by deterministic states, semantics, viewport/content pressure, and Axe,
   not by a shared contract.
+- InteractionStates is an approved component-scoped Wave E exception that remains
+  Styles-only; its focused proof does not start downstream adoption or imply
+  completion of unfinished earlier waves.
 - Wave order is A (stateful keyboard/focus) → B (form controls) → C (navigation,
   collections, activation) → D (status, feedback, progress) → E (visual and
   composition-led). A later-wave component is not proven ahead of its wave's
