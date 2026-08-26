@@ -391,12 +391,12 @@ only when a downstream package exposes the same promise.
 ### Approved focused continuation: Integration
 
 - [x] T054F [US5] Add the focused Styles Integration proof and runner
-      registration; verify native toolbar semantics and activation, decorative
-      status associations, consumer-owned segmented selection and roving focus,
-      and narrow increased-text containment; register canonical fixtures while
-      keeping the shared contract unchanged and deferring rollout-ledger status
-      and fixture recording to T056; leave parent T054 open until the remaining
-      focused proofs merge.
+      registration; verify native button semantics and representative keyboard
+      activation, decorative status associations, consumer-owned segmented
+      selection and roving focus, and narrow increased-text containment; register
+      canonical fixtures while keeping the shared contract unchanged and
+      deferring rollout-ledger status and fixture recording to T056; leave parent
+      T054 open until the remaining focused proofs merge.
 
 **Checkpoint**: All Wave E surfaces are Styles-only-proven and recorded, with no
 shared contract promoted without a downstream promise.
