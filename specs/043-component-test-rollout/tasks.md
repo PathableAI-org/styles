@@ -369,6 +369,17 @@ only when a downstream package exposes the same promise.
       the unchanged helpers in React, register the React target fixtures, and
       transition the ledger entry from `styles-proven` to `adopted`.
 
+### Approved focused continuation: IconTile
+
+- [x] T054D [US5] Add the focused Styles IconTile proof and runner registration;
+      verify decorative and meaningful semantics, square/circle geometry,
+      compact/default/large sizing, status token variants, constrained and
+      increased-text content pressure, SVG normalization, and public
+      custom-property sizing; register canonical aggregate fixtures while
+      keeping the shared contract unchanged and deferring rollout-ledger status
+      and fixture recording to T056 after this focused proof; leave parent T054
+      open while Integration and InteractionStates remain.
+
 **Checkpoint**: All Wave E surfaces are Styles-only-proven and recorded, with no
 shared contract promoted without a downstream promise.
 

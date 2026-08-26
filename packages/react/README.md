@@ -60,6 +60,17 @@ In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset
 workaround.
 
+## Theming
+
+Override colors with a typed, scoped theme instead of hand-writing CSS. The
+canonical theming documentation lives under `docs/theming/`:
+
+- [Consumer guide](../../docs/theming/consumer-guide.md) — override with
+  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and choose an import
+  path.
+- [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
+  color token with its CSS custom property, default value, and role.
+
 ## Usage
 
 ```tsx

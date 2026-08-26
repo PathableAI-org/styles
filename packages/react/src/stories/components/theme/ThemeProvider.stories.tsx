@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { AppShell } from '../../../components/AppShell/AppShell'
+import { AppShellNavItem } from '../../../components/AppShell/AppShellNavItem'
 import { ThemeProvider } from '../../../theme/ThemeProvider'
 import { createTheme } from '../../../theme/createTheme'
 import { defaultTheme } from '../../../theme/defaultTheme'
@@ -114,6 +116,46 @@ export const NestedBrandedSection: Story = {
       description: {
         story:
           'An outer default-themed provider (no wrapper) wraps a partial-theme inner provider. The inner wrapper&apos;s inline style wins for the tokens it emits; outer content resolves defaults.',
+      },
+    },
+  },
+}
+
+export const AppShellUnderPartialTheme: Story = {
+  render: () => (
+    <>
+      <ThemeProvider theme={brand}>
+        <AppShell
+          sidebarBrand={<strong>PathAble</strong>}
+          sidebarNav={
+            <>
+              <AppShellNavItem href="#dashboard" active>
+                Dashboard
+              </AppShellNavItem>
+              <AppShellNavItem href="#participants">
+                Participants
+              </AppShellNavItem>
+              <AppShellNavItem href="#reports">Reports</AppShellNavItem>
+            </>
+          }
+          topBarTitle="PathAble"
+        >
+          <h1>Dashboard</h1>
+          <p>
+            A representative app-shell layout rendered under a partial theme.
+            The active navigation indicator resolves the overridden accent
+            token; body text keeps the default text token.
+          </p>
+        </AppShell>
+      </ThemeProvider>
+      <p>Outside the provider subtree.</p>
+    </>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Partial-theme resolution proof: `AppShell` rendered under `ThemeProvider theme={brand}` resolves the overridden accent (`#7c3aed`) inside the provider subtree, while a sibling outside the subtree resolves the default accent (`#1cae96`). Asserted by the Storybook test-runner via `getComputedStyle`.',
       },
     },
   },
