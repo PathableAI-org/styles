@@ -159,6 +159,7 @@ async function verifyViewSwitcher(
   await expectSingleSelection(radios, radios[1])
 
   await userEvent.click(radios[2])
+  await expect(radios[2]).toHaveFocus()
   await expectSingleSelection(radios, radios[2])
 
   await userEvent.keyboard('{ArrowRight}')
@@ -213,6 +214,7 @@ async function verifyIconButtonSemantics(
   })
   representativeAction.focus()
   await userEvent.keyboard('{Enter}')
+  await expect(activations).toBe(1)
   await userEvent.keyboard(' ')
   await expect(activations).toBe(2)
 }
