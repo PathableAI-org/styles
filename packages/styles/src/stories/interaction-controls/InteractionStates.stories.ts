@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only SCSS mixins with semantics supplied by the consuming control.\n\n**States verified**: The combined mixin provides hover, focus-visible, focus-within, active, selected, disabled, and loading feedback; disabled/loading precedence; and narrow increased-text containment. The alternative granular pressed mixin is not part of the combined demo.\n\n**Consumers must**: Include the appropriate interaction-state mixins in component SCSS. Use native disabled semantics or application logic to suppress activation while unavailable or loading, and expose persistent state with the ARIA semantics appropriate to the control.',
+          '**Interaction Model**: CSS-only SCSS mixins with semantics supplied by the consuming control.\n\n**States verified**: The combined mixin provides hover, focus-visible, focus-within, active, selected, disabled, and loading feedback. Fixtures verify disabled/loading precedence and compatibility with consumer-owned narrow and increased-text containment. The alternative granular pressed mixin is not part of the combined demo.\n\n**Consumers must**: Include the appropriate interaction-state mixins in component SCSS. Use native disabled semantics or application logic to suppress activation while unavailable or loading, and expose persistent state with the ARIA semantics appropriate to the control.',
       },
     },
   },
@@ -99,6 +99,7 @@ const allStatesRender = (idSuffix = 'all-states') => `
         </div>
       </div>
       ${stateButton('Disabled', 'Unavailable', '', 'disabled')}
+      ${stateButton('ARIA disabled', 'Application-suppressed', '', 'aria-disabled="true" tabindex="-1"')}
     </div>
   </section>
 `
@@ -118,6 +119,9 @@ const runAllStatesPlay = async (
     })
     const disabled = canvas.getByRole('button', {
       name: 'Disabled Unavailable',
+    })
+    const ariaDisabled = canvas.getByRole('button', {
+      name: 'ARIA disabled Application-suppressed',
     })
 
     await expectStylesReady(rest, view)
@@ -153,10 +157,31 @@ const runAllStatesPlay = async (
     await expect(disabledStyle.boxShadow).toBe('none')
     await expect(disabledStyle.opacity).toBe('0.5')
 
+    let ariaDisabledAttempts = 0
+    let ariaDisabledActions = 0
+    ariaDisabled.addEventListener('click', (event) => {
+      ariaDisabledAttempts += 1
+      if (ariaDisabled.getAttribute('aria-disabled') === 'true') {
+        event.preventDefault()
+        return
+      }
+      ariaDisabledActions += 1
+    })
+    ariaDisabled.click()
+    const ariaDisabledStyle = view.getComputedStyle(ariaDisabled)
+    await expect(ariaDisabled).toHaveAttribute('aria-disabled', 'true')
+    await expect(ariaDisabled).toHaveAttribute('tabindex', '-1')
+    await expect(ariaDisabledAttempts).toBe(1)
+    await expect(ariaDisabledActions).toBe(0)
+    await expect(ariaDisabledStyle.cursor).toBe('default')
+    await expect(ariaDisabledStyle.boxShadow).toBe('none')
+    await expect(ariaDisabledStyle.opacity).toBe('0.5')
+
     await userEvent.tab()
     await expect(selected).toHaveFocus()
     await userEvent.tab()
     await expect(disabled).not.toHaveFocus()
+    await expect(ariaDisabled).not.toHaveFocus()
   })
 }
 
@@ -205,7 +230,7 @@ export const LoadingState = {
     <section aria-labelledby="loading-state-heading">
       <h3 id="loading-state-heading" style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">Loading State</h3>
       <p style="color: var(--pathable-color-text-muted); font-size: 0.875rem; margin: 0 0 1rem;">
-        The CSS spinner blocks pointer input; native disabled semantics suppress keyboard activation.
+        The CSS spinner removes the loading control from pointer hit-testing; native disabled semantics suppress keyboard activation.
       </p>
       <div class="pathable-cluster" style="align-items: stretch;">
         ${stateButton('Ready', 'Saving preferences')}
@@ -242,12 +267,19 @@ export const LoadingState = {
         await expect(loading).toHaveAttribute('aria-busy', 'true')
         await expect(activations).toBe(0)
         await expect(loadingStyle.pointerEvents).toBe('none')
-        await expect(loadingStyle.cursor).toBe('wait')
         await expect(spinner.content).toBe('""')
         await expect(spinner.position).toBe('absolute')
         await expect(spinner.borderTopWidth).toBe('2px')
         await expect(loadingBounds.width).toBeCloseTo(readyBounds.width, 3)
         await expect(loadingBounds.height).toBeCloseTo(readyBounds.height, 3)
+        const loadingHitTarget = canvasElement.ownerDocument.elementFromPoint(
+          loadingBounds.left + loadingBounds.width / 2,
+          loadingBounds.top + loadingBounds.height / 2,
+        )
+        if (!loadingHitTarget) {
+          throw new Error('Loading-state center has no browser hit target')
+        }
+        await expect(loading.contains(loadingHitTarget)).toBe(false)
         await userEvent.tab()
         await expect(ready).toHaveFocus()
         await userEvent.tab()
@@ -295,13 +327,15 @@ export const StatePrecedence = {
         await expect(selectedDisabledStyle.borderTopColor).toBe(
           resolveColorToken(canvasElement, view, '--pathable-color-border'),
         )
+        await expect(selectedDisabledStyle.backgroundColor).toBe(
+          resolveColorToken(canvasElement, view, '--pathable-color-bg'),
+        )
         await expect(selectedDisabledStyle.fontWeight).toBe('700')
 
         const loadingStyle = view.getComputedStyle(loadingDisabled)
         await expect(loadingDisabled).toBeDisabled()
         await expect(loadingDisabled).toHaveAttribute('aria-busy', 'true')
         await expect(loadingStyle.pointerEvents).toBe('none')
-        await expect(loadingStyle.cursor).toBe('wait')
       },
     )
   },
@@ -313,6 +347,7 @@ const pressureRender = (increasedText = false) => {
   return `
   <section aria-labelledby="pressure-heading-${idSuffix}" style="box-sizing: border-box; width: 320px; max-width: 100%; ${increasedText ? 'font-size: 2rem;' : ''}">
     <h3 id="pressure-heading-${idSuffix}" style="margin: 0 0 0.5rem; font-size: 1em; font-weight: 600; overflow-wrap: anywhere;">${increasedText ? 'Increased-text interaction states' : 'Constrained interaction states'}</h3>
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.75em; margin: 0 0 0.75rem; overflow-wrap: anywhere;">The consuming surface owns wrapping and containment; interaction feedback must remain intact within it.</p>
     <div style="min-width: 0;">
       ${stateButton('Regional documentation review', 'A deliberately long interaction-state label must wrap without escaping its constrained surface.', '', '', 'width: 100%; min-width: 0; white-space: normal; overflow-wrap: anywhere;')}
       ${stateButton('Pending accessibility approval', 'Selected state remains visible when content wraps across several lines.', 'is-selected', 'aria-pressed="true"', 'width: 100%; min-width: 0; margin-top: 0.75rem; white-space: normal; overflow-wrap: anywhere;')}

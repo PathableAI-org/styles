@@ -55,6 +55,9 @@ async function assertInteractionStatesPointerFeedback(page, context) {
   const disabled = page.getByRole('button', {
     name: 'Disabled Unavailable',
   })
+  const ariaDisabled = page.getByRole('button', {
+    name: 'ARIA disabled Application-suppressed',
+  })
   const restingStyle = await rest.evaluate((element) => {
     const style = getComputedStyle(element)
     const probe = element.ownerDocument.createElement('span')
@@ -134,6 +137,31 @@ async function assertInteractionStatesPointerFeedback(page, context) {
     fail(
       'interaction-states.disabled-hover',
       'disabled control changed appearance on hover',
+    )
+  }
+
+  const ariaDisabledBeforeHover = await ariaDisabled.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      background: style.backgroundColor,
+      shadow: style.boxShadow,
+    }
+  })
+  await ariaDisabled.hover()
+  const ariaDisabledAfterHover = await ariaDisabled.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      background: style.backgroundColor,
+      shadow: style.boxShadow,
+    }
+  })
+  if (
+    ariaDisabledAfterHover.background !== ariaDisabledBeforeHover.background ||
+    ariaDisabledAfterHover.shadow !== ariaDisabledBeforeHover.shadow
+  ) {
+    fail(
+      'interaction-states.aria-disabled-hover',
+      'ARIA-disabled control changed appearance on hover',
     )
   }
 }

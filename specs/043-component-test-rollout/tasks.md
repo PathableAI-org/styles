@@ -403,10 +403,10 @@ only when a downstream package exposes the same promise.
 - [x] T054G [US5] Add the focused Styles InteractionStates proof and runner
       registration; verify combined hover/focus/active/selected/disabled/loading
       feedback, focus-within, semantic disabled and loading suppression, state
-      precedence, and narrow increased-text containment; register canonical
-      fixtures while keeping shared contracts unchanged and deferring rollout-
-      ledger status and fixture recording to T056; leave parent T054 open until
-      all focused proofs merge.
+      precedence, and compatibility with consumer-owned narrow increased-text
+      containment; register canonical fixtures while keeping shared contracts
+      unchanged and deferring rollout-ledger status and fixture recording to
+      T056; leave parent T054 open until all focused proofs merge.
 
 **Checkpoint**: All Wave E surfaces are Styles-only-proven and recorded, with no
 shared contract promoted without a downstream promise.
