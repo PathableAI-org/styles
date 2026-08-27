@@ -62,7 +62,7 @@ limited to components sharing only non-overlapping infrastructure.
 
 InteractionStates is an approved component-scoped Wave E exception that remains
 Styles-only. Its independent focused proof does not start downstream adoption or
-imply completion of unfinished Waves B-D.
+imply completion of unfinished Waves B–D.
 
 SegmentedControl is an approved component-scoped exception to the default wave
 sequence because a downstream React package now exposes the same promise. The
