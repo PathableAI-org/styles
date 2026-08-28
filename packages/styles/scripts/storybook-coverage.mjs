@@ -34,6 +34,10 @@ const EXPECTED_COVERAGE = {
   ],
   'Form controls': [
     'components-form-controls-checkbox--default',
+    'components-form-controls-checkbox--disabled',
+    'components-form-controls-checkbox--required',
+    'components-form-controls-checkbox--invalid',
+    'components-form-controls-checkbox--with-hint-and-error',
     'components-form-controls-combo-box--default',
     'components-form-controls-input--default',
     'components-form-controls-radio--default',

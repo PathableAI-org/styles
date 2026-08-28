@@ -60,6 +60,12 @@ const CANONICAL_STORIES = [
   // Structured workflow
   { id: 'structured-workflow-wizard--wizard-long-form', mode: 'both' },
   { id: 'structured-workflow-wizard--mobile', mode: 'mobile' },
+  // Components - Form controls
+  { id: 'components-form-controls-checkbox--disabled', mode: 'both' },
+  {
+    id: 'components-form-controls-checkbox--with-hint-and-error',
+    mode: 'both',
+  },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
@@ -151,6 +157,20 @@ const UNNAMED_CONTROLS_ALLOWLIST = {
  * Format: { [storyId]: [{ selector: 'css', reason: 'explanation' }] }
  */
 const SMALL_TOUCH_TARGETS_ALLOWLIST = {
+  'components-form-controls-checkbox--disabled': [
+    {
+      selector: 'input[type="checkbox"]',
+      reason:
+        'Native checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
+    },
+  ],
+  'components-form-controls-checkbox--with-hint-and-error': [
+    {
+      selector: 'input[type="checkbox"]',
+      reason:
+        'Native checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
+    },
+  ],
   'structured-workflow-wizard--mobile': [
     {
       selector: 'input[type="radio"], input[type="checkbox"]',
