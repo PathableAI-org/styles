@@ -386,10 +386,12 @@ export const OnDifferentSurfaces = {
       Bare icon buttons on base and brand surfaces plus the inverse appearance on a dark surface. Tab through to verify icon and focus-ring visibility across all surface types.
     </p>
     <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: center;">
-      <div class="pathable-surface pathable-surface--base" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center; background: var(--pathable-color-surface);">
-        <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on base surface">
-          ${closeIcon}
-        </button>
+      <div style="display: inline-flex; background: var(--pathable-color-surface);">
+        <div class="pathable-surface pathable-surface--base" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center;">
+          <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on base surface">
+            ${closeIcon}
+          </button>
+        </div>
       </div>
       <div class="pathable-surface pathable-surface--brand" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center;">
         <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on brand surface">
