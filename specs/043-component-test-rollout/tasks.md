@@ -379,6 +379,14 @@ only when a downstream package exposes the same promise.
       keeping the shared contract unchanged and deferring rollout-ledger status
       and fixture recording to T056 after this focused proof; leave parent T054
       open while Integration and InteractionStates remain.
+- [x] T054E [US5] Add the focused Styles IconButton proof and runner
+      registration; verify native naming and activation, appearance and danger
+      token variants, compact/default/large button and icon geometry, circular
+      shape, focus surfaces, disabled/loading behavior, and constrained-content
+      pressure; register canonical fixtures while keeping the shared contract
+      unchanged and deferring rollout-ledger status and fixture recording to
+      T056; leave parent T054 open while Integration and InteractionStates
+      remain.
 
 **Checkpoint**: All Wave E surfaces are Styles-only-proven and recorded, with no
 shared contract promoted without a downstream promise.

@@ -52,6 +52,13 @@ const EXPECTED_COVERAGE = {
     'components-navigation-sidenav--default',
   ],
   'Interaction controls': [
+    'interaction-controls-iconbutton--all-variants',
+    'interaction-controls-iconbutton--all-sizes',
+    'interaction-controls-iconbutton--circle-shape',
+    'interaction-controls-iconbutton--on-different-surfaces',
+    'interaction-controls-iconbutton--disabled',
+    'interaction-controls-iconbutton--loading',
+    'interaction-controls-iconbutton--constrained-content',
     'interaction-controls-icon-tile--all-variants',
     'interaction-controls-icon-tile--custom-sizing',
     'interaction-controls-icon-tile--inline-content-pressure',

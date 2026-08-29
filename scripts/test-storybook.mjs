@@ -108,12 +108,24 @@ export const targets = {
       'checkbox.invalid': 'components-form-controls-checkbox--invalid',
       'checkbox.hint-error':
         'components-form-controls-checkbox--with-hint-and-error',
+      'icon-button.appearances':
+        'interaction-controls-iconbutton--all-variants',
+      'icon-button.sizes': 'interaction-controls-iconbutton--all-sizes',
+      'icon-button.circle': 'interaction-controls-iconbutton--circle-shape',
+      'icon-button.surfaces':
+        'interaction-controls-iconbutton--on-different-surfaces',
+      'icon-button.disabled': 'interaction-controls-iconbutton--disabled',
+      'icon-button.loading': 'interaction-controls-iconbutton--loading',
+      'icon-button.content-pressure':
+        'interaction-controls-iconbutton--constrained-content',
+      'icon-button.default': 'interaction-controls-iconbutton--default',
     },
     filters: {
       'components-communication-accordion': 'contract-accordion',
       'interaction-controls-segmentedcontrol': 'contract-segmented-control',
       'interaction-controls-icon-tile': 'contract-icon-tile',
       'components-form-controls-checkbox': 'contract-checkbox',
+      'interaction-controls-iconbutton': 'contract-icon-button',
     },
     sharedContracts: true,
   },

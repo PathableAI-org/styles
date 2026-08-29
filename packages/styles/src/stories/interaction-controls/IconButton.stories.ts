@@ -2,7 +2,7 @@ import { expect, userEvent, within } from 'storybook/test'
 
 export default {
   title: 'Interaction Controls/IconButton',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'contract-icon-button'],
   parameters: {
     docs: {
       description: {
@@ -15,7 +15,7 @@ export default {
 
 const closeIcon = `
   <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-    <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
+    <path fill="currentColor" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
   </svg>
 `
 
@@ -121,7 +121,7 @@ const findOpaqueBackground = (element: HTMLElement, view: Window) => {
     current = current.parentElement
   }
 
-  throw new Error('Loading IconButton has no opaque background')
+  throw new Error('IconButton has no opaque background')
 }
 
 const contrastRatio = (foreground: string, background: string) => {
@@ -143,6 +143,50 @@ const contrastRatio = (foreground: string, background: string) => {
   return (lighter + 0.05) / (darker + 0.05)
 }
 
+const getButtonIcon = (button: HTMLElement) => {
+  const icon = button.querySelector<SVGElement>('svg')
+
+  if (!icon) throw new Error('IconButton SVG is missing')
+  return icon
+}
+
+const expectCentered = async (button: HTMLElement, icon: SVGElement) => {
+  const buttonBounds = button.getBoundingClientRect()
+  const iconBounds = icon.getBoundingClientRect()
+
+  await expect(iconBounds.left + iconBounds.width / 2).toBeCloseTo(
+    buttonBounds.left + buttonBounds.width / 2,
+    2,
+  )
+  await expect(iconBounds.top + iconBounds.height / 2).toBeCloseTo(
+    buttonBounds.top + buttonBounds.height / 2,
+    2,
+  )
+}
+
+const resolveColorToken = (canvasElement: HTMLElement, token: string) => {
+  const view = canvasElement.ownerDocument.defaultView
+
+  if (!view) throw new Error('IconButton story window is unavailable')
+
+  const tokenValue = view
+    .getComputedStyle(canvasElement)
+    .getPropertyValue(token)
+    .trim()
+  const probe = canvasElement.ownerDocument.createElement('span')
+
+  if (!tokenValue) throw new Error(`IconButton token ${token} is undefined`)
+
+  probe.style.color = `var(${token})`
+  probe.hidden = true
+  canvasElement.append(probe)
+  const color = view.getComputedStyle(probe).color
+  probe.remove()
+
+  if (!color) throw new Error(`Unable to resolve IconButton token ${token}`)
+  return color
+}
+
 export const AllVariants = {
   render: () => `
     <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">All Appearance Variants</h3>
@@ -159,6 +203,7 @@ export const AllVariants = {
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView
     const variants = [
       ['Bare', 'pathable-icon-button--bare'],
       ['Subtle', 'pathable-icon-button--subtle'],
@@ -167,15 +212,81 @@ export const AllVariants = {
       ['Destructive', 'pathable-icon-button--destructive'],
     ] as const
 
+    if (!view) throw new Error('IconButton story window is unavailable')
+
     for (const [name, modifier] of variants) {
       const button = canvas.getByRole('button', { name })
-      const icon = button.querySelector('svg')
+      const icon = getButtonIcon(button)
+      const buttonBounds = button.getBoundingClientRect()
+      const iconBounds = icon.getBoundingClientRect()
+      const style = view.getComputedStyle(button)
 
       await expect(button).toHaveClass('pathable-icon-button', modifier)
       await expect(button).toHaveAttribute('type', 'button')
       await expect(icon).toHaveAttribute('aria-hidden', 'true')
       await expect(icon).toHaveAttribute('focusable', 'false')
+      await expect(Math.round(buttonBounds.width)).toBe(44)
+      await expect(Math.round(buttonBounds.height)).toBe(44)
+      await expect(Math.round(iconBounds.width)).toBe(20)
+      await expect(Math.round(iconBounds.height)).toBe(20)
+      await expect(style.alignItems).toBe('center')
+      await expect(style.justifyContent).toBe('center')
+      await expect(style.flexShrink).toBe('0')
+      await expectCentered(button, icon)
     }
+
+    const bareStyle = view.getComputedStyle(
+      canvas.getByRole('button', { name: 'Bare' }),
+    )
+    const subtleStyle = view.getComputedStyle(
+      canvas.getByRole('button', { name: 'Subtle' }),
+    )
+    const borderedStyle = view.getComputedStyle(
+      canvas.getByRole('button', { name: 'Bordered' }),
+    )
+    const inverseStyle = view.getComputedStyle(
+      canvas.getByRole('button', { name: 'Inverse' }),
+    )
+    const destructiveStyle = view.getComputedStyle(
+      canvas.getByRole('button', { name: 'Destructive' }),
+    )
+
+    await expect(bareStyle.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(subtleStyle.backgroundColor).toBe(
+      resolveColorToken(canvasElement, '--pathable-color-bg'),
+    )
+    await expect(borderedStyle.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(borderedStyle.borderTopWidth).toBe('1px')
+    await expect(borderedStyle.borderTopColor).toBe(
+      resolveColorToken(canvasElement, '--pathable-color-border'),
+    )
+    await expect(inverseStyle.backgroundColor).toBe(
+      resolveColorToken(canvasElement, '--pathable-color-text'),
+    )
+    await expect(inverseStyle.color).toBe(
+      resolveColorToken(canvasElement, '--pathable-color-surface'),
+    )
+    await expect(destructiveStyle.color).toBe(
+      resolveColorToken(canvasElement, '--pathable-color-danger'),
+    )
+
+    const bare = canvas.getByRole('button', { name: 'Bare' })
+    const destructive = canvas.getByRole('button', { name: 'Destructive' })
+    let activations = 0
+    bare.addEventListener('click', () => {
+      activations += 1
+    })
+
+    await userEvent.tab()
+    await expect(bare).toHaveFocus()
+    await userEvent.keyboard('{Enter}')
+    await userEvent.keyboard(' ')
+    await expect(activations).toBe(2)
+
+    for (let index = 0; index < 4; index += 1) await userEvent.tab()
+    await expect(destructive).toHaveFocus()
+    await expect(view.getComputedStyle(destructive).outlineStyle).toBe('solid')
+    await expect(view.getComputedStyle(destructive).outlineWidth).toBe('2px')
   },
 }
 
@@ -212,20 +323,25 @@ export const AllSizes = {
       name: 'Close',
     })
     const sizes = [
-      [compact, 32],
-      [defaultButton, 44],
-      [large, 52],
+      [compact, 32, 16],
+      [defaultButton, 44, 20],
+      [large, 52, 24],
     ] as const
 
     await expect(compact).toHaveClass('pathable-icon-button--compact')
     await expect(defaultButton).toHaveClass('pathable-icon-button')
     await expect(large).toHaveClass('pathable-icon-button--large')
 
-    for (const [button, size] of sizes) {
+    for (const [button, size, iconSize] of sizes) {
       const bounds = button.getBoundingClientRect()
+      const icon = getButtonIcon(button)
+      const iconBounds = icon.getBoundingClientRect()
 
       await expect(Math.round(bounds.width)).toBe(size)
       await expect(Math.round(bounds.height)).toBe(size)
+      await expect(Math.round(iconBounds.width)).toBe(iconSize)
+      await expect(Math.round(iconBounds.height)).toBe(iconSize)
+      await expectCentered(button, icon)
     }
   },
 }
@@ -244,12 +360,21 @@ export const CircleShape = {
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('IconButton story window is unavailable')
 
     for (const name of ['Bare Circle', 'Subtle Circle', 'Bordered Circle']) {
-      await expect(canvas.getByRole('button', { name })).toHaveClass(
+      const button = canvas.getByRole('button', { name })
+      const bounds = button.getBoundingClientRect()
+
+      await expect(button).toHaveClass(
         'pathable-icon-button',
         'pathable-icon-button--circle',
       )
+      await expect(view.getComputedStyle(button).borderRadius).toBe('50%')
+      await expect(Math.round(bounds.width)).toBe(Math.round(bounds.height))
+      await expectCentered(button, getButtonIcon(button))
     }
   },
 }
@@ -258,13 +383,15 @@ export const OnDifferentSurfaces = {
   render: () => `
     <h3 style="margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600;">On Different Surfaces</h3>
     <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
-      Bare icon buttons on base, brand, and inverse surfaces. Tab through to verify focus ring visibility across all surface types.
+      Bare icon buttons on base and brand surfaces plus the inverse appearance on a dark surface. Tab through to verify icon and focus-ring visibility across all surface types.
     </p>
     <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: center;">
-      <div class="pathable-surface pathable-surface--base" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center;">
-        <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on base surface">
-          ${closeIcon}
-        </button>
+      <div style="display: inline-flex; background: var(--pathable-color-surface);">
+        <div class="pathable-surface pathable-surface--base" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center;">
+          <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on base surface">
+            ${closeIcon}
+          </button>
+        </div>
       </div>
       <div class="pathable-surface pathable-surface--brand" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center;">
         <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on brand surface">
@@ -272,7 +399,7 @@ export const OnDifferentSurfaces = {
         </button>
       </div>
       <div class="pathable-surface pathable-surface--inverse" style="padding: 1.5rem; display: inline-flex; align-items: center; justify-content: center;">
-        <button type="button" class="pathable-icon-button pathable-icon-button--bare" aria-label="Close on inverse surface">
+        <button type="button" class="pathable-icon-button pathable-icon-button--inverse" aria-label="Close on inverse surface">
           ${closeIcon}
         </button>
       </div>
@@ -298,10 +425,20 @@ export const OnDifferentSurfaces = {
       if (index > 0) await userEvent.tab()
 
       const style = view.getComputedStyle(button)
+      const iconPath = getButtonIcon(button).querySelector('path')
+      const background = findOpaqueBackground(button, view)
+
+      if (!iconPath) throw new Error('IconButton SVG path is missing')
 
       await expect(button).toHaveFocus()
       await expect(style.outlineStyle).toBe('solid')
       await expect(style.outlineWidth).toBe('2px')
+      await expect(
+        contrastRatio(view.getComputedStyle(iconPath).fill, background),
+      ).toBeGreaterThanOrEqual(3)
+      await expect(
+        contrastRatio(style.outlineColor, background),
+      ).toBeGreaterThanOrEqual(3)
     }
   },
 }
@@ -313,15 +450,35 @@ export const Disabled = {
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
     const button = canvas.getByRole('button', { name: 'Close unavailable' })
-    const icon = button.querySelector('svg')
+    const icon = getButtonIcon(button)
+    const view = canvasElement.ownerDocument.defaultView
+    let activations = 0
+
+    if (!view) throw new Error('IconButton story window is unavailable')
+
+    button.addEventListener('click', () => {
+      activations += 1
+    })
+    button.click()
+    button.focus()
+    const restingBackground = view.getComputedStyle(button).backgroundColor
+    await userEvent.hover(button)
 
     await expect(button).toBeDisabled()
+    await expect(activations).toBe(0)
+    await expect(button).not.toHaveFocus()
     await expect(button).toHaveClass(
       'pathable-icon-button',
       'pathable-icon-button--subtle',
     )
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
     await expect(icon).toHaveAttribute('focusable', 'false')
+    await expect(view.getComputedStyle(button).opacity).toBe('0.5')
+    await expect(view.getComputedStyle(button).cursor).toBe('default')
+    await expect(view.getComputedStyle(button).boxShadow).toBe('none')
+    await expect(view.getComputedStyle(button).backgroundColor).toBe(
+      restingBackground,
+    )
   },
 }
 
@@ -390,10 +547,16 @@ export const Loading = {
       await expect(
         parseComputedColor(spinnerStyle.borderRightColor).alpha,
       ).toBe(1)
-      await expect(restingBounds.width).toBeCloseTo(loadingCase.buttonSize, 3)
-      await expect(restingBounds.height).toBeCloseTo(loadingCase.buttonSize, 3)
-      await expect(loadingBounds.width).toBeCloseTo(restingBounds.width, 3)
-      await expect(loadingBounds.height).toBeCloseTo(restingBounds.height, 3)
+      await expect(Math.round(restingBounds.width)).toBe(loadingCase.buttonSize)
+      await expect(Math.round(restingBounds.height)).toBe(
+        loadingCase.buttonSize,
+      )
+      await expect(Math.round(loadingBounds.width)).toBe(
+        Math.round(restingBounds.width),
+      )
+      await expect(Math.round(loadingBounds.height)).toBe(
+        Math.round(restingBounds.height),
+      )
       await expect(
         contrastRatio(
           spinnerStyle.borderRightColor,
@@ -423,9 +586,14 @@ export const ConstrainedContent = {
       'Regional documentation requires review before approval',
     )
     const bounds = button.getBoundingClientRect()
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('IconButton story window is unavailable')
 
     await expect(Math.round(bounds.width)).toBe(44)
     await expect(Math.round(bounds.height)).toBe(44)
+    await expect(view.getComputedStyle(button).flexShrink).toBe('0')
+    await expectCentered(button, getButtonIcon(button))
     await expect(text).toBeVisible()
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
