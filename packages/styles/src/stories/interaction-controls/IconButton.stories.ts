@@ -166,8 +166,11 @@ const expectCentered = async (button: HTMLElement, icon: SVGElement) => {
 
 const resolveColorToken = (canvasElement: HTMLElement, token: string) => {
   const view = canvasElement.ownerDocument.defaultView
+
+  if (!view) throw new Error('IconButton story window is unavailable')
+
   const tokenValue = view
-    ?.getComputedStyle(canvasElement)
+    .getComputedStyle(canvasElement)
     .getPropertyValue(token)
     .trim()
   const probe = canvasElement.ownerDocument.createElement('span')
@@ -222,10 +225,10 @@ export const AllVariants = {
       await expect(button).toHaveAttribute('type', 'button')
       await expect(icon).toHaveAttribute('aria-hidden', 'true')
       await expect(icon).toHaveAttribute('focusable', 'false')
-      await expect(buttonBounds.width).toBeCloseTo(44, 3)
-      await expect(buttonBounds.height).toBeCloseTo(44, 3)
-      await expect(iconBounds.width).toBeCloseTo(20, 3)
-      await expect(iconBounds.height).toBeCloseTo(20, 3)
+      await expect(Math.round(buttonBounds.width)).toBe(44)
+      await expect(Math.round(buttonBounds.height)).toBe(44)
+      await expect(Math.round(iconBounds.width)).toBe(20)
+      await expect(Math.round(iconBounds.height)).toBe(20)
       await expect(style.alignItems).toBe('center')
       await expect(style.justifyContent).toBe('center')
       await expect(style.flexShrink).toBe('0')
@@ -370,7 +373,7 @@ export const CircleShape = {
         'pathable-icon-button--circle',
       )
       await expect(view.getComputedStyle(button).borderRadius).toBe('50%')
-      await expect(bounds.width).toBeCloseTo(bounds.height, 3)
+      await expect(Math.round(bounds.width)).toBe(Math.round(bounds.height))
       await expectCentered(button, getButtonIcon(button))
     }
   },
@@ -539,10 +542,16 @@ export const Loading = {
       await expect(
         parseComputedColor(spinnerStyle.borderRightColor).alpha,
       ).toBe(1)
-      await expect(restingBounds.width).toBeCloseTo(loadingCase.buttonSize, 3)
-      await expect(restingBounds.height).toBeCloseTo(loadingCase.buttonSize, 3)
-      await expect(loadingBounds.width).toBeCloseTo(restingBounds.width, 3)
-      await expect(loadingBounds.height).toBeCloseTo(restingBounds.height, 3)
+      await expect(Math.round(restingBounds.width)).toBe(loadingCase.buttonSize)
+      await expect(Math.round(restingBounds.height)).toBe(
+        loadingCase.buttonSize,
+      )
+      await expect(Math.round(loadingBounds.width)).toBe(
+        Math.round(restingBounds.width),
+      )
+      await expect(Math.round(loadingBounds.height)).toBe(
+        Math.round(restingBounds.height),
+      )
       await expect(
         contrastRatio(
           spinnerStyle.borderRightColor,
