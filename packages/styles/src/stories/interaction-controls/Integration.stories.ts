@@ -80,9 +80,11 @@ function initializeViewSwitcher(
 
   if (group.dataset.segmentedControlReady !== 'true') {
     group.addEventListener('click', (event) => {
-      const selected = (
-        event.target as HTMLElement
-      ).closest?.<HTMLButtonElement>('.pathable-segmented-control__option')
+      if (!(event.target instanceof Element)) return
+
+      const selected = event.target.closest<HTMLButtonElement>(
+        '.pathable-segmented-control__option',
+      )
       if (selected && radios.includes(selected)) select(selected)
     })
     group.addEventListener('keydown', (event) => {
