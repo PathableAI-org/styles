@@ -41,7 +41,9 @@ Rules carried by the ledger:
   reusable helpers unless those helpers are already green or a documented,
   component-scoped reprioritization preserves Styles-first proof. SegmentedControl
   is the first such exception because a downstream React wrapper now exposes the
-  same user-facing promise.
+  same user-facing promise. The subsequently approved IconTile, IconButton, and
+  Integration continuations remain Styles-only, preserve independent focused
+  proofs, and do not imply completion of unfinished earlier waves.
 
 ## Component and helper taxonomy
 

@@ -85,6 +85,15 @@ export const targets = {
         'interaction-controls-segmentedcontrol--disabled-option',
       'segmented-control.static-single-option':
         'interaction-controls-segmentedcontrol--static-single-option',
+      'integration.toolbar': 'interaction-controls-integration--toolbar-panel',
+      'integration.status-row': 'interaction-controls-integration--status-row',
+      'integration.view-switcher':
+        'interaction-controls-integration--view-switcher',
+      'integration.full-composition':
+        'interaction-controls-integration--full-composition',
+      'integration.content-pressure':
+        'interaction-controls-integration--content-pressure',
+      'integration.default': 'interaction-controls-integration--default',
       'icon-tile.shape': 'interaction-controls-icon-tile--square-and-circle',
       'icon-tile.sizes': 'interaction-controls-icon-tile--size-variants',
       'icon-tile.decorative':
@@ -126,6 +135,7 @@ export const targets = {
       'interaction-controls-icon-tile': 'contract-icon-tile',
       'components-form-controls-checkbox': 'contract-checkbox',
       'interaction-controls-iconbutton': 'contract-icon-button',
+      'interaction-controls-integration': 'contract-integration',
     },
     sharedContracts: true,
   },

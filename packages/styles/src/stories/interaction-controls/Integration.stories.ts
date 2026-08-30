@@ -2,12 +2,12 @@ import { expect, userEvent, within } from 'storybook/test'
 
 export default {
   title: 'Interaction Controls/Integration',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'contract-integration'],
   parameters: {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS presentation with consumer-owned SegmentedControl behavior.\n\n**States verified**: Toolbar actions retain native button semantics and accessible names, status icons remain decorative beside visible text, and the view switcher maintains selection and roving focus during Arrow-key navigation.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Segmented radiogroups also require application JavaScript for selection state and Arrow-key navigation; use the React wrapper or implement the documented ARIA behavior.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
+          '**Interaction Model**: CSS presentation with consumer-owned SegmentedControl behavior.\n\n**States verified**: Toolbar actions retain native button semantics and accessible names, status icons remain decorative beside visible text, and the view switcher maintains selection and roving focus during Arrow-key and click navigation. The constrained fixture verifies that the composition contains overflow under narrow, increased-text pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS. Segmented radiogroups also require application JavaScript for selection state and Arrow-key navigation; use the React wrapper or implement the documented ARIA behavior.\n\nA complete composition demonstrating how icon buttons, icon tiles, segmented controls, and surfaces work together in a realistic UI layout.',
       },
     },
   },
@@ -15,7 +15,7 @@ export default {
 
 const iconButton = (modifiers: string, label: string, iconContent: string) => `
   <button type="button" class="pathable-icon-button ${modifiers}" aria-label="${label}">
-    <svg class="pathable-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg class="pathable-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       ${iconContent}
     </svg>
   </button>
@@ -23,7 +23,7 @@ const iconButton = (modifiers: string, label: string, iconContent: string) => `
 
 const iconTile = (modifiers: string, iconContent: string) => `
   <span class="pathable-icon-tile ${modifiers}" aria-hidden="true">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       ${iconContent}
     </svg>
   </span>
@@ -53,9 +53,17 @@ const ICONS = {
   eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />',
 }
 
-function initializeViewSwitcher(canvasElement: HTMLElement) {
+type IntegrationPlayContext = {
+  canvasElement: HTMLElement
+  id: string
+}
+
+function initializeViewSwitcher(
+  canvasElement: HTMLElement,
+  groupName = 'View mode',
+) {
   const group = within(canvasElement).getByRole('radiogroup', {
-    name: 'View mode',
+    name: groupName,
   })
   const radios = within(group).getAllByRole<HTMLButtonElement>('radio')
   const select = (selected: HTMLButtonElement) => {
@@ -71,11 +79,12 @@ function initializeViewSwitcher(canvasElement: HTMLElement) {
   }
 
   if (group.dataset.segmentedControlReady !== 'true') {
-    group.dataset.segmentedControlReady = 'true'
     group.addEventListener('click', (event) => {
-      const selected = (
-        event.target as HTMLElement
-      ).closest?.<HTMLButtonElement>('.pathable-segmented-control__option')
+      if (!(event.target instanceof Element)) return
+
+      const selected = event.target.closest<HTMLButtonElement>(
+        '.pathable-segmented-control__option',
+      )
       if (selected && radios.includes(selected)) select(selected)
     })
     group.addEventListener('keydown', (event) => {
@@ -103,21 +112,76 @@ function initializeViewSwitcher(canvasElement: HTMLElement) {
       select(next)
       next.focus()
     })
+    group.dataset.segmentedControlReady = 'true'
   }
 
   return radios
 }
 
-async function verifyViewSwitcher(canvasElement: HTMLElement) {
-  const radios = initializeViewSwitcher(canvasElement)
+async function expectSingleSelection(
+  radios: HTMLButtonElement[],
+  selected: HTMLButtonElement,
+) {
+  await expect(
+    radios.filter((radio) => radio.getAttribute('aria-checked') === 'true'),
+  ).toEqual([selected])
+  await expect(radios.filter((radio) => radio.tabIndex === 0)).toEqual([
+    selected,
+  ])
+  await expect(
+    radios.filter((radio) =>
+      radio.classList.contains('pathable-segmented-control__option--selected'),
+    ),
+  ).toEqual([selected])
+}
+
+async function verifyViewSwitcher(
+  canvasElement: HTMLElement,
+  groupName = 'View mode',
+) {
+  const canvas = within(canvasElement)
+  const group = canvas.getByRole('radiogroup', { name: groupName })
+  const initialRadios = within(group).getAllByRole<HTMLButtonElement>('radio')
+
+  await expect(initialRadios).toHaveLength(3)
+  await expectSingleSelection(initialRadios, initialRadios[0])
+
+  const radios = initializeViewSwitcher(canvasElement, groupName)
+
+  await expect(group).toHaveAttribute('data-segmented-control-ready', 'true')
+  for (const icon of group.querySelectorAll('svg')) {
+    await expect(icon).toHaveAttribute('aria-hidden', 'true')
+    await expect(icon).toHaveAttribute('focusable', 'false')
+  }
   radios[0].focus()
 
   await userEvent.keyboard('{ArrowRight}')
 
   await expect(radios[1]).toHaveFocus()
-  await expect(radios[1]).toHaveAttribute('aria-checked', 'true')
-  await expect(radios[1]).toHaveAttribute('tabindex', '0')
-  await expect(radios[0]).toHaveAttribute('tabindex', '-1')
+  await expectSingleSelection(radios, radios[1])
+
+  await userEvent.click(radios[2])
+  await expect(radios[2]).toHaveFocus()
+  await expectSingleSelection(radios, radios[2])
+
+  await userEvent.keyboard('{ArrowRight}')
+  await expect(radios[0]).toHaveFocus()
+  await expectSingleSelection(radios, radios[0])
+}
+
+async function runIntegrationProof(
+  storyId: string,
+  capability: string,
+  proof: () => Promise<void>,
+) {
+  try {
+    await proof()
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    throw new Error(`[styles/${storyId}/${capability}] ${message}`, {
+      cause: error,
+    })
+  }
 }
 
 async function verifyIconButtonSemantics(
@@ -128,30 +192,58 @@ async function verifyIconButtonSemantics(
 
   for (const name of names) {
     const button = canvas.getByRole('button', { name })
-    const icon = button.querySelector('svg')
+    const icon = button.querySelector<SVGElement>('svg')
+
+    if (!icon) throw new Error(`Integration action "${name}" has no icon`)
 
     await expect(button.tagName).toBe('BUTTON')
     await expect(button).toHaveAttribute('type', 'button')
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
+    await expect(icon).toHaveAttribute('focusable', 'false')
   }
+
+  const representativeName = names[0]
+  if (!representativeName) {
+    throw new Error('Integration fixture needs a representative toolbar action')
+  }
+
+  const representativeAction = canvas.getByRole('button', {
+    name: representativeName,
+  })
+  let activations = 0
+  representativeAction.addEventListener('click', () => {
+    activations += 1
+  })
+  representativeAction.focus()
+  await userEvent.keyboard('{Enter}')
+  await expect(activations).toBe(1)
+  await userEvent.keyboard(' ')
+  await expect(activations).toBe(2)
 }
 
 async function verifyDecorativeStatusTiles(
   canvasElement: HTMLElement,
+  listName: string,
   labels: readonly string[],
 ) {
-  const tiles = canvasElement.querySelectorAll('.pathable-icon-tile--circle')
+  const canvas = within(canvasElement)
+  const list = canvas.getByRole('list', { name: listName })
+  const items = within(list).getAllByRole('listitem')
 
-  await expect(tiles).toHaveLength(labels.length)
-  for (const [index, tile] of Array.from(tiles).entries()) {
-    const statusItem = tile.parentElement
+  await expect(items).toHaveLength(labels.length)
+  for (const [index, statusItem] of items.entries()) {
     const label = labels[index]
+    const tile = statusItem.querySelector('.pathable-icon-tile--circle')
 
-    if (!statusItem || !label) {
+    if (!tile || !label) {
       throw new Error('Each status tile must have a corresponding label')
     }
 
     await expect(tile).toHaveAttribute('aria-hidden', 'true')
+    const icon = tile.querySelector('svg')
+    if (!icon) throw new Error(`Integration status "${label}" has no icon`)
+    await expect(icon).toHaveAttribute('aria-hidden', 'true')
+    await expect(icon).toHaveAttribute('focusable', 'false')
     await expect(within(statusItem).getByText(label)).toBeVisible()
   }
 }
@@ -166,24 +258,26 @@ export const ToolbarPanel = {
       <div class="pathable-cluster" style="align-items: center;">
         ${iconButton('pathable-icon-button--bare', 'Search', ICONS.search)}
         ${iconButton('pathable-icon-button--bare', 'Notifications', ICONS.bell)}
-        <span style="width: 1px; height: 24px; background: var(--pathable-color-border, #ccc); display: inline-block;"></span>
+        <span aria-hidden="true" style="width: 1px; height: 24px; background: var(--pathable-color-border, #ccc); display: inline-block;"></span>
         ${iconButton('pathable-icon-button--subtle', 'Edit', ICONS.edit)}
         ${iconButton('pathable-icon-button--subtle', 'Download', ICONS.download)}
-        <span style="width: 1px; height: 24px; background: var(--pathable-color-border, #ccc); display: inline-block;"></span>
+        <span aria-hidden="true" style="width: 1px; height: 24px; background: var(--pathable-color-border, #ccc); display: inline-block;"></span>
         ${iconButton('pathable-icon-button--bordered', 'Delete', ICONS.trash)}
         ${iconButton('pathable-icon-button--bordered', 'Settings', ICONS.settings)}
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    await verifyIconButtonSemantics(canvasElement, [
-      'Search',
-      'Notifications',
-      'Edit',
-      'Download',
-      'Delete',
-      'Settings',
-    ])
+  play: async ({ canvasElement, id }: IntegrationPlayContext) => {
+    await runIntegrationProof(id, 'integration.toolbar', async () => {
+      await verifyIconButtonSemantics(canvasElement, [
+        'Search',
+        'Notifications',
+        'Edit',
+        'Download',
+        'Delete',
+        'Settings',
+      ])
+    })
   },
 }
 
@@ -194,29 +288,29 @@ export const StatusRow = {
       A row of status icon tiles indicating the state of related items.
     </p>
     <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
-      <div class="pathable-cluster" style="align-items: center;">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div class="pathable-cluster" role="list" aria-label="Training statuses" style="align-items: center;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', ICONS.checkCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Compliance Training</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Completed Apr 12</div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', ICONS.alertTriangle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Safety Certification</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Pending review</div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', ICONS.xCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Fire Safety Drill</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">Overdue 14 days</div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', ICONS.info)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">HIPAA Update</div>
@@ -226,13 +320,15 @@ export const StatusRow = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    await verifyDecorativeStatusTiles(canvasElement, [
-      'Compliance Training',
-      'Safety Certification',
-      'Fire Safety Drill',
-      'HIPAA Update',
-    ])
+  play: async ({ canvasElement, id }: IntegrationPlayContext) => {
+    await runIntegrationProof(id, 'integration.status-row', async () => {
+      await verifyDecorativeStatusTiles(canvasElement, 'Training statuses', [
+        'Compliance Training',
+        'Safety Certification',
+        'Fire Safety Drill',
+        'HIPAA Update',
+      ])
+    })
   },
 }
 
@@ -247,19 +343,19 @@ export const ViewSwitcher = {
         <span style="font-size: 0.875rem; font-weight: 600;">Documents</span>
         <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
           <button type="button" class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" tabindex="0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               ${ICONS.list}
             </svg>
             List
           </button>
           <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               ${ICONS.grid}
             </svg>
             Grid
           </button>
           <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               ${ICONS.eye}
             </svg>
             Detail
@@ -268,8 +364,10 @@ export const ViewSwitcher = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    await verifyViewSwitcher(canvasElement)
+  play: async ({ canvasElement, id }: IntegrationPlayContext) => {
+    await runIntegrationProof(id, 'integration.view-switcher', async () => {
+      await verifyViewSwitcher(canvasElement)
+    })
   },
 }
 
@@ -284,7 +382,7 @@ export const FullComposition = {
       <div class="pathable-cluster" style="align-items: center; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <span class="pathable-icon-tile" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
             </svg>
@@ -294,19 +392,19 @@ export const FullComposition = {
 
         <div class="pathable-segmented-control" role="radiogroup" aria-label="View mode">
           <button type="button" class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" tabindex="0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               ${ICONS.list}
             </svg>
             List
           </button>
           <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               ${ICONS.grid}
             </svg>
             Grid
           </button>
           <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               ${ICONS.eye}
             </svg>
             Detail
@@ -320,39 +418,39 @@ export const FullComposition = {
           ${iconButton('pathable-icon-button--subtle', 'Search records', ICONS.search)}
           ${iconButton('pathable-icon-button--subtle', 'Add record', ICONS.edit)}
           ${iconButton('pathable-icon-button--bordered', 'Export', ICONS.download)}
-          <span style="width: 1px; height: 24px; background: var(--pathable-color-border, #ccc); display: inline-block;"></span>
+          <span aria-hidden="true" style="width: 1px; height: 24px; background: var(--pathable-color-border, #ccc); display: inline-block;"></span>
           ${iconButton('pathable-icon-button--bare', 'Notifications', ICONS.bell)}
           ${iconButton('pathable-icon-button--bare', 'Settings', ICONS.settings)}
         </div>
       </div>
 
       <!-- Divider -->
-      <div style="height: 1px; background: var(--pathable-color-border, #e0e0e0); margin: 0 0 1rem;"></div>
+      <div aria-hidden="true" style="height: 1px; background: var(--pathable-color-border, #e0e0e0); margin: 0 0 1rem;"></div>
 
       <!-- Status row with labeled items -->
-      <div class="pathable-cluster" style="align-items: center;">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div class="pathable-cluster" role="list" aria-label="Record statuses" style="align-items: center;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--success', ICONS.checkCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Compliance</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">12 records</div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', ICONS.alertTriangle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Pending Review</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">5 records</div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--error', ICONS.xCircle)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Overdue</div>
             <div style="font-size: 0.75rem; opacity: 0.7;">3 records</div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem;">
           ${iconTile('pathable-icon-tile--circle pathable-icon-tile--info', ICONS.info)}
           <div>
             <div style="font-size: 0.8rem; font-weight: 600;">Upcoming</div>
@@ -362,22 +460,111 @@ export const FullComposition = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    await verifyViewSwitcher(canvasElement)
-    await verifyIconButtonSemantics(canvasElement, [
-      'Search records',
-      'Add record',
-      'Export',
-      'Notifications',
-      'Settings',
-    ])
-    await verifyDecorativeStatusTiles(canvasElement, [
-      'Compliance',
-      'Pending Review',
-      'Overdue',
-      'Upcoming',
-    ])
+  play: async ({ canvasElement, id }: IntegrationPlayContext) => {
+    await runIntegrationProof(id, 'integration.full-composition', async () => {
+      await verifyViewSwitcher(canvasElement)
+      await verifyIconButtonSemantics(canvasElement, [
+        'Search records',
+        'Add record',
+        'Export',
+        'Notifications',
+        'Settings',
+      ])
+      await verifyDecorativeStatusTiles(canvasElement, 'Record statuses', [
+        'Compliance',
+        'Pending Review',
+        'Overdue',
+        'Upcoming',
+      ])
+    })
   },
 }
 
-export const Default = FullComposition
+export const ContentPressure = {
+  render: () => `
+    <section aria-labelledby="integration-pressure-heading" style="box-sizing: border-box; width: 320px; max-width: 100%;">
+      <h3 id="integration-pressure-heading" style="margin: 0 0 0.5rem; font-size: 2rem; font-weight: 600; overflow-wrap: anywhere;">Constrained integration composition</h3>
+      <div class="pathable-surface pathable-surface--raised" style="box-sizing: border-box; min-width: 0; padding: 1rem; font-size: 2rem;">
+        <div style="min-width: 0; margin-bottom: 1rem; overflow-wrap: anywhere;">
+          Regional training documentation and certification records
+        </div>
+        <div class="pathable-segmented-control" role="radiogroup" aria-label="Constrained view mode" style="width: 100%; margin-bottom: 1rem;">
+          <button type="button" class="pathable-segmented-control__option pathable-segmented-control__option--selected" role="radio" aria-checked="true" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              ${ICONS.list}
+            </svg>
+            Chronological records
+          </button>
+          <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              ${ICONS.grid}
+            </svg>
+            Responsive card grid
+          </button>
+          <button type="button" class="pathable-segmented-control__option" role="radio" aria-checked="false" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              ${ICONS.eye}
+            </svg>
+            Expanded details
+          </button>
+        </div>
+        <div class="pathable-cluster" style="align-items: center; margin-bottom: 1rem;">
+          ${iconButton('pathable-icon-button--subtle', 'Search constrained records', ICONS.search)}
+          ${iconButton('pathable-icon-button--bordered', 'Export constrained records', ICONS.download)}
+        </div>
+        <div role="list" aria-label="Constrained record status">
+          <div role="listitem" style="display: flex; min-width: 0; align-items: center; gap: 0.5rem;">
+            ${iconTile('pathable-icon-tile--circle pathable-icon-tile--warning', ICONS.alertTriangle)}
+            <span style="min-width: 0; overflow-wrap: anywhere;">Mandatory annual certification remains pending review</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  `,
+  play: async ({ canvasElement, id }: IntegrationPlayContext) => {
+    await runIntegrationProof(id, 'integration.content-pressure', async () => {
+      const canvas = within(canvasElement)
+      const fixture = canvas.getByRole('region', {
+        name: 'Constrained integration composition',
+      })
+      const viewSwitcher = canvas.getByRole('radiogroup', {
+        name: 'Constrained view mode',
+      })
+
+      await verifyViewSwitcher(canvasElement, 'Constrained view mode')
+      await verifyIconButtonSemantics(canvasElement, [
+        'Search constrained records',
+        'Export constrained records',
+      ])
+      await verifyDecorativeStatusTiles(
+        canvasElement,
+        'Constrained record status',
+        ['Mandatory annual certification remains pending review'],
+      )
+
+      for (const name of [
+        'Search constrained records',
+        'Export constrained records',
+      ]) {
+        const bounds = canvas
+          .getByRole('button', { name })
+          .getBoundingClientRect()
+        await expect(bounds.width).toBeCloseTo(44, 3)
+        await expect(bounds.height).toBeCloseTo(44, 3)
+      }
+
+      await expect(viewSwitcher.scrollWidth).toBeGreaterThan(
+        viewSwitcher.clientWidth,
+      )
+      await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+      await expect(canvasElement.scrollWidth).toBeLessThanOrEqual(
+        canvasElement.clientWidth,
+      )
+    })
+  },
+}
+
+export const Default = {
+  render: FullComposition.render,
+  play: FullComposition.play,
+}

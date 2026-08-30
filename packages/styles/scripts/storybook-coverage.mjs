@@ -63,6 +63,8 @@ const EXPECTED_COVERAGE = {
     'interaction-controls-icon-tile--custom-sizing',
     'interaction-controls-icon-tile--inline-content-pressure',
     'interaction-controls-icon-tile--increased-text',
+    'interaction-controls-integration--full-composition',
+    'interaction-controls-integration--content-pressure',
   ],
   Feedback: [
     'components-feedback-emptystate--no-data',

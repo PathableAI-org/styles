@@ -65,6 +65,10 @@ sequence because a downstream React package now exposes the same promise. The
 exception does not relax proof order: its entry must reach `styles-proven` with
 no downstream adoption before a separate React change can mark it `adopted`.
 
+IconTile, IconButton, and Integration are approved component-scoped Wave E
+exceptions that remain Styles-only. Their independent focused proofs do not
+start downstream adoption or imply completion of unfinished Waves B–D.
+
 ## Downstream adoption contract
 
 For each framework that adopts a shared component (`status: adopted`):
