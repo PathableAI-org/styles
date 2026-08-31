@@ -9,7 +9,8 @@
   "type": "module",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "AGENTS.md"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
