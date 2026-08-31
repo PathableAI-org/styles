@@ -60,6 +60,10 @@ RolloutEntry
 A component is proven one at a time within a wave (`FR-003`); parallel work is
 limited to components sharing only non-overlapping infrastructure.
 
+InteractionStates is an approved component-scoped Wave E exception that remains
+Styles-only. Its independent focused proof does not start downstream adoption or
+imply completion of unfinished Waves B–D.
+
 SegmentedControl is an approved component-scoped exception to the default wave
 sequence because a downstream React package now exposes the same promise. The
 exception does not relax proof order: its entry must reach `styles-proven` with

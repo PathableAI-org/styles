@@ -71,6 +71,24 @@ const CANONICAL_STORIES = [
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
   // Components - Layout
   { id: 'components-layout-icon--all-icons', mode: 'both' },
+  // Interaction states
+  { id: 'interaction-controls-interaction-states--all-states', mode: 'both' },
+  {
+    id: 'interaction-controls-interaction-states--focus-within',
+    mode: 'desktop',
+  },
+  {
+    id: 'interaction-controls-interaction-states--state-precedence',
+    mode: 'both',
+  },
+  {
+    id: 'interaction-controls-interaction-states--content-pressure',
+    mode: 'both',
+  },
+  {
+    id: 'interaction-controls-interaction-states--increased-text',
+    mode: 'both',
+  },
   // Interaction controls
   { id: 'interaction-controls-iconbutton--all-variants', mode: 'both' },
   { id: 'interaction-controls-iconbutton--all-sizes', mode: 'desktop' },

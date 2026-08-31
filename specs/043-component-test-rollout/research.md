@@ -183,6 +183,9 @@ field is what makes "Styles-proven before adoption" auditable.
 - The conformance proofs (break a component's behavior → its contract fails while
   unrelated targets stay green; break a shared helper → every adopting target
   fails) are execution-time proofs and are not committed.
+- InteractionStates is an approved component-scoped Wave E exception. It remains
+  Styles-only, receives an independent focused proof, does not start downstream
+  adoption, and does not claim completion of skipped Waves B–D.
 
 ## Decision 7: Reprioritize SegmentedControl as a two-step shared promotion
 
