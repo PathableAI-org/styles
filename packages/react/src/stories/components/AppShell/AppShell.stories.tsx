@@ -274,7 +274,7 @@ export const SharedMobileNavigation: Story = {
     })
 
     await step(
-      'custom skip link targets the consumer main landmark',
+      'custom skip link targets the dashboard main landmark',
       async () => {
         await expect(
           canvas.getByRole('link', { name: 'Skip product navigation' }),

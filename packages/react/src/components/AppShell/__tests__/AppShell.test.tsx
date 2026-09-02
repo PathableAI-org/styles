@@ -113,6 +113,25 @@ describe('AppShell', () => {
 
     rerender(<AppShell skipLinkText={false}>Content</AppShell>)
     expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(<AppShell skipLinkText={true}>Content</AppShell>)
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(<AppShell skipLinkText={[]}>Content</AppShell>)
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(<AppShell skipLinkText={<></>}>Content</AppShell>)
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(<AppShell skipLinkText={<span />}>Content</AppShell>)
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(
+      <AppShell skipLinkText={<span>Skip product navigation</span>}>
+        Content
+      </AppShell>,
+    )
+    expect(getByRole('link').textContent).toBe('Skip product navigation')
   })
 
   it('keeps AppShell children in control of main content at compile time', () => {

@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { Fragment, HTMLAttributes, isValidElement, ReactNode } from 'react'
 
 export interface BottomNavItem {
   label: string
@@ -20,6 +20,29 @@ const CONTENT_WIDTH_CLASS: Record<ContentWidth, string> = {
 
 function hasContent(value: unknown): boolean {
   return value !== null && value !== undefined && value !== false
+}
+
+function hasAccessibleContent(value: ReactNode): boolean {
+  if (typeof value === 'string') return Boolean(value.trim())
+  if (typeof value === 'number') return true
+  if (Array.isArray(value)) return value.some(hasAccessibleContent)
+  if (!isValidElement(value)) return false
+
+  const props = value.props as {
+    'aria-label'?: unknown
+    alt?: unknown
+    children?: ReactNode
+  }
+  if (
+    [props['aria-label'], props.alt].some(
+      (label) => typeof label === 'string' && Boolean(label.trim()),
+    )
+  ) {
+    return true
+  }
+  if (hasAccessibleContent(props.children)) return true
+
+  return value.type !== Fragment && typeof value.type !== 'string'
 }
 
 export interface AppShellProps extends Omit<
@@ -76,12 +99,9 @@ export function AppShell({
     typeof navigationLabel === 'string' && navigationLabel.trim()
       ? navigationLabel.trim()
       : DEFAULT_NAVIGATION_LABEL
-  const resolvedSkipLinkText =
-    skipLinkText === null ||
-    skipLinkText === false ||
-    (typeof skipLinkText === 'string' && !skipLinkText.trim())
-      ? DEFAULT_SKIP_LINK_TEXT
-      : skipLinkText
+  const resolvedSkipLinkText = hasAccessibleContent(skipLinkText)
+    ? skipLinkText
+    : DEFAULT_SKIP_LINK_TEXT
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',
