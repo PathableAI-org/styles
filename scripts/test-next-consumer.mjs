@@ -214,7 +214,7 @@ async function assertReactPackage(reactRoot) {
   )
   assert.match(
     appShellDeclarations,
-    /mainProps\?:\s*Omit<HTMLAttributes<HTMLElement>,\s*['"]children['"]>/u,
+    /mainProps\?:\s*Omit<HTMLAttributes<HTMLElement>,\s*['"]children['"]\s*\|\s*['"]dangerouslySetInnerHTML['"]>/u,
     'Packed declarations omit AppShell main landmark attributes',
   )
   const activityTypeExports =
