@@ -62,6 +62,7 @@ export type {
   AppShellProps,
   BottomNavItem,
   ContentWidth,
+  MobileNavigation,
 } from './components/AppShell/AppShell.js'
 export { AppShellNavItem } from './components/AppShell/AppShellNavItem.js'
 export type { AppShellNavItemProps } from './components/AppShell/AppShellNavItem.js'

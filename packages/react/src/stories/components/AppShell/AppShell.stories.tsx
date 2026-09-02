@@ -124,9 +124,11 @@ const meta = {
           'that do not need persistent navigation.\n\n' +
           '**Accessible naming**: The shell always renders a skip link as the ' +
           'first focusable element. Active navigation is communicated with ' +
-          'aria-current="page".\n\n' +
-          '**Known constraints**: bottomNavItems supports at most five ' +
-          'destinations. Sidebar hides below 1024px.',
+          'aria-current="page". Use `mainProps` to configure the main landmark ' +
+          'and `navigationLabel` to name navigation.\n\n' +
+          '**Responsive navigation**: The default `bottom` mode preserves the ' +
+          'compact, icon-based bottom navigation. The `shared` mode reuses all ' +
+          'sidebar destinations across breakpoints without JavaScript.',
       },
     },
   },
@@ -144,6 +146,24 @@ const meta = {
     topBarTitle: {
       control: { type: 'text' },
       description: 'Title displayed in the mobile top bar.',
+    },
+    mobileNavigation: {
+      options: ['bottom', 'shared'],
+      control: { type: 'select' },
+      description:
+        'Uses compact bottomNavItems or reuses the sidebar navigation on mobile.',
+    },
+    navigationLabel: {
+      control: { type: 'text' },
+      description: 'Accessible name for the primary navigation landmark.',
+    },
+    skipLinkText: {
+      control: { type: 'text' },
+      description: 'Consumer-localizable skip-link content.',
+    },
+    mainProps: {
+      control: { type: 'object' },
+      description: 'Native attributes applied to the main landmark.',
     },
     className: {
       control: { type: 'text' },
@@ -209,6 +229,61 @@ export const MobileShell: Story = {
       value: 'mobile1',
       isRotated: false,
     },
+  },
+}
+
+// Mobile shell with one shared navigation landmark
+export const SharedMobileNavigation: Story = {
+  render: () => (
+    <AppShell
+      mainProps={{
+        'aria-label': 'Dashboard workspace',
+        id: 'dashboard-main',
+        tabIndex: -1,
+      }}
+      mobileNavigation="shared"
+      navigationLabel="Product"
+      sidebarBrand={<strong>PathAble</strong>}
+      sidebarNav={renderSidebarNav()}
+      skipLinkText="Skip product navigation"
+      topBarTitle="PathAble"
+    >
+      <h1>Shared mobile navigation</h1>
+      <p>
+        Every desktop navigation destination remains available in one
+        horizontally scrollable navigation landmark on narrow viewports.
+      </p>
+    </AppShell>
+  ),
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false,
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('one named navigation contains every destination', async () => {
+      const navigation = canvas.getByRole('navigation', { name: 'Product' })
+      await expect(navigation).toBeVisible()
+      await expect(within(navigation).getAllByRole('link')).toHaveLength(
+        NAV_ITEMS.length,
+      )
+      await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
+    })
+
+    await step(
+      'custom skip link targets the consumer main landmark',
+      async () => {
+        await expect(
+          canvas.getByRole('link', { name: 'Skip product navigation' }),
+        ).toHaveAttribute('href', '#dashboard-main')
+        await expect(
+          canvas.getByRole('main', { name: 'Dashboard workspace' }),
+        ).toHaveAttribute('tabindex', '-1')
+      },
+    )
   },
 }
 

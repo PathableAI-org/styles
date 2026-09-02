@@ -43,6 +43,26 @@ const bottomNav = () => `
   </nav>
 `
 
+const sharedNavigation = () => `
+  <aside class="pathable-app-shell__sidebar">
+    <nav class="pathable-app-shell__nav" aria-label="Product">
+      ${[
+        'Dashboard',
+        'Participants',
+        'Programs',
+        'Reports',
+        'Resources',
+        'Settings',
+      ]
+        .map(
+          (label, index) => `
+        <a href="#${label.toLowerCase()}" class="pathable-app-shell__nav-item${index === 0 ? ' pathable-app-shell__nav-item--active' : ''}" ${index === 0 ? 'aria-current="page"' : ''}>${label}</a>`,
+        )
+        .join('')}
+    </nav>
+  </aside>
+`
+
 const mainContent = () => `
   <main id="main-content" class="pathable-app-shell__content">
     <h2 style="margin: 0 0 1rem; font-size: 1.125rem; font-weight: 600;">Home</h2>
@@ -79,6 +99,25 @@ export const Default = {
       ${topbar()}
       ${mainContent()}
       ${bottomNav()}
+    </div>
+  `,
+}
+
+export const SharedNavigation = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `pathable-app-shell--shared-navigation` modifier keeps one named navigation landmark and every destination available across breakpoints. At narrow widths, the destination row scrolls horizontally without JavaScript.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-app-shell pathable-app-shell--shared-navigation">
+      ${sharedNavigation()}
+      ${topbar()}
+      ${mainContent()}
     </div>
   `,
 }

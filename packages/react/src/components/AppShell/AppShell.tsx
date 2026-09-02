@@ -8,6 +8,7 @@ export interface BottomNavItem {
 }
 
 export type ContentWidth = 'standard' | 'wide'
+export type MobileNavigation = 'bottom' | 'shared'
 
 const CONTENT_WIDTH_CLASS: Record<ContentWidth, string> = {
   standard: 'pathable-app-shell__content--standard',
@@ -31,6 +32,10 @@ export interface AppShellProps extends Omit<
   bottomNavItems?: BottomNavItem[]
   contentWidth?: ContentWidth
   notification?: ReactNode
+  mainProps?: Omit<HTMLAttributes<HTMLElement>, 'children'>
+  navigationLabel?: string
+  skipLinkText?: ReactNode
+  mobileNavigation?: MobileNavigation
 }
 
 export function AppShell({
@@ -44,8 +49,17 @@ export function AppShell({
   bottomNavItems,
   contentWidth = 'standard',
   notification,
+  mainProps,
+  navigationLabel = 'Primary',
+  skipLinkText = 'Skip to main content',
+  mobileNavigation = 'bottom',
   ...rest
 }: AppShellProps) {
+  const {
+    className: mainClassName,
+    id: mainId = 'main-content',
+    ...mainAttributes
+  } = mainProps ?? {}
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',
@@ -56,14 +70,23 @@ export function AppShell({
   const contentClass = [
     'pathable-app-shell__content',
     CONTENT_WIDTH_CLASS[contentWidth],
-  ].join(' ')
+    mainClassName,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
-  const rootClass = ['pathable-app-shell', className].filter(Boolean).join(' ')
+  const rootClass = [
+    'pathable-app-shell',
+    mobileNavigation === 'shared' && 'pathable-app-shell--shared-navigation',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <div className={rootClass} {...rest}>
-      <a className="pathable-skipnav" href="#main-content">
-        Skip to main content
+      <a className="pathable-skipnav" href={`#${mainId}`}>
+        {skipLinkText}
       </a>
 
       {hasContent(notification) ? (
@@ -76,7 +99,9 @@ export function AppShell({
         ) : null}
 
         {hasContent(sidebarNav) ? (
-          <nav className="pathable-app-shell__nav">{sidebarNav}</nav>
+          <nav className="pathable-app-shell__nav" aria-label={navigationLabel}>
+            {sidebarNav}
+          </nav>
         ) : null}
 
         {hasContent(sidebarAccount) ? (
@@ -90,12 +115,17 @@ export function AppShell({
         </span>
       </header>
 
-      <main id="main-content" className={contentClass}>
+      <main {...mainAttributes} id={mainId} className={contentClass}>
         {children}
       </main>
 
-      {bottomNavItems && bottomNavItems.length > 0 ? (
-        <nav className="pathable-bottom-navigation" aria-label="Primary">
+      {mobileNavigation === 'bottom' &&
+      bottomNavItems &&
+      bottomNavItems.length > 0 ? (
+        <nav
+          className="pathable-bottom-navigation"
+          aria-label={navigationLabel}
+        >
           {bottomNavItems.map((item) => {
             const itemClass = [
               'pathable-bottom-navigation__item',

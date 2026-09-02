@@ -176,6 +176,11 @@ Pathable styling without any additional styles package import by the consumer.
   its regions? Class names should be merged rather than replaced.
 - What happens when a consumer passes additional HTML attributes to the shell
   or its regions? Attributes should be spread onto the appropriate DOM element.
+- What happens when a product has more than five primary destinations? Shared
+  navigation keeps the complete sidebar destination set available in a
+  horizontally scrollable mobile row without rendering a duplicate landmark.
+- What happens when a consumer changes the main landmark ID? The skip link must
+  derive its target from that ID and preserve server-rendered output.
 
 ## Requirements *(mandatory)*
 
@@ -254,6 +259,27 @@ Pathable styling without any additional styles package import by the consumer.
 
 - **FR-018**: The feature MUST NOT disable, weaken, skip, or silence lint
   checks to complete the wrapper work.
+
+- **FR-019**: The AppShell MUST accept native main-landmark attributes, merge a
+  consumer class name with required content classes, and derive the skip-link
+  target from the main landmark ID, defaulting to `main-content`.
+
+- **FR-020**: The AppShell MUST support consumer-provided skip-link content and
+  an accessible navigation label, defaulting to `Skip to main content` and
+  `Primary` respectively.
+
+- **FR-021**: The AppShell MUST preserve the existing icon-and-label bottom
+  navigation as the default mobile behavior.
+
+- **FR-022**: The AppShell MUST offer an opt-in shared mobile navigation mode
+  that renders one navigation landmark and keeps every sidebar destination
+  available across breakpoints without JavaScript.
+
+- **FR-023**: Shared mobile navigation MUST remain usable at viewport widths of
+  320px and above without dropping destinations or obscuring main content.
+
+- **FR-024**: The additive AppShell contract MUST produce equivalent client and
+  server markup and be verified through a packed React 18 Next.js consumer.
 
 ### Key Entities
 

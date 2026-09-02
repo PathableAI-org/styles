@@ -18,6 +18,7 @@ interface BottomNavItem {
 }
 
 type ContentWidth = 'standard' | 'wide'
+type MobileNavigation = 'bottom' | 'shared'
 
 interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Main content rendered inside the shell's content area (required). */
@@ -46,6 +47,18 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
 
   /** Content for the global notification or status layer. */
   notification?: ReactNode
+
+  /** Native attributes applied to the main landmark. */
+  mainProps?: Omit<HTMLAttributes<HTMLElement>, 'children'>
+
+  /** Accessible navigation landmark name. Default: 'Primary'. */
+  navigationLabel?: string
+
+  /** Consumer-localizable skip-link content. Default: 'Skip to main content'. */
+  skipLinkText?: ReactNode
+
+  /** Mobile navigation strategy. Default: 'bottom'. */
+  mobileNavigation?: MobileNavigation
 }
 ```
 
@@ -62,6 +75,10 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
 | `bottomNavItems` | `BottomNavItem[]` | No | — | `<nav className="pathable-bottom-navigation">` (omitted if empty/undefined) |
 | `contentWidth` | `'standard' \| 'wide'` | No | `'standard'` | `pathable-app-shell__content--standard` or `--wide` |
 | `notification` | `ReactNode` | No | — | `<div className="pathable-app-shell__notification">` (omitted if empty) |
+| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children'>` | No | — | Native main attributes; class names merge and ID controls the skip target |
+| `navigationLabel` | `string` | No | `'Primary'` | Accessible name for navigation landmarks |
+| `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Skip-link content |
+| `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar navigation on mobile |
 | `className` | `string` | No | `''` | Merged onto the root `<div className="pathable-app-shell">` |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | No | — | Spread onto the root div |
 
@@ -75,7 +92,7 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   <!-- sidebar (hidden on mobile) -->
   <aside class="pathable-app-shell__sidebar [pathable-app-shell__sidebar--fixed]">
     <div class="pathable-app-shell__brand">...</div>
-    <nav class="pathable-app-shell__nav">...</nav>
+    <nav class="pathable-app-shell__nav" aria-label="Primary">...</nav>
     <div class="pathable-app-shell__account">...</div>
   </aside>
   <!-- topbar (hidden on desktop) -->
@@ -95,6 +112,12 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   </nav>
 </div>
 ```
+
+With `mobileNavigation="shared"`, the root also receives
+`pathable-app-shell--shared-navigation`. The sidebar navigation remains the one
+navigation landmark at all breakpoints; `bottomNavItems` is not rendered. Below
+1024px, CSS presents all sidebar destinations in a horizontally scrollable row
+and hides sidebar brand and account regions.
 
 ### Empty State Behavior
 
