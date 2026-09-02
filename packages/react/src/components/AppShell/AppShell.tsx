@@ -10,6 +10,8 @@ export interface BottomNavItem {
 export type ContentWidth = 'standard' | 'wide'
 export type MobileNavigation = 'bottom' | 'shared'
 
+const DEFAULT_SKIP_LINK_TEXT = 'Skip to main content'
+
 const CONTENT_WIDTH_CLASS: Record<ContentWidth, string> = {
   standard: 'pathable-app-shell__content--standard',
   wide: 'pathable-app-shell__content--wide',
@@ -54,7 +56,7 @@ export function AppShell({
   notification,
   mainProps,
   navigationLabel = 'Primary',
-  skipLinkText = 'Skip to main content',
+  skipLinkText = DEFAULT_SKIP_LINK_TEXT,
   mobileNavigation = 'bottom',
   ...rest
 }: AppShellProps) {
@@ -65,7 +67,16 @@ export function AppShell({
   } = mainProps ?? {}
   const normalizedMainId =
     typeof requestedMainId === 'string' ? requestedMainId.trim() : ''
-  const mainId = normalizedMainId || 'main-content'
+  const mainId =
+    normalizedMainId && !/\s/u.test(normalizedMainId)
+      ? normalizedMainId
+      : 'main-content'
+  const resolvedSkipLinkText =
+    skipLinkText === null ||
+    skipLinkText === false ||
+    (typeof skipLinkText === 'string' && !skipLinkText.trim())
+      ? DEFAULT_SKIP_LINK_TEXT
+      : skipLinkText
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',
@@ -92,7 +103,7 @@ export function AppShell({
   return (
     <div className={rootClass} {...rest}>
       <a className="pathable-skipnav" href={`#${mainId}`}>
-        {skipLinkText}
+        {resolvedSkipLinkText}
       </a>
 
       {hasContent(notification) ? (

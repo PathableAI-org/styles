@@ -526,12 +526,14 @@ available in one navigation landmark at every breakpoint without JavaScript.
 </AppShell>
 ```
 
-The skip-link target is derived from a trimmed, non-empty `mainProps.id`, falling
-back to `main-content`. Consumer classes are appended to the shell's required
-main classes, and other native main attributes are forwarded except `children`
-and `dangerouslySetInnerHTML`; main content remains owned by `AppShell` children.
-`navigationLabel` defaults to `Primary` and names both the sidebar navigation
-and the legacy bottom navigation when present.
+The skip-link target is derived from a trimmed, non-empty `mainProps.id` without
+whitespace, falling back to `main-content`. Empty `skipLinkText` values fall back
+to `Skip to main content` so the focusable link remains named. Consumer classes
+are appended to the shell's required main classes, and other native main
+attributes are forwarded except `children` and `dangerouslySetInnerHTML`; main
+content remains owned by `AppShell` children. `navigationLabel` defaults to
+`Primary` and names both the sidebar navigation and the legacy bottom navigation
+when present.
 
 In the default `bottom` mode, pass up to five icon-and-label destinations with
 `bottomNavItems`; the desktop sidebar remains hidden below 1024px. In `shared`
@@ -540,12 +542,12 @@ landmark becomes a horizontally scrollable mobile row so all destinations stay
 available without duplicate landmarks. Sidebar brand and account content remain
 desktop-only in this mode.
 
-| Prop               | Type                                                                         | Default                  | Description                                                                                                    |
-| ------------------ | ---------------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| `mainProps`        | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | —                        | Native main-landmark attributes; `className` is merged and a trimmed, non-empty `id` controls the skip target. |
-| `navigationLabel`  | `string`                                                                     | `'Primary'`              | Accessible name for navigation landmarks.                                                                      |
-| `skipLinkText`     | `ReactNode`                                                                  | `'Skip to main content'` | Localizable skip-link content.                                                                                 |
-| `mobileNavigation` | `'bottom' \| 'shared'`                                                       | `'bottom'`               | Selects compact bottom items or the complete shared navigation.                                                |
+| Prop               | Type                                                                         | Default                  | Description                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `mainProps`        | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | —                        | Native main-landmark attributes; `className` is merged and a valid normalized `id` controls the skip target. |
+| `navigationLabel`  | `string`                                                                     | `'Primary'`              | Accessible name for navigation landmarks.                                                                    |
+| `skipLinkText`     | `ReactNode`                                                                  | `'Skip to main content'` | Localizable skip-link content; empty values use the default.                                                 |
+| `mobileNavigation` | `'bottom' \| 'shared'`                                                       | `'bottom'`               | Selects compact bottom items or the complete shared navigation.                                              |
 
 ## Activity List
 

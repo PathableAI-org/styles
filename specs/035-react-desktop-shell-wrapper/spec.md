@@ -262,14 +262,15 @@ Pathable styling without any additional styles package import by the consumer.
 
 - **FR-019**: The AppShell MUST accept native main-landmark attributes, merge a
   consumer class name with required content classes, and derive the skip-link
-  target from a trimmed, non-empty main landmark ID, defaulting invalid or
-  missing IDs to `main-content`. Main-landmark attributes MUST NOT accept
-  `children` or `dangerouslySetInnerHTML`; main content remains owned by AppShell
-  children.
+  target from a valid normalized main landmark ID, defaulting missing, empty,
+  non-string, or embedded-whitespace IDs to `main-content`. Main-landmark
+  attributes MUST NOT accept `children` or `dangerouslySetInnerHTML`; main
+  content remains owned by AppShell children.
 
 - **FR-020**: The AppShell MUST support consumer-provided skip-link content and
   an accessible navigation label, defaulting to `Skip to main content` and
-  `Primary` respectively.
+  `Primary` respectively. Empty skip-link content MUST use the default copy so
+  the focusable link remains named.
 
 - **FR-021**: The AppShell MUST preserve the existing icon-and-label bottom
   navigation as the default mobile behavior.

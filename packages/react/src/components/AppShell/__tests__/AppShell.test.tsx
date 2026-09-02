@@ -81,6 +81,11 @@ describe('AppShell', () => {
     expect(getByRole('main').getAttribute('id')).toBe('consumer-main')
     expect(getByRole('link').getAttribute('href')).toBe('#consumer-main')
 
+    rerender(<AppShell mainProps={{ id: 'consumer main' }}>Content</AppShell>)
+
+    expect(getByRole('main').getAttribute('id')).toBe('main-content')
+    expect(getByRole('link').getAttribute('href')).toBe('#main-content')
+
     rerender(<AppShell mainProps={{ id: ' ' }}>Content</AppShell>)
 
     expect(getByRole('main').getAttribute('id')).toBe('main-content')
@@ -94,6 +99,20 @@ describe('AppShell', () => {
 
     expect(getByRole('main').getAttribute('id')).toBe('main-content')
     expect(getByRole('link').getAttribute('href')).toBe('#main-content')
+  })
+
+  it('keeps the skip link named when consumer content is empty', () => {
+    const { getByRole, rerender } = render(
+      <AppShell skipLinkText=" ">Content</AppShell>,
+    )
+
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(<AppShell skipLinkText={null}>Content</AppShell>)
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(<AppShell skipLinkText={false}>Content</AppShell>)
+    expect(getByRole('link').textContent).toBe('Skip to main content')
   })
 
   it('keeps AppShell children in control of main content at compile time', () => {
