@@ -32,7 +32,10 @@ export interface AppShellProps extends Omit<
   bottomNavItems?: BottomNavItem[]
   contentWidth?: ContentWidth
   notification?: ReactNode
-  mainProps?: Omit<HTMLAttributes<HTMLElement>, 'children'>
+  mainProps?: Omit<
+    HTMLAttributes<HTMLElement>,
+    'children' | 'dangerouslySetInnerHTML'
+  >
   navigationLabel?: string
   skipLinkText?: ReactNode
   mobileNavigation?: MobileNavigation
@@ -57,9 +60,13 @@ export function AppShell({
 }: AppShellProps) {
   const {
     className: mainClassName,
-    id: mainId = 'main-content',
+    id: requestedMainId,
     ...mainAttributes
   } = mainProps ?? {}
+  const mainId =
+    typeof requestedMainId === 'string' && requestedMainId.trim()
+      ? requestedMainId
+      : 'main-content'
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',

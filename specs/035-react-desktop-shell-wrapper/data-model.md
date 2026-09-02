@@ -24,7 +24,7 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 | `bottomNavItems` | `BottomNavItem[]` | No | — | Destinations for the mobile bottom navigation bar |
 | `contentWidth` | `'standard' \| 'wide'` | No | `'standard'` | Content max-width (1024px vs 1280px) |
 | `notification` | `ReactNode` | No | — | Content for the global notification/status layer |
-| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children'>` | No | — | Native main attributes; class names merge and ID controls the skip target |
+| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | No | — | Native main attributes; class names merge and a non-empty ID controls the skip target |
 | `navigationLabel` | `string` | No | `'Primary'` | Accessible name for navigation landmarks |
 | `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Consumer-localizable skip-link content |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar destinations on mobile |
@@ -44,7 +44,10 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - If `notification` is empty, no `<div className="pathable-app-shell__notification">` element is rendered.
 - `contentWidth` must be `'standard'` or `'wide'` — applies the corresponding modifier class.
 - Fixed sidebar: `sidebarFixed === true` adds `pathable-app-shell__sidebar--fixed` modifier.
-- `mainProps.id` defaults to `main-content` and determines the skip-link target.
+- A missing, empty, or non-string `mainProps.id` falls back to `main-content`;
+  the resolved ID determines the skip-link target.
+- `mainProps` excludes `children` and `dangerouslySetInnerHTML`; main content is
+  supplied only through `AppShell.children`.
 - Shared navigation renders no `bottomNavItems`; the sidebar navigation remains the single navigation landmark.
 
 ---
@@ -142,15 +145,17 @@ A compact horizontal bar visible on mobile (< 1024px) and hidden on desktop.
 
 The primary content area.
 
-**DOM output**: `<main id="[mainProps.id ?? 'main-content']" className="pathable-app-shell__content [contentWidth modifier] [mainProps.className]" [...mainProps]>[children]</main>`
+**DOM output**: `<main id="[non-empty mainProps.id or 'main-content']" className="pathable-app-shell__content [contentWidth modifier] [mainProps.className]" [...mainProps]>[children]</main>`
 
 **Behaviors**:
 - Max-width: 1024px (standard) or 1280px (wide)
 - Full width on mobile (< 1024px)
 - Center-aligned with auto margins
 - Scrollable (CSS `overflow-y: auto`)
-- ID defaults to `main-content` and serves as the skip-link target
-- Native main attributes are consumer-owned; required Pathable classes are preserved
+- A missing, empty, or non-string ID falls back to `main-content` and serves as
+  the skip-link target
+- Native main attributes are consumer-owned except `children` and
+  `dangerouslySetInnerHTML`; required Pathable classes are preserved
 
 ---
 

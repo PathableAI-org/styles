@@ -73,6 +73,39 @@ describe('AppShell', () => {
     )
   })
 
+  it('falls back to the default main ID when the consumer ID is empty', () => {
+    const { getByRole, rerender } = render(
+      <AppShell mainProps={{ id: '' }}>Content</AppShell>,
+    )
+
+    expect(getByRole('main').getAttribute('id')).toBe('main-content')
+    expect(getByRole('link').getAttribute('href')).toBe('#main-content')
+
+    rerender(
+      <AppShell mainProps={{ id: null as unknown as string }}>
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('main').getAttribute('id')).toBe('main-content')
+    expect(getByRole('link').getAttribute('href')).toBe('#main-content')
+  })
+
+  it('keeps AppShell children in control of main content at compile time', () => {
+    const invalidExample = (
+      <AppShell
+        mainProps={{
+          // @ts-expect-error -- main content is provided through AppShell children.
+          dangerouslySetInnerHTML: { __html: 'Invalid main content' },
+        }}
+      >
+        Content
+      </AppShell>
+    )
+
+    expect(invalidExample).toBeDefined()
+  })
+
   it('labels the canonical navigation region', () => {
     const { getByRole } = render(
       <AppShell navigationLabel="Product" sidebarNav={navigation()}>
