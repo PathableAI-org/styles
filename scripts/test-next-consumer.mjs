@@ -411,17 +411,17 @@ async function assertConsumer(fixtureRoot) {
   )
   assert.match(
     html,
-    /class="pathable-skipnav" href="#consumer-main"/u,
+    /<a(?=[^>]*\bclass="pathable-skipnav")(?=[^>]*\bhref="#consumer-main")[^>]*>/u,
     'Rendered AppShell skip link does not target the consumer main landmark',
   )
   assert.match(
     html,
-    /<nav class="pathable-app-shell__nav" aria-label="Consumer product">/u,
+    /<nav(?=[^>]*\bclass="pathable-app-shell__nav")(?=[^>]*\baria-label="Consumer product")[^>]*>/u,
     'Rendered AppShell navigation does not preserve its accessible name',
   )
   assert.match(
     html,
-    /<main aria-label="Consumer workspace" tabindex="-1" id="consumer-main"/u,
+    /<main(?=[^>]*\baria-label="Consumer workspace")(?=[^>]*\btabindex="-1")(?=[^>]*\bid="consumer-main")[^>]*>/u,
     'Rendered AppShell does not preserve consumer main attributes',
   )
   const activityHeading = html.match(
