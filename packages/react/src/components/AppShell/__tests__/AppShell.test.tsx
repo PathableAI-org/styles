@@ -115,18 +115,36 @@ describe('AppShell', () => {
     ).toBe(true)
   })
 
-  it('produces identical output during SSR', () => {
+  it('produces equivalent SSR output without leaking component props', () => {
     const shell = (
       <AppShell
         mainProps={{ id: 'main', tabIndex: -1 }}
         mobileNavigation="shared"
         navigationLabel="Primary"
         sidebarNav={navigation()}
+        skipLinkText="Skip navigation"
       >
         Content
       </AppShell>
     )
 
-    expect(render(shell).container.innerHTML).toBe(renderToString(shell))
+    const clientRoot = render(shell).container.firstElementChild
+    const serverContainer = document.createElement('div')
+    serverContainer.innerHTML = renderToString(shell)
+    const serverRoot = serverContainer.firstElementChild
+
+    expect(clientRoot).not.toBeNull()
+    expect(serverRoot).not.toBeNull()
+    expect(clientRoot?.isEqualNode(serverRoot)).toBe(true)
+
+    for (const attribute of [
+      'mainprops',
+      'mobilenavigation',
+      'navigationlabel',
+      'skiplinktext',
+    ]) {
+      expect(clientRoot?.hasAttribute(attribute)).toBe(false)
+      expect(serverRoot?.hasAttribute(attribute)).toBe(false)
+    }
   })
 })
