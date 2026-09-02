@@ -52,7 +52,10 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   mainProps?: Omit<
     HTMLAttributes<HTMLElement>,
     'children' | 'dangerouslySetInnerHTML'
-  >
+  > & {
+    children?: never
+    dangerouslySetInnerHTML?: never
+  }
 
   /** Accessible navigation landmark name. Default: 'Primary'. */
   navigationLabel?: string
@@ -78,7 +81,7 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
 | `bottomNavItems` | `BottomNavItem[]` | No | — | `<nav className="pathable-bottom-navigation">` (omitted if empty/undefined) |
 | `contentWidth` | `'standard' \| 'wide'` | No | `'standard'` | `pathable-app-shell__content--standard` or `--wide` |
 | `notification` | `ReactNode` | No | — | `<div className="pathable-app-shell__notification">` (omitted if empty) |
-| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | No | — | Native main attributes; class names merge, content-owning runtime keys are stripped, and a valid normalized ID controls the skip target |
+| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never }` | No | — | Native main attributes; content-owning keys are forbidden and runtime-stripped, class names merge, and a valid normalized ID controls the skip target |
 | `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
 | `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Skip-link content; structurally empty values use the default |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar navigation; unexpected runtime values use `bottom` |

@@ -545,12 +545,12 @@ available without duplicate landmarks. Sidebar brand and account content remain
 desktop-only in this mode. Unexpected runtime `mobileNavigation` values fall
 back to the legacy `bottom` behavior.
 
-| Prop               | Type                                                                         | Default                  | Description                                                                                                  |
-| ------------------ | ---------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `mainProps`        | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | —                        | Native main-landmark attributes; `className` is merged and a valid normalized `id` controls the skip target. |
-| `navigationLabel`  | `string`                                                                     | `'Primary'`              | Accessible name for navigation landmarks; empty values use the default.                                      |
-| `skipLinkText`     | `ReactNode`                                                                  | `'Skip to main content'` | Localizable skip-link content; structurally empty values use the default.                                    |
-| `mobileNavigation` | `'bottom' \| 'shared'`                                                       | `'bottom'`               | Selects compact bottom items or the complete shared navigation.                                              |
+| Prop               | Type                                                                                                                                 | Default                  | Description                                                                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mainProps`        | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never }` | —                        | Native main-landmark attributes; content-owning keys are forbidden, `className` is merged, and a valid normalized `id` controls the skip target. |
+| `navigationLabel`  | `string`                                                                                                                             | `'Primary'`              | Accessible name for navigation landmarks; empty values use the default.                                                                          |
+| `skipLinkText`     | `ReactNode`                                                                                                                          | `'Skip to main content'` | Localizable skip-link content; structurally empty values use the default.                                                                        |
+| `mobileNavigation` | `'bottom' \| 'shared'`                                                                                                               | `'bottom'`               | Selects compact bottom items or the complete shared navigation.                                                                                  |
 
 ## Activity List
 

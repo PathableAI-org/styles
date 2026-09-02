@@ -61,7 +61,10 @@ export interface AppShellProps extends Omit<
   mainProps?: Omit<
     HTMLAttributes<HTMLElement>,
     'children' | 'dangerouslySetInnerHTML'
-  >
+  > & {
+    children?: never
+    dangerouslySetInnerHTML?: never
+  }
   navigationLabel?: string
   skipLinkText?: ReactNode
   mobileNavigation?: MobileNavigation

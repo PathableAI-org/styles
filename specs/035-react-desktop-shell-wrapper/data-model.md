@@ -24,7 +24,7 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 | `bottomNavItems` | `BottomNavItem[]` | No | — | Destinations for the mobile bottom navigation bar |
 | `contentWidth` | `'standard' \| 'wide'` | No | `'standard'` | Content max-width (1024px vs 1280px) |
 | `notification` | `ReactNode` | No | — | Content for the global notification/status layer |
-| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | No | — | Native main attributes; class names merge and a valid normalized ID controls the skip target |
+| `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never }` | No | — | Native main attributes; content-owning keys are forbidden and runtime-stripped, class names merge, and a valid normalized ID controls the skip target |
 | `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
 | `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Consumer-localizable skip-link content; structurally empty values use the default |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar destinations; unexpected runtime values use `bottom` |
