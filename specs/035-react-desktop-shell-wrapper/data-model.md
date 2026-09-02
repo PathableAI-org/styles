@@ -47,8 +47,9 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - `mainProps.id` is trimmed; a missing, empty, non-string, or embedded-whitespace
   value falls back to `main-content`, and the resolved ID determines the
   skip-link target.
-- `mainProps` excludes `children` and `dangerouslySetInnerHTML`; main content is
-  supplied only through `AppShell.children`.
+- `mainProps` excludes and runtime-strips `children` and
+  `dangerouslySetInnerHTML`; main content is supplied only through
+  `AppShell.children`.
 - Structurally empty `skipLinkText` values fall back to `Skip to main content`.
 - `navigationLabel` is trimmed; empty or non-string values fall back to
   `Primary` for every rendered navigation landmark.

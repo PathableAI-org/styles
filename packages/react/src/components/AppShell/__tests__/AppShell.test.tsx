@@ -160,6 +160,20 @@ describe('AppShell', () => {
     expect(invalidExample).toBeDefined()
   })
 
+  it('strips unsafe main content attributes from runtime consumers', () => {
+    const runtimeMainProps = {
+      children: 'Injected children',
+      dangerouslySetInnerHTML: { __html: 'Injected HTML' },
+    } as unknown as NonNullable<
+      React.ComponentProps<typeof AppShell>['mainProps']
+    >
+    const { getByRole } = render(
+      <AppShell mainProps={runtimeMainProps}>Consumer content</AppShell>,
+    )
+
+    expect(getByRole('main').textContent).toBe('Consumer content')
+  })
+
   it('normalizes the canonical navigation label and falls back when empty', () => {
     const bottomNavItems = [
       { label: 'Mobile home', href: '/mobile', icon: <span /> },

@@ -532,6 +532,7 @@ values fall back to `Skip to main content` so the focusable link remains named.
 Consumer classes are appended to the shell's required main classes, and other
 native main attributes are forwarded except `children` and
 `dangerouslySetInnerHTML`; main content remains owned by `AppShell` children.
+Those content-owning keys are also stripped from unexpected runtime input.
 `navigationLabel` defaults to `Primary`, trims consumer strings, falls back when
 empty, and names both the sidebar navigation and the legacy bottom navigation
 when present.

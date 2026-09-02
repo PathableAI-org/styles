@@ -84,11 +84,16 @@ export function AppShell({
   mobileNavigation = 'bottom',
   ...rest
 }: AppShellProps) {
+  const runtimeMainAttributes = {
+    ...mainProps,
+  } as HTMLAttributes<HTMLElement>
+  delete runtimeMainAttributes.children
+  delete runtimeMainAttributes.dangerouslySetInnerHTML
   const {
     className: mainClassName,
     id: requestedMainId,
     ...mainAttributes
-  } = mainProps ?? {}
+  } = runtimeMainAttributes
   const normalizedMainId =
     typeof requestedMainId === 'string' ? requestedMainId.trim() : ''
   const mainId =
