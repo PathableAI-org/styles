@@ -25,7 +25,7 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 | `contentWidth` | `'standard' \| 'wide'` | No | `'standard'` | Content max-width (1024px vs 1280px) |
 | `notification` | `ReactNode` | No | — | Content for the global notification/status layer |
 | `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | No | — | Native main attributes; class names merge and a valid normalized ID controls the skip target |
-| `navigationLabel` | `string` | No | `'Primary'` | Accessible name for navigation landmarks |
+| `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
 | `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Consumer-localizable skip-link content; empty values use the default |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar destinations on mobile |
 | `className` | `string` | No | `''` | Additional CSS classes merged onto the root element |
@@ -50,6 +50,8 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - `mainProps` excludes `children` and `dangerouslySetInnerHTML`; main content is
   supplied only through `AppShell.children`.
 - Empty `skipLinkText` values fall back to `Skip to main content`.
+- `navigationLabel` is trimmed; empty or non-string values fall back to
+  `Primary` for every rendered navigation landmark.
 - Shared navigation renders no `bottomNavItems`; the sidebar navigation remains the single navigation landmark.
 
 ---

@@ -270,7 +270,9 @@ Pathable styling without any additional styles package import by the consumer.
 - **FR-020**: The AppShell MUST support consumer-provided skip-link content and
   an accessible navigation label, defaulting to `Skip to main content` and
   `Primary` respectively. Empty skip-link content MUST use the default copy so
-  the focusable link remains named.
+  the focusable link remains named. Navigation labels MUST be trimmed and empty
+  or non-string runtime values MUST use the default so every navigation landmark
+  remains named.
 
 - **FR-021**: The AppShell MUST preserve the existing icon-and-label bottom
   navigation as the default mobile behavior.

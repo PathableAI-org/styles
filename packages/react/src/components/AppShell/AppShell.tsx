@@ -10,6 +10,7 @@ export interface BottomNavItem {
 export type ContentWidth = 'standard' | 'wide'
 export type MobileNavigation = 'bottom' | 'shared'
 
+const DEFAULT_NAVIGATION_LABEL = 'Primary'
 const DEFAULT_SKIP_LINK_TEXT = 'Skip to main content'
 
 const CONTENT_WIDTH_CLASS: Record<ContentWidth, string> = {
@@ -55,7 +56,7 @@ export function AppShell({
   contentWidth = 'standard',
   notification,
   mainProps,
-  navigationLabel = 'Primary',
+  navigationLabel = DEFAULT_NAVIGATION_LABEL,
   skipLinkText = DEFAULT_SKIP_LINK_TEXT,
   mobileNavigation = 'bottom',
   ...rest
@@ -71,6 +72,10 @@ export function AppShell({
     normalizedMainId && !/\s/u.test(normalizedMainId)
       ? normalizedMainId
       : 'main-content'
+  const resolvedNavigationLabel =
+    typeof navigationLabel === 'string' && navigationLabel.trim()
+      ? navigationLabel.trim()
+      : DEFAULT_NAVIGATION_LABEL
   const resolvedSkipLinkText =
     skipLinkText === null ||
     skipLinkText === false ||
@@ -116,7 +121,10 @@ export function AppShell({
         ) : null}
 
         {hasContent(sidebarNav) ? (
-          <nav className="pathable-app-shell__nav" aria-label={navigationLabel}>
+          <nav
+            className="pathable-app-shell__nav"
+            aria-label={resolvedNavigationLabel}
+          >
             {sidebarNav}
           </nav>
         ) : null}
@@ -141,7 +149,7 @@ export function AppShell({
       bottomNavItems.length > 0 ? (
         <nav
           className="pathable-bottom-navigation"
-          aria-label={navigationLabel}
+          aria-label={resolvedNavigationLabel}
         >
           {bottomNavItems.map((item) => {
             const itemClass = [

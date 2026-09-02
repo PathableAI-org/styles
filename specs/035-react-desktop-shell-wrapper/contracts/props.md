@@ -79,7 +79,7 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
 | `contentWidth` | `'standard' \| 'wide'` | No | `'standard'` | `pathable-app-shell__content--standard` or `--wide` |
 | `notification` | `ReactNode` | No | — | `<div className="pathable-app-shell__notification">` (omitted if empty) |
 | `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | No | — | Native main attributes; class names merge and a valid normalized ID controls the skip target |
-| `navigationLabel` | `string` | No | `'Primary'` | Accessible name for navigation landmarks |
+| `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
 | `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Skip-link content; empty values use the default |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar navigation on mobile |
 | `className` | `string` | No | `''` | Merged onto the root `<div className="pathable-app-shell">` |

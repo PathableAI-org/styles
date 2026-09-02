@@ -532,8 +532,8 @@ to `Skip to main content` so the focusable link remains named. Consumer classes
 are appended to the shell's required main classes, and other native main
 attributes are forwarded except `children` and `dangerouslySetInnerHTML`; main
 content remains owned by `AppShell` children. `navigationLabel` defaults to
-`Primary` and names both the sidebar navigation and the legacy bottom navigation
-when present.
+`Primary`, trims consumer strings, falls back when empty, and names both the
+sidebar navigation and the legacy bottom navigation when present.
 
 In the default `bottom` mode, pass up to five icon-and-label destinations with
 `bottomNavItems`; the desktop sidebar remains hidden below 1024px. In `shared`
@@ -545,7 +545,7 @@ desktop-only in this mode.
 | Prop               | Type                                                                         | Default                  | Description                                                                                                  |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
 | `mainProps`        | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | —                        | Native main-landmark attributes; `className` is merged and a valid normalized `id` controls the skip target. |
-| `navigationLabel`  | `string`                                                                     | `'Primary'`              | Accessible name for navigation landmarks.                                                                    |
+| `navigationLabel`  | `string`                                                                     | `'Primary'`              | Accessible name for navigation landmarks; empty values use the default.                                      |
 | `skipLinkText`     | `ReactNode`                                                                  | `'Skip to main content'` | Localizable skip-link content; empty values use the default.                                                 |
 | `mobileNavigation` | `'bottom' \| 'shared'`                                                       | `'bottom'`               | Selects compact bottom items or the complete shared navigation.                                              |
 

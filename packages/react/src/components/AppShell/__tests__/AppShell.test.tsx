@@ -130,14 +130,33 @@ describe('AppShell', () => {
     expect(invalidExample).toBeDefined()
   })
 
-  it('labels the canonical navigation region', () => {
-    const { getByRole } = render(
-      <AppShell navigationLabel="Product" sidebarNav={navigation()}>
+  it('normalizes the canonical navigation label and falls back when empty', () => {
+    const bottomNavItems = [
+      { label: 'Mobile home', href: '/mobile', icon: <span /> },
+    ]
+    const { getAllByRole, rerender } = render(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        navigationLabel=" Product "
+        sidebarNav={navigation()}
+      >
         Content
       </AppShell>,
     )
 
-    expect(getByRole('navigation', { name: 'Product' }).tagName).toBe('NAV')
+    expect(getAllByRole('navigation', { name: 'Product' })).toHaveLength(2)
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        navigationLabel={null as unknown as string}
+        sidebarNav={navigation()}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getAllByRole('navigation', { name: 'Primary' })).toHaveLength(2)
   })
 
   it('reuses one navigation region across breakpoints in shared mode', () => {
