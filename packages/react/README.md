@@ -541,7 +541,8 @@ In the default `bottom` mode, pass up to five icon-and-label destinations with
 mode, `bottomNavItems` is not rendered. Instead, the existing `sidebarNav`
 landmark becomes a horizontally scrollable mobile row so all destinations stay
 available without duplicate landmarks. Sidebar brand and account content remain
-desktop-only in this mode.
+desktop-only in this mode. Unexpected runtime `mobileNavigation` values fall
+back to the legacy `bottom` behavior.
 
 | Prop               | Type                                                                         | Default                  | Description                                                                                                  |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |

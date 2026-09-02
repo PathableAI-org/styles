@@ -164,7 +164,7 @@ export function AppShell({
         {children}
       </main>
 
-      {mobileNavigation === 'bottom' &&
+      {mobileNavigation !== 'shared' &&
       bottomNavItems &&
       bottomNavItems.length > 0 ? (
         <nav

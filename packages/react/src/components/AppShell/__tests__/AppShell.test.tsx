@@ -19,13 +19,11 @@ function navigation() {
 
 describe('AppShell', () => {
   it('preserves the default main and skip-link contract', () => {
-    const { container, getAllByRole, getByRole } = render(
-      <AppShell
-        bottomNavItems={[
-          { label: 'Mobile home', href: '/mobile', icon: <span /> },
-        ]}
-        sidebarNav={navigation()}
-      >
+    const bottomNavItems = [
+      { label: 'Mobile home', href: '/mobile', icon: <span /> },
+    ]
+    const { container, getAllByRole, getByRole, rerender } = render(
+      <AppShell bottomNavItems={bottomNavItems} sidebarNav={navigation()}>
         Content
       </AppShell>,
     )
@@ -39,6 +37,19 @@ describe('AppShell', () => {
     expect(
       getByRole('link', { name: 'Mobile home' }).getAttribute('href'),
     ).toBe('/mobile')
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation={'invalid' as 'bottom'}
+        sidebarNav={navigation()}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getAllByRole('navigation', { name: 'Primary' })).toHaveLength(2)
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
   })
 
   it('derives the skip target from consumer main attributes', () => {

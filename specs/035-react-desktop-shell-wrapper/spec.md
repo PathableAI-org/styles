@@ -275,7 +275,8 @@ Pathable styling without any additional styles package import by the consumer.
   navigation landmark remains named.
 
 - **FR-021**: The AppShell MUST preserve the existing icon-and-label bottom
-  navigation as the default mobile behavior.
+  navigation as the default mobile behavior, including for unexpected runtime
+  `mobileNavigation` values.
 
 - **FR-022**: The AppShell MUST offer an opt-in shared mobile navigation mode
   that renders one navigation landmark and keeps every sidebar destination

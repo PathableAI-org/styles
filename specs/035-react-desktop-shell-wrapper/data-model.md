@@ -27,7 +27,7 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 | `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'>` | No | — | Native main attributes; class names merge and a valid normalized ID controls the skip target |
 | `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
 | `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Consumer-localizable skip-link content; structurally empty values use the default |
-| `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar destinations on mobile |
+| `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar destinations; unexpected runtime values use `bottom` |
 | `className` | `string` | No | `''` | Additional CSS classes merged onto the root element |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | No | — | Passthrough attributes spread onto the root div |
 
@@ -53,6 +53,8 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - `navigationLabel` is trimmed; empty or non-string values fall back to
   `Primary` for every rendered navigation landmark.
 - Shared navigation renders no `bottomNavItems`; the sidebar navigation remains the single navigation landmark.
+- Any `mobileNavigation` runtime value other than `shared` uses the legacy
+  `bottom` behavior.
 
 ---
 
