@@ -63,10 +63,9 @@ export function AppShell({
     id: requestedMainId,
     ...mainAttributes
   } = mainProps ?? {}
-  const mainId =
-    typeof requestedMainId === 'string' && requestedMainId.trim()
-      ? requestedMainId
-      : 'main-content'
+  const normalizedMainId =
+    typeof requestedMainId === 'string' ? requestedMainId.trim() : ''
+  const mainId = normalizedMainId || 'main-content'
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',

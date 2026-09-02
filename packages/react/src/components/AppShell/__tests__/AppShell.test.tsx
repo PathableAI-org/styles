@@ -73,10 +73,15 @@ describe('AppShell', () => {
     )
   })
 
-  it('falls back to the default main ID when the consumer ID is empty', () => {
+  it('normalizes the consumer main ID and falls back when it is empty', () => {
     const { getByRole, rerender } = render(
-      <AppShell mainProps={{ id: '' }}>Content</AppShell>,
+      <AppShell mainProps={{ id: ' consumer-main ' }}>Content</AppShell>,
     )
+
+    expect(getByRole('main').getAttribute('id')).toBe('consumer-main')
+    expect(getByRole('link').getAttribute('href')).toBe('#consumer-main')
+
+    rerender(<AppShell mainProps={{ id: ' ' }}>Content</AppShell>)
 
     expect(getByRole('main').getAttribute('id')).toBe('main-content')
     expect(getByRole('link').getAttribute('href')).toBe('#main-content')
