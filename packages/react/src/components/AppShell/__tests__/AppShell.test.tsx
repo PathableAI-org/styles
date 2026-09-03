@@ -391,6 +391,31 @@ describe('AppShell', () => {
     expect(getByRole('link', { name: 'Reports' })).toBeDefined()
   })
 
+  it('falls back to bottom navigation for a non-callable iterator', () => {
+    const sidebarNav = {
+      [Symbol.iterator]: 1,
+    } as unknown as React.ReactNode
+    const { container, getAllByRole, getByRole } = render(
+      <AppShell
+        bottomNavItems={[
+          { label: 'Mobile home', href: '/mobile', icon: <span /> },
+        ]}
+        mobileNavigation="shared"
+        sidebarNav={sidebarNav}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(
+      container.firstElementChild?.classList.contains(
+        'pathable-app-shell--shared-navigation',
+      ),
+    ).toBe(false)
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
+  })
+
   it('produces equivalent SSR output without leaking component props', () => {
     const shell = (
       <AppShell

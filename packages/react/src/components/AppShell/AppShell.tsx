@@ -32,11 +32,16 @@ function hasSharedNavigation(value: ReactNode): boolean {
       value !== null &&
       Symbol.iterator in value
     ) {
-      const iterable = value as Iterable<ReactNode>
-      const iterator = iterable[Symbol.iterator]()
+      const iteratorFactory = (value as { [Symbol.iterator]: unknown })[
+        Symbol.iterator
+      ]
+      if (typeof iteratorFactory !== 'function') return false
+
+      const getIterator = iteratorFactory as () => Iterator<ReactNode>
+      const iterator = getIterator.call(value)
 
       // Consuming a generator here would leave React with an exhausted child.
-      if (iterator !== iterable[Symbol.iterator]()) {
+      if (iterator !== getIterator.call(value)) {
         for (let item = iterator.next(); !item.done; item = iterator.next()) {
           if (hasSharedNavigation(item.value)) return true
         }
