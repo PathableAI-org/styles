@@ -120,6 +120,11 @@ describe('AppShell', () => {
 
     expect(getByRole('main').getAttribute('id')).toBe('main-content')
     expect(getByRole('link').getAttribute('href')).toBe('#main-content')
+
+    rerender(<AppShell mainProps={{ id: 'main\0content' }}>Content</AppShell>)
+
+    expect(getByRole('main').getAttribute('id')).toBe('main-content')
+    expect(getByRole('link').getAttribute('href')).toBe('#main-content')
   })
 
   it('keeps the skip link named when consumer content is empty', () => {
@@ -264,6 +269,47 @@ describe('AppShell', () => {
       ),
     ).toBe(false)
     expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav={new Set([false])}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav={new Set([navigation()])}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(
+      container.firstElementChild?.classList.contains(
+        'pathable-app-shell--shared-navigation',
+      ),
+    ).toBe(true)
+    expect(queryByRole('link', { name: 'Mobile home' })).toBeNull()
 
     rerender(
       <AppShell

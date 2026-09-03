@@ -127,7 +127,8 @@ in the bottom grid row and hides sidebar brand and account regions. The landmark
 remains before main content in DOM and keyboard order; the skip link remains the
 first focusable element. Structurally empty sidebar navigation prevents shared
 mode from activating and preserves any supplied legacy `bottomNavItems`;
-elements and custom components count as supplied content.
+elements and custom components count as supplied content, while booleans and
+reusable iterables containing only empty values do not.
 
 ### Empty State Behavior
 

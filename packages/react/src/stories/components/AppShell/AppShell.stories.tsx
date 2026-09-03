@@ -226,7 +226,7 @@ export const MobileShell: Story = {
   ),
   globals: {
     viewport: {
-      value: 'mobile1',
+      value: 'mobile320',
       isRotated: false,
     },
   },
@@ -257,7 +257,7 @@ export const SharedMobileNavigation: Story = {
   ),
   globals: {
     viewport: {
-      value: 'mobile1',
+      value: 'mobile320',
       isRotated: false,
     },
   },
@@ -271,6 +271,35 @@ export const SharedMobileNavigation: Story = {
         NAV_ITEMS.length,
       )
       await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
+      const shell = canvasElement.querySelector('.pathable-app-shell')
+      if (!(shell instanceof HTMLElement)) throw new Error('AppShell not found')
+      await expect(shell.scrollWidth).toBeLessThanOrEqual(shell.clientWidth)
+    })
+
+    await step('keyboard focus reaches every shared destination', async () => {
+      const skipLink = canvas.getByRole('link', {
+        name: 'Skip product navigation',
+      })
+      const navigation = canvas.getByRole('navigation', { name: 'Product' })
+      const links = within(navigation).getAllByRole('link')
+
+      await userEvent.tab()
+      await expect(skipLink).toHaveFocus()
+
+      for (const link of links) {
+        await userEvent.tab()
+        await expect(link).toHaveFocus()
+        const navigationBounds = navigation.getBoundingClientRect()
+        const contentRange = document.createRange()
+        contentRange.selectNodeContents(link)
+        const contentBounds = contentRange.getBoundingClientRect()
+        await expect(contentBounds.left).toBeGreaterThanOrEqual(
+          navigationBounds.left - 1,
+        )
+        await expect(contentBounds.right).toBeLessThanOrEqual(
+          navigationBounds.right + 1,
+        )
+      }
     })
 
     await step(
@@ -437,6 +466,7 @@ export const OperationalDashboard: Story = {
 export const SkipLinkActivation: Story = {
   render: () => (
     <AppShell
+      mainProps={{ tabIndex: -1 }}
       sidebarBrand={<strong>PathAble</strong>}
       sidebarNav={renderSidebarNav()}
       topBarTitle="MyApp"
@@ -455,6 +485,8 @@ export const SkipLinkActivation: Story = {
       await userEvent.tab()
       await expect(skipLink).toHaveFocus()
       await expect(skipLink).toHaveAttribute('href', '#main-content')
+      await userEvent.keyboard('{Enter}')
+      await expect(canvas.getByRole('main')).toHaveFocus()
     })
   },
 }
@@ -481,6 +513,10 @@ export const ActiveNavItemFocus: Story = {
         await expect(activeItem.className).toContain(
           'pathable-app-shell__nav-item--active',
         )
+        await userEvent.tab()
+        await userEvent.tab()
+        await expect(activeItem).toHaveFocus()
+        await expect(getComputedStyle(activeItem).outlineStyle).not.toBe('none')
       },
     )
 
@@ -508,7 +544,7 @@ export const ResponsiveLayoutSwitch: Story = {
   ),
   globals: {
     viewport: {
-      value: 'mobile1',
+      value: 'mobile320',
       isRotated: false,
     },
   },
@@ -516,33 +552,71 @@ export const ResponsiveLayoutSwitch: Story = {
     const canvas = within(canvasElement)
 
     await step('top bar title is present on mobile', async () => {
-      const topBar = canvas.getByRole('banner', { hidden: true })
+      const topBar = canvas.getByRole('banner')
+      await expect(topBar).toBeVisible()
       await expect(within(topBar).getByText('PathAble')).toBeInTheDocument()
+      const sidebar = canvasElement.querySelector(
+        '.pathable-app-shell__sidebar',
+      )
+      if (!(sidebar instanceof HTMLElement))
+        throw new Error('Sidebar not found')
+      await expect(sidebar).not.toBeVisible()
     })
 
     await step(
       'bottom navigation is present with active destination',
       async () => {
-        const bottomNav = canvas
-          .getAllByRole('navigation', { hidden: true })
-          .find((navigation) =>
-            within(navigation).queryByRole('link', {
-              name: /Home/,
-              hidden: true,
-            }),
-          )
+        const bottomNav = canvas.getAllByRole('navigation').find((navigation) =>
+          within(navigation).queryByRole('link', {
+            name: /Home/,
+          }),
+        )
 
         if (!bottomNav) {
           throw new Error('Mobile bottom navigation was not rendered')
         }
 
         await expect(bottomNav).toBeInTheDocument()
+        await expect(bottomNav).toBeVisible()
         const activeItem = within(bottomNav).getByRole('link', {
           name: /Home/,
-          hidden: true,
         })
         await expect(activeItem).toHaveAttribute('aria-current', 'page')
       },
     )
+  },
+}
+
+export const ResponsiveDesktopLayout: Story = {
+  ...ResponsiveLayoutSwitch,
+  globals: {
+    viewport: {
+      value: 'desktop',
+      isRotated: false,
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('desktop exposes the sidebar navigation only', async () => {
+      const sidebar = canvasElement.querySelector(
+        '.pathable-app-shell__sidebar',
+      )
+      const topBar = canvasElement.querySelector('.pathable-app-shell__topbar')
+      const bottomNav = canvasElement.querySelector(
+        '.pathable-bottom-navigation',
+      )
+      if (!(sidebar instanceof HTMLElement))
+        throw new Error('Sidebar not found')
+      if (!(topBar instanceof HTMLElement)) throw new Error('Top bar not found')
+      if (!(bottomNav instanceof HTMLElement)) {
+        throw new Error('Bottom navigation not found')
+      }
+
+      await expect(sidebar).toBeVisible()
+      await expect(topBar).not.toBeVisible()
+      await expect(bottomNav).not.toBeVisible()
+      await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
+    })
   },
 }

@@ -23,10 +23,28 @@ function hasContent(value: unknown): boolean {
 }
 
 function hasSharedNavigation(value: ReactNode): boolean {
+  if (typeof value === 'boolean') return false
   if (typeof value === 'string') return Boolean(value.trim())
   if (Array.isArray(value)) return value.some(hasSharedNavigation)
-  if (!isValidElement(value) || value.type !== Fragment)
+  if (!isValidElement(value) || value.type !== Fragment) {
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      Symbol.iterator in value
+    ) {
+      const iterator = (value as Iterable<ReactNode>)[Symbol.iterator]()
+
+      // Consuming a generator here would leave React with an exhausted child.
+      if (iterator !== (value as unknown as Iterator<ReactNode>)) {
+        for (let item = iterator.next(); !item.done; item = iterator.next()) {
+          if (hasSharedNavigation(item.value)) return true
+        }
+        return false
+      }
+    }
+
     return hasContent(value)
+  }
 
   return hasSharedNavigation(
     (value.props as { children?: ReactNode }).children ?? null,
@@ -88,7 +106,9 @@ export function AppShell({
   const normalizedMainId =
     typeof requestedMainId === 'string' ? requestedMainId.trim() : ''
   let mainId =
-    normalizedMainId && !/\s/u.test(normalizedMainId)
+    normalizedMainId &&
+    !/\s/u.test(normalizedMainId) &&
+    !normalizedMainId.includes('\0')
       ? normalizedMainId
       : 'main-content'
   try {

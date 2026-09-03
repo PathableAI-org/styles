@@ -527,9 +527,10 @@ available in one navigation landmark at every breakpoint without JavaScript.
 ```
 
 The skip-link target is derived from a trimmed, non-empty `mainProps.id` without
-whitespace, falling back to `main-content`; URL-significant characters are
-encoded in the link fragment. Empty or non-string runtime `skipLinkText` values
-fall back to `Skip to main content` so the focusable link remains named.
+whitespace or null characters, falling back to `main-content`; URL-significant
+characters are encoded in the link fragment. Empty or non-string runtime
+`skipLinkText` values fall back to `Skip to main content` so the focusable link
+remains named.
 Consumer classes are appended to the shell's required main classes, and other
 native main attributes are forwarded except `children` and
 `dangerouslySetInnerHTML`; main content remains owned by `AppShell` children.
@@ -548,7 +549,8 @@ DOM and keyboard order while CSS places it in the bottom grid row on mobile;
 the first-focusable skip link lets keyboard users move directly to main content.
 If `sidebarNav` is structurally empty, or if `mobileNavigation` has an unexpected
 runtime value, the shell falls back to the legacy `bottom` behavior. Elements
-and custom components count as consumer-provided navigation content.
+and custom components count as consumer-provided navigation content; booleans
+and reusable iterables containing only empty values do not.
 
 | Prop               | Type                                                                                                                                 | Default                  | Description                                                                                                                                      |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |

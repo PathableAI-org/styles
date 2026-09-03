@@ -2,7 +2,17 @@ import { injectAxe, checkA11y } from 'axe-playwright'
 
 /** @type { import('@storybook/test-runner').TestRunnerConfig } */
 const config = {
-  async preVisit(page) {
+  async preVisit(page, context) {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    if (
+      new Set([
+        'application-shell-mobile-shell--default',
+        'application-shell-mobile-shell--shared-navigation',
+      ]).has(context.id)
+    ) {
+      await page.setViewportSize({ width: 320, height: 700 })
+    }
+
     await injectAxe(page)
   },
   async postVisit(page, context) {

@@ -44,9 +44,9 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - If `notification` is empty, no `<div className="pathable-app-shell__notification">` element is rendered.
 - `contentWidth` must be `'standard'` or `'wide'` — applies the corresponding modifier class.
 - Fixed sidebar: `sidebarFixed === true` adds `pathable-app-shell__sidebar--fixed` modifier.
-- `mainProps.id` is trimmed; a missing, empty, non-string, or embedded-whitespace
-  value falls back to `main-content`, and the URL-encoded resolved ID determines
-  the skip-link fragment.
+- `mainProps.id` is trimmed; a missing, empty, non-string, embedded-whitespace,
+  null-containing, or URI-malformed value falls back to `main-content`, and the
+  URL-encoded resolved ID determines the skip-link fragment.
 - `mainProps` excludes and runtime-strips `children` and
   `dangerouslySetInnerHTML`; main content is supplied only through
   `AppShell.children`.
@@ -59,7 +59,8 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
   CSS visually places it in the bottom grid row on mobile.
 - Structurally empty sidebar navigation prevents shared mode from activating,
   preserving any supplied legacy `bottomNavItems`. Elements and custom
-  components count as consumer-provided navigation content.
+  components count as consumer-provided navigation content; booleans and
+  reusable iterables containing only empty values do not.
 - Any `mobileNavigation` runtime value other than `shared` uses the legacy
   `bottom` behavior.
 
@@ -165,8 +166,9 @@ The primary content area.
 - Full width on mobile (< 1024px)
 - Center-aligned with auto margins
 - Scrollable (CSS `overflow-y: auto`)
-- The ID is trimmed; a missing, empty, non-string, or embedded-whitespace ID
-  falls back to `main-content` and serves as the skip-link target
+- The ID is trimmed; a missing, empty, non-string, embedded-whitespace,
+  null-containing, or URI-malformed ID falls back to `main-content` and serves
+  as the skip-link target
 - Native main attributes are consumer-owned except `children` and
   `dangerouslySetInnerHTML`; required Pathable classes are preserved
 

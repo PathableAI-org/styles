@@ -1,3 +1,5 @@
+import { expect, userEvent, within } from 'storybook/test'
+
 export default {
   title: 'Application Shell/Mobile Shell',
   tags: ['autodocs'],
@@ -104,7 +106,7 @@ export const Default = {
 }
 
 export const SharedNavigation = {
-  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
   parameters: {
     docs: {
       description: {
@@ -115,9 +117,22 @@ export const SharedNavigation = {
   },
   render: () => `
     <div class="pathable-app-shell pathable-app-shell--shared-navigation">
+      <a class="pathable-skipnav" href="#main-content">Skip to main content</a>
       ${sharedNavigation()}
       ${topbar()}
       ${mainContent()}
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const shell = canvasElement.querySelector('.pathable-app-shell')
+    if (!(shell instanceof HTMLElement)) throw new Error('AppShell not found')
+
+    await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
+    await expect(shell.scrollWidth).toBeLessThanOrEqual(shell.clientWidth)
+    await userEvent.tab()
+    await expect(
+      canvas.getByRole('link', { name: 'Skip to main content' }),
+    ).toHaveFocus()
+  },
 }

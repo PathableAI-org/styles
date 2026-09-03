@@ -190,8 +190,10 @@
     height: auto;
     overflow: hidden;
     display: block;
-    padding: var(--space-8) var(--space-16)
-      calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
+    padding: var(--space-8)
+      calc(var(--space-16) + env(safe-area-inset-right, 0px))
+      calc(var(--space-8) + env(safe-area-inset-bottom, 0px))
+      calc(var(--space-16) + env(safe-area-inset-left, 0px));
     border-right: 0;
     border-top: 1px solid var(--pathable-color-border);
   }
