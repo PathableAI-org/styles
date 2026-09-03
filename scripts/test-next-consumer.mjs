@@ -227,6 +227,11 @@ async function assertReactPackage(reactRoot) {
     /dangerouslySetInnerHTML\?:\s*never/u,
     'Packed declarations do not forbid mainProps dangerouslySetInnerHTML',
   )
+  assert.match(
+    appShellDeclarations,
+    /skipLinkText\?:\s*string/u,
+    'Packed declarations do not restrict AppShell skip-link text to a string',
+  )
   const activityTypeExports =
     declarations.match(
       /export\s+type\s*\{([^}]*)\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/su,

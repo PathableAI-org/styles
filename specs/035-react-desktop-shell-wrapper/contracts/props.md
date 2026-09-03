@@ -60,8 +60,8 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Accessible navigation landmark name. Default: 'Primary'. */
   navigationLabel?: string
 
-  /** Consumer-localizable skip-link content. Default: 'Skip to main content'. */
-  skipLinkText?: ReactNode
+  /** Consumer-localizable skip-link text. Default: 'Skip to main content'. */
+  skipLinkText?: string
 
   /** Mobile navigation strategy. Default: 'bottom'. */
   mobileNavigation?: MobileNavigation
@@ -83,7 +83,7 @@ interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
 | `notification` | `ReactNode` | No | — | `<div className="pathable-app-shell__notification">` (omitted if empty) |
 | `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never }` | No | — | Native main attributes; content-owning keys are forbidden and runtime-stripped, class names merge, and a valid normalized ID controls the skip target |
 | `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
-| `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Skip-link content; structurally empty values use the default |
+| `skipLinkText` | `string` | No | `'Skip to main content'` | Localizable skip-link text; empty values use the default |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar navigation; unexpected runtime values use `bottom` |
 | `className` | `string` | No | `''` | Merged onto the root `<div className="pathable-app-shell">` |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | No | — | Spread onto the root div |
@@ -123,7 +123,11 @@ With `mobileNavigation="shared"`, the root also receives
 `pathable-app-shell--shared-navigation`. The sidebar navigation remains the one
 navigation landmark at all breakpoints; `bottomNavItems` is not rendered. Below
 1024px, CSS presents all sidebar destinations in a horizontally scrollable row
-and hides sidebar brand and account regions.
+in the bottom grid row and hides sidebar brand and account regions. The landmark
+remains before main content in DOM and keyboard order; the skip link remains the
+first focusable element. Structurally empty sidebar navigation prevents shared
+mode from activating and preserves any supplied legacy `bottomNavItems`;
+elements and custom components count as supplied content.
 
 ### Empty State Behavior
 

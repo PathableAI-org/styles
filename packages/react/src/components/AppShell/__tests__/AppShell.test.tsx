@@ -110,6 +110,16 @@ describe('AppShell', () => {
 
     expect(getByRole('main').getAttribute('id')).toBe('main-content')
     expect(getByRole('link').getAttribute('href')).toBe('#main-content')
+
+    rerender(<AppShell mainProps={{ id: 'main%20content' }}>Content</AppShell>)
+
+    expect(getByRole('main').getAttribute('id')).toBe('main%20content')
+    expect(getByRole('link').getAttribute('href')).toBe('#main%2520content')
+
+    rerender(<AppShell mainProps={{ id: '\ud800' }}>Content</AppShell>)
+
+    expect(getByRole('main').getAttribute('id')).toBe('main-content')
+    expect(getByRole('link').getAttribute('href')).toBe('#main-content')
   })
 
   it('keeps the skip link named when consumer content is empty', () => {
@@ -119,28 +129,18 @@ describe('AppShell', () => {
 
     expect(getByRole('link').textContent).toBe('Skip to main content')
 
-    rerender(<AppShell skipLinkText={null}>Content</AppShell>)
-    expect(getByRole('link').textContent).toBe('Skip to main content')
-
-    rerender(<AppShell skipLinkText={false}>Content</AppShell>)
-    expect(getByRole('link').textContent).toBe('Skip to main content')
-
-    rerender(<AppShell skipLinkText={true}>Content</AppShell>)
-    expect(getByRole('link').textContent).toBe('Skip to main content')
-
-    rerender(<AppShell skipLinkText={[]}>Content</AppShell>)
-    expect(getByRole('link').textContent).toBe('Skip to main content')
-
-    rerender(<AppShell skipLinkText={<></>}>Content</AppShell>)
-    expect(getByRole('link').textContent).toBe('Skip to main content')
-
-    rerender(<AppShell skipLinkText={<span />}>Content</AppShell>)
+    rerender(
+      <AppShell skipLinkText={null as unknown as string}>Content</AppShell>,
+    )
     expect(getByRole('link').textContent).toBe('Skip to main content')
 
     rerender(
-      <AppShell skipLinkText={<span>Skip product navigation</span>}>
-        Content
-      </AppShell>,
+      <AppShell skipLinkText={false as unknown as string}>Content</AppShell>,
+    )
+    expect(getByRole('link').textContent).toBe('Skip to main content')
+
+    rerender(
+      <AppShell skipLinkText=" Skip product navigation ">Content</AppShell>,
     )
     expect(getByRole('link').textContent).toBe('Skip product navigation')
   })
@@ -156,8 +156,17 @@ describe('AppShell', () => {
         Content
       </AppShell>
     )
+    const invalidSkipLink = (
+      <AppShell
+        // @ts-expect-error -- skip-link content must have a reliable text name.
+        skipLinkText={<span>Skip navigation</span>}
+      >
+        Content
+      </AppShell>
+    )
 
     expect(invalidExample).toBeDefined()
+    expect(invalidSkipLink).toBeDefined()
   })
 
   it('strips unsafe main content attributes from runtime consumers', () => {
@@ -233,6 +242,57 @@ describe('AppShell', () => {
         getByRole('link', { name: 'Students' }),
       ),
     ).toBe(true)
+    expect(
+      getByRole('navigation').compareDocumentPosition(getByRole('main')) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('uses bottom navigation when shared sidebar navigation is empty', () => {
+    const bottomNavItems = [
+      { label: 'Mobile home', href: '/mobile', icon: <span /> },
+    ]
+    const { container, getByRole, queryByRole, rerender } = render(
+      <AppShell bottomNavItems={bottomNavItems} mobileNavigation="shared">
+        Content
+      </AppShell>,
+    )
+
+    expect(
+      container.firstElementChild?.classList.contains(
+        'pathable-app-shell--shared-navigation',
+      ),
+    ).toBe(false)
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav={<></>}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav={<span />}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(
+      container.firstElementChild?.classList.contains(
+        'pathable-app-shell--shared-navigation',
+      ),
+    ).toBe(true)
+    expect(queryByRole('link', { name: 'Mobile home' })).toBeNull()
   })
 
   it('produces equivalent SSR output without leaking component props', () => {

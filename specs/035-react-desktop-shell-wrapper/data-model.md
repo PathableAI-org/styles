@@ -26,7 +26,7 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 | `notification` | `ReactNode` | No | — | Content for the global notification/status layer |
 | `mainProps` | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never }` | No | — | Native main attributes; content-owning keys are forbidden and runtime-stripped, class names merge, and a valid normalized ID controls the skip target |
 | `navigationLabel` | `string` | No | `'Primary'` | Normalized accessible name for navigation landmarks; empty values use the default |
-| `skipLinkText` | `ReactNode` | No | `'Skip to main content'` | Consumer-localizable skip-link content; structurally empty values use the default |
+| `skipLinkText` | `string` | No | `'Skip to main content'` | Consumer-localizable skip-link text; empty values use the default |
 | `mobileNavigation` | `'bottom' \| 'shared'` | No | `'bottom'` | Compact bottom items or shared sidebar destinations; unexpected runtime values use `bottom` |
 | `className` | `string` | No | `''` | Additional CSS classes merged onto the root element |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | No | — | Passthrough attributes spread onto the root div |
@@ -45,15 +45,21 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - `contentWidth` must be `'standard'` or `'wide'` — applies the corresponding modifier class.
 - Fixed sidebar: `sidebarFixed === true` adds `pathable-app-shell__sidebar--fixed` modifier.
 - `mainProps.id` is trimmed; a missing, empty, non-string, or embedded-whitespace
-  value falls back to `main-content`, and the resolved ID determines the
-  skip-link target.
+  value falls back to `main-content`, and the URL-encoded resolved ID determines
+  the skip-link fragment.
 - `mainProps` excludes and runtime-strips `children` and
   `dangerouslySetInnerHTML`; main content is supplied only through
   `AppShell.children`.
-- Structurally empty `skipLinkText` values fall back to `Skip to main content`.
+- `skipLinkText` is trimmed; empty or non-string runtime values fall back to
+  `Skip to main content`.
 - `navigationLabel` is trimmed; empty or non-string values fall back to
   `Primary` for every rendered navigation landmark.
-- Shared navigation renders no `bottomNavItems`; the sidebar navigation remains the single navigation landmark.
+- Shared navigation renders no `bottomNavItems`; the sidebar navigation remains
+  the single navigation landmark before main content in DOM and keyboard order.
+  CSS visually places it in the bottom grid row on mobile.
+- Structurally empty sidebar navigation prevents shared mode from activating,
+  preserving any supplied legacy `bottomNavItems`. Elements and custom
+  components count as consumer-provided navigation content.
 - Any `mobileNavigation` runtime value other than `shared` uses the legacy
   `bottom` behavior.
 
@@ -187,8 +193,8 @@ A skip-to-content link, always rendered as the first focusable element.
 **Behaviors**:
 - Visually hidden until focused (CSS from `pathable-skipnav`)
 - On focus: becomes visible and keyboard-operable
-- Targets the main landmark ID and defaults to `#main-content`
-- Structurally empty content falls back to `Skip to main content`
+- Targets the URL-encoded main landmark ID and defaults to `#main-content`
+- Empty or non-string runtime text falls back to `Skip to main content`
 
 ## Relationships
 

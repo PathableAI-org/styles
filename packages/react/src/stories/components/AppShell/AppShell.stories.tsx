@@ -159,7 +159,7 @@ const meta = {
     },
     skipLinkText: {
       control: { type: 'text' },
-      description: 'Consumer-localizable skip-link content.',
+      description: 'Consumer-localizable skip-link text.',
     },
     mainProps: {
       control: { type: 'object' },

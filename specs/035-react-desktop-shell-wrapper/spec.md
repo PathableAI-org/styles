@@ -268,12 +268,13 @@ Pathable styling without any additional styles package import by the consumer.
   content remains owned by AppShell children, and unexpected runtime instances
   of those attributes MUST be stripped before rendering.
 
-- **FR-020**: The AppShell MUST support consumer-provided skip-link content and
+- **FR-020**: The AppShell MUST support consumer-provided skip-link text and
   an accessible navigation label, defaulting to `Skip to main content` and
-  `Primary` respectively. Structurally empty skip-link content MUST use the
-  default copy so the focusable link remains named. Navigation labels MUST be
-  trimmed and empty or non-string runtime values MUST use the default so every
-  navigation landmark remains named.
+  `Primary` respectively. Skip-link text MUST be a string, be trimmed, and use
+  the default copy for empty or non-string runtime values so the focusable link
+  remains named. Navigation labels MUST be trimmed and empty or non-string
+  runtime values MUST use the default so every navigation landmark remains
+  named.
 
 - **FR-021**: The AppShell MUST preserve the existing icon-and-label bottom
   navigation as the default mobile behavior, including for unexpected runtime
@@ -281,7 +282,9 @@ Pathable styling without any additional styles package import by the consumer.
 
 - **FR-022**: The AppShell MUST offer an opt-in shared mobile navigation mode
   that renders one navigation landmark and keeps every sidebar destination
-  available across breakpoints without JavaScript.
+  available across breakpoints without JavaScript. If sidebar navigation is
+  structurally empty, the shell MUST retain the legacy bottom-navigation
+  behavior.
 
 - **FR-023**: Shared mobile navigation MUST remain usable at viewport widths of
   320px and above without dropping destinations or obscuring main content.

@@ -22,27 +22,15 @@ function hasContent(value: unknown): boolean {
   return value !== null && value !== undefined && value !== false
 }
 
-function hasAccessibleContent(value: ReactNode): boolean {
+function hasSharedNavigation(value: ReactNode): boolean {
   if (typeof value === 'string') return Boolean(value.trim())
-  if (typeof value === 'number') return true
-  if (Array.isArray(value)) return value.some(hasAccessibleContent)
-  if (!isValidElement(value)) return false
+  if (Array.isArray(value)) return value.some(hasSharedNavigation)
+  if (!isValidElement(value) || value.type !== Fragment)
+    return hasContent(value)
 
-  const props = value.props as {
-    'aria-label'?: unknown
-    alt?: unknown
-    children?: ReactNode
-  }
-  if (
-    [props['aria-label'], props.alt].some(
-      (label) => typeof label === 'string' && Boolean(label.trim()),
-    )
-  ) {
-    return true
-  }
-  if (hasAccessibleContent(props.children)) return true
-
-  return value.type !== Fragment && typeof value.type !== 'string'
+  return hasSharedNavigation(
+    (value.props as { children?: ReactNode }).children ?? null,
+  )
 }
 
 export interface AppShellProps extends Omit<
@@ -66,7 +54,7 @@ export interface AppShellProps extends Omit<
     dangerouslySetInnerHTML?: never
   }
   navigationLabel?: string
-  skipLinkText?: ReactNode
+  skipLinkText?: string
   mobileNavigation?: MobileNavigation
 }
 
@@ -99,17 +87,26 @@ export function AppShell({
   } = runtimeMainAttributes
   const normalizedMainId =
     typeof requestedMainId === 'string' ? requestedMainId.trim() : ''
-  const mainId =
+  let mainId =
     normalizedMainId && !/\s/u.test(normalizedMainId)
       ? normalizedMainId
       : 'main-content'
+  try {
+    encodeURIComponent(mainId)
+  } catch {
+    mainId = 'main-content'
+  }
+  const mainFragment = encodeURIComponent(mainId)
   const resolvedNavigationLabel =
     typeof navigationLabel === 'string' && navigationLabel.trim()
       ? navigationLabel.trim()
       : DEFAULT_NAVIGATION_LABEL
-  const resolvedSkipLinkText = hasAccessibleContent(skipLinkText)
-    ? skipLinkText
-    : DEFAULT_SKIP_LINK_TEXT
+  const resolvedSkipLinkText =
+    typeof skipLinkText === 'string' && skipLinkText.trim()
+      ? skipLinkText.trim()
+      : DEFAULT_SKIP_LINK_TEXT
+  const usesSharedNavigation =
+    mobileNavigation === 'shared' && hasSharedNavigation(sidebarNav ?? null)
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',
@@ -127,7 +124,7 @@ export function AppShell({
 
   const rootClass = [
     'pathable-app-shell',
-    mobileNavigation === 'shared' && 'pathable-app-shell--shared-navigation',
+    usesSharedNavigation && 'pathable-app-shell--shared-navigation',
     className,
   ]
     .filter(Boolean)
@@ -135,7 +132,7 @@ export function AppShell({
 
   return (
     <div className={rootClass} {...rest}>
-      <a className="pathable-skipnav" href={`#${mainId}`}>
+      <a className="pathable-skipnav" href={`#${mainFragment}`}>
         {resolvedSkipLinkText}
       </a>
 
@@ -172,9 +169,7 @@ export function AppShell({
         {children}
       </main>
 
-      {mobileNavigation !== 'shared' &&
-      bottomNavItems &&
-      bottomNavItems.length > 0 ? (
+      {!usesSharedNavigation && bottomNavItems && bottomNavItems.length > 0 ? (
         <nav
           className="pathable-bottom-navigation"
           aria-label={resolvedNavigationLabel}
