@@ -7,6 +7,7 @@ const config = {
     if (
       new Set([
         'application-shell-mobile-shell--default',
+        'application-shell-mobile-shell--legacy-active-color-override',
         'application-shell-mobile-shell--shared-navigation',
       ]).has(context.id)
     ) {

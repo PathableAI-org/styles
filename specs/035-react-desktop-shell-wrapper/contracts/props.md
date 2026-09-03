@@ -128,7 +128,9 @@ remains before main content in DOM and keyboard order; the skip link remains the
 first focusable element. Structurally empty sidebar navigation prevents shared
 mode from activating and preserves any supplied legacy `bottomNavItems`;
 elements and custom components count as supplied content, while booleans and
-reusable iterables containing only empty values do not.
+reusable iterables containing only empty values do not. One-shot iterables count
+as supplied content without inspection so the shell does not consume them before
+React renders them.
 
 ### Empty State Behavior
 

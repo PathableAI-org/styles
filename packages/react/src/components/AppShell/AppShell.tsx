@@ -32,10 +32,11 @@ function hasSharedNavigation(value: ReactNode): boolean {
       value !== null &&
       Symbol.iterator in value
     ) {
-      const iterator = (value as Iterable<ReactNode>)[Symbol.iterator]()
+      const iterable = value as Iterable<ReactNode>
+      const iterator = iterable[Symbol.iterator]()
 
       // Consuming a generator here would leave React with an exhausted child.
-      if (iterator !== (value as unknown as Iterator<ReactNode>)) {
+      if (iterator !== iterable[Symbol.iterator]()) {
         for (let item = iterator.next(); !item.done; item = iterator.next()) {
           if (hasSharedNavigation(item.value)) return true
         }
@@ -125,8 +126,9 @@ export function AppShell({
     typeof skipLinkText === 'string' && skipLinkText.trim()
       ? skipLinkText.trim()
       : DEFAULT_SKIP_LINK_TEXT
+  const hasSidebarNavigation = hasSharedNavigation(sidebarNav ?? null)
   const usesSharedNavigation =
-    mobileNavigation === 'shared' && hasSharedNavigation(sidebarNav ?? null)
+    mobileNavigation === 'shared' && hasSidebarNavigation
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',
@@ -165,7 +167,7 @@ export function AppShell({
           <div className="pathable-app-shell__brand">{sidebarBrand}</div>
         ) : null}
 
-        {hasContent(sidebarNav) ? (
+        {hasSidebarNavigation ? (
           <nav
             className="pathable-app-shell__nav"
             aria-label={resolvedNavigationLabel}

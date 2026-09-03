@@ -58,7 +58,9 @@
     var(--pathable-app-shell-sidebar-width, 280px)
     minmax(0, 1fr);
   grid-template-rows: 1fr;
+  height: 100dvh;
   min-height: 100dvh;
+  overflow: hidden;
 }
 
 .pathable-app-shell__sidebar {
@@ -147,6 +149,7 @@
   grid-area: main;
   width: 100%;
   min-width: 0;
+  min-height: 0;
   max-width: min(100%, var(--pathable-app-shell-content-max-width, 1024px));
   box-sizing: border-box;
   margin-inline: auto;

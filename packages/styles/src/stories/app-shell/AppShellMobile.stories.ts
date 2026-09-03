@@ -4,6 +4,7 @@ export default {
   title: 'Application Shell/Mobile Shell',
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     docs: {
       description: {
         story:
@@ -66,7 +67,7 @@ const sharedNavigation = () => `
 `
 
 const mainContent = () => `
-  <main id="main-content" class="pathable-app-shell__content">
+  <main id="main-content" class="pathable-app-shell__content" tabindex="0">
     <h2 style="margin: 0 0 1rem; font-size: 1.125rem; font-weight: 600;">Home</h2>
     <div style="display: flex; flex-direction: column; gap: 0.75rem;">
       <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
@@ -88,6 +89,17 @@ const mainContent = () => `
         </p>
       </div>
     </div>
+  </main>
+`
+
+const longMainContent = () => `
+  <main id="main-content" class="pathable-app-shell__content" tabindex="0">
+    <h2 style="margin: 0 0 1rem; font-size: 1.125rem; font-weight: 600;">Scrollable workspace</h2>
+    ${Array.from(
+      { length: 24 },
+      (_, index) =>
+        `<p style="margin: 0 0 0.75rem;">Workspace row ${index + 1}</p>`,
+    ).join('')}
   </main>
 `
 
@@ -120,19 +132,59 @@ export const SharedNavigation = {
       <a class="pathable-skipnav" href="#main-content">Skip to main content</a>
       ${sharedNavigation()}
       ${topbar()}
-      ${mainContent()}
+      ${longMainContent()}
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
     const shell = canvasElement.querySelector('.pathable-app-shell')
     if (!(shell instanceof HTMLElement)) throw new Error('AppShell not found')
+    const navigation = canvas.getByRole('navigation', { name: 'Product' })
+    const main = canvas.getByRole('main')
+    const initialNavigationBounds = navigation.getBoundingClientRect()
 
+    await expect(window.innerWidth).toBe(320)
     await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
     await expect(shell.scrollWidth).toBeLessThanOrEqual(shell.clientWidth)
+    await expect(main.scrollHeight).toBeGreaterThan(main.clientHeight)
+    main.scrollTop = main.scrollHeight
+    await expect(main.scrollTop).toBeGreaterThan(0)
+    const scrolledNavigationBounds = navigation.getBoundingClientRect()
+    await expect(scrolledNavigationBounds.top).toBeCloseTo(
+      initialNavigationBounds.top,
+      0,
+    )
+    await expect(scrolledNavigationBounds.bottom).toBeLessThanOrEqual(
+      window.innerHeight,
+    )
     await userEvent.tab()
     await expect(
       canvas.getByRole('link', { name: 'Skip to main content' }),
     ).toHaveFocus()
+  },
+}
+
+export const LegacyActiveColorOverride = {
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
+  render: () => `
+    <div
+      class="pathable-app-shell"
+      style="--pathable-bottom-navigation-bg: #00365c; --pathable-bottom-navigation-active-color: #fff; --pathable-color-text-muted: #d9e8f0;"
+    >
+      ${topbar()}
+      ${mainContent()}
+      ${bottomNav()}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const activeItem = canvasElement.querySelector(
+      '.pathable-bottom-navigation__item--active',
+    )
+    if (!(activeItem instanceof HTMLElement)) {
+      throw new Error('Active bottom-navigation item not found')
+    }
+
+    await expect(window.innerWidth).toBe(320)
+    await expect(getComputedStyle(activeItem).color).toBe('rgb(255, 255, 255)')
   },
 }

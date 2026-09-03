@@ -99,9 +99,12 @@ mobile viewports.
 2. **Given** the AppShell is viewed on a desktop viewport, **When** the focus
    order is inspected, **Then** it follows the sidebar DOM order (brand →
    navigation → account context) before entering the main content region.
-3. **Given** the AppShell is viewed on a mobile viewport, **When** the focus
-   order is inspected, **Then** it follows the top bar → main content → bottom
-   navigation order, and no fixed region covers focused elements.
+3. **Given** the AppShell is viewed on a mobile viewport in default bottom mode,
+   **When** the focus order is inspected, **Then** it follows main content →
+   bottom navigation after the skip link. In shared mode, the one navigation
+   landmark remains before main content in DOM order while CSS places it in the
+   bottom row; the first-focusable skip link provides direct access to main
+   content. No fixed region covers focused elements in either mode.
 
 ---
 
@@ -348,9 +351,10 @@ Pathable styling without any additional styles package import by the consumer.
   CamelCase. The sub-component name is `AppShellNavItem` because
   `pathable-app-shell__nav-item` becomes `AppShellNavItem` under the same
   convention.
-- This feature wraps, not extends, the existing app shell contract; it does
-  not add new visual variants, layout regions, or change the underlying app
-  shell styles.
+- This feature primarily wraps the existing app shell contract and adds one
+  opt-in shared-navigation modifier. It introduces no duplicate mobile markup or
+  new layout region; the modifier reuses the existing sidebar region below the
+  mobile content.
 - Provider design evidence is not required because the request targets an
   existing repository-owned styles contract rather than a new design-derived
   visual surface.

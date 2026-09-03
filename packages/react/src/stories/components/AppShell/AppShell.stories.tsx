@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import { AppShell, BottomNavItem } from '../../../components/AppShell/AppShell'
 import { AppShellNavItem } from '../../../components/AppShell/AppShellNavItem'
@@ -111,6 +111,7 @@ const meta = {
   component: AppShell,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     docs: {
       description: {
         component:
@@ -239,7 +240,7 @@ export const SharedMobileNavigation: Story = {
       mainProps={{
         'aria-label': 'Dashboard workspace',
         id: 'dashboard-main',
-        tabIndex: -1,
+        tabIndex: 0,
       }}
       mobileNavigation="shared"
       navigationLabel="Product"
@@ -253,6 +254,9 @@ export const SharedMobileNavigation: Story = {
         Every desktop navigation destination remains available in one
         horizontally scrollable navigation landmark on narrow viewports.
       </p>
+      {Array.from({ length: 24 }, (_, index) => (
+        <p key={index}>Scrollable workspace row {index + 1}</p>
+      ))}
     </AppShell>
   ),
   globals: {
@@ -267,6 +271,7 @@ export const SharedMobileNavigation: Story = {
     await step('one named navigation contains every destination', async () => {
       const navigation = canvas.getByRole('navigation', { name: 'Product' })
       await expect(navigation).toBeVisible()
+      await expect(window.innerWidth).toBe(320)
       await expect(within(navigation).getAllByRole('link')).toHaveLength(
         NAV_ITEMS.length,
       )
@@ -274,6 +279,26 @@ export const SharedMobileNavigation: Story = {
       const shell = canvasElement.querySelector('.pathable-app-shell')
       if (!(shell instanceof HTMLElement)) throw new Error('AppShell not found')
       await expect(shell.scrollWidth).toBeLessThanOrEqual(shell.clientWidth)
+    })
+
+    await step('main content scrolls without moving navigation', async () => {
+      const navigation = canvas.getByRole('navigation', { name: 'Product' })
+      const main = canvas.getByRole('main')
+      const initialNavigationBounds = navigation.getBoundingClientRect()
+
+      await expect(main.scrollHeight).toBeGreaterThan(main.clientHeight)
+      main.scrollTop = main.scrollHeight
+      await expect(main.scrollTop).toBeGreaterThan(0)
+
+      const scrolledNavigationBounds = navigation.getBoundingClientRect()
+      await expect(scrolledNavigationBounds.top).toBeCloseTo(
+        initialNavigationBounds.top,
+        0,
+      )
+      await expect(scrolledNavigationBounds.bottom).toBeLessThanOrEqual(
+        window.innerHeight,
+      )
+      main.scrollTop = 0
     })
 
     await step('keyboard focus reaches every shared destination', async () => {
@@ -289,18 +314,30 @@ export const SharedMobileNavigation: Story = {
       for (const link of links) {
         await userEvent.tab()
         await expect(link).toHaveFocus()
-        const navigationBounds = navigation.getBoundingClientRect()
-        const contentRange = document.createRange()
-        contentRange.selectNodeContents(link)
-        const contentBounds = contentRange.getBoundingClientRect()
-        await expect(contentBounds.left).toBeGreaterThanOrEqual(
-          navigationBounds.left - 1,
-        )
-        await expect(contentBounds.right).toBeLessThanOrEqual(
-          navigationBounds.right + 1,
-        )
       }
     })
+
+    await step(
+      'horizontal scrolling reveals the final destination',
+      async () => {
+        const navigation = canvas.getByRole('navigation', { name: 'Product' })
+        const links = within(navigation).getAllByRole('link')
+        navigation.scrollLeft = navigation.scrollWidth
+
+        await waitFor(() => {
+          const navigationBounds = navigation.getBoundingClientRect()
+          const contentRange = document.createRange()
+          contentRange.selectNodeContents(links.at(-1)!)
+          const contentBounds = contentRange.getBoundingClientRect()
+          expect(contentBounds.left).toBeGreaterThanOrEqual(
+            navigationBounds.left - 1,
+          )
+          expect(contentBounds.right).toBeLessThanOrEqual(
+            navigationBounds.right + 1,
+          )
+        })
+      },
+    )
 
     await step(
       'custom skip link targets the dashboard main landmark',
@@ -310,7 +347,7 @@ export const SharedMobileNavigation: Story = {
         ).toHaveAttribute('href', '#dashboard-main')
         await expect(
           canvas.getByRole('main', { name: 'Dashboard workspace' }),
-        ).toHaveAttribute('tabindex', '-1')
+        ).toHaveAttribute('tabindex', '0')
       },
     )
   },

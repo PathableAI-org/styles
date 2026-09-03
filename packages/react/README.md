@@ -550,7 +550,9 @@ the first-focusable skip link lets keyboard users move directly to main content.
 If `sidebarNav` is structurally empty, or if `mobileNavigation` has an unexpected
 runtime value, the shell falls back to the legacy `bottom` behavior. Elements
 and custom components count as consumer-provided navigation content; booleans
-and reusable iterables containing only empty values do not.
+and reusable iterables containing only empty values do not. One-shot iterables
+are treated as supplied content without inspection so AppShell does not consume
+them before React renders them.
 
 | Prop               | Type                                                                                                                                 | Default                  | Description                                                                                                                                      |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |

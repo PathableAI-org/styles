@@ -110,7 +110,7 @@
 .pathable-bottom-navigation__item[aria-current='page'] {
   color: var(
     --pathable-bottom-navigation-active-text-color,
-    var(--pathable-color-text)
+    var(--pathable-bottom-navigation-active-color, var(--pathable-color-text))
   );
   font-weight: 700;
   border-top-color: var(

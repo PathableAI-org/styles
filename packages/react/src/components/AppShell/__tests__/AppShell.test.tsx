@@ -257,11 +257,12 @@ describe('AppShell', () => {
     const bottomNavItems = [
       { label: 'Mobile home', href: '/mobile', icon: <span /> },
     ]
-    const { container, getByRole, queryByRole, rerender } = render(
-      <AppShell bottomNavItems={bottomNavItems} mobileNavigation="shared">
-        Content
-      </AppShell>,
-    )
+    const { container, getAllByRole, getByRole, queryByRole, rerender } =
+      render(
+        <AppShell bottomNavItems={bottomNavItems} mobileNavigation="shared">
+          Content
+        </AppShell>,
+      )
 
     expect(
       container.firstElementChild?.classList.contains(
@@ -269,6 +270,33 @@ describe('AppShell', () => {
       ),
     ).toBe(false)
     expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav="   "
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
+
+    rerender(
+      <AppShell
+        bottomNavItems={bottomNavItems}
+        mobileNavigation="shared"
+        sidebarNav={[]}
+      >
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
 
     rerender(
       <AppShell
@@ -281,6 +309,7 @@ describe('AppShell', () => {
     )
 
     expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
 
     rerender(
       <AppShell
@@ -293,6 +322,7 @@ describe('AppShell', () => {
     )
 
     expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
 
     rerender(
       <AppShell
@@ -322,6 +352,7 @@ describe('AppShell', () => {
     )
 
     expect(getByRole('link', { name: 'Mobile home' })).toBeDefined()
+    expect(getAllByRole('navigation')).toHaveLength(1)
 
     rerender(
       <AppShell
@@ -339,6 +370,25 @@ describe('AppShell', () => {
       ),
     ).toBe(true)
     expect(queryByRole('link', { name: 'Mobile home' })).toBeNull()
+  })
+
+  it('does not consume a one-shot custom navigation iterable', () => {
+    const iterator = [
+      <AppShellNavItem key="reports" href="/reports">
+        Reports
+      </AppShellNavItem>,
+    ][Symbol.iterator]()
+    const sidebarNav: Iterable<React.ReactNode> = {
+      [Symbol.iterator]: () => iterator,
+    }
+
+    const { getByRole } = render(
+      <AppShell mobileNavigation="shared" sidebarNav={sidebarNav}>
+        Content
+      </AppShell>,
+    )
+
+    expect(getByRole('link', { name: 'Reports' })).toBeDefined()
   })
 
   it('produces equivalent SSR output without leaking component props', () => {

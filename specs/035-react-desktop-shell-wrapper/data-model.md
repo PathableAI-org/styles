@@ -60,7 +60,8 @@ The top-level layout wrapper component that arranges sidebar, header, navigation
 - Structurally empty sidebar navigation prevents shared mode from activating,
   preserving any supplied legacy `bottomNavItems`. Elements and custom
   components count as consumer-provided navigation content; booleans and
-  reusable iterables containing only empty values do not.
+  reusable iterables containing only empty values do not. One-shot iterables
+  count as supplied content without inspection.
 - Any `mobileNavigation` runtime value other than `shared` uses the legacy
   `bottom` behavior.
 
@@ -165,7 +166,8 @@ The primary content area.
 - Max-width: 1024px (standard) or 1280px (wide)
 - Full width on mobile (< 1024px)
 - Center-aligned with auto margins
-- Scrollable (CSS `overflow-y: auto`)
+- Scrollable within the viewport-owned shell (CSS `overflow-y: auto` and
+  `min-height: 0`)
 - The ID is trimmed; a missing, empty, non-string, embedded-whitespace,
   null-containing, or URI-malformed ID falls back to `main-content` and serves
   as the skip-link target
