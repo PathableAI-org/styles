@@ -109,7 +109,7 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
 | `--pathable-bottom-navigation-safe-area` | `env(safe-area-inset-bottom, 0px)` | Safe area padding |
 | `--pathable-bottom-navigation-item-gap` | `var(--space-4)` | Gap between icon and label |
 | `--pathable-bottom-navigation-active-color` | `var(--pathable-color-accent)` | Active indicator color |
-| `--pathable-bottom-navigation-active-text-color` | `var(--pathable-color-text)` | Active item text and icon color |
+| `--pathable-bottom-navigation-active-text-color` | `var(--pathable-bottom-navigation-active-color, var(--pathable-color-text))` | Active item text and icon color |
 | `--pathable-bottom-navigation-active-indicator-width` | `3px` | Active indicator bar width |
 
 ## Accessibility Contract
