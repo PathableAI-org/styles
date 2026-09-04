@@ -11,7 +11,19 @@ const config = {
     process.env.STORYBOOK_TARGET === 'react'
       ? { include: ['behavior-contract'] }
       : undefined,
-  async preVisit(page) {
+  async preVisit(page, context) {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    if (
+      new Set([
+        'components-appshell--mobile-shell',
+        'components-appshell--narrow-viewport',
+        'components-appshell--shared-mobile-navigation',
+        'components-appshell--responsive-layout-switch',
+      ]).has(context.id)
+    ) {
+      await page.setViewportSize({ width: 320, height: 700 })
+    }
+
     await injectAxe(page)
   },
   async postVisit(page, context) {

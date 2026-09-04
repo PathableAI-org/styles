@@ -11,6 +11,7 @@
 //   --pathable-bottom-navigation-safe-area       (default: env(safe-area-inset-bottom, 0px))
 //   --pathable-bottom-navigation-item-gap        (default: var(--space-4))
 //   --pathable-bottom-navigation-active-color    (default: var(--pathable-color-accent))
+//   --pathable-bottom-navigation-active-text-color (default: var(--pathable-bottom-navigation-active-color, var(--pathable-color-text)))
 //   --pathable-bottom-navigation-active-indicator-width (default: 3px)
 //
 // The .pathable-bottom-navigation element should be placed inside the
@@ -108,8 +109,8 @@
 .pathable-bottom-navigation__item--active,
 .pathable-bottom-navigation__item[aria-current='page'] {
   color: var(
-    --pathable-bottom-navigation-active-color,
-    var(--pathable-color-accent)
+    --pathable-bottom-navigation-active-text-color,
+    var(--pathable-bottom-navigation-active-color, var(--pathable-color-text))
   );
   font-weight: 700;
   border-top-color: var(

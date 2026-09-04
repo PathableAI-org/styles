@@ -81,6 +81,7 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
 | `.pathable-app-shell__sidebar--fixed` | `__sidebar` | Makes sidebar `position: fixed` instead of `sticky` |
 | `.pathable-app-shell__content--standard` | `__content` | Applies standard max-width (default) |
 | `.pathable-app-shell__content--wide` | `__content` | Applies wide max-width |
+| `.pathable-app-shell--shared-navigation` | root | Reuses sidebar navigation as a horizontally scrollable bottom row below 1024px |
 
 ## CSS Custom Properties
 
@@ -107,7 +108,8 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
 | `--pathable-bottom-navigation-bg` | `var(--pathable-color-surface)` | Bottom nav background |
 | `--pathable-bottom-navigation-safe-area` | `env(safe-area-inset-bottom, 0px)` | Safe area padding |
 | `--pathable-bottom-navigation-item-gap` | `var(--space-4)` | Gap between icon and label |
-| `--pathable-bottom-navigation-active-color` | `var(--pathable-color-accent)` | Active item color |
+| `--pathable-bottom-navigation-active-color` | `var(--pathable-color-accent)` | Active indicator color |
+| `--pathable-bottom-navigation-active-text-color` | `var(--pathable-bottom-navigation-active-color, var(--pathable-color-text))` | Active item text and icon color |
 | `--pathable-bottom-navigation-active-indicator-width` | `3px` | Active indicator bar width |
 
 ## Accessibility Contract
@@ -115,7 +117,7 @@ This document describes the framework-neutral SCSS/CSS interface contracts for t
 | Requirement | Implementation |
 |-------------|----------------|
 | Skip link targets main content | Consumer adds `id="main-content"` to `__content` element; shell documentation directs use of existing `pathable-skipnav` |
-| Focus order follows DOM order | Desktop: sidebar (brand → nav → account) → content; Mobile: top bar → content → bottom nav |
+| Focus order follows DOM order | Default mobile mode: content → bottom nav after the skip link. Shared mode retains its single sidebar navigation before main in DOM order while CSS places it in the bottom row; the skip link provides direct main access. |
 | Fixed regions don't obscure focused content, dialogs, or toasts | All fixed/sticky regions use appropriate `z-index`; overlays use higher `z-index` values |
 | Visible focus on navigation items | Each `__nav-item` has `:focus-visible` outline using `var(--pathable-color-focus-ring)` |
 | Active state uses color + additional cue | Sidebar: inset left border + font-weight; Bottom nav: top border/background + font-weight |

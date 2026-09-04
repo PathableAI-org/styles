@@ -99,9 +99,12 @@ mobile viewports.
 2. **Given** the AppShell is viewed on a desktop viewport, **When** the focus
    order is inspected, **Then** it follows the sidebar DOM order (brand →
    navigation → account context) before entering the main content region.
-3. **Given** the AppShell is viewed on a mobile viewport, **When** the focus
-   order is inspected, **Then** it follows the top bar → main content → bottom
-   navigation order, and no fixed region covers focused elements.
+3. **Given** the AppShell is viewed on a mobile viewport in default bottom mode,
+   **When** the focus order is inspected, **Then** it follows main content →
+   bottom navigation after the skip link. In shared mode, the one navigation
+   landmark remains before main content in DOM order while CSS places it in the
+   bottom row; the first-focusable skip link provides direct access to main
+   content. No fixed region covers focused elements in either mode.
 
 ---
 
@@ -176,6 +179,11 @@ Pathable styling without any additional styles package import by the consumer.
   its regions? Class names should be merged rather than replaced.
 - What happens when a consumer passes additional HTML attributes to the shell
   or its regions? Attributes should be spread onto the appropriate DOM element.
+- What happens when a product has more than five primary destinations? Shared
+  navigation keeps the complete sidebar destination set available in a
+  horizontally scrollable mobile row without rendering a duplicate landmark.
+- What happens when a consumer changes the main landmark ID? The skip link must
+  derive its target from that ID and preserve server-rendered output.
 
 ## Requirements *(mandatory)*
 
@@ -255,6 +263,39 @@ Pathable styling without any additional styles package import by the consumer.
 - **FR-018**: The feature MUST NOT disable, weaken, skip, or silence lint
   checks to complete the wrapper work.
 
+- **FR-019**: The AppShell MUST accept native main-landmark attributes, merge a
+  consumer class name with required content classes, and derive the skip-link
+  target from a valid normalized main landmark ID, defaulting missing, empty,
+  non-string, embedded-whitespace, null-containing, or URI-malformed IDs to
+  `main-content`. Main-landmark attributes MUST NOT accept `children` or
+  `dangerouslySetInnerHTML`; main content remains owned by AppShell children,
+  and unexpected runtime instances of those attributes MUST be stripped before
+  rendering.
+
+- **FR-020**: The AppShell MUST support consumer-provided skip-link text and
+  an accessible navigation label, defaulting to `Skip to main content` and
+  `Primary` respectively. Skip-link text MUST be a string, be trimmed, and use
+  the default copy for empty or non-string runtime values so the focusable link
+  remains named. Navigation labels MUST be trimmed and empty or non-string
+  runtime values MUST use the default so every navigation landmark remains
+  named.
+
+- **FR-021**: The AppShell MUST preserve the existing icon-and-label bottom
+  navigation as the default mobile behavior, including for unexpected runtime
+  `mobileNavigation` values.
+
+- **FR-022**: The AppShell MUST offer an opt-in shared mobile navigation mode
+  that renders one navigation landmark and keeps every sidebar destination
+  available across breakpoints without JavaScript. If sidebar navigation is
+  structurally empty, the shell MUST retain the legacy bottom-navigation
+  behavior.
+
+- **FR-023**: Shared mobile navigation MUST remain usable at viewport widths of
+  320px and above without dropping destinations or obscuring main content.
+
+- **FR-024**: The additive AppShell contract MUST produce equivalent client and
+  server markup and be verified through a packed React 18 Next.js consumer.
+
 ### Key Entities
 
 - **AppShell**: The top-level layout wrapper component that arranges sidebar,
@@ -310,9 +351,10 @@ Pathable styling without any additional styles package import by the consumer.
   CamelCase. The sub-component name is `AppShellNavItem` because
   `pathable-app-shell__nav-item` becomes `AppShellNavItem` under the same
   convention.
-- This feature wraps, not extends, the existing app shell contract; it does
-  not add new visual variants, layout regions, or change the underlying app
-  shell styles.
+- This feature primarily wraps the existing app shell contract and adds one
+  opt-in shared-navigation modifier. It introduces no duplicate mobile markup or
+  new layout region; the modifier reuses the existing sidebar region below the
+  mobile content.
 - Provider design evidence is not required because the request targets an
   existing repository-owned styles contract rather than a new design-derived
   visual surface.

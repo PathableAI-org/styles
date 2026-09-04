@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import { AppShell, BottomNavItem } from '../../../components/AppShell/AppShell'
 import { AppShellNavItem } from '../../../components/AppShell/AppShellNavItem'
@@ -111,6 +111,7 @@ const meta = {
   component: AppShell,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     docs: {
       description: {
         component:
@@ -124,9 +125,11 @@ const meta = {
           'that do not need persistent navigation.\n\n' +
           '**Accessible naming**: The shell always renders a skip link as the ' +
           'first focusable element. Active navigation is communicated with ' +
-          'aria-current="page".\n\n' +
-          '**Known constraints**: bottomNavItems supports at most five ' +
-          'destinations. Sidebar hides below 1024px.',
+          'aria-current="page". Use `mainProps` to configure the main landmark ' +
+          'and `navigationLabel` to name navigation.\n\n' +
+          '**Responsive navigation**: The default `bottom` mode preserves the ' +
+          'compact, icon-based bottom navigation. The `shared` mode reuses all ' +
+          'sidebar destinations across breakpoints without JavaScript.',
       },
     },
   },
@@ -144,6 +147,24 @@ const meta = {
     topBarTitle: {
       control: { type: 'text' },
       description: 'Title displayed in the mobile top bar.',
+    },
+    mobileNavigation: {
+      options: ['bottom', 'shared'],
+      control: { type: 'select' },
+      description:
+        'Uses compact bottomNavItems or reuses the sidebar navigation on mobile.',
+    },
+    navigationLabel: {
+      control: { type: 'text' },
+      description: 'Accessible name for the primary navigation landmark.',
+    },
+    skipLinkText: {
+      control: { type: 'text' },
+      description: 'Consumer-localizable skip-link text.',
+    },
+    mainProps: {
+      control: { type: 'object' },
+      description: 'Native attributes applied to the main landmark.',
     },
     className: {
       control: { type: 'text' },
@@ -206,9 +227,129 @@ export const MobileShell: Story = {
   ),
   globals: {
     viewport: {
-      value: 'mobile1',
+      value: 'mobile320',
       isRotated: false,
     },
+  },
+}
+
+// Mobile shell with one shared navigation landmark
+export const SharedMobileNavigation: Story = {
+  render: () => (
+    <AppShell
+      mainProps={{
+        'aria-label': 'Dashboard workspace',
+        id: 'dashboard-main',
+        tabIndex: 0,
+      }}
+      mobileNavigation="shared"
+      navigationLabel="Product"
+      sidebarBrand={<strong>PathAble</strong>}
+      sidebarNav={renderSidebarNav()}
+      skipLinkText="Skip product navigation"
+      topBarTitle="PathAble"
+    >
+      <h1>Shared mobile navigation</h1>
+      <p>
+        Every desktop navigation destination remains available in one
+        horizontally scrollable navigation landmark on narrow viewports.
+      </p>
+      {Array.from({ length: 24 }, (_, index) => (
+        <p key={index}>Scrollable workspace row {index + 1}</p>
+      ))}
+    </AppShell>
+  ),
+  globals: {
+    viewport: {
+      value: 'mobile320',
+      isRotated: false,
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('one named navigation contains every destination', async () => {
+      const navigation = canvas.getByRole('navigation', { name: 'Product' })
+      await expect(navigation).toBeVisible()
+      await expect(window.innerWidth).toBe(320)
+      await expect(within(navigation).getAllByRole('link')).toHaveLength(
+        NAV_ITEMS.length,
+      )
+      await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
+      const shell = canvasElement.querySelector('.pathable-app-shell')
+      if (!(shell instanceof HTMLElement)) throw new Error('AppShell not found')
+      await expect(shell.scrollWidth).toBeLessThanOrEqual(shell.clientWidth)
+    })
+
+    await step('main content scrolls without moving navigation', async () => {
+      const navigation = canvas.getByRole('navigation', { name: 'Product' })
+      const main = canvas.getByRole('main')
+      const initialNavigationBounds = navigation.getBoundingClientRect()
+
+      await expect(main.scrollHeight).toBeGreaterThan(main.clientHeight)
+      main.scrollTop = main.scrollHeight
+      await expect(main.scrollTop).toBeGreaterThan(0)
+
+      const scrolledNavigationBounds = navigation.getBoundingClientRect()
+      await expect(scrolledNavigationBounds.top).toBeCloseTo(
+        initialNavigationBounds.top,
+        0,
+      )
+      await expect(scrolledNavigationBounds.bottom).toBeLessThanOrEqual(
+        window.innerHeight,
+      )
+      main.scrollTop = 0
+    })
+
+    await step('keyboard focus reaches every shared destination', async () => {
+      const skipLink = canvas.getByRole('link', {
+        name: 'Skip product navigation',
+      })
+      const navigation = canvas.getByRole('navigation', { name: 'Product' })
+      const links = within(navigation).getAllByRole('link')
+
+      await userEvent.tab()
+      await expect(skipLink).toHaveFocus()
+
+      for (const link of links) {
+        await userEvent.tab()
+        await expect(link).toHaveFocus()
+      }
+    })
+
+    await step(
+      'horizontal scrolling reveals the final destination',
+      async () => {
+        const navigation = canvas.getByRole('navigation', { name: 'Product' })
+        const links = within(navigation).getAllByRole('link')
+        navigation.scrollLeft = navigation.scrollWidth
+
+        await waitFor(() => {
+          const navigationBounds = navigation.getBoundingClientRect()
+          const contentRange = document.createRange()
+          contentRange.selectNodeContents(links.at(-1)!)
+          const contentBounds = contentRange.getBoundingClientRect()
+          expect(contentBounds.left).toBeGreaterThanOrEqual(
+            navigationBounds.left - 1,
+          )
+          expect(contentBounds.right).toBeLessThanOrEqual(
+            navigationBounds.right + 1,
+          )
+        })
+      },
+    )
+
+    await step(
+      'custom skip link targets the dashboard main landmark',
+      async () => {
+        await expect(
+          canvas.getByRole('link', { name: 'Skip product navigation' }),
+        ).toHaveAttribute('href', '#dashboard-main')
+        await expect(
+          canvas.getByRole('main', { name: 'Dashboard workspace' }),
+        ).toHaveAttribute('tabindex', '0')
+      },
+    )
   },
 }
 
@@ -362,6 +503,7 @@ export const OperationalDashboard: Story = {
 export const SkipLinkActivation: Story = {
   render: () => (
     <AppShell
+      mainProps={{ tabIndex: -1 }}
       sidebarBrand={<strong>PathAble</strong>}
       sidebarNav={renderSidebarNav()}
       topBarTitle="MyApp"
@@ -380,6 +522,8 @@ export const SkipLinkActivation: Story = {
       await userEvent.tab()
       await expect(skipLink).toHaveFocus()
       await expect(skipLink).toHaveAttribute('href', '#main-content')
+      await userEvent.keyboard('{Enter}')
+      await expect(canvas.getByRole('main')).toHaveFocus()
     })
   },
 }
@@ -406,6 +550,10 @@ export const ActiveNavItemFocus: Story = {
         await expect(activeItem.className).toContain(
           'pathable-app-shell__nav-item--active',
         )
+        await userEvent.tab()
+        await userEvent.tab()
+        await expect(activeItem).toHaveFocus()
+        await expect(getComputedStyle(activeItem).outlineStyle).not.toBe('none')
       },
     )
 
@@ -433,7 +581,7 @@ export const ResponsiveLayoutSwitch: Story = {
   ),
   globals: {
     viewport: {
-      value: 'mobile1',
+      value: 'mobile320',
       isRotated: false,
     },
   },
@@ -441,33 +589,71 @@ export const ResponsiveLayoutSwitch: Story = {
     const canvas = within(canvasElement)
 
     await step('top bar title is present on mobile', async () => {
-      const topBar = canvas.getByRole('banner', { hidden: true })
+      const topBar = canvas.getByRole('banner')
+      await expect(topBar).toBeVisible()
       await expect(within(topBar).getByText('PathAble')).toBeInTheDocument()
+      const sidebar = canvasElement.querySelector(
+        '.pathable-app-shell__sidebar',
+      )
+      if (!(sidebar instanceof HTMLElement))
+        throw new Error('Sidebar not found')
+      await expect(sidebar).not.toBeVisible()
     })
 
     await step(
       'bottom navigation is present with active destination',
       async () => {
-        const bottomNav = canvas
-          .getAllByRole('navigation', { hidden: true })
-          .find((navigation) =>
-            within(navigation).queryByRole('link', {
-              name: /Home/,
-              hidden: true,
-            }),
-          )
+        const bottomNav = canvas.getAllByRole('navigation').find((navigation) =>
+          within(navigation).queryByRole('link', {
+            name: /Home/,
+          }),
+        )
 
         if (!bottomNav) {
           throw new Error('Mobile bottom navigation was not rendered')
         }
 
         await expect(bottomNav).toBeInTheDocument()
+        await expect(bottomNav).toBeVisible()
         const activeItem = within(bottomNav).getByRole('link', {
           name: /Home/,
-          hidden: true,
         })
         await expect(activeItem).toHaveAttribute('aria-current', 'page')
       },
     )
+  },
+}
+
+export const ResponsiveDesktopLayout: Story = {
+  ...ResponsiveLayoutSwitch,
+  globals: {
+    viewport: {
+      value: 'desktop',
+      isRotated: false,
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('desktop exposes the sidebar navigation only', async () => {
+      const sidebar = canvasElement.querySelector(
+        '.pathable-app-shell__sidebar',
+      )
+      const topBar = canvasElement.querySelector('.pathable-app-shell__topbar')
+      const bottomNav = canvasElement.querySelector(
+        '.pathable-bottom-navigation',
+      )
+      if (!(sidebar instanceof HTMLElement))
+        throw new Error('Sidebar not found')
+      if (!(topBar instanceof HTMLElement)) throw new Error('Top bar not found')
+      if (!(bottomNav instanceof HTMLElement)) {
+        throw new Error('Bottom navigation not found')
+      }
+
+      await expect(sidebar).toBeVisible()
+      await expect(topBar).not.toBeVisible()
+      await expect(bottomNav).not.toBeVisible()
+      await expect(canvas.getAllByRole('navigation')).toHaveLength(1)
+    })
   },
 }

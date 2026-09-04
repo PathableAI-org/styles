@@ -24,6 +24,7 @@
 //   .pathable-app-shell__sidebar--fixed      — fixed positioning (default: sticky)
 //   .pathable-app-shell__content--standard   — standard max-width (default)
 //   .pathable-app-shell__content--wide       — wide max-width
+//   .pathable-app-shell--shared-navigation   — reuses sidebar navigation on mobile
 //
 // Usage:
 //   <div class="pathable-app-shell">
@@ -57,7 +58,9 @@
     var(--pathable-app-shell-sidebar-width, 280px)
     minmax(0, 1fr);
   grid-template-rows: 1fr;
+  height: 100dvh;
   min-height: 100dvh;
+  overflow: hidden;
 }
 
 .pathable-app-shell__sidebar {
@@ -146,6 +149,7 @@
   grid-area: main;
   width: 100%;
   min-width: 0;
+  min-height: 0;
   max-width: min(100%, var(--pathable-app-shell-content-max-width, 1024px));
   box-sizing: border-box;
   margin-inline: auto;
@@ -181,6 +185,45 @@
     display: none; // hidden on mobile
   }
 
+  .pathable-app-shell--shared-navigation .pathable-app-shell__sidebar {
+    grid-area: bottomnav;
+    position: static;
+    min-width: 0;
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    display: block;
+    padding: var(--space-8)
+      calc(var(--space-16) + env(safe-area-inset-right, 0px))
+      calc(var(--space-8) + env(safe-area-inset-bottom, 0px))
+      calc(var(--space-16) + env(safe-area-inset-left, 0px));
+    border-right: 0;
+    border-top: 1px solid var(--pathable-color-border);
+  }
+
+  .pathable-app-shell--shared-navigation .pathable-app-shell__brand,
+  .pathable-app-shell--shared-navigation .pathable-app-shell__account {
+    display: none;
+  }
+
+  .pathable-app-shell--shared-navigation .pathable-app-shell__nav {
+    max-width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .pathable-app-shell--shared-navigation .pathable-app-shell__nav-item {
+    flex: 0 0 auto;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .pathable-app-shell--shared-navigation
+    .pathable-app-shell__nav-item:focus-visible {
+    outline-offset: -2px;
+  }
+
   .pathable-app-shell__topbar {
     display: flex; // visible on mobile
   }
@@ -206,6 +249,13 @@
   .pathable-app-shell__nav-item:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 2px;
+  }
+}
+
+@media (forced-colors: active) and (max-width: 1023px) {
+  .pathable-app-shell--shared-navigation .pathable-app-shell__sidebar {
+    border-right: 0;
+    border-top: 2px solid CanvasText;
   }
 }
 

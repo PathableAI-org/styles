@@ -50,6 +50,7 @@ const CANONICAL_STORIES = [
   // App shell
   { id: 'application-shell-desktop-shell--default', mode: 'desktop' },
   { id: 'application-shell-mobile-shell--default', mode: 'mobile' },
+  { id: 'application-shell-mobile-shell--shared-navigation', mode: 'mobile' },
   // Dashboard
   { id: 'dashboard-dashboard-overview--populated', mode: 'desktop' },
   { id: 'dashboard-dashboard-header--with-many-actions', mode: 'both' },
@@ -196,6 +197,13 @@ const UNNAMED_CONTROLS_ALLOWLIST = {
  * Format: { [storyId]: [{ selector: 'css', reason: 'explanation' }] }
  */
 const SMALL_TOUCH_TARGETS_ALLOWLIST = {
+  'application-shell-mobile-shell--shared-navigation': [
+    {
+      selector: '.pathable-skipnav',
+      reason:
+        'The skip link is a keyboard bypass control hidden until focus, not a persistent mobile touch action. Navigation destinations remain subject to the 44 px check.',
+    },
+  ],
   'components-form-controls-checkbox--disabled': [
     {
       selector: 'input[type="checkbox"]',

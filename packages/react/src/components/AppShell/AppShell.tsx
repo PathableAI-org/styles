@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { Fragment, HTMLAttributes, isValidElement, ReactNode } from 'react'
 
 export interface BottomNavItem {
   label: string
@@ -8,6 +8,10 @@ export interface BottomNavItem {
 }
 
 export type ContentWidth = 'standard' | 'wide'
+export type MobileNavigation = 'bottom' | 'shared'
+
+const DEFAULT_NAVIGATION_LABEL = 'Primary'
+const DEFAULT_SKIP_LINK_TEXT = 'Skip to main content'
 
 const CONTENT_WIDTH_CLASS: Record<ContentWidth, string> = {
   standard: 'pathable-app-shell__content--standard',
@@ -16,6 +20,41 @@ const CONTENT_WIDTH_CLASS: Record<ContentWidth, string> = {
 
 function hasContent(value: unknown): boolean {
   return value !== null && value !== undefined && value !== false
+}
+
+function hasSharedNavigation(value: ReactNode): boolean {
+  if (typeof value === 'boolean') return false
+  if (typeof value === 'string') return Boolean(value.trim())
+  if (Array.isArray(value)) return value.some(hasSharedNavigation)
+  if (!isValidElement(value) || value.type !== Fragment) {
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      Symbol.iterator in value
+    ) {
+      const iteratorFactory = (value as { [Symbol.iterator]: unknown })[
+        Symbol.iterator
+      ]
+      if (typeof iteratorFactory !== 'function') return false
+
+      const getIterator = iteratorFactory as () => Iterator<ReactNode>
+      const iterator = getIterator.call(value)
+
+      // Consuming a generator here would leave React with an exhausted child.
+      if (iterator !== getIterator.call(value)) {
+        for (let item = iterator.next(); !item.done; item = iterator.next()) {
+          if (hasSharedNavigation(item.value)) return true
+        }
+        return false
+      }
+    }
+
+    return hasContent(value)
+  }
+
+  return hasSharedNavigation(
+    (value.props as { children?: ReactNode }).children ?? null,
+  )
 }
 
 export interface AppShellProps extends Omit<
@@ -31,6 +70,16 @@ export interface AppShellProps extends Omit<
   bottomNavItems?: BottomNavItem[]
   contentWidth?: ContentWidth
   notification?: ReactNode
+  mainProps?: Omit<
+    HTMLAttributes<HTMLElement>,
+    'children' | 'dangerouslySetInnerHTML'
+  > & {
+    children?: never
+    dangerouslySetInnerHTML?: never
+  }
+  navigationLabel?: string
+  skipLinkText?: string
+  mobileNavigation?: MobileNavigation
 }
 
 export function AppShell({
@@ -44,8 +93,47 @@ export function AppShell({
   bottomNavItems,
   contentWidth = 'standard',
   notification,
+  mainProps,
+  navigationLabel = DEFAULT_NAVIGATION_LABEL,
+  skipLinkText = DEFAULT_SKIP_LINK_TEXT,
+  mobileNavigation = 'bottom',
   ...rest
 }: AppShellProps) {
+  const runtimeMainAttributes = {
+    ...mainProps,
+  } as HTMLAttributes<HTMLElement>
+  delete runtimeMainAttributes.children
+  delete runtimeMainAttributes.dangerouslySetInnerHTML
+  const {
+    className: mainClassName,
+    id: requestedMainId,
+    ...mainAttributes
+  } = runtimeMainAttributes
+  const normalizedMainId =
+    typeof requestedMainId === 'string' ? requestedMainId.trim() : ''
+  let mainId =
+    normalizedMainId &&
+    !/\s/u.test(normalizedMainId) &&
+    !normalizedMainId.includes('\0')
+      ? normalizedMainId
+      : 'main-content'
+  try {
+    encodeURIComponent(mainId)
+  } catch {
+    mainId = 'main-content'
+  }
+  const mainFragment = encodeURIComponent(mainId)
+  const resolvedNavigationLabel =
+    typeof navigationLabel === 'string' && navigationLabel.trim()
+      ? navigationLabel.trim()
+      : DEFAULT_NAVIGATION_LABEL
+  const resolvedSkipLinkText =
+    typeof skipLinkText === 'string' && skipLinkText.trim()
+      ? skipLinkText.trim()
+      : DEFAULT_SKIP_LINK_TEXT
+  const hasSidebarNavigation = hasSharedNavigation(sidebarNav ?? null)
+  const usesSharedNavigation =
+    mobileNavigation === 'shared' && hasSidebarNavigation
   const sidebarClass = [
     'pathable-app-shell__sidebar',
     sidebarFixed && 'pathable-app-shell__sidebar--fixed',
@@ -56,14 +144,23 @@ export function AppShell({
   const contentClass = [
     'pathable-app-shell__content',
     CONTENT_WIDTH_CLASS[contentWidth],
-  ].join(' ')
+    mainClassName,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
-  const rootClass = ['pathable-app-shell', className].filter(Boolean).join(' ')
+  const rootClass = [
+    'pathable-app-shell',
+    usesSharedNavigation && 'pathable-app-shell--shared-navigation',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <div className={rootClass} {...rest}>
-      <a className="pathable-skipnav" href="#main-content">
-        Skip to main content
+      <a className="pathable-skipnav" href={`#${mainFragment}`}>
+        {resolvedSkipLinkText}
       </a>
 
       {hasContent(notification) ? (
@@ -75,8 +172,13 @@ export function AppShell({
           <div className="pathable-app-shell__brand">{sidebarBrand}</div>
         ) : null}
 
-        {hasContent(sidebarNav) ? (
-          <nav className="pathable-app-shell__nav">{sidebarNav}</nav>
+        {hasSidebarNavigation ? (
+          <nav
+            className="pathable-app-shell__nav"
+            aria-label={resolvedNavigationLabel}
+          >
+            {sidebarNav}
+          </nav>
         ) : null}
 
         {hasContent(sidebarAccount) ? (
@@ -90,12 +192,15 @@ export function AppShell({
         </span>
       </header>
 
-      <main id="main-content" className={contentClass}>
+      <main {...mainAttributes} id={mainId} className={contentClass}>
         {children}
       </main>
 
-      {bottomNavItems && bottomNavItems.length > 0 ? (
-        <nav className="pathable-bottom-navigation" aria-label="Primary">
+      {!usesSharedNavigation && bottomNavItems && bottomNavItems.length > 0 ? (
+        <nav
+          className="pathable-bottom-navigation"
+          aria-label={resolvedNavigationLabel}
+        >
           {bottomNavItems.map((item) => {
             const itemClass = [
               'pathable-bottom-navigation__item',

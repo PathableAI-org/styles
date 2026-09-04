@@ -18,6 +18,10 @@ const preview = {
     },
     viewport: {
       viewports: {
+        mobile320: {
+          name: 'Mobile compact (320px)',
+          styles: { width: '320px', height: '700px' },
+        },
         mobile1: {
           name: 'Mobile (375px)',
           styles: { width: '375px', height: '812px' },

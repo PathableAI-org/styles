@@ -78,6 +78,8 @@ import {
   Accordion,
   ActivityList,
   Alert,
+  AppShell,
+  AppShellNavItem,
   Banner,
   Breadcrumb,
   Button,
@@ -489,6 +491,75 @@ function App() {
   )
 }
 ```
+
+## Application Shell
+
+`AppShell` defaults to the existing compact mobile bottom navigation. Use
+`mobileNavigation="shared"` when the same complete destination set must remain
+available in one navigation landmark at every breakpoint without JavaScript.
+
+```tsx
+<AppShell
+  mainProps={{
+    'aria-label': 'Participant workspace',
+    id: 'participant-workspace',
+    tabIndex: -1,
+  }}
+  mobileNavigation="shared"
+  navigationLabel="Product"
+  sidebarNav={
+    <>
+      <AppShellNavItem href="/dashboard" active>
+        Dashboard
+      </AppShellNavItem>
+      <AppShellNavItem href="/participants">Participants</AppShellNavItem>
+      <AppShellNavItem href="/programs">Programs</AppShellNavItem>
+      <AppShellNavItem href="/reports">Reports</AppShellNavItem>
+      <AppShellNavItem href="/resources">Resources</AppShellNavItem>
+      <AppShellNavItem href="/settings">Settings</AppShellNavItem>
+    </>
+  }
+  skipLinkText="Skip product navigation"
+  topBarTitle="PathAble"
+>
+  <h1>Participant dashboard</h1>
+</AppShell>
+```
+
+The skip-link target is derived from a trimmed, non-empty `mainProps.id` without
+whitespace or null characters, falling back to `main-content`; URL-significant
+characters are encoded in the link fragment. Empty or non-string runtime
+`skipLinkText` values fall back to `Skip to main content` so the focusable link
+remains named.
+Consumer classes are appended to the shell's required main classes, and other
+native main attributes are forwarded except `children` and
+`dangerouslySetInnerHTML`; main content remains owned by `AppShell` children.
+Those content-owning keys are also stripped from unexpected runtime input.
+`navigationLabel` defaults to `Primary`, trims consumer strings, falls back when
+empty, and names both the sidebar navigation and the legacy bottom navigation
+when present.
+
+In the default `bottom` mode, pass up to five icon-and-label destinations with
+`bottomNavItems`; the desktop sidebar remains hidden below 1024px. In `shared`
+mode, `bottomNavItems` is not rendered. Instead, the existing `sidebarNav`
+landmark becomes a horizontally scrollable mobile row so all destinations stay
+available without duplicate landmarks. Sidebar brand and account content remain
+desktop-only in this mode. The shared landmark remains before main content in
+DOM and keyboard order while CSS places it in the bottom grid row on mobile;
+the first-focusable skip link lets keyboard users move directly to main content.
+If `sidebarNav` is structurally empty, or if `mobileNavigation` has an unexpected
+runtime value, the shell falls back to the legacy `bottom` behavior. Elements
+and custom components count as consumer-provided navigation content; booleans
+and reusable iterables containing only empty values do not. One-shot iterables
+are treated as supplied content without inspection so AppShell does not consume
+them before React renders them.
+
+| Prop               | Type                                                                                                                                 | Default                  | Description                                                                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mainProps`        | `Omit<HTMLAttributes<HTMLElement>, 'children' \| 'dangerouslySetInnerHTML'> & { children?: never; dangerouslySetInnerHTML?: never }` | —                        | Native main-landmark attributes; content-owning keys are forbidden, `className` is merged, and a valid normalized `id` controls the skip target. |
+| `navigationLabel`  | `string`                                                                                                                             | `'Primary'`              | Accessible name for navigation landmarks; empty values use the default.                                                                          |
+| `skipLinkText`     | `string`                                                                                                                             | `'Skip to main content'` | Localizable skip-link text; empty values use the default.                                                                                        |
+| `mobileNavigation` | `'bottom' \| 'shared'`                                                                                                               | `'bottom'`               | Selects compact bottom items or the complete shared navigation.                                                                                  |
 
 ## Activity List
 

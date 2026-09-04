@@ -28,10 +28,21 @@ const commandEnvironment = {
 }
 
 function run(command, args, options = {}) {
-  const result = spawnSync(command, args, {
+  const pnpmCli = command === 'pnpm' ? process.env.npm_execpath : undefined
+  const executable = pnpmCli
+    ? process.execPath
+    : process.platform === 'win32' && command === 'pnpm'
+      ? 'pnpm.cmd'
+      : command
+  const commandArguments = pnpmCli ? [pnpmCli, ...args] : args
+  const result = spawnSync(executable, commandArguments, {
     cwd: options.cwd ?? repoRoot,
     encoding: 'utf8',
     env: { ...commandEnvironment, ...options.env },
+    shell:
+      process.platform === 'win32' &&
+      command === 'pnpm' &&
+      pnpmCli === undefined,
     stdio: options.capture ? 'pipe' : 'inherit',
   })
 
@@ -111,6 +122,11 @@ async function assertStylesAssets(stylesRoot) {
     /\.pathable-activity-list(?:\b|[_{,:.-])/u,
     'Packed stylesheet omits Activity List selectors',
   )
+  assert.match(
+    css,
+    /\.pathable-app-shell--shared-navigation(?:\b|[_{,:.-])/u,
+    'Packed stylesheet omits shared AppShell navigation selectors',
+  )
 
   for (const url of urls) {
     const asset = normalize(resolve(dirname(stylesheet), url))
@@ -145,6 +161,10 @@ async function assertReactPackage(reactRoot) {
   const runtime = await readFile(join(reactRoot, 'dist', 'index.js'), 'utf8')
   const declarations = await readFile(
     join(reactRoot, 'dist', 'index.d.ts'),
+    'utf8',
+  )
+  const appShellDeclarations = await readFile(
+    join(reactRoot, 'dist', 'components', 'AppShell', 'AppShell.d.ts'),
     'utf8',
   )
   const dependencyValues = Object.values(manifest.dependencies ?? {})
@@ -186,6 +206,31 @@ async function assertReactPackage(reactRoot) {
     declarations,
     /export\s*\{\s*ActivityList\s*\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/u,
     'Packed declarations do not explicitly export ActivityList',
+  )
+  assert.match(
+    declarations,
+    /\bMobileNavigation\b/u,
+    'Packed declarations do not export the AppShell mobile navigation type',
+  )
+  assert.match(
+    appShellDeclarations,
+    /mainProps\?:\s*Omit<HTMLAttributes<HTMLElement>,\s*['"]children['"]\s*\|\s*['"]dangerouslySetInnerHTML['"]>/u,
+    'Packed declarations omit AppShell main landmark attributes',
+  )
+  assert.match(
+    appShellDeclarations,
+    /children\?:\s*never/u,
+    'Packed declarations do not forbid mainProps children',
+  )
+  assert.match(
+    appShellDeclarations,
+    /dangerouslySetInnerHTML\?:\s*never/u,
+    'Packed declarations do not forbid mainProps dangerouslySetInnerHTML',
+  )
+  assert.match(
+    appShellDeclarations,
+    /skipLinkText\?:\s*string/u,
+    'Packed declarations do not restrict AppShell skip-link text to a string',
   )
   const activityTypeExports =
     declarations.match(
@@ -265,11 +310,27 @@ export default function RootLayout({ children }) {
   )
   await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
-    `import { ActivityList, Card, Link, List, Loading, Tag } from '@pathableai/react'
+    `import { ActivityList, AppShell, AppShellNavItem, Card, Link, List, Loading, Tag } from '@pathableai/react'
 
 export default function Page() {
   return (
-    <main>
+    <AppShell
+      mainProps={{ 'aria-label': 'Consumer workspace', id: 'consumer-main', tabIndex: -1 }}
+      mobileNavigation="shared"
+      navigationLabel="Consumer product"
+      sidebarNav={
+        <>
+          <AppShellNavItem href="/dashboard" active>Consumer dashboard</AppShellNavItem>
+          <AppShellNavItem href="/participants">Consumer participants</AppShellNavItem>
+          <AppShellNavItem href="/programs">Consumer programs</AppShellNavItem>
+          <AppShellNavItem href="/reports">Consumer reports</AppShellNavItem>
+          <AppShellNavItem href="/resources">Consumer resources</AppShellNavItem>
+          <AppShellNavItem href="/settings">Consumer settings</AppShellNavItem>
+        </>
+      }
+      skipLinkText="Skip consumer navigation"
+      topBarTitle="Consumer shell"
+    >
       <h1>PathAble consumer smoke</h1>
       <Card title="Consumer card">Server-rendered card content</Card>
       <Link href="/details">Consumer link</Link>
@@ -305,7 +366,7 @@ export default function Page() {
           },
         ]}
       />
-    </main>
+    </AppShell>
   )
 }
 `,
@@ -352,9 +413,32 @@ async function assertConsumer(fixtureRoot) {
     'Consumer unfamiliar activity',
     'Awaiting review',
     'View consumer activity',
+    'Skip consumer navigation',
+    'Consumer dashboard',
+    'Consumer settings',
   ]) {
     assert.ok(html.includes(content), `Rendered page is missing: ${content}`)
   }
+  assert.match(
+    html,
+    /class="pathable-app-shell pathable-app-shell--shared-navigation"/u,
+    'Rendered AppShell is missing the shared-navigation modifier',
+  )
+  assert.match(
+    html,
+    /<a(?=[^>]*\bclass="pathable-skipnav")(?=[^>]*\bhref="#consumer-main")[^>]*>/u,
+    'Rendered AppShell skip link does not target the consumer main landmark',
+  )
+  assert.match(
+    html,
+    /<nav(?=[^>]*\bclass="pathable-app-shell__nav")(?=[^>]*\baria-label="Consumer product")[^>]*>/u,
+    'Rendered AppShell navigation does not preserve its accessible name',
+  )
+  assert.match(
+    html,
+    /<main(?=[^>]*\baria-label="Consumer workspace")(?=[^>]*\btabindex="-1")(?=[^>]*\bid="consumer-main")[^>]*>/u,
+    'Rendered AppShell does not preserve consumer main attributes',
+  )
   const activityHeading = html.match(
     /<h([2-6])([^>]*)>Consumer activity today<\/h\1>/u,
   )
