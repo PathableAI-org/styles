@@ -1385,6 +1385,12 @@ Use `role="status"` for polite operational updates and `role="alert"` for urgent
 | StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
 | SummaryBox    | Key information callout box with optional heading.                                                                                  | `heading`, `children`                                                                            |
 
+## Guidance
+
+See `@pathableai/styles` `BRAND_RULES.md` for full color and typography guidance.
+See `AGENTS.md` for short operational rules intended for coding agents.
+See `STORYBOOK_STANDARD.md` for the story authoring checklist and PR requirements.
+
 ## Development
 
 ### Using className as Escape Hatch
