@@ -63,7 +63,7 @@ All components below are exported from `@pathableai/react`. Detailed prop tables
 | `ThemeColors`, `ThemeConfig`, `ThemeProviderProps`, `ColorScheme` | Typing theme-aware application code                   |
 | `TextTone`, `SurfaceTone`, `BorderTone`, `SurfaceElevation`       | Typing semantic tone and elevation props              |
 
-Canonical theming docs: `docs/theming/consumer-guide.md` and `docs/theming/token-vocabulary.md`.
+Canonical theming docs (repo): https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md and https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md.
 
 ### Layout And Shell
 
