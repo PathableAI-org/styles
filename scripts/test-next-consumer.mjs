@@ -19,6 +19,7 @@ import {
 } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { tmpdir } from 'node:os'
+import { validateAgentGuidance } from './check-agent-guidance.mjs'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const commandEnvironment = {
@@ -443,6 +444,10 @@ async function main() {
     )
 
     await assertReactPackage(reactRoot)
+    const guidance = await validateAgentGuidance(reactRoot)
+    console.log(
+      `[next-consumer] Verified ${guidance.files} packed agent-guidance files`,
+    )
     await assertStylesAssets(stylesRoot)
 
     const fixtureRoot = join(temporaryRoot, 'consumer')

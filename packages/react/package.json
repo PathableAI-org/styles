@@ -10,7 +10,7 @@
   "files": [
     "dist",
     "README.md",
-    "AGENTS.md"
+    "agent-guidance"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

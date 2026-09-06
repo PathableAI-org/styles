@@ -2,4 +2,6 @@
 '@pathableai/react': patch
 ---
 
-Add `AGENTS.md` to the published package with agent-facing component catalog, styling, theming, accessibility, and client-boundary rules. Include the file in the npm `files` list and cross-link it from the package README.
+Ship a cross-platform Agent Skill-shaped consumer guide with focused styling,
+theming, accessibility, and client-boundary guidance. Include the guide in the
+npm package and document an opt-in repository instruction pointer.

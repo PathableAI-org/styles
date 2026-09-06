@@ -60,16 +60,36 @@ In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset
 workaround.
 
+## Agent guidance
+
+This package ships a cross-platform Agent Skill-shaped guide. Skills installed
+under an agent's discovery directory are found automatically; a guide inside
+`node_modules` is version-aligned but is not automatically discovered by most
+agents. To opt in without installing or copying files, add this pointer to the
+consumer repository's root `AGENTS.md`, `CLAUDE.md`, or equivalent agent
+instructions:
+
+> When creating or editing UI that uses `@pathableai/react`, locate the
+> installed `@pathableai/react` package and read
+> `agent-guidance/pathable-react/SKILL.md` from that package before making
+> changes. Read only the linked reference relevant to the task.
+
+The usual npm layout places the guide at
+`node_modules/@pathableai/react/agent-guidance/pathable-react/SKILL.md`, but
+agents should resolve the installed package rather than assume that location;
+pnpm workspaces and other package managers may use a different physical path.
+
 ## Theming
 
 Override colors with a typed, scoped theme instead of hand-writing CSS. The
 canonical theming documentation lives under `docs/theming/`:
 
-- [Consumer guide](../../docs/theming/consumer-guide.md) — override with
-  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and choose an import
-  path.
-- [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
-  color token with its CSS custom property, default value, and role.
+- [Consumer guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md)
+  — override with `createTheme` + `ThemeProvider`, extend `defaultTheme`, and
+  choose an import path.
+- [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md)
+  — every overridable color token with its CSS custom property, default value,
+  and role.
 
 ## Usage
 

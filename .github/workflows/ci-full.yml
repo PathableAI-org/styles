@@ -304,6 +304,8 @@ jobs:
         run: pnpm --filter @pathableai/react check:package
       - name: Validate types
         run: pnpm --filter @pathableai/react check:types
+      - name: Validate agent guidance
+        run: pnpm check:agent-guidance
 
   next-consumer:
     needs: changes
@@ -315,6 +317,20 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Validate packed Next.js consumer
         run: pnpm test:next-consumer
+
+  agent-guidance-impact:
+    if: github.event_name == 'pull_request'
+    name: Agent guidance impact (advisory)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Review agent guidance impact
+        run: >-
+          node scripts/check-agent-guidance-impact.mjs
+          --base origin/${{ github.base_ref }}
+          --head ${{ github.sha }}
 
   storybook-build:
     needs: changes

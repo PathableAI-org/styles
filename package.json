@@ -26,6 +26,8 @@
     "test:contracts:styles": "pnpm test:storybook-styles",
     "test:storybook-react-server": "node scripts/check-react-server-compatibility.mjs",
     "test:storybook-react-server:strict": "node scripts/check-react-server-compatibility.mjs --strict",
+    "check:agent-guidance": "node scripts/check-agent-guidance.mjs && node --test scripts/check-agent-guidance-impact.test.mjs",
+    "check:agent-guidance-impact": "node scripts/check-agent-guidance-impact.mjs",
     "test:visual": "node packages/styles/scripts/test-visual.mjs",
     "storybook:coverage": "node packages/styles/scripts/storybook-coverage.mjs",
     "quality-gates": "node packages/styles/scripts/quality-gates.mjs",
