@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process'
 import {
   mkdtemp,
   readFile,
+  realpath,
   rm,
   writeFile,
   mkdir,
@@ -275,6 +276,9 @@ async function assertReactPackage(reactRoot) {
 
 async function writeFixture(fixtureRoot, stylesTarball, reactTarball) {
   await mkdir(join(fixtureRoot, 'app'), { recursive: true })
+  const uswdsDirectory = await realpath(
+    join(repoRoot, 'packages/styles/node_modules/@uswds/uswds'),
+  )
   await writeFile(
     join(fixtureRoot, 'package.json'),
     `${JSON.stringify(
@@ -298,10 +302,7 @@ async function writeFixture(fixtureRoot, stylesTarball, reactTarball) {
     `packages: []
 overrides:
   '@pathableai/styles': 'file:${stylesTarball}'
-  '@uswds/uswds': 'file:${join(
-    repoRoot,
-    'packages/styles/node_modules/@uswds/uswds',
-  )}'
+  '@uswds/uswds': 'file:${uswdsDirectory}'
 allowBuilds:
   '@swc/core': true
   sharp: true
