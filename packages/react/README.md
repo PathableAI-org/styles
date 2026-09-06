@@ -60,16 +60,36 @@ In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset
 workaround.
 
+## Agent guidance
+
+This package ships a cross-platform Agent Skill-shaped guide. Skills installed
+under an agent's discovery directory are found automatically; a guide inside
+`node_modules` is version-aligned but is not automatically discovered by most
+agents. To opt in without installing or copying files, add this pointer to the
+consumer repository's root `AGENTS.md`, `CLAUDE.md`, or equivalent agent
+instructions:
+
+> When creating or editing UI that uses `@pathableai/react`, locate the
+> installed `@pathableai/react` package and read
+> `agent-guidance/pathable-react/SKILL.md` from that package before making
+> changes. Read only the linked reference relevant to the task.
+
+The usual npm layout places the guide at
+`node_modules/@pathableai/react/agent-guidance/pathable-react/SKILL.md`, but
+agents should resolve the installed package rather than assume that location;
+pnpm workspaces and other package managers may use a different physical path.
+
 ## Theming
 
 Override colors with a typed, scoped theme instead of hand-writing CSS. The
 canonical theming documentation lives under `docs/theming/`:
 
-- [Consumer guide](../../docs/theming/consumer-guide.md) — override with
-  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and choose an import
-  path.
-- [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
-  color token with its CSS custom property, default value, and role.
+- [Consumer guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md)
+  — override with `createTheme` + `ThemeProvider`, extend `defaultTheme`, and
+  choose an import path.
+- [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md)
+  — every overridable color token with its CSS custom property, default value,
+  and role.
 
 ## Usage
 
@@ -1385,11 +1405,27 @@ Use `role="status"` for polite operational updates and `role="alert"` for urgent
 | StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
 | SummaryBox    | Key information callout box with optional heading.                                                                                  | `heading`, `children`                                                                            |
 
+## Guidance
+
+- See the `@pathableai/styles`
+  [brand rules on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/BRAND_RULES.md)
+  for full color and typography guidance.
+- See the shipped [agent guide](agent-guidance/pathable-react/SKILL.md) for
+  operational rules intended for coding agents.
+- Contributors can use the
+  [Storybook standard on GitHub](https://github.com/PathableAI-org/styles/blob/main/STORYBOOK_STANDARD.md)
+  for the story authoring checklist and PR requirements.
+
 ## Development
 
 ### Using className as Escape Hatch
 
-When a desired utility from `@pathable/styles` does not yet have a semantic prop mapped in the resolver layer, consumers can use the standard `className` prop directly with the CSS class name from the `@pathable/styles` utility catalog. See `docs/capability-inventory.md` for the full list of available utility classes.
+When a desired utility from `@pathableai/styles` does not yet have a semantic
+prop mapped in the resolver layer, consumers can use the standard `className`
+prop directly with the CSS class name from the `@pathableai/styles` utility
+catalog. See the
+[capability inventory on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/capability-inventory.md)
+for the full list of available utility classes.
 
 ```tsx
 // Direct className usage when no semantic prop exists:
