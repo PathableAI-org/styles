@@ -12,8 +12,9 @@ const guidanceFiles = [
   'agent-guidance/pathable-react/references/styling-and-theming.md',
 ]
 
-function parseFrontmatter(markdown) {
-  const match = markdown.match(/^---\n([\s\S]*?)\n---\n/u)
+export function parseFrontmatter(markdown) {
+  const normalizedMarkdown = markdown.replace(/\r\n?/gu, '\n')
+  const match = normalizedMarkdown.match(/^---\n([\s\S]*?)\n---\n/u)
   assert.ok(match, 'SKILL.md must start with YAML frontmatter')
 
   const fields = Object.fromEntries(
@@ -31,6 +32,8 @@ function parseFrontmatter(markdown) {
     ['description', 'name'],
     'SKILL.md frontmatter may contain only name and description',
   )
+
+  return fields
 }
 
 function relativeMarkdownLinks(markdown) {

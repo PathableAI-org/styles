@@ -1336,15 +1336,25 @@ Use `role="status"` for polite operational updates and `role="alert"` for urgent
 
 ## Guidance
 
-See `@pathableai/styles` `BRAND_RULES.md` for full color and typography guidance.
-See `AGENTS.md` for short operational rules intended for coding agents.
-See `STORYBOOK_STANDARD.md` for the story authoring checklist and PR requirements.
+- See the `@pathableai/styles`
+  [brand rules on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/BRAND_RULES.md)
+  for full color and typography guidance.
+- See the shipped [agent guide](agent-guidance/pathable-react/SKILL.md) for
+  operational rules intended for coding agents.
+- Contributors can use the
+  [Storybook standard on GitHub](https://github.com/PathableAI-org/styles/blob/main/STORYBOOK_STANDARD.md)
+  for the story authoring checklist and PR requirements.
 
 ## Development
 
 ### Using className as Escape Hatch
 
-When a desired utility from `@pathable/styles` does not yet have a semantic prop mapped in the resolver layer, consumers can use the standard `className` prop directly with the CSS class name from the `@pathable/styles` utility catalog. See `docs/capability-inventory.md` for the full list of available utility classes.
+When a desired utility from `@pathableai/styles` does not yet have a semantic
+prop mapped in the resolver layer, consumers can use the standard `className`
+prop directly with the CSS class name from the `@pathableai/styles` utility
+catalog. See the
+[capability inventory on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/capability-inventory.md)
+for the full list of available utility classes.
 
 ```tsx
 // Direct className usage when no semantic prop exists:
