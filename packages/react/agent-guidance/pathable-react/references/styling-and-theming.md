@@ -3,8 +3,8 @@
 ## Use the built-in fallback
 
 The React entry point loads default theme tokens plus structural component and
-utility styles. Do not add a separate `@pathableai/styles` import in an
-application that imports `@pathableai/react`.
+utility styles. Do not add a separate `@pathableai/styles` stylesheet import in
+an application that imports `@pathableai/react`.
 
 - For a custom scoped theme, create it with `createTheme` and render the
   affected subtree inside `ThemeProvider`.

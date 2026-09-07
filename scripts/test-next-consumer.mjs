@@ -200,6 +200,20 @@ async function assertReactPackage(reactRoot) {
     /import\s*['"]@pathableai\/styles\/theme['"]/u,
     'Packed React runtime does not retain the default theme fallback',
   )
+  const themeImportIndex = runtime.search(
+    /import\s*['"]@pathableai\/styles\/theme['"]/u,
+  )
+  const componentsImportIndex = runtime.search(
+    /import\s*['"]@pathableai\/styles\/components['"]/u,
+  )
+  const utilitiesImportIndex = runtime.search(
+    /import\s*['"]@pathableai\/styles\/utilities['"]/u,
+  )
+  assert.ok(
+    themeImportIndex < componentsImportIndex &&
+      themeImportIndex < utilitiesImportIndex,
+    'Packed React runtime does not load the default theme before structural styles',
+  )
   assert.match(
     runtime,
     /from\s+['"]react\/jsx-runtime['"]/u,

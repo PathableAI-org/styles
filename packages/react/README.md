@@ -25,15 +25,24 @@ override the root defaults, while tokens outside the provider continue to use
 the default theme:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@pathableai/react'
+import { Button, ThemeProvider, createTheme } from '@pathableai/react'
 
 const brand = createTheme({ colors: { accent: '#7c3aed' } })
+
+export function BrandedAction() {
+  return (
+    <ThemeProvider theme={brand}>
+      <Button>Continue</Button>
+    </ThemeProvider>
+  )
+}
 ```
 
 Direct `@pathableai/styles`, `@pathableai/styles/theme`, components, and
 utilities imports remain available for applications that consume the CSS
-package without the React package. Do not import them in addition to
-`@pathableai/react`; that would load the same stylesheet layers twice.
+package without the React package. Do not import these stylesheet entries in
+addition to `@pathableai/react`; that would load the same stylesheet layers
+twice. This does not apply to the optional `@pathableai/styles/js` helper.
 
 In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset

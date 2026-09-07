@@ -60,9 +60,17 @@ custom properties, so its values override the root defaults without requiring
 stylesheet ordering or hand-written CSS:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@pathableai/react'
+import { Button, ThemeProvider, createTheme } from '@pathableai/react'
 
 const brand = createTheme({ colors: { accent: '#7c3aed' } })
+
+export function BrandedAction() {
+  return (
+    <ThemeProvider theme={brand}>
+      <Button>Continue</Button>
+    </ThemeProvider>
+  )
+}
 ```
 
 The `@pathableai/styles` root, theme, component, and utility imports remain
