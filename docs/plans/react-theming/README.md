@@ -5,19 +5,9 @@ defined in [`../react-theming.md`](../react-theming.md). It is a high-level
 sequence of phases, ordered by dependency and risk. A separate implementation
 plan will break each phase into concrete, testable work items.
 
-> **Historical plan:** The structural-only React entry point described below was
-> implemented in `@pathableai/react@0.0.4` and later superseded. The current
-> package loads default theme tokens automatically, while `ThemeProvider` inline
-> values override those root defaults.
-
-The remaining content is retained as the implementation history.
-
-> **Historical source:** the original target API and design principles live in
-> [`../react-theming.md`](../react-theming.md). This README only describes how
-> that original target was delivered. Use the current
-> [consumer guide](../../theming/consumer-guide.md) and
-> [`@pathableai/react` README](../../../packages/react/README.md) for the active
-> entry-point contract.
+> **Source of truth:** the target API and design principles live in
+> [`../react-theming.md`](../react-theming.md). This README only describes _how_
+> we get there.
 
 ---
 
@@ -43,10 +33,8 @@ The remaining content is retained as the implementation history.
   `defaultTheme`).
 - A `createTheme` helper deep-merges partial input with defaults.
 - Semantic tone types are importable from the public entry point.
-- Historical `@pathableai/react@0.0.4` target: `@pathableai/styles` ships
-  granular subpath exports (components / utilities / theme), and
-  `@pathableai/react` no longer imports the default theme tokens. The subpaths
-  remain current, but the React import behavior was later superseded.
+- `@pathableai/styles` ships granular subpath exports (components / utilities /
+  theme), and `@pathableai/react` no longer imports the default theme tokens.
 - `--pathable-color-*` declarations are consolidated into a single `:root`
   block.
 
@@ -78,11 +66,14 @@ default _rendered output_ is unchanged. Concretely, a consumer who already
 imports `@pathableai/styles` (directly or transitively) must see identical
 rendering with no `ThemeProvider`.
 
-The historical Phase 2 entry-point change stopped `@pathableai/react` from
-implicitly importing default theme tokens and required affected consumers to
-add a Styles import. That behavior shipped in `@pathableai/react@0.0.4` and was
-later superseded by the automatic fallback described above; see feature
-[05](./05-react-entry-point-wiring.md) for the original implementation record.
+One deliberate exception is the Phase 2 entry-point change: `@pathableai/react`
+stops implicitly importing the default theme tokens as a side effect (today
+`packages/react/src/index.ts` imports `@pathableai/styles` in full). A consumer
+who relied on that implicit import without importing `@pathableai/styles`
+themselves must add `import '@pathableai/styles'` (or
+`@pathableai/styles/theme`). This is a one-line, documented migration — see
+feature [05](./05-react-entry-point-wiring.md) — and is a breaking change only
+in the sense that the default-token import is no longer implicit.
 
 ---
 

@@ -4,11 +4,6 @@
 
 **Input**: Feature specification from `specs/061-react-entry-point-wiring/spec.md`
 
-> **Historical feature record:** This plan describes the structural-only React
-> entry point released in `@pathableai/react@0.0.4` and later superseded by
-> automatic default-theme fallback loading. Use `packages/react/README.md` and
-> `scripts/test-next-consumer.mjs` for the current contract.
-
 ## Summary
 
 Change the `@pathableai/react` package entry point so it imports only the structural stylesheet layers —

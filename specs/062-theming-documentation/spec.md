@@ -8,12 +8,6 @@
 
 **Input**: User description: "Prove the complete theming API is correct, safe, and discoverable, and close out every acceptance criterion in the parent plan. This feature ships no new runtime surface; it adds the documentation, cross-cutting checks, and end-to-end evidence that tie features 01–05 into a verified, usable whole." (Source: `docs/plans/react-theming/06-theming-documentation.md`)
 
-> **Historical feature record:** This specification documents the original
-> feature 062 scope. Its structural-only React entry-point assumptions were
-> later superseded by automatic default-theme fallback loading. Use
-> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
-> consumer guidance.
-
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - End-to-end proof that a partial theme resolves colors (Priority: P1)
@@ -148,4 +142,4 @@ A maintainer reviewing the theming series can confirm that each acceptance crite
 - The end-to-end test is implemented as a Storybook story or a small integration test (the two options named in the parent plan), rendering a representative existing layout (e.g., the app-shell or a page-composition pattern) rather than a bespoke fixture.
 - The vocabulary reference is derived from `defaultTheme` (itself generated from the SCSS token definitions), so its values cannot drift from the actual defaults; the reference is presented as a reviewed, human-consumable table.
 - "Identical rendering" for backward compatibility is measured by visual and structural comparison of before/after output for the no-theme path.
-- The parent plan's acceptance criteria list was the authoritative checklist that this historical feature closed out; its structural-only React criterion was later superseded.
+- The parent plan's acceptance criteria list is the authoritative checklist that this feature closes out.

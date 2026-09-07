@@ -8,17 +8,6 @@ existing architecture of `@pathableai/styles`. It defines what we will build, th
 design principles that govern it, and the interfaces consumers will use. A
 separate implementation plan will break this into sequenced work items.
 
-> **Historical plan:** The structural-only React entry-point target in this plan
-> was implemented in `@pathableai/react@0.0.4` and later superseded by automatic
-> default-theme fallback loading. `ThemeProvider` overrides remain scoped inline
-> values and take precedence over the root defaults.
-
-The remaining content records the original target and is not current guidance
-where it describes a structural-only React entry point. See
-[`../theming/consumer-guide.md`](../theming/consumer-guide.md) and the
-[`@pathableai/react` README](../../packages/react/README.md) for the current
-contract.
-
 ## Motivation
 
 `@pathableai/styles` emits a comprehensive set of design tokens as CSS custom
@@ -477,27 +466,26 @@ class resolves to.
 
 ## Acceptance Criteria
 
-- [x] A consumer can pass a typed, partial color theme to `ThemeProvider` and
+- [ ] A consumer can pass a typed, partial color theme to `ThemeProvider` and
       see the resolved colors render with no hand-written CSS.
-- [x] Invalid token keys fail at type-check time (TypeScript), not silently at
+- [ ] Invalid token keys fail at type-check time (TypeScript), not silently at
       runtime.
-- [x] Overrides are scoped to the provider's subtree; components outside the
+- [ ] Overrides are scoped to the provider's subtree; components outside the
       subtree render with default tokens.
-- [x] `defaultTheme` is exported and contains the complete default color token
+- [ ] `defaultTheme` is exported and contains the complete default color token
       set.
-- [x] `createTheme` deep-merges partial input with defaults and returns a fully
+- [ ] `createTheme` deep-merges partial input with defaults and returns a fully
       resolved `ThemeConfig`.
-- [x] `TextTone`, `SurfaceTone`, and `BorderTone` types are importable from the
+- [ ] `TextTone`, `SurfaceTone`, and `BorderTone` types are importable from the
       public entry point.
-- [x] A consumer can import `@pathableai/styles/components` and
+- [ ] A consumer can import `@pathableai/styles/components` and
       `@pathableai/styles/utilities` without also importing the default theme
       tokens.
-- [x] **Superseded:** `@pathableai/react@0.0.4` stopped importing default theme
-      tokens. The current entry point restores those tokens as an automatic
-      fallback before structural styles.
-- [x] The `--pathable-color-*` declarations are consolidated into a single
+- [ ] `@pathableai/react` no longer imports the default theme tokens via its
+      side-effect import.
+- [ ] The `--pathable-color-*` declarations are consolidated into a single
       `:root` block in the compiled stylesheet.
-- [x] All existing components render identically when no `ThemeProvider` is
+- [ ] All existing components render identically when no `ThemeProvider` is
       present (backward compatibility).
-- [x] All existing components render identically when wrapped in a
+- [ ] All existing components render identically when wrapped in a
       `ThemeProvider` with `defaultTheme`.

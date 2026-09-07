@@ -1,6 +1,6 @@
 # 01 — Consolidated Theme Token CSS and Granular Exports
 
-Status: COMPLETED
+Status: NOT STARTED
 
 ## Parent Plan
 

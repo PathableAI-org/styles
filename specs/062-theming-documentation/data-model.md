@@ -1,11 +1,5 @@
 # Data Model: Theming Documentation and End-to-End Validation
 
-> **Historical feature record:** This model documents the original feature 062
-> scope. Its structural-only React entry-point assumptions were later
-> superseded by automatic default-theme fallback loading. Use
-> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
-> consumer guidance.
-
 This feature ships **no runtime data entities**. There is no new state, persistence, lifecycle, or
 transition to model — the runtime entities (`ThemeColors`, `ThemeConfig`, `defaultTheme`,
 `createTheme`, `ThemeProvider`, the tone types, and the stylesheet subpaths) already exist and are
@@ -56,8 +50,8 @@ The canonical source for each fact that appears in this feature's docs (constitu
 
 ### 4. Parent acceptance-criteria close-out map
 
-The parent plan (`docs/plans/react-theming.md` "Acceptance Criteria") was the authoritative checklist
-for the original feature (spec FR-010). The 11 criteria map to evidence as follows; the verification record
+The parent plan (`docs/plans/react-theming.md` "Acceptance Criteria") is the authoritative checklist
+(spec FR-010). The 11 criteria map to evidence as follows; the verification record
 (`docs/theming/acceptance-verification.md`) carries the checked-off list with evidence pointers:
 
 | # | Parent criterion | Evidence |
@@ -69,7 +63,7 @@ for the original feature (spec FR-010). The 11 criteria map to evidence as follo
 | 5 | `createTheme` deep-merges | `createTheme.test.ts` + 059 `create-theme.md` |
 | 6 | Tone types importable | `check:types` + 058 `tone-exports.md` (FR-013) |
 | 7 | `components`/`utilities` importable without default tokens | `test-next-consumer` + 061 `styles-subpaths.md` (FR-014) |
-| 8 | Superseded: React package no longer imports default tokens | Original `test-next-consumer` + 061 `react-entry-point.md`; current fallback is recorded in `docs/theming/acceptance-verification.md` |
+| 8 | React package no longer imports default tokens | `test-next-consumer` + 061 `react-entry-point.md` |
 | 9 | `--pathable-color-*` consolidated into one `:root` block | `pnpm lint:tokens` + 057 `package-exports.md` |
 | 10 | No-provider rendering identical | `pnpm test:visual` + `pnpm test:storybook-react` (FR-009) |
 | 11 | `ThemeProvider` with `defaultTheme` renders identically | 060 `theme-provider.md` no-wrapper optimization + rendered test |

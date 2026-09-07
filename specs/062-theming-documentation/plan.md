@@ -4,12 +4,6 @@
 
 **Input**: Feature specification from `specs/062-theming-documentation/spec.md`
 
-> **Historical feature record:** This plan documents the original feature 062
-> scope. Its structural-only React entry-point assumptions were later
-> superseded by automatic default-theme fallback loading. Use
-> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
-> consumer guidance.
-
 ## Summary
 
 Ship the documentation, cross-cutting checks, and end-to-end evidence that tie the theming series

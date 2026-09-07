@@ -3,33 +3,17 @@
 ## Installation
 
 ```bash
-pnpm add @pathableai/styles @uswds/uswds
-pnpm add -D sass
+pnpm add @pathable/styles @uswds/uswds
 ```
 
-## Build brand-aligned USWDS components
+## Usage (Compiled CSS)
 
-Load the PathAble configuration before USWDS in the same Sass entry point:
-
-```scss
-@use '@pathableai/styles/src/index' as pathable;
-@use 'uswds';
+```css
+/* App entrypoint */
+@import '@pathable/styles/dist/styles.css';
 ```
 
-Configure Dart Sass to resolve both installed packages and the USWDS package
-modules. For example, compile `src/app.scss` with:
-
-```bash
-pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
-node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
-```
-
-The copy command matches the source entry's default `../fonts` URLs when the
-compiled stylesheet is `dist/app.css`. If your bundler rewrites asset URLs,
-configure it to emit the package's published `fonts/` directory instead.
-
-USWDS components and utilities compiled from that entry point use the configured
-PathAble-aligned theme tokens:
+Then use USWDS utility classes. Brand colors map automatically:
 
 ```html
 <button class="usa-button">Primary Action</button>
@@ -37,39 +21,45 @@ PathAble-aligned theme tokens:
 <p class="text-secondary">Secondary brand text</p>
 ```
 
-Use the package's semantic custom properties:
+Existing `--pathable-*` tokens continue to work unchanged:
 
 ```css
 .element {
-  color: var(--pathable-color-text);
+  color: var(--pathable-blue);
   background: var(--pathable-color-surface);
 }
 ```
 
-## Use PathAble Sass variables
-
-The same namespaced import exposes PathAble variables for application styles:
+Existing `$pathable-*` SCSS variables continue to work unchanged:
 
 ```scss
 .element {
-  color: pathable.$pathable-blue;
+  color: $pathable-blue;
 }
+```
+
+## Usage (SCSS Customization)
+
+If your project uses SCSS and you want to extend the theme:
+
+```scss
+@use '@pathable/styles/src/index' as pathable;
 ```
 
 ## Verifying Brand Colors
 
-After compiling the entry point above, check that USWDS component selectors and
-the configured primary and secondary color values are present:
+After installing, build and check:
 
 ```bash
-rg "\\.usa-button" dist/app.css
-rg "#162e51" dist/app.css
-rg "#1dc2ae" dist/app.css
+pnpm build
+# Verify brand colors compiled correctly
+rg "blue-warm-80v" dist/styles.css    # Should show PathAble Blue
+rg "mint-cool-30v" dist/styles.css    # Should show Intelligent Jade
 ```
 
 ## Important Notes
 
-- **No USWDS component styles** in the precompiled PathAble output. Compile USWDS after the PathAble Sass configuration when you need brand-aligned USWDS components.
+- **No USWDS component styles** in the output. Add `@import 'uswds/dist/css/uswds.css'` separately if you need USWDS components.
 - **Future feature**: `--pathable-*` to `--uswds-*` aliasing is not available yet.
 - **Color differences**: If brand colors look slightly different from original hexes, see `research.md` for deltaE values.
-- **Upgrading USWDS**: Package maintainers update `packages/styles/src/_uswds-theme.scss`, the single settings file per FR-008; consumers should not edit installed package files.
+- **Upgrading USWDS**: Edit `_uswds-theme.scss` — it is the single settings file per FR-008.
