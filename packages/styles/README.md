@@ -93,7 +93,7 @@ pnpm add -D sass
 **Usage with USWDS components:**
 
 ```scss
-@use '@pathableai/styles/src/index';
+@use '@pathableai/styles/src/index' as pathable;
 @use 'uswds';
 ```
 
