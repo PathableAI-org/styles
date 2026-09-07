@@ -1,5 +1,11 @@
 # Research: Theming Documentation and End-to-End Validation
 
+> **Historical feature record:** This research documents the original feature
+> 062 scope. Its structural-only React entry-point assumptions were later
+> superseded by automatic default-theme fallback loading. Use
+> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
+> consumer guidance.
+
 This feature ships no new runtime surface, so the research questions are all *placement and
 evidence* decisions, not library or API design decisions. Each decision below resolves a Technical
 Context unknown or a spec assumption with a concrete choice, rationale, and the alternatives

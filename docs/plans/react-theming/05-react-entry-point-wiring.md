@@ -1,5 +1,10 @@
 # 05 — React Entry Point Wiring
 
+> **Historical plan:** This document describes the structural-only React entry
+> point released in `@pathableai/react@0.0.4` and later superseded by automatic
+> default-theme fallback loading. Use `packages/react/README.md` and
+> `scripts/test-next-consumer.mjs` for the current contract.
+
 Status: NOT STARTED
 
 ## Parent Plan

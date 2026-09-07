@@ -1,5 +1,10 @@
 # Tasks: React Entry Point Wiring
 
+> **Historical feature record:** These tasks implemented the structural-only
+> React entry point released in `@pathableai/react@0.0.4` and later superseded
+> by automatic default-theme fallback loading. They are retained as
+> implementation history, not current guidance.
+
 **Input**: Design documents from `/specs/061-react-entry-point-wiring/`
 **Prerequisites**: `plan.md` (required), `spec.md` (required for user stories), `research.md`, `data-model.md`, `contracts/`, `quickstart.md`
 

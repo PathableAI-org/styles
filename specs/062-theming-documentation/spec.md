@@ -8,6 +8,12 @@
 
 **Input**: User description: "Prove the complete theming API is correct, safe, and discoverable, and close out every acceptance criterion in the parent plan. This feature ships no new runtime surface; it adds the documentation, cross-cutting checks, and end-to-end evidence that tie features 01–05 into a verified, usable whole." (Source: `docs/plans/react-theming/06-theming-documentation.md`)
 
+> **Historical feature record:** This specification documents the original
+> feature 062 scope. Its structural-only React entry-point assumptions were
+> later superseded by automatic default-theme fallback loading. Use
+> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
+> consumer guidance.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - End-to-end proof that a partial theme resolves colors (Priority: P1)

@@ -1,5 +1,10 @@
 # Data Model: React Entry Point Wiring
 
+> **Historical feature record:** This model describes the structural-only React
+> entry point released in `@pathableai/react@0.0.4` and later superseded by
+> automatic default-theme fallback loading. Use `packages/react/README.md` and
+> `scripts/test-next-consumer.mjs` for the current contract.
+
 This feature is a module-entry/import change with **no runtime data entities**. There is no state,
 persistence, lifecycle, or transition to model — the change re-points which compiled CSS layers the
 `@pathableai/react` package imports as side effects. The only durable domain facts are the

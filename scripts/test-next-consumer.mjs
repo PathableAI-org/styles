@@ -163,7 +163,7 @@ async function assertStylesAssets(stylesRoot) {
   )
 }
 
-async function assertReactPackage(reactRoot) {
+async function assertReactPackage(reactRoot, expectedStylesVersion) {
   const manifest = JSON.parse(
     await readFile(join(reactRoot, 'package.json'), 'utf8'),
   )
@@ -187,6 +187,11 @@ async function assertReactPackage(reactRoot) {
     stylesDependency ?? '',
     /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u,
     'Packed React manifest does not declare a concrete @pathableai/styles dependency',
+  )
+  assert.equal(
+    stylesDependency,
+    expectedStylesVersion,
+    'Packed React manifest does not reference the packed @pathableai/styles version',
   )
   console.log(
     `[next-consumer] Packed React styles dependency: ${stylesDependency}`,
@@ -450,18 +455,18 @@ async function assertConsumer(fixtureRoot) {
   ).join('\n')
   assert.match(
     emittedCss,
-    /--pathable-color-text\s*:/u,
-    'Next build CSS omits default PathAble color tokens',
+    /:root\s*\{[^}]*--pathable-color-text\s*:\s*#00365c\s*;/u,
+    'Next build CSS omits the default root PathAble text color',
   )
   assert.match(
     emittedCss,
-    /--pathable-space-6\s*:/u,
-    'Next build CSS omits default PathAble spacing tokens',
+    /:root\s*\{[^}]*--pathable-space-6\s*:\s*3rem\s*;/u,
+    'Next build CSS omits the default root PathAble spacing value',
   )
   assert.match(
     emittedCss,
-    /\.pathable-dashboard-header(?:[,{\s])/u,
-    'Next build CSS omits DashboardHeader structural styles',
+    /\.pathable-dashboard-header\s*\{[^}]*display\s*:\s*flex\s*;/u,
+    'Next build CSS omits effective DashboardHeader structural styles',
   )
 
   const html = await readFile(
@@ -593,8 +598,11 @@ async function main() {
       reactTarball,
       join(temporaryRoot, 'react-extracted'),
     )
+    const stylesManifest = JSON.parse(
+      await readFile(join(stylesRoot, 'package.json'), 'utf8'),
+    )
 
-    await assertReactPackage(reactRoot)
+    await assertReactPackage(reactRoot, stylesManifest.version)
     const guidance = await validateAgentGuidance(reactRoot)
     console.log(
       `[next-consumer] Verified ${guidance.files} packed agent-guidance files`,

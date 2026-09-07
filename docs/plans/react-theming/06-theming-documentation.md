@@ -1,5 +1,11 @@
 # 06 — Theming Documentation and End-to-End Validation
 
+> **Historical plan:** This document describes the original feature 062 scope.
+> Its structural-only React entry-point assumptions were later superseded by
+> automatic default-theme fallback loading. Use
+> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
+> consumer guidance.
+
 Status: NOT STARTED
 
 ## Parent Plan

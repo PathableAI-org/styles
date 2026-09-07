@@ -1,5 +1,11 @@
 # Quickstart: Validating Theming Documentation and End-to-End Proof
 
+> **Historical feature record:** This guide validates the original feature 062
+> scope. Its structural-only React entry-point assumptions were later
+> superseded by automatic default-theme fallback loading. Use
+> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
+> consumer guidance.
+
 This guide proves the feature works end-to-end: the docs are complete and accurate, and a partial
 theme demonstrably resolves in a rendered layout. Full contracts live in
 [`contracts/token-vocabulary.md`](./contracts/token-vocabulary.md),

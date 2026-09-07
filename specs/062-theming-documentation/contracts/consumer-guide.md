@@ -1,5 +1,11 @@
 # Interface Contract: Consumer Guide
 
+> **Superseded contract:** This document records the original feature 062
+> consumer guide requirements. Its structural-only React entry-point assumptions
+> were later superseded by automatic default-theme fallback loading. Use
+> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
+> consumer guidance; the remainder is historical only.
+
 Artifact: `docs/theming/consumer-guide.md` (canonical source for "how to override, extend, and
 choose a path"). This is the primary "how to use it" artifact for consumers.
 

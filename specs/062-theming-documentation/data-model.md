@@ -1,5 +1,11 @@
 # Data Model: Theming Documentation and End-to-End Validation
 
+> **Historical feature record:** This model documents the original feature 062
+> scope. Its structural-only React entry-point assumptions were later
+> superseded by automatic default-theme fallback loading. Use
+> `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
+> consumer guidance.
+
 This feature ships **no runtime data entities**. There is no new state, persistence, lifecycle, or
 transition to model — the runtime entities (`ThemeColors`, `ThemeConfig`, `defaultTheme`,
 `createTheme`, `ThemeProvider`, the tone types, and the stylesheet subpaths) already exist and are

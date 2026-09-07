@@ -1,5 +1,10 @@
 # Tasks: Theming Documentation and End-to-End Validation
 
+> **Historical feature record:** These tasks implemented the original feature
+> 062 scope. Its structural-only React entry-point assumptions were later
+> superseded by automatic default-theme fallback loading. They are retained as
+> implementation history, not current guidance.
+
 **Input**: Design documents from `specs/062-theming-documentation/`
 **Prerequisites**: plan.md (required), spec.md (required), research.md, data-model.md, contracts/, quickstart.md
 

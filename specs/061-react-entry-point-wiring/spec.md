@@ -8,6 +8,11 @@
 
 **Input**: User description: "Make `@pathableai/react` structurally independent of the default theme token layer so consumers who supply their own tokens via `ThemeProvider` do not have to fight a cascade-order battle against the package's own stylesheet. This is a small but high-stakes change to the package's side-effect import, gated on backward compatibility."
 
+> **Historical feature record:** The structural-only React entry point specified
+> below shipped in `@pathableai/react@0.0.4` and was later superseded by
+> automatic default-theme fallback loading. Use `packages/react/README.md` and
+> `scripts/test-next-consumer.mjs` for the current contract.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - ThemeProvider-driven consumer renders with custom tokens (Priority: P1)

@@ -1,5 +1,10 @@
 # Quickstart: Validating React Entry Point Wiring
 
+> **Historical feature record:** This guide validates the structural-only React
+> entry point released in `@pathableai/react@0.0.4` and later superseded by
+> automatic default-theme fallback loading. Use `packages/react/README.md` and
+> `scripts/test-next-consumer.mjs` for current usage and validation.
+
 This guide proves the feature works end-to-end across the three supported consumer paths and the
 package-content/build validation gates. Full contracts live in
 [`contracts/react-entry-point.md`](./contracts/react-entry-point.md) and
