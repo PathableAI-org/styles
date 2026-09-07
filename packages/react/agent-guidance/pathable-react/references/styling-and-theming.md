@@ -10,6 +10,8 @@ an application that imports `@pathableai/react`.
   affected subtree inside `ThemeProvider`.
 - Provider values are inline custom properties, so they override the root
   defaults while content outside the provider retains the fallback theme.
+- Package defaults use zero selector specificity, so application-owned `:root`
+  token declarations also override them regardless of stylesheet order.
 - Import `@pathableai/styles` subpaths directly only in CSS-only consumers that
   do not import the React package.
 
@@ -31,8 +33,9 @@ export function BrandedArea({ children }: { children: ReactNode }) {
 - Prefer component props for tone, surface, border, elevation, width, spacing,
   and layout when the installed type exposes them.
 - Use semantic theme keys such as `accent`, `surface`, and `textMuted`. Do not
-  invent visual aliases such as `prettyBlue` or redeclare the package's
-  `--pathable-color-*` variables on `:root`.
+  invent visual aliases such as `prettyBlue`. Declare `--pathable-color-*`
+  variables on `:root` only for an intentional application-wide theme;
+  otherwise use `ThemeProvider` for scoped overrides.
 - Do not hardcode brand colors or typography when an existing semantic token
   expresses the intent.
 - Preserve accessible contrast when customizing a theme. Generated color sets

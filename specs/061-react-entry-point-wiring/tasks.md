@@ -95,7 +95,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Run the React Storybook contract gate `pnpm test:storybook-react` and confirm the default-path stories render identically (no visual or structural regressions)
+- [X] T011 [US2] Run the React Storybook contract gate `pnpm test:storybook-react` and confirm the default-path stories render identically (no visual or structural regressions)
 
 **Checkpoint**: The mainstream default consumer path is confirmed backward-compatible.
 
@@ -109,7 +109,7 @@
 
 ### Implementation for User Story 3
 
-- [ ] T012 [US3] Verify the theme-subpath consumer path renders default tokens: confirm `packages/styles/package.json` still maps `"./theme"` to `dist/theme-default.css` and run `pnpm --filter @pathable/storybook-react storybook` to confirm no regression in theme-subpath rendering (depends on T008)
+- [X] T012 [US3] Verify the theme-subpath consumer path renders default tokens: confirm `packages/styles/package.json` still maps `"./theme"` to `dist/theme-default.css` and run `pnpm --filter @pathable/storybook-react storybook` to confirm no regression in theme-subpath rendering (depends on T008)
 
 **Checkpoint**: The theme-subpath consumer path is confirmed intact (FR-004, FR-007).
 
@@ -154,7 +154,7 @@
 - [X] T019 [P] Run `pnpm --filter @pathableai/react lint` (eslint, `--max-warnings=0`) and `pnpm --filter @pathableai/react typecheck` and confirm both pass
 - [X] T020 [P] Run `pnpm lint:tokens` and confirm the token vocabulary is untouched (FR-008)
 - [X] T021 [P] Run `pnpm test:storybook-react-server` and confirm the server-compatibility audit reports no new findings
-- [ ] T022 Run the `quickstart.md` validation path end-to-end (`specs/061-react-entry-point-wiring/quickstart.md`) and confirm all sections exit `0`
+- [X] T022 Run the `quickstart.md` validation path end-to-end (`specs/061-react-entry-point-wiring/quickstart.md`) and confirm all sections exit `0`
 
 **Checkpoint**: All quality gates pass; the feature is complete.
 

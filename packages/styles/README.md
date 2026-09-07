@@ -62,7 +62,8 @@ default token declarations:
 React consumers should import only `@pathableai/react`, which loads these
 stylesheet layers automatically, and use `ThemeProvider` for scoped overrides.
 
-All three subpath imports resolve to the corresponding file under `dist/`:
+The root import and all three subpath imports resolve to corresponding files
+under `dist/`:
 
 | Import                          | Resolves to              |
 | ------------------------------- | ------------------------ |
@@ -73,9 +74,21 @@ All three subpath imports resolve to the corresponding file under `dist/`:
 
 ### SCSS (`@use`)
 
-```scss
-@use '@pathableai/styles';
+Install Dart Sass and USWDS, then use the published source subpath with a stable
+namespace:
+
+```bash
+pnpm add @pathableai/styles @uswds/uswds
+pnpm add -D sass
 ```
+
+```scss
+@use '@pathableai/styles/src/index' as pathable;
+```
+
+When using the command-line compiler, include the package and USWDS module load
+paths shown below. The source entry emits font URLs relative to the compiled CSS;
+ensure your bundler copies those assets, or use the copy command below.
 
 ### USWDS Integration
 
@@ -102,6 +115,7 @@ modules. For the command-line compiler:
 
 ```bash
 pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
+node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
 ```
 
 The compiled PathAble CSS does **not** include USWDS component styles. Importing
@@ -140,7 +154,7 @@ The canonical theming documentation lives under `docs/theming/`:
 
 See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
-See STORY_AUTHORING.md for the story authoring checklist and PR requirements.
+See the [story authoring guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/STORY_AUTHORING.md) for its checklist and PR requirements.
 Applications SHOULD consume semantic tokens like --pathable-color-text instead of directly using brand colors like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
 

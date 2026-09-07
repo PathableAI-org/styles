@@ -21,7 +21,12 @@ modules. For example, compile `src/app.scss` with:
 
 ```bash
 pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
+node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
 ```
+
+The copy command matches the source entry's default `../fonts` URLs when the
+compiled stylesheet is `dist/app.css`. If your bundler rewrites asset URLs,
+configure it to emit the package's published `fonts/` directory instead.
 
 USWDS components and utilities compiled from that entry point use the configured
 PathAble-aligned theme tokens:

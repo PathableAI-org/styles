@@ -1,7 +1,7 @@
 // Entry point for @pathableai/react
 
-// Load default tokens as the root fallback before structural styles. Scoped
-// ThemeProvider values are inline custom properties and override these defaults.
+// Load low-specificity default tokens before structural styles. Application
+// :root declarations and inline ThemeProvider values override these defaults.
 import '@pathableai/styles/theme'
 import '@pathableai/styles/components'
 import '@pathableai/styles/utilities'

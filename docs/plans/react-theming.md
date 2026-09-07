@@ -477,27 +477,27 @@ class resolves to.
 
 ## Acceptance Criteria
 
-- [ ] A consumer can pass a typed, partial color theme to `ThemeProvider` and
+- [x] A consumer can pass a typed, partial color theme to `ThemeProvider` and
       see the resolved colors render with no hand-written CSS.
-- [ ] Invalid token keys fail at type-check time (TypeScript), not silently at
+- [x] Invalid token keys fail at type-check time (TypeScript), not silently at
       runtime.
-- [ ] Overrides are scoped to the provider's subtree; components outside the
+- [x] Overrides are scoped to the provider's subtree; components outside the
       subtree render with default tokens.
-- [ ] `defaultTheme` is exported and contains the complete default color token
+- [x] `defaultTheme` is exported and contains the complete default color token
       set.
-- [ ] `createTheme` deep-merges partial input with defaults and returns a fully
+- [x] `createTheme` deep-merges partial input with defaults and returns a fully
       resolved `ThemeConfig`.
-- [ ] `TextTone`, `SurfaceTone`, and `BorderTone` types are importable from the
+- [x] `TextTone`, `SurfaceTone`, and `BorderTone` types are importable from the
       public entry point.
-- [ ] A consumer can import `@pathableai/styles/components` and
+- [x] A consumer can import `@pathableai/styles/components` and
       `@pathableai/styles/utilities` without also importing the default theme
       tokens.
 - [x] **Superseded:** `@pathableai/react@0.0.4` stopped importing default theme
       tokens. The current entry point restores those tokens as an automatic
       fallback before structural styles.
-- [ ] The `--pathable-color-*` declarations are consolidated into a single
+- [x] The `--pathable-color-*` declarations are consolidated into a single
       `:root` block in the compiled stylesheet.
-- [ ] All existing components render identically when no `ThemeProvider` is
+- [x] All existing components render identically when no `ThemeProvider` is
       present (backward compatibility).
-- [ ] All existing components render identically when wrapped in a
+- [x] All existing components render identically when wrapped in a
       `ThemeProvider` with `defaultTheme`.

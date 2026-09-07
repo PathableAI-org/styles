@@ -48,18 +48,16 @@ harder to reason about. This does not apply to the optional
 
 When upgrading from `@pathableai/react@0.0.4`, remove any default, theme,
 component, or utility stylesheet import that was added to compensate for that
-version's structural-only entry point. Applications that supply global token
-overrides in CSS must load them after the package defaults. In a Next.js App
-Router application, establish that order in the root layout before importing
-components from pages:
+version's structural-only entry point. Package defaults use zero selector
+specificity, so conventional application-owned `:root` declarations override
+them regardless of stylesheet order:
 
 ```tsx
-import '@pathableai/react'
 import './globals.css' // Application-owned :root overrides.
+import '@pathableai/react'
 ```
 
-Prefer `ThemeProvider` for scoped overrides that do not depend on stylesheet
-order.
+Prefer `ThemeProvider` for scoped runtime overrides.
 
 In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset

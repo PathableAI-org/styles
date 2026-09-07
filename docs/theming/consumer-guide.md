@@ -81,17 +81,16 @@ also repeats theme and structural CSS, while any extra stylesheet import makes
 cascade order harder to reason about.
 
 When upgrading from `@pathableai/react@0.0.4`, remove stylesheet imports added
-to restore that version's omitted default tokens. Global CSS token overrides
-must load after the package defaults. In a Next.js App Router application,
-establish that order in the root layout before importing components from pages:
+to restore that version's omitted default tokens. Package defaults use zero
+selector specificity, so conventional application-owned `:root` declarations
+override them regardless of stylesheet order:
 
 ```tsx
-import '@pathableai/react'
 import './globals.css' // Application-owned :root overrides.
+import '@pathableai/react'
 ```
 
-`ThemeProvider` is the preferred path for scoped overrides that are independent
-of stylesheet order.
+`ThemeProvider` is the preferred path for scoped runtime overrides.
 
 The original delivery contracts behind these APIs live under `specs/`. Feature
 061's structural-only React entry-point contract is historical and superseded;

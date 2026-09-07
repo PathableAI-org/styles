@@ -354,7 +354,8 @@ function walkDir(dir, filterFn) {
 /**
  * Enforce the consolidated theme token invariant:
  *   1. Exactly one SCSS source file may declare --pathable-color-* properties
- *      (in a :root block), and that file must be _semantic.scss.
+ *      (in a zero-specificity :where(:root) block), and that file must be
+ *      _semantic.scss.
  *   2. The canonical block must declare the complete semantic color set
  *      (the same count of distinct token names produced by the $semantic-colors
  *      map in _semantic.scss).
@@ -381,8 +382,8 @@ function checkColorTokenConsolidation() {
       }
     }
 
-    // Check :root blocks for the canonical declaration source.
-    const rootRe = /:root\s*\{/g
+    // Check low-specificity root blocks for the canonical declaration source.
+    const rootRe = /:where\(\s*:root\s*\)\s*\{/g
     let rm
     while ((rm = rootRe.exec(content)) !== null) {
       const startIdx = rm.index + rm[0].length
@@ -406,7 +407,7 @@ function checkColorTokenConsolidation() {
   const issues = []
   if (colorBlockFiles.length !== 1) {
     issues.push(
-      `Expected exactly 1 :root block declaring --pathable-color-* tokens, found ${colorBlockFiles.length}.`,
+      `Expected exactly 1 :where(:root) block declaring --pathable-color-* tokens, found ${colorBlockFiles.length}.`,
     )
   }
   for (const file of colorBlockFiles) {
@@ -430,7 +431,7 @@ function checkColorTokenConsolidation() {
   const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
   const semanticMap = parseScssMap(semantic, 'semantic-colors')
   const expectedCount = semanticMap.size
-  // Count distinct --pathable-color-* tokens from the semantic :root block.
+  // Count distinct --pathable-color-* tokens from the semantic root block.
   const rootDeclRe = /(--pathable-color-[a-z0-9-]+)\s*:/g
   const declaredColorTokens = new Set()
   let rdm
@@ -439,7 +440,7 @@ function checkColorTokenConsolidation() {
   }
   if (declaredColorTokens.size !== expectedCount) {
     issues.push(
-      `_semantic.scss :root block declares ${declaredColorTokens.size} --pathable-color-* token(s); expected ${expectedCount} from the $semantic-colors map.`,
+      `_semantic.scss :where(:root) block declares ${declaredColorTokens.size} --pathable-color-* token(s); expected ${expectedCount} from the $semantic-colors map.`,
     )
   }
 
