@@ -1,6 +1,6 @@
 # 03 — Default Theme and createTheme
 
-Status: NOT STARTED
+Status: COMPLETED
 
 ## Parent Plan
 

@@ -5,7 +5,7 @@
 > default-theme fallback loading. Use `packages/react/README.md` and
 > `scripts/test-next-consumer.mjs` for the current contract.
 
-Status: NOT STARTED
+Status: COMPLETED (later superseded as described above)
 
 ## Parent Plan
 

@@ -1,6 +1,6 @@
 # 02 — Theme Token Types and Vocabulary
 
-Status: NOT STARTED
+Status: COMPLETED
 
 ## Parent Plan
 

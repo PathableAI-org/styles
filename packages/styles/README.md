@@ -37,15 +37,16 @@ This package is the implementation source for PathAble visual design foundations
 
 Install the package:
 
-````bash
+```bash
 pnpm add @pathableai/styles
+```
 
 Import the compiled CSS entry point to get all default styles, tokens, and utilities:
 
 ```css
 /* Full import — components, utilities, and default theme tokens */
 @import '@pathableai/styles';
-````
+```
 
 CSS-only consumers that supply a complete set of application-owned theme tokens
 can import only the component and utility layers to avoid loading the package's

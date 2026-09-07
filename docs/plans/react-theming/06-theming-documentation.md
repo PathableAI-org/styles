@@ -6,7 +6,7 @@
 > `docs/theming/consumer-guide.md` and `packages/react/README.md` for current
 > consumer guidance.
 
-Status: NOT STARTED
+Status: COMPLETED (entry-point assumption later superseded as described above)
 
 ## Parent Plan
 
