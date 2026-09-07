@@ -144,6 +144,8 @@ jobs:
               - 'pnpm-lock.yaml'
             next_consumer:
               - 'scripts/test-next-consumer.mjs'
+              - '.github/actions/setup/**'
+              - '.github/workflows/ci-full.yml'
               - 'packages/react/**'
               - 'packages/styles/**'
               - 'package.json'
@@ -315,6 +317,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+        with:
+          install_playwright: 'true'
       - name: Validate packed Next.js consumer
         run: pnpm test:next-consumer
 

@@ -56,8 +56,8 @@ The canonical source for each fact that appears in this feature's docs (constitu
 
 ### 4. Parent acceptance-criteria close-out map
 
-The parent plan (`docs/plans/react-theming.md` "Acceptance Criteria") is the authoritative checklist
-(spec FR-010). The 11 criteria map to evidence as follows; the verification record
+The parent plan (`docs/plans/react-theming.md` "Acceptance Criteria") was the authoritative checklist
+for the original feature (spec FR-010). The 11 criteria map to evidence as follows; the verification record
 (`docs/theming/acceptance-verification.md`) carries the checked-off list with evidence pointers:
 
 | # | Parent criterion | Evidence |
@@ -69,7 +69,7 @@ The parent plan (`docs/plans/react-theming.md` "Acceptance Criteria") is the aut
 | 5 | `createTheme` deep-merges | `createTheme.test.ts` + 059 `create-theme.md` |
 | 6 | Tone types importable | `check:types` + 058 `tone-exports.md` (FR-013) |
 | 7 | `components`/`utilities` importable without default tokens | `test-next-consumer` + 061 `styles-subpaths.md` (FR-014) |
-| 8 | React package no longer imports default tokens | `test-next-consumer` + 061 `react-entry-point.md` |
+| 8 | Superseded: React package no longer imports default tokens | Original `test-next-consumer` + 061 `react-entry-point.md`; current fallback is recorded in `docs/theming/acceptance-verification.md` |
 | 9 | `--pathable-color-*` consolidated into one `:root` block | `pnpm lint:tokens` + 057 `package-exports.md` |
 | 10 | No-provider rendering identical | `pnpm test:visual` + `pnpm test:storybook-react` (FR-009) |
 | 11 | `ThemeProvider` with `defaultTheme` renders identically | 060 `theme-provider.md` no-wrapper optimization + rendered test |

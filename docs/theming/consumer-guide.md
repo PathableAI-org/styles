@@ -1,8 +1,9 @@
 # Theming consumer guide
 
-This guide covers the three ways to customize colors in `@pathableai/react`.
-It assumes the runtime API already exists; the full list of overridable tokens
-is in the [token vocabulary reference](./token-vocabulary.md).
+This guide covers two ways to customize colors in `@pathableai/react` and
+explains how its automatic styles interact with those overrides. It assumes the
+runtime API already exists; the full list of overridable tokens is in the
+[token vocabulary reference](./token-vocabulary.md).
 
 ## 1. Override a few colors with `createTheme` + `ThemeProvider`
 

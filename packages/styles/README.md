@@ -78,7 +78,9 @@ All three subpath imports resolve to the corresponding file under `dist/`:
 
 ### USWDS Integration
 
-This package wraps USWDS v3.x theme color tokens to match PathAble brand colors. When using USWDS components alongside `@pathableai/styles`, USWDS components automatically render with brand-aligned colors.
+This package configures USWDS v3.x theme tokens to match PathAble brand colors.
+Compile the PathAble source before USWDS in the same Sass build to apply that
+configuration to USWDS components.
 
 **Installation with USWDS:**
 
@@ -89,22 +91,17 @@ pnpm add @pathableai/styles @uswds/uswds
 **Usage with USWDS components:**
 
 ```scss
-// Import USWDS component styles separately (e.g., usa-button)
+@use '@pathableai/styles/src/index';
 @use 'uswds';
-
-// @pathableai/styles provides the theme token configuration
-// that makes USWDS components render with PathAble brand colors
 ```
 
-```css
-/* When using compiled CSS, import both: */
-/* @import '@pathableai/styles/dist/styles.css'; */
-/* @import '@uswds/uswds/dist/css/uswds.css'; */
-```
+The compiled PathAble CSS does **not** include USWDS component styles. Importing
+the stock precompiled USWDS CSS adds stock components; it does not apply the
+PathAble Sass configuration. Use the combined Sass build above for brand-aligned
+USWDS components.
 
-The compiled `dist/styles.css` includes USWDS theme token configuration but **not** USWDS component styles. Consumers who need USWDS components must add USWDS as their own dependency and import components separately.
-
-For detailed setup instructions, see [quickstart.md](specs/003-wrap-uswds-theme/quickstart.md).
+For detailed setup instructions, see the
+[USWDS theme quickstart](https://github.com/PathableAI-org/styles/blob/main/specs/003-wrap-uswds-theme/quickstart.md).
 
 ### Token Usage
 
@@ -125,8 +122,8 @@ Override semantic color tokens with the typed theming API in
 The canonical theming documentation lives under `docs/theming/`:
 
 - [Consumer guide](../../docs/theming/consumer-guide.md) — override with
-  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and choose an import
-  path.
+  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and understand
+  automatic React styles versus CSS-only imports.
 - [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
   color token with its CSS custom property, default value, and role.
 

@@ -3,17 +3,20 @@
 ## Installation
 
 ```bash
-pnpm add @pathable/styles @uswds/uswds
+pnpm add @pathableai/styles @uswds/uswds
 ```
 
-## Usage (Compiled CSS)
+## Build brand-aligned USWDS components
 
-```css
-/* App entrypoint */
-@import '@pathable/styles/dist/styles.css';
+Load the PathAble configuration before USWDS in the same Sass entry point:
+
+```scss
+@use '@pathableai/styles/src/index' as pathable;
+@use 'uswds';
 ```
 
-Then use USWDS utility classes. Brand colors map automatically:
+USWDS components and utilities compiled from that entry point use the configured
+PathAble-aligned theme tokens:
 
 ```html
 <button class="usa-button">Primary Action</button>
@@ -21,29 +24,23 @@ Then use USWDS utility classes. Brand colors map automatically:
 <p class="text-secondary">Secondary brand text</p>
 ```
 
-Existing `--pathable-*` tokens continue to work unchanged:
+Use the package's semantic custom properties:
 
 ```css
 .element {
-  color: var(--pathable-blue);
+  color: var(--pathable-color-text);
   background: var(--pathable-color-surface);
 }
 ```
 
-Existing `$pathable-*` SCSS variables continue to work unchanged:
+## Use PathAble Sass variables
+
+The same namespaced import exposes PathAble variables for application styles:
 
 ```scss
 .element {
-  color: $pathable-blue;
+  color: pathable.$pathable-blue;
 }
-```
-
-## Usage (SCSS Customization)
-
-If your project uses SCSS and you want to extend the theme:
-
-```scss
-@use '@pathable/styles/src/index' as pathable;
 ```
 
 ## Verifying Brand Colors
@@ -59,7 +56,7 @@ rg "mint-cool-30v" dist/styles.css    # Should show Intelligent Jade
 
 ## Important Notes
 
-- **No USWDS component styles** in the output. Add `@import 'uswds/dist/css/uswds.css'` separately if you need USWDS components.
+- **No USWDS component styles** in the precompiled PathAble output. Compile USWDS after the PathAble Sass configuration when you need brand-aligned USWDS components.
 - **Future feature**: `--pathable-*` to `--uswds-*` aliasing is not available yet.
 - **Color differences**: If brand colors look slightly different from original hexes, see `research.md` for deltaE values.
 - **Upgrading USWDS**: Edit `_uswds-theme.scss` — it is the single settings file per FR-008.

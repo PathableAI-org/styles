@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import {
   mkdtemp,
   readFile,
@@ -21,6 +21,8 @@ import {
 } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { tmpdir } from 'node:os'
+import { createServer } from 'node:net'
+import { chromium } from 'playwright'
 import { validateAgentGuidance } from './check-agent-guidance.mjs'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -31,6 +33,23 @@ const commandEnvironment = {
 }
 
 const javaScriptEntrypoints = new Set(['.js', '.cjs', '.mjs'])
+let activeConsumerServer
+
+async function handleTermination(signal) {
+  try {
+    if (activeConsumerServer) await stopProcess(activeConsumerServer)
+  } finally {
+    process.removeAllListeners(signal)
+    process.kill(process.pid, signal)
+  }
+}
+
+process.once('SIGINT', () => {
+  void handleTermination('SIGINT')
+})
+process.once('SIGTERM', () => {
+  void handleTermination('SIGTERM')
+})
 
 function run(command, args, options = {}) {
   const pnpmCli = command === 'pnpm' ? process.env.npm_execpath : undefined
@@ -83,6 +102,128 @@ async function findTarball(directory, packageSlug) {
     `Expected one ${packageSlug} tarball, found: ${matches.join(', ')}`,
   )
   return join(directory, matches[0])
+}
+
+async function availablePort() {
+  const server = createServer()
+  await new Promise((resolvePromise, reject) => {
+    server.once('error', reject)
+    server.listen(0, '127.0.0.1', resolvePromise)
+  })
+  const address = server.address()
+  assert.ok(address && typeof address !== 'string', 'Could not reserve a port')
+  await new Promise((resolvePromise, reject) =>
+    server.close((error) => (error ? reject(error) : resolvePromise())),
+  )
+  return address.port
+}
+
+async function stopProcess(child) {
+  if (child.pid === undefined || processExited(child)) return
+  child.kill()
+  if (await waitForExit(child, 5_000)) return
+  child.kill('SIGKILL')
+  assert.ok(
+    await waitForExit(child, 5_000),
+    'Next server did not exit after forced termination',
+  )
+}
+
+function processExited(child) {
+  return child.exitCode !== null || child.signalCode !== null
+}
+
+async function waitForExit(child, timeout) {
+  if (processExited(child)) return true
+  return new Promise((resolvePromise) => {
+    const onExit = () => {
+      clearTimeout(timer)
+      resolvePromise(true)
+    }
+    const timer = setTimeout(() => {
+      child.off('exit', onExit)
+      resolvePromise(false)
+    }, timeout)
+    child.once('exit', onExit)
+  })
+}
+
+async function waitForServer(url, child, output, startError) {
+  const deadline = Date.now() + 30_000
+  while (Date.now() < deadline) {
+    const launchError = startError()
+    if (launchError) {
+      throw new Error(`Failed to start Next server\n${launchError.message}`)
+    }
+    if (processExited(child)) {
+      const result = child.signalCode ?? child.exitCode
+      throw new Error(
+        `Next server exited before becoming ready (${result})\n${output()}`,
+      )
+    }
+    try {
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(1_000),
+      })
+      if (response.ok) return
+    } catch {
+      // The server has not bound its port yet.
+    }
+    await new Promise((resolvePromise) => setTimeout(resolvePromise, 250))
+  }
+  throw new Error(`Next server did not become ready\n${output()}`)
+}
+
+async function startConsumerServer(fixtureRoot) {
+  const nextCli = join(
+    fixtureRoot,
+    'node_modules',
+    'next',
+    'dist',
+    'bin',
+    'next',
+  )
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const port = await availablePort()
+    const url = `http://127.0.0.1:${port}`
+    const child = spawn(
+      process.execPath,
+      [nextCli, 'start', '--hostname', '127.0.0.1', '--port', String(port)],
+      {
+        cwd: fixtureRoot,
+        env: commandEnvironment,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    )
+    activeConsumerServer = child
+    let serverOutput = ''
+    let childStartError
+    child.on('error', (error) => {
+      childStartError = error
+    })
+    child.stdout.on('data', (chunk) => {
+      serverOutput += chunk
+    })
+    child.stderr.on('data', (chunk) => {
+      serverOutput += chunk
+    })
+
+    try {
+      await waitForServer(
+        url,
+        child,
+        () => serverOutput,
+        () => childStartError,
+      )
+      return { child, url, output: () => serverOutput }
+    } catch (error) {
+      await stopProcess(child)
+      if (activeConsumerServer === child) activeConsumerServer = undefined
+      if (serverOutput.includes('EADDRINUSE') && attempt < 2) continue
+      throw error
+    }
+  }
+  throw new Error('Could not start the Next server on an available port')
 }
 
 async function extractTarball(tarball, destination) {
@@ -339,10 +480,20 @@ allowBuilds:
   )
   await writeFile(
     join(fixtureRoot, 'app', 'layout.js'),
-    `export const metadata = { title: 'PathAble package smoke' }
+    `import '@pathableai/react'
+import './overrides.css'
+
+export const metadata = { title: 'PathAble package smoke' }
 
 export default function RootLayout({ children }) {
   return <html lang="en"><body>{children}</body></html>
+}
+`,
+  )
+  await writeFile(
+    join(fixtureRoot, 'app', 'overrides.css'),
+    `:root {
+  --pathable-color-text: #123456;
 }
 `,
   )
@@ -415,6 +566,112 @@ export default function Page() {
   )
 }
 
+async function assertBrowserConsumer(fixtureRoot) {
+  const { child, url, output } = await startConsumerServer(fixtureRoot)
+
+  let browser
+  try {
+    browser = await chromium.launch({ headless: true })
+    const page = await browser.newPage()
+    const browserErrors = []
+    page.on('pageerror', (error) => browserErrors.push(error.message))
+    page.on('console', (message) => {
+      if (message.type() === 'error') browserErrors.push(message.text())
+    })
+    page.on('requestfailed', (request) => {
+      if (
+        ['document', 'script', 'stylesheet'].includes(request.resourceType())
+      ) {
+        browserErrors.push(
+          `${request.resourceType()} request failed: ${request.url()}`,
+        )
+      }
+    })
+
+    await page.goto(url, { waitUntil: 'networkidle' })
+    const header = page.locator('.pathable-dashboard-header')
+    assert.equal(
+      await header.count(),
+      1,
+      'Rendered page has no unique DashboardHeader',
+    )
+    assert.equal(
+      await header.locator('h1.pathable-dashboard-header__title').textContent(),
+      'PathAble consumer smoke',
+      'DashboardHeader title is not rendered inside its root',
+    )
+    assert.equal(
+      await header.locator('.pathable-dashboard-header__context').textContent(),
+      'Default theme fallback',
+      'DashboardHeader context is not rendered inside its root',
+    )
+    assert.equal(
+      await header
+        .locator('.pathable-dashboard-header__description')
+        .textContent(),
+      'Packed React supplies theme and structural styles.',
+      'DashboardHeader description is not rendered inside its root',
+    )
+
+    const computed = await page.evaluate(() => {
+      const root = getComputedStyle(document.documentElement)
+      const title = document.querySelector('.pathable-dashboard-header__title')
+      const header = document.querySelector('.pathable-dashboard-header')
+      if (!(title instanceof HTMLElement) || !(header instanceof HTMLElement)) {
+        throw new Error('DashboardHeader DOM is incomplete')
+      }
+      return {
+        accent: root.getPropertyValue('--pathable-color-accent').trim(),
+        spacing: root.getPropertyValue('--pathable-space-6').trim(),
+        text: root.getPropertyValue('--pathable-color-text').trim(),
+        titleColor: getComputedStyle(title).color,
+        headerDisplay: getComputedStyle(header).display,
+      }
+    })
+    assert.equal(
+      computed.accent,
+      '#1cae96',
+      'Default accent token is not applied',
+    )
+    assert.equal(
+      computed.spacing,
+      '3rem',
+      'Default spacing token is not applied',
+    )
+    assert.equal(
+      computed.text,
+      '#123456',
+      'Application token override does not follow package defaults',
+    )
+    assert.equal(
+      computed.titleColor,
+      'rgb(18, 52, 86)',
+      'DashboardHeader does not resolve the application text override',
+    )
+    assert.equal(
+      computed.headerDisplay,
+      'flex',
+      'DashboardHeader structural styles are not applied',
+    )
+    assert.deepEqual(
+      browserErrors,
+      [],
+      `Consumer browser emitted runtime errors:\n${browserErrors.join('\n')}`,
+    )
+  } catch (error) {
+    throw new Error(`${error.message}\nNext server output:\n${output()}`, {
+      cause: error,
+    })
+  } finally {
+    try {
+      await browser?.close()
+    } finally {
+      await stopProcess(child)
+      if (activeConsumerServer === child) activeConsumerServer = undefined
+    }
+  }
+}
+
 async function assertConsumer(fixtureRoot, stylesTarball) {
   const installArguments = [
     'install',
@@ -450,19 +707,38 @@ async function assertConsumer(fixtureRoot, stylesTarball) {
   )
   run('pnpm', ['build'], { cwd: fixtureRoot })
 
-  const cssRoot = join(fixtureRoot, '.next', 'static', 'css')
-  let cssFiles = []
-  try {
-    cssFiles = (await readdir(cssRoot, { recursive: true })).filter((file) =>
-      file.endsWith('.css'),
-    )
-  } catch (error) {
-    if (error?.code !== 'ENOENT') throw error
-  }
-  assert.ok(cssFiles.length > 0, 'Next build emitted no CSS assets')
+  const html = await readFile(
+    join(fixtureRoot, '.next', 'server', 'app', 'index.html'),
+    'utf8',
+  )
+  const stylesheetHrefs = [...html.matchAll(/<link\b[^>]*>/gu)]
+    .filter((match) => /\brel="stylesheet"/u.test(match[0]))
+    .map((match) => match[0].match(/\bhref="([^"]+\.css)"/u)?.[1])
+    .filter(Boolean)
+  assert.ok(stylesheetHrefs.length > 0, 'Prerendered page links no CSS assets')
+  const cssPrefix = '/_next/static/css/'
   const emittedCss = (
     await Promise.all(
-      cssFiles.map((file) => readFile(join(cssRoot, file), 'utf8')),
+      stylesheetHrefs.map(async (href) => {
+        assert.ok(
+          href.startsWith(cssPrefix),
+          `Unexpected stylesheet URL: ${href}`,
+        )
+        const asset = join(
+          fixtureRoot,
+          '.next',
+          'static',
+          'css',
+          ...href.slice(cssPrefix.length).split('/'),
+        )
+        try {
+          return await readFile(asset, 'utf8')
+        } catch (error) {
+          throw new Error(`Linked stylesheet is missing: ${href}`, {
+            cause: error,
+          })
+        }
+      }),
     )
   ).join('\n')
   assert.match(
@@ -479,11 +755,6 @@ async function assertConsumer(fixtureRoot, stylesTarball) {
     emittedCss,
     /\.pathable-dashboard-header\s*\{[^}]*display\s*:\s*flex\s*;/u,
     'Next build CSS omits concrete DashboardHeader structural styles',
-  )
-
-  const html = await readFile(
-    join(fixtureRoot, '.next', 'server', 'app', 'index.html'),
-    'utf8',
   )
 
   for (const content of [
@@ -576,6 +847,7 @@ async function assertConsumer(fixtureRoot, stylesTarball) {
       `Consumer emitted a React runtime error: ${runtimeError}`,
     )
   }
+  await assertBrowserConsumer(fixtureRoot)
 }
 
 async function main() {

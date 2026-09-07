@@ -148,4 +148,4 @@ A maintainer reviewing the theming series can confirm that each acceptance crite
 - The end-to-end test is implemented as a Storybook story or a small integration test (the two options named in the parent plan), rendering a representative existing layout (e.g., the app-shell or a page-composition pattern) rather than a bespoke fixture.
 - The vocabulary reference is derived from `defaultTheme` (itself generated from the SCSS token definitions), so its values cannot drift from the actual defaults; the reference is presented as a reviewed, human-consumable table.
 - "Identical rendering" for backward compatibility is measured by visual and structural comparison of before/after output for the no-theme path.
-- The parent plan's acceptance criteria list is the authoritative checklist that this feature closes out.
+- The parent plan's acceptance criteria list was the authoritative checklist that this historical feature closed out; its structural-only React criterion was later superseded.

@@ -13,6 +13,12 @@ separate implementation plan will break this into sequenced work items.
 > default-theme fallback loading. `ThemeProvider` overrides remain scoped inline
 > values and take precedence over the root defaults.
 
+The remaining content records the original target and is not current guidance
+where it describes a structural-only React entry point. See
+[`../theming/consumer-guide.md`](../theming/consumer-guide.md) and the
+[`@pathableai/react` README](../../packages/react/README.md) for the current
+contract.
+
 ## Motivation
 
 `@pathableai/styles` emits a comprehensive set of design tokens as CSS custom
@@ -486,8 +492,9 @@ class resolves to.
 - [ ] A consumer can import `@pathableai/styles/components` and
       `@pathableai/styles/utilities` without also importing the default theme
       tokens.
-- [ ] `@pathableai/react` no longer imports the default theme tokens via its
-      side-effect import.
+- [x] **Superseded:** `@pathableai/react@0.0.4` stopped importing default theme
+      tokens. The current entry point restores those tokens as an automatic
+      fallback before structural styles.
 - [ ] The `--pathable-color-*` declarations are consolidated into a single
       `:root` block in the compiled stylesheet.
 - [ ] All existing components render identically when no `ThemeProvider` is
