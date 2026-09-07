@@ -152,6 +152,7 @@ jobs:
               - '.github/workflows/ci-full.yml'
               - 'packages/react/**'
               - 'packages/styles/**'
+              - '.gitattributes'
               - '.npmrc'
               - 'package.json'
               - 'pnpm-lock.yaml'

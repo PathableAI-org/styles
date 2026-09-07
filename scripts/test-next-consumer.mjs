@@ -854,10 +854,14 @@ allowBuilds:
   manifest.dependencies['@pathableai/react'] = `file:${reactTarball}`
   manifest.dependencies['@pathableai/styles'] = `file:${stylesTarball}`
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
-  run('pnpm', [...installArguments, '--offline', '--no-frozen-lockfile'], {
-    cwd: fixtureRoot,
-    capture: true,
-  })
+  run(
+    'pnpm',
+    [...installArguments, '--prefer-offline', '--no-frozen-lockfile'],
+    {
+      cwd: fixtureRoot,
+      capture: true,
+    },
+  )
   console.log(
     `[next-consumer] Installed locked ${consumerFixture} fixture and packed packages`,
   )
