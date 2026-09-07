@@ -130,10 +130,10 @@ Override semantic color tokens with the typed theming API in
 `@pathableai/react` instead of redeclaring `--pathable-color-*` on `:root`.
 The canonical theming documentation lives under `docs/theming/`:
 
-- [Consumer guide](../../docs/theming/consumer-guide.md) — override with
+- [Consumer guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md) — override with
   `createTheme` + `ThemeProvider`, extend `defaultTheme`, and understand
   automatic React styles versus CSS-only imports.
-- [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
+- [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md) — every overridable
   color token with its CSS custom property, default value, and role.
 
 ## Guidance
