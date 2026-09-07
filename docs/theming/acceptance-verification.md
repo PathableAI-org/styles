@@ -1,10 +1,11 @@
 # Acceptance verification record
 
-This record closes out the 11 acceptance criteria in the parent theming plan
+This record originally closed out the 11 acceptance criteria in the parent theming plan
 ([`docs/plans/react-theming.md`](../../plans/react-theming.md), "Acceptance
 Criteria"). Each criterion is marked satisfied with an evidence pointer. The
-runtime surface was delivered by features 057 through 061; this feature (062)
-verifies and documents it rather than rebuilding it.
+runtime surface was delivered by features 057 through 061, and feature 062
+verified and documented that original surface. A later corrective change
+superseded criterion 8 as described below.
 
 > **Current contract update:** The structural-only React entry point recorded by
 > criterion 8 was superseded after downstream consumers demonstrated that React
@@ -41,8 +42,9 @@ pnpm test:storybook-react                     # FR-006/007/008/009 + a11y
 pnpm test:visual                              # FR-009: no-provider visual smoke
 ```
 
-## No new runtime surface (FR-015)
+## Original scope and corrective runtime change (FR-015)
 
-This feature changes only `docs/`, story files, and the Storybook test-runner
-config. It adds no token categories, no components, no dark-mode tokens, and
-renames or removes no component or export.
+Feature 062 changed only `docs/`, story files, and the Storybook test-runner
+config. The later corrective change restores the default-theme side-effect
+import in `@pathableai/react`; it adds no token categories, components, or
+dark-mode tokens and renames or removes no component or export.

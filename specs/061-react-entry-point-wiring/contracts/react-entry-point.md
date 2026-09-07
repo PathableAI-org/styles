@@ -6,7 +6,9 @@ Module: `@pathableai/react` → `packages/react/src/index.ts`, built by `vite bu
 > **Superseded contract:** This feature contract records the structural-only
 > entry point released in `@pathableai/react@0.0.4`. The current entry point also
 > imports `@pathableai/styles/theme` as its automatic fallback; package README
-> guidance and `scripts/test-next-consumer.mjs` define the current behavior.
+> guidance and `scripts/test-next-consumer.mjs` define the current behavior. All
+> content below this notice describes historical `0.0.4` behavior only and must
+> not be used as current implementation or consumer guidance.
 
 ## Side-effect imports (the contract this feature changes)
 

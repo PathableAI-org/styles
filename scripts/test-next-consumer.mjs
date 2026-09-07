@@ -429,9 +429,14 @@ async function assertConsumer(fixtureRoot) {
   run('pnpm', ['build'], { cwd: fixtureRoot })
 
   const cssRoot = join(fixtureRoot, '.next', 'static', 'css')
-  const cssFiles = (await readdir(cssRoot, { recursive: true })).filter(
-    (file) => file.endsWith('.css'),
-  )
+  let cssFiles = []
+  try {
+    cssFiles = (await readdir(cssRoot, { recursive: true })).filter((file) =>
+      file.endsWith('.css'),
+    )
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+  }
   assert.ok(cssFiles.length > 0, 'Next build emitted no CSS assets')
   const emittedCss = (
     await Promise.all(
