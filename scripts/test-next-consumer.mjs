@@ -206,6 +206,11 @@ async function assertReactPackage(reactRoot) {
     /import\s*['"]@pathableai\/styles\/theme['"]/u,
     'Packed React runtime does not retain the default theme fallback',
   )
+  assert.doesNotMatch(
+    runtime,
+    /import\s*['"]@pathableai\/styles['"]/u,
+    'Packed React runtime imports the root styles entry, duplicating stylesheet layers',
+  )
   const themeImportIndex = runtime.search(
     /import\s*['"]@pathableai\/styles\/theme['"]/u,
   )
