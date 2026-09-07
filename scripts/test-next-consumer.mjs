@@ -259,6 +259,14 @@ async function assertStylesAssets(stylesRoot) {
   )
   const stylesheet = join(stylesRoot, 'dist', 'styles.css')
   const css = await readFile(stylesheet, 'utf8')
+  const componentsCss = await readFile(
+    join(stylesRoot, 'dist', 'components.css'),
+    'utf8',
+  )
+  const utilitiesCss = await readFile(
+    join(stylesRoot, 'dist', 'utilities.css'),
+    'utf8',
+  )
   const urls = localCssUrls(css)
   const missing = []
 
@@ -267,6 +275,41 @@ async function assertStylesAssets(stylesRoot) {
     './dist/styles.css',
     'Packed styles manifest does not expose its public stylesheet entry',
   )
+  assert.equal(
+    manifest.exports?.['./components'],
+    './dist/components.css',
+    'Packed styles manifest does not expose its components stylesheet',
+  )
+  assert.equal(
+    manifest.exports?.['./utilities'],
+    './dist/utilities.css',
+    'Packed styles manifest does not expose its utilities stylesheet',
+  )
+  assert.match(
+    componentsCss,
+    /\.pathable-dashboard-header(?:\b|[_{,:.-])/u,
+    'Packed components stylesheet omits DashboardHeader selectors',
+  )
+  assert.match(
+    utilitiesCss,
+    /\.pathable-bg-primary(?:\b|[_{,:.-])/u,
+    'Packed utilities stylesheet omits generated utility selectors',
+  )
+  for (const [layer, layerCss] of [
+    ['components', componentsCss],
+    ['utilities', utilitiesCss],
+  ]) {
+    assert.doesNotMatch(
+      layerCss,
+      /--pathable-color-text\s*:/u,
+      `Packed ${layer} stylesheet includes default color tokens`,
+    )
+    assert.doesNotMatch(
+      layerCss,
+      /--pathable-space-6\s*:/u,
+      `Packed ${layer} stylesheet includes default spacing tokens`,
+    )
+  }
   assert.match(
     css,
     /\.pathable-activity-list(?:\b|[_{,:.-])/u,

@@ -4,6 +4,7 @@
 
 ```bash
 pnpm add @pathableai/styles @uswds/uswds
+pnpm add -D sass
 ```
 
 ## Build brand-aligned USWDS components
@@ -13,6 +14,13 @@ Load the PathAble configuration before USWDS in the same Sass entry point:
 ```scss
 @use '@pathableai/styles/src/index' as pathable;
 @use 'uswds';
+```
+
+Configure Dart Sass to resolve both installed packages and the USWDS package
+modules. For example, compile `src/app.scss` with:
+
+```bash
+pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
 ```
 
 USWDS components and utilities compiled from that entry point use the configured
@@ -45,13 +53,13 @@ The same namespaced import exposes PathAble variables for application styles:
 
 ## Verifying Brand Colors
 
-After installing, build and check:
+After compiling the entry point above, check that USWDS component selectors and
+the configured primary and secondary color values are present:
 
 ```bash
-pnpm build
-# Verify brand colors compiled correctly
-rg "blue-warm-80v" dist/styles.css    # Should show PathAble Blue
-rg "mint-cool-30v" dist/styles.css    # Should show Intelligent Jade
+rg "\\.usa-button" dist/app.css
+rg "#162e51" dist/app.css
+rg "#1dc2ae" dist/app.css
 ```
 
 ## Important Notes
@@ -59,4 +67,4 @@ rg "mint-cool-30v" dist/styles.css    # Should show Intelligent Jade
 - **No USWDS component styles** in the precompiled PathAble output. Compile USWDS after the PathAble Sass configuration when you need brand-aligned USWDS components.
 - **Future feature**: `--pathable-*` to `--uswds-*` aliasing is not available yet.
 - **Color differences**: If brand colors look slightly different from original hexes, see `research.md` for deltaE values.
-- **Upgrading USWDS**: Edit `_uswds-theme.scss` — it is the single settings file per FR-008.
+- **Upgrading USWDS**: Package maintainers update `packages/styles/src/_uswds-theme.scss`, the single settings file per FR-008; consumers should not edit installed package files.

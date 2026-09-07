@@ -11,7 +11,7 @@ Use `createTheme` to resolve a partial override into a complete theme, then
 scope it to a subtree with `ThemeProvider`:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@pathableai/react'
+import { AppShell, ThemeProvider, createTheme } from '@pathableai/react'
 
 const brand = createTheme({
   colors: { accent: '#7c3aed', actionPrimaryBg: '#7c3aed' },
@@ -82,8 +82,16 @@ cascade order harder to reason about.
 
 When upgrading from `@pathableai/react@0.0.4`, remove stylesheet imports added
 to restore that version's omitted default tokens. Global CSS token overrides
-must load after the package defaults; `ThemeProvider` is the preferred path for
-scoped overrides that are independent of stylesheet order.
+must load after the package defaults. In a Next.js App Router application,
+establish that order in the root layout before importing components from pages:
+
+```tsx
+import '@pathableai/react'
+import './globals.css' // Application-owned :root overrides.
+```
+
+`ThemeProvider` is the preferred path for scoped overrides that are independent
+of stylesheet order.
 
 The original delivery contracts behind these APIs live under `specs/`. Feature
 061's structural-only React entry-point contract is historical and superseded;

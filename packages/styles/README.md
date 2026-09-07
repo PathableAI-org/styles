@@ -87,6 +87,7 @@ configuration to USWDS components.
 
 ```bash
 pnpm add @pathableai/styles @uswds/uswds
+pnpm add -D sass
 ```
 
 **Usage with USWDS components:**
@@ -94,6 +95,13 @@ pnpm add @pathableai/styles @uswds/uswds
 ```scss
 @use '@pathableai/styles/src/index';
 @use 'uswds';
+```
+
+Configure Dart Sass to resolve both installed packages and the USWDS package
+modules. For the command-line compiler:
+
+```bash
+pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
 ```
 
 The compiled PathAble CSS does **not** include USWDS component styles. Importing
