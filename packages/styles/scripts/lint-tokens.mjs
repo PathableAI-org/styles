@@ -59,6 +59,18 @@ function escapeRegex(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+function extractBraceBlock(content, startIndex) {
+  let depth = 1
+  const depthChange = { '{': 1, '}': -1 }
+  for (const match of content.slice(startIndex).matchAll(/[{}]/g)) {
+    depth += depthChange[match[0]]
+    if (depth === 0) {
+      return content.slice(startIndex, startIndex + match.index)
+    }
+  }
+  return content.slice(startIndex, -1)
+}
+
 /**
  * Parse a flat SCSS map like:
  *   $map: (
@@ -206,17 +218,7 @@ function extractStaticTokens(content, tokens) {
   let rm
   while ((rm = rootRe.exec(content)) !== null) {
     const startIdx = rm.index + rm[0].length
-    let depth = 1
-    let endIdx = startIdx
-    while (depth > 0 && endIdx < content.length) {
-      if (content[endIdx] === '{') {
-        depth++
-      } else if (content[endIdx] === '}') {
-        depth--
-      }
-      endIdx++
-    }
-    const block = content.slice(startIdx, endIdx - 1)
+    const block = extractBraceBlock(content, startIdx)
     const propRe = /--pathable-[a-zA-Z0-9_-]+\s*:/g
     let pm
     while ((pm = propRe.exec(block)) !== null) {
@@ -387,17 +389,7 @@ function checkColorTokenConsolidation() {
     let rm
     while ((rm = rootRe.exec(content)) !== null) {
       const startIdx = rm.index + rm[0].length
-      let depth = 1
-      let endIdx = startIdx
-      while (depth > 0 && endIdx < content.length) {
-        if (content[endIdx] === '{') {
-          depth++
-        } else if (content[endIdx] === '}') {
-          depth--
-        }
-        endIdx++
-      }
-      const block = content.slice(startIdx, endIdx - 1)
+      const block = extractBraceBlock(content, startIdx)
       if (/--pathable-color-[a-z0-9-]+\s*:/.test(block)) {
         colorBlockFiles.push(file)
       }
