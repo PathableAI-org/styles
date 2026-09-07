@@ -1,7 +1,7 @@
 # Acceptance verification record
 
 This record originally closed out the 11 acceptance criteria in the parent theming plan
-([`docs/plans/react-theming.md`](../../plans/react-theming.md), "Acceptance
+([`docs/plans/react-theming.md`](../plans/react-theming.md), "Acceptance
 Criteria"). Each criterion is marked satisfied with an evidence pointer. The
 runtime surface was delivered by features 057 through 061, and feature 062
 verified and documented that original surface. A later corrective change

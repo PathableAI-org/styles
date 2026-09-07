@@ -415,7 +415,7 @@ export default function Page() {
   )
 }
 
-async function assertConsumer(fixtureRoot) {
+async function assertConsumer(fixtureRoot, stylesTarball) {
   const installArguments = [
     'install',
     '--store-dir',
@@ -436,6 +436,18 @@ async function assertConsumer(fixtureRoot) {
       cwd: fixtureRoot,
     })
   }
+  const lockfile = await readFile(join(fixtureRoot, 'pnpm-lock.yaml'), 'utf8')
+  const stylesTarballName = basename(stylesTarball)
+  assert.ok(
+    lockfile
+      .split(/\r?\n/u)
+      .some(
+        (line) =>
+          line.includes('@pathableai/styles@file:') &&
+          line.includes(stylesTarballName),
+      ),
+    'Consumer lockfile does not resolve @pathableai/styles from the packed tarball',
+  )
   run('pnpm', ['build'], { cwd: fixtureRoot })
 
   const cssRoot = join(fixtureRoot, '.next', 'static', 'css')
@@ -466,7 +478,7 @@ async function assertConsumer(fixtureRoot) {
   assert.match(
     emittedCss,
     /\.pathable-dashboard-header\s*\{[^}]*display\s*:\s*flex\s*;/u,
-    'Next build CSS omits effective DashboardHeader structural styles',
+    'Next build CSS omits concrete DashboardHeader structural styles',
   )
 
   const html = await readFile(
@@ -486,12 +498,20 @@ async function assertConsumer(fixtureRoot) {
     'Consumer unfamiliar activity',
     'Awaiting review',
     'View consumer activity',
+    'PathAble consumer smoke',
+    'Default theme fallback',
+    'Packed React supplies theme and structural styles.',
     'Skip consumer navigation',
     'Consumer dashboard',
     'Consumer settings',
   ]) {
     assert.ok(html.includes(content), `Rendered page is missing: ${content}`)
   }
+  assert.match(
+    html,
+    /class="pathable-dashboard-header"/u,
+    'Rendered page is missing the DashboardHeader root class',
+  )
   assert.match(
     html,
     /class="pathable-app-shell pathable-app-shell--shared-navigation"/u,
@@ -611,7 +631,7 @@ async function main() {
 
     const fixtureRoot = join(temporaryRoot, 'consumer')
     await writeFixture(fixtureRoot, stylesTarball, reactTarball)
-    await assertConsumer(fixtureRoot)
+    await assertConsumer(fixtureRoot, stylesTarball)
 
     console.log(
       '[next-consumer] Packed package and Next.js smoke checks passed',

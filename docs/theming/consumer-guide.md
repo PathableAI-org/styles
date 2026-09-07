@@ -75,7 +75,9 @@ export function BrandedAction() {
 
 The `@pathableai/styles` root, theme, component, and utility imports remain
 available to CSS-only consumers. Applications importing `@pathableai/react`
-should not add those imports separately because React already loads each layer.
+do not need those imports because React already loads each layer. The root entry
+also repeats theme and structural CSS, while any extra stylesheet import makes
+cascade order harder to reason about.
 
 When upgrading from `@pathableai/react@0.0.4`, remove stylesheet imports added
 to restore that version's omitted default tokens. Global CSS token overrides

@@ -40,9 +40,11 @@ export function BrandedAction() {
 
 Direct `@pathableai/styles`, `@pathableai/styles/theme`, components, and
 utilities imports remain available for applications that consume the CSS
-package without the React package. Do not import these stylesheet entries in
-addition to `@pathableai/react`; that would load the same stylesheet layers
-twice. This does not apply to the optional `@pathableai/styles/js` helper.
+package without the React package. These stylesheet imports are unnecessary in
+an application that imports `@pathableai/react`; the root entry also repeats
+theme and structural CSS, while any extra stylesheet import makes cascade order
+harder to reason about. This does not apply to the optional
+`@pathableai/styles/js` helper.
 
 When upgrading from `@pathableai/react@0.0.4`, remove any default, theme,
 component, or utility stylesheet import that was added to compensate for that

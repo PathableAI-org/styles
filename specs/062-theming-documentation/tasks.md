@@ -242,6 +242,6 @@ With multiple developers:
 - The vocabulary reference derives default values from `defaultTheme.colors` (itself generated from SCSS `$semantic-colors`), so values cannot drift.
 - `pnpm lint:tokens` already enforces the 25-key set between SCSS and TypeScript — use it as the completeness gate for the vocabulary.
 - The new story must be deterministic (fixed colors, synthetic content, no dates/randomness/network per constitution XIV) and pass axe accessibility (constitution X).
-- j sdom does not resolve CSS custom properties — the browser assertion via the Storybook test-runner (real Chromium) is required for color-resolution proof.
+- jsdom does not resolve CSS custom properties — the browser assertion via the Storybook test-runner (real Chromium) is required for color-resolution proof.
 - Commit after each logical group (story completion or phase completion).
 - Stop at any checkpoint to validate the story independently.
