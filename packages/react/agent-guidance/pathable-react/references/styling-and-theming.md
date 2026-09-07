@@ -1,23 +1,19 @@
 # Styling and theming
 
-## Choose one token strategy
+## Use the built-in fallback
 
-The React entry point loads structural component and utility styles. It does
-not load default theme tokens.
+The React entry point loads default theme tokens plus structural component and
+utility styles. Do not add a separate `@pathableai/styles` import in an
+application that imports `@pathableai/react`.
 
-- For the shipped default colors, import `@pathableai/styles` or
-  `@pathableai/styles/theme` once at the application boundary.
 - For a custom scoped theme, create it with `createTheme` and render the
   affected subtree inside `ThemeProvider`.
-- Rely on structural styles alone only when another application-owned layer
-  supplies the complete required token contract.
+- Provider values are inline custom properties, so they override the root
+  defaults while content outside the provider retains the fallback theme.
+- Import `@pathableai/styles` subpaths directly only in CSS-only consumers that
+  do not import the React package.
 
 Do not import private stylesheet paths.
-
-```tsx
-import '@pathableai/styles/theme'
-import { Button } from '@pathableai/react'
-```
 
 ```tsx
 import type { ReactNode } from 'react'

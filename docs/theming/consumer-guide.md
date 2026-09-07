@@ -45,20 +45,19 @@ This is the spread-based alternative to `createTheme`: it starts from the full
 default object and replaces only the keys you name. Both paths produce the same
 kind of complete, resolved `ThemeConfig`.
 
-## 3. Choose between the default import and the provider-driven path
+## 3. Use automatic defaults and provider overrides
 
-`@pathableai/styles` ships three stylesheet-import paths. Pick based on whether
-you want the default token layer and whether you need scoped, runtime overrides:
+Importing `@pathableai/react` automatically loads the default token layer and
+the structural component and utility styles. No separate stylesheet import is
+needed:
 
-| Path            | Import                                  | Default tokens | When to use                                        |
-| --------------- | --------------------------------------- | -------------- | -------------------------------------------------- |
-| Default         | `import '@pathableai/styles'`           | yes            | No theming; unchanged legacy behavior.             |
-| Theme subpath   | `import '@pathableai/styles/theme'`     | yes            | Explicit default-token import at the boundary.     |
-| Provider-driven | none — tokens come from `ThemeProvider` | no             | Scoped or runtime overrides with no cascade fight. |
+```tsx
+import { Button } from '@pathableai/react'
+```
 
-For the provider-driven path, import only the React package — its entry point
-already loads the structural stylesheet layers (component wrappers and
-utilities) without the default token layer:
+Use `ThemeProvider` for scoped or runtime overrides. The provider emits inline
+custom properties, so its values override the root defaults without requiring
+stylesheet ordering or hand-written CSS:
 
 ```tsx
 import { ThemeProvider, createTheme } from '@pathableai/react'
@@ -66,13 +65,9 @@ import { ThemeProvider, createTheme } from '@pathableai/react'
 const brand = createTheme({ colors: { accent: '#7c3aed' } })
 ```
 
-For the default and theme-subpath paths, import the styles package at the
-boundary alongside the React components:
-
-```tsx
-import '@pathableai/styles'
-import { Button } from '@pathableai/react'
-```
+The `@pathableai/styles` root, theme, component, and utility imports remain
+available to CSS-only consumers. Applications importing `@pathableai/react`
+should not add those imports separately because React already loads each layer.
 
 The runtime contracts behind these APIs live under `specs/`:
 

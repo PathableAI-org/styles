@@ -10,18 +10,19 @@ pnpm add @pathableai/react
 ```
 
 `@pathableai/react` declares `@pathableai/styles` as a runtime dependency and
-imports the structural stylesheet layers (component wrappers and utilities) at
-its entry point, so component styling and published fonts load automatically.
-It does **not** import the default theme token layer.
+imports the default theme tokens and structural stylesheet layers (component
+wrappers and utilities) at its entry point. Component styling, published fonts,
+and default token values load automatically.
 
-Choose one of three supported stylesheet-import paths:
+Import the React package without an additional stylesheet import:
 
-### 1. Provider-driven (ThemeProvider)
+```tsx
+import { Button } from '@pathableai/react'
+```
 
-For `ThemeProvider` consumers who supply their own tokens, import only the React
-package — no additional stylesheet import is required. Structural styles load
-automatically; default tokens are omitted so provider-supplied tokens are not
-overridden by the package.
+To customize tokens, use `ThemeProvider`. Its scoped inline custom properties
+override the root defaults, while tokens outside the provider continue to use
+the default theme:
 
 ```tsx
 import { ThemeProvider, createTheme } from '@pathableai/react'
@@ -29,32 +30,10 @@ import { ThemeProvider, createTheme } from '@pathableai/react'
 const brand = createTheme({ colors: { accent: '#7c3aed' } })
 ```
 
-### 2. Default path
-
-To retain the full default token layer, import the styles package root at the
-application boundary (unchanged from previous behavior):
-
-```tsx
-import '@pathableai/styles'
-import { Button } from '@pathableai/react'
-```
-
-### 3. Theme-subpath path
-
-To load default tokens via the theme subpath:
-
-```tsx
-import '@pathableai/styles/theme'
-import { Button } from '@pathableai/react'
-```
-
-> **Breaking change**: Consumers who previously relied on the React package's
-> implicit default-theme side-effect import — that is, who imported
-> `@pathableai/react` without any `@pathableai/styles` import and expected the
-> default theme tokens — must now add `import '@pathableai/styles'` or
-> `import '@pathableai/styles/theme'` at the application boundary to retain
-> default tokens. Importing only `@pathableai/react` now loads structural
-> styles without the default token layer.
+Direct `@pathableai/styles`, `@pathableai/styles/theme`, components, and
+utilities imports remain available for applications that consume the CSS
+package without the React package. Do not import them in addition to
+`@pathableai/react`; that would load the same stylesheet layers twice.
 
 In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset
@@ -85,8 +64,7 @@ Override colors with a typed, scoped theme instead of hand-writing CSS. The
 canonical theming documentation lives under `docs/theming/`:
 
 - [Consumer guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md)
-  — override with `createTheme` + `ThemeProvider`, extend `defaultTheme`, and
-  choose an import path.
+  — override with `createTheme` + `ThemeProvider` and extend `defaultTheme`.
 - [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md)
   — every overridable color token with its CSS custom property, default value,
   and role.
