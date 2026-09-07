@@ -47,17 +47,19 @@ Import the compiled CSS entry point to get all default styles, tokens, and utili
 @import '@pathableai/styles';
 ````
 
-For consumers who supply their own theme tokens (e.g., via a `ThemeProvider`),
-import only the component and utility layers to avoid a cascade fight with the
-package's default token declarations:
+CSS-only consumers that supply a complete set of application-owned theme tokens
+can import only the component and utility layers to avoid loading the package's
+default token declarations:
 
 ```css
 /* Component styles and utilities only — no default :root theme tokens */
 @import '@pathableai/styles/components';
 @import '@pathableai/styles/utilities';
-/* Supply your own theme tokens, or import the defaults separately: */
-@import '@pathableai/styles/theme';
+/* Define the complete application-owned token set after these imports. */
 ```
+
+React consumers should import only `@pathableai/react`, which loads these
+stylesheet layers automatically, and use `ThemeProvider` for scoped overrides.
 
 All three subpath imports resolve to the corresponding file under `dist/`:
 

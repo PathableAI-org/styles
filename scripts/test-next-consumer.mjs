@@ -177,13 +177,19 @@ async function assertReactPackage(reactRoot) {
     'utf8',
   )
   const dependencyValues = Object.values(manifest.dependencies ?? {})
+  const stylesDependency = manifest.dependencies?.['@pathableai/styles']
 
   assert.ok(
     dependencyValues.every((value) => !value.startsWith('workspace:')),
     'Packed React manifest contains a workspace protocol dependency',
   )
+  assert.match(
+    stylesDependency ?? '',
+    /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u,
+    'Packed React manifest does not declare a concrete @pathableai/styles dependency',
+  )
   console.log(
-    `[next-consumer] Packed React styles dependency: ${manifest.dependencies['@pathableai/styles']}`,
+    `[next-consumer] Packed React styles dependency: ${stylesDependency}`,
   )
   assert.match(
     runtime,
@@ -301,7 +307,6 @@ async function writeFixture(fixtureRoot, stylesTarball, reactTarball) {
         scripts: { build: 'next build', start: 'next start' },
         dependencies: {
           '@pathableai/react': `file:${reactTarball}`,
-          '@pathableai/styles': `file:${stylesTarball}`,
           next: '15.5.22',
           react: '18.3.1',
           'react-dom': '18.3.1',
@@ -333,7 +338,7 @@ export default function RootLayout({ children }) {
   )
   await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
-    `import { ActivityList, AppShell, AppShellNavItem, Card, Link, List, Loading, Tag } from '@pathableai/react'
+    `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, Link, List, Loading, Tag } from '@pathableai/react'
 
 export default function Page() {
   return (
@@ -354,7 +359,11 @@ export default function Page() {
       skipLinkText="Skip consumer navigation"
       topBarTitle="Consumer shell"
     >
-      <h1>PathAble consumer smoke</h1>
+      <DashboardHeader
+        title="PathAble consumer smoke"
+        context="Default theme fallback"
+        description="Packed React supplies theme and structural styles."
+      />
       <Card title="Consumer card">Server-rendered card content</Card>
       <Link href="/details">Consumer link</Link>
       <List items={['Consumer list item one', 'Consumer list item two']} />
@@ -418,6 +427,32 @@ async function assertConsumer(fixtureRoot) {
     })
   }
   run('pnpm', ['build'], { cwd: fixtureRoot })
+
+  const cssRoot = join(fixtureRoot, '.next', 'static', 'css')
+  const cssFiles = (await readdir(cssRoot, { recursive: true })).filter(
+    (file) => file.endsWith('.css'),
+  )
+  assert.ok(cssFiles.length > 0, 'Next build emitted no CSS assets')
+  const emittedCss = (
+    await Promise.all(
+      cssFiles.map((file) => readFile(join(cssRoot, file), 'utf8')),
+    )
+  ).join('\n')
+  assert.match(
+    emittedCss,
+    /--pathable-color-text\s*:/u,
+    'Next build CSS omits default PathAble color tokens',
+  )
+  assert.match(
+    emittedCss,
+    /--pathable-space-6\s*:/u,
+    'Next build CSS omits default PathAble spacing tokens',
+  )
+  assert.match(
+    emittedCss,
+    /\.pathable-dashboard-header(?:[,{\s])/u,
+    'Next build CSS omits DashboardHeader structural styles',
+  )
 
   const html = await readFile(
     join(fixtureRoot, '.next', 'server', 'app', 'index.html'),

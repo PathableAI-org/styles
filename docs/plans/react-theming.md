@@ -8,6 +8,11 @@ existing architecture of `@pathableai/styles`. It defines what we will build, th
 design principles that govern it, and the interfaces consumers will use. A
 separate implementation plan will break this into sequenced work items.
 
+> **Historical plan:** The structural-only React entry-point target in this plan
+> was implemented in `@pathableai/react@0.0.4` and later superseded by automatic
+> default-theme fallback loading. `ThemeProvider` overrides remain scoped inline
+> values and take precedence over the root defaults.
+
 ## Motivation
 
 `@pathableai/styles` emits a comprehensive set of design tokens as CSS custom

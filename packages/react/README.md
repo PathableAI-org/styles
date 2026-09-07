@@ -44,6 +44,12 @@ package without the React package. Do not import these stylesheet entries in
 addition to `@pathableai/react`; that would load the same stylesheet layers
 twice. This does not apply to the optional `@pathableai/styles/js` helper.
 
+When upgrading from `@pathableai/react@0.0.4`, remove any default, theme,
+component, or utility stylesheet import that was added to compensate for that
+version's structural-only entry point. Applications that supply global token
+overrides in CSS must load them after the package defaults; prefer
+`ThemeProvider` for scoped overrides that do not depend on stylesheet order.
+
 In a Next.js App Router application, import components normally from a page or
 layout. Do not import a private `dist` stylesheet path or add a webpack asset
 workaround.

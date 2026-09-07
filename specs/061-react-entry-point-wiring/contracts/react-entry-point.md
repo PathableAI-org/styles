@@ -3,6 +3,11 @@
 Module: `@pathableai/react` → `packages/react/src/index.ts`, built by `vite build` into
 `dist/index.js` and typed by `dist/index.d.ts`.
 
+> **Superseded contract:** This feature contract records the structural-only
+> entry point released in `@pathableai/react@0.0.4`. The current entry point also
+> imports `@pathableai/styles/theme` as its automatic fallback; package README
+> guidance and `scripts/test-next-consumer.mjs` define the current behavior.
+
 ## Side-effect imports (the contract this feature changes)
 
 The package's public entry point performs exactly these stylesheet side-effect imports:

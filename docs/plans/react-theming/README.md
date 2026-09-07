@@ -5,6 +5,13 @@ defined in [`../react-theming.md`](../react-theming.md). It is a high-level
 sequence of phases, ordered by dependency and risk. A separate implementation
 plan will break each phase into concrete, testable work items.
 
+> **Historical plan:** The structural-only React entry point described below was
+> implemented in `@pathableai/react@0.0.4` and later superseded. The current
+> package loads default theme tokens automatically, while `ThemeProvider` inline
+> values override those root defaults.
+
+The remaining content is retained as the implementation history.
+
 > **Source of truth:** the target API and design principles live in
 > [`../react-theming.md`](../react-theming.md). This README only describes _how_
 > we get there.

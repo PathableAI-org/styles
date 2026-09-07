@@ -77,7 +77,14 @@ The `@pathableai/styles` root, theme, component, and utility imports remain
 available to CSS-only consumers. Applications importing `@pathableai/react`
 should not add those imports separately because React already loads each layer.
 
-The runtime contracts behind these APIs live under `specs/`:
+When upgrading from `@pathableai/react@0.0.4`, remove stylesheet imports added
+to restore that version's omitted default tokens. Global CSS token overrides
+must load after the package defaults; `ThemeProvider` is the preferred path for
+scoped overrides that are independent of stylesheet order.
+
+The original delivery contracts behind these APIs live under `specs/`. Feature
+061's structural-only React entry-point contract is historical and superseded;
+its independent stylesheet-subpath contract remains current:
 
 - `createTheme` / `defaultTheme`: `specs/059-default-theme-create-theme/contracts/`
 - `ThemeProvider`: `specs/060-theme-provider/contracts/theme-provider.md`
