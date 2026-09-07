@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process'
 import {
   mkdtemp,
   readFile,
+  realpath,
   rm,
   writeFile,
   mkdir,
@@ -11,6 +12,7 @@ import {
 import {
   basename,
   dirname,
+  extname,
   join,
   normalize,
   relative,
@@ -28,14 +30,20 @@ const commandEnvironment = {
   NEXT_TELEMETRY_DISABLED: '1',
 }
 
+const javaScriptEntrypoints = new Set(['.js', '.cjs', '.mjs'])
+
 function run(command, args, options = {}) {
   const pnpmCli = command === 'pnpm' ? process.env.npm_execpath : undefined
+  const pnpmCliIsJavaScript =
+    pnpmCli !== undefined && javaScriptEntrypoints.has(extname(pnpmCli))
   const executable = pnpmCli
-    ? process.execPath
+    ? pnpmCliIsJavaScript
+      ? process.execPath
+      : pnpmCli
     : process.platform === 'win32' && command === 'pnpm'
       ? 'pnpm.cmd'
       : command
-  const commandArguments = pnpmCli ? [pnpmCli, ...args] : args
+  const commandArguments = pnpmCliIsJavaScript ? [pnpmCli, ...args] : args
   const result = spawnSync(executable, commandArguments, {
     cwd: options.cwd ?? repoRoot,
     encoding: 'utf8',
@@ -268,6 +276,9 @@ async function assertReactPackage(reactRoot) {
 
 async function writeFixture(fixtureRoot, stylesTarball, reactTarball) {
   await mkdir(join(fixtureRoot, 'app'), { recursive: true })
+  const uswdsDirectory = await realpath(
+    join(repoRoot, 'packages/styles/node_modules/@uswds/uswds'),
+  )
   await writeFile(
     join(fixtureRoot, 'package.json'),
     `${JSON.stringify(
@@ -291,10 +302,7 @@ async function writeFixture(fixtureRoot, stylesTarball, reactTarball) {
     `packages: []
 overrides:
   '@pathableai/styles': 'file:${stylesTarball}'
-  '@uswds/uswds': 'file:${join(
-    repoRoot,
-    'packages/styles/node_modules/@uswds/uswds',
-  )}'
+  '@uswds/uswds': 'file:${uswdsDirectory}'
 allowBuilds:
   '@swc/core': true
   sharp: true
