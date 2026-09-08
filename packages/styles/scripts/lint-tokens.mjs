@@ -68,7 +68,7 @@ function extractBraceBlock(content, startIndex) {
       return content.slice(startIndex, startIndex + match.index)
     }
   }
-  return content.slice(startIndex, -1)
+  return content.slice(startIndex)
 }
 
 /**
@@ -210,11 +210,11 @@ function parseNestedMapValues(content, mapName) {
 // ---------------------------------------------------------------------------
 
 /**
- * Extract static --pathable-* tokens from :root { ... } blocks.
+ * Extract static --pathable-* tokens from :root and :where(:root) blocks.
  * Uses brace counting to handle nested interpolations like #{...}.
  */
 function extractStaticTokens(content, tokens) {
-  const rootRe = /:root\s*\{/g
+  const rootRe = /(?::where\(\s*:root\s*\)|:root)\s*\{/g
   let rm
   while ((rm = rootRe.exec(content)) !== null) {
     const startIdx = rm.index + rm[0].length
