@@ -37,15 +37,16 @@ This package is the implementation source for PathAble visual design foundations
 
 Install the package:
 
-````bash
+```bash
 pnpm add @pathableai/styles
+```
 
 Import the compiled CSS entry point to get all default styles, tokens, and utilities:
 
 ```css
 /* Full import — components, utilities, and default theme tokens */
 @import '@pathableai/styles';
-````
+```
 
 CSS-only consumers that supply a complete application-owned theme can import
 only the component and utility layers without loading the default tokens:
@@ -61,8 +62,8 @@ React consumers should import only `@pathableai/react`, which loads the default
 theme, component, and utility layers automatically. Use `ThemeProvider` for
 scoped runtime overrides.
 
-The root and three subpath imports resolve to the corresponding file under
-`dist/`:
+The root import and all three subpath imports resolve to corresponding files
+under `dist/`:
 
 | Import                          | Resolves to              |
 | ------------------------------- | ------------------------ |
@@ -73,39 +74,57 @@ The root and three subpath imports resolve to the corresponding file under
 
 ### SCSS (`@use`)
 
-```scss
-@use '@pathableai/styles';
+Install Dart Sass and USWDS, then use the published source subpath with a stable
+namespace:
+
+```bash
+pnpm add @pathableai/styles @uswds/uswds
+pnpm add -D sass
 ```
+
+```scss
+@use '@pathableai/styles/src/index' as pathable;
+```
+
+When using the command-line compiler, include the package and USWDS module load
+paths shown below. The source entry emits font URLs relative to the compiled CSS;
+ensure your bundler copies those assets, or use the copy command below.
 
 ### USWDS Integration
 
-This package wraps USWDS v3.x theme color tokens to match PathAble brand colors. When using USWDS components alongside `@pathableai/styles`, USWDS components automatically render with brand-aligned colors.
+This package configures USWDS v3.x theme tokens to match PathAble brand colors.
+Compile the PathAble source before USWDS in the same Sass build to apply that
+configuration to USWDS components.
 
 **Installation with USWDS:**
 
 ```bash
 pnpm add @pathableai/styles @uswds/uswds
+pnpm add -D sass
 ```
 
 **Usage with USWDS components:**
 
 ```scss
-// Import USWDS component styles separately (e.g., usa-button)
+@use '@pathableai/styles/src/index' as pathable;
 @use 'uswds';
-
-// @pathableai/styles provides the theme token configuration
-// that makes USWDS components render with PathAble brand colors
 ```
 
-```css
-/* When using compiled CSS, import both: */
-/* @import '@pathableai/styles/dist/styles.css'; */
-/* @import '@uswds/uswds/dist/css/uswds.css'; */
+Configure Dart Sass to resolve both installed packages and the USWDS package
+modules. For the command-line compiler:
+
+```bash
+pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
+node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
 ```
 
-The compiled `dist/styles.css` includes USWDS theme token configuration but **not** USWDS component styles. Consumers who need USWDS components must add USWDS as their own dependency and import components separately.
+The compiled PathAble CSS does **not** include USWDS component styles. Importing
+the stock precompiled USWDS CSS adds stock components; it does not apply the
+PathAble Sass configuration. Use the combined Sass build above for brand-aligned
+USWDS components.
 
-For detailed setup instructions, see [quickstart.md](specs/003-wrap-uswds-theme/quickstart.md).
+For detailed setup instructions, see the
+[USWDS theme quickstart](https://github.com/PathableAI-org/styles/blob/main/specs/003-wrap-uswds-theme/quickstart.md).
 
 ### Token Usage
 
@@ -126,17 +145,17 @@ Override semantic color tokens with the typed theming API in
 consumers can also define an application-wide theme with `:root` declarations.
 The canonical theming documentation lives under `docs/theming/`:
 
-- [Consumer guide](../../docs/theming/consumer-guide.md) — override with
-  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and choose an import
-  path.
-- [Token vocabulary](../../docs/theming/token-vocabulary.md) — every overridable
+- [Consumer guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md) — override with
+  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and understand
+  automatic React styles versus CSS-only imports.
+- [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md) — every overridable
   color token with its CSS custom property, default value, and role.
 
 ## Guidance
 
 See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
-See STORY_AUTHORING.md for the story authoring checklist and PR requirements.
+See the [story authoring guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/STORY_AUTHORING.md) for its checklist and PR requirements.
 Applications SHOULD consume semantic tokens like --pathable-color-text instead of directly using brand colors like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
 
