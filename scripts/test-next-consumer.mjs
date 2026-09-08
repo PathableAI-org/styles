@@ -118,6 +118,10 @@ async function assertStylesAssets(stylesRoot) {
   )
   const stylesheet = join(stylesRoot, 'dist', 'styles.css')
   const css = await readFile(stylesheet, 'utf8')
+  const themeCss = await readFile(
+    join(stylesRoot, 'dist', 'theme-default.css'),
+    'utf8',
+  )
   const urls = localCssUrls(css)
   const missing = []
 
@@ -125,6 +129,16 @@ async function assertStylesAssets(stylesRoot) {
     manifest.exports?.['.'],
     './dist/styles.css',
     'Packed styles manifest does not expose its public stylesheet entry',
+  )
+  assert.equal(
+    manifest.exports?.['./theme'],
+    './dist/theme-default.css',
+    'Packed styles manifest does not expose its theme stylesheet',
+  )
+  assert.match(
+    themeCss,
+    /:where\(:root\)\s*\{[^}]*--pathable-color-bg\s*:/u,
+    'Packed theme does not emit low-specificity default color tokens',
   )
   assert.match(
     css,
@@ -195,10 +209,29 @@ async function assertReactPackage(reactRoot) {
     /import\s*['"]@pathableai\/styles\/utilities['"]/u,
     'Packed React runtime does not retain the utilities styles import',
   )
+  assert.match(
+    runtime,
+    /import\s*['"]@pathableai\/styles\/theme['"]/u,
+    'Packed React runtime does not retain the default theme fallback',
+  )
   assert.doesNotMatch(
     runtime,
     /import\s*['"]@pathableai\/styles['"]/u,
-    'Packed React runtime imports the root styles entry, reapplying default tokens',
+    'Packed React runtime imports the root styles entry, duplicating stylesheet layers',
+  )
+  const themeImportIndex = runtime.search(
+    /import\s*['"]@pathableai\/styles\/theme['"]/u,
+  )
+  const componentsImportIndex = runtime.search(
+    /import\s*['"]@pathableai\/styles\/components['"]/u,
+  )
+  const utilitiesImportIndex = runtime.search(
+    /import\s*['"]@pathableai\/styles\/utilities['"]/u,
+  )
+  assert.ok(
+    themeImportIndex < componentsImportIndex &&
+      themeImportIndex < utilitiesImportIndex,
+    'Packed React runtime does not load the default theme before structural styles',
   )
   assert.match(
     runtime,

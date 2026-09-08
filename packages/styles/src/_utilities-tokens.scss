@@ -13,7 +13,7 @@
 @use 'sass:map';
 @use '_utilities-config' as uc;
 
-:root {
+:where(:root) {
   @each $module-name, $module in uc.$pathable-utilities {
     @each $val-name, $val in map.get($module, 'values') {
       --pathable-#{$module-name}-#{$val-name}: #{$val};

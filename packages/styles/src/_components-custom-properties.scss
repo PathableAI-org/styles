@@ -4,7 +4,7 @@
 
 @use 'uswds-core' as *;
 
-:root {
+:where(:root) {
   // --- Button component tokens ---
   --pathable-button-border-radius: #{radius($theme-button-border-radius)};
   --pathable-button-padding-x: #{units(2.5)};

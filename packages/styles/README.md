@@ -47,19 +47,22 @@ Import the compiled CSS entry point to get all default styles, tokens, and utili
 @import '@pathableai/styles';
 ````
 
-For consumers who supply their own theme tokens (e.g., via a `ThemeProvider`),
-import only the component and utility layers to avoid a cascade fight with the
-package's default token declarations:
+CSS-only consumers that supply a complete application-owned theme can import
+only the component and utility layers without loading the default tokens:
 
 ```css
 /* Component styles and utilities only — no default :root theme tokens */
 @import '@pathableai/styles/components';
 @import '@pathableai/styles/utilities';
-/* Supply your own theme tokens, or import the defaults separately: */
-@import '@pathableai/styles/theme';
+/* Define the complete application-owned token set separately. */
 ```
 
-All three subpath imports resolve to the corresponding file under `dist/`:
+React consumers should import only `@pathableai/react`, which loads the default
+theme, component, and utility layers automatically. Use `ThemeProvider` for
+scoped runtime overrides.
+
+The root and three subpath imports resolve to the corresponding file under
+`dist/`:
 
 | Import                          | Resolves to              |
 | ------------------------------- | ------------------------ |
@@ -119,7 +122,8 @@ Use exported tokens instead of hardcoded colors or font names whenever possible.
 ## Theming
 
 Override semantic color tokens with the typed theming API in
-`@pathableai/react` instead of redeclaring `--pathable-color-*` on `:root`.
+`@pathableai/react`. Package defaults use zero selector specificity, so CSS-only
+consumers can also define an application-wide theme with `:root` declarations.
 The canonical theming documentation lives under `docs/theming/`:
 
 - [Consumer guide](../../docs/theming/consumer-guide.md) — override with

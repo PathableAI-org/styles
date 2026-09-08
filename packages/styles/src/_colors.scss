@@ -68,7 +68,7 @@ $brand-uswds-color-mappings: (
   ),
 );
 
-:root {
+:where(:root) {
   --pathable-brand-pathable-blue: #{$pathable-brand-pathable-blue};
   --pathable-brand-intelligent-jade: #{$pathable-brand-intelligent-jade};
   --pathable-brand-bright-blue-brooks: #{$pathable-brand-bright-blue-brooks};

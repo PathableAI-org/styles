@@ -1,23 +1,21 @@
 # Styling and theming
 
-## Choose one token strategy
+## Use the built-in fallback
 
-The React entry point loads structural component and utility styles. It does
-not load default theme tokens.
+The React entry point loads default theme tokens plus structural component and
+utility styles. Do not add a separate `@pathableai/styles` stylesheet import in
+an application that imports `@pathableai/react`.
 
-- For the shipped default colors, import `@pathableai/styles` or
-  `@pathableai/styles/theme` once at the application boundary.
 - For a custom scoped theme, create it with `createTheme` and render the
   affected subtree inside `ThemeProvider`.
-- Rely on structural styles alone only when another application-owned layer
-  supplies the complete required token contract.
+- Provider values are inline custom properties, so they override the root
+  defaults while content outside the provider retains the fallback theme.
+- Package defaults use zero selector specificity, so application-owned `:root`
+  token declarations also override them regardless of stylesheet order.
+- Import `@pathableai/styles` subpaths directly only in CSS-only consumers that
+  do not import the React package.
 
 Do not import private stylesheet paths.
-
-```tsx
-import '@pathableai/styles/theme'
-import { Button } from '@pathableai/react'
-```
 
 ```tsx
 import type { ReactNode } from 'react'
@@ -35,8 +33,9 @@ export function BrandedArea({ children }: { children: ReactNode }) {
 - Prefer component props for tone, surface, border, elevation, width, spacing,
   and layout when the installed type exposes them.
 - Use semantic theme keys such as `accent`, `surface`, and `textMuted`. Do not
-  invent visual aliases such as `prettyBlue` or redeclare the package's
-  `--pathable-color-*` variables on `:root`.
+  invent visual aliases such as `prettyBlue`. Declare `--pathable-color-*`
+  variables on `:root` only for an intentional application-wide theme;
+  otherwise use `ThemeProvider` for scoped overrides.
 - Do not hardcode brand colors or typography when an existing semantic token
   expresses the intent.
 - Preserve accessible contrast when customizing a theme. Generated color sets

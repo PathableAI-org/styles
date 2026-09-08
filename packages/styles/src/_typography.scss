@@ -69,7 +69,7 @@ $typography-scale: (
   ),
 );
 
-:root {
+:where(:root) {
   --pathable-font-heading: #{$pathable-font-heading};
   --pathable-font-alternate-heading: #{$pathable-font-alternate-heading};
   --pathable-font-subheading: #{$pathable-font-subheading};
@@ -89,7 +89,7 @@ $ui-label-md: 14px;
 $ui-label-sm: 12px;
 $ui-caption-md: 12px;
 
-:root {
+:where(:root) {
   --ui-display-lg: #{$ui-display-lg};
   --ui-heading-lg: #{$ui-heading-lg};
   --ui-heading-md: #{$ui-heading-md};
@@ -130,7 +130,7 @@ $typography-tokens: (
   'font-line-height-caption-md': 1.33,
 );
 
-:root {
+:where(:root) {
   @each $name, $value in $typography-tokens {
     --pathable-#{$name}: #{$value};
     --usa-#{$name}: #{$value};

@@ -75,7 +75,7 @@ $semantic-colors: (
   'on-accent': #001a33,
 );
 
-:root {
+:where(:root) {
   --pathable-color-bg: #{$pathable-color-bg};
   --pathable-color-surface: #{$pathable-color-surface};
   --pathable-color-text: #{$pathable-color-text};
