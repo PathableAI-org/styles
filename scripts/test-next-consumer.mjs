@@ -225,6 +225,7 @@ async function startConsumerServer(fixtureRoot) {
         cwd: fixtureRoot,
         env: commandEnvironment,
         stdio: ['ignore', 'pipe', 'pipe'],
+        windowsHide: true,
       },
     )
     activeConsumerServer = child

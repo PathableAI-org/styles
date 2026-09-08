@@ -19,11 +19,16 @@ runs:
         node-version: 24
         cache: pnpm
 
+    - name: Configure Playwright browser path
+      if: inputs.install_playwright == 'true'
+      shell: bash
+      run: echo "PLAYWRIGHT_BROWSERS_PATH=${RUNNER_TEMP}/ms-playwright" >> "$GITHUB_ENV"
+
     - name: Cache Playwright browsers
       if: inputs.install_playwright == 'true'
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
-        path: ~/.cache/ms-playwright
+        path: ${{ runner.temp }}/ms-playwright
         key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
         restore-keys: |
           playwright-${{ runner.os }}-
