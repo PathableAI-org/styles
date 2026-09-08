@@ -33,6 +33,11 @@ runs:
       run: pnpm install --frozen-lockfile
 
     - name: Install Playwright browsers
-      if: inputs.install_playwright == 'true'
+      if: inputs.install_playwright == 'true' && runner.os == 'Linux'
       shell: bash
       run: pnpm exec playwright install --with-deps chromium
+
+    - name: Install Playwright browser
+      if: inputs.install_playwright == 'true' && runner.os != 'Linux'
+      shell: bash
+      run: pnpm exec playwright install chromium

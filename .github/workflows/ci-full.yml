@@ -144,10 +144,17 @@ jobs:
               - 'pnpm-lock.yaml'
             next_consumer:
               - 'scripts/test-next-consumer.mjs'
+              - 'scripts/check-agent-guidance.mjs'
+              - 'scripts/fixtures/next-consumer/**'
+              - '.github/actions/setup/**'
+              - '.github/workflows/ci-full.yml'
               - 'packages/react/**'
               - 'packages/styles/**'
+              - '.gitattributes'
+              - '.npmrc'
               - 'package.json'
               - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
             storybook:
               - 'apps/storybook/**'
               - 'apps/storybook-react/**'
@@ -310,11 +317,29 @@ jobs:
   next-consumer:
     needs: changes
     if: needs.changes.outputs.next_consumer == 'true'
-    name: Packed Next.js consumer
-    runs-on: ubuntu-latest
+    name: Packed consumer (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: next15-react18-linux
+            os: ubuntu-latest
+            fixture: next15-react18
+          - label: next16-react19-linux
+            os: ubuntu-latest
+            fixture: next16-react19
+          - label: next16-react19-windows
+            os: windows-latest
+            fixture: next16-react19
+    env:
+      NEXT_CONSUMER_FIXTURE: ${{ matrix.fixture }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+        with:
+          install_playwright: 'true'
       - name: Validate packed Next.js consumer
         run: pnpm test:next-consumer
 
