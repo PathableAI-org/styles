@@ -896,6 +896,7 @@ allowBuilds:
   )
   const lockfile = await readFile(join(fixtureRoot, 'pnpm-lock.yaml'), 'utf8')
   const stylesTarballName = basename(stylesTarball)
+  const reactTarballName = basename(reactTarball)
   assert.ok(
     lockfile
       .split(/\r?\n/u)
@@ -905,6 +906,16 @@ allowBuilds:
           line.includes(stylesTarballName),
       ),
     'Consumer lockfile does not resolve @pathableai/styles from the packed tarball',
+  )
+  assert.ok(
+    lockfile
+      .split(/\r?\n/u)
+      .some(
+        (line) =>
+          line.includes('@pathableai/react@file:') &&
+          line.includes(reactTarballName),
+      ),
+    'Consumer lockfile does not resolve @pathableai/react from the packed tarball',
   )
   run('pnpm', ['build'], { cwd: fixtureRoot })
 
