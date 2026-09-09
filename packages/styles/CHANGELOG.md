@@ -1,5 +1,12 @@
 # @pathableai/styles
 
+## 0.0.4
+
+### Patch Changes
+
+- a9830f4: Emit default tokens with zero selector specificity so application-owned `:root` declarations win regardless of stylesheet order. Also clarify the packaged README's React and CSS-only guidance.
+- ba07c56: Correct the published Sass and USWDS setup guidance, including the source namespace, compiler load paths, and font asset copying.
+
 ## 0.0.3
 
 ### Patch Changes
