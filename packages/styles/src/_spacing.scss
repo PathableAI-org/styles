@@ -20,7 +20,7 @@ $pathable-spacing-scale: (
   8: 4rem,
 );
 
-:root {
+:where(:root) {
   --space-4: 4px;
   --space-8: 8px;
   --space-12: 12px;

@@ -1,8 +1,9 @@
 # Theming consumer guide
 
-This guide covers the three ways to customize colors in `@pathableai/react`.
-It assumes the runtime API already exists; the full list of overridable tokens
-is in the [token vocabulary reference](./token-vocabulary.md).
+This guide covers two ways to customize colors in `@pathableai/react` and
+explains how its automatic styles interact with those overrides. It assumes the
+runtime API already exists; the full list of overridable tokens is in the
+[token vocabulary reference](./token-vocabulary.md).
 
 ## 1. Override a few colors with `createTheme` + `ThemeProvider`
 
@@ -10,7 +11,7 @@ Use `createTheme` to resolve a partial override into a complete theme, then
 scope it to a subtree with `ThemeProvider`:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@pathableai/react'
+import { AppShell, ThemeProvider, createTheme } from '@pathableai/react'
 
 const brand = createTheme({
   colors: { accent: '#7c3aed', actionPrimaryBg: '#7c3aed' },
@@ -45,36 +46,55 @@ This is the spread-based alternative to `createTheme`: it starts from the full
 default object and replaces only the keys you name. Both paths produce the same
 kind of complete, resolved `ThemeConfig`.
 
-## 3. Choose between the default import and the provider-driven path
+## 3. Use automatic defaults and provider overrides
 
-`@pathableai/styles` ships three stylesheet-import paths. Pick based on whether
-you want the default token layer and whether you need scoped, runtime overrides:
-
-| Path            | Import                                  | Default tokens | When to use                                        |
-| --------------- | --------------------------------------- | -------------- | -------------------------------------------------- |
-| Default         | `import '@pathableai/styles'`           | yes            | No theming; unchanged legacy behavior.             |
-| Theme subpath   | `import '@pathableai/styles/theme'`     | yes            | Explicit default-token import at the boundary.     |
-| Provider-driven | none — tokens come from `ThemeProvider` | no             | Scoped or runtime overrides with no cascade fight. |
-
-For the provider-driven path, import only the React package — its entry point
-already loads the structural stylesheet layers (component wrappers and
-utilities) without the default token layer:
+Importing `@pathableai/react` automatically loads the default token layer and
+the structural component and utility styles. No separate stylesheet import is
+needed:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@pathableai/react'
-
-const brand = createTheme({ colors: { accent: '#7c3aed' } })
-```
-
-For the default and theme-subpath paths, import the styles package at the
-boundary alongside the React components:
-
-```tsx
-import '@pathableai/styles'
 import { Button } from '@pathableai/react'
 ```
 
-The runtime contracts behind these APIs live under `specs/`:
+Use `ThemeProvider` for scoped or runtime overrides. The provider emits inline
+custom properties, so its values override the root defaults without requiring
+stylesheet ordering or hand-written CSS:
+
+```tsx
+import { Button, ThemeProvider, createTheme } from '@pathableai/react'
+
+const brand = createTheme({ colors: { accent: '#7c3aed' } })
+
+export function BrandedAction() {
+  return (
+    <ThemeProvider theme={brand}>
+      <Button>Continue</Button>
+    </ThemeProvider>
+  )
+}
+```
+
+The `@pathableai/styles` root, theme, component, and utility imports remain
+available to CSS-only consumers. Applications importing `@pathableai/react`
+do not need those imports because React already loads each layer. The root entry
+also repeats theme and structural CSS, while any extra stylesheet import makes
+cascade order harder to reason about.
+
+When upgrading from `@pathableai/react@0.0.4`, remove stylesheet imports added
+to restore that version's omitted default tokens. Package defaults use zero
+selector specificity, so conventional application-owned `:root` declarations
+override them regardless of stylesheet order:
+
+```tsx
+import './globals.css' // Application-owned :root overrides.
+import '@pathableai/react'
+```
+
+`ThemeProvider` is the preferred path for scoped runtime overrides.
+
+The original delivery contracts behind these APIs live under `specs/`. Feature
+061's structural-only React entry-point contract is historical and superseded;
+its independent stylesheet-subpath contract remains current:
 
 - `createTheme` / `defaultTheme`: `specs/059-default-theme-create-theme/contracts/`
 - `ThemeProvider`: `specs/060-theme-provider/contracts/theme-provider.md`

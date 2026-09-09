@@ -1,8 +1,8 @@
 // Entry point for @pathableai/react
 
-// Import only the structural style layers (component wrappers + utilities),
-// not the default theme token layer. Consumers who want default tokens import
-// '@pathableai/styles' or '@pathableai/styles/theme' at the application boundary.
+// Load low-specificity default tokens before structural styles. Application
+// :root declarations and inline ThemeProvider values override these defaults.
+import '@pathableai/styles/theme'
 import '@pathableai/styles/components'
 import '@pathableai/styles/utilities'
 
