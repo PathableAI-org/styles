@@ -90,6 +90,13 @@ const renderGapRow = (gap: 'sm' | 'md' | 'lg' | 'xl') => `
   </div>
 `
 
+const renderGapOverrideRow = (name: string, className: string) => `
+  <div class="${className}" data-testid="gap-${name}">
+    <div class="pathable-form-group"><label class="pathable-label" for="gap-${name}-first">First field</label><input class="pathable-input" id="gap-${name}-first" name="gap-${name}-first" /></div>
+    <div class="pathable-form-group"><label class="pathable-label" for="gap-${name}-second">Second field</label><input class="pathable-input" id="gap-${name}-second" name="gap-${name}-second" /></div>
+  </div>
+`
+
 export default {
   title: 'Components/Form Controls/Form Row',
   tags: ['autodocs'],
@@ -346,6 +353,7 @@ export const InPathableForm = {
 export const GapSizes = {
   globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
+    <style>.form-row-custom-gap { --pathable-form-row-gap: 14px; }</style>
     <form aria-label="Form row gap sizes">
       ${renderGapRow('sm')}
       ${renderGapRow('md')}
@@ -355,6 +363,13 @@ export const GapSizes = {
         <div class="pathable-form-group"><label class="pathable-label" for="gap-custom-first">First custom field</label><input class="pathable-input" id="gap-custom-first" name="gap-custom-first" /></div>
         <div class="pathable-form-group"><label class="pathable-label" for="gap-custom-second">Second custom field</label><input class="pathable-input" id="gap-custom-second" name="gap-custom-second" /></div>
       </div>
+      <div style="--pathable-form-row-gap: 13px;">
+        ${renderGapOverrideRow('inherited', 'pathable-form-row')}
+      </div>
+      ${renderGapOverrideRow(
+        'class-override',
+        'pathable-form-row pathable-form-row--gap-sm form-row-custom-gap',
+      )}
     </form>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -373,6 +388,13 @@ export const GapSizes = {
     await expect(
       window.getComputedStyle(canvas.getByTestId('gap-custom')).columnGap,
     ).toBe('12px')
+    await expect(
+      window.getComputedStyle(canvas.getByTestId('gap-inherited')).columnGap,
+    ).toBe('13px')
+    await expect(
+      window.getComputedStyle(canvas.getByTestId('gap-class-override'))
+        .columnGap,
+    ).toBe('14px')
   },
 }
 

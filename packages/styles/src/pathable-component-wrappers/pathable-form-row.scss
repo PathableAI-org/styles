@@ -13,25 +13,23 @@
 //        --gap-lg (var(--space-16)), --gap-xl (var(--space-24))
 
 .pathable-form-row {
-  --pathable-form-row-gap: var(--space-8);
-
   display: grid;
-  gap: var(--pathable-form-row-gap);
+  gap: var(--pathable-form-row-gap, var(--space-8));
 }
 
-.pathable-form-row.pathable-form-row--gap-sm {
+.pathable-form-row--gap-sm {
   --pathable-form-row-gap: var(--space-4);
 }
 
-.pathable-form-row.pathable-form-row--gap-md {
+.pathable-form-row--gap-md {
   --pathable-form-row-gap: var(--space-8);
 }
 
-.pathable-form-row.pathable-form-row--gap-lg {
+.pathable-form-row--gap-lg {
   --pathable-form-row-gap: var(--space-16);
 }
 
-.pathable-form-row.pathable-form-row--gap-xl {
+.pathable-form-row--gap-xl {
   --pathable-form-row-gap: var(--space-24);
 }
 
@@ -49,7 +47,7 @@
     grid-template-rows: auto auto auto auto;
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
-    column-gap: var(--pathable-form-row-gap);
+    column-gap: var(--pathable-form-row-gap, var(--space-8));
     row-gap: 0;
   }
 
