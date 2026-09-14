@@ -104,6 +104,7 @@ export default {
 }
 
 export const Default = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => renderUnevenHints(),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -126,6 +127,7 @@ export const Default = {
 }
 
 export const LongLabelsAndHints = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
     <form aria-label="Employment planning" style="max-width: 44rem;">
       <div class="pathable-form-row pathable-form-row--gap-lg" data-testid="long-form-row">
@@ -164,6 +166,7 @@ export const LongLabelsAndHints = {
 }
 
 export const MixedControlHeights = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
     <form aria-label="Session details">
       <div class="pathable-form-row pathable-form-row--gap-xl" data-testid="mixed-form-row">
@@ -200,6 +203,7 @@ export const MixedControlHeights = {
 }
 
 export const UnevenErrors = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
     <form aria-label="Contact details">
       <div class="pathable-form-row" data-testid="error-form-row">
@@ -253,6 +257,7 @@ export const UnevenErrors = {
 }
 
 export const ConstrainedThreeFields = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
     <form aria-label="Compact scheduling filters" style="max-width: 42rem;">
       <div class="pathable-form-row pathable-form-row--gap-sm" data-testid="constrained-row">
@@ -303,6 +308,7 @@ export const ConstrainedThreeFields = {
 }
 
 export const InPathableForm = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
     <form class="pathable-form" aria-label="PathAble form integration">
       <div class="pathable-form-row pathable-form-row--gap-sm" data-testid="pathable-form-row">
@@ -338,6 +344,7 @@ export const InPathableForm = {
 }
 
 export const GapSizes = {
+  globals: { viewport: { value: 'desktop', isRotated: false } },
   render: () => `
     <form aria-label="Form row gap sizes">
       ${renderGapRow('sm')}
