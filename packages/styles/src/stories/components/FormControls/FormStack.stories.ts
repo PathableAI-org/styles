@@ -50,7 +50,10 @@ export const Default = {
       canvas.getByLabelText('Planning notes'),
     ]) {
       await expect(window.getComputedStyle(control).maxWidth).toBe('none')
-      await expect(control.getBoundingClientRect().width).toBeGreaterThan(480)
+      await expect(control.getBoundingClientRect().width).toBeCloseTo(
+        form.getBoundingClientRect().width,
+        0,
+      )
     }
     await expect(form.scrollWidth).toBeLessThanOrEqual(form.clientWidth + 2)
   },
