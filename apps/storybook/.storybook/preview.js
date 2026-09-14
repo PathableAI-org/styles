@@ -30,6 +30,14 @@ const preview = {
           name: 'Tablet (768px)',
           styles: { width: '768px', height: '1024px' },
         },
+        belowDesktopBreakpoint: {
+          name: 'Below desktop breakpoint (1023px)',
+          styles: { width: '1023px', height: '900px' },
+        },
+        desktopBreakpoint: {
+          name: 'Desktop breakpoint (1024px)',
+          styles: { width: '1024px', height: '900px' },
+        },
         desktop: {
           name: 'Desktop (1280px)',
           styles: { width: '1280px', height: '900px' },

@@ -370,6 +370,9 @@ export const GapSizes = {
 }
 
 export const AtDesktopBreakpoint = {
+  globals: {
+    viewport: { value: 'desktopBreakpoint', isRotated: false },
+  },
   render: () => renderUnevenHints(),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -387,6 +390,9 @@ export const AtDesktopBreakpoint = {
 }
 
 export const BelowDesktopBreakpoint = {
+  globals: {
+    viewport: { value: 'belowDesktopBreakpoint', isRotated: false },
+  },
   render: () => renderUnevenHints(),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -408,9 +414,20 @@ export const Narrow = {
     const row = canvas.getByTestId('form-row')
     const serviceField = canvas.getByTestId('service-field')
     const statusField = canvas.getByTestId('status-field')
+    const serviceLabel = canvas.getByText('Service area')
+    const statusLabel = canvas.getByText('Status')
 
     await expect(window.innerWidth).toBe(320)
     await expectStackedColumns(serviceField, statusField)
+    await expect(window.getComputedStyle(row).rowGap).toBe('16px')
+    for (const element of [
+      serviceField,
+      statusField,
+      serviceLabel,
+      statusLabel,
+    ]) {
+      await expect(window.getComputedStyle(element).marginTop).toBe('0px')
+    }
     await expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth + 2)
   },
 }
