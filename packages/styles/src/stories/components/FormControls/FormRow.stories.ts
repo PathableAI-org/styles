@@ -276,7 +276,7 @@ export const ConstrainedThreeFields = {
         </div>
         <div class="pathable-form-group" data-testid="constrained-status">
           <label class="pathable-label" for="constrained-status-control">Status</label>
-          <input class="pathable-input" id="constrained-status-control" name="status" />
+          <input class="pathable-input pathable-maxw-mobile" id="constrained-status-control" name="status" />
         </div>
         <div class="pathable-form-group" data-testid="constrained-notes">
           <label class="pathable-label" for="constrained-notes-control">Notes</label>
@@ -298,6 +298,7 @@ export const ConstrainedThreeFields = {
       canvas.getByLabelText('Status'),
       canvas.getByLabelText('Notes'),
     ]
+    const expectedMaxWidths = ['none', '320px', 'none']
 
     await expectEqualHorizontalColumns(...groups)
     await expectAligned(...controls)
@@ -305,7 +306,9 @@ export const ConstrainedThreeFields = {
       await expect(window.getComputedStyle(control).boxSizing).toBe(
         'border-box',
       )
-      await expect(window.getComputedStyle(control).maxWidth).toBe('none')
+      await expect(window.getComputedStyle(control).maxWidth).toBe(
+        expectedMaxWidths[index],
+      )
       await expect(control.getBoundingClientRect().width).toBeLessThanOrEqual(
         groups[index].getBoundingClientRect().width,
       )

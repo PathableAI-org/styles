@@ -70,12 +70,24 @@
     grid-row: 2;
   }
 
-  .pathable-form-row
-    > .pathable-form-group
+  :where(.pathable-form-row)
+    > :where(.pathable-form-group)
     > :is(.pathable-input, .pathable-select, .pathable-textarea) {
     box-sizing: border-box;
     grid-row: 3;
     min-width: 0;
+  }
+
+  :where(.pathable-form-row)
+    > :where(.pathable-form-group)
+    > :is(.pathable-input, .pathable-select, .pathable-textarea):not(
+      :where(
+        .pathable-maxw-mobile,
+        .pathable-maxw-mobile-lg,
+        .pathable-maxw-tablet,
+        .pathable-maxw-desktop
+      )
+    ) {
     max-width: none;
   }
 
