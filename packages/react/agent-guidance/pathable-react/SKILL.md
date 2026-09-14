@@ -28,6 +28,9 @@ raw HTML and `usa-*` or `pathable-*` classes.
   `SidebarLayout`, `CardGrid`, and `AppShell`.
 - Build forms from `Form`, `FormGroup`, `FormStack`, `Fieldset`, `Label`,
   `Hint`, `ErrorMessage`, and the supplied control wrappers.
+- Use `Form` for short, linear forms and `FormStack` for wider multi-field or
+  multi-section forms. Both render `<form>` by default, so do not nest them;
+  use `FormStack as="div"` when an existing form owns submission.
 - Use communication and feedback components such as `Alert`, `Banner`,
   `Modal`, `Toast`, `Loading`, `EmptyState`, `PageError`, `Skeleton`,
   `SiteAlert`, `StepIndicator`, `SummaryBox`, `ProcessList`, and `Accordion`.

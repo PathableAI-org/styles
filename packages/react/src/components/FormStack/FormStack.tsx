@@ -43,6 +43,7 @@ function FormStackInner(
 
   const classes = mergeClasses(
     'pathable-stack',
+    'pathable-form-stack',
     GAP_CLASS[gap],
     maxWidthClass,
     className,

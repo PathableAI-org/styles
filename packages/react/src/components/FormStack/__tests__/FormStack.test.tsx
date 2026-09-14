@@ -9,12 +9,13 @@ function classList(element: Element): string[] {
 }
 
 describe('FormStack', () => {
-  it('renders a form element with pathable-stack by default', () => {
+  it('renders a form element with form-stack classes by default', () => {
     const { container } = render(<FormStack />)
     const root = container.firstElementChild!
 
     expect(root.tagName).toBe('FORM')
     expect(classList(root)).toContain('pathable-stack')
+    expect(classList(root)).toContain('pathable-form-stack')
     expect(classList(root)).toContain('pathable-stack--gap-md')
   })
 

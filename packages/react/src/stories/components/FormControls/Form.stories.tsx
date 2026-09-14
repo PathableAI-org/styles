@@ -26,9 +26,9 @@ const meta = {
       description: {
         component: `A native form boundary for collecting and submitting related user input. It wraps the native \`<form>\` with the \`.pathable-form\` class and forwards standard form attributes.
 
-**When to use**: Use Form for a real form submission boundary containing labeled controls and an appropriate submit action. Choose the native form attributes that match the application's submission behavior.
+**When to use**: Use Form for a short, linear submission flow containing labeled controls and an appropriate submit action. It retains the USWDS form measure. Choose the native form attributes that match the application's submission behavior.
 
-**When not to use**: Do not use Form as a generic layout container or nest one form inside another. It does not manage control state, validation, submission requests, or server responses.
+**When not to use**: Do not use Form as a generic layout container or nest one form inside another. Use FormStack instead for wider multi-field, multi-section, or FormRow layouts. Form does not manage control state, validation, submission requests, or server responses.
 
 **Underlying element**: Native \`<form>\`. The wrapper does not intercept submission, prevent default browser behavior, or add validation logic.
 
@@ -114,6 +114,7 @@ export const Submission: Story = {
     const input = canvas.getByRole('textbox', { name: 'Participant name' })
 
     await expect(form).toHaveClass('pathable-form')
+    await expect(window.getComputedStyle(input).maxWidth).toBe('none')
     await userEvent.click(button)
     await expect(submitSpy).toHaveBeenCalledTimes(1)
 
