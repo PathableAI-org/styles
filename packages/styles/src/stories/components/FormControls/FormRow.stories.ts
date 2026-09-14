@@ -230,15 +230,15 @@ export const UnevenErrors = {
           </span>
         </div>
         <div class="pathable-form-group">
-          <label class="pathable-label" for="form-row-phone">Phone number</label>
-          <span class="pathable-hint" id="form-row-phone-hint">Include the area code.</span>
-          <input
-            class="pathable-input"
-            id="form-row-phone"
-            name="phone"
-            type="tel"
-            aria-describedby="form-row-phone-hint"
-          />
+          <label class="pathable-label" for="form-row-notes">Notes</label>
+          <span class="pathable-hint" id="form-row-notes-hint">Include relevant context.</span>
+          <textarea
+            class="pathable-textarea"
+            id="form-row-notes"
+            name="notes"
+            rows="4"
+            aria-describedby="form-row-notes-hint"
+          ></textarea>
         </div>
       </div>
     </form>
@@ -246,14 +246,17 @@ export const UnevenErrors = {
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
     const email = canvas.getByLabelText('Email address')
-    const phone = canvas.getByLabelText('Phone number')
+    const notes = canvas.getByLabelText('Notes')
     const error = canvas.getByText('Enter a valid email address.')
 
-    await expectAligned(email, phone)
+    await expectAligned(email, notes)
+    await expect(notes.getBoundingClientRect().height).toBeGreaterThan(
+      email.getBoundingClientRect().height,
+    )
     await expect(error.getBoundingClientRect().top).toBeGreaterThanOrEqual(
       Math.max(
         email.getBoundingClientRect().bottom,
-        phone.getBoundingClientRect().bottom,
+        notes.getBoundingClientRect().bottom,
       ),
     )
     await expect(email).toHaveAttribute('aria-invalid', 'true')
