@@ -4,14 +4,32 @@ import { injectAxe, checkA11y } from 'axe-playwright'
 const config = {
   async preVisit(page, context) {
     await page.setViewportSize({ width: 1280, height: 900 })
-    if (
-      new Set([
-        'application-shell-mobile-shell--default',
+    const storyViewports = new Map([
+      ['application-shell-mobile-shell--default', { width: 320, height: 700 }],
+      [
         'application-shell-mobile-shell--legacy-active-color-override',
+        { width: 320, height: 700 },
+      ],
+      [
         'application-shell-mobile-shell--shared-navigation',
-      ]).has(context.id)
-    ) {
-      await page.setViewportSize({ width: 320, height: 700 })
+        { width: 320, height: 700 },
+      ],
+      [
+        'components-form-controls-form-row--narrow',
+        { width: 320, height: 700 },
+      ],
+      [
+        'components-form-controls-form-row--at-desktop-breakpoint',
+        { width: 1024, height: 900 },
+      ],
+      [
+        'components-form-controls-form-row--below-desktop-breakpoint',
+        { width: 1023, height: 900 },
+      ],
+    ])
+    const storyViewport = storyViewports.get(context.id)
+    if (storyViewport) {
+      await page.setViewportSize(storyViewport)
     }
 
     await injectAxe(page)

@@ -1,0 +1,91 @@
+// packages/styles/src/pathable-component-wrappers/pathable-form-row.scss
+//
+// Responsive form-field row. Direct pathable-form-group children stack by
+// default and share label, hint, control, and error tracks on desktop. The
+// aligned control slot supports direct pathable-input, pathable-select, and
+// pathable-textarea children.
+//
+// CSS custom properties:
+//   --pathable-form-row-gap (default: var(--space-8)) - gap between fields
+//
+// Modifier classes:
+//   Gap: --gap-sm (var(--space-4)), --gap-md (var(--space-8)),
+//        --gap-lg (var(--space-16)), --gap-xl (var(--space-24))
+
+.pathable-form-row {
+  --pathable-form-row-gap: var(--space-8);
+
+  display: grid;
+  gap: var(--pathable-form-row-gap);
+}
+
+.pathable-form-row.pathable-form-row--gap-sm {
+  --pathable-form-row-gap: var(--space-4);
+}
+
+.pathable-form-row.pathable-form-row--gap-md {
+  --pathable-form-row-gap: var(--space-8);
+}
+
+.pathable-form-row.pathable-form-row--gap-lg {
+  --pathable-form-row-gap: var(--space-16);
+}
+
+.pathable-form-row.pathable-form-row--gap-xl {
+  --pathable-form-row-gap: var(--space-24);
+}
+
+:where(.pathable-form-row) > :where(.pathable-form-group) {
+  min-width: 0;
+  margin-top: 0;
+}
+
+:where(.pathable-form-row)
+  > :where(.pathable-form-group)
+  > :where(.pathable-label:first-child) {
+  margin-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .pathable-form-row {
+    grid-template-rows: auto auto auto auto;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: var(--pathable-form-row-gap);
+    row-gap: 0;
+  }
+
+  :where(.pathable-form-row) > :where(.pathable-form-group) {
+    display: grid;
+    grid-row: 1 / span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  :where(.pathable-form-row)
+    > :where(.pathable-form-group)
+    > :where(.pathable-label) {
+    grid-row: 1;
+  }
+
+  :where(.pathable-form-row)
+    > :where(.pathable-form-group)
+    > :where(.pathable-hint) {
+    grid-row: 2;
+  }
+
+  .pathable-form-row
+    > .pathable-form-group
+    > :is(.pathable-input, .pathable-select, .pathable-textarea) {
+    box-sizing: border-box;
+    grid-row: 3;
+    min-width: 0;
+    max-width: none;
+  }
+
+  :where(.pathable-form-row)
+    > :where(.pathable-form-group)
+    > :where(.pathable-error-message) {
+    grid-row: 4;
+  }
+}

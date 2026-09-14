@@ -710,6 +710,12 @@ export const rolloutLedger: RolloutEntry[] = [
   stylesOnly('components-basic-card', 'Card', 'E', 'components-basic-card'),
   stylesOnly('components-basic-tag', 'Tag', 'E', 'components-basic-tag'),
   stylesOnly(
+    'components-form-controls-form-row',
+    'FormRow',
+    'E',
+    'components-form-controls-form-row',
+  ),
+  stylesOnly(
     'components-layout-media-block',
     'MediaBlock',
     'E',
