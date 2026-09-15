@@ -348,6 +348,28 @@ describe('FormGroup', () => {
     expect(describedByIds(control)).toEqual([hint.id, error.id])
   })
 
+  it('keeps duplicate sibling keys from colliding in associations', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    try {
+      const { container, getByText } = render(
+        <FormGroup>
+          <Input aria-label="Email" />
+          <Hint key="duplicate">Duplicate hint.</Hint>
+          <ErrorMessage key="duplicate">Duplicate error.</ErrorMessage>
+        </FormGroup>,
+      )
+      const control = container.querySelector('input')!
+      const hint = getByText('Duplicate hint.')
+      const error = getByText('Duplicate error.')
+
+      expect(hint.id).not.toBe(error.id)
+      expect(describedByIds(control)).toEqual([hint.id, error.id])
+    } finally {
+      consoleError.mockRestore()
+    }
+  })
+
   it('supports malformed Unicode keys without throwing', () => {
     const malformedKey = '\ud800'
     const { container, getByText } = render(

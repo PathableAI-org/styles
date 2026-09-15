@@ -40,25 +40,8 @@ interface Participant {
   path: string
 }
 
-function encodeKey(key: string) {
-  return Array.from(key, (character) =>
-    character
-      .codePointAt(0)!
-      .toString(16)
-      .padStart(character.length === 1 ? 4 : 6, '0'),
-  ).join('-')
-}
-
-function participantPath(
-  element: ReactElement,
-  index: number,
-  parentPath: string,
-) {
-  const segment =
-    element.key === null
-      ? `index:${index}`
-      : `key:${encodeKey(String(element.key))}`
-  return `${parentPath}/${segment}`
+function participantPath(index: number, parentPath: string) {
+  return `${parentPath}/${index.toString(36)}`
 }
 
 function isUsableId(value: null | string | undefined): value is string {
@@ -80,7 +63,7 @@ function forEachParticipant(
 ) {
   Children.toArray(children).forEach((child, index) => {
     if (!isValidElement(child)) return
-    const path = participantPath(child, index, parentPath)
+    const path = participantPath(index, parentPath)
 
     if (child.type === Fragment) {
       forEachParticipant(
@@ -166,7 +149,7 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
   function associate(participants: ReactNode, parentPath = ''): ReactNode {
     return Children.toArray(participants).map((child, index) => {
       if (!isValidElement(child)) return child
-      const path = participantPath(child, index, parentPath)
+      const path = participantPath(index, parentPath)
 
       if (child.type === Fragment) {
         const fragmentChildren = (child.props as AssociationProps).children
