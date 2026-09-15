@@ -38,7 +38,7 @@ const meta = {
 
 **Underlying element**: Native \`<div>\`. The wrapper associates one direct PathAble Label and any direct Hint or ErrorMessage children with one supported control, but it does not manage values, validation, focus, or submission.
 
-**Accessibility**: Compose one Label and any Hint or ErrorMessage children directly with one Input, Select, Textarea, or Range to receive stable IDs and associations automatically. Key dynamically reordered descriptions. Explicit non-empty IDs and ARIA attributes are preserved. A non-empty \`aria-labelledby\` opts out of automatic Label wiring; an explicit \`aria-describedby\`, including an empty string, opts out of description wiring. Use a native \`<fieldset>\` when controls need a shared group name.`,
+**Accessibility**: Compose one Label and any Hint or ErrorMessage children directly with one Input, Select, Textarea, or Range to receive stable IDs and associations automatically. Explicit non-empty IDs and ARIA attributes are preserved. A non-empty \`aria-labelledby\` opts out of automatic Label wiring; an explicit \`aria-describedby\`, including an empty string, opts out of description wiring. Multiple direct controls, including mixed PathAble and native controls, disable automatic wiring. Use a native \`<fieldset>\` when controls need a shared group name.`,
       },
     },
   },

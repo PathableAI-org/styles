@@ -4,7 +4,6 @@ import {
   Fragment,
   isValidElement,
   useId,
-  useState,
   type HTMLAttributes,
   type ReactElement,
   type ReactNode,
@@ -47,19 +46,6 @@ function encodeKey(key: string) {
       .toString(16)
       .padStart(character.length === 1 ? 4 : 6, '0'),
   ).join('-')
-}
-
-function createPathTokenAllocator() {
-  const tokens = new Map<string, string>()
-
-  return (path: string) => {
-    const existingToken = tokens.get(path)
-    if (existingToken !== undefined) return existingToken
-
-    const token = tokens.size.toString(36)
-    tokens.set(path, token)
-    return token
-  }
 }
 
 function participantPath(
@@ -117,16 +103,29 @@ function isSupportedControl(element: ReactElement) {
   )
 }
 
+function isNativeControl(element: ReactElement) {
+  return (
+    element.type === 'input' ||
+    element.type === 'select' ||
+    element.type === 'textarea'
+  )
+}
+
 export function FormGroup({ children, className, ...rest }: FormGroupProps) {
   const generatedId = useId()
-  const [pathTokenFor] = useState(() => createPathTokenAllocator())
   const combinedClassName = `${BASE_CLASS} ${className || ''}`.trim()
   const controls: Participant[] = []
   const labels: Participant[] = []
   const descriptions: Description[] = []
+  let controlCount = 0
 
   forEachParticipant(children, (element, path) => {
-    if (isSupportedControl(element)) controls.push({ element, path })
+    if (isSupportedControl(element)) {
+      controls.push({ element, path })
+      controlCount += 1
+    } else if (isNativeControl(element)) {
+      controlCount += 1
+    }
     if (element.type === Label) labels.push({ element, path })
     if (element.type === Hint) {
       descriptions.push({ element, kind: 'hint', path })
@@ -136,7 +135,7 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
     }
   })
 
-  const control = controls.length === 1 ? controls[0] : undefined
+  const control = controlCount === 1 ? controls[0] : undefined
   const controlProps = (control?.element.props ?? {}) as AssociationProps
   const label = control && labels.length === 1 ? labels[0] : undefined
   const labelProps = label?.element.props as AssociationProps | undefined
@@ -148,11 +147,11 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
     control !== undefined && controlProps['aria-describedby'] == null
   const managesLabel = !hasIdReference(controlProps['aria-labelledby'])
   const descriptionIds = managesDescriptions
-    ? descriptions.map(({ element, kind, path }) => {
+    ? descriptions.map(({ element, kind }, index) => {
         const props = element.props as AssociationProps
         return isUsableId(props.id)
           ? props.id
-          : `${generatedId}-${kind}-${pathTokenFor(path)}`
+          : `${generatedId}-${kind}-${index.toString(36)}`
       })
     : []
   const descriptionIdsByPath = new Map(

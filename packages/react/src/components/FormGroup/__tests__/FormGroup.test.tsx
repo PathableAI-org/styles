@@ -240,7 +240,7 @@ describe('FormGroup', () => {
     expect(describedByIds(control)).toEqual(hintIds)
   })
 
-  it('keeps keyed description ids stable across insertion and reordering', () => {
+  it('updates description associations across insertion and reordering', () => {
     function DynamicField({
       includeHint,
       reverse,
@@ -265,23 +265,28 @@ describe('FormGroup', () => {
     const { container, getByText, rerender } = render(
       <DynamicField includeHint reverse={false} />,
     )
-    const initialHintId = getByText('Stable hint.').id
-    const initialErrorId = getByText('Stable error.').id
+    const initialHint = getByText('Stable hint.')
+    const initialError = getByText('Stable error.')
+
+    expect(describedByIds(container.querySelector('input')!)).toEqual([
+      initialHint.id,
+      initialError.id,
+    ])
 
     rerender(<DynamicField includeHint reverse />)
 
-    expect(getByText('Stable hint.').id).toBe(initialHintId)
-    expect(getByText('Stable error.').id).toBe(initialErrorId)
+    const reorderedHint = getByText('Stable hint.')
+    const reorderedError = getByText('Stable error.')
     expect(describedByIds(container.querySelector('input')!)).toEqual([
-      initialErrorId,
-      initialHintId,
+      reorderedError.id,
+      reorderedHint.id,
     ])
 
     rerender(<DynamicField includeHint={false} reverse />)
 
-    expect(getByText('Stable error.').id).toBe(initialErrorId)
+    const remainingError = getByText('Stable error.')
     expect(describedByIds(container.querySelector('input')!)).toEqual([
-      initialErrorId,
+      remainingError.id,
     ])
   })
 
@@ -391,6 +396,26 @@ describe('FormGroup', () => {
     expect(container.querySelector('label')?.hasAttribute('for')).toBe(false)
     expect(container.querySelector('input')?.hasAttribute('id')).toBe(false)
     expect(container.querySelector('textarea')?.hasAttribute('id')).toBe(false)
+    expect(container.querySelector('.pathable-hint')?.hasAttribute('id')).toBe(
+      false,
+    )
+  })
+
+  it('treats mixed PathAble and native controls as ambiguous', () => {
+    const { container } = render(
+      <FormGroup>
+        <Label>Name</Label>
+        <Input />
+        <input aria-label="Native name" />
+        <Hint>Enter a name.</Hint>
+      </FormGroup>,
+    )
+
+    expect(container.querySelector('label')?.hasAttribute('for')).toBe(false)
+    for (const control of container.querySelectorAll('input')) {
+      expect(control.hasAttribute('id')).toBe(false)
+      expect(control.hasAttribute('aria-describedby')).toBe(false)
+    }
     expect(container.querySelector('.pathable-hint')?.hasAttribute('id')).toBe(
       false,
     )

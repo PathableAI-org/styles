@@ -44,8 +44,7 @@ raw HTML and `usa-*` or `pathable-*` classes.
 - Give every interactive control an accessible name.
 - Compose one `Input`, `Select`, `Textarea`, or `Range` directly with `Label`,
   `Hint`, and `ErrorMessage` inside `FormGroup` to receive stable IDs and
-  associations automatically. Use one Label and give dynamically reordered
-  descriptions React keys. Explicit non-empty IDs and ARIA attributes are
+  associations automatically. Explicit non-empty IDs and ARIA attributes are
   preserved. A non-empty `aria-labelledby` opts out of automatic Label wiring;
   an explicit `aria-describedby`, including an empty string, opts out of
   automatic description wiring.
@@ -54,7 +53,7 @@ raw HTML and `usa-*` or `pathable-*` classes.
   and announcement timing consumer-owned.
 - Use `Fieldset` for related controls that need a shared group name;
   `FormGroup` does not create group semantics and does not auto-wire multiple
-  controls.
+  direct controls, including mixed PathAble and native controls.
 - Preserve native element semantics, visible focus indicators, keyboard
   behavior, and non-color cues.
 - Give informative images meaningful alternative text and decorative images
