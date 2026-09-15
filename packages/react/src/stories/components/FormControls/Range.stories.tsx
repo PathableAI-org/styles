@@ -25,7 +25,7 @@ const meta = {
 
 **Controlled/uncontrolled**: Use \`value\` with \`onChange\` for controlled state or \`defaultValue\` for an uncontrolled slider. The browser owns clamping, stepping, keyboard interaction, validation, and form submission.
 
-**Accessibility**: Provide a visible associated label whenever possible. Communicate the current value visually when the slider's numeric value is not self-explanatory, and use \`aria-valuetext\` when assistive technology needs a human-readable value such as "45 minutes."`,
+**Accessibility**: Provide a visible associated label whenever possible. FormGroup supplies missing Label and description associations for direct Range compositions; wire standalone or custom-wrapped controls explicitly. Communicate the current value visually when the slider's numeric value is not self-explanatory, and use \`aria-valuetext\` when assistive technology needs a human-readable value such as "45 minutes."`,
       },
     },
   },

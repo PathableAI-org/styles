@@ -42,9 +42,18 @@ raw HTML and `usa-*` or `pathable-*` classes.
 ## Preserve accessibility
 
 - Give every interactive control an accessible name.
-- Connect hints and validation messages with `aria-describedby`.
+- Compose one `Input`, `Select`, `Textarea`, or `Range` directly with `Label`,
+  `Hint`, and `ErrorMessage` inside `FormGroup` to receive stable IDs and
+  associations automatically. Use one Label and give dynamically reordered
+  descriptions React keys. Explicit non-empty IDs and ARIA attributes are
+  preserved; an explicit `aria-describedby`, including an empty string, opts
+  out of automatic description wiring.
+- Wire standalone controls, custom wrappers, and composite controls explicitly
+  with labels and `aria-describedby`. Keep `aria-invalid`, validation state,
+  and announcement timing consumer-owned.
 - Use `Fieldset` for related controls that need a shared group name;
-  `FormGroup` is visual grouping only.
+  `FormGroup` does not create group semantics and does not auto-wire multiple
+  controls.
 - Preserve native element semantics, visible focus indicators, keyboard
   behavior, and non-color cues.
 - Give informative images meaningful alternative text and decorative images

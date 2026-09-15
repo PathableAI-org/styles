@@ -1,14 +1,27 @@
+import { ErrorMessage } from '../../../components/ErrorMessage/ErrorMessage'
 import { FormGroup } from '../../../components/FormGroup/FormGroup'
+import { Hint } from '../../../components/Hint/Hint'
 import { Input } from '../../../components/Input/Input'
+import { Label } from '../../../components/Label/Label'
+import { Select } from '../../../components/Select/Select'
 import type { Meta, StoryObj } from '@storybook/react'
-import { expect, within } from 'storybook/test'
+import { expect, userEvent, within } from 'storybook/test'
+import {
+  verifyHintErrorAssociation,
+  verifyLabeledControl,
+  type StoryHarness,
+} from '@pathable/storybook-contracts'
 
 const defaultChildren = (
   <>
-    <label htmlFor="participant-name">Participant name</label>
-    <Input id="participant-name" name="participantName" />
+    <Label>Participant name</Label>
+    <Input name="participantName" />
   </>
 )
+
+function harnessFor(root: HTMLElement): StoryHarness {
+  return { root, within, userEvent, expect }
+}
 
 const meta = {
   title: 'Components/Form Controls/FormGroup',
@@ -21,11 +34,11 @@ const meta = {
 
 **When to use**: Use FormGroup to apply PathAble form-group styling around a control, its label, and related hint or validation content.
 
-**When not to use**: Do not use FormGroup as a semantic group for related controls or as a replacement for \`<fieldset>\`. It does not provide an accessible name, manage form state, or disable descendants.
+**When not to use**: Do not use FormGroup as a semantic group for related controls or as a replacement for \`<fieldset>\`. It does not manage form state, validation, or disabled descendants.
 
-**Underlying element**: Native \`<div>\`. The wrapper does not manage labels, values, validation, focus, or submission.
+**Underlying element**: Native \`<div>\`. The wrapper associates one direct PathAble Label and any direct Hint or ErrorMessage children with one supported control, but it does not manage values, validation, focus, or submission.
 
-**Accessibility**: Provide an accessible name for each contained control with a visible associated \`<label>\` or an appropriate ARIA label. Associate hints and validation messages with the control through \`aria-describedby\`; use a native \`<fieldset>\` when controls need a shared group name.`,
+**Accessibility**: Compose one Label and any Hint or ErrorMessage children directly with one Input, Select, Textarea, or Range to receive stable IDs and associations automatically. Key dynamically reordered descriptions. Explicit non-empty IDs and ARIA attributes are preserved; an explicit \`aria-describedby\`, including an empty string, opts out of description wiring. Use a native \`<fieldset>\` when controls need a shared group name.`,
       },
     },
   },
@@ -62,32 +75,30 @@ export const Default: Story = {
 }
 
 export const FormComposition: Story = {
+  tags: ['behavior-contract', 'contract-form-group'],
   render: () => (
     <FormGroup>
-      <label htmlFor="participant-email">Participant email</label>
-      <Input
-        id="participant-email"
-        name="participantEmail"
-        type="email"
-        aria-describedby="participant-email-hint"
-      />
-      <p id="participant-email-hint">
-        Use the address associated with the participant record.
-      </p>
+      <Label>Service area</Label>
+      <Hint>Choose the category that applies.</Hint>
+      <Select name="serviceArea" defaultValue="" aria-invalid="true">
+        <option value="" disabled>
+          Select a service area
+        </option>
+        <option value="employment">Employment</option>
+        <option value="housing">Housing</option>
+      </Select>
+      <ErrorMessage>Choose a service area.</ErrorMessage>
     </FormGroup>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const input = canvas.getByRole('textbox', { name: 'Participant email' })
-    const hint = canvas.getByText(
-      'Use the address associated with the participant record.',
-    )
-    const group = hint.parentElement
+    const harness = harnessFor(canvasElement)
 
-    await expect(group).toHaveClass('pathable-form-group')
-    await expect(input).toHaveAttribute(
-      'aria-describedby',
-      'participant-email-hint',
+    await verifyLabeledControl(harness, 'Service area')
+    await verifyHintErrorAssociation(
+      harness,
+      'Service area',
+      'Choose the category that applies.',
+      'Choose a service area.',
     )
   },
 }
@@ -95,7 +106,7 @@ export const FormComposition: Story = {
 export const ValidationComposition: Story = {
   render: () => (
     <FormGroup>
-      <label htmlFor="invalid-email">Participant email</label>
+      <Label htmlFor="invalid-email">Participant email</Label>
       <Input
         id="invalid-email"
         name="participantEmail"
@@ -104,9 +115,9 @@ export const ValidationComposition: Story = {
         aria-invalid="true"
         aria-describedby="invalid-email-error"
       />
-      <p id="invalid-email-error" role="alert">
+      <ErrorMessage id="invalid-email-error" role="alert">
         Enter a valid email address.
-      </p>
+      </ErrorMessage>
     </FormGroup>
   ),
   play: async ({ canvasElement }) => {
@@ -131,7 +142,7 @@ export const CustomAttributes: Story = {
       data-testid="participant-details"
       title="Participant details"
     >
-      <label htmlFor="custom-participant-name">Participant name</label>
+      <Label htmlFor="custom-participant-name">Participant name</Label>
       <Input id="custom-participant-name" name="participantName" />
     </FormGroup>
   ),
@@ -154,17 +165,13 @@ export const EmptyContent: Story = {
 export const LongContent: Story = {
   render: () => (
     <FormGroup>
-      <label htmlFor="long-details">Participant employment details</label>
-      <Input
-        id="long-details"
-        name="employmentDetails"
-        aria-describedby="long-details-hint"
-      />
-      <p id="long-details-hint">
+      <Label>Participant employment details</Label>
+      <Input name="employmentDetails" />
+      <Hint>
         Include the participant&apos;s employment goals, workplace support
         needs, communication preferences, and any other details that should be
         available during coaching follow-up.
-      </p>
+      </Hint>
     </FormGroup>
   ),
 }
@@ -177,8 +184,8 @@ export const Narrow: Story = {
   },
   render: () => (
     <FormGroup>
-      <label htmlFor="narrow-details">Workplace support details</label>
-      <Input id="narrow-details" name="workplaceSupport" />
+      <Label>Workplace support details</Label>
+      <Input name="workplaceSupport" />
     </FormGroup>
   ),
 }

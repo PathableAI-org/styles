@@ -172,12 +172,20 @@ export const targets = {
       'accordion.panel-association',
       'accordion.panel-availability',
       'accordion.focus-retention',
+      'form-group.label-association',
+      'form-group.hint-error-association',
     ],
     fixtures: {
       'accordion.default':
         'components-communication-accordion--contract-default',
       'accordion.first-expanded':
         'components-communication-accordion--contract-initially-expanded',
+      'form-group.associations':
+        'components-form-controls-formgroup--form-composition',
+    },
+    filters: {
+      'components-communication-accordion': 'contract-accordion',
+      'components-form-controls-formgroup': 'contract-form-group',
     },
   },
 }

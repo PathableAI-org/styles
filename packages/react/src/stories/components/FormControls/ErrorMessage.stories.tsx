@@ -11,7 +11,7 @@ const meta = {
       description: {
         component: `A field-level validation message for explaining how to correct an invalid or incomplete form value. It wraps a native \`<span>\` with the \`.pathable-error-message\` class and forwards standard span attributes.
 
-**When to use**: Use ErrorMessage when a form control needs concise, human-readable recovery guidance. Associate it with the invalid control through \`aria-describedby\` and give it an \`id\`.
+**When to use**: Use ErrorMessage when a form control needs concise, human-readable recovery guidance. FormGroup connects a direct ErrorMessage to one supported control automatically; otherwise associate it through \`aria-describedby\` and give it an \`id\`.
 
 **When not to use**: Do not use ErrorMessage for page-level failures, general status announcements, or broad application alerts. Use PageError, Alert, or the appropriate feedback pattern instead.
 
@@ -19,7 +19,7 @@ const meta = {
 
 **Announcement behavior**: Consumers choose whether a message should be announced with attributes such as \`role="alert"\` or \`aria-live\`. Plain inline messages remain non-announcing by default so validation timing stays application-controlled.
 
-**Accessibility**: Provide specific recovery guidance, connect the message with \`aria-describedby\`, and use \`aria-invalid="true"\` on the associated control when validation identifies an error.`,
+**Accessibility**: Provide specific recovery guidance, use FormGroup automatic association or connect the message with \`aria-describedby\` explicitly, and use \`aria-invalid="true"\` on the associated control when validation identifies an error.`,
       },
     },
   },
