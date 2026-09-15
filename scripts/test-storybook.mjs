@@ -179,9 +179,6 @@ export const targets = {
       'accordion.first-expanded':
         'components-communication-accordion--contract-initially-expanded',
     },
-    filters: {
-      'components-communication-accordion': 'contract-accordion',
-    },
   },
 }
 

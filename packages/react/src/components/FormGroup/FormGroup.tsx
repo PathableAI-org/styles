@@ -4,6 +4,7 @@ import {
   Fragment,
   isValidElement,
   useId,
+  useState,
   type HTMLAttributes,
   type ReactElement,
   type ReactNode,
@@ -48,18 +49,17 @@ function encodeKey(key: string) {
   ).join('-')
 }
 
-function stablePathToken(path: string) {
-  let first = 0x811c9dc5
-  let second = 0x9e3779b9
+function createPathTokenAllocator() {
+  const tokens = new Map<string, string>()
 
-  for (let index = 0; index < path.length; index += 1) {
-    const codeUnit = path.charCodeAt(index)
-    first = Math.imul(first ^ codeUnit, 0x01000193)
-    second = Math.imul(second ^ codeUnit, 0x85ebca77)
+  return (path: string) => {
+    const existingToken = tokens.get(path)
+    if (existingToken !== undefined) return existingToken
+
+    const token = tokens.size.toString(36)
+    tokens.set(path, token)
+    return token
   }
-
-  // Keep React keys out of rendered markup while retaining keyed ID stability.
-  return `${(first >>> 0).toString(36)}-${(second >>> 0).toString(36)}`
 }
 
 function participantPath(
@@ -119,6 +119,7 @@ function isSupportedControl(element: ReactElement) {
 
 export function FormGroup({ children, className, ...rest }: FormGroupProps) {
   const generatedId = useId()
+  const [pathTokenFor] = useState(() => createPathTokenAllocator())
   const combinedClassName = `${BASE_CLASS} ${className || ''}`.trim()
   const controls: Participant[] = []
   const labels: Participant[] = []
@@ -151,7 +152,7 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
         const props = element.props as AssociationProps
         return isUsableId(props.id)
           ? props.id
-          : `${generatedId}-${kind}-${stablePathToken(path)}`
+          : `${generatedId}-${kind}-${pathTokenFor(path)}`
       })
     : []
   const descriptionIdsByPath = new Map(
