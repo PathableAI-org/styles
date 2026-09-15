@@ -285,6 +285,21 @@ describe('FormGroup', () => {
     ])
   })
 
+  it('does not serialize React keys into generated ids', () => {
+    const sensitiveKey = `participant-record-${'private-identifier-'.repeat(8)}`
+    const { getByText } = render(
+      <FormGroup>
+        <Input aria-label="Email" />
+        <Hint key={sensitiveKey}>Private-key guidance.</Hint>
+      </FormGroup>,
+    )
+
+    const generatedDescriptionId = getByText('Private-key guidance.').id
+
+    expect(generatedDescriptionId).not.toContain(sensitiveKey)
+    expect(generatedDescriptionId.length).toBeLessThan(sensitiveKey.length)
+  })
+
   it('keeps identical keys in separate nested arrays uniquely scoped', () => {
     const descriptions = [
       [<Hint key="shared">Nested hint.</Hint>],

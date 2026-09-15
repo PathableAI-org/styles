@@ -48,6 +48,20 @@ function encodeKey(key: string) {
   ).join('-')
 }
 
+function stablePathToken(path: string) {
+  let first = 0x811c9dc5
+  let second = 0x9e3779b9
+
+  for (let index = 0; index < path.length; index += 1) {
+    const codeUnit = path.charCodeAt(index)
+    first = Math.imul(first ^ codeUnit, 0x01000193)
+    second = Math.imul(second ^ codeUnit, 0x85ebca77)
+  }
+
+  // Keep React keys out of rendered markup while retaining keyed ID stability.
+  return `${(first >>> 0).toString(36)}-${(second >>> 0).toString(36)}`
+}
+
 function participantPath(
   element: ReactElement,
   index: number,
@@ -137,7 +151,7 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
         const props = element.props as AssociationProps
         return isUsableId(props.id)
           ? props.id
-          : `${generatedId}-${kind}-${encodeKey(path)}`
+          : `${generatedId}-${kind}-${stablePathToken(path)}`
       })
     : []
   const descriptionIdsByPath = new Map(
