@@ -1,4 +1,5 @@
 import type { InputHTMLAttributes, ReactNode } from 'react'
+import { registerFormGroupCompositeControl } from '../../internal/form-group-control.js'
 
 export type RadioProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -34,3 +35,5 @@ export function Radio({
     </label>
   )
 }
+
+registerFormGroupCompositeControl(Radio)

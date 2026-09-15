@@ -440,16 +440,14 @@ function App() {
         <Hint id="session-note-hint">Include the agreed next action.</Hint>
 
         <FormGroup>
-          <Label htmlFor="participant-email">Participant email</Label>
+          <Label>Participant email</Label>
           <Input
-            id="participant-email"
             name="participantEmail"
             type="email"
             required
             aria-invalid="true"
-            aria-describedby="participant-email-error"
           />
-          <ErrorMessage id="participant-email-error" role="alert">
+          <ErrorMessage role="alert">
             Enter an email address in the format name@example.com.
           </ErrorMessage>
         </FormGroup>
@@ -457,37 +455,27 @@ function App() {
         <Fieldset>
           <legend>Employment preferences</legend>
           <FormGroup>
-            <Label htmlFor="employment-goal">Employment goal</Label>
-            <Select id="employment-goal" name="employmentGoal">
+            <Label>Employment goal</Label>
+            <Select name="employmentGoal">
               <option value="">Select a goal</option>
               <option value="job-search">Job search skills</option>
               <option value="interview">Interview preparation</option>
             </Select>
           </FormGroup>
           <FormGroup>
-            <Label htmlFor="employment-hours">Preferred weekly hours</Label>
-            <Input
-              id="employment-hours"
-              name="employmentHours"
-              type="number"
-              min={1}
-              max={40}
-            />
+            <Label>Preferred weekly hours</Label>
+            <Input name="employmentHours" type="number" min={1} max={40} />
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="session-duration">Session duration</Label>
-            <Hint id="session-duration-hint">
-              Choose a duration from 15 to 120 minutes.
-            </Hint>
+            <Label>Session duration</Label>
+            <Hint>Choose a duration from 15 to 120 minutes.</Hint>
             <Range
-              id="session-duration"
               name="sessionDuration"
               min={15}
               max={120}
               step={15}
               defaultValue={45}
-              aria-describedby="session-duration-hint"
             />
           </FormGroup>
         </Fieldset>
@@ -1107,7 +1095,7 @@ Any other standard input attributes, including `id`, `name`, `placeholder`, `min
 
 #### Input Accessibility
 
-Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+Provide a visible associated `<label>` or an appropriate ARIA label. When Input is composed directly with PathAble Label, Hint, or ErrorMessage inside a FormGroup, FormGroup supplies missing IDs and associations. Wire standalone or custom-wrapped compositions explicitly. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
 
 ### Search Props
 
@@ -1170,7 +1158,7 @@ Give the form an accessible name when needed, preserve each control's label and 
 
 ### FormGroup Props
 
-`FormGroup` wraps a native `<div>` with the `pathable-form-group` class and forwards standard div attributes.
+`FormGroup` wraps a native `<div>` with the `pathable-form-group` class, forwards standard div attributes, and supplies accessible associations for one supported PathAble control.
 
 | Prop      | Type              | Default | Description                                                  |
 | --------- | ----------------- | ------- | ------------------------------------------------------------ |
@@ -1182,7 +1170,11 @@ Any other standard div attributes, including `aria-*`, `data-*`, and event handl
 
 #### FormGroup Accessibility
 
-FormGroup is a visual styling wrapper and does not create a semantic group or accessible name. Give each contained control a visible associated `<label>` or an appropriate ARIA label. Associate hints and validation messages with the control through `aria-describedby`. Use a native `<fieldset>` when related controls need a shared group name, and do not use FormGroup as a replacement for a fieldset.
+Compose one `Input`, `Select`, `Textarea`, or `Range` directly with one `Label` and any `Hint` or `ErrorMessage` children. FormGroup generates hydration-stable IDs when needed, connects the Label through `htmlFor`, and lists Hint and ErrorMessage IDs in `aria-describedby` source order. Fragment children are supported. Generated IDs are implementation details and should not be used as durable selectors.
+
+Explicit non-empty control IDs, Label `htmlFor`, and description IDs are preserved, as are control ARIA attributes. A non-empty `aria-labelledby` opts out of automatic Label wiring. An explicit `aria-describedby`, including an empty string, opts out of automatic description wiring; other ARIA attributes do not disable the remaining defaults. FormGroup replaces missing, empty, or invalid association IDs so generated relationships remain usable. It does not infer `aria-invalid`, `role="alert"`, validation state, or announcement timing.
+
+Automatic wiring is disabled when a FormGroup contains more than one direct field control, including a supported control mixed with a native or PathAble composite control. More than one direct Label is left unchanged, while Hint and ErrorMessage wiring can still apply to the single PathAble control. FormGroup does not wire native elements, custom wrappers, or composite controls such as Checkbox, Radio, ComboBox, DatePicker, or DateRangePicker. Wire those compositions explicitly. FormGroup does not create a semantic group or group name; use `Fieldset` when related controls need a shared name.
 
 ### Hint Props
 
@@ -1191,14 +1183,14 @@ FormGroup is a visual styling wrapper and does not create a semantic group or ac
 | Prop      | Type              | Default | Description                                                       |
 | --------- | ----------------- | ------- | ----------------------------------------------------------------- |
 | children  | `React.ReactNode` | —       | Supplemental guidance for completing the associated form control. |
-| id        | `string`          | —       | Identifier referenced by the control through `aria-describedby`.  |
+| id        | `string`          | —       | Explicit identifier; FormGroup supplies one when needed.          |
 | className | `string`          | —       | Additional class names appended after `pathable-hint`.            |
 
 Any other standard span attributes, including `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<span>` element.
 
 #### Hint Accessibility
 
-Keep guidance concise and specific. Give the Hint an `id` and connect it to the related control with `aria-describedby` when it describes that control. Use ErrorMessage for validation recovery guidance and do not use Hint as an announcement or general status message.
+Keep guidance concise and specific. FormGroup connects a direct Hint to its supported control automatically. Give standalone or custom-wrapped hints an `id` and connect them with `aria-describedby`. Use ErrorMessage for validation recovery guidance and do not use Hint as an announcement or general status message.
 
 ### Label Props
 
@@ -1207,14 +1199,14 @@ Keep guidance concise and specific. Give the Hint an `id` and connect it to the 
 | Prop      | Type              | Default | Description                                                        |
 | --------- | ----------------- | ------- | ------------------------------------------------------------------ |
 | children  | `React.ReactNode` | —       | Visible text or inline content naming the associated form control. |
-| htmlFor   | `string`          | —       | `id` of the associated form control.                               |
+| htmlFor   | `string`          | —       | Explicit control ID; FormGroup supplies it when omitted.           |
 | className | `string`          | —       | Additional CSS class names appended after `pathable-label`.        |
 
 Any other standard label attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the underlying `<label>` element.
 
 #### Label Accessibility
 
-Give each form control an accessible name with a visible `Label` and a matching `htmlFor`/`id` pair, or place the control inside the label. Use `aria-describedby` for supporting hints or validation messages rather than putting all instructions in the label.
+Give each form control an accessible name with a visible `Label`. FormGroup supplies the matching `htmlFor`/`id` pair for one direct supported control; standalone and custom-wrapped compositions require an explicit pair or a control placed inside the label. Use `aria-describedby` for supporting hints or validation messages rather than putting all instructions in the label.
 
 ### Textarea Props
 
@@ -1234,7 +1226,7 @@ Any other standard textarea attributes, including `id`, `name`, `placeholder`, `
 
 #### Textarea Accessibility
 
-Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
+Provide a visible associated `<label>` or an appropriate ARIA label. FormGroup supplies missing Label and description associations for direct Textarea compositions; wire standalone or custom-wrapped compositions explicitly. Use `value` with `onChange` for controlled fields and `defaultValue` for uncontrolled fields.
 
 ### Skipnav Props
 
@@ -1271,7 +1263,7 @@ Any other standard select attributes, including `id`, `name`, `aria-*`, `data-*`
 
 #### Select Accessibility
 
-Provide a visible associated `<label>` or an appropriate ARIA label. Use `aria-describedby` to associate hints or validation messages. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
+Provide a visible associated `<label>` or an appropriate ARIA label. FormGroup supplies missing Label and description associations for direct Select compositions; wire standalone or custom-wrapped compositions explicitly. For required fields, provide a prompt option with an empty value rather than treating instructional text as a valid selection.
 
 ### Fieldset Props
 
@@ -1298,7 +1290,7 @@ Use a meaningful `<legend>` as the first child so assistive technology can ident
 | --------- | ---------------------------------- | -------- | ----------------------------------------------------------------------- |
 | children  | `React.ReactNode`                  | required | Human-readable recovery guidance                                        |
 | className | `string`                           | —        | Additional CSS class names appended after `pathable-error-message`      |
-| id        | `string`                           | —        | Identifier referenced by the invalid control through `aria-describedby` |
+| id        | `string`                           | —        | Explicit identifier; FormGroup supplies one when needed                 |
 | role      | `string`                           | —        | Optional consumer-selected role, such as `alert` or `status`            |
 | aria-live | `'off' \| 'polite' \| 'assertive'` | —        | Optional live-region behavior selected by the consuming validation flow |
 
@@ -1306,7 +1298,7 @@ Any other standard span attributes, including `aria-*`, `data-*`, and event hand
 
 #### ErrorMessage Accessibility
 
-Provide specific recovery guidance and associate the message with the invalid control through `aria-describedby`. Use `aria-invalid="true"` on the associated control when application validation identifies an error. Choose `role="alert"` or `aria-live` only when the validation flow should announce the message immediately.
+Provide specific recovery guidance. FormGroup associates a direct ErrorMessage with its supported control automatically; wire standalone or custom-wrapped messages explicitly. Use `aria-invalid="true"` on the associated control when application validation identifies an error. Choose `role="alert"` or `aria-live` only when the validation flow should announce the message immediately.
 
 ### Radio Props
 
@@ -1352,7 +1344,7 @@ Any other supported native range input attributes, including `id`, `form`, `list
 
 #### Range Accessibility
 
-Provide a visible associated `Label` whenever possible, and use `aria-describedby` to connect supporting hints. Show the current value when users need precision. Use `aria-valuetext` for units or qualitative meanings, such as `45 minutes` or `moderate`, while keeping the numeric `value`, `min`, `max`, and `step` coherent. Avoid repeating the same value through both `aria-describedby` and `aria-valuetext`. Native arrow keys and Home/End behavior are preserved.
+Provide a visible associated `Label` whenever possible. FormGroup supplies missing Label and description associations for direct Range compositions; wire standalone or custom-wrapped compositions explicitly. Show the current value when users need precision. Use `aria-valuetext` for units or qualitative meanings, such as `45 minutes` or `moderate`, while keeping the numeric `value`, `min`, `max`, and `step` coherent. Avoid repeating the same value through both `aria-describedby` and `aria-valuetext`. Native arrow keys and Home/End behavior are preserved.
 
 ### Checkbox Props
 

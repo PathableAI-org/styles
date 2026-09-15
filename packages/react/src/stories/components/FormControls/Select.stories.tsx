@@ -30,7 +30,7 @@ const meta = {
 
 **Controlled/uncontrolled**: Select is a native form control. Consumers manage its value with standard \`value\`, \`defaultValue\`, and event-handler props.
 
-**Accessibility**: Consumers must provide an accessible name through a visible associated label or an appropriate ARIA label. Use \`aria-describedby\` for hints or validation messages. The first option should provide useful guidance and should not silently submit as a real value when a choice is required.`,
+**Accessibility**: Consumers must provide an accessible name through a visible associated label or an appropriate ARIA label. FormGroup supplies missing Label and description associations for direct compositions; wire standalone or custom-wrapped controls explicitly. The first option should provide useful guidance and should not silently submit as a real value when a choice is required.`,
       },
     },
   },

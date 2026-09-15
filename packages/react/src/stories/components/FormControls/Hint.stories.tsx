@@ -12,13 +12,13 @@ const meta = {
       description: {
         component: `Supplemental form guidance for explaining expected input, format, or context. It wraps a native \`<span>\` with the \`.pathable-hint\` class and forwards standard span attributes.
 
-**When to use**: Use Hint for concise instructions that help someone complete a form control. Give it an \`id\` and connect the control with \`aria-describedby\` when the guidance describes that control.
+**When to use**: Use Hint for concise instructions that help someone complete a form control. FormGroup connects a direct Hint to one supported control automatically; otherwise give it an \`id\` and connect the control with \`aria-describedby\`.
 
 **When not to use**: Do not use Hint for validation errors, urgent announcements, or general status messages. Use ErrorMessage or the appropriate feedback pattern instead.
 
 **Underlying element**: Native \`<span>\`. The wrapper does not manage form state, validation, or live-region announcements.
 
-**Accessibility**: Keep guidance specific and concise. Associate it with the related control through \`aria-describedby\`; do not rely on visual placement alone to establish the relationship.`,
+**Accessibility**: Keep guidance specific and concise. Use FormGroup automatic association or wire \`aria-describedby\` explicitly; do not rely on visual placement alone to establish the relationship.`,
       },
     },
   },

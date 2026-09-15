@@ -12,13 +12,13 @@ const meta = {
       description: {
         component: `An accessible form label that associates visible text with a native form control. It wraps a native \`<label>\` element with the \`.pathable-label\` class and forwards standard label attributes.
 
-**When to use**: Use Label to provide a visible accessible name for an associated form control. Set \`htmlFor\` to the control's \`id\`, or place the control inside the label.
+**When to use**: Use Label to provide a visible accessible name for an associated form control. Compose it directly inside FormGroup with one supported control for automatic association, set \`htmlFor\` explicitly, or place the control inside the label.
 
 **When not to use**: Do not use Label as a heading, helper text, validation message, or action control. Use the appropriate semantic element or PathAble wrapper for those purposes.
 
 **Underlying element**: Native \`<label>\`. The wrapper does not create or manage the associated form control.
 
-**Accessibility**: Every form control should have an accessible name. Prefer a visible Label with a matching \`htmlFor\` and control \`id\`; use \`aria-describedby\` for supporting hints or validation messages rather than putting all instructions in the label.`,
+**Accessibility**: Every form control should have an accessible name. FormGroup supplies a missing \`htmlFor\` and control \`id\` for direct supported compositions; standalone and custom-wrapped controls require explicit association. Use \`aria-describedby\` for supporting hints or validation messages rather than putting all instructions in the label.`,
       },
     },
   },
