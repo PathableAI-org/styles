@@ -1,5 +1,12 @@
 # @pathableai/styles
 
+## 0.1.0
+
+### Minor Changes
+
+- 7c0b34a: Add responsive form rows that align direct input, select, and textarea controls when field labels, hints, and errors have uneven content.
+- 80e3074: Add a dedicated FormStack layout contract that expands supported controls to the available form width, preserves explicit control constraints, and documents Form versus FormStack usage.
+
 ## 0.0.4
 
 ### Patch Changes
