@@ -19,6 +19,10 @@ const config = {
         { width: 320, height: 700 },
       ],
       [
+        'components-form-controls-form-stack--narrow',
+        { width: 320, height: 700 },
+      ],
+      [
         'components-form-controls-form-row--at-desktop-breakpoint',
         { width: 1024, height: 900 },
       ],

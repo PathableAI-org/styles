@@ -1132,7 +1132,7 @@ Search does not own the query, results, validation, request, or keyboard routing
 
 ### Form Props
 
-`Form` wraps a native `<form>` with the `pathable-form` class and forwards standard form attributes.
+`Form` wraps a native `<form>` with the `pathable-form` class and forwards standard form attributes. Use it for short, linear forms that benefit from the USWDS form measure. Use `FormStack` instead for wider multi-field or multi-section layouts.
 
 | Prop       | Type                                                  | Default | Description                                                                   |
 | ---------- | ----------------------------------------------------- | ------- | ----------------------------------------------------------------------------- |
@@ -1147,6 +1147,26 @@ Any other standard form attributes, including `id`, `encType`, `target`, `aria-*
 #### Form Accessibility
 
 Use a visible heading with `aria-labelledby` or an appropriate `aria-label` when the form needs an accessible name. Give every contained control an accessible label and provide a clearly labeled submit action. Do not nest forms. Form does not manage control state, validation, submission requests, or server responses.
+
+### FormStack Props
+
+`FormStack` renders a native `<form>` by default with `pathable-stack` and `pathable-form-stack`. It provides consistent vertical spacing for multi-field forms and lets PathAble inputs, selects, and textareas use the available form-column width without per-control sizing props.
+
+| Prop      | Type                           | Default  | Description                                                                 |
+| --------- | ------------------------------ | -------- | --------------------------------------------------------------------------- |
+| children  | `React.ReactNode`              | —        | Form groups, fieldsets, form rows, and form actions.                        |
+| gap       | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`   | Vertical spacing between direct children.                                   |
+| maxWidth  | `'tablet' \| 'desktop'`        | —        | Optional maximum width; omission uses the available container width.        |
+| as        | `React.ElementType`            | `'form'` | Root element; use `div` only when composing inside an existing native form. |
+| className | `string`                       | —        | Additional classes appended after the FormStack classes.                    |
+
+Any other standard form attributes, including `id`, `action`, `method`, `aria-*`, `data-*`, and event handlers, are forwarded to the root element.
+
+Use `Form` and `FormStack` as alternative form roots; do not nest them. When an existing form already owns submission, render `FormStack` with `as="div"`. An explicit `maxWidth` prop on an individual control overrides FormStack's automatic control expansion.
+
+#### FormStack Accessibility
+
+Give the form an accessible name when needed, preserve each control's label and description associations, and provide a clearly labeled submit action. FormStack owns layout only; it does not manage field state, validation, submission requests, or server responses.
 
 ### FormGroup Props
 

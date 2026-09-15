@@ -6,6 +6,9 @@
 // Selective import test for the responsive form-row composition.
 @forward '../src/pathable-component-wrappers/pathable-form-row';
 
+// Selective import test for FormStack control expansion.
+@forward '../src/pathable-component-wrappers/pathable-stack';
+
 // Selective import tests for structured workflow components:
 // Import each new composition individually to verify they compile without pulling in unrelated classes.
 @forward '../src/pathable-component-wrappers/pathable-wizard';

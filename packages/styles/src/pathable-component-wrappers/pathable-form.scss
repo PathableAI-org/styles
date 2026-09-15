@@ -12,3 +12,18 @@
 .pathable-form {
   @extend .usa-form;
 }
+
+// USWDS scopes this rule to .usa-* controls, so repeat it for PathAble-only
+// markup. Explicit control max-width utilities remain intentional overrides.
+.pathable-form
+  :where(.pathable-input, .pathable-select, .pathable-textarea):not(
+    :where(
+      .pathable-maxw-mobile,
+      .pathable-maxw-mobile-lg,
+      .pathable-maxw-tablet,
+      .pathable-maxw-desktop
+    )
+  ) {
+  box-sizing: border-box;
+  max-width: none;
+}

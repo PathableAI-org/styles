@@ -19,6 +19,7 @@ const config = {
         'components-appshell--narrow-viewport',
         'components-appshell--shared-mobile-navigation',
         'components-appshell--responsive-layout-switch',
+        'components-form-controls-formstack--narrow',
       ]).has(context.id)
     ) {
       await page.setViewportSize({ width: 320, height: 700 })
