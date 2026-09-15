@@ -1,5 +1,17 @@
 # @pathableai/react
 
+## 0.1.0
+
+### Minor Changes
+
+- 80e3074: Add a dedicated FormStack layout contract that expands supported controls to the available form width, preserves explicit control constraints, and documents Form versus FormStack usage.
+
+### Patch Changes
+
+- Updated dependencies [7c0b34a]
+- Updated dependencies [80e3074]
+  - @pathableai/styles@0.1.0
+
 ## 0.0.5
 
 ### Patch Changes
