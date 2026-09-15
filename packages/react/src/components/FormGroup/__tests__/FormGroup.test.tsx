@@ -122,6 +122,22 @@ describe('FormGroup', () => {
     expect(control.getAttribute('aria-invalid')).toBe('grammar')
   })
 
+  it('does not add Label wiring when aria-labelledby names the control', () => {
+    const { container, getByRole } = render(
+      <FormGroup>
+        <span id="external-label">External account email</span>
+        <Label>Local email label</Label>
+        <Input aria-labelledby="external-label" />
+      </FormGroup>,
+    )
+
+    const label = container.querySelector('label')!
+    const control = getByRole('textbox', { name: 'External account email' })
+
+    expect(label.hasAttribute('for')).toBe(false)
+    expect(control.getAttribute('aria-labelledby')).toBe('external-label')
+  })
+
   it('uses an explicit Label htmlFor as the missing control id', () => {
     const { container, getByLabelText } = render(
       <FormGroup>
@@ -363,6 +379,37 @@ describe('FormGroup', () => {
     expect(container.querySelector('.pathable-hint')?.hasAttribute('id')).toBe(
       false,
     )
+  })
+
+  it('preserves control identity when composition becomes unambiguous', () => {
+    function DynamicField({ includeExtra }: { includeExtra: boolean }) {
+      return (
+        <FormGroup>
+          <Label>Name</Label>
+          <Input defaultValue="Initial value" />
+          {includeExtra && <Textarea aria-label="Additional notes" />}
+        </FormGroup>
+      )
+    }
+
+    const { container, rerender } = render(<DynamicField includeExtra />)
+    const initialControl = container.querySelector('input')!
+    initialControl.value = 'Consumer value'
+    initialControl.focus()
+
+    rerender(<DynamicField includeExtra={false} />)
+
+    expect(container.querySelector('input')).toBe(initialControl)
+    expect(initialControl.value).toBe('Consumer value')
+    expect(document.activeElement).toBe(initialControl)
+
+    rerender(<DynamicField includeExtra />)
+
+    expect(container.querySelector('input')).toBe(initialControl)
+    expect(initialControl.value).toBe('Consumer value')
+    expect(document.activeElement).toBe(initialControl)
+    expect(container.querySelector('label')?.hasAttribute('for')).toBe(false)
+    expect(initialControl.hasAttribute('id')).toBe(false)
   })
 
   it('leaves native and custom wrapper compositions unchanged', () => {

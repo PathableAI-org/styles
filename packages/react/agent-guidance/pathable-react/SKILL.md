@@ -46,8 +46,9 @@ raw HTML and `usa-*` or `pathable-*` classes.
   `Hint`, and `ErrorMessage` inside `FormGroup` to receive stable IDs and
   associations automatically. Use one Label and give dynamically reordered
   descriptions React keys. Explicit non-empty IDs and ARIA attributes are
-  preserved; an explicit `aria-describedby`, including an empty string, opts
-  out of automatic description wiring.
+  preserved. A non-empty `aria-labelledby` opts out of automatic Label wiring;
+  an explicit `aria-describedby`, including an empty string, opts out of
+  automatic description wiring.
 - Wire standalone controls, custom wrappers, and composite controls explicitly
   with labels and `aria-describedby`. Keep `aria-invalid`, validation state,
   and announcement timing consumer-owned.

@@ -22,6 +22,7 @@ const BASE_CLASS = 'pathable-form-group'
 
 interface AssociationProps {
   'aria-describedby'?: null | string
+  'aria-labelledby'?: null | string
   children?: ReactNode
   htmlFor?: null | string
   id?: null | string
@@ -65,6 +66,10 @@ function isUsableId(value: null | string | undefined): value is string {
     value.length > 0 &&
     !/[\u0009\u000a\u000c\u000d\u0020]/.test(value)
   )
+}
+
+function hasIdReference(value: null | string | undefined) {
+  return typeof value === 'string' && value.trim().length > 0
 }
 
 function forEachParticipant(
@@ -116,23 +121,17 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
     }
   })
 
-  if (controls.length !== 1) {
-    return (
-      <div className={combinedClassName} {...rest}>
-        {children}
-      </div>
-    )
-  }
-
-  const control = controls[0]
-  const controlProps = control.element.props as AssociationProps
-  const label = labels.length === 1 ? labels[0] : undefined
+  const control = controls.length === 1 ? controls[0] : undefined
+  const controlProps = (control?.element.props ?? {}) as AssociationProps
+  const label = control && labels.length === 1 ? labels[0] : undefined
   const labelProps = label?.element.props as AssociationProps | undefined
   const controlId =
     (isUsableId(controlProps.id) && controlProps.id) ||
     (isUsableId(labelProps?.htmlFor) && labelProps.htmlFor) ||
     `${generatedId}-control`
-  const managesDescriptions = controlProps['aria-describedby'] == null
+  const managesDescriptions =
+    control !== undefined && controlProps['aria-describedby'] == null
+  const managesLabel = !hasIdReference(controlProps['aria-labelledby'])
   const descriptionIds = managesDescriptions
     ? descriptions.map(({ element, kind, path }) => {
         const props = element.props as AssociationProps
@@ -159,14 +158,14 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
       const props = child.props as AssociationProps
       const associationProps: AssociationProps = {}
 
-      if (path === control.path) {
+      if (path === control?.path) {
         if (!isUsableId(props.id)) associationProps.id = controlId
         if (managesDescriptions && ariaDescribedBy) {
           associationProps['aria-describedby'] = ariaDescribedBy
         }
       }
 
-      if (path === label?.path && !isUsableId(props.htmlFor)) {
+      if (managesLabel && path === label?.path && !isUsableId(props.htmlFor)) {
         associationProps.htmlFor = controlId
       }
 
