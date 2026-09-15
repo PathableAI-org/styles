@@ -53,7 +53,9 @@ raw HTML and `usa-*` or `pathable-*` classes.
   and announcement timing consumer-owned.
 - Use `Fieldset` for related controls that need a shared group name;
   `FormGroup` does not create group semantics and does not auto-wire multiple
-  direct controls, including mixed PathAble and native controls.
+  direct controls, including a supported control mixed with a native control or
+  a PathAble composite such as `Checkbox`, `Radio`, `ComboBox`, `DatePicker`, or
+  `DateRangePicker`.
 - Preserve native element semantics, visible focus indicators, keyboard
   behavior, and non-color cues.
 - Give informative images meaningful alternative text and decorative images

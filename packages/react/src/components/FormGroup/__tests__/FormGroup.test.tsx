@@ -3,11 +3,16 @@ import { cleanup, render } from '@testing-library/react'
 import { hydrateRoot } from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { Checkbox } from '../../Checkbox/Checkbox'
+import { ComboBox } from '../../ComboBox/ComboBox'
+import { DatePicker } from '../../DatePicker/DatePicker'
+import { DateRangePicker } from '../../DateRangePicker/DateRangePicker'
 import { ErrorMessage } from '../../ErrorMessage/ErrorMessage'
 import { Hint } from '../../Hint/Hint'
 import { Input } from '../../Input/Input'
 import { Label } from '../../Label/Label'
 import { Range } from '../../Range/Range'
+import { Radio } from '../../Radio/Radio'
 import { Select } from '../../Select/Select'
 import { Textarea } from '../../Textarea/Textarea'
 import { FormGroup } from '../FormGroup'
@@ -136,6 +141,24 @@ describe('FormGroup', () => {
 
     expect(label.hasAttribute('for')).toBe(false)
     expect(control.getAttribute('aria-labelledby')).toBe('external-label')
+  })
+
+  it('does not reuse Label htmlFor when aria-labelledby opts out', () => {
+    const { container, getByRole } = render(
+      <FormGroup>
+        <span id="external-label">External account email</span>
+        <span id="other-control" />
+        <Label htmlFor="other-control">Local email label</Label>
+        <Input aria-labelledby="external-label" />
+      </FormGroup>,
+    )
+
+    const label = container.querySelector('label')!
+    const control = getByRole('textbox', { name: 'External account email' })
+
+    expect(label.getAttribute('for')).toBe('other-control')
+    expect(control.id).not.toBe('other-control')
+    expect(container.querySelectorAll('#other-control')).toHaveLength(1)
   })
 
   it('uses an explicit Label htmlFor as the missing control id', () => {
@@ -420,6 +443,42 @@ describe('FormGroup', () => {
       false,
     )
   })
+
+  it.each([
+    ['Checkbox', <Checkbox>Choice</Checkbox>],
+    ['Radio', <Radio>Choice</Radio>],
+    [
+      'ComboBox',
+      <ComboBox label="Choice" options={[{ label: 'One', value: 'one' }]} />,
+    ],
+    ['DatePicker', <DatePicker label="Date" />],
+    [
+      'DateRangePicker',
+      <DateRangePicker startLabel="Start date" endLabel="End date" />,
+    ],
+  ])(
+    'treats a supported control mixed with direct %s as ambiguous',
+    (_name, compositeControl) => {
+      const { container } = render(
+        <FormGroup>
+          <Label>Name</Label>
+          <Input />
+          {compositeControl}
+          <Hint>Enter a name.</Hint>
+        </FormGroup>,
+      )
+
+      const supportedControl = container.querySelector('.pathable-input')!
+      expect(
+        container.querySelector('.pathable-label')?.hasAttribute('for'),
+      ).toBe(false)
+      expect(supportedControl.hasAttribute('id')).toBe(false)
+      expect(supportedControl.hasAttribute('aria-describedby')).toBe(false)
+      expect(
+        container.querySelector('.pathable-hint')?.hasAttribute('id'),
+      ).toBe(false)
+    },
+  )
 
   it('preserves control identity when composition becomes unambiguous', () => {
     function DynamicField({ includeExtra }: { includeExtra: boolean }) {

@@ -8,6 +8,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react'
+import { isFormGroupCompositeControl } from '../../internal/form-group-control.js'
 import { ErrorMessage } from '../ErrorMessage/ErrorMessage.js'
 import { Hint } from '../Hint/Hint.js'
 import { Input } from '../Input/Input.js'
@@ -123,7 +124,10 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
     if (isSupportedControl(element)) {
       controls.push({ element, path })
       controlCount += 1
-    } else if (isNativeControl(element)) {
+    } else if (
+      isNativeControl(element) ||
+      isFormGroupCompositeControl(element.type)
+    ) {
       controlCount += 1
     }
     if (element.type === Label) labels.push({ element, path })
@@ -139,13 +143,13 @@ export function FormGroup({ children, className, ...rest }: FormGroupProps) {
   const controlProps = (control?.element.props ?? {}) as AssociationProps
   const label = control && labels.length === 1 ? labels[0] : undefined
   const labelProps = label?.element.props as AssociationProps | undefined
+  const managesLabel = !hasIdReference(controlProps['aria-labelledby'])
   const controlId =
     (isUsableId(controlProps.id) && controlProps.id) ||
-    (isUsableId(labelProps?.htmlFor) && labelProps.htmlFor) ||
+    (managesLabel && isUsableId(labelProps?.htmlFor) && labelProps.htmlFor) ||
     `${generatedId}-control`
   const managesDescriptions =
     control !== undefined && controlProps['aria-describedby'] == null
-  const managesLabel = !hasIdReference(controlProps['aria-labelledby'])
   const descriptionIds = managesDescriptions
     ? descriptions.map(({ element, kind }, index) => {
         const props = element.props as AssociationProps
