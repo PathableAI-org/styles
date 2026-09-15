@@ -67,6 +67,15 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-checkbox--with-hint-and-error',
     mode: 'both',
   },
+  { id: 'components-form-controls-form-row--default', mode: 'both' },
+  {
+    id: 'components-form-controls-form-row--constrained-three-fields',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-form-row--in-pathable-form',
+    mode: 'desktop',
+  },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
