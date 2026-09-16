@@ -293,7 +293,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
       - name: Test React
-        run: pnpm --filter @pathableai/react test:unit -- --maxWorkers=1
+        run: pnpm --filter @pathableai/react test:unit:ci
       - name: Typecheck React
         run: pnpm --filter @pathableai/react typecheck
 
