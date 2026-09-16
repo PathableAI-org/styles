@@ -1,0 +1,147 @@
+// packages/styles/src/pathable-component-wrappers/pathable-filterable-option-list.scss
+//
+// Framework-neutral composition for a labeled filter and native checkbox list.
+// Existing fieldset, legend, input, label, and checkbox contracts own control
+// appearance; this contract owns layout, scrolling, details, and result states.
+
+.pathable-filterable-option-list {
+  box-sizing: border-box;
+  display: grid;
+  width: 100%;
+  max-width: var(--pathable-filterable-option-list-max-width, 32rem);
+  min-width: 0;
+  gap: var(--space-12);
+  color: var(--pathable-color-text);
+}
+
+.pathable-filterable-option-list__filter {
+  min-width: 0;
+}
+
+.pathable-filterable-option-list__filter > .pathable-label:first-child {
+  margin-top: 0;
+}
+
+.pathable-filterable-option-list__filter-input {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.pathable-filterable-option-list__status {
+  margin: 0;
+  color: var(--pathable-color-text-muted);
+}
+
+.pathable-filterable-option-list__options {
+  box-sizing: border-box;
+  max-height: var(--pathable-filterable-option-list-max-height, 20rem);
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-4);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid var(--pathable-color-border);
+  background: var(--pathable-color-surface);
+  list-style: none;
+  scrollbar-gutter: stable;
+}
+
+.pathable-filterable-option-list__option {
+  min-width: 0;
+  padding: var(--space-8);
+  overflow-wrap: anywhere;
+}
+
+.pathable-filterable-option-list__option
+  + .pathable-filterable-option-list__option {
+  border-top: 1px solid var(--pathable-color-border);
+}
+
+.pathable-filterable-option-list__option > .pathable-checkbox {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 44px;
+}
+
+.pathable-filterable-option-list__option > .pathable-checkbox:focus-within {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: -2px;
+}
+
+// Keep the native control at its option's position so keyboard focus scrolls
+// within the bounded list instead of targeting USWDS's off-canvas location.
+.pathable-filterable-option-list .pathable-checkbox__input {
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.pathable-filterable-option-list__details {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  margin-inline-start: var(--space-32);
+  color: var(--pathable-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.pathable-filterable-option-list__description,
+.pathable-filterable-option-list__meta {
+  min-width: 0;
+}
+
+.pathable-filterable-option-list__meta {
+  font-size: var(--pathable-font-size-body-sm);
+  font-weight: var(--pathable-font-weight-semibold, 600);
+}
+
+.pathable-filterable-option-list__empty {
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-16);
+  border: 1px solid var(--pathable-color-border);
+  background: var(--pathable-color-surface);
+  color: var(--pathable-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.pathable-filterable-option-list:disabled
+  :is(
+    .pathable-filterable-option-list__status,
+    .pathable-filterable-option-list__details,
+    .pathable-filterable-option-list__empty
+  ) {
+  color: var(--pathable-color-text-muted);
+}
+
+@media (forced-colors: active) {
+  .pathable-filterable-option-list__option > .pathable-checkbox:focus-within {
+    outline-color: Highlight;
+  }
+
+  .pathable-filterable-option-list__options,
+  .pathable-filterable-option-list__empty {
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .pathable-filterable-option-list__option
+    + .pathable-filterable-option-list__option {
+    border-color: CanvasText;
+  }
+
+  .pathable-filterable-option-list__status,
+  .pathable-filterable-option-list__details,
+  .pathable-filterable-option-list__empty {
+    color: CanvasText;
+  }
+}

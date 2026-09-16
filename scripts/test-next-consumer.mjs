@@ -459,6 +459,16 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     join(reactRoot, 'dist', 'index.d.ts'),
     'utf8',
   )
+  const filterableOptionListRuntime = await readFile(
+    join(
+      reactRoot,
+      'dist',
+      'components',
+      'FilterableOptionList',
+      'FilterableOptionList.js',
+    ),
+    'utf8',
+  )
   const appShellDeclarations = await readFile(
     join(reactRoot, 'dist', 'components', 'AppShell', 'AppShell.d.ts'),
     'utf8',
@@ -518,9 +528,19 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     'Packed React runtime does not load the default theme before structural styles',
   )
   assert.match(
-    runtime,
+    filterableOptionListRuntime,
     /from\s+['"]react\/jsx-runtime['"]/u,
-    'Packed React runtime does not import the consumer JSX runtime',
+    'Packed FilterableOptionList does not import the consumer JSX runtime',
+  )
+  assert.match(
+    filterableOptionListRuntime,
+    /^['"]use client['"];/u,
+    'Packed FilterableOptionList does not preserve its client boundary',
+  )
+  assert.doesNotMatch(
+    runtime,
+    /^['"]use client['"];/u,
+    'Packed React root unnecessarily marks server-safe exports as client-only',
   )
   const runtimeExports = runtime.match(/export\s*\{([^}]*)\}/su)?.[1] ?? ''
   assert.match(
@@ -529,10 +549,35 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     'Packed runtime does not explicitly export ActivityList',
   )
   assert.match(
+    runtimeExports,
+    /\b(?:FilterableOptionList|\w+\s+as\s+FilterableOptionList)\b/u,
+    'Packed runtime does not explicitly export FilterableOptionList',
+  )
+  assert.match(
     declarations,
     /export\s*\{\s*ActivityList\s*\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/u,
     'Packed declarations do not explicitly export ActivityList',
   )
+  assert.match(
+    declarations,
+    /export\s*\{\s*FilterableOptionList\s*\}\s*from\s*['"]\.\/components\/FilterableOptionList\/FilterableOptionList\.js['"]/u,
+    'Packed declarations do not explicitly export FilterableOptionList',
+  )
+  const filterableOptionListTypeExports =
+    declarations.match(
+      /export\s+type\s*\{([^}]*)\}\s*from\s*['"]\.\/components\/FilterableOptionList\/FilterableOptionList\.js['"]/su,
+    )?.[1] ?? ''
+  for (const publicType of [
+    'FilterableOption',
+    'FilterableOptionListProps',
+    'FilterableOptionPredicate',
+  ]) {
+    assert.match(
+      filterableOptionListTypeExports,
+      new RegExp(`\\b${publicType}\\b`, 'u'),
+      `Packed declarations do not explicitly export ${publicType}`,
+    )
+  }
   assert.match(
     declarations,
     /\bMobileNavigation\b/u,
@@ -638,7 +683,7 @@ export default function RootLayout({ children }) {
   )
   await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
-    `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, Link, List, Loading, Tag } from '@pathableai/react'
+    `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, FilterableOptionList, Link, List, Loading, Tag } from '@pathableai/react'
 
 export default function Page() {
   return (
@@ -669,6 +714,19 @@ export default function Page() {
       <List items={['Consumer list item one', 'Consumer list item two']} />
       <Tag>Consumer tag</Tag>
       <Loading text="Consumer loading state" />
+      <FilterableOptionList
+        legend="Consumer services"
+        filterLabel="Filter consumer services"
+        name="services"
+        options={[
+          {
+            id: 'employment',
+            label: 'Employment support',
+            description: 'Help finding and retaining work.',
+          },
+          { id: 'housing', label: 'Housing support' },
+        ]}
+      />
       <ActivityList
         groups={[
           {
@@ -809,6 +867,29 @@ async function assertBrowserConsumer(fixtureRoot) {
       computed.headerDisplay,
       'flex',
       'DashboardHeader structural styles are not applied',
+    )
+    const optionList = page.locator('.pathable-filterable-option-list')
+    assert.equal(
+      await optionList.count(),
+      1,
+      'Rendered page has no unique FilterableOptionList',
+    )
+    await optionList.getByRole('searchbox').fill('housing')
+    assert.equal(
+      await optionList.getByRole('checkbox').count(),
+      1,
+      'Packed FilterableOptionList did not filter after hydration',
+    )
+    await optionList.locator('label', { hasText: 'Housing support' }).click()
+    assert.equal(
+      await optionList.getByRole('status').textContent(),
+      '1 selected, 1 match',
+      'Packed FilterableOptionList did not update selection status',
+    )
+    assert.equal(
+      await optionList.evaluate((element) => getComputedStyle(element).display),
+      'grid',
+      'FilterableOptionList structural styles are not applied',
     )
     assert.deepEqual(
       browserErrors,
@@ -967,6 +1048,11 @@ allowBuilds:
     /\.pathable-dashboard-header\s*\{[^}]*display\s*:\s*flex(?:\s*;|\s*\})/u,
     'Next build CSS omits concrete DashboardHeader structural styles',
   )
+  assert.match(
+    emittedCss,
+    /\.pathable-filterable-option-list\s*\{[^}]*display\s*:\s*grid(?:\s*;|\s*\})/u,
+    'Next build CSS omits concrete FilterableOptionList structural styles',
+  )
 
   for (const content of [
     'Server-rendered card content',
@@ -974,6 +1060,10 @@ allowBuilds:
     'Consumer list item one',
     'Consumer tag',
     'Consumer loading state',
+    'Consumer services',
+    'Filter consumer services',
+    'Employment support',
+    'Housing support',
     'Consumer activity today',
     'Consumer completed activity',
     'Completed',

@@ -114,6 +114,7 @@ import {
   Checkbox,
   EmptyState,
   Form,
+  FilterableOptionList,
   FormGroup,
   Fieldset,
   Header,
@@ -1076,6 +1077,93 @@ The visible fields use native labels, `aria-invalid` for invalid or out-of-range
 #### ComboBox Accessibility
 
 ComboBox supplies the visible label, `combobox` role, `listbox` relationship, active-descendant state, keyboard navigation, and polite result announcements. Use `inputProps.aria-describedby` for hints or validation messages. The hidden native select retains the submitted field name and selected value. Use `selectProps.value` with `selectProps.onChange` for controlled selection or `selectProps.defaultValue` for uncontrolled selection.
+
+### FilterableOptionList Props
+
+Use `FilterableOptionList` when people need to compare, filter, and select
+multiple entries from a known catalog of dozens or hundreds of options. Use a
+single `Checkbox` for one choice, `Radio` or `Select` for one-of-many selection,
+and `ComboBox` for one searchable choice. For thousands of simultaneously
+available records, use a product-owned remote or virtualized experience instead.
+
+```tsx
+<FilterableOptionList
+  legend="Service standards"
+  filterLabel="Filter standards"
+  filterPlaceholder="Search by label"
+  name="serviceStandards"
+  defaultValues={['employment']}
+  options={[
+    {
+      id: 'employment',
+      label: 'Employment support',
+      description: 'Services related to obtaining or retaining work.',
+      meta: 'EMP-01',
+    },
+    {
+      id: 'transportation',
+      label: 'Transportation planning',
+      description: 'Route planning and travel training.',
+      meta: 'TRN-03',
+    },
+  ]}
+/>
+```
+
+| Prop                | Type                                                   | Default                   | Description                                                                                               |
+| ------------------- | ------------------------------------------------------ | ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `legend`            | `React.ReactNode`                                      | required                  | Visible accessible name for the checkbox group.                                                           |
+| `options`           | `readonly FilterableOption[]`                          | required                  | Ordered options with unique non-empty IDs, labels, and optional description, metadata, or disabled state. |
+| `values`            | `readonly string[]`                                    | —                         | Controlled ordered selection; IDs absent from `options` remain selected.                                  |
+| `defaultValues`     | `readonly string[]`                                    | `[]`                      | Initial ordered selection for uncontrolled usage.                                                         |
+| `onValuesChange`    | `(values: readonly string[]) => void`                  | —                         | Receives the complete next selection in stable order.                                                     |
+| `filterable`        | `boolean`                                              | `true`                    | Shows the labeled filter input.                                                                           |
+| `filterMode`        | `'client' \| 'external'`                               | `'client'`                | Applies local matching or renders consumer-supplied results without filtering again.                      |
+| `query`             | `string`                                               | —                         | Controlled query.                                                                                         |
+| `defaultQuery`      | `string`                                               | `''`                      | Initial query for uncontrolled usage.                                                                     |
+| `onQueryChange`     | `(query: string) => void`                              | —                         | Reports every query change.                                                                               |
+| `filterOption`      | `(option: FilterableOption, query: string) => boolean` | label substring matching  | Custom client-side matching policy.                                                                       |
+| `filterLabel`       | `React.ReactNode`                                      | `'Filter options'`        | Visible accessible label for the search input.                                                            |
+| `filterPlaceholder` | `string`                                               | —                         | Supplemental placeholder; not a replacement for `filterLabel`.                                            |
+| `name`              | `string`                                               | —                         | Native form name used once for each selected ID.                                                          |
+| `emptyMessage`      | `React.ReactNode`                                      | `'No options available.'` | Message for an empty supplied catalog.                                                                    |
+| `noMatchesMessage`  | `React.ReactNode`                                      | `'No matches.'`           | Message for a client query with no results.                                                               |
+| `disabled`          | `boolean`                                              | `false`                   | Disables the fieldset, filter, and all options.                                                           |
+| `className`         | `string`                                               | —                         | Additional root fieldset classes.                                                                         |
+
+Each `FilterableOption` requires a unique, non-empty string `id` and a concise
+string `label`. Provide meaningful, non-empty text for `legend` and
+`filterLabel`. `description` and `meta` accept non-interactive inline React
+content and are exposed as descriptions rather than becoming part of the
+checkbox name. Invalid duplicate or empty IDs throw an error instead of creating
+ambiguous selections.
+
+Client mode uses trimmed, case-insensitive label substring matching unless
+`filterOption` supplies another policy. External mode calls `onQueryChange` and
+renders `options` exactly as supplied, so the application owns remote requests,
+loading, errors, authorization, and result replacement. Filtering never removes
+selected IDs that are hidden or absent from the current options, and the status
+count and form values continue to include them. Use either `values` or
+`defaultValues`, and either `query` or `defaultQuery`, independently according to
+where each piece of state belongs. Native form reset restores uncontrolled
+defaults. Group-level validation such as "choose at least one" remains
+application-owned.
+
+#### FilterableOptionList Accessibility
+
+The component renders a native fieldset and legend, a visibly labeled search
+input, a list of native checkboxes, and one polite atomic status. Tab moves
+through the filter and enabled checkboxes in native order; Space toggles a
+focused checkbox. Keep labels concise and put supporting content in
+`description` or `meta`. Do not add listbox roles or custom arrow-key behavior.
+When `name` is supplied, repeated hidden inputs submit every selected ID exactly
+once, including IDs hidden by filtering or absent from external results.
+
+`FilterableOptionList` produces meaningful initial server HTML, but its state,
+effects, and input handlers require it to render beneath a client boundary in a
+React Server Component framework. Keep controlled state, callbacks, and the
+component together in that client module. It does not require
+`@pathableai/styles/js`.
 
 ### Input Props
 

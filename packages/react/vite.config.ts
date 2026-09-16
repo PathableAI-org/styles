@@ -18,6 +18,9 @@ export default defineConfig({
         /^@pathableai\/styles(\/|$)/,
       ],
       output: {
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        entryFileNames: '[name].js',
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',

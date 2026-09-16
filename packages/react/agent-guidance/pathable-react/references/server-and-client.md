@@ -14,10 +14,13 @@ frameworks:
 - `ComboBox`
 - `DatePicker`
 - `DateRangePicker`
+- `FilterableOptionList`
 - `Modal`
 
-They own state, effects, browser interaction, or portals. `Modal` portals to
-`document.body` after mounting.
+They own state, effects, browser interaction, or portals. `FilterableOptionList`
+produces meaningful initial server HTML, but filtering, selection, and native
+form-reset synchronization become interactive only after hydration. `Modal`
+portals to `document.body` after mounting.
 
 ## Usage-driven boundaries
 
