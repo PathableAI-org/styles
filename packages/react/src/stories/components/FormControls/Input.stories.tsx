@@ -19,7 +19,7 @@ const meta = {
 
 **Underlying element**: Native \`<input>\`. The wrapper does not manage value state, validation, submission, or input type behavior.
 
-**Accessibility**: Consumers must provide an accessible name through a visible associated \`<label>\` or an appropriate ARIA label. Use \`aria-describedby\` to associate hints or validation messages, and use \`aria-invalid\` when application validation identifies an error.`,
+**Accessibility**: Consumers must provide an accessible name through a visible associated \`<label>\` or an appropriate ARIA label. FormGroup supplies missing Label and description associations for direct compositions; wire standalone or custom-wrapped controls explicitly. Use \`aria-invalid\` when application validation identifies an error.`,
       },
     },
   },

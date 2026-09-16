@@ -13,6 +13,7 @@ import {
   type ReactNode,
   type SelectHTMLAttributes,
 } from 'react'
+import { registerFormGroupCompositeControl } from '../../internal/form-group-control.js'
 
 export interface ComboBoxOption {
   readonly value: string
@@ -452,3 +453,5 @@ export function ComboBox({
     </div>
   )
 }
+
+registerFormGroupCompositeControl(ComboBox)

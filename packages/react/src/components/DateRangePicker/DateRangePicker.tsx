@@ -12,6 +12,7 @@ import {
   type MouseEventHandler,
   type ReactNode,
 } from 'react'
+import { registerFormGroupCompositeControl } from '../../internal/form-group-control.js'
 
 import {
   DatePickerCalendar,
@@ -569,3 +570,5 @@ export function DateRangePicker({
     </div>
   )
 }
+
+registerFormGroupCompositeControl(DateRangePicker)
