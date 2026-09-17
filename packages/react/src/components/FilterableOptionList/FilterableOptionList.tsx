@@ -146,7 +146,10 @@ export function FilterableOptionList({
       queueMicrotask(() => {
         if (!active || event.defaultPrevented) return
         if (values === undefined) setUncontrolledValues(unique(defaultValues))
-        if (query === undefined) setUncontrolledQuery(defaultQuery)
+        if (query === undefined) {
+          setUncontrolledQuery(defaultQuery)
+          onQueryChange?.(defaultQuery)
+        }
       })
     }
 
@@ -155,7 +158,7 @@ export function FilterableOptionList({
       active = false
       ownerDocument.removeEventListener('reset', reset)
     }
-  }, [defaultQuery, defaultValues, form, query, values])
+  }, [defaultQuery, defaultValues, form, onQueryChange, query, values])
 
   const changeQuery = (nextQuery: string) => {
     if (query === undefined) setUncontrolledQuery(nextQuery)

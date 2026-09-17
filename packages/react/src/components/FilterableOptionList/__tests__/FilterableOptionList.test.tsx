@@ -1,4 +1,4 @@
-import React, { act } from 'react'
+import React, { act, useState } from 'react'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { hydrateRoot } from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
@@ -115,6 +115,51 @@ describe('FilterableOptionList', () => {
     fireEvent.change(getByRole('searchbox'), { target: { value: 'next' } })
     expect(onQueryChange).toHaveBeenCalledWith('next')
     expect(getAllByRole('checkbox')).toHaveLength(3)
+  })
+
+  it('reports the restored uncontrolled query so external results reset', async () => {
+    const onQueryChange = vi.fn()
+
+    function ExternalFilteringForm() {
+      const [externalQuery, setExternalQuery] = useState('')
+      const externalOptions = externalQuery
+        ? options.filter((option) =>
+            option.label.toLowerCase().includes(externalQuery.toLowerCase()),
+          )
+        : options
+
+      return (
+        <form>
+          <FilterableOptionList
+            legend="Services"
+            options={externalOptions}
+            filterMode="external"
+            onQueryChange={(nextQuery) => {
+              onQueryChange(nextQuery)
+              setExternalQuery(nextQuery)
+            }}
+          />
+        </form>
+      )
+    }
+
+    const { container, getAllByRole, getByRole } = render(
+      <ExternalFilteringForm />,
+    )
+    const form = container.querySelector('form')!
+    const searchbox = getByRole('searchbox') as HTMLInputElement
+
+    fireEvent.change(searchbox, { target: { value: 'housing' } })
+    expect(searchbox.value).toBe('housing')
+    expect(getAllByRole('checkbox')).toHaveLength(1)
+
+    onQueryChange.mockClear()
+    await resetForm(form)
+
+    expect(searchbox.value).toBe('')
+    expect(getAllByRole('checkbox')).toHaveLength(3)
+    expect(onQueryChange).toHaveBeenCalledTimes(1)
+    expect(onQueryChange).toHaveBeenCalledWith('')
   })
 
   it('supports uncontrolled selection and preserves unknown defaults', () => {
@@ -331,6 +376,7 @@ describe('FilterableOptionList', () => {
   })
 
   it('preserves uncontrolled state when native reset is cancelled', async () => {
+    const onQueryChange = vi.fn()
     const { container, getByRole } = render(
       <form onReset={(event) => event.preventDefault()}>
         <FilterableOptionList
@@ -338,6 +384,7 @@ describe('FilterableOptionList', () => {
           options={options}
           defaultValues={['employment']}
           defaultQuery="support"
+          onQueryChange={onQueryChange}
         />
       </form>,
     )
@@ -345,10 +392,12 @@ describe('FilterableOptionList', () => {
 
     fireEvent.click(getByRole('checkbox', { name: 'Housing support' }))
     fireEvent.change(getByRole('searchbox'), { target: { value: 'housing' } })
+    onQueryChange.mockClear()
     await resetForm(form)
 
     expect((getByRole('searchbox') as HTMLInputElement).value).toBe('housing')
     expect(getByRole('status').textContent).toBe('2 selected, 1 match')
+    expect(onQueryChange).not.toHaveBeenCalled()
   })
 
   it('observes an externally associated form mounted after the list', async () => {

@@ -69,7 +69,11 @@ Expected outcome:
 ```powershell
 pnpm --filter @pathableai/react check:package
 pnpm --filter @pathableai/react check:types
+$env:NEXT_CONSUMER_FIXTURE = 'next15-react18'
 pnpm test:next-consumer
+$env:NEXT_CONSUMER_FIXTURE = 'next16-react19'
+pnpm test:next-consumer
+Remove-Item Env:NEXT_CONSUMER_FIXTURE
 pnpm changeset:status
 ```
 

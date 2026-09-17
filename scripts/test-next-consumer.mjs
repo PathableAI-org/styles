@@ -35,6 +35,10 @@ const commandEnvironment = {
 
 const javaScriptEntrypoints = new Set(['.js', '.cjs', '.mjs'])
 const consumerFixture = process.env.NEXT_CONSUMER_FIXTURE ?? 'next15-react18'
+const expectedFixtureMajors = {
+  'next15-react18': { next: 15, react: 18, 'react-dom': 18 },
+  'next16-react19': { next: 16, react: 19, 'react-dom': 19 },
+}
 assert.match(
   consumerFixture,
   /^[a-z\d-]+$/u,
@@ -43,6 +47,24 @@ assert.match(
 let activeConsumerServer
 let activeTemporaryRoot
 let terminating = false
+
+function assertFixtureFrameworkVersions(manifest) {
+  const expectedMajors = expectedFixtureMajors[consumerFixture]
+  assert.ok(
+    expectedMajors,
+    `No framework version contract is registered for ${consumerFixture}`,
+  )
+
+  for (const [dependency, expectedMajor] of Object.entries(expectedMajors)) {
+    const declaredVersion = manifest.dependencies?.[dependency]
+    const major = Number.parseInt(declaredVersion?.split('.')[0] ?? '', 10)
+    assert.equal(
+      major,
+      expectedMajor,
+      `${consumerFixture} must declare ${dependency} ${expectedMajor}.x, received ${declaredVersion ?? 'no version'}`,
+    )
+  }
+}
 
 async function handleTermination(signal) {
   if (terminating) return
@@ -646,6 +668,10 @@ async function writeFixture(fixtureRoot) {
     'next-consumer',
     consumerFixture,
   )
+  const fixtureManifest = JSON.parse(
+    await readFile(join(fixtureTemplate, 'package.json'), 'utf8'),
+  )
+  assertFixtureFrameworkVersions(fixtureManifest)
   await copyFile(
     join(fixtureTemplate, 'package.json'),
     join(fixtureRoot, 'package.json'),

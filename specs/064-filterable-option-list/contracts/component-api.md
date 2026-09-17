@@ -83,7 +83,8 @@ The package root exports `FilterableOptionList`, `FilterableOption`,
 - When `name` is supplied, render one hidden successful control per selected
   unique ID.
 - Visual checkboxes do not carry `name`, preventing duplicate submission.
-- Form reset restores uncontrolled default values and default query.
+- Form reset restores uncontrolled default values and default query. Restoring
+  an uncontrolled query reports `defaultQuery` through `onQueryChange`.
 - Group-required validation is not part of this API.
 
 ## Attribute Forwarding

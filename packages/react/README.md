@@ -1146,8 +1146,9 @@ selected IDs that are hidden or absent from the current options, and the status
 count and form values continue to include them. Use either `values` or
 `defaultValues`, and either `query` or `defaultQuery`, independently according to
 where each piece of state belongs. Native form reset restores uncontrolled
-defaults. Group-level validation such as "choose at least one" remains
-application-owned.
+defaults and reports the restored `defaultQuery` through `onQueryChange` so
+external result owners can synchronize their result set. Group-level validation
+such as "choose at least one" remains application-owned.
 
 #### FilterableOptionList Accessibility
 
