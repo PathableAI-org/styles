@@ -147,9 +147,9 @@ options, with 500 as the tested local-filter boundary.
 ### Complexity Tracking
 
 - No constitution violation is required.
-- The feature is intentionally stacked on unmerged PR #243 for the private
-  FormGroup composite registry. The eventual PR must declare that dependency and
-  rebase onto `main` after #243 lands.
+- Implementation began stacked on PR #243 for the private FormGroup composite
+  registry. PR #243 has since landed, and this branch was rebased onto `main`
+  before final validation.
 
 ## Project Structure
 

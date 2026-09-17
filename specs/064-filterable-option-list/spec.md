@@ -149,5 +149,5 @@ relationships and submitted values.
 - Supporting descriptions and metadata are non-interactive content.
 - Group-level "at least one required" validation remains consumer-owned because native checkbox `required` does not express that rule for a group.
 - Loading, error, pagination, authorization, and data fetching remain outside the component.
-- Issue #233 and PR #243 provide the FormGroup composite registry. This feature is intentionally stacked on that unmerged work and must preserve a clear dependency until it lands.
+- Issue #233 and merged PR #243 provide the FormGroup composite registry. This feature branch is rebased onto that work in `main`.
 - The existing package style entrypoint and dependency wiring remain the delivery path for the new shared stylesheet contract.
