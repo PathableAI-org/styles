@@ -1,5 +1,11 @@
 # @pathableai/react
 
+## 0.2.0
+
+### Minor Changes
+
+- 4c8c1f2: Add accessible-by-default FormGroup composition that generates stable field IDs and associates supported labels, hints, and errors while preserving explicit consumer ARIA attributes.
+
 ## 0.1.0
 
 ### Minor Changes
