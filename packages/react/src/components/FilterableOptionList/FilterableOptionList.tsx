@@ -3,6 +3,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type FieldsetHTMLAttributes,
@@ -32,7 +33,7 @@ interface FilterableOptionListBaseProps extends Omit<
 > {
   readonly children?: never
   readonly dangerouslySetInnerHTML?: never
-  readonly legend: ReactNode
+  readonly legend: string
   readonly options: readonly FilterableOption[]
   readonly values?: readonly string[]
   readonly defaultValues?: readonly string[]
@@ -41,7 +42,7 @@ interface FilterableOptionListBaseProps extends Omit<
   readonly query?: string
   readonly defaultQuery?: string
   readonly onQueryChange?: (query: string) => void
-  readonly filterLabel?: ReactNode
+  readonly filterLabel?: string
   readonly filterPlaceholder?: string
   readonly name?: string
   readonly emptyMessage?: ReactNode
@@ -90,6 +91,19 @@ function validateOptions(options: readonly FilterableOption[]) {
   }
 }
 
+function validateAccessibleNames(
+  legend: string,
+  filterLabel: string,
+  filterable: boolean,
+) {
+  if (typeof legend !== 'string' || !legend.trim()) {
+    throw new Error('FilterableOptionList legend must be non-empty.')
+  }
+  if (filterable && (typeof filterLabel !== 'string' || !filterLabel.trim())) {
+    throw new Error('FilterableOptionList filterLabel must be non-empty.')
+  }
+}
+
 export function FilterableOptionList({
   legend,
   options,
@@ -112,6 +126,7 @@ export function FilterableOptionList({
   form,
   ...rest
 }: FilterableOptionListProps) {
+  validateAccessibleNames(legend, filterLabel, filterable)
   validateOptions(options)
   if (filterMode === 'external' && filterOption !== undefined) {
     throw new Error(
@@ -168,7 +183,7 @@ export function FilterableOptionList({
   const queryText = hasQuery ? ` for "${currentQuery.trim()}"` : ''
   const statusText = `${selectedValues.length} selected, ${resultText}${queryText}`
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     resetStateRef.current = {
       defaultQuery,
       defaultValues,

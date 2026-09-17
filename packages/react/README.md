@@ -1112,7 +1112,7 @@ available records, use a product-owned remote or virtualized experience instead.
 
 | Prop                | Type                                                   | Default                   | Description                                                                                               |
 | ------------------- | ------------------------------------------------------ | ------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `legend`            | `React.ReactNode`                                      | required                  | Visible accessible name for the checkbox group.                                                           |
+| `legend`            | `string`                                               | required                  | Non-empty visible accessible name for the checkbox group.                                                 |
 | `options`           | `readonly FilterableOption[]`                          | required                  | Ordered options with unique non-empty IDs, labels, and optional description, metadata, or disabled state. |
 | `values`            | `readonly string[]`                                    | —                         | Controlled ordered selection; IDs absent from `options` remain selected.                                  |
 | `defaultValues`     | `readonly string[]`                                    | `[]`                      | Initial ordered selection for uncontrolled usage.                                                         |
@@ -1123,7 +1123,7 @@ available records, use a product-owned remote or virtualized experience instead.
 | `defaultQuery`      | `string`                                               | `''`                      | Initial query for uncontrolled usage.                                                                     |
 | `onQueryChange`     | `(query: string) => void`                              | —                         | Reports every query change.                                                                               |
 | `filterOption`      | `(option: FilterableOption, query: string) => boolean` | label substring matching  | Custom client-side matching policy; invalid when `filterMode="external"`.                                 |
-| `filterLabel`       | `React.ReactNode`                                      | `'Filter options'`        | Visible accessible label for the search input.                                                            |
+| `filterLabel`       | `string`                                               | `'Filter options'`        | Non-empty visible accessible label for the search input.                                                  |
 | `filterPlaceholder` | `string`                                               | —                         | Supplemental placeholder; not a replacement for `filterLabel`.                                            |
 | `name`              | `string`                                               | —                         | Native form name used once for each selected ID.                                                          |
 | `emptyMessage`      | `React.ReactNode`                                      | `'No options available.'` | Message for an empty supplied catalog.                                                                    |
@@ -1136,8 +1136,8 @@ Other standard fieldset attributes, including `id`, `form`, `aria-*`, and
 `children` and `dangerouslySetInnerHTML` are not accepted.
 
 Each `FilterableOption` requires a unique, non-empty string `id` and a concise
-string `label`. Provide meaningful, non-empty text for `legend` and
-`filterLabel`. `description` and `meta` accept non-interactive inline React
+string `label`. `legend` and `filterLabel` accept meaningful, non-empty strings
+so the group and filter always have accessible names. `description` and `meta` accept non-interactive inline React
 content and are exposed as descriptions rather than becoming part of the
 checkbox name. Empty labels and duplicate or empty IDs throw a generic error
 instead of creating unnamed or ambiguous selections or exposing identifier

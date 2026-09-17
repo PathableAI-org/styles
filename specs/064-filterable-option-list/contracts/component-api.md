@@ -27,7 +27,7 @@ interface FilterableOptionListBaseProps
   > {
   readonly children?: never
   readonly dangerouslySetInnerHTML?: never
-  readonly legend: ReactNode
+  readonly legend: string
   readonly options: readonly FilterableOption[]
   readonly values?: readonly string[]
   readonly defaultValues?: readonly string[]
@@ -36,7 +36,7 @@ interface FilterableOptionListBaseProps
   readonly query?: string
   readonly defaultQuery?: string
   readonly onQueryChange?: (query: string) => void
-  readonly filterLabel?: ReactNode
+  readonly filterLabel?: string
   readonly filterPlaceholder?: string
   readonly name?: string
   readonly emptyMessage?: ReactNode
@@ -58,6 +58,10 @@ export type FilterableOptionListProps = FilterableOptionListBaseProps &
 
 The package root exports `FilterableOptionList`, `FilterableOption`,
 `FilterableOptionListProps`, and `FilterableOptionPredicate`.
+
+`legend` and `filterLabel` are non-empty strings so the native fieldset and
+search input always receive visible accessible names. Runtime validation guards
+the same contract for untyped JavaScript callers.
 
 ## Defaults
 
@@ -108,7 +112,7 @@ The package root exports `FilterableOptionList`, `FilterableOption`,
   an uncontrolled query reports `defaultQuery` through `onQueryChange`.
 - Controlled values and query remain authoritative after native reset.
 - Accepted reset handling remains active across parent rerenders caused by the
-  reset event and reads the latest defaults and callbacks.
+  reset event and reads defaults and callbacks committed by those updates.
 - Group-required validation is not part of this API.
 
 ## Attribute Forwarding

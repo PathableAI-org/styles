@@ -31,6 +31,21 @@ const invalidExternalFilteringProps: FilterableOptionListProps = {
 }
 void invalidExternalFilteringProps
 
+const invalidLegendProps: FilterableOptionListProps = {
+  // @ts-expect-error Accessible names must be non-empty strings, not nullable nodes.
+  legend: null,
+  options,
+}
+void invalidLegendProps
+
+const invalidFilterLabelProps: FilterableOptionListProps = {
+  legend: 'Services',
+  options,
+  // @ts-expect-error Accessible names must be non-empty strings, not arbitrary nodes.
+  filterLabel: <span>Filter services</span>,
+}
+void invalidFilterLabelProps
+
 async function resetForm(form: HTMLFormElement) {
   await act(async () => {
     form.reset()
@@ -509,6 +524,47 @@ describe('FilterableOptionList', () => {
     ).toBe(false)
   })
 
+  it('uses defaults and callbacks committed by a parent reset update', async () => {
+    const initialOnQueryChange = vi.fn()
+    const updatedOnQueryChange = vi.fn()
+
+    function UpdatingResetForm() {
+      const [updated, setUpdated] = useState(false)
+
+      return (
+        <form onReset={() => setUpdated(true)}>
+          <FilterableOptionList
+            legend="Services"
+            options={options}
+            defaultValues={updated ? ['housing'] : ['employment']}
+            defaultQuery={updated ? 'housing' : 'support'}
+            onQueryChange={
+              updated ? updatedOnQueryChange : initialOnQueryChange
+            }
+          />
+        </form>
+      )
+    }
+
+    const { container, getByRole } = render(<UpdatingResetForm />)
+    const form = container.querySelector('form')!
+
+    fireEvent.click(getByRole('checkbox', { name: 'Employment support' }))
+    fireEvent.change(getByRole('searchbox'), { target: { value: 'transport' } })
+    initialOnQueryChange.mockClear()
+
+    await resetForm(form)
+
+    expect((getByRole('searchbox') as HTMLInputElement).value).toBe('housing')
+    expect(
+      (getByRole('checkbox', { name: 'Housing support' }) as HTMLInputElement)
+        .checked,
+    ).toBe(true)
+    expect(initialOnQueryChange).not.toHaveBeenCalled()
+    expect(updatedOnQueryChange).toHaveBeenCalledOnce()
+    expect(updatedOnQueryChange).toHaveBeenCalledWith('housing')
+  })
+
   it('preserves uncontrolled state when native reset is cancelled', async () => {
     const onQueryChange = vi.fn()
     const { container, getByRole } = render(
@@ -710,6 +766,46 @@ describe('FilterableOptionList', () => {
         />,
       ),
     ).toThrow('option ids must be unique')
+  })
+
+  it('rejects missing accessible names from untyped callers', () => {
+    const invalidLegend = {
+      legend: null,
+    } as unknown as Partial<FilterableOptionListProps>
+    const invalidFilterLabel = {
+      filterLabel: ' ',
+    } as Partial<FilterableOptionListProps>
+
+    expect(() =>
+      render(
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          {...invalidLegend}
+        />,
+      ),
+    ).toThrow('legend must be non-empty')
+
+    expect(() =>
+      render(
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          {...invalidFilterLabel}
+        />,
+      ),
+    ).toThrow('filterLabel must be non-empty')
+
+    expect(() =>
+      render(
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          filterable={false}
+          {...invalidFilterLabel}
+        />,
+      ),
+    ).not.toThrow()
   })
 
   it('drops unsafe fieldset content props supplied at runtime', () => {
