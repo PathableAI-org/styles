@@ -210,7 +210,8 @@ export const LongContent = {
           checked: true,
         },
       ],
-      status: '1 selected, 1 match',
+      status:
+        '1 selected, 1 match for "ExtremelyLongUnbrokenConsumerSuppliedQueryThatMustWrapWithoutOverflowingTheBoundedOptionList"',
     }),
 }
 

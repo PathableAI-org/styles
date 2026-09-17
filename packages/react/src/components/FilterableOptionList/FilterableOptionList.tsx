@@ -63,6 +63,8 @@ export type FilterableOptionListProps = FilterableOptionListBaseProps &
 
 const ROOT_CLASS = 'pathable-filterable-option-list'
 const FIELDSET_CLASS = 'pathable-fieldset'
+const useIsomorphicLayoutEffect =
+  typeof document === 'undefined' ? useEffect : useLayoutEffect
 
 function unique(values: readonly string[]) {
   return Array.from(new Set(values))
@@ -183,7 +185,7 @@ export function FilterableOptionList({
   const queryText = hasQuery ? ` for "${currentQuery.trim()}"` : ''
   const statusText = `${selectedValues.length} selected, ${resultText}${queryText}`
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     resetStateRef.current = {
       defaultQuery,
       defaultValues,

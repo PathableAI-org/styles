@@ -457,6 +457,9 @@ export const LongContent: Story = {
       },
     ],
     defaultValues: ['coordinated-support'],
+    defaultQuery:
+      'ExtremelyLongUnbrokenConsumerSuppliedQueryThatMustWrapWithoutOverflowingTheBoundedOptionList',
+    filterMode: 'external',
   },
 }
 

@@ -377,10 +377,10 @@ describe('FilterableOptionList', () => {
     expect(new FormData(form).getAll('services')).toEqual([])
   })
 
-  it('associates hidden values and reset behavior with an external form', async () => {
-    const { container, getByRole } = render(
+  it('associates hidden values and reset behavior with a replaced external form', async () => {
+    const { container, getByRole, rerender } = render(
       <>
-        <form id="service-form" />
+        <form key="initial" id="service-form" />
         <FilterableOptionList
           legend="Services"
           options={options}
@@ -401,9 +401,31 @@ describe('FilterableOptionList', () => {
       'housing',
     ])
 
-    await resetForm(form)
+    rerender(
+      <>
+        <form key="replacement" id="service-form" />
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          defaultValues={['employment']}
+          defaultQuery="support"
+          name="services"
+          form="service-form"
+        />
+      </>,
+    )
+    const replacementForm = container.querySelector('form')!
+    expect(replacementForm).not.toBe(form)
+    expect(new FormData(replacementForm).getAll('services')).toEqual([
+      'employment',
+      'housing',
+    ])
+
+    await resetForm(replacementForm)
     expect((getByRole('searchbox') as HTMLInputElement).value).toBe('support')
-    expect(new FormData(form).getAll('services')).toEqual(['employment'])
+    expect(new FormData(replacementForm).getAll('services')).toEqual([
+      'employment',
+    ])
   })
 
   it('restores uncontrolled defaults on native form reset', async () => {
