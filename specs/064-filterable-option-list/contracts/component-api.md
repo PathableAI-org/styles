@@ -16,7 +16,7 @@ export type FilterableOptionPredicate = (
   query: string,
 ) => boolean
 
-export interface FilterableOptionListProps
+interface FilterableOptionListBaseProps
   extends Omit<
     FieldsetHTMLAttributes<HTMLFieldSetElement>,
     | 'children'
@@ -33,17 +33,27 @@ export interface FilterableOptionListProps
   readonly defaultValues?: readonly string[]
   readonly onValuesChange?: (values: readonly string[]) => void
   readonly filterable?: boolean
-  readonly filterMode?: 'client' | 'external'
   readonly query?: string
   readonly defaultQuery?: string
   readonly onQueryChange?: (query: string) => void
-  readonly filterOption?: FilterableOptionPredicate
   readonly filterLabel?: ReactNode
   readonly filterPlaceholder?: string
   readonly name?: string
   readonly emptyMessage?: ReactNode
   readonly noMatchesMessage?: ReactNode
 }
+
+export type FilterableOptionListProps = FilterableOptionListBaseProps &
+  (
+    | {
+        readonly filterMode?: 'client'
+        readonly filterOption?: FilterableOptionPredicate
+      }
+    | {
+        readonly filterMode: 'external'
+        readonly filterOption?: never
+      }
+  )
 ```
 
 The package root exports `FilterableOptionList`, `FilterableOption`,
@@ -80,9 +90,14 @@ The package root exports `FilterableOptionList`, `FilterableOption`,
   trimmed lower-case query with the lower-case option label.
 - External mode never filters `options`; `onQueryChange` lets the consumer
   replace results.
-- `filterOption` is invalid in external mode and should be documented and typed
-  as a client-mode concern where practical.
+- `filterOption` is invalid in external mode. The public discriminated type
+  rejects it, and runtime validation protects untyped JavaScript callers.
 - `filterable={false}` omits the filter and renders all supplied options.
+- An empty client catalog remains an empty-catalog state even when a query is
+  present. In external mode, an empty supplied result set with an active query
+  is a no-match state.
+- The single status includes the active trimmed query so equal-count query
+  transitions still produce an informative announcement.
 
 ## Form Rules
 
@@ -92,6 +107,8 @@ The package root exports `FilterableOptionList`, `FilterableOption`,
 - Form reset restores uncontrolled default values and default query. Restoring
   an uncontrolled query reports `defaultQuery` through `onQueryChange`.
 - Controlled values and query remain authoritative after native reset.
+- Accepted reset handling remains active across parent rerenders caused by the
+  reset event and reads the latest defaults and callbacks.
 - Group-required validation is not part of this API.
 
 ## Attribute Forwarding
@@ -110,3 +127,6 @@ The package root exports `FilterableOptionList`, `FilterableOption`,
 - Initial server output is meaningful and hydration-stable.
 - Consumers using React Server Components place the component and its stateful
   owner under a client boundary.
+- A `FormGroup` containing `FilterableOptionList` and another control must be
+  composed wholly within one client module so composite-control identity is
+  available during association inference.

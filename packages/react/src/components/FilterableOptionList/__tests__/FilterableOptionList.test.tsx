@@ -22,6 +22,15 @@ const options: FilterableOption[] = [
   { id: 'housing', label: 'Housing support' },
 ]
 
+// @ts-expect-error External filtering delegates matching and cannot accept a client predicate.
+const invalidExternalFilteringProps: FilterableOptionListProps = {
+  legend: 'Services',
+  options,
+  filterMode: 'external',
+  filterOption: () => true,
+}
+void invalidExternalFilteringProps
+
 async function resetForm(form: HTMLFormElement) {
   await act(async () => {
     form.reset()
@@ -64,7 +73,9 @@ describe('FilterableOptionList', () => {
 
     expect(getByRole('checkbox', { name: 'Housing support' })).toBeTruthy()
     expect(queryByRole('checkbox', { name: 'Employment support' })).toBeNull()
-    expect(getByRole('status').textContent).toBe('0 selected, 1 match')
+    expect(getByRole('status').textContent).toBe(
+      '0 selected, 1 match for "HOUSING"',
+    )
   })
 
   it('supports custom matching and controlled query state', () => {
@@ -97,7 +108,23 @@ describe('FilterableOptionList', () => {
         filterOption={filterOption}
       />,
     )
-    expect(getByRole('status').textContent).toBe('0 selected, no matches')
+    expect(getByRole('status').textContent).toBe(
+      '0 selected, no matches for "housing"',
+    )
+  })
+
+  it('changes the live status when equal-count queries replace results', () => {
+    const { getByRole } = render(
+      <FilterableOptionList legend="Services" options={options} />,
+    )
+    const searchbox = getByRole('searchbox')
+    const status = getByRole('status')
+
+    fireEvent.change(searchbox, { target: { value: 'employment' } })
+    expect(status.textContent).toBe('0 selected, 1 match for "employment"')
+
+    fireEvent.change(searchbox, { target: { value: 'housing' } })
+    expect(status.textContent).toBe('0 selected, 1 match for "housing"')
   })
 
   it('delegates filtering in external mode while reporting query changes', () => {
@@ -116,6 +143,23 @@ describe('FilterableOptionList', () => {
     fireEvent.change(getByRole('searchbox'), { target: { value: 'next' } })
     expect(onQueryChange).toHaveBeenCalledWith('next')
     expect(getAllByRole('checkbox')).toHaveLength(3)
+  })
+
+  it('rejects a client predicate in external mode at runtime', () => {
+    const unsafeProps = {
+      filterMode: 'external',
+      filterOption: () => true,
+    } as unknown as Partial<FilterableOptionListProps>
+
+    expect(() =>
+      render(
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          {...unsafeProps}
+        />,
+      ),
+    ).toThrow('filterOption is only valid in client mode')
   })
 
   it('reports the restored uncontrolled query so external results reset', async () => {
@@ -362,11 +406,15 @@ describe('FilterableOptionList', () => {
 
     fireEvent.click(getByRole('checkbox', { name: 'Housing support' }))
     fireEvent.change(getByRole('searchbox'), { target: { value: 'housing' } })
-    expect(getByRole('status').textContent).toBe('2 selected, 1 match')
+    expect(getByRole('status').textContent).toBe(
+      '2 selected, 1 match for "housing"',
+    )
 
     await resetForm(form)
     expect((getByRole('searchbox') as HTMLInputElement).value).toBe('support')
-    expect(getByRole('status').textContent).toBe('1 selected, 2 matches')
+    expect(getByRole('status').textContent).toBe(
+      '1 selected, 2 matches for "support"',
+    )
     expect(
       (
         getByRole('checkbox', {
@@ -420,6 +468,47 @@ describe('FilterableOptionList', () => {
     expect(housing.checked).toBe(true)
   })
 
+  it('restores defaults when the parent rerenders during native reset', async () => {
+    function RerenderingResetForm() {
+      const [, setResetCount] = useState(0)
+
+      return (
+        <form onReset={() => setResetCount((count) => count + 1)}>
+          <FilterableOptionList
+            legend="Services"
+            options={options}
+            defaultValues={['employment']}
+            defaultQuery="support"
+          />
+        </form>
+      )
+    }
+
+    const { container, getByRole } = render(<RerenderingResetForm />)
+    const form = container.querySelector('form')!
+
+    fireEvent.click(getByRole('checkbox', { name: 'Housing support' }))
+    fireEvent.change(getByRole('searchbox'), { target: { value: 'housing' } })
+
+    await resetForm(form)
+
+    expect((getByRole('searchbox') as HTMLInputElement).value).toBe('support')
+    expect(
+      (
+        getByRole('checkbox', {
+          name: 'Employment support',
+        }) as HTMLInputElement
+      ).checked,
+    ).toBe(true)
+    expect(
+      (
+        getByRole('checkbox', {
+          name: 'Housing support',
+        }) as HTMLInputElement
+      ).checked,
+    ).toBe(false)
+  })
+
   it('preserves uncontrolled state when native reset is cancelled', async () => {
     const onQueryChange = vi.fn()
     const { container, getByRole } = render(
@@ -441,7 +530,9 @@ describe('FilterableOptionList', () => {
     await resetForm(form)
 
     expect((getByRole('searchbox') as HTMLInputElement).value).toBe('housing')
-    expect(getByRole('status').textContent).toBe('2 selected, 1 match')
+    expect(getByRole('status').textContent).toBe(
+      '2 selected, 1 match for "housing"',
+    )
     expect(onQueryChange).not.toHaveBeenCalled()
   })
 
@@ -527,14 +618,46 @@ describe('FilterableOptionList', () => {
     rerender(
       <FilterableOptionList
         legend="Services"
+        options={[]}
+        query="not present"
+        emptyMessage="Catalog unavailable"
+        noMatchesMessage="Nothing found"
+      />,
+    )
+    expect(getByRole('status').textContent).toBe(
+      '0 selected, no options available for "not present"',
+    )
+    expect(getByRole('group').textContent).toContain('Catalog unavailable')
+    expect(getByRole('group').textContent).not.toContain('Nothing found')
+
+    rerender(
+      <FilterableOptionList
+        legend="Services"
         options={options}
         query="not present"
         noMatchesMessage="Nothing found"
       />,
     )
-    expect(getByRole('status').textContent).toBe('0 selected, no matches')
+    expect(getByRole('status').textContent).toBe(
+      '0 selected, no matches for "not present"',
+    )
     expect(getByRole('group').textContent).toContain('Nothing found')
     expect(queryByRole('list')).toBeNull()
+
+    rerender(
+      <FilterableOptionList
+        legend="Services"
+        options={[]}
+        filterMode="external"
+        query="not present"
+        emptyMessage="Catalog unavailable"
+        noMatchesMessage="Nothing found"
+      />,
+    )
+    expect(getByRole('status').textContent).toBe(
+      '0 selected, no matches for "not present"',
+    )
+    expect(getByRole('group').textContent).toContain('Nothing found')
   })
 
   it('can render without filtering and forwards fieldset attributes', () => {
@@ -586,7 +709,7 @@ describe('FilterableOptionList', () => {
           ]}
         />,
       ),
-    ).toThrow('Duplicate id: "same"')
+    ).toThrow('option ids must be unique')
   })
 
   it('drops unsafe fieldset content props supplied at runtime', () => {
@@ -625,7 +748,9 @@ describe('FilterableOptionList', () => {
     })
     const elapsed = performance.now() - startedAt
     expect(getAllByRole('checkbox')).toHaveLength(1)
-    expect(getByRole('status').textContent).toBe('0 selected, 1 match')
+    expect(getByRole('status').textContent).toBe(
+      '0 selected, 1 match for "Option 499"',
+    )
     expect(elapsed).toBeLessThan(100)
   })
 

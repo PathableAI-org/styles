@@ -60,8 +60,10 @@
 - Every option is a native checkbox with one concise visible label.
 - Description and metadata content is non-interactive and referenced through
   `aria-describedby` when present.
-- The single status node reports selection and results. Empty and no-match text
-  may also appear in the option region but must not create another live region.
+- The single status node reports selection, results, and the active query when
+  present so equal-count query transitions remain announceable. Empty and
+  no-match text may also appear in the option region but must not create another
+  live region.
 - No-match and empty output are not list options.
 - Hidden form controls mirror selected IDs exactly once when `name` is supplied.
 

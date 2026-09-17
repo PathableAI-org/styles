@@ -618,6 +618,11 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     )
   }
   assert.match(
+    filterableOptionListDeclarations,
+    /filterMode: 'external'[\s\S]*?filterOption\?: never/u,
+    'Packed FilterableOptionList declarations do not reject filterOption in external mode',
+  )
+  assert.match(
     declarations,
     /\bMobileNavigation\b/u,
     'Packed declarations do not export the AppShell mobile navigation type',
@@ -725,8 +730,31 @@ export default function RootLayout({ children }) {
 `,
   )
   await writeFile(
+    join(fixtureRoot, 'app', 'client-form.js'),
+    `'use client'
+
+import { FilterableOptionList, FormGroup, Input, Label } from '@pathableai/react'
+
+export function ClientFormComposition() {
+  return (
+    <FormGroup data-rsc-client-composition="true">
+      <Label data-rsc-ambiguous-label="true">Mixed controls</Label>
+      <Input aria-label="Standalone mixed input" />
+      <FilterableOptionList
+        data-testid="mixed-filterable-option-list"
+        filterable={false}
+        legend="Mixed service options"
+        options={[{ id: 'mixed-service', label: 'Mixed service' }]}
+      />
+    </FormGroup>
+  )
+}
+`,
+  )
+  await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
     `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, FilterableOptionList, Link, List, Loading, Tag } from '@pathableai/react'
+import { ClientFormComposition } from './client-form'
 
 export default function Page() {
   return (
@@ -758,6 +786,7 @@ export default function Page() {
       <Tag>Consumer tag</Tag>
       <Loading text="Consumer loading state" />
       <FilterableOptionList
+        data-testid="consumer-filterable-option-list"
         legend="Consumer services"
         filterLabel="Filter consumer services"
         name="services"
@@ -770,6 +799,7 @@ export default function Page() {
           { id: 'housing', label: 'Housing support' },
         ]}
       />
+      <ClientFormComposition />
       <ActivityList
         groups={[
           {
@@ -911,11 +941,42 @@ async function assertBrowserConsumer(fixtureRoot) {
       'flex',
       'DashboardHeader structural styles are not applied',
     )
-    const optionList = page.locator('.pathable-filterable-option-list')
+    const optionList = page.getByTestId('consumer-filterable-option-list')
     assert.equal(
       await optionList.count(),
       1,
       'Rendered page has no unique FilterableOptionList',
+    )
+    assert.equal(
+      await page.locator('.pathable-filterable-option-list').count(),
+      2,
+      'Packed RSC page did not render both FilterableOptionList compositions',
+    )
+    const detailsSpacing = await optionList
+      .locator('.pathable-filterable-option-list__details')
+      .evaluate((element) => {
+        const style = getComputedStyle(element)
+        return { gap: style.gap, marginBlockStart: style.marginBlockStart }
+      })
+    assert.deepEqual(
+      detailsSpacing,
+      { gap: '4px', marginBlockStart: '4px' },
+      'FilterableOptionList detail spacing does not resolve shared tokens',
+    )
+    const mixedComposition = page.locator(
+      '[data-rsc-client-composition="true"]',
+    )
+    assert.equal(
+      await mixedComposition.count(),
+      1,
+      'Packed RSC page did not render the client-owned FormGroup composition',
+    )
+    assert.equal(
+      await mixedComposition
+        .locator('[data-rsc-ambiguous-label="true"]')
+        .getAttribute('for'),
+      null,
+      'FormGroup incorrectly associated a label across an ambiguous client composition',
     )
     await optionList.getByRole('searchbox').fill('housing')
     assert.equal(
@@ -926,7 +987,7 @@ async function assertBrowserConsumer(fixtureRoot) {
     await optionList.locator('label', { hasText: 'Housing support' }).click()
     assert.equal(
       await optionList.getByRole('status').textContent(),
-      '1 selected, 1 match',
+      '1 selected, 1 match for "housing"',
       'Packed FilterableOptionList did not update selection status',
     )
     assert.equal(

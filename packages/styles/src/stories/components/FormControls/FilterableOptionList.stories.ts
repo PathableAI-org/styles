@@ -189,7 +189,7 @@ export const NoMatches = {
     renderList({
       id: 'no-matches',
       query: 'aquatic',
-      status: '1 selected, no matches',
+      status: '1 selected, no matches for "aquatic"',
       empty:
         'No standards match "aquatic". Clear the filter to view all options.',
     }),

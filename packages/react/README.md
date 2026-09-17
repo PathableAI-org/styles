@@ -1122,7 +1122,7 @@ available records, use a product-owned remote or virtualized experience instead.
 | `query`             | `string`                                               | —                         | Controlled query.                                                                                         |
 | `defaultQuery`      | `string`                                               | `''`                      | Initial query for uncontrolled usage.                                                                     |
 | `onQueryChange`     | `(query: string) => void`                              | —                         | Reports every query change.                                                                               |
-| `filterOption`      | `(option: FilterableOption, query: string) => boolean` | label substring matching  | Custom client-side matching policy.                                                                       |
+| `filterOption`      | `(option: FilterableOption, query: string) => boolean` | label substring matching  | Custom client-side matching policy; invalid when `filterMode="external"`.                                 |
 | `filterLabel`       | `React.ReactNode`                                      | `'Filter options'`        | Visible accessible label for the search input.                                                            |
 | `filterPlaceholder` | `string`                                               | —                         | Supplemental placeholder; not a replacement for `filterLabel`.                                            |
 | `name`              | `string`                                               | —                         | Native form name used once for each selected ID.                                                          |
@@ -1139,15 +1139,20 @@ Each `FilterableOption` requires a unique, non-empty string `id` and a concise
 string `label`. Provide meaningful, non-empty text for `legend` and
 `filterLabel`. `description` and `meta` accept non-interactive inline React
 content and are exposed as descriptions rather than becoming part of the
-checkbox name. Invalid duplicate or empty IDs throw an error instead of creating
-ambiguous selections.
+checkbox name. Empty labels and duplicate or empty IDs throw a generic error
+instead of creating unnamed or ambiguous selections or exposing identifier
+values.
 
 Client mode uses trimmed, case-insensitive label substring matching unless
 `filterOption` supplies another policy. External mode calls `onQueryChange` and
 renders `options` exactly as supplied, so the application owns remote requests,
-loading, errors, authorization, and result replacement. Filtering never removes
-selected IDs that are hidden or absent from the current options, and the status
-count and form values continue to include them. Use either `values` or
+loading, errors, authorization, and result replacement. Supplying `filterOption`
+with external mode is rejected by the public type and at runtime. An empty client
+catalog remains distinct from a query with no matches; an empty externally
+supplied result set with a query is a no-match state. Filtering never removes
+selected IDs that are hidden or absent from the current options. The status
+includes the active query so equal-count result replacements are announced, and
+selection counts and form values continue to include hidden IDs. Use either `values` or
 `defaultValues`, and either `query` or `defaultQuery`, independently according to
 where each piece of state belongs. Native form reset restores uncontrolled
 defaults and reports the restored `defaultQuery` through `onQueryChange` so
@@ -1168,8 +1173,11 @@ once, including IDs hidden by filtering or absent from external results.
 `FilterableOptionList` produces meaningful initial server HTML, but its state,
 effects, and input handlers require it to render beneath a client boundary in a
 React Server Component framework. Keep controlled state, callbacks, and the
-component together in that client module. It does not require
-`@pathableai/styles/js`.
+component together in that client module. When composing it with `FormGroup` and
+other controls, place the entire `FormGroup` composition in the same client
+module. A server-rendered `FormGroup` cannot inspect a client-reference proxy as
+the registered composite control and may infer the wrong association. It does
+not require `@pathableai/styles/js`.
 
 ### Input Props
 

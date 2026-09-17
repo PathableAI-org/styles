@@ -26,7 +26,7 @@ export type FilterableOptionPredicate = (
   query: string,
 ) => boolean
 
-export interface FilterableOptionListProps extends Omit<
+interface FilterableOptionListBaseProps extends Omit<
   FieldsetHTMLAttributes<HTMLFieldSetElement>,
   'children' | 'dangerouslySetInnerHTML' | 'defaultValue' | 'onChange' | 'value'
 > {
@@ -38,17 +38,27 @@ export interface FilterableOptionListProps extends Omit<
   readonly defaultValues?: readonly string[]
   readonly onValuesChange?: (values: readonly string[]) => void
   readonly filterable?: boolean
-  readonly filterMode?: 'client' | 'external'
   readonly query?: string
   readonly defaultQuery?: string
   readonly onQueryChange?: (query: string) => void
-  readonly filterOption?: FilterableOptionPredicate
   readonly filterLabel?: ReactNode
   readonly filterPlaceholder?: string
   readonly name?: string
   readonly emptyMessage?: ReactNode
   readonly noMatchesMessage?: ReactNode
 }
+
+export type FilterableOptionListProps = FilterableOptionListBaseProps &
+  (
+    | {
+        readonly filterMode?: 'client'
+        readonly filterOption?: FilterableOptionPredicate
+      }
+    | {
+        readonly filterMode: 'external'
+        readonly filterOption?: never
+      }
+  )
 
 const ROOT_CLASS = 'pathable-filterable-option-list'
 const FIELDSET_CLASS = 'pathable-fieldset'
@@ -74,9 +84,7 @@ function validateOptions(options: readonly FilterableOption[]) {
       throw new Error('FilterableOptionList option labels must be non-empty.')
     }
     if (ids.has(option.id)) {
-      throw new Error(
-        `FilterableOptionList option ids must be unique. Duplicate id: "${option.id}".`,
-      )
+      throw new Error('FilterableOptionList option ids must be unique.')
     }
     ids.add(option.id)
   }
@@ -105,6 +113,11 @@ export function FilterableOptionList({
   ...rest
 }: FilterableOptionListProps) {
   validateOptions(options)
+  if (filterMode === 'external' && filterOption !== undefined) {
+    throw new Error(
+      'FilterableOptionList filterOption is only valid in client mode.',
+    )
+  }
 
   const runtimeFieldsetAttributes = {
     ...rest,
@@ -118,6 +131,13 @@ export function FilterableOptionList({
     unique(defaultValues),
   )
   const [uncontrolledQuery, setUncontrolledQuery] = useState(defaultQuery)
+  const resetStateRef = useRef({
+    defaultQuery,
+    defaultValues,
+    onQueryChange,
+    query,
+    values,
+  })
   const selectedValues = unique(values ?? uncontrolledValues)
   const selectedIds = new Set(selectedValues)
   const currentQuery = query ?? uncontrolledQuery
@@ -138,13 +158,25 @@ export function FilterableOptionList({
         )
 
   const empty = visibleOptions.length === 0
-  const noMatches = empty && hasQuery
+  const noMatches =
+    empty && hasQuery && (filterMode === 'external' || options.length > 0)
   const resultText = noMatches
     ? 'no matches'
     : empty
       ? 'no options available'
       : `${visibleOptions.length} ${visibleOptions.length === 1 ? 'match' : 'matches'}`
-  const statusText = `${selectedValues.length} selected, ${resultText}`
+  const queryText = hasQuery ? ` for "${currentQuery.trim()}"` : ''
+  const statusText = `${selectedValues.length} selected, ${resultText}${queryText}`
+
+  useEffect(() => {
+    resetStateRef.current = {
+      defaultQuery,
+      defaultValues,
+      onQueryChange,
+      query,
+      values,
+    }
+  }, [defaultQuery, defaultValues, onQueryChange, query, values])
 
   useEffect(() => {
     const ownerDocument = rootRef.current?.ownerDocument
@@ -156,12 +188,15 @@ export function FilterableOptionList({
 
       queueMicrotask(() => {
         if (!active || event.defaultPrevented) return
-        if (values === undefined) setUncontrolledValues(unique(defaultValues))
-        if (query === undefined) {
-          setUncontrolledQuery(defaultQuery)
-          onQueryChange?.(defaultQuery)
+        const resetState = resetStateRef.current
+        if (resetState.values === undefined) {
+          setUncontrolledValues(unique(resetState.defaultValues))
         }
-        if (values !== undefined || query !== undefined) {
+        if (resetState.query === undefined) {
+          setUncontrolledQuery(resetState.defaultQuery)
+          resetState.onQueryChange?.(resetState.defaultQuery)
+        }
+        if (resetState.values !== undefined || resetState.query !== undefined) {
           setResetVersion((version) => version + 1)
         }
       })
@@ -172,7 +207,7 @@ export function FilterableOptionList({
       active = false
       ownerDocument.removeEventListener('reset', reset)
     }
-  }, [defaultQuery, defaultValues, form, onQueryChange, query, values])
+  }, [])
 
   const changeQuery = (nextQuery: string) => {
     if (query === undefined) setUncontrolledQuery(nextQuery)

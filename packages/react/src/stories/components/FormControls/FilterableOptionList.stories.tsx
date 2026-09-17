@@ -194,7 +194,7 @@ export const Uncontrolled: Story = {
       canvas.getByRole('checkbox', { name: 'Employment support' }),
     ).toBeChecked()
     await expect(canvas.getByRole('status')).toHaveTextContent(
-      '1 selected, 1 match',
+      '1 selected, 1 match for "support"',
     )
   },
 }
@@ -267,7 +267,7 @@ export const ClientFiltering: Story = {
     ).toBeVisible()
     await expect(canvas.getAllByRole('checkbox')).toHaveLength(1)
     await expect(canvas.getByRole('status')).toHaveTextContent(
-      '0 selected, 1 match',
+      '0 selected, 1 match for "trn-03"',
     )
   },
 }
@@ -306,7 +306,7 @@ export const ExternalFiltering: Story = {
       canvas.queryByRole('checkbox', { name: 'Transportation planning' }),
     ).not.toBeInTheDocument()
     await expect(canvas.getByRole('status')).toHaveTextContent(
-      '1 selected, 1 match',
+      '1 selected, 1 match for "workplace"',
     )
   },
 }
@@ -329,7 +329,7 @@ export const FilteringAndKeyboardSelection: Story = {
           canvas.queryByRole('checkbox', { name: 'Transportation planning' }),
         ).not.toBeInTheDocument()
         await expect(canvas.getByRole('status')).toHaveTextContent(
-          '1 selected, 1 match',
+          '1 selected, 1 match for "employment"',
         )
       },
     )
@@ -345,7 +345,7 @@ export const FilteringAndKeyboardSelection: Story = {
         await userEvent.keyboard(' ')
         await expect(checkbox).toBeChecked()
         await expect(canvas.getByRole('status')).toHaveTextContent(
-          '2 selected, 1 match',
+          '2 selected, 1 match for "employment"',
         )
       },
     )
@@ -380,7 +380,7 @@ export const NoResults: Story = {
     ).toBeVisible()
     await expect(canvas.queryAllByRole('checkbox')).toHaveLength(0)
     await expect(canvas.getByRole('status')).toHaveTextContent(
-      '1 selected, no matches',
+      '1 selected, no matches for "aquatic"',
     )
   },
 }
@@ -597,7 +597,7 @@ export const FormSubmission: Story = {
         canvas.getByRole('checkbox', { name: 'Employment support' }),
       ).toBeChecked()
       await expect(canvas.getByRole('status')).toHaveTextContent(
-        '2 selected, 1 match',
+        '2 selected, 1 match for "employment"',
       )
     })
   },

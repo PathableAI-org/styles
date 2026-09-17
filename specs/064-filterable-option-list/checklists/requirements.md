@@ -6,7 +6,9 @@
 
 ## Content Quality
 
-- [x] No implementation details (languages, frameworks, APIs)
+- [ ] No implementation details (languages, frameworks, APIs) - not applicable;
+  this repository-scoped specification intentionally names the React package and
+  supported integration boundaries.
 - [x] Focused on user value and business needs
 - [x] Written for non-technical stakeholders
 - [x] All mandatory sections completed
@@ -27,8 +29,12 @@
 - [x] All functional requirements have clear acceptance criteria
 - [x] User scenarios cover primary flows
 - [x] Feature meets measurable outcomes defined in Success Criteria
-- [x] No implementation details leak into specification
+- [ ] No implementation details leak into specification - not applicable; the
+  delivery target and compatibility requirements are explicit project constraints.
 
 ## Notes
 
-- The specification is ready for implementation planning without further clarification.
+- The specification is ready for implementation planning without further
+  clarification. The two unchecked technology-agnostic criteria are deliberate
+  exceptions for a design-system package feature with explicit React, RSC, and
+  compatibility deliverables.

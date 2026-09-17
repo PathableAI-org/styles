@@ -94,5 +94,8 @@ pnpm check:format
 git diff --check
 ```
 
-Expected outcome: all applicable checks pass without exclusions, suppressions,
-or warning-only substitutions.
+Expected outcome: all changed files pass the applicable gates without
+exclusions, suppressions, or warning-only substitutions. `pnpm check:format` may
+also report the repository's pre-existing whole-tree formatting baseline; no
+new or modified file may contribute an error, and CI's changed-file formatting
+gate must pass.

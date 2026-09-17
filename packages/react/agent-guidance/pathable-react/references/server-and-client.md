@@ -36,6 +36,12 @@ Do not pass non-serializable callbacks from a Server Component into a Client
 Component. Put the state, handlers, and affected component tree together in a
 client module.
 
+When `FilterableOptionList` shares a `FormGroup` with another form control, keep
+the entire `FormGroup` composition in one client module. If `FormGroup` renders
+on the server, the `FilterableOptionList` child is represented by an RSC client
+reference rather than the registered composite function, so control-count based
+label and description inference cannot safely recognize the composition.
+
 Presentational components with serializable props can remain in server-rendered
 trees. Do not add `'use client'` merely because a component is imported from a
 React package.
