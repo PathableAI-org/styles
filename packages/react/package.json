@@ -30,7 +30,6 @@
     "check:package": "publint --pack false",
     "check:types": "attw --pack --profile esm-only",
     "test:unit": "vitest run",
-    "test:unit:ci": "vitest run --maxWorkers=1",
     "test:unit:watch": "vitest",
     "test:unit:coverage": "vitest run --coverage"
   },

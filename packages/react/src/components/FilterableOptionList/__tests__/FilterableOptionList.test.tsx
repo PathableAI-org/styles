@@ -496,8 +496,9 @@ describe('FilterableOptionList', () => {
     )
 
     expect(getAllByRole('checkbox')).toHaveLength(500)
+    const searchbox = getByRole('searchbox')
     const startedAt = performance.now()
-    fireEvent.change(getByRole('searchbox'), {
+    fireEvent.change(searchbox, {
       target: { value: 'Option 499' },
     })
     const elapsed = performance.now() - startedAt
