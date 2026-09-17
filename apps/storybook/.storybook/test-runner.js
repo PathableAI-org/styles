@@ -40,6 +40,9 @@ const config = {
   },
   async postVisit(page, context) {
     await assertInteractionStatesPointerFeedback(page, context)
+    const isFilterableOptionList = context.id.startsWith(
+      'components-form-controls-filterable-option-list--',
+    )
     await checkA11y(page, 'body', {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -56,7 +59,7 @@ const config = {
           // stories are pre-existing. Utility stories showcase color swatches; USWDS
           // components follow their own design system conventions (e.g., links use
           // underline as the visual indicator).
-          'color-contrast': { enabled: false },
+          'color-contrast': { enabled: isFilterableOptionList },
           // USWDS pagination uses a standard <ul> inside <nav aria-label="Pagination">.
           // The "list" rule is over-strict here as the nav label provides adequate
           // context. This is a pre-existing USWDS pattern.
