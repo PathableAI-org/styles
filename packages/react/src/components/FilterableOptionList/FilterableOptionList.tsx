@@ -28,8 +28,10 @@ export type FilterableOptionPredicate = (
 
 export interface FilterableOptionListProps extends Omit<
   FieldsetHTMLAttributes<HTMLFieldSetElement>,
-  'children' | 'defaultValue' | 'onChange' | 'value'
+  'children' | 'dangerouslySetInnerHTML' | 'defaultValue' | 'onChange' | 'value'
 > {
+  readonly children?: never
+  readonly dangerouslySetInnerHTML?: never
   readonly legend: ReactNode
   readonly options: readonly FilterableOption[]
   readonly values?: readonly string[]
@@ -68,6 +70,9 @@ function validateOptions(options: readonly FilterableOption[]) {
     if (!option.id.trim()) {
       throw new Error('FilterableOptionList option ids must be non-empty.')
     }
+    if (!option.label.trim()) {
+      throw new Error('FilterableOptionList option labels must be non-empty.')
+    }
     if (ids.has(option.id)) {
       throw new Error(
         `FilterableOptionList option ids must be unique. Duplicate id: "${option.id}".`,
@@ -101,8 +106,14 @@ export function FilterableOptionList({
 }: FilterableOptionListProps) {
   validateOptions(options)
 
+  const runtimeFieldsetAttributes = {
+    ...rest,
+  } as FieldsetHTMLAttributes<HTMLFieldSetElement>
+  delete runtimeFieldsetAttributes.children
+  delete runtimeFieldsetAttributes.dangerouslySetInnerHTML
   const generatedId = useId()
   const rootRef = useRef<HTMLFieldSetElement>(null)
+  const [, setResetVersion] = useState(0)
   const [uncontrolledValues, setUncontrolledValues] = useState(() =>
     unique(defaultValues),
   )
@@ -150,6 +161,9 @@ export function FilterableOptionList({
           setUncontrolledQuery(defaultQuery)
           onQueryChange?.(defaultQuery)
         }
+        if (values !== undefined || query !== undefined) {
+          setResetVersion((version) => version + 1)
+        }
       })
     }
 
@@ -178,7 +192,7 @@ export function FilterableOptionList({
 
   return (
     <fieldset
-      {...rest}
+      {...runtimeFieldsetAttributes}
       ref={rootRef}
       className={rootClassName}
       disabled={disabled}

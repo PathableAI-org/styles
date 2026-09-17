@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   FilterableOptionList,
   type FilterableOption,
+  type FilterableOptionListProps,
 } from '../FilterableOptionList'
 
 afterEach(cleanup)
@@ -23,7 +24,7 @@ const options: FilterableOption[] = [
 
 async function resetForm(form: HTMLFormElement) {
   await act(async () => {
-    fireEvent.reset(form)
+    form.reset()
     await Promise.resolve()
   })
 }
@@ -375,6 +376,50 @@ describe('FilterableOptionList', () => {
     ).toBe(true)
   })
 
+  it('reapplies controlled query and selection after native form reset', async () => {
+    const { container, getByRole, rerender } = render(
+      <form>
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          filterMode="external"
+          values={['employment']}
+          query="support"
+        />
+      </form>,
+    )
+    const form = container.querySelector('form')!
+
+    rerender(
+      <form>
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          filterMode="external"
+          values={['housing']}
+          query="housing"
+        />
+      </form>,
+    )
+
+    const searchbox = getByRole('searchbox') as HTMLInputElement
+    const employment = getByRole('checkbox', {
+      name: 'Employment support',
+    }) as HTMLInputElement
+    const housing = getByRole('checkbox', {
+      name: 'Housing support',
+    }) as HTMLInputElement
+    expect(searchbox.value).toBe('housing')
+    expect(employment.checked).toBe(false)
+    expect(housing.checked).toBe(true)
+
+    await resetForm(form)
+
+    expect(searchbox.value).toBe('housing')
+    expect(employment.checked).toBe(false)
+    expect(housing.checked).toBe(true)
+  })
+
   it('preserves uncontrolled state when native reset is cancelled', async () => {
     const onQueryChange = vi.fn()
     const { container, getByRole } = render(
@@ -512,7 +557,7 @@ describe('FilterableOptionList', () => {
     )
   })
 
-  it('fails clearly for empty and duplicate option ids', () => {
+  it('fails clearly for empty labels and empty or duplicate option ids', () => {
     expect(() =>
       render(
         <FilterableOptionList
@@ -526,6 +571,15 @@ describe('FilterableOptionList', () => {
       render(
         <FilterableOptionList
           legend="Services"
+          options={[{ id: 'empty-label', label: ' ' }]}
+        />,
+      ),
+    ).toThrow('option labels must be non-empty')
+
+    expect(() =>
+      render(
+        <FilterableOptionList
+          legend="Services"
           options={[
             { id: 'same', label: 'One' },
             { id: 'same', label: 'Two' },
@@ -533,6 +587,25 @@ describe('FilterableOptionList', () => {
         />,
       ),
     ).toThrow('Duplicate id: "same"')
+  })
+
+  it('drops unsafe fieldset content props supplied at runtime', () => {
+    const unsafeProps = {
+      dangerouslySetInnerHTML: {
+        __html: '<span data-injected="true">Injected content</span>',
+      },
+    } as unknown as Partial<FilterableOptionListProps>
+
+    const { container, getByRole } = render(
+      <FilterableOptionList
+        legend="Services"
+        options={options}
+        {...unsafeProps}
+      />,
+    )
+
+    expect(getByRole('group', { name: 'Services' })).toBeTruthy()
+    expect(container.querySelector('[data-injected="true"]')).toBeNull()
   })
 
   it('handles 500 local options', () => {

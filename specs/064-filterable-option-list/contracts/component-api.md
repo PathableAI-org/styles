@@ -19,8 +19,14 @@ export type FilterableOptionPredicate = (
 export interface FilterableOptionListProps
   extends Omit<
     FieldsetHTMLAttributes<HTMLFieldSetElement>,
-    'children' | 'defaultValue' | 'onChange' | 'value'
+    | 'children'
+    | 'dangerouslySetInnerHTML'
+    | 'defaultValue'
+    | 'onChange'
+    | 'value'
   > {
+  readonly children?: never
+  readonly dangerouslySetInnerHTML?: never
   readonly legend: ReactNode
   readonly options: readonly FilterableOption[]
   readonly values?: readonly string[]
@@ -85,12 +91,15 @@ The package root exports `FilterableOptionList`, `FilterableOption`,
 - Visual checkboxes do not carry `name`, preventing duplicate submission.
 - Form reset restores uncontrolled default values and default query. Restoring
   an uncontrolled query reports `defaultQuery` through `onQueryChange`.
+- Controlled values and query remain authoritative after native reset.
 - Group-required validation is not part of this API.
 
 ## Attribute Forwarding
 
 - Remaining fieldset attributes, including `id`, `className`, `disabled`,
   `form`, `aria-*`, and `data-*`, are forwarded to the root fieldset.
+- `children` and `dangerouslySetInnerHTML` are rejected because the component
+  owns the fieldset content.
 - Component-owned event handling must compose with rather than silently replace
   relevant consumer handlers.
 - Component-owned classes precede consumer `className`.

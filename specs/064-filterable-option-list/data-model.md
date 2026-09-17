@@ -7,7 +7,7 @@ One catalog record rendered as a checkbox row.
 | Field         | Type             | Required | Rules |
 | ------------- | ---------------- | -------- | ----- |
 | `id`          | string           | Yes      | Non-empty and unique within `options`; used as selection and form value. |
-| `label`       | string           | Yes      | Concise visible and accessible name; default client-filter source. |
+| `label`       | string           | Yes      | Non-empty concise visible and accessible name; default client-filter source. |
 | `description` | display content  | No       | Non-interactive explanatory content referenced as an accessible description. |
 | `meta`        | display content  | No       | Non-interactive code/category content referenced as an accessible description. |
 | `disabled`    | boolean          | No       | Prevents selection changes and native focus. |

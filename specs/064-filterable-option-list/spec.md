@@ -92,8 +92,8 @@ relationships and submitted values.
 
 - **FR-001**: The design system MUST provide a framework-neutral `pathable-filterable-option-list` visual and semantic class contract before exposing a framework wrapper.
 - **FR-002**: The React package MUST expose a `FilterableOptionList` component whose name and markup preserve the shared contract.
-- **FR-003**: The component MUST accept options with a non-empty unique identifier, text label, optional supporting description, optional metadata, and optional disabled state.
-- **FR-004**: The component MUST fail clearly when option identifiers are empty or duplicated rather than producing ambiguous selections.
+- **FR-003**: The component MUST accept options with a non-empty unique identifier, non-empty text label, optional supporting description, optional metadata, and optional disabled state.
+- **FR-004**: The component MUST fail clearly when option identifiers are empty or duplicated or when option labels are empty rather than producing ambiguous or unnamed selections.
 - **FR-005**: The component MUST support controlled selections and uncontrolled selections with initial values.
 - **FR-006**: Selection-change notifications MUST contain unique identifiers, preserve the order of existing selections, append newly selected identifiers, and remove only the deselected identifier.
 - **FR-007**: Selections absent from the current visible or supplied options MUST remain selected until explicitly removed by the consumer.

@@ -491,6 +491,16 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     ),
     'utf8',
   )
+  const filterableOptionListDeclarations = await readFile(
+    join(
+      reactRoot,
+      'dist',
+      'components',
+      'FilterableOptionList',
+      'FilterableOptionList.d.ts',
+    ),
+    'utf8',
+  )
   const appShellDeclarations = await readFile(
     join(reactRoot, 'dist', 'components', 'AppShell', 'AppShell.d.ts'),
     'utf8',
@@ -598,6 +608,13 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
       filterableOptionListTypeExports,
       new RegExp(`\\b${publicType}\\b`, 'u'),
       `Packed declarations do not explicitly export ${publicType}`,
+    )
+  }
+  for (const ownedContentProp of ['children', 'dangerouslySetInnerHTML']) {
+    assert.match(
+      filterableOptionListDeclarations,
+      new RegExp(`readonly ${ownedContentProp}\\?: never`, 'u'),
+      `Packed FilterableOptionList declarations do not reject ${ownedContentProp}`,
     )
   }
   assert.match(

@@ -1131,6 +1131,10 @@ available records, use a product-owned remote or virtualized experience instead.
 | `disabled`          | `boolean`                                              | `false`                   | Disables the fieldset, filter, and all options.                                                           |
 | `className`         | `string`                                               | —                         | Additional root fieldset classes.                                                                         |
 
+Other standard fieldset attributes, including `id`, `form`, `aria-*`, and
+`data-*`, are forwarded to the root. The component owns its children, so
+`children` and `dangerouslySetInnerHTML` are not accepted.
+
 Each `FilterableOption` requires a unique, non-empty string `id` and a concise
 string `label`. Provide meaningful, non-empty text for `legend` and
 `filterLabel`. `description` and `meta` accept non-interactive inline React
@@ -1147,8 +1151,9 @@ count and form values continue to include them. Use either `values` or
 `defaultValues`, and either `query` or `defaultQuery`, independently according to
 where each piece of state belongs. Native form reset restores uncontrolled
 defaults and reports the restored `defaultQuery` through `onQueryChange` so
-external result owners can synchronize their result set. Group-level validation
-such as "choose at least one" remains application-owned.
+external result owners can synchronize their result set. Controlled query and
+selection props remain authoritative after reset. Group-level validation such as
+"choose at least one" remains application-owned.
 
 #### FilterableOptionList Accessibility
 
