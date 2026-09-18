@@ -1403,21 +1403,56 @@ Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, `styl
 
 Use `role="status"` for polite operational updates and `role="alert"` for urgent, time-sensitive messages. Toast derives that role from the variant by default but allows an explicit override. Give messages enough context to stand alone, keep icons decorative, provide a meaningful `dismissLabel`, and ensure action content describes what will happen. Consumers remain responsible for visibility timing, removal, queueing, focus policy, and announcements when a toast appears or is dismissed.
 
+### Modal Props
+
+`Modal` portals an accessible dialog into `document.body` with focus trapping, Escape close, scroll locking, and focus restoration. When `open` is `true`, React emits the styles-owned dual-class open shell (`wrapper → overlay → dialog`); when `open` is `false`, it renders `null`. Backdrop dimming and dialog centering come from `@pathableai/styles` via those classes — consumers must not add custom overlay or wrapper CSS.
+
+| Prop                 | Type                                   | Default         | Description                                                                                                                          |
+| -------------------- | -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| open                 | `boolean`                              | —               | When `true`, portals the open presentation; when `false`, renders `null`.                                                            |
+| onClose              | `() => void`                           | —               | Called on Escape, the close control, and consumer-driven actions; also on overlay click when `closeOnBackdropClick` is `true`.       |
+| closeOnBackdropClick | `boolean`                              | `false`         | When `false` (default), the backdrop is visual-only. When `true`, overlay click calls `onClose`; dialog content clicks do not close. |
+| title                | `React.ReactNode`                      | —               | Dialog accessible name source (required).                                                                                            |
+| description          | `React.ReactNode`                      | —               | Optional body copy wired to `aria-describedby`.                                                                                      |
+| children             | `React.ReactNode`                      | —               | Dialog body content.                                                                                                                 |
+| footer               | `React.ReactNode`                      | —               | Optional footer region.                                                                                                              |
+| closeLabel           | `string`                               | `'Close modal'` | Accessible name for the close control.                                                                                               |
+| initialFocusRef      | `React.RefObject<HTMLElement \| null>` | —               | Optional initial focus override; defaults to the close control.                                                                      |
+| className            | `string`                               | —               | Additional classes appended after `pathable-modal usa-modal` on the dialog.                                                          |
+
+Any other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, `style`, and event handlers, are forwarded to the **dialog** element (not the wrapper or overlay).
+
+#### Modal open shell
+
+When `open` is `true`, the portal tree is:
+
+```text
+.pathable-modal-wrapper.usa-modal-wrapper.is-visible
+  └── .pathable-modal-overlay.usa-modal-overlay
+        └── .pathable-modal.usa-modal[role=dialog] …
+```
+
+React applies both PathAble and USWDS companion classes on the wrapper and overlay. Do not invent consumer overlay CSS or a separate overlay wrapper — that risks double backdrops once the styles-owned shell is present.
+
+#### Modal Accessibility
+
+Keep focus inside the dialog while open; Escape and the close control call `onClose`. Provide a meaningful `title` and `closeLabel`. Prefer `closeOnBackdropClick={false}` (the default) unless product requirements need backdrop dismiss; when enabled, dialog content clicks still do not close.
+
 ### Communication Components
 
-| Component     | Description                                                                                                                         | Props                                                                                            |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Accordion     | Expandable disclosure panels with single or multiple selection. Supports controlled/uncontrolled expanded state and disabled items. | `items`, `expandedIds`, `defaultExpandedIds`, `allowMultiple`, `onExpandedChange`                |
-| Alert         | Status messages with info, success, warning, error, and emergency severity levels. Optional slim variant.                           | `status`, `slim`, `heading`, `children`, `role`                                                  |
-| Banner        | Official site banner with disclosure toggle. Controlled/uncontrolled expanded state.                                                | `summary`, `children`, `expanded`, `defaultExpanded`, `onExpandedChange`                         |
-| Modal         | Dialog rendered via portal with focus trapping, Escape close, scroll locking, and focus restoration.                                | `open`, `onClose`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
-| Toast         | Transient feedback notification with five variants, optional action, and optional dismiss control.                                  | `variant`, `message`, `icon`, `action`, `dismissible`, `dismissLabel`, `role`                    |
-| ToastRegion   | Fixed stacking container for one or more Toast instances.                                                                           | `children`, `className`                                                                          |
-| Loading       | Inline CSS-only loading indicator with optional status text and a large page-level treatment.                                       | `size`, `text`, `role`, `aria-live`                                                              |
-| ProcessList   | Ordered list of process steps with headings and body content.                                                                       | `items` (array of `{id, heading, body}`)                                                         |
-| SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                     | `status`, `slim`, `heading`, `children`, `role`                                                  |
-| StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                             | `steps`, `currentStep`, `heading`                                                                |
-| SummaryBox    | Key information callout box with optional heading.                                                                                  | `heading`, `children`                                                                            |
+| Component     | Description                                                                                                                                                          | Props                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Accordion     | Expandable disclosure panels with single or multiple selection. Supports controlled/uncontrolled expanded state and disabled items.                                  | `items`, `expandedIds`, `defaultExpandedIds`, `allowMultiple`, `onExpandedChange`                                        |
+| Alert         | Status messages with info, success, warning, error, and emergency severity levels. Optional slim variant.                                                            | `status`, `slim`, `heading`, `children`, `role`                                                                          |
+| Banner        | Official site banner with disclosure toggle. Controlled/uncontrolled expanded state.                                                                                 | `summary`, `children`, `expanded`, `defaultExpanded`, `onExpandedChange`                                                 |
+| Modal         | Portal dialog with dual-class open shell (`wrapper → overlay → dialog`), focus trap, Escape close, scroll lock, and optional `closeOnBackdropClick` (default false). | `open`, `onClose`, `closeOnBackdropClick`, `title`, `description`, `children`, `footer`, `closeLabel`, `initialFocusRef` |
+| Toast         | Transient feedback notification with five variants, optional action, and optional dismiss control.                                                                   | `variant`, `message`, `icon`, `action`, `dismissible`, `dismissLabel`, `role`                                            |
+| ToastRegion   | Fixed stacking container for one or more Toast instances.                                                                                                            | `children`, `className`                                                                                                  |
+| Loading       | Inline CSS-only loading indicator with optional status text and a large page-level treatment.                                                                        | `size`, `text`, `role`, `aria-live`                                                                                      |
+| ProcessList   | Ordered list of process steps with headings and body content.                                                                                                        | `items` (array of `{id, heading, body}`)                                                                                 |
+| SiteAlert     | Site-wide notifications. Supports default, info, and emergency statuses. Optional slim variant.                                                                      | `status`, `slim`, `heading`, `children`, `role`                                                                          |
+| StepIndicator | Multi-step progress indicator with derived completed/current states. One-based current step validation.                                                              | `steps`, `currentStep`, `heading`                                                                                        |
+| SummaryBox    | Key information callout box with optional heading.                                                                                                                   | `heading`, `children`                                                                                                    |
 
 ## Guidance
 
