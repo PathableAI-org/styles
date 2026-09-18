@@ -93,6 +93,11 @@ const EXPECTED_COVERAGE = {
     'components-feedback-skeleton--card',
     'components-feedback-toast--stacked',
   ],
+  Communication: [
+    'components-communication-modal--open',
+    'components-communication-modal--narrow',
+    'components-communication-modal--long-content',
+  ],
   'Discovery / Resource Finder': [
     'discovery-filter-bar--default',
     'discovery-filter-pill--default',

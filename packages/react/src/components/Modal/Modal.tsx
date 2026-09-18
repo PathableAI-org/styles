@@ -6,6 +6,7 @@ import {
   useCallback,
   useId,
   KeyboardEvent,
+  MouseEvent,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -18,6 +19,8 @@ interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   footer?: ReactNode
   closeLabel?: string
   initialFocusRef?: React.RefObject<HTMLElement | null>
+  /** When true, overlay is an accessible dismiss control. Default false (presentational only). */
+  closeOnBackdropClick?: boolean
 }
 
 export function Modal({
@@ -29,8 +32,10 @@ export function Modal({
   footer,
   closeLabel = 'Close modal',
   initialFocusRef,
+  closeOnBackdropClick = false,
   className = '',
   onKeyDown: consumerOnKeyDown,
+  onClick: consumerOnClick,
   ...rest
 }: ModalProps) {
   const autoId = useId()
@@ -99,9 +104,29 @@ export function Modal({
     [onClose],
   )
 
+  const handleDialogClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      consumerOnClick?.(e)
+    },
+    [consumerOnClick],
+  )
+
+  const handleOverlayKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        onClose()
+      }
+    },
+    [onClose],
+  )
+
   if (!open || typeof document === 'undefined') return null
 
-  const classes = ['pathable-modal', className].filter(Boolean).join(' ')
+  const classes = ['pathable-modal', 'usa-modal', className]
+    .filter(Boolean)
+    .join(' ')
 
   const dialog = (
     // The dialog role element needs onKeyDown for Escape close and Tab containment,
@@ -115,6 +140,7 @@ export function Modal({
       aria-modal="true"
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
+      onClick={handleDialogClick}
       onKeyDown={(e) => {
         handleKeyDown(e)
         consumerOnKeyDown?.(e)
@@ -140,5 +166,26 @@ export function Modal({
     </div>
   )
 
-  return createPortal(dialog, document.body)
+  const overlay = closeOnBackdropClick ? (
+    <div
+      className="pathable-modal-overlay usa-modal-overlay"
+      role="button"
+      tabIndex={-1}
+      aria-label="Close dialog"
+      onClick={onClose}
+      onKeyDown={handleOverlayKeyDown}
+    >
+      {dialog}
+    </div>
+  ) : (
+    <div className="pathable-modal-overlay usa-modal-overlay">{dialog}</div>
+  )
+
+  const shell = (
+    <div className="pathable-modal-wrapper usa-modal-wrapper is-visible">
+      {overlay}
+    </div>
+  )
+
+  return createPortal(shell, document.body)
 }

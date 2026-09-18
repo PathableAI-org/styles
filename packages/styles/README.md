@@ -151,6 +151,23 @@ The canonical theming documentation lives under `docs/theming/`:
 - [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md) — every overridable
   color token with its CSS custom property, default value, and role.
 
+## Modal open shell
+
+Open Modal markup uses styles-owned classes. No ad-hoc consumer overlay CSS is
+required for backdrop or centering.
+
+| Layer   | Classes                              | Role                                      |
+| ------- | ------------------------------------ | ----------------------------------------- |
+| Wrapper | `.pathable-modal-wrapper.is-visible` | Fixed open shell; add `.is-visible` open  |
+| Overlay | `.pathable-modal-overlay`            | Dimmed full-viewport backdrop + centering |
+| Dialog  | `.pathable-modal` and `.usa-modal`   | Dialog panel (dual-class)                 |
+
+PathAble-only wrapper and overlay classes with `.is-visible` on the wrapper are
+enough for the open presentation (backdrop + centering) without USWDS JavaScript.
+When dual-classing (for example `@pathableai/react`), also include
+`.usa-modal-wrapper` and `.usa-modal-overlay` beside the PathAble shell classes.
+See BRAND_RULES.md for the full PathAble ↔ USWDS Modal catalogue.
+
 ## Guidance
 
 See BRAND_RULES.md for full color and typography guidance.
