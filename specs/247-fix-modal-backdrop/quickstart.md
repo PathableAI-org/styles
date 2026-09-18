@@ -32,23 +32,23 @@ shell):
 
 ### CSS-only / no-USWDS-JS proof (required)
 
-Default `apps/storybook/.storybook/preview.js` currently imports `@pathableai/styles/js`.
-FR-009 requires the **styles Modal open story itself** to prove PathAble-only open CSS
-without USWDS JS — not a substitute fixture elsewhere.
+Default `apps/storybook/.storybook/preview.js` imports `@pathableai/styles/js` for
+Accordion/Banner and other USWDS-JS stories. **Do not remove that global import** —
+doing so breaks `pnpm test:storybook-styles`.
 
-After implementation (see tasks T005):
-
-1. Change `apps/storybook/.storybook/preview.js` so Communication/Modal open does **not**
-   load `@pathableai/styles/js` (preferred: drop the global import; load USWDS JS only in
-   stories that need it).
-2. Re-open the Modal open fixture in Storybook and confirm backdrop + centering still
-   appear from static `.is-visible` markup + PathAble CSS alone.
-3. Run the styles Storybook interaction runner (covers Modal open plays under that
-   harness):
+FR-009 requires the styles Modal **open story** proven without USWDS JS. After
+implementation (T005), use the **isolated CSS-only Modal Storybook config** (preview
+imports styles CSS/SCSS only — no `@pathableai/styles/js`), e.g.:
 
 ```bash
-pnpm test:storybook-styles
+# Dev: Modal-only CSS harness (exact -c path set in T005)
+pnpm --filter @pathable/storybook exec storybook dev -c .storybook-modal-css -p 6008
+# Automated: build + play/geometry runner for that config (script added in T005)
+pnpm test:storybook-modal-css
 ```
+
+Confirm backdrop + centering from static `.is-visible` markup + PathAble CSS alone.
+Keep default `pnpm test:storybook-styles` green (global JS unchanged).
 
 ## 2. React open presentation
 
@@ -146,20 +146,23 @@ pnpm --filter @pathableai/react check:package
 pnpm --filter @pathableai/react test:unit
 pnpm --filter @pathableai/styles build
 pnpm --filter @pathableai/react build
-# Storybook interaction / a11y runners (styles + React)
+# Default styles Storybook (keeps global @pathableai/styles/js for Accordion/Banner)
 pnpm test:storybook-styles
+# Isolated CSS-only Modal harness (no styles/js) + Modal geometry assertions
+pnpm test:storybook-modal-css
+# React interaction/a11y (behavior-contract-tagged Modal stories) + React geometry
 pnpm test:storybook-react
-# Styles visual smoke (metric-based; requires apps/storybook/storybook-static)
-# after registering Modal open stories in CANONICAL_STORIES (see tasks)
+pnpm test:modal-open-geometry
+# Styles visual smoke / coverage after registering Modal IDs (blank/overflow only —
+# backdrop/centering are enforced by test:storybook-modal-css + test:modal-open-geometry)
 pnpm --filter @pathable/storybook build-storybook
 pnpm test:visual
 pnpm quality-gates
 pnpm storybook:coverage
 ```
 
-No new lint suppressions. Metric-based visual smoke (`pnpm test:visual`) and quality
-gates must include the styles Modal open (and narrow/long) story IDs so backdrop /
-placement regressions fail the gate. React open is covered by Storybook interaction
-runner + unit tests (and any React visual/CI fixture added in tasks). Release
-metadata: Changeset covering `@pathableai/styles` and `@pathableai/react` with portal
-DOM migration note (`wrapper → overlay → dialog`).
+No new lint suppressions. **Backdrop presence and dialog centering** must fail the
+dedicated geometry gates (`pnpm test:storybook-modal-css` and
+`pnpm test:modal-open-geometry` for styles + React), not only blank/overflow smoke.
+Release metadata: Changeset covering `@pathableai/styles` and `@pathableai/react` with
+portal DOM migration note (`wrapper → overlay → dialog`).

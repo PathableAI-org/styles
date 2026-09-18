@@ -43,11 +43,15 @@ fixtures (US4).
   `packages/styles/src/stories/components/Communication/Modal.stories.ts`,
   `packages/styles/BRAND_RULES.md`, `packages/styles/AGENTS.md`,
   `packages/styles/README.md`
-- Storybook apps / preview: `apps/storybook/.storybook/preview.js`,
+- Storybook apps / preview: `apps/storybook/.storybook/preview.js` (keeps global
+  `@pathableai/styles/js`), isolated CSS-only Modal config under
+  `apps/storybook/.storybook-modal-css/` (no styles/js),
   `apps/storybook-react/.storybook/preview.js`
-- Visual/coverage gates: `packages/styles/scripts/quality-gates.mjs`,
+- Visual/coverage/geometry gates: `packages/styles/scripts/quality-gates.mjs`,
   `packages/styles/scripts/storybook-coverage.mjs`,
-  `packages/styles/scripts/test-visual.mjs`
+  `packages/styles/scripts/test-visual.mjs`, plus Modal geometry runner/script
+  added by this feature (e.g. `scripts/test-modal-open-geometry.mjs` or equivalent
+  under `packages/styles/scripts/`)
 - React: `packages/react/src/components/Modal/Modal.tsx`,
   `packages/react/src/stories/components/Communication/Modal.stories.tsx`,
   `packages/react/src/components/Modal/` (unit tests),
@@ -106,13 +110,14 @@ React Modal `Open` / no-JS mount check; confirm backdrop + centered dialog on bo
       `.pathable-modal.usa-modal` dialog with content/heading/footer); keep
       `verifyDialogName` / close-button plays **and** assert
       `.pathable-modal-wrapper.is-visible` + `.pathable-modal-overlay` are present
-- [ ] T005 [US1] Make the styles Modal **open Storybook story itself** a no-USWDS-JS
-      proof (FR-009): update `apps/storybook/.storybook/preview.js` so
-      Communication/Modal open does **not** load `@pathableai/styles/js` (preferred:
-      remove the global import; load USWDS JS only in stories that need it). Do **not**
-      treat a separate `packages/styles` HTML fixture as a substitute for isolating this
-      story. Confirm T004’s open fixture still shows backdrop + centering under that
-      harness; automated coverage via `pnpm test:storybook-styles`
+- [ ] T005 [US1] Provide an **isolated CSS-only Modal Storybook config** under
+      `apps/storybook/.storybook-modal-css/` (preview imports styles CSS/SCSS only —
+      **no** `@pathableai/styles/js`) that loads the Communication/Modal open story from
+      `packages/styles/src/stories/components/Communication/Modal.stories.ts`. Keep
+      default `apps/storybook/.storybook/preview.js` importing `@pathableai/styles/js`
+      so Accordion/Banner `pnpm test:storybook-styles` stays green. Add root script
+      `test:storybook-modal-css` (build/serve that config + run Modal open plays). Do
+      **not** remove the global styles/js import as the FR-009 proof.
 - [ ] T006 [US1] Rewrite styles Modal docs in
       `packages/styles/src/stories/components/Communication/Modal.stories.ts`
       `parameters.docs.description`: remove “overlay from USWDS JS only”; document
@@ -225,20 +230,24 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
       export name + docs) **and** add both styles **narrow** and **long-content** open
       fixtures in the same file (FR-013 — both required). Register those story IDs in
       `packages/styles/scripts/quality-gates.mjs` `CANONICAL_STORIES` and in
-      `packages/styles/scripts/storybook-coverage.mjs` `EXPECTED_COVERAGE` so
-      `pnpm test:visual`, `pnpm quality-gates`, and `pnpm storybook:coverage` exercise
-      them (FR-011 / SC-005)
-- [ ] T020 [P] [US4] Confirm React `Open` (and existing `Narrow` / `LongContent` open
-      stories) in
-      `packages/react/src/stories/components/Communication/Modal.stories.tsx` remain
-      deterministic visual/interaction fixtures for backdrop + placement; ensure
-      React CI/Storybook runners cover them (`pnpm test:storybook-react`) and extend
-      or add a React visual/smoke fixture if styles-only `pnpm test:visual` cannot
-      cover React open (FR-011 / SC-005)
+      `packages/styles/scripts/storybook-coverage.mjs` `EXPECTED_COVERAGE`. Add Modal
+      **geometry** assertions (overlay covers viewport; dialog centered / not end-of-
+      page) for the open fixture in the CSS-only harness plays and/or
+      `scripts/test-modal-open-geometry.mjs` (or `packages/styles/scripts/`), wired as
+      root `pnpm test:modal-open-geometry` (FR-011 / SC-005 — blank/overflow smoke alone
+      is insufficient)
+- [ ] T020 [US4] Tag React Modal open fixtures (`Open`, `Narrow`, `LongContent`) in
+      `packages/react/src/stories/components/Communication/Modal.stories.tsx` with
+      `behavior-contract` (meta or per-story) so `pnpm test:storybook-react` includes
+      them under `STORYBOOK_TARGET=react`. Add **mandatory** React open geometry /
+      visual assertions (Playwright layout or equivalent against
+      `apps/storybook-react` static, included in `pnpm test:modal-open-geometry` or a
+      dedicated React step) that fail if backdrop is missing or dialog is uncentered —
+      do not treat interaction/a11y-only coverage as sufficient for FR-011 / SC-005
 - [ ] T021 [US4] Verify Storybook a11y addon / rendered checks report no new violations
       for styles and React Modal open stories (`pnpm test:storybook-styles` /
-      `pnpm test:storybook-react` a11y); keep ARIA on the dialog; do not broaden
-      existing `jsx-a11y` exceptions in
+      `pnpm test:storybook-react` a11y; CSS-only Modal harness as applicable); keep ARIA
+      on the dialog; do not broaden existing `jsx-a11y` exceptions in
       `packages/react/src/components/Modal/Modal.tsx`
 
 **Checkpoint**: US4 review/visual gates satisfied
@@ -251,31 +260,32 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 
 - [ ] T022 [P] Run root `pnpm lint` (covers `lint:js`, styles, Markdown, tokens, and
       `check:format` per root `package.json`) and fix findings without disabling rules
-- [ ] T023 [P] Run `pnpm --filter @pathableai/react typecheck`,
+- [ ] T023 Run `pnpm --filter @pathableai/react typecheck`,
       `pnpm --filter @pathableai/react check:types`,
       `pnpm --filter @pathableai/react check:package`, and
       `pnpm --filter @pathableai/react test:unit`; fix findings (unit suite must run
-      after T009 / T012–T014 Modal coverage)
-- [ ] T024 [P] Build `@pathableai/styles` and `@pathableai/react`; confirm styles CSS
-      entry used by React still includes Modal open-shell rules (consumer import /
-      packaged CSS smoke check for FR-008)
+      after T009 / T012–T014 Modal coverage). **Serialize before T024** — do not run in
+      parallel with the React package build
+- [ ] T024 Build `@pathableai/styles` and `@pathableai/react` **after T023**; confirm
+      styles CSS entry used by React still includes Modal open-shell rules (consumer
+      import / packaged CSS smoke check for FR-008)
 - [ ] T025 Build Storybooks and run explicit package runners with pass/fail criteria:
       `pnpm --filter @pathable/storybook build-storybook`,
       `pnpm --filter @pathable/storybook-react build-storybook`,
-      `pnpm test:storybook-styles` (must pass; Modal open plays included),
-      `pnpm test:storybook-react` (must pass; Modal interaction/a11y included);
+      `pnpm test:storybook-styles` (must pass; Accordion/Banner unchanged),
+      `pnpm test:storybook-modal-css` (must pass; PathAble-only open + geometry),
+      `pnpm test:storybook-react` (must pass; behavior-contract-tagged Modal included);
       confirm composition does not hide independent failures
 - [ ] T026 Walk `specs/247-fix-modal-backdrop/quickstart.md` validation steps
-      (compiled-CSS grep, CSS-only preview for styles Modal open,
-      `pnpm test:storybook-styles`, React no-JS `test:unit`, backdrop-click checks,
-      package gates) and confirm each command exits 0
-- [ ] T027 Run metric-based visual smoke (not snapshot baselines): after T019 registers
-      Modal open/narrow/long IDs in `CANONICAL_STORIES`, build
-      `apps/storybook/storybook-static` and run `pnpm test:visual` plus
-      `pnpm quality-gates`; review failure screenshots under
-      `apps/storybook/test-results/visual-failures/` if any. For React open, rely on
-      T020’s Storybook/runner (or added React visual fixture)—do not assume
-      snapshot-diff review exists
+      (compiled-CSS grep, CSS-only Modal harness, React no-JS `test:unit`,
+      `pnpm test:modal-open-geometry`, backdrop-click checks, package gates) and confirm
+      each command exits 0
+- [ ] T027 Run metric-based visual smoke for registered Modal IDs (`pnpm test:visual`,
+      `pnpm quality-gates`) **and** require `pnpm test:modal-open-geometry` (styles CSS-
+      only open + React open) to fail on missing overlay coverage or uncentered /
+      end-of-page dialog. Do not treat blank/overflow-only smoke or interaction-only
+      runners as sufficient for FR-011 / SC-005; there is no snapshot-diff baseline
+      workflow — geometry assertions are the backdrop/centering gate
 
 ---
 
@@ -303,7 +313,9 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 - T016 and T017 (different files) after API settles
 - T020 parallel with T019 only if different files are edited by different people
   carefully; prefer sequential when both touch story files
-- T022, T023, T024 parallel in Polish
+- T022 parallel with other polish only when not racing package builds
+- T023 then T024 (serialized — React checks before React build)
+- Do **not** parallelize T023 with T024
 
 ---
 
@@ -346,11 +358,13 @@ Task: "Update packages/react/README.md Modal docs"
 - Do not disable, weaken, or silence lint rules
 - Prefer accessible queries; class checks allowed for shell contract under test
 - Canonical open visibility class is `.pathable-modal-wrapper.is-visible` (no alternate modifier)
-- Default Storybook previews import `@pathableai/styles/js` — T005 must isolate the
-  styles Modal **open story** from that import (FR-009); T009 proves React without JS
+- Default Storybook preview keeps `@pathableai/styles/js` — FR-009 proof is the
+  isolated `apps/storybook/.storybook-modal-css/` harness (T005), not removing global JS
+- React `open={false}` is always `return null` (unmount); optional closed fixtures are styles-only
 - Storybook commands: `pnpm --filter @pathable/storybook storybook` and
   `pnpm --filter @pathable/storybook-react storybook`; runners:
-  `pnpm test:storybook-styles`, `pnpm test:storybook-react`, `pnpm test:visual`,
+  `pnpm test:storybook-styles`, `pnpm test:storybook-modal-css`,
+  `pnpm test:storybook-react`, `pnpm test:modal-open-geometry`, `pnpm test:visual`,
   `pnpm quality-gates`, `pnpm storybook:coverage`
 - Task IDs: T001–T027 (27 tasks)
 - Commit after each task or logical group
