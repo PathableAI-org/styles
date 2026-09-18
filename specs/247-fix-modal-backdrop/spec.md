@@ -47,17 +47,17 @@ A product engineer opens a Modal for a blocking message (for example, “session
 
 ### User Story 2 - React Owns Open/Closed Transition (Priority: P1)
 
-A React consumer toggles a single `Modal` between closed and open. React applies the styles-owned closed vs open class presentations and owns focus trap, Escape, scroll lock, focus restore, and optional backdrop-click dismiss via `closeOnBackdropClick`. Styles may document open and closed as separate class-based components without owning that transition behavior.
+A React consumer toggles a single `Modal` between closed and open. When open, React applies the styles-owned open class presentation (dual-class shell). When closed (`open={false}`), React **unmounts** the portal (`return null`) so the open shell is **absent**—no open wrapper/overlay/dialog remains. A distinct styles-owned closed class presentation stays optional and is not required for React’s closed state. React owns focus trap, Escape, scroll lock, focus restore, and optional backdrop-click dismiss via `closeOnBackdropClick`. Styles may still document open and (optionally) closed as separate class-based fixtures without owning that transition.
 
 **Why this priority**: Full interactive behavior is a React concern; styles remain the source of visual/class definitions without needing parity of state-machine behavior.
 
-**Independent Test**: Toggle React Modal open and closed from a trigger; verify styles-owned open classes (with backdrop) appear when open and are removed/replaced by closed presentation when closed, with focus/scroll restore. Confirm default `closeOnBackdropClick={false}` does not dismiss on overlay click; with `closeOnBackdropClick={true}`, overlay click calls `onClose` and dialog-content clicks do not. In styles Storybook, open and closed presentations can be reviewed as separate fixtures if styles splits them.
+**Independent Test**: Toggle React Modal open and closed from a trigger; verify styles-owned open classes (with backdrop) appear when open and are **absent** when closed (unmounted shell), with focus/scroll restore. Confirm default `closeOnBackdropClick={false}` does not dismiss on overlay click; with `closeOnBackdropClick={true}`, overlay click calls `onClose` and dialog-content clicks do not. In styles Storybook, open (and optional closed) presentations can be reviewed as separate fixtures if styles splits them.
 
 **Acceptance Scenarios**:
 
 1. **Given** an open React Modal that locked body scroll, **When** the Modal closes, **Then** body scrolling is restored and neither open overlay nor open dialog remains visible.
 2. **Given** focus moved into the open React Modal from a trigger control, **When** the Modal closes, **Then** focus is restored to that trigger (or the documented restore target).
-3. **Given** an open React Modal, **When** the user presses Escape (or activates the documented close path), **Then** `onClose` runs and React transitions to the closed presentation.
+3. **Given** an open React Modal, **When** the user presses Escape (or activates the documented close path), **Then** `onClose` runs and React closes (portal unmounts; open shell absent).
 4. **Given** an open React Modal with default `closeOnBackdropClick` (false), **When** the user clicks the dimmed overlay, **Then** the Modal remains open and `onClose` is not called from that click.
 5. **Given** an open React Modal with `closeOnBackdropClick={true}`, **When** the user clicks the dimmed overlay, **Then** `onClose` runs; **When** the user clicks inside the dialog content, **Then** the Modal does not close from that click.
 6. **Given** styles documents distinct open and closed Modal class presentations, **When** a styles consumer views them, **Then** each can be understood without styles providing React-equivalent open/close transition logic.

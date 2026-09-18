@@ -41,9 +41,13 @@ fixtures (US4).
 
 - Styles: `packages/styles/src/pathable-component-wrappers/pathable-modal.scss`,
   `packages/styles/src/stories/components/Communication/Modal.stories.ts`,
-  `packages/styles/BRAND_RULES.md`, `packages/styles/AGENTS.md`
-- Storybook apps: `apps/storybook/.storybook/preview.js`,
+  `packages/styles/BRAND_RULES.md`, `packages/styles/AGENTS.md`,
+  `packages/styles/README.md`
+- Storybook apps / preview: `apps/storybook/.storybook/preview.js`,
   `apps/storybook-react/.storybook/preview.js`
+- Visual/coverage gates: `packages/styles/scripts/quality-gates.mjs`,
+  `packages/styles/scripts/storybook-coverage.mjs`,
+  `packages/styles/scripts/test-visual.mjs`
 - React: `packages/react/src/components/Modal/Modal.tsx`,
   `packages/react/src/stories/components/Communication/Modal.stories.tsx`,
   `packages/react/src/components/Modal/` (unit tests),
@@ -102,11 +106,13 @@ React Modal `Open` / no-JS mount check; confirm backdrop + centered dialog on bo
       `.pathable-modal.usa-modal` dialog with content/heading/footer); keep
       `verifyDialogName` / close-button plays **and** assert
       `.pathable-modal-wrapper.is-visible` + `.pathable-modal-overlay` are present
-- [ ] T005 [US1] Provide a CSS-only PathAble-open proof that does not rely on global
-      `@pathableai/styles/js` from `apps/storybook/.storybook/preview.js` (scope JS out
-      for this fixture, add an isolated CSS-only Storybook/preview context, or add a
-      styles package HTML/CSS fixture test under `packages/styles/` that mounts static
-      open markup without USWDS modal JS)
+- [ ] T005 [US1] Make the styles Modal **open Storybook story itself** a no-USWDS-JS
+      proof (FR-009): update `apps/storybook/.storybook/preview.js` so
+      Communication/Modal open does **not** load `@pathableai/styles/js` (preferred:
+      remove the global import; load USWDS JS only in stories that need it). Do **not**
+      treat a separate `packages/styles` HTML fixture as a substitute for isolating this
+      story. Confirm T004’s open fixture still shows backdrop + centering under that
+      harness; automated coverage via `pnpm test:storybook-styles`
 - [ ] T006 [US1] Rewrite styles Modal docs in
       `packages/styles/src/stories/components/Communication/Modal.stories.ts`
       `parameters.docs.description`: remove “overlay from USWDS JS only”; document
@@ -188,8 +194,9 @@ works without ad-hoc overlay CSS.
 ### Implementation for User Story 3
 
 - [ ] T016 [P] [US3] Update PathAble wrapper/overlay class catalogue (and dual-class
-      notes) in `packages/styles/BRAND_RULES.md` **and** `packages/styles/AGENTS.md`
-      (mandatory — both already list Modal)
+      notes) in `packages/styles/BRAND_RULES.md`, `packages/styles/AGENTS.md`
+      (mandatory — both already list Modal), **and** public Modal open-shell guidance
+      in `packages/styles/README.md` (FR-014)
 - [ ] T017 [P] [US3] Update React Modal docs in `packages/react/README.md` (and story
       component description in
       `packages/react/src/stories/components/Communication/Modal.stories.tsx`) for
@@ -215,14 +222,22 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 
 - [ ] T019 [US4] Name/document the styles open Modal fixture for discoverability in
       `packages/styles/src/stories/components/Communication/Modal.stories.ts` (stable
-      export name + docs so it serves as visual-regression fixture) and add styles
-      narrow and/or long-content open fixture coverage in the same file (FR-013)
+      export name + docs) **and** add both styles **narrow** and **long-content** open
+      fixtures in the same file (FR-013 — both required). Register those story IDs in
+      `packages/styles/scripts/quality-gates.mjs` `CANONICAL_STORIES` and in
+      `packages/styles/scripts/storybook-coverage.mjs` `EXPECTED_COVERAGE` so
+      `pnpm test:visual`, `pnpm quality-gates`, and `pnpm storybook:coverage` exercise
+      them (FR-011 / SC-005)
 - [ ] T020 [P] [US4] Confirm React `Open` (and existing `Narrow` / `LongContent` open
       stories) in
       `packages/react/src/stories/components/Communication/Modal.stories.tsx` remain
-      deterministic visual-regression fixtures for backdrop + placement
+      deterministic visual/interaction fixtures for backdrop + placement; ensure
+      React CI/Storybook runners cover them (`pnpm test:storybook-react`) and extend
+      or add a React visual/smoke fixture if styles-only `pnpm test:visual` cannot
+      cover React open (FR-011 / SC-005)
 - [ ] T021 [US4] Verify Storybook a11y addon / rendered checks report no new violations
-      for styles and React Modal open stories; keep ARIA on the dialog; do not broaden
+      for styles and React Modal open stories (`pnpm test:storybook-styles` /
+      `pnpm test:storybook-react` a11y); keep ARIA on the dialog; do not broaden
       existing `jsx-a11y` exceptions in
       `packages/react/src/components/Modal/Modal.tsx`
 
@@ -234,22 +249,33 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 
 **Purpose**: Gates across packages
 
-- [ ] T022 [P] Run styles lint (`pnpm --filter @pathableai/styles lint:styles` and
-      `pnpm --filter @pathableai/styles lint:tokens`) and
-      `pnpm --filter @pathableai/react lint`; fix findings without disabling rules
+- [ ] T022 [P] Run root `pnpm lint` (covers `lint:js`, styles, Markdown, tokens, and
+      `check:format` per root `package.json`) and fix findings without disabling rules
 - [ ] T023 [P] Run `pnpm --filter @pathableai/react typecheck`,
-      `pnpm --filter @pathableai/react check:types`, and
-      `pnpm --filter @pathableai/react check:package`; fix findings
+      `pnpm --filter @pathableai/react check:types`,
+      `pnpm --filter @pathableai/react check:package`, and
+      `pnpm --filter @pathableai/react test:unit`; fix findings (unit suite must run
+      after T009 / T012–T014 Modal coverage)
 - [ ] T024 [P] Build `@pathableai/styles` and `@pathableai/react`; confirm styles CSS
       entry used by React still includes Modal open-shell rules (consumer import /
       packaged CSS smoke check for FR-008)
-- [ ] T025 Build and exercise `@pathable/storybook` and `@pathable/storybook-react` in
-      their own contexts; confirm composition does not hide independent failures
+- [ ] T025 Build Storybooks and run explicit package runners with pass/fail criteria:
+      `pnpm --filter @pathable/storybook build-storybook`,
+      `pnpm --filter @pathable/storybook-react build-storybook`,
+      `pnpm test:storybook-styles` (must pass; Modal open plays included),
+      `pnpm test:storybook-react` (must pass; Modal interaction/a11y included);
+      confirm composition does not hide independent failures
 - [ ] T026 Walk `specs/247-fix-modal-backdrop/quickstart.md` validation steps
-      (compiled-CSS grep, open fixtures, CSS-only/no-JS proofs, backdrop-click checks,
-      interaction stories, package gates)
-- [ ] T027 Review visual-regression snapshots for styles open + React `Open`; approve
-      only intentional backdrop/centering changes
+      (compiled-CSS grep, CSS-only preview for styles Modal open,
+      `pnpm test:storybook-styles`, React no-JS `test:unit`, backdrop-click checks,
+      package gates) and confirm each command exits 0
+- [ ] T027 Run metric-based visual smoke (not snapshot baselines): after T019 registers
+      Modal open/narrow/long IDs in `CANONICAL_STORIES`, build
+      `apps/storybook/storybook-static` and run `pnpm test:visual` plus
+      `pnpm quality-gates`; review failure screenshots under
+      `apps/storybook/test-results/visual-failures/` if any. For React open, rely on
+      T020’s Storybook/runner (or added React visual fixture)—do not assume
+      snapshot-diff review exists
 
 ---
 
@@ -320,9 +346,12 @@ Task: "Update packages/react/README.md Modal docs"
 - Do not disable, weaken, or silence lint rules
 - Prefer accessible queries; class checks allowed for shell contract under test
 - Canonical open visibility class is `.pathable-modal-wrapper.is-visible` (no alternate modifier)
-- Default Storybook previews import `@pathableai/styles/js` — PathAble-only / no-USWDS-modal-JS
-  acceptance needs an explicit CSS-only or unit-test proof path (T005, T009)
+- Default Storybook previews import `@pathableai/styles/js` — T005 must isolate the
+  styles Modal **open story** from that import (FR-009); T009 proves React without JS
 - Storybook commands: `pnpm --filter @pathable/storybook storybook` and
-  `pnpm --filter @pathable/storybook-react storybook`
+  `pnpm --filter @pathable/storybook-react storybook`; runners:
+  `pnpm test:storybook-styles`, `pnpm test:storybook-react`, `pnpm test:visual`,
+  `pnpm quality-gates`, `pnpm storybook:coverage`
+- Task IDs: T001–T027 (27 tasks)
 - Commit after each task or logical group
 - Validate via `specs/247-fix-modal-backdrop/quickstart.md`
