@@ -33,4 +33,4 @@
 
 - Validation iteration 1: Pass. Design-system package/class contract names in Requirements follow the spec template’s owning-package rules for `packages/styles` / `packages/react` and match prior specs (e.g. ThemeProvider); Success Criteria stay outcome-focused.
 - Clarification session 2026-09-18: dual-package scope, styles-owned classes vs React-owned transitions, open required / closed optional for acceptance.
-- Ready for `/speckit.plan`.
+- Critique remediation 2026-09-18: locked required open class list + explicit PathAble SCSS (E1/X1); dual-class shell vs styles PathAble-only proof (E2); `closeOnBackdropClick` default false (P4/X2); migration/done-when/ARIA-on-dialog notes. Spec + plan/contract/research/data-model/quickstart aligned. Re-critique polish: FR locks `.is-visible` (no modifier hedge); `closeOnBackdropClick` true/false automated coverage required. Checkboxes unchanged—ready for `/speckit.tasks`.
