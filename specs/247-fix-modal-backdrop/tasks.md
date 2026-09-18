@@ -7,8 +7,8 @@ data-model.md, contracts/modal-open-presentation.md, quickstart.md
 
 **Tests**: Included — FR-010 and
 `contracts/modal-open-presentation.md` require automated React interaction/unit coverage
-for shell open/absent and `closeOnBackdropClick` false/true; styles Storybook play
-coverage for PathAble-only open.
+for shell open/absent, focus/scroll restore, and `closeOnBackdropClick` false/true;
+styles Storybook play coverage for PathAble-only open (including CSS-only proof path).
 
 **Organization**: Styles-owned open shell is Foundational (blocks all stories). User
 stories then add PathAble-only open proof + React dual-class portal (US1), React
@@ -27,7 +27,7 @@ fixtures (US4).
 - [Phase 6: User Story 4](#phase-6-user-story-4---open-state-is-reviewable-in-storybook-priority-p2)
 - [Phase 7: Polish](#phase-7-polish--cross-cutting-concerns)
 - [Dependencies & Execution Order](#dependencies--execution-order)
-- [Parallel Example: User Story 1](#parallel-example-user-story-1)
+- [Parallel Example: User Story 3](#parallel-example-user-story-3)
 - [Implementation Strategy](#implementation-strategy)
 - [Notes](#notes)
 
@@ -42,10 +42,14 @@ fixtures (US4).
 - Styles: `packages/styles/src/pathable-component-wrappers/pathable-modal.scss`,
   `packages/styles/src/stories/components/Communication/Modal.stories.ts`,
   `packages/styles/BRAND_RULES.md`, `packages/styles/AGENTS.md`
+- Storybook apps: `apps/storybook/.storybook/preview.js`,
+  `apps/storybook-react/.storybook/preview.js`
 - React: `packages/react/src/components/Modal/Modal.tsx`,
   `packages/react/src/stories/components/Communication/Modal.stories.tsx`,
+  `packages/react/src/components/Modal/` (unit tests),
   `packages/react/README.md`
-- Contract reference: `specs/247-fix-modal-backdrop/contracts/modal-open-presentation.md`
+- Release: `.changeset/` (Changesets for `@pathableai/styles` + `@pathableai/react`)
+- Contract: `specs/247-fix-modal-backdrop/contracts/modal-open-presentation.md`
 
 ---
 
@@ -86,8 +90,8 @@ contract before React emits it.
 **Goal**: Styles PathAble-only open markup and React `open={true}` both show a dimmed
 full-viewport backdrop and centered dialog with correct title→body→footer order.
 
-**Independent Test**: Open styles Modal open fixture (PathAble-only, no USWDS JS) and
-React Modal `Open` story; confirm backdrop + centered dialog on both.
+**Independent Test**: Open styles Modal open fixture (PathAble-only CSS proof) and
+React Modal `Open` / no-JS mount check; confirm backdrop + centered dialog on both.
 
 ### Implementation for User Story 1
 
@@ -96,23 +100,35 @@ React Modal `Open` story; confirm backdrop + centered dialog on both.
       required PathAble-only shell
       (`.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` →
       `.pathable-modal.usa-modal` dialog with content/heading/footer); keep
-      `verifyDialogName` / close-button play checks
-- [ ] T005 [P] [US1] Replace styles Modal story docs that claim the overlay comes only
-      from USWDS JS in
+      `verifyDialogName` / close-button plays **and** assert
+      `.pathable-modal-wrapper.is-visible` + `.pathable-modal-overlay` are present
+- [ ] T005 [US1] Provide a CSS-only PathAble-open proof that does not rely on global
+      `@pathableai/styles/js` from `apps/storybook/.storybook/preview.js` (scope JS out
+      for this fixture, add an isolated CSS-only Storybook/preview context, or add a
+      styles package HTML/CSS fixture test under `packages/styles/` that mounts static
+      open markup without USWDS modal JS)
+- [ ] T006 [US1] Rewrite styles Modal docs in
       `packages/styles/src/stories/components/Communication/Modal.stories.ts`
-      parameters.docs.description
-- [ ] T006 [US1] Update React portal in
+      `parameters.docs.description`: remove “overlay from USWDS JS only”; document
+      wrapper → overlay → inner dialog structure; state open presentation is
+      CSS-driven with static `.is-visible`
+- [ ] T007 [US1] Update React portal in
       `packages/react/src/components/Modal/Modal.tsx` so when `open` is true it
       portals dual-class shell
       (`.pathable-modal-wrapper.usa-modal-wrapper.is-visible` →
       `.pathable-modal-overlay.usa-modal-overlay` →
       `.pathable-modal.usa-modal` dialog); keep `ref`, ARIA, `onKeyDown`, and
       `...rest` on the **dialog**; keep `return null` when `!open`
-- [ ] T007 [US1] Confirm React `Open` story in
+- [ ] T008 [US1] Confirm React `Open` story in
       `packages/react/src/stories/components/Communication/Modal.stories.tsx` shows
-      backdrop + centered dialog with default args (`open: true`)
+      backdrop + centered dialog with `open: true`
+- [ ] T009 [US1] Add a React unit/integration test under
+      `packages/react/src/components/Modal/` that mounts `Modal` with styles CSS and
+      **without** importing `@pathableai/styles/js`, asserting wrapper/overlay/dialog
+      shell when `open={true}` (proves no USWDS modal-JS dependency for React open)
 
-**Checkpoint**: US1 open presentation works for styles PathAble-only and React dual-class
+**Checkpoint**: US1 open presentation works for styles PathAble-only CSS proof and
+React dual-class portal (Storybook + no-JS mount)
 
 ---
 
@@ -121,37 +137,41 @@ React Modal `Open` story; confirm backdrop + centered dialog on both.
 **Goal**: Single React `Modal` owns open/closed transition, preserves Escape/focus/scroll,
 and exposes `closeOnBackdropClick` (default `false`).
 
-**Independent Test**: Toggle open/closed from a trigger; overlay click does not dismiss
-by default; with `closeOnBackdropClick={true}`, overlay click calls `onClose` and
-dialog-content clicks do not; Escape/Tab/close still work.
-
-### Tests for User Story 2
-
-- [ ] T008 [P] [US2] Add or extend React Storybook play coverage in
-      `packages/react/src/stories/components/Communication/Modal.stories.tsx` to assert
-      wrapper/overlay (or dialog contained in overlay) when open and those shell nodes
-      absent when closed (`OpenCloseBehavior` and/or dedicated plays)
-- [ ] T009 [P] [US2] Add React interaction coverage in
-      `packages/react/src/stories/components/Communication/Modal.stories.tsx` (and/or
-      co-located unit tests under `packages/react/src/components/Modal/`) for
-      `closeOnBackdropClick` default `false`: overlay click does **not** call `onClose`
-- [ ] T010 [P] [US2] Add React interaction coverage in
-      `packages/react/src/stories/components/Communication/Modal.stories.tsx` (and/or
-      co-located unit tests) for `closeOnBackdropClick={true}`: overlay click calls
-      `onClose`; click inside dialog content does not
-- [ ] T011 [US2] Confirm existing Escape / Tab / close plays in
-      `packages/react/src/stories/components/Communication/Modal.stories.tsx`
-      (`EscapeCloses`, `TabContainment`, `OpenCloseBehavior`) still pass after the
-      shell change
+**Independent Test**: Controlled open/close from a trigger; shell absent when closed;
+scroll and focus restored; overlay click does not dismiss by default; with
+`closeOnBackdropClick={true}`, overlay click calls `onClose` and dialog-content clicks
+do not; Escape/Tab/close still work.
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Add `closeOnBackdropClick?: boolean` (default `false`) to
+- [ ] T010 [US2] Add `closeOnBackdropClick?: boolean` (default `false`) to
       `packages/react/src/components/Modal/Modal.tsx`; when `true`, overlay click calls
-      `onClose` and dialog clicks stop propagation; styles remain non-interactive
-- [ ] T013 [US2] Preserve body scroll lock, focus restore, Escape, and Tab trap behavior
+      `onClose`; dialog click must `stopPropagation` **and compose** with any consumer
+      `onClick` forwarded via `...rest` (do not overwrite); styles remain non-interactive
+- [ ] T011 [US2] Preserve body scroll lock, focus restore, Escape, and Tab trap behavior
       in `packages/react/src/components/Modal/Modal.tsx` across open/close with the new
       shell (no regression vs pre-shell behavior)
+
+### Tests for User Story 2
+
+> Implement T010/T011 first (or write failing tests then implement). Sequential edits to
+> the same story/test files — do **not** mark same-file tasks `[P]`.
+
+- [ ] T012 [US2] Add a controlled open/close play or unit test in
+      `packages/react/src/stories/components/Communication/Modal.stories.tsx` and/or
+      `packages/react/src/components/Modal/` that toggles `open` true→false (trigger
+      button), asserts wrapper/overlay present when open and **absent** when closed,
+      and asserts body scroll + focus restore to the trigger (FR-010 / SC-003)
+- [ ] T013 [US2] Add coverage in `packages/react/src/components/Modal/` (preferred) or
+      `packages/react/src/stories/components/Communication/Modal.stories.tsx` for
+      `closeOnBackdropClick` default `false`: overlay click does **not** call `onClose`
+- [ ] T014 [US2] Add coverage in `packages/react/src/components/Modal/` (preferred) or
+      `packages/react/src/stories/components/Communication/Modal.stories.tsx` for
+      `closeOnBackdropClick={true}`: overlay click calls `onClose`; click inside dialog
+      content does not; consumer `onClick` on dialog still runs when composed
+- [ ] T015 [US2] Confirm existing Escape / Tab / close plays in
+      `packages/react/src/stories/components/Communication/Modal.stories.tsx`
+      (`EscapeCloses`, `TabContainment`) still pass after the shell change
 
 **Checkpoint**: US2 transition + backdrop-click prop are verified automatically
 
@@ -167,18 +187,17 @@ works without ad-hoc overlay CSS.
 
 ### Implementation for User Story 3
 
-- [ ] T014 [P] [US3] Catalogue PathAble wrapper/overlay classes (and dual-class notes)
-      in `packages/styles/BRAND_RULES.md` and `packages/styles/AGENTS.md` if those
-      tables list public Modal classes
-- [ ] T015 [P] [US3] Update React Modal docs in `packages/react/README.md` (and story
+- [ ] T016 [P] [US3] Update PathAble wrapper/overlay class catalogue (and dual-class
+      notes) in `packages/styles/BRAND_RULES.md` **and** `packages/styles/AGENTS.md`
+      (mandatory — both already list Modal)
+- [ ] T017 [P] [US3] Update React Modal docs in `packages/react/README.md` (and story
       component description in
       `packages/react/src/stories/components/Communication/Modal.stories.tsx`) for
       dual-class shell on open, `closeOnBackdropClick` default/behavior, and no
       consumer overlay CSS
-- [ ] T016 [US3] Add changelog/migration note for portal DOM shape
-      `wrapper → overlay → dialog` and removing temporary consumer overlay CSS (package
-      CHANGELOG or release notes path used by this monorepo for `@pathableai/styles` /
-      `@pathableai/react`)
+- [ ] T018 [US3] Add a Changeset under `.changeset/` covering `@pathableai/styles` and
+      `@pathableai/react` with migration note for portal DOM shape
+      `wrapper → overlay → dialog` and removing temporary consumer overlay CSS
 
 **Checkpoint**: Docs match `contracts/modal-open-presentation.md`
 
@@ -187,21 +206,22 @@ works without ad-hoc overlay CSS.
 ## Phase 6: User Story 4 - Open State Is Reviewable in Storybook (Priority: P2)
 
 **Goal**: Named open fixtures in both Storybooks are discoverable and protect backdrop +
-placement via visual regression.
+placement (including narrow/long content) via visual regression.
 
 **Independent Test**: Reviewers find styles and React open Modal stories in under one
 minute and see backdrop + dialog; visual fixtures cover those opens.
 
 ### Implementation for User Story 4
 
-- [ ] T017 [P] [US4] Name/document the styles open Modal fixture for discoverability in
+- [ ] T019 [US4] Name/document the styles open Modal fixture for discoverability in
       `packages/styles/src/stories/components/Communication/Modal.stories.ts` (stable
-      export name + docs so it serves as visual-regression fixture)
-- [ ] T018 [P] [US4] Confirm React `Open` (and existing `Narrow` / `LongContent` open
+      export name + docs so it serves as visual-regression fixture) and add styles
+      narrow and/or long-content open fixture coverage in the same file (FR-013)
+- [ ] T020 [P] [US4] Confirm React `Open` (and existing `Narrow` / `LongContent` open
       stories) in
       `packages/react/src/stories/components/Communication/Modal.stories.tsx` remain
       deterministic visual-regression fixtures for backdrop + placement
-- [ ] T019 [US4] Verify Storybook a11y addon / rendered checks report no new violations
+- [ ] T021 [US4] Verify Storybook a11y addon / rendered checks report no new violations
       for styles and React Modal open stories; keep ARIA on the dialog; do not broaden
       existing `jsx-a11y` exceptions in
       `packages/react/src/components/Modal/Modal.tsx`
@@ -214,14 +234,21 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 
 **Purpose**: Gates across packages
 
-- [ ] T020 [P] Run lint for affected packages (`pnpm --filter @pathableai/styles lint`,
-      `pnpm --filter @pathableai/react lint`) and fix findings without disabling rules
-- [ ] T021 [P] Run typecheck for `@pathableai/react` and fix findings
-- [ ] T022 Build and exercise styles + React Storybooks in their own contexts; confirm
-      composition does not hide independent failures
-- [ ] T023 Walk `specs/247-fix-modal-backdrop/quickstart.md` validation steps
-      (compiled-CSS grep, open fixtures, backdrop-click checks, interaction stories)
-- [ ] T024 Review visual-regression snapshots for styles open + React `Open`; approve
+- [ ] T022 [P] Run styles lint (`pnpm --filter @pathableai/styles lint:styles` and
+      `pnpm --filter @pathableai/styles lint:tokens`) and
+      `pnpm --filter @pathableai/react lint`; fix findings without disabling rules
+- [ ] T023 [P] Run `pnpm --filter @pathableai/react typecheck`,
+      `pnpm --filter @pathableai/react check:types`, and
+      `pnpm --filter @pathableai/react check:package`; fix findings
+- [ ] T024 [P] Build `@pathableai/styles` and `@pathableai/react`; confirm styles CSS
+      entry used by React still includes Modal open-shell rules (consumer import /
+      packaged CSS smoke check for FR-008)
+- [ ] T025 Build and exercise `@pathable/storybook` and `@pathable/storybook-react` in
+      their own contexts; confirm composition does not hide independent failures
+- [ ] T026 Walk `specs/247-fix-modal-backdrop/quickstart.md` validation steps
+      (compiled-CSS grep, open fixtures, CSS-only/no-JS proofs, backdrop-click checks,
+      interaction stories, package gates)
+- [ ] T027 Review visual-regression snapshots for styles open + React `Open`; approve
       only intentional backdrop/centering changes
 
 ---
@@ -233,35 +260,33 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 - **Setup (Phase 1)**: No dependencies
 - **Foundational (Phase 2)**: Depends on Setup — **BLOCKS** all user stories
 - **US1 (Phase 3)**: Depends on Foundational — MVP open presentation
-- **US2 (Phase 4)**: Depends on US1 React portal (T006) — prop + interaction on shell
-- **US3 (Phase 5)**: Depends on Foundational; can start after T004/T006 for accurate docs
-- **US4 (Phase 6)**: Depends on US1 stories (T004/T007); can parallel US3 after those
+- **US2 (Phase 4)**: Depends on US1 React portal (T007) — prop + interaction on shell
+- **US3 (Phase 5)**: Depends on Foundational; best after T007/T010 for accurate docs
+- **US4 (Phase 6)**: Depends on US1 stories (T004/T008); can parallel US3 after those
 - **Polish (Phase 7)**: Depends on desired user stories being complete
 
 ### User Story Dependencies
 
 - **US1 (P1)**: After Foundational — no other story deps
 - **US2 (P1)**: After US1 React portal exists
-- **US3 (P2)**: Docs; best after US1/US2 API settles
+- **US3 (P2)**: Docs/Changeset; best after US1/US2 API settles
 - **US4 (P2)**: Story/visual polish on US1 fixtures
 
 ### Parallel Opportunities
 
-- T005 parallel with T004 after markup approach is clear (same file — usually sequential)
-- T008, T009, T010 can be authored in parallel once T012 lands (or fail-first then implement)
-- T014, T015 parallel in US3
-- T017, T018 parallel in US4
-- T020, T021 parallel in Polish
+- T016 and T017 (different files) after API settles
+- T020 parallel with T019 only if different files are edited by different people
+  carefully; prefer sequential when both touch story files
+- T022, T023, T024 parallel in Polish
 
 ---
 
-## Parallel Example: User Story 2
+## Parallel Example: User Story 3
 
 ```bash
-# After T012 (prop) exists, launch coverage tasks together:
-Task: "Shell open/absent plays in packages/react/.../Modal.stories.tsx"
-Task: "closeOnBackdropClick false coverage in Modal.stories.tsx / unit tests"
-Task: "closeOnBackdropClick true coverage in Modal.stories.tsx / unit tests"
+# Different files — safe to parallelize:
+Task: "Update BRAND_RULES.md + AGENTS.md Modal shell catalogue"
+Task: "Update packages/react/README.md Modal docs"
 ```
 
 ---
@@ -272,7 +297,7 @@ Task: "closeOnBackdropClick true coverage in Modal.stories.tsx / unit tests"
 
 1. Phase 1 Setup
 2. Phase 2 Foundational (styles SCSS + dist grep) — CRITICAL
-3. Phase 3 US1 (styles open fixture + React dual-class portal)
+3. Phase 3 US1 (styles open fixture + CSS-only proof + React dual-class portal + no-JS mount)
 4. **STOP and VALIDATE**: PathAble-only styles open + React Open show backdrop
 5. Continue US2 for prop/interaction, then US3/US4, then Polish
 
@@ -281,7 +306,7 @@ Task: "closeOnBackdropClick true coverage in Modal.stories.tsx / unit tests"
 1. Setup + Foundational → open CSS in `dist`
 2. US1 → visual open works (MVP for #246)
 3. US2 → transition + `closeOnBackdropClick` verified
-4. US3 → docs/migration
+4. US3 → docs/Changeset
 5. US4 + Polish → Storybook/visual/gates
 
 ---
@@ -295,5 +320,9 @@ Task: "closeOnBackdropClick true coverage in Modal.stories.tsx / unit tests"
 - Do not disable, weaken, or silence lint rules
 - Prefer accessible queries; class checks allowed for shell contract under test
 - Canonical open visibility class is `.pathable-modal-wrapper.is-visible` (no alternate modifier)
+- Default Storybook previews import `@pathableai/styles/js` — PathAble-only / no-USWDS-modal-JS
+  acceptance needs an explicit CSS-only or unit-test proof path (T005, T009)
+- Storybook commands: `pnpm --filter @pathable/storybook storybook` and
+  `pnpm --filter @pathable/storybook-react storybook`
 - Commit after each task or logical group
 - Validate via `specs/247-fix-modal-backdrop/quickstart.md`
