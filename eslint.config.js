@@ -11,6 +11,7 @@ export default defineConfig([
     '**/dist/**',
     '**/node_modules/**',
     '**/storybook-static/**',
+    '**/storybook-static-modal-css/**',
     '**/.vite/**',
     '**/.astro/**',
     '**/.cache/**',

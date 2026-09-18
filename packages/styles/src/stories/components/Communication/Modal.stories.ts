@@ -80,7 +80,6 @@ async function assertOpenShell(canvasElement: HTMLElement) {
  * geometry gates.
  */
 export const Open = {
-  name: 'Open',
   parameters: {
     docs: {
       description: {
@@ -102,7 +101,6 @@ export const Default = Open
  * Narrow-viewport open fixture (FR-013): same PathAble-only open shell at mobile width.
  */
 export const Narrow = {
-  name: 'Narrow',
   globals: { viewport: { value: 'mobile320', isRotated: false } },
   parameters: {
     docs: {
@@ -122,7 +120,6 @@ export const Narrow = {
  * Long-content open fixture (FR-013): open shell with scrollable body content.
  */
 export const LongContent = {
-  name: 'Long Content',
   parameters: {
     docs: {
       description: {

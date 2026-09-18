@@ -70,4 +70,7 @@
 
 .pathable-modal__close {
   @extend .usa-modal__close;
+  // Meet quality-gates 44 px minimum touch target (USWDS close is ~20×28).
+  min-height: 44px;
+  min-width: 44px;
 }

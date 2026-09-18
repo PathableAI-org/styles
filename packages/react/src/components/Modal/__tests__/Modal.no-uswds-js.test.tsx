@@ -1,13 +1,12 @@
 import React from 'react'
 import { cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import '@pathableai/styles'
 import { Modal } from '../Modal'
 
 afterEach(cleanup)
 
 describe('Modal without @pathableai/styles/js (T009)', () => {
-  it('mounts open shell with styles CSS only (no styles/js)', () => {
+  it('mounts open shell without importing @pathableai/styles/js', () => {
     const onClose = vi.fn()
 
     render(
