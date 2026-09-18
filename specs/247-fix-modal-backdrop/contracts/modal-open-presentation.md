@@ -24,8 +24,13 @@ Consumers (and styles Storybook) show an open Modal with:
 
 **Observable outcomes when open**
 
-- Overlay covers the viewport and dims page content behind the dialog.
-- Dialog is centered (or intentionally placed) within the overlay.
+- Overlay covers the viewport and dims page content behind the dialog (non-transparent
+  dimmer; page content is visually obscured).
+- Dialog is **centered** within the overlay for the supported open fixtures (default,
+  narrow viewport, and long-content). Geometry gates MUST assert centering within a
+  documented pixel/percentage tolerance — end-of-page / uncentered inline placement is
+  a failure. Do not use an unspecified “intentional placement” escape hatch for these
+  fixtures.
 - Title appears above body/footer (footer not stacked above title due to reverse flex).
 
 **Styles package does not require**: React-equivalent focus trap, Escape handling,

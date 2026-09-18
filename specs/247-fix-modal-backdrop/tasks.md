@@ -47,11 +47,14 @@ fixtures (US4).
   `@pathableai/styles/js`), isolated CSS-only Modal config under
   `apps/storybook/.storybook-modal-css/` (no styles/js),
   `apps/storybook-react/.storybook/preview.js`
-- Visual/coverage/geometry gates: `packages/styles/scripts/quality-gates.mjs`,
-  `packages/styles/scripts/storybook-coverage.mjs`,
-  `packages/styles/scripts/test-visual.mjs`, plus Modal geometry runner/script
-  added by this feature (e.g. `scripts/test-modal-open-geometry.mjs` or equivalent
-  under `packages/styles/scripts/`)
+- Gate scripts (pin these paths): root `package.json` scripts
+  `test:storybook-modal-css` and `test:modal-open-geometry`;
+  `scripts/test-storybook-modal-css.mjs`;
+  `packages/styles/scripts/test-modal-open-geometry.mjs`;
+  `packages/styles/scripts/quality-gates.mjs`;
+  `packages/styles/scripts/storybook-coverage.mjs`;
+  `packages/styles/scripts/test-visual.mjs`;
+  `.github/workflows/storybook-quality.yml` (CI must invoke the new Modal gates)
 - React: `packages/react/src/components/Modal/Modal.tsx`,
   `packages/react/src/stories/components/Communication/Modal.stories.tsx`,
   `packages/react/src/components/Modal/` (unit tests),
@@ -115,7 +118,8 @@ React Modal `Open` / no-JS mount check; confirm backdrop + centered dialog on bo
       **no** `@pathableai/styles/js`) that loads the Communication/Modal open story from
       `packages/styles/src/stories/components/Communication/Modal.stories.ts`. Keep
       default `apps/storybook/.storybook/preview.js` importing `@pathableai/styles/js`
-      so Accordion/Banner `pnpm test:storybook-styles` stays green. Add root script
+      so Accordion/Banner `pnpm test:storybook-styles` stays green. Add
+      `scripts/test-storybook-modal-css.mjs` and root `package.json` script
       `test:storybook-modal-css` (build/serve that config + run Modal open plays). Do
       **not** remove the global styles/js import as the FR-009 proof.
 - [ ] T006 [US1] Rewrite styles Modal docs in
@@ -156,9 +160,14 @@ do not; Escape/Tab/close still work.
 ### Implementation for User Story 2
 
 - [ ] T010 [US2] Add `closeOnBackdropClick?: boolean` (default `false`) to
-      `packages/react/src/components/Modal/Modal.tsx`; when `true`, overlay click calls
-      `onClose`; dialog click must `stopPropagation` **and compose** with any consumer
-      `onClick` forwarded via `...rest` (do not overwrite); styles remain non-interactive
+      `packages/react/src/components/Modal/Modal.tsx`. When `false`, overlay is
+      presentational only. When `true`, overlay dismiss MUST be an accessible control
+      (prefer `<button type="button">` with dimmer styles, or `role="button"` with
+      Enter/Space) with an accessible name (e.g. “Close dialog”); click calls `onClose`;
+      dialog click must `stopPropagation` **and compose** with any consumer `onClick`
+      via `...rest`. Escape/close remain required keyboard dismiss paths. Do **not**
+      broaden the existing dialog `jsx-a11y` exception—satisfy lint for the overlay
+      control without new suppressions. Styles remain non-interactive.
 - [ ] T011 [US2] Preserve body scroll lock, focus restore, Escape, and Tab trap behavior
       in `packages/react/src/components/Modal/Modal.tsx` across open/close with the new
       shell (no regression vs pre-shell behavior)
@@ -199,17 +208,20 @@ works without ad-hoc overlay CSS.
 ### Implementation for User Story 3
 
 - [ ] T016 [P] [US3] Update PathAble wrapper/overlay class catalogue (and dual-class
-      notes) in `packages/styles/BRAND_RULES.md`, `packages/styles/AGENTS.md`
-      (mandatory — both already list Modal), **and** public Modal open-shell guidance
-      in `packages/styles/README.md` (FR-014)
+      notes) in `packages/styles/BRAND_RULES.md` (Modal mapping table ~modal row) **and**
+      `packages/styles/AGENTS.md` (extend the existing modal dual-class table/guidance
+      at the PathAble↔USWDS catalogue to include `.pathable-modal-wrapper` /
+      `.pathable-modal-overlay`), **and** public Modal open-shell guidance in
+      `packages/styles/README.md` (FR-014)
 - [ ] T017 [P] [US3] Update React Modal docs in `packages/react/README.md` (and story
       component description in
       `packages/react/src/stories/components/Communication/Modal.stories.tsx`) for
       dual-class shell on open, `closeOnBackdropClick` default/behavior, and no
       consumer overlay CSS
 - [ ] T018 [US3] Add a Changeset under `.changeset/` covering `@pathableai/styles` and
-      `@pathableai/react` with migration note for portal DOM shape
-      `wrapper → overlay → dialog` and removing temporary consumer overlay CSS
+      `@pathableai/react` as **minor** bumps (portal DOM shape
+      `wrapper → overlay → dialog` is a public contract change; do not ship as patch)
+      with migration note for removing temporary consumer overlay CSS
 
 **Checkpoint**: Docs match `contracts/modal-open-presentation.md`
 
@@ -230,24 +242,26 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
       export name + docs) **and** add both styles **narrow** and **long-content** open
       fixtures in the same file (FR-013 — both required). Register those story IDs in
       `packages/styles/scripts/quality-gates.mjs` `CANONICAL_STORIES` and in
-      `packages/styles/scripts/storybook-coverage.mjs` `EXPECTED_COVERAGE`. Add Modal
-      **geometry** assertions (overlay covers viewport; dialog centered / not end-of-
-      page) for the open fixture in the CSS-only harness plays and/or
-      `scripts/test-modal-open-geometry.mjs` (or `packages/styles/scripts/`), wired as
-      root `pnpm test:modal-open-geometry` (FR-011 / SC-005 — blank/overflow smoke alone
-      is insufficient)
-- [ ] T020 [US4] Tag React Modal open fixtures (`Open`, `Narrow`, `LongContent`) in
-      `packages/react/src/stories/components/Communication/Modal.stories.tsx` with
-      `behavior-contract` (meta or per-story) so `pnpm test:storybook-react` includes
-      them under `STORYBOOK_TARGET=react`. Add **mandatory** React open geometry /
-      visual assertions (Playwright layout or equivalent against
-      `apps/storybook-react` static, included in `pnpm test:modal-open-geometry` or a
-      dedicated React step) that fail if backdrop is missing or dialog is uncentered —
-      do not treat interaction/a11y-only coverage as sufficient for FR-011 / SC-005
+      `packages/styles/scripts/storybook-coverage.mjs` `EXPECTED_COVERAGE`. Implement
+      `packages/styles/scripts/test-modal-open-geometry.mjs` and root `package.json`
+      script `test:modal-open-geometry` asserting for styles open (CSS-only harness):
+      (1) overlay covers viewport, (2) dialog centered within tolerance, (3) overlay
+      **dims** the page (computed background/opacity not fully transparent), (4) close
+      control shows a visible **focus-visible** indicator when focused. Wire the same
+      script for React open in T020 (FR-011 / SC-005)
+- [ ] T020 [US4] In `packages/react/src/stories/components/Communication/Modal.stories.tsx`,
+      tag **all** Modal stories that must run under `pnpm test:storybook-react` with
+      `behavior-contract`, including `Open`, `Narrow`, `LongContent`,
+      `OpenCloseBehavior`, `EscapeCloses`, and `TabContainment` (meta tags or per-story —
+      do not leave interaction regressions outside the filtered runner). Extend
+      `packages/styles/scripts/test-modal-open-geometry.mjs` to assert React open
+      backdrop dimming + dialog centering + close focus-visible against
+      `apps/storybook-react` static (mandatory FR-011 / SC-005 — not optional)
 - [ ] T021 [US4] Verify Storybook a11y addon / rendered checks report no new violations
       for styles and React Modal open stories (`pnpm test:storybook-styles` /
-      `pnpm test:storybook-react` a11y; CSS-only Modal harness as applicable); keep ARIA
-      on the dialog; do not broaden existing `jsx-a11y` exceptions in
+      `pnpm test:storybook-react` / `pnpm test:storybook-modal-css` a11y). Include the
+      focus-visible close-control assertion from T019/T020. Keep ARIA on the dialog;
+      do not broaden existing `jsx-a11y` exceptions in
       `packages/react/src/components/Modal/Modal.tsx`
 
 **Checkpoint**: US4 review/visual gates satisfied
@@ -260,32 +274,35 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 
 - [ ] T022 [P] Run root `pnpm lint` (covers `lint:js`, styles, Markdown, tokens, and
       `check:format` per root `package.json`) and fix findings without disabling rules
-- [ ] T023 Run `pnpm --filter @pathableai/react typecheck`,
-      `pnpm --filter @pathableai/react check:types`,
-      `pnpm --filter @pathableai/react check:package`, and
-      `pnpm --filter @pathableai/react test:unit`; fix findings (unit suite must run
-      after T009 / T012–T014 Modal coverage). **Serialize before T024** — do not run in
-      parallel with the React package build
-- [ ] T024 Build `@pathableai/styles` and `@pathableai/react` **after T023**; confirm
-      styles CSS entry used by React still includes Modal open-shell rules (consumer
-      import / packaged CSS smoke check for FR-008)
+- [ ] T023 Run source-level React checks that do **not** require fresh `dist`:
+      `pnpm --filter @pathableai/react typecheck` and
+      `pnpm --filter @pathableai/react test:unit`; fix findings (after T009 / T012–T014)
+- [ ] T024 Build `@pathableai/styles` and `@pathableai/react` **after T023**, then run
+      publishability checks on the new artifacts:
+      `pnpm --filter @pathableai/react check:types` and
+      `pnpm --filter @pathableai/react check:package`; confirm styles CSS entry used by
+      React includes Modal open-shell rules (FR-008). Also run
+      `pnpm test:storybook-react-server` and address any new Modal SSR/browser-global
+      findings
 - [ ] T025 Build Storybooks and run explicit package runners with pass/fail criteria:
       `pnpm --filter @pathable/storybook build-storybook`,
       `pnpm --filter @pathable/storybook-react build-storybook`,
       `pnpm test:storybook-styles` (must pass; Accordion/Banner unchanged),
-      `pnpm test:storybook-modal-css` (must pass; PathAble-only open + geometry),
-      `pnpm test:storybook-react` (must pass; behavior-contract-tagged Modal included);
-      confirm composition does not hide independent failures
-- [ ] T026 Walk `specs/247-fix-modal-backdrop/quickstart.md` validation steps
-      (compiled-CSS grep, CSS-only Modal harness, React no-JS `test:unit`,
-      `pnpm test:modal-open-geometry`, backdrop-click checks, package gates) and confirm
-      each command exits 0
+      `pnpm test:storybook-modal-css` (must pass; PathAble-only open),
+      `pnpm test:storybook-react` (must pass; all behavior-contract Modal stories),
+      `pnpm test:modal-open-geometry` (must fail on missing dimmer / uncentered dialog /
+      missing close focus-visible); confirm composition does not hide independent
+      failures
+- [ ] T026 Walk `specs/247-fix-modal-backdrop/quickstart.md` validation steps in the
+      documented order (build before `check:types`/`check:package`) and confirm each
+      command exits 0
 - [ ] T027 Run metric-based visual smoke for registered Modal IDs (`pnpm test:visual`,
-      `pnpm quality-gates`) **and** require `pnpm test:modal-open-geometry` (styles CSS-
-      only open + React open) to fail on missing overlay coverage or uncentered /
-      end-of-page dialog. Do not treat blank/overflow-only smoke or interaction-only
-      runners as sufficient for FR-011 / SC-005; there is no snapshot-diff baseline
-      workflow — geometry assertions are the backdrop/centering gate
+      `pnpm quality-gates`) **and** require `pnpm test:modal-open-geometry` +
+      `pnpm test:storybook-modal-css` as the backdrop/centering/dimming/focus-visible
+      gates. Update `.github/workflows/storybook-quality.yml` to run
+      `pnpm test:storybook-modal-css` and `pnpm test:modal-open-geometry` on PRs (not
+      local-only). Do not treat blank/overflow-only smoke or interaction-only runners as
+      sufficient for FR-011 / SC-005
 
 ---
 
@@ -314,8 +331,8 @@ minute and see backdrop + dialog; visual fixtures cover those opens.
 - T020 parallel with T019 only if different files are edited by different people
   carefully; prefer sequential when both touch story files
 - T022 parallel with other polish only when not racing package builds
-- T023 then T024 (serialized — React checks before React build)
-- Do **not** parallelize T023 with T024
+- T023 (typecheck/unit) then T024 (build + check:types/check:package + SSR audit)
+- Do **not** parallelize T023 with T024; do not run check:package before build
 
 ---
 
@@ -361,11 +378,17 @@ Task: "Update packages/react/README.md Modal docs"
 - Default Storybook preview keeps `@pathableai/styles/js` — FR-009 proof is the
   isolated `apps/storybook/.storybook-modal-css/` harness (T005), not removing global JS
 - React `open={false}` is always `return null` (unmount); optional closed fixtures are styles-only
+- Dialog must be **centered** (no vague intentional-placement escape) for open fixtures
+- `closeOnBackdropClick` overlay dismiss must be an accessible control without new lint suppressions
+- Changesets: **minor** for both packages
+- CI: `.github/workflows/storybook-quality.yml` must run `test:storybook-modal-css` +
+  `test:modal-open-geometry`
 - Storybook commands: `pnpm --filter @pathable/storybook storybook` and
   `pnpm --filter @pathable/storybook-react storybook`; runners:
   `pnpm test:storybook-styles`, `pnpm test:storybook-modal-css`,
-  `pnpm test:storybook-react`, `pnpm test:modal-open-geometry`, `pnpm test:visual`,
-  `pnpm quality-gates`, `pnpm storybook:coverage`
+  `pnpm test:storybook-react`, `pnpm test:modal-open-geometry`,
+  `pnpm test:storybook-react-server`, `pnpm test:visual`, `pnpm quality-gates`,
+  `pnpm storybook:coverage`
 - Task IDs: T001–T027 (27 tasks)
 - Commit after each task or logical group
 - Validate via `specs/247-fix-modal-backdrop/quickstart.md`

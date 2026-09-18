@@ -38,7 +38,7 @@ A product engineer opens a Modal for a blocking message (for example, “session
 
 **Acceptance Scenarios**:
 
-1. **Given** the styles-owned open Modal class presentation using PathAble-only open markup (no undocumented consumer CSS, no USWDS JS), **When** that open presentation is shown, **Then** a dimmed overlay covers the full viewport and the dialog is centered (or otherwise intentionally placed per the design-system modal contract).
+1. **Given** the styles-owned open Modal class presentation using PathAble-only open markup (no undocumented consumer CSS, no USWDS JS), **When** that open presentation is shown, **Then** a dimmed overlay covers the full viewport and the dialog is centered within the overlay.
 2. **Given** React `Modal` with `open={true}` applying the styles-owned open classes and documented dual-class shell, **When** the Modal is open, **Then** the same external backdrop and dialog placement outcomes appear.
 3. **Given** an open Modal, **When** a reviewer inspects the page behind the dialog, **Then** the page content is visually obscured by the overlay (not fully visible as if no modal shell existed).
 4. **Given** an open Modal with title, description, and footer, **When** the dialog is visible, **Then** content order matches the intended modal layout (title and body above footer actions; footer does not appear above the title solely because centering context is missing).
@@ -103,7 +103,7 @@ Designers and engineers review the open Modal presentation in styles and React S
 - **Backdrop click (default)**: With `closeOnBackdropClick` unset or `false`, overlay clicks do not dismiss; dismiss paths remain Escape, close control, and other consumer `onClose` triggers.
 - **Backdrop click (enabled)**: With `closeOnBackdropClick={true}`, overlay click calls `onClose`; clicks on dialog content MUST NOT bubble to close the Modal.
 - **Long title or body**: Long content remains usable inside the open dialog (scroll within the dialog or documented overflow behavior) without breaking centering or leaving the dialog off-screen.
-- **Narrow / mobile viewports**: Overlay still covers the viewport; dialog remains usable and intentionally placed on small screens.
+- **Narrow / mobile viewports**: Overlay still covers the viewport; dialog remains usable and **centered** on small screens (same centering contract as desktop, within documented tolerance).
 - **Reduced motion**: Overlay and dialog presentation remain understandable; any motion follows reduced-motion expectations if motion is introduced. React owns animated transitions between styles-owned states if motion is used.
 - **Forced colors / high contrast**: Overlay and dialog remain distinguishable as a modal layer over page content.
 - **Multiple open attempts**: Only the intended open Modal presentation appears; consumers are not required to manually clean up orphan overlays.
@@ -115,7 +115,7 @@ Designers and engineers review the open Modal presentation in styles and React S
 
 ### Functional Requirements
 
-- **FR-001**: Both `packages/styles` and `packages/react` MUST implement this feature. `packages/styles` MUST own all Modal-related class definitions and raw CSS/SCSS for open (and closed, if defined) presentations. The required open class list MUST include at least: wrapper `.pathable-modal-wrapper.is-visible`, overlay `.pathable-modal-overlay`, and dialog with `.pathable-modal` and `.usa-modal`. Styles MUST define **explicit PathAble SCSS** for that open-visibility/overlay geometry so PathAble-only open markup yields full-viewport dimmed backdrop + intentional centering/placement **without** relying on USWDS compound `@extend` alone. When the open presentation is shown—via styles markup using those classes, or via React applying them—the external open visual result MUST match across packages. Styles MUST NOT be required to provide React-equivalent transition, focus-trap, Escape, scroll-lock, or backdrop-click behavior.
+- **FR-001**: Both `packages/styles` and `packages/react` MUST implement this feature. `packages/styles` MUST own all Modal-related class definitions and raw CSS/SCSS for open (and closed, if defined) presentations. The required open class list MUST include at least: wrapper `.pathable-modal-wrapper.is-visible`, overlay `.pathable-modal-overlay`, and dialog with `.pathable-modal` and `.usa-modal`. Styles MUST define **explicit PathAble SCSS** for that open-visibility/overlay geometry so PathAble-only open markup yields full-viewport **dimmed** backdrop + **centered** dialog **without** relying on USWDS compound `@extend` alone. When the open presentation is shown—via styles markup using those classes, or via React applying them—the external open visual result MUST match across packages. Styles MUST NOT be required to provide React-equivalent transition, focus-trap, Escape, scroll-lock, or backdrop-click behavior.
 - **FR-002**: The `@pathableai/react` `Modal` MUST remain a single component that owns transitioning between closed and open presentations by applying the styles-owned classes/markup contract. It MUST continue to expose its documented React interface (portal dialog, open/close props, focus trap, Escape-to-close, body scroll lock, focus restore) and MUST NOT regress those behaviors when the backdrop/centering presentation is corrected. It MUST also expose `closeOnBackdropClick` (default `false`) as documented in FR-007.
 - **FR-003**: When the open Modal presentation is shown, page content behind the dialog MUST be visually obscured by the backdrop so the dialog reads as a modal layer, not as an inline block at the end of the document.
 - **FR-004**: Open Modal content structure MUST keep the expected reading and visual order for title, description/body, and footer actions (footer MUST NOT appear above the title solely due to missing overlay/centering context).
@@ -133,7 +133,7 @@ Designers and engineers review the open Modal presentation in styles and React S
 ### Key Entities
 
 - **Styles-owned Modal class contract**: The PathAble Modal CSS classes and SCSS/CSS definitions (including overlay/positioning and any distinct open vs closed presentations) authored only in `packages/styles`. Required open list includes `.pathable-modal-wrapper.is-visible`, `.pathable-modal-overlay`, and dialog `.pathable-modal` + `.usa-modal`, with explicit PathAble open SCSS so PathAble-only markup works.
-- **Modal open presentation**: The combination of dimmed full-viewport backdrop plus intentionally placed dialog produced by the styles-owned open classes (also shown when React applies those classes).
+- **Modal open presentation**: The combination of dimmed full-viewport backdrop plus centered dialog produced by the styles-owned open classes (also shown when React applies those classes).
 - **Modal closed presentation**: Optional styles-owned class presentation for the non-open Modal; may be documented as a separate styles component from open.
 - **React Modal**: Single React component that applies the styles-owned open presentation when `open={true}` (dual-class shell), **unmounts** (`return null`) when `open={false}`, and owns transitions plus focus/scroll/keyboard behavior. Exposes `closeOnBackdropClick` (boolean, default `false`) for optional overlay-click dismiss; ARIA/`...rest` stay on the dialog element.
 - **Modal dialog content**: Title, optional description/body, and optional footer actions associated with the open dialog.
@@ -142,7 +142,7 @@ Designers and engineers review the open Modal presentation in styles and React S
 
 ### Measurable Outcomes
 
-- **SC-001**: In a React consumer page that only uses the documented React Modal API, setting open to true yields a visibly dimmed full-viewport layer and a centered (or intentionally placed) dialog on first open—a blocking message reads as visually modal over page content—using styles-owned classes with no undocumented consumer CSS.
+- **SC-001**: In a React consumer page that only uses the documented React Modal API, setting open to true yields a visibly dimmed full-viewport layer and a centered dialog on first open—a blocking message reads as visually modal over page content—using styles-owned classes with no undocumented consumer CSS.
 - **SC-002**: In styles Storybook or a styles consumer page using only the documented PathAble-only open Modal classes (no USWDS JS), the open presentation yields full-viewport dim + centered dialog matching React’s open visual outcomes; each package’s open visual-regression fixture is the per-package regression gate (not a single cross-package screenshot).
 - **SC-003**: After React close, 100% of tested flows restore page scrolling and remove the open overlay/dialog from view; focus returns to the pre-open control in standard trigger-open-close sequences.
 - **SC-004**: Reviewers can identify backdrop + dialog in both styles and React open Modal Storybook presentations in under one minute per surface.

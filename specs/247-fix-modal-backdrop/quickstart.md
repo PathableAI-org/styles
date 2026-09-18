@@ -140,29 +140,33 @@ After upgrade, remove any temporary consumer overlay CSS to avoid stacked dimmer
 ```bash
 # Root lint pipeline (JS, styles, Markdown, tokens, format)
 pnpm lint
+# Source checks (no dist required)
 pnpm --filter @pathableai/react typecheck
-pnpm --filter @pathableai/react check:types
-pnpm --filter @pathableai/react check:package
 pnpm --filter @pathableai/react test:unit
+# Build packages BEFORE publishability / packaged-entry checks
 pnpm --filter @pathableai/styles build
 pnpm --filter @pathableai/react build
+pnpm --filter @pathableai/react check:types
+pnpm --filter @pathableai/react check:package
+pnpm test:storybook-react-server
 # Default styles Storybook (keeps global @pathableai/styles/js for Accordion/Banner)
 pnpm test:storybook-styles
-# Isolated CSS-only Modal harness (no styles/js) + Modal geometry assertions
+# Isolated CSS-only Modal harness (no styles/js)
 pnpm test:storybook-modal-css
-# React interaction/a11y (behavior-contract-tagged Modal stories) + React geometry
+# React interaction/a11y (all Modal behavior-contract stories, including Escape/Tab)
 pnpm test:storybook-react
+# Backdrop dimming + dialog centering (+ focus-visible on close) for styles + React
 pnpm test:modal-open-geometry
-# Styles visual smoke / coverage after registering Modal IDs (blank/overflow only —
-# backdrop/centering are enforced by test:storybook-modal-css + test:modal-open-geometry)
+# Styles visual smoke / coverage after registering Modal IDs
 pnpm --filter @pathable/storybook build-storybook
 pnpm test:visual
 pnpm quality-gates
 pnpm storybook:coverage
 ```
 
-No new lint suppressions. **Backdrop presence and dialog centering** must fail the
-dedicated geometry gates (`pnpm test:storybook-modal-css` and
-`pnpm test:modal-open-geometry` for styles + React), not only blank/overflow smoke.
-Release metadata: Changeset covering `@pathableai/styles` and `@pathableai/react` with
-portal DOM migration note (`wrapper → overlay → dialog`).
+No new lint suppressions. **Backdrop dimming and dialog centering** must fail
+`pnpm test:modal-open-geometry` (and the CSS-only Modal harness), not only
+blank/overflow smoke. CI must run those scripts via
+`.github/workflows/storybook-quality.yml`. Release metadata: **minor** Changesets for
+`@pathableai/styles` and `@pathableai/react` with portal DOM migration note
+(`wrapper → overlay → dialog`).

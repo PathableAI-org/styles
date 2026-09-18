@@ -40,9 +40,9 @@ wrapper (pathable-modal-wrapper [+ usa-modal-wrapper], .is-visible)
                     └── footer (optional)
 ```
 
-- **Invariants**: Full-viewport dimmed backdrop; dialog centered/intentionally
-  placed; title/body/footer visual order matches DOM intent (`flex-direction: column`
-  for PathAble content); page behind visually obscured.
+- **Invariants**: Full-viewport dimmed backdrop; dialog centered within the overlay
+  (documented geometry tolerance); title/body/footer visual order matches DOM intent
+  (`flex-direction: column` for PathAble content); page behind visually obscured.
 - **Relationships**: Produced by styles static markup or React when `open === true`.
 
 ### 3. Modal closed presentation
