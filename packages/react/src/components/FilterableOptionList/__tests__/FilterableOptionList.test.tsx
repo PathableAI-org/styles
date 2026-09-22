@@ -856,6 +856,18 @@ describe('FilterableOptionList', () => {
     }
   })
 
+  it('rejects malformed option entries from untyped callers', () => {
+    for (const option of [null, undefined, 42, 'invalid']) {
+      const invalidOptions = [option] as unknown as readonly FilterableOption[]
+
+      expect(() =>
+        render(
+          <FilterableOptionList legend="Services" options={invalidOptions} />,
+        ),
+      ).toThrow('options must be objects')
+    }
+  })
+
   it('rejects missing accessible names from untyped callers', () => {
     const invalidLegend = {
       legend: null,

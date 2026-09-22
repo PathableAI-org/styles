@@ -80,6 +80,9 @@ function validateOptions(options: readonly FilterableOption[]) {
   const ids = new Set<string>()
 
   for (const option of options) {
+    if (option === null || typeof option !== 'object') {
+      throw new Error('FilterableOptionList options must be objects.')
+    }
     if (typeof option.id !== 'string' || !option.id.trim()) {
       throw new Error('FilterableOptionList option ids must be non-empty.')
     }

@@ -99,7 +99,7 @@ relationships and submitted values.
 - **FR-007**: Selections absent from the current visible or supplied options MUST remain selected until explicitly removed by the consumer.
 - **FR-008**: The component MUST display a count of all selected identifiers, including choices hidden by filtering or absent from current external results.
 - **FR-009**: Filtering MUST be optional and enabled by default.
-- **FR-010**: Built-in filtering MUST use trimmed, case-insensitive label substring matching by default and permit a consumer-provided matching policy.
+- **FR-010**: For a non-empty trimmed query, client filtering MUST use case-insensitive label substring matching by default and permit a consumer-provided matching policy. An empty or whitespace-only query MUST render the full catalog without invoking that policy.
 - **FR-011**: External filtering mode MUST report query changes and render consumer-supplied options without applying an additional local filter.
 - **FR-012**: Query state MUST support controlled and uncontrolled operation.
 - **FR-013**: The option group MUST have an accessible group name, and the filter MUST have an accessible label independent of placeholder text.
