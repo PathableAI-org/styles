@@ -12,13 +12,17 @@ const meta = {
       description: {
         component: `A dialog that displays content in an overlay layer, focusing user attention on a specific task or message.
 
+**Open presentation**: When \`open\` is true, the Modal portals a dual-class shell — \`.pathable-modal-wrapper.usa-modal-wrapper.is-visible\` → \`.pathable-modal-overlay.usa-modal-overlay\` → \`.pathable-modal.usa-modal\` — which provides the dimmed full-viewport backdrop and centered dialog via styles-owned CSS. Consumers do not need ad-hoc overlay CSS for backdrop or centering.
+
+**closeOnBackdropClick**: Defaults to \`false\` (backdrop is visual-only; dismiss via Escape, close control, or consumer \`onClose\`). When \`true\`, overlay click calls \`onClose\`; clicks inside the dialog do not dismiss.
+
 **When to use**: For confirmations, forms, alerts that require immediate user attention, or content that benefits from focused interaction without leaving the current page.
 
 **When not to use**: Do not use for non-essential information (use a Banner or Alert instead). Do not use for long or complex workflows. Do not use when the user needs to reference the underlying page content.
 
 **Keyboard behavior**: Tab cycles through focusable elements within the modal. Escape closes the modal. Focus is trapped inside the modal while open.
 
-**Underlying element**: Portaled \`<div>\` with role="dialog" and aria-modal="true".`,
+**Underlying element**: Portaled dual-class shell with a \`<div>\` dialog (\`role="dialog"\`, \`aria-modal="true"\`).`,
       },
     },
   },
@@ -121,6 +125,7 @@ export const ClosedTrigger: Story = {
 }
 
 export const Open: Story = {
+  tags: ['behavior-contract'],
   args: {
     open: true,
     title: 'Confirm Deletion',
@@ -146,9 +151,34 @@ export const Open: Story = {
     ),
     onClose: fn(),
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Open Modal (`open: true`) portals the dual-class shell so styles CSS shows a dimmed full-viewport backdrop and a centered dialog.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await step('backdrop + centered dual-class shell is present', async () => {
+      const wrapper = document.body.querySelector(
+        '.pathable-modal-wrapper.usa-modal-wrapper.is-visible',
+      )
+      const overlay = document.body.querySelector(
+        '.pathable-modal-overlay.usa-modal-overlay',
+      )
+      const dialog = document.body.querySelector(
+        '.pathable-modal.usa-modal[role="dialog"]',
+      )
+      await expect(wrapper).not.toBeNull()
+      await expect(overlay).not.toBeNull()
+      await expect(dialog).not.toBeNull()
+    })
+  },
 }
 
 export const LongContent: Story = {
+  tags: ['behavior-contract'],
   args: {
     open: true,
     title: 'Terms and Conditions',
@@ -207,6 +237,7 @@ export const LongActions: Story = {
 }
 
 export const Narrow: Story = {
+  tags: ['behavior-contract'],
   args: {
     open: true,
     title: 'Confirm',
@@ -238,6 +269,7 @@ export const Narrow: Story = {
 // ---------------------------------------------------------------------------
 
 export const OpenCloseBehavior: Story = {
+  tags: ['behavior-contract'],
   args: {
     open: true,
     title: 'Test Modal',
@@ -262,6 +294,7 @@ export const OpenCloseBehavior: Story = {
 }
 
 export const EscapeCloses: Story = {
+  tags: ['behavior-contract'],
   args: {
     open: true,
     title: 'Escape Test',
@@ -281,6 +314,7 @@ export const EscapeCloses: Story = {
 }
 
 export const TabContainment: Story = {
+  tags: ['behavior-contract'],
   args: {
     open: true,
     title: 'Tab Trap',

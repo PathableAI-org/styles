@@ -195,6 +195,10 @@ const CANONICAL_STORIES = [
   { id: 'recipes-operational-dashboard--loading', mode: 'desktop' },
   { id: 'recipes-operational-dashboard--mobile', mode: 'mobile' },
   { id: 'recipes-operational-dashboard--populated', mode: 'desktop' },
+  // Components - Communication / Modal open fixtures (FR-011 / FR-013)
+  { id: 'components-communication-modal--open', mode: 'desktop' },
+  { id: 'components-communication-modal--narrow', mode: 'mobile' },
+  { id: 'components-communication-modal--long-content', mode: 'desktop' },
 ]
 
 /**

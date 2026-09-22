@@ -286,7 +286,9 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 | list                | `.pathable-list`                | `.usa-list`            |                                                                        |
 | media-block         | `.pathable-media-block`         | `.usa-media-block`     |                                                                        |
 | memorable-date      | `.pathable-memorable-date`      | `.usa-memorable-date`  |                                                                        |
-| modal               | `.pathable-modal`               | `.usa-modal`           |                                                                        |
+| modal               | `.pathable-modal`               | `.usa-modal`           | Dialog; dual-class with `.usa-modal` for JS-driven interactivity       |
+| modal-wrapper       | `.pathable-modal-wrapper`       | `.usa-modal-wrapper`   | Open shell; `.is-visible` when open; PathAble-only works without JS    |
+| modal-overlay       | `.pathable-modal-overlay`       | `.usa-modal-overlay`   | Dimmed full-viewport backdrop + centering for the open shell           |
 | nav                 | `.pathable-nav`                 | `.usa-nav`             |                                                                        |
 | pagination          | `.pathable-pagination`          | `.usa-pagination`      |                                                                        |
 | paragraph           | `.pathable-paragraph`           | `.usa-paragraph`       |                                                                        |
@@ -317,4 +319,5 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 - Use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
 - For components where USWDS does not define a base class (character-count, checkbox, radio, date-picker, date-range-picker, site-title, validation), the wrapper provides element-level selectors or forwards the USWDS bundle — use the available `.pathable-{component}__{element}` classes directly.
 - For JS-driven components (accordion, banner, character-count, combo-box, date-picker, date-range-picker, file-input, header, in-page-navigation, input-mask, language-selector, modal, nav, site-alert, time-picker, tooltip, validation), keep `.usa-{component}` on the DOM element AND add `.pathable-{component}` as an additional class — the USWDS JavaScript selects DOM nodes by `.usa-*` class names, and removing them would break interactivity.
+- Modal open presentation uses a styles-owned shell: `.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` → `.pathable-modal` (and `.usa-modal` on the dialog). PathAble-only wrapper/overlay classes with `.is-visible` are enough for backdrop and centering; do not invent ad-hoc overlay CSS. When dual-classing (for example React), also emit `.usa-modal-wrapper` and `.usa-modal-overlay` beside the PathAble shell classes.
 - Use `--pathable-{component}-{property}` and `--usa-{component}-{property}` CSS custom properties as alternatives to the class-based components.

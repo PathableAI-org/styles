@@ -299,6 +299,8 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 | list           | `.pathable-list`           | `.usa-list`           |
 | media-block    | `.pathable-media-block`    | `.usa-media-block`    |
 | modal          | `.pathable-modal`          | `.usa-modal`          |
+| modal-wrapper  | `.pathable-modal-wrapper`  | `.usa-modal-wrapper`  |
+| modal-overlay  | `.pathable-modal-overlay`  | `.usa-modal-overlay`  |
 | nav            | `.pathable-nav`            | `.usa-nav`            |
 | pagination     | `.pathable-pagination`     | `.usa-pagination`     |
 | process-list   | `.pathable-process-list`   | `.usa-process-list`   |
@@ -321,5 +323,6 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 - Agents MUST use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Agents MUST use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
 - For JS-driven components (accordion, banner, combo-box, date-picker, date-range-picker, file-input, header, in-page-navigation, input-mask, modal, nav, site-alert, time-picker, tooltip, validation), Agents MUST keep `.usa-{component}` on the DOM element AND add `.pathable-{component}` as an additional class — the USWDS JavaScript selects DOM nodes by `.usa-*` class names, and removing them would break interactivity.
-- Agents MUST NOT write ad-hoc CSS rules for styling that can be achieved by applying component wrapper classes.
+- For Modal open presentation, Agents MUST use the styles-owned open shell: `.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` → `.pathable-modal` **and** `.usa-modal` on the dialog. PathAble-only wrapper/overlay with `.is-visible` MUST show backdrop and centering without USWDS JS. When dual-classing (for example React portals), Agents MUST also emit `.usa-modal-wrapper` and `.usa-modal-overlay` beside the PathAble shell classes.
+- Agents MUST NOT write ad-hoc CSS rules for Modal backdrop or centering (or for any styling that can be achieved by applying component wrapper classes).
 - Agent MAY use `--pathable-{component}-{property}` and `--usa-{component}-{property}` CSS custom properties as alternatives to the class-based components.

@@ -120,6 +120,7 @@ packages/styles/dist/
 packages/styles/fonts/
 packages/styles/img/
 storybook-static/
+storybook-static-modal-css/
 
 # Temporary / scratch files
 tmp/

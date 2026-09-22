@@ -4,11 +4,51 @@
 // USWDS dependencies: uswds-fonts, usa-icon
 // JS-driven: Yes — modal JS selects .usa-modal, .usa-modal__close
 // Requires .usa-* on DOM: Yes — keep .usa-modal for JS to find elements
+//
+// Open shell (styles-owned): .pathable-modal-wrapper.is-visible →
+// .pathable-modal-overlay → .pathable-modal. PathAble-only markup must work
+// without USWDS JS or compound @extend of .usa-modal-wrapper.is-visible.
 
 @use 'uswds-core' as *;
 
 @use 'usa-icon';
 @use 'usa-modal/src/styles';
+
+.pathable-modal-wrapper {
+  @extend .usa-modal-wrapper;
+}
+
+// Explicit open-state geometry so PathAble-only class lists show the shell
+// without relying on Sass rewriting .usa-modal-wrapper.is-visible.
+.pathable-modal-wrapper.is-visible {
+  visibility: visible;
+  opacity: 1;
+  position: fixed;
+  z-index: 99999;
+}
+
+.pathable-modal-overlay {
+  @extend .usa-modal-overlay;
+  // Explicit overlay geometry for PathAble-only open markup (backdrop + centering).
+  background: rgba(0, 0, 0, 0.7);
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  overflow: scroll;
+  overflow-x: hidden;
+  padding: 1.5rem;
+  position: fixed;
+  scroll-behavior: smooth;
+  top: 0;
+  width: 100%;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+}
 
 .pathable-modal {
   @extend .usa-modal;
@@ -16,6 +56,8 @@
 
 .pathable-modal__content {
   @extend .usa-modal__content;
+  // PathAble DOM order is title → body → footer; override USWDS column-reverse.
+  flex-direction: column;
 }
 
 .pathable-modal__heading {
@@ -28,4 +70,7 @@
 
 .pathable-modal__close {
   @extend .usa-modal__close;
+  // Meet quality-gates 44 px minimum touch target (USWDS close is ~20×28).
+  min-height: 44px;
+  min-width: 44px;
 }

@@ -1,0 +1,55 @@
+import '@pathableai/styles/src/index.scss'
+
+/**
+ * CSS-only Modal harness preview — styles SCSS only.
+ * Intentionally omits `@pathableai/styles/js` so PathAble-only open markup is
+ * proven without USWDS modal JS (FR-009).
+ */
+
+/** @type { import('@storybook/html-vite').Preview } */
+const preview = {
+  parameters: {
+    a11y: {
+      element: '#storybook-root',
+      config: {
+        rules: [{ id: 'color-contrast', enabled: true }],
+      },
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    viewport: {
+      viewports: {
+        mobile320: {
+          name: 'Mobile compact (320px)',
+          styles: { width: '320px', height: '700px' },
+        },
+        mobile1: {
+          name: 'Mobile (375px)',
+          styles: { width: '375px', height: '812px' },
+        },
+        tablet: {
+          name: 'Tablet (768px)',
+          styles: { width: '768px', height: '1024px' },
+        },
+        belowDesktopBreakpoint: {
+          name: 'Below desktop breakpoint (1023px)',
+          styles: { width: '1023px', height: '900px' },
+        },
+        desktopBreakpoint: {
+          name: 'Desktop breakpoint (1024px)',
+          styles: { width: '1024px', height: '900px' },
+        },
+        desktop: {
+          name: 'Desktop (1280px)',
+          styles: { width: '1280px', height: '900px' },
+        },
+      },
+    },
+  },
+}
+
+export default preview

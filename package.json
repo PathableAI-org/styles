@@ -22,6 +22,8 @@
     "test:storybook-styles": "node scripts/test-storybook.mjs styles",
     "test:storybook-react": "node scripts/test-storybook.mjs react",
     "test:storybook-react:all": "pnpm --filter @pathable/storybook-contracts build && pnpm --filter @pathableai/styles build && pnpm --filter @pathableai/react build && bash scripts/test-storybook.sh apps/storybook-react 6007",
+    "test:storybook-modal-css": "node scripts/test-storybook-modal-css.mjs",
+    "test:modal-open-geometry": "node packages/styles/scripts/test-modal-open-geometry.mjs",
     "test:contracts": "pnpm test:storybook-styles",
     "test:contracts:styles": "pnpm test:storybook-styles",
     "test:storybook-react-server": "node scripts/check-react-server-compatibility.mjs",
