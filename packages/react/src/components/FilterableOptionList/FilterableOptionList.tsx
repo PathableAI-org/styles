@@ -80,10 +80,10 @@ function validateOptions(options: readonly FilterableOption[]) {
   const ids = new Set<string>()
 
   for (const option of options) {
-    if (!option.id.trim()) {
+    if (typeof option.id !== 'string' || !option.id.trim()) {
       throw new Error('FilterableOptionList option ids must be non-empty.')
     }
-    if (!option.label.trim()) {
+    if (typeof option.label !== 'string' || !option.label.trim()) {
       throw new Error('FilterableOptionList option labels must be non-empty.')
     }
     if (ids.has(option.id)) {
@@ -219,10 +219,10 @@ export function FilterableOptionList({
       })
     }
 
-    ownerDocument.addEventListener('reset', reset)
+    ownerDocument.addEventListener('reset', reset, true)
     return () => {
       active = false
-      ownerDocument.removeEventListener('reset', reset)
+      ownerDocument.removeEventListener('reset', reset, true)
     }
   }, [])
 

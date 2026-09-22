@@ -461,6 +461,31 @@ describe('FilterableOptionList', () => {
     ).toBe(true)
   })
 
+  it('restores defaults when the owning form stops reset propagation', async () => {
+    const { container, getByRole } = render(
+      <form onReset={(event) => event.stopPropagation()}>
+        <FilterableOptionList
+          legend="Services"
+          options={options}
+          defaultValues={['employment']}
+          defaultQuery="support"
+        />
+      </form>,
+    )
+    const form = container.querySelector('form')!
+
+    fireEvent.click(getByRole('checkbox', { name: 'Housing support' }))
+    fireEvent.change(getByRole('searchbox'), { target: { value: 'housing' } })
+
+    await resetForm(form)
+
+    expect((getByRole('searchbox') as HTMLInputElement).value).toBe('support')
+    expect(
+      (getByRole('checkbox', { name: 'Housing support' }) as HTMLInputElement)
+        .checked,
+    ).toBe(false)
+  })
+
   it('reapplies controlled query and selection after native form reset', async () => {
     const { container, getByRole, rerender } = render(
       <form>
@@ -788,6 +813,32 @@ describe('FilterableOptionList', () => {
         />,
       ),
     ).toThrow('option ids must be unique')
+  })
+
+  it('rejects non-string option ids and labels from untyped callers', () => {
+    for (const id of [null, undefined, 42]) {
+      const invalidOptions = [
+        { id, label: 'Invalid id' },
+      ] as unknown as readonly FilterableOption[]
+
+      expect(() =>
+        render(
+          <FilterableOptionList legend="Services" options={invalidOptions} />,
+        ),
+      ).toThrow('option ids must be non-empty')
+    }
+
+    for (const label of [null, undefined, 42]) {
+      const invalidOptions = [
+        { id: 'invalid-label', label },
+      ] as unknown as readonly FilterableOption[]
+
+      expect(() =>
+        render(
+          <FilterableOptionList legend="Services" options={invalidOptions} />,
+        ),
+      ).toThrow('option labels must be non-empty')
+    }
   })
 
   it('rejects missing accessible names from untyped callers', () => {
