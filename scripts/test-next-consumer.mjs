@@ -637,8 +637,34 @@ export default function RootLayout({ children }) {
 `,
   )
   await writeFile(
+    join(fixtureRoot, 'app', 'optional-form.js'),
+    `'use client'
+
+import { OptionalFormSection } from '@pathableai/react'
+
+export function OptionalForm() {
+  return (
+    <form aria-label="Consumer optional form">
+      <OptionalFormSection
+        heading="Consumer optional details"
+        headingLevel={2}
+      >
+        <label htmlFor="consumer-optional-note">Consumer optional note</label>
+        <input
+          id="consumer-optional-note"
+          name="optionalNote"
+          defaultValue="Retained consumer value"
+        />
+      </OptionalFormSection>
+    </form>
+  )
+}
+`,
+  )
+  await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
     `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, Link, List, Loading, Tag } from '@pathableai/react'
+import { OptionalForm } from './optional-form'
 
 export default function Page() {
   return (
@@ -669,6 +695,7 @@ export default function Page() {
       <List items={['Consumer list item one', 'Consumer list item two']} />
       <Tag>Consumer tag</Tag>
       <Loading text="Consumer loading state" />
+      <OptionalForm />
       <ActivityList
         groups={[
           {
@@ -809,6 +836,42 @@ async function assertBrowserConsumer(fixtureRoot) {
       computed.headerDisplay,
       'flex',
       'DashboardHeader structural styles are not applied',
+    )
+    const optionalSection = page.locator('.pathable-optional-form-section')
+    const optionalButton = optionalSection.getByRole('button', {
+      name: 'Consumer optional details',
+    })
+    const optionalRegion = optionalSection.locator('[role="region"]')
+    assert.equal(
+      await optionalButton.getAttribute('aria-expanded'),
+      'false',
+      'OptionalFormSection is not initially collapsed',
+    )
+    assert.notEqual(
+      await optionalRegion.getAttribute('hidden'),
+      null,
+      'OptionalFormSection collapsed content is not hidden',
+    )
+    await optionalButton.click()
+    assert.equal(
+      await optionalButton.getAttribute('aria-expanded'),
+      'true',
+      'OptionalFormSection does not expand in the packed consumer',
+    )
+    await optionalButton.click()
+    const optionalFormData = await page.evaluate(() => {
+      const form = document.querySelector(
+        'form[aria-label="Consumer optional form"]',
+      )
+      if (!(form instanceof HTMLFormElement)) {
+        throw new Error('OptionalFormSection consumer form is missing')
+      }
+      return Object.fromEntries(new FormData(form))
+    })
+    assert.deepEqual(
+      optionalFormData,
+      { optionalNote: 'Retained consumer value' },
+      'OptionalFormSection collapsed controls do not retain form submission',
     )
     assert.deepEqual(
       browserErrors,
@@ -967,6 +1030,11 @@ allowBuilds:
     /\.pathable-dashboard-header\s*\{[^}]*display\s*:\s*flex(?:\s*;|\s*\})/u,
     'Next build CSS omits concrete DashboardHeader structural styles',
   )
+  assert.match(
+    emittedCss,
+    /\.pathable-optional-form-section\s*\{/u,
+    'Next build CSS omits OptionalFormSection structural styles',
+  )
 
   for (const content of [
     'Server-rendered card content',
@@ -974,6 +1042,9 @@ allowBuilds:
     'Consumer list item one',
     'Consumer tag',
     'Consumer loading state',
+    'Consumer optional details',
+    'Consumer optional note',
+    'Retained consumer value',
     'Consumer activity today',
     'Consumer completed activity',
     'Completed',

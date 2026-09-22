@@ -288,6 +288,9 @@ async function main() {
         totalChecks++
         const page = await browser.newPage()
         try {
+          if (story.id.endsWith('--forced-colors')) {
+            await page.emulateMedia({ forcedColors: 'active' })
+          }
           const failures = await checkStory(page, story.id, vpName)
           if (failures.length > 0) {
             totalFailed++

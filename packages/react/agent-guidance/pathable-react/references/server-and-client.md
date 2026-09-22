@@ -15,6 +15,7 @@ frameworks:
 - `DatePicker`
 - `DateRangePicker`
 - `Modal`
+- `OptionalFormSection`
 
 They own state, effects, browser interaction, or portals. `Modal` portals to
 `document.body` after mounting.
@@ -48,5 +49,5 @@ the application boundary using the framework's supported client-only loading
 mechanism. Do not import it inside individual reusable components.
 
 The React-owned `Accordion`, `Banner`, `ComboBox`, `DatePicker`,
-`DateRangePicker`, and `Modal` components do not require the USWDS JavaScript
-bundle.
+`DateRangePicker`, `Modal`, and `OptionalFormSection` components do not require
+the USWDS JavaScript bundle.

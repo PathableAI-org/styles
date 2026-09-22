@@ -81,6 +81,42 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-form-stack--with-form-row',
     mode: 'desktop',
   },
+  {
+    id: 'components-form-controls-optional-form-section--default',
+    mode: 'both',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--expanded',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--nested-form-group',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--nested-fieldset',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--form-composition',
+    mode: 'both',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--long-content',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--narrow',
+    mode: 'mobile',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--increased-text',
+    mode: 'both',
+  },
+  {
+    id: 'components-form-controls-optional-form-section--forced-colors',
+    mode: 'both',
+  },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
@@ -234,6 +270,20 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
       selector: 'input[type="checkbox"]',
       reason:
         'Native checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
+    },
+  ],
+  'components-form-controls-optional-form-section--form-composition': [
+    {
+      selector: 'input[type="radio"]',
+      reason:
+        'Native radio inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
+    },
+  ],
+  'components-form-controls-optional-form-section--nested-fieldset': [
+    {
+      selector: 'input[type="radio"]',
+      reason:
+        'Native radio inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
     },
   ],
   'structured-workflow-wizard--mobile': [
@@ -822,6 +872,9 @@ async function main(checkMode = 'all') {
         const page = await browser.newPage()
 
         try {
+          if (story.id.endsWith('--forced-colors')) {
+            await page.emulateMedia({ forcedColors: 'active' })
+          }
           const failures = await checkStory(page, story.id, vpName)
           storiesChecked++
 
