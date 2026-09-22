@@ -150,7 +150,8 @@ const meta = {
     },
     noMatchesMessage: {
       control: { type: 'text' },
-      description: 'Content shown when a client query has no matches.',
+      description:
+        'Content shown when a client or external query has no matches.',
     },
     disabled: {
       control: { type: 'boolean' },
