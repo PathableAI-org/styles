@@ -262,6 +262,7 @@ export function FilterableOptionList({
             id={filterId}
             className={`${ROOT_CLASS}__filter-input`}
             type="search"
+            form={form}
             value={currentQuery}
             placeholder={filterPlaceholder}
             onChange={(event) => changeQuery(event.currentTarget.value)}
@@ -296,6 +297,7 @@ export function FilterableOptionList({
                   id={optionId}
                   checked={selectedIds.has(option.id)}
                   disabled={disabled || option.disabled}
+                  form={form}
                   aria-describedby={detailsId}
                   onChange={() => toggleOption(option)}
                 >

@@ -110,6 +110,9 @@ the same contract for untyped JavaScript callers.
 - When `name` is supplied, render one hidden successful control per selected
   unique ID.
 - Visual checkboxes do not carry `name`, preventing duplicate submission.
+- An explicit `form` assigns the fieldset, search input, checkboxes, and hidden
+  submission controls to the same form owner, even when the component is
+  physically nested in a different form.
 - Form reset restores uncontrolled default values and default query. Restoring
   an uncontrolled query reports `defaultQuery` through `onQueryChange`.
 - Controlled values and query remain authoritative after native reset.

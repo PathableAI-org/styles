@@ -1133,7 +1133,10 @@ available records, use a product-owned remote or virtualized experience instead.
 
 Other standard fieldset attributes, including `id`, `form`, `aria-*`, and
 `data-*`, are forwarded to the root. The component owns its children, so
-`children` and `dangerouslySetInnerHTML` are not accepted.
+`children` and `dangerouslySetInnerHTML` are not accepted. When `form` is
+supplied, the fieldset, search input, checkboxes, and hidden submission inputs
+all use that explicit form owner, including when the component is rendered
+inside a different form.
 
 Each `FilterableOption` requires a unique, non-empty string `id` and a concise
 string `label`. `legend` and `filterLabel` accept meaningful, non-empty strings

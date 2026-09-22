@@ -443,6 +443,63 @@ describe('FilterableOptionList', () => {
     ])
   })
 
+  it('assigns every control to an explicit form instead of an enclosing form', async () => {
+    const { container, getAllByRole, getByRole } = render(
+      <>
+        <form id="service-form" />
+        <form>
+          <FilterableOptionList
+            legend="Services"
+            options={options}
+            defaultValues={['employment']}
+            defaultQuery="support"
+            name="services"
+            form="service-form"
+          />
+        </form>
+      </>,
+    )
+    const [ownerForm, enclosingForm] = Array.from(
+      container.querySelectorAll('form'),
+    )
+    const group = getByRole('group') as HTMLFieldSetElement
+    const searchbox = getByRole('searchbox') as HTMLInputElement
+    const checkboxes = getAllByRole('checkbox') as HTMLInputElement[]
+    const hiddenInput = container.querySelector(
+      'input[type="hidden"]',
+    ) as HTMLInputElement
+
+    expect(group.form).toBe(ownerForm)
+    expect(searchbox.form).toBe(ownerForm)
+    expect(checkboxes.every((checkbox) => checkbox.form === ownerForm)).toBe(
+      true,
+    )
+    expect(hiddenInput.form).toBe(ownerForm)
+
+    fireEvent.click(getByRole('checkbox', { name: 'Housing support' }))
+    fireEvent.change(searchbox, { target: { value: 'housing' } })
+    await resetForm(enclosingForm)
+
+    expect(searchbox.value).toBe('housing')
+    expect(
+      (getByRole('checkbox', { name: 'Housing support' }) as HTMLInputElement)
+        .checked,
+    ).toBe(true)
+    expect(new FormData(ownerForm).getAll('services')).toEqual([
+      'employment',
+      'housing',
+    ])
+
+    await resetForm(ownerForm)
+
+    expect(searchbox.value).toBe('support')
+    expect(
+      (getByRole('checkbox', { name: 'Housing support' }) as HTMLInputElement)
+        .checked,
+    ).toBe(false)
+    expect(new FormData(ownerForm).getAll('services')).toEqual(['employment'])
+  })
+
   it('restores uncontrolled defaults on native form reset', async () => {
     const { container, getByRole } = render(
       <form>
