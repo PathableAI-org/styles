@@ -445,7 +445,9 @@ export const DisabledOption: Story = {
 export const LongContent: Story = {
   args: {
     legend:
-      'Service standards for coordinated employment and independent-living planning',
+      'ServiceStandardsForCoordinatedEmploymentAndIndependentLivingPlanningWithoutBreaks',
+    filterLabel:
+      'FilterServiceStandardsForCoordinatedEmploymentAndIndependentLivingPlanningWithoutBreaks',
     options: [
       {
         id: 'coordinated-support',

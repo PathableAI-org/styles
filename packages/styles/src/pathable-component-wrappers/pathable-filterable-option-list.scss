@@ -18,6 +18,13 @@
   min-width: 0;
 }
 
+.pathable-filterable-option-list > .pathable-legend,
+.pathable-filterable-option-list__filter > .pathable-label:first-child {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .pathable-filterable-option-list__filter > .pathable-label:first-child {
   margin-top: 0;
 }

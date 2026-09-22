@@ -76,6 +76,8 @@ function renderOptions(options: Option[]) {
 
 function renderList({
   id,
+  legend = 'Service standards',
+  filterLabel = 'Filter standards',
   options = defaultOptions,
   query = '',
   status = '0 selected, 4 matches',
@@ -84,6 +86,8 @@ function renderList({
   style = '',
 }: {
   id: string
+  legend?: string
+  filterLabel?: string
   options?: Option[]
   query?: string
   status?: string
@@ -96,9 +100,9 @@ function renderList({
     ${disabled ? 'disabled' : ''}
     ${style ? `style="${style}"` : ''}
   >
-    <legend class="pathable-legend">Service standards</legend>
+    <legend class="pathable-legend">${legend}</legend>
     <div class="pathable-filterable-option-list__filter">
-      <label class="pathable-label" for="${id}-filter">Filter standards</label>
+      <label class="pathable-label" for="${id}-filter">${filterLabel}</label>
       <input
         class="pathable-input pathable-filterable-option-list__filter-input"
         id="${id}-filter"
@@ -199,6 +203,10 @@ export const LongContent = {
   render: () =>
     renderList({
       id: 'long-content',
+      legend:
+        'ServiceStandardsForCoordinatedEmploymentAndIndependentLivingPlanningWithoutBreaks',
+      filterLabel:
+        'FilterServiceStandardsForCoordinatedEmploymentAndIndependentLivingPlanningWithoutBreaks',
       options: [
         {
           id: 'long',

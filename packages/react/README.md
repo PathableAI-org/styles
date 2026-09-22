@@ -1127,7 +1127,7 @@ available records, use a product-owned remote or virtualized experience instead.
 | `filterPlaceholder` | `string`                                               | —                         | Supplemental placeholder; not a replacement for `filterLabel`.                                            |
 | `name`              | `string`                                               | —                         | Native form name used once for each selected ID.                                                          |
 | `emptyMessage`      | `React.ReactNode`                                      | `'No options available.'` | Message for an empty supplied catalog.                                                                    |
-| `noMatchesMessage`  | `React.ReactNode`                                      | `'No matches.'`           | Message for a client query with no results.                                                               |
+| `noMatchesMessage`  | `React.ReactNode`                                      | `'No matches.'`           | Message for a client or external query with no results.                                                   |
 | `disabled`          | `boolean`                                              | `false`                   | Disables the fieldset, filter, and all options.                                                           |
 | `className`         | `string`                                               | —                         | Additional root fieldset classes.                                                                         |
 
