@@ -213,7 +213,7 @@ export const LongContent = {
           label:
             'Coordinated employment, transportation, communication, and independent-living support planning',
           description:
-            'Use this deliberately long localized-looking description to verify that labels and supporting details wrap inside the option region without obscuring the native checkbox or requiring horizontal scrolling.',
+            'Use this deliberately long localized-looking description to verify that labels and supporting details wrap inside the option region without obscuring the native checkbox or requiring horizontal scrolling.<svg aria-hidden="true" width="800" height="40" viewBox="0 0 800 40"><rect width="800" height="40" fill="currentColor"></rect></svg>',
           meta: 'EXTREMELY-LONG-CATALOG-REFERENCE-2026-ACCESSIBILITY-REVIEW',
           checked: true,
         },
@@ -221,6 +221,16 @@ export const LongContent = {
       status:
         '1 selected, 1 match for "ExtremelyLongUnbrokenConsumerSuppliedQueryThatMustWrapWithoutOverflowingTheBoundedOptionList"',
     }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const optionRegion = canvasElement.querySelector<HTMLElement>(
+      '.pathable-filterable-option-list__options',
+    )
+
+    await expect(optionRegion).not.toBeNull()
+    await expect(optionRegion!.scrollWidth).toBeLessThanOrEqual(
+      optionRegion!.clientWidth + 2,
+    )
+  },
 }
 
 export const ManyOptions = {

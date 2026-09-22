@@ -106,6 +106,12 @@
 .pathable-filterable-option-list__description,
 .pathable-filterable-option-list__meta {
   min-width: 0;
+
+  :is(img, svg, video, canvas) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .pathable-filterable-option-list__meta {

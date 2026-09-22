@@ -468,8 +468,21 @@ export const LongContent: Story = {
         id: 'coordinated-support',
         label:
           'Coordinated employment, transportation, communication, and independent-living support planning',
-        description:
-          'Use this deliberately long localized-looking description to verify that labels and supporting details wrap without obscuring the native checkbox or requiring horizontal scrolling.',
+        description: (
+          <>
+            Use this deliberately long localized-looking description to verify
+            that labels and supporting details wrap without obscuring the native
+            checkbox or requiring horizontal scrolling.
+            <svg
+              aria-hidden="true"
+              width="800"
+              height="40"
+              viewBox="0 0 800 40"
+            >
+              <rect width="800" height="40" fill="currentColor" />
+            </svg>
+          </>
+        ),
         meta: 'EXTREMELY-LONG-CATALOG-REFERENCE-2026-ACCESSIBILITY-REVIEW',
       },
     ],
@@ -477,6 +490,16 @@ export const LongContent: Story = {
     defaultQuery:
       'ExtremelyLongUnbrokenConsumerSuppliedQueryThatMustWrapWithoutOverflowingTheBoundedOptionList',
     filterMode: 'external',
+  },
+  play: async ({ canvasElement }) => {
+    const optionRegion = canvasElement.querySelector<HTMLElement>(
+      '.pathable-filterable-option-list__options',
+    )
+
+    if (!optionRegion) throw new Error('Expected the option region')
+    await expect(optionRegion.scrollWidth).toBeLessThanOrEqual(
+      optionRegion.clientWidth + 2,
+    )
   },
 }
 

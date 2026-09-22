@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  Children,
   useEffect,
   useId,
   useLayoutEffect,
@@ -74,6 +75,12 @@ function encodeOptionId(value: string) {
   return Array.from(value, (character) =>
     character.codePointAt(0)!.toString(36),
   ).join('-')
+}
+
+function hasDetailContent(content: ReactNode) {
+  return Children.toArray(content).some(
+    (child) => typeof child !== 'string' || child.trim().length > 0,
+  )
 }
 
 function validateOptions(options: readonly FilterableOption[]) {
@@ -287,8 +294,9 @@ export function FilterableOptionList({
         <ul className={`pathable-checkbox__list ${ROOT_CLASS}__options`}>
           {visibleOptions.map((option) => {
             const optionId = `${generatedId}-option-${encodeOptionId(option.id)}`
-            const hasDetails =
-              option.description !== undefined || option.meta !== undefined
+            const hasDescription = hasDetailContent(option.description)
+            const hasMeta = hasDetailContent(option.meta)
+            const hasDetails = hasDescription || hasMeta
             const detailsId = hasDetails ? `${optionId}-details` : undefined
 
             return (
@@ -305,12 +313,12 @@ export function FilterableOptionList({
                 </Checkbox>
                 {hasDetails ? (
                   <span className={`${ROOT_CLASS}__details`} id={detailsId}>
-                    {option.description !== undefined ? (
+                    {hasDescription ? (
                       <span className={`${ROOT_CLASS}__description`}>
                         {option.description}
                       </span>
                     ) : null}
-                    {option.meta !== undefined ? (
+                    {hasMeta ? (
                       <span className={`${ROOT_CLASS}__meta`}>
                         {option.meta}
                       </span>

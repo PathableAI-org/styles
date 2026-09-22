@@ -77,6 +77,51 @@ describe('FilterableOptionList', () => {
     expect(getByRole('status').textContent).toBe('0 selected, 3 matches')
   })
 
+  it('omits empty detail relationships while preserving renderable values', () => {
+    const { container, getByRole, getByText } = render(
+      <FilterableOptionList
+        legend="Services"
+        options={[
+          {
+            id: 'empty-details',
+            label: 'Empty details',
+            description: null,
+            meta: false,
+          },
+          {
+            id: 'blank-details',
+            label: 'Blank details',
+            description: '   ',
+          },
+          {
+            id: 'numeric-details',
+            label: 'Numeric details',
+            meta: 0,
+          },
+        ]}
+      />,
+    )
+
+    expect(
+      getByRole('checkbox', { name: 'Empty details' }).getAttribute(
+        'aria-describedby',
+      ),
+    ).toBeNull()
+    expect(
+      getByRole('checkbox', { name: 'Blank details' }).getAttribute(
+        'aria-describedby',
+      ),
+    ).toBeNull()
+    expect(
+      getByRole('checkbox', { name: 'Numeric details' }).getAttribute(
+        'aria-describedby',
+      ),
+    ).toBe(getByText('0').parentElement?.id)
+    expect(
+      container.querySelectorAll('.pathable-filterable-option-list__details'),
+    ).toHaveLength(1)
+  })
+
   it('filters trimmed case-insensitive label substrings by default', () => {
     const { getByRole, queryByRole } = render(
       <FilterableOptionList legend="Services" options={options} />,
