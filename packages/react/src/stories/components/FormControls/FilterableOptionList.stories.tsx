@@ -47,6 +47,18 @@ const MANY_OPTIONS: readonly FilterableOption[] = Array.from(
   }),
 )
 
+const KEYBOARD_OPTIONS: readonly FilterableOption[] = Array.from(
+  { length: 100 },
+  (_, index) => {
+    const number = String(index + 1).padStart(3, '0')
+    return {
+      id: `keyboard-service-${number}`,
+      label: `Keyboard service option ${number}`,
+      meta: `KEY-${number}`,
+    }
+  },
+)
+
 const meta = {
   title: 'Components/Form Controls/FilterableOptionList',
   component: FilterableOptionList,
@@ -313,53 +325,55 @@ export const ExternalFiltering: Story = {
 
 export const FilteringAndKeyboardSelection: Story = {
   args: {
-    defaultValues: ['transportation'],
+    options: KEYBOARD_OPTIONS,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const filter = canvas.getByRole('searchbox', { name: 'Filter standards' })
+    const optionNumbers = ['007', '042', '100']
 
     await step(
-      'filters without moving focus or clearing hidden selections',
+      'filters and selects three options with the keyboard',
       async () => {
-        await userEvent.click(filter)
-        await userEvent.type(filter, 'employment')
-        await expect(filter).toHaveFocus()
-        await expect(
-          canvas.queryByRole('checkbox', { name: 'Transportation planning' }),
-        ).not.toBeInTheDocument()
-        await expect(canvas.getByRole('status')).toHaveTextContent(
-          '1 selected, 1 match for "employment"',
-        )
-      },
-    )
-
-    await step(
-      'uses native Space behavior to add the visible option',
-      async () => {
-        const checkbox = canvas.getByRole('checkbox', {
-          name: 'Employment support',
-        })
         await userEvent.tab()
-        await expect(checkbox).toHaveFocus()
-        await userEvent.keyboard(' ')
-        await expect(checkbox).toBeChecked()
-        await expect(canvas.getByRole('status')).toHaveTextContent(
-          '2 selected, 1 match for "employment"',
-        )
+        await expect(filter).toHaveFocus()
+
+        for (const [index, number] of optionNumbers.entries()) {
+          await userEvent.type(filter, number)
+          await expect(filter).toHaveFocus()
+
+          const checkbox = canvas.getByRole('checkbox', {
+            name: `Keyboard service option ${number}`,
+          })
+          await userEvent.tab()
+          await expect(checkbox).toHaveFocus()
+          await userEvent.keyboard(' ')
+          await expect(checkbox).toBeChecked()
+          await expect(canvas.getByRole('status')).toHaveTextContent(
+            `${index + 1} selected, 1 match for "${number}"`,
+          )
+
+          await userEvent.tab({ shift: true })
+          await expect(filter).toHaveFocus()
+          await userEvent.clear(filter)
+        }
       },
     )
 
     await step(
-      'clears the query and restores the hidden selection',
+      'clears the query and retains all three selections',
       async () => {
-        await userEvent.click(filter)
-        await userEvent.clear(filter)
-        await expect(
-          canvas.getByRole('checkbox', { name: 'Transportation planning' }),
-        ).toBeChecked()
+        await expect(filter).toHaveFocus()
+        await expect(canvas.getAllByRole('checkbox')).toHaveLength(100)
+        for (const number of optionNumbers) {
+          await expect(
+            canvas.getByRole('checkbox', {
+              name: `Keyboard service option ${number}`,
+            }),
+          ).toBeChecked()
+        }
         await expect(canvas.getByRole('status')).toHaveTextContent(
-          '2 selected, 4 matches',
+          '3 selected, 100 matches',
         )
       },
     )

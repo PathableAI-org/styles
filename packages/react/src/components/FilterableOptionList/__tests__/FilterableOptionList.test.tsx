@@ -128,6 +128,21 @@ describe('FilterableOptionList', () => {
     )
   })
 
+  it('shows the full catalog without invoking custom matching for a blank query', () => {
+    const filterOption = vi.fn(() => false)
+    const { getAllByRole } = render(
+      <FilterableOptionList
+        legend="Services"
+        options={options}
+        query="   "
+        filterOption={filterOption}
+      />,
+    )
+
+    expect(getAllByRole('checkbox')).toHaveLength(options.length)
+    expect(filterOption).not.toHaveBeenCalled()
+  })
+
   it('changes the live status when equal-count queries replace results', () => {
     const { getByRole } = render(
       <FilterableOptionList legend="Services" options={options} />,

@@ -1122,7 +1122,7 @@ available records, use a product-owned remote or virtualized experience instead.
 | `query`             | `string`                                               | —                         | Controlled query.                                                                                         |
 | `defaultQuery`      | `string`                                               | `''`                      | Initial query for uncontrolled usage.                                                                     |
 | `onQueryChange`     | `(query: string) => void`                              | —                         | Reports every query change.                                                                               |
-| `filterOption`      | `(option: FilterableOption, query: string) => boolean` | label substring matching  | Custom client-side matching policy; invalid when `filterMode="external"`.                                 |
+| `filterOption`      | `(option: FilterableOption, query: string) => boolean` | label substring matching  | Custom client-side policy for active queries; invalid when `filterMode="external"`.                       |
 | `filterLabel`       | `string`                                               | `'Filter options'`        | Non-empty visible accessible label for the search input.                                                  |
 | `filterPlaceholder` | `string`                                               | —                         | Supplemental placeholder; not a replacement for `filterLabel`.                                            |
 | `name`              | `string`                                               | —                         | Native form name used once for each selected ID.                                                          |
@@ -1137,28 +1137,29 @@ Other standard fieldset attributes, including `id`, `form`, `aria-*`, and
 
 Each `FilterableOption` requires a unique, non-empty string `id` and a concise
 string `label`. `legend` and `filterLabel` accept meaningful, non-empty strings
-so the group and filter always have accessible names. `description` and `meta` accept non-interactive inline React
-content and are exposed as descriptions rather than becoming part of the
-checkbox name. Empty labels and duplicate or empty IDs throw a generic error
-instead of creating unnamed or ambiguous selections or exposing identifier
-values.
+so the group and filter always have accessible names. `description` and `meta`
+accept non-interactive inline React content and are exposed as descriptions
+rather than becoming part of the checkbox name. Empty labels and duplicate or
+empty IDs throw a generic error instead of creating unnamed or ambiguous
+selections or exposing identifier values.
 
-Client mode uses trimmed, case-insensitive label substring matching unless
-`filterOption` supplies another policy. External mode calls `onQueryChange` and
-renders `options` exactly as supplied, so the application owns remote requests,
-loading, errors, authorization, and result replacement. Supplying `filterOption`
-with external mode is rejected by the public type and at runtime. An empty client
-catalog remains distinct from a query with no matches; an empty externally
-supplied result set with a query is a no-match state. Filtering never removes
-selected IDs that are hidden or absent from the current options. The status
-includes the active query so equal-count result replacements are announced, and
-selection counts and form values continue to include hidden IDs. Use either `values` or
-`defaultValues`, and either `query` or `defaultQuery`, independently according to
-where each piece of state belongs. Native form reset restores uncontrolled
-defaults and reports the restored `defaultQuery` through `onQueryChange` so
-external result owners can synchronize their result set. Controlled query and
-selection props remain authoritative after reset. Group-level validation such as
-"choose at least one" remains application-owned.
+Client mode uses trimmed, case-insensitive label substring matching unless an
+active query and `filterOption` supply another policy. An empty or whitespace-only
+query renders the full catalog without invoking `filterOption`. External mode
+calls `onQueryChange` and renders `options` exactly as supplied, so the application
+owns remote requests, loading, errors, authorization, and result replacement.
+Supplying `filterOption` with external mode is rejected by the public type and at
+runtime. An empty client catalog remains distinct from a query with no matches;
+an empty externally supplied result set with a query is a no-match state.
+Filtering never removes selected IDs that are hidden or absent from the current
+options. The status includes the active query so equal-count result replacements
+are announced, and selection counts and form values continue to include hidden
+IDs. Use either `values` or `defaultValues`, and either `query` or `defaultQuery`,
+independently according to where each piece of state belongs. Native form reset
+restores uncontrolled defaults and reports the restored `defaultQuery` through
+`onQueryChange` so external result owners can synchronize their result set.
+Controlled query and selection props remain authoritative after reset.
+Group-level validation such as "choose at least one" remains application-owned.
 
 #### FilterableOptionList Accessibility
 

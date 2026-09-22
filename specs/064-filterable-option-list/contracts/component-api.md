@@ -90,8 +90,10 @@ the same contract for untyped JavaScript callers.
 
 - `query !== undefined` selects controlled query mode; otherwise state starts
   from `defaultQuery`.
-- Client mode applies `filterOption` when supplied; otherwise it compares the
-  trimmed lower-case query with the lower-case option label.
+- For a non-empty trimmed query, client mode applies `filterOption` when
+  supplied; otherwise it compares the trimmed lower-case query with the
+  lower-case option label. An empty or whitespace-only query renders the full
+  catalog without invoking `filterOption`.
 - External mode never filters `options`; `onQueryChange` lets the consumer
   replace results.
 - `filterOption` is invalid in external mode. The public discriminated type
