@@ -1,5 +1,16 @@
 # @pathableai/react
 
+## 0.4.0
+
+### Minor Changes
+
+- d82c526: Add the shared FilterableOptionList style contract and React component for accessible controlled or uncontrolled multi-selection with client or external filtering, native form values, and documented client-boundary usage.
+
+### Patch Changes
+
+- Updated dependencies [d82c526]
+  - @pathableai/styles@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes
