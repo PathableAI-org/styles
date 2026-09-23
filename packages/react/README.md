@@ -1284,6 +1284,28 @@ name.
 </OptionalFormSection>
 ```
 
+Use controlled state when the application needs to coordinate expansion:
+
+```tsx
+function ControlledOptionalSection() {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <OptionalFormSection
+      heading="Additional contact details"
+      headingLevel={3}
+      expanded={expanded}
+      onExpandedChange={setExpanded}
+    >
+      <FormGroup>
+        <Label>Alternate email</Label>
+        <Input name="alternateEmail" type="email" />
+      </FormGroup>
+    </OptionalFormSection>
+  )
+}
+```
+
 | Prop               | Type                          | Default | Description                                                        |
 | ------------------ | ----------------------------- | ------- | ------------------------------------------------------------------ |
 | `heading`          | `string`                      | —       | Required non-empty visible heading and disclosure name.            |

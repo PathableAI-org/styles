@@ -63,6 +63,29 @@ describe('OptionalFormSection', () => {
     expect(button).toHaveAttribute('aria-expanded', 'false')
   })
 
+  it('reports each uncontrolled state change', () => {
+    const onExpandedChange = vi.fn()
+    const { getByRole } = render(
+      <OptionalFormSection
+        heading="Preferences"
+        headingLevel={2}
+        onExpandedChange={onExpandedChange}
+      >
+        Preferences form
+      </OptionalFormSection>,
+    )
+    const button = getByRole('button', { name: 'Preferences' })
+
+    fireEvent.click(button)
+    expect(onExpandedChange).toHaveBeenLastCalledWith(true)
+    expect(button).toHaveAttribute('aria-expanded', 'true')
+
+    fireEvent.click(button)
+    expect(onExpandedChange).toHaveBeenLastCalledWith(false)
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+    expect(onExpandedChange).toHaveBeenCalledTimes(2)
+  })
+
   it('requests controlled changes without changing the supplied state', () => {
     const onExpandedChange = vi.fn(() => {
       expect(button).toHaveAttribute('aria-expanded', 'false')

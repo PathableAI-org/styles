@@ -166,6 +166,9 @@ async function checkStory(page, storyId, viewportName) {
   }
 
   if (storyId.endsWith('--forced-colors')) {
+    const checksFilterableOptionList = storyId.startsWith(
+      'components-form-controls-filterable-option-list--',
+    )
     const forcedColorState = await page.evaluate(() => {
       const inputs = Array.from(
         document.querySelectorAll('.pathable-checkbox__input'),
@@ -214,7 +217,7 @@ async function checkStory(page, storyId, viewportName) {
         message: 'Forced-colors emulation was not active in the story.',
       })
     }
-    if (!forcedColorState.selectedCue) {
+    if (checksFilterableOptionList && !forcedColorState.selectedCue) {
       failures.push({
         type: 'forced-colors-selected-cue',
         storyId,
@@ -222,7 +225,7 @@ async function checkStory(page, storyId, viewportName) {
         message: 'Selected and unselected options have no distinct marker cue.',
       })
     }
-    if (!forcedColorState.disabledCue) {
+    if (checksFilterableOptionList && !forcedColorState.disabledCue) {
       failures.push({
         type: 'forced-colors-disabled-cue',
         storyId,

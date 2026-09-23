@@ -6,8 +6,8 @@
 
 **Tests**: Required by the specification for disclosure state, keyboard/focus,
 form behavior, SSR/hydration, accessibility, responsive states, and package
-consumption. All tasks are initially unchecked because implementation is in
-progress and must be validated against this finalized design.
+consumption. Implementation and validation are complete; all tasks below are
+checked.
 
 ## Phase 1: Setup (Shared Styles Contract)
 
