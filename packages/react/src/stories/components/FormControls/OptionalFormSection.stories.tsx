@@ -260,6 +260,11 @@ export const KeyboardAndFormRetention: Story = {
       async () => {
         await userEvent.tab()
         await expect(button).toHaveFocus()
+        const focusStyle = getComputedStyle(button)
+        await expect(focusStyle.outlineStyle).toBe('solid')
+        await expect(
+          Number.parseFloat(focusStyle.outlineWidth),
+        ).toBeGreaterThan(0)
         await userEvent.keyboard('{Enter}')
         await expect(button).toHaveAttribute('aria-expanded', 'true')
         await expect(button).toHaveFocus()

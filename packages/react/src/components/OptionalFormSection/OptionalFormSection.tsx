@@ -8,12 +8,12 @@ export interface OptionalFormSectionProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
   'children'
 > {
-  children: ReactNode
-  heading: string
-  headingLevel: OptionalFormSectionHeadingLevel
-  expanded?: boolean
-  defaultExpanded?: boolean
-  onExpandedChange?: (expanded: boolean) => void
+  readonly children: ReactNode
+  readonly heading: string
+  readonly headingLevel: OptionalFormSectionHeadingLevel
+  readonly expanded?: boolean
+  readonly defaultExpanded?: boolean
+  readonly onExpandedChange?: (expanded: boolean) => void
 }
 
 const HEADING_ELEMENTS = {

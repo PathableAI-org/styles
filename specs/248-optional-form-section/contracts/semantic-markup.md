@@ -12,7 +12,11 @@
       aria-expanded="false"
       aria-controls="generated-content-id"
     >
-      Additional contact details
+      <span>Additional contact details</span>
+      <span
+        class="pathable-optional-form-section__indicator"
+        aria-hidden="true"
+      ></span>
     </button>
   </h3>
 
@@ -60,7 +64,8 @@ of `h2`, `h3`, `h4`, `h5`, or `h6`.
 
 - New shared composition contract: `pathable-optional-form-section`,
   `pathable-optional-form-section__heading`,
-  `pathable-optional-form-section__button`, and
+  `pathable-optional-form-section__button`,
+  `pathable-optional-form-section__indicator`, and
   `pathable-optional-form-section__content`.
 - The shared contract owns layout, heading/button presentation, disclosure
   indicator, content spacing, wrapping, focus visibility, and forced-colors
