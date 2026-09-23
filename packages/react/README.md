@@ -1287,6 +1287,8 @@ name.
 Use controlled state when the application needs to coordinate expansion:
 
 ```tsx
+import { useState } from 'react'
+
 function ControlledOptionalSection() {
   const [expanded, setExpanded] = useState(false)
 
