@@ -35,6 +35,10 @@ const commandEnvironment = {
 
 const javaScriptEntrypoints = new Set(['.js', '.cjs', '.mjs'])
 const consumerFixture = process.env.NEXT_CONSUMER_FIXTURE ?? 'next15-react18'
+const expectedFixtureMajors = {
+  'next15-react18': { next: 15, react: 18, 'react-dom': 18 },
+  'next16-react19': { next: 16, react: 19, 'react-dom': 19 },
+}
 assert.match(
   consumerFixture,
   /^[a-z\d-]+$/u,
@@ -43,6 +47,24 @@ assert.match(
 let activeConsumerServer
 let activeTemporaryRoot
 let terminating = false
+
+function assertFixtureFrameworkVersions(manifest) {
+  const expectedMajors = expectedFixtureMajors[consumerFixture]
+  assert.ok(
+    expectedMajors,
+    `No framework version contract is registered for ${consumerFixture}`,
+  )
+
+  for (const [dependency, expectedMajor] of Object.entries(expectedMajors)) {
+    const declaredVersion = manifest.dependencies?.[dependency]
+    const major = Number.parseInt(declaredVersion?.split('.')[0] ?? '', 10)
+    assert.equal(
+      major,
+      expectedMajor,
+      `${consumerFixture} must declare ${dependency} ${expectedMajor}.x, received ${declaredVersion ?? 'no version'}`,
+    )
+  }
+}
 
 async function handleTermination(signal) {
   if (terminating) return
@@ -459,6 +481,26 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     join(reactRoot, 'dist', 'index.d.ts'),
     'utf8',
   )
+  const filterableOptionListRuntime = await readFile(
+    join(
+      reactRoot,
+      'dist',
+      'components',
+      'FilterableOptionList',
+      'FilterableOptionList.js',
+    ),
+    'utf8',
+  )
+  const filterableOptionListDeclarations = await readFile(
+    join(
+      reactRoot,
+      'dist',
+      'components',
+      'FilterableOptionList',
+      'FilterableOptionList.d.ts',
+    ),
+    'utf8',
+  )
   const appShellDeclarations = await readFile(
     join(reactRoot, 'dist', 'components', 'AppShell', 'AppShell.d.ts'),
     'utf8',
@@ -518,9 +560,19 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     'Packed React runtime does not load the default theme before structural styles',
   )
   assert.match(
-    runtime,
+    filterableOptionListRuntime,
     /from\s+['"]react\/jsx-runtime['"]/u,
-    'Packed React runtime does not import the consumer JSX runtime',
+    'Packed FilterableOptionList does not import the consumer JSX runtime',
+  )
+  assert.match(
+    filterableOptionListRuntime,
+    /^['"]use client['"];/u,
+    'Packed FilterableOptionList does not preserve its client boundary',
+  )
+  assert.doesNotMatch(
+    runtime,
+    /^['"]use client['"];/u,
+    'Packed React root unnecessarily marks server-safe exports as client-only',
   )
   const runtimeExports = runtime.match(/export\s*\{([^}]*)\}/su)?.[1] ?? ''
   assert.match(
@@ -529,9 +581,46 @@ async function assertReactPackage(reactRoot, expectedStylesVersion) {
     'Packed runtime does not explicitly export ActivityList',
   )
   assert.match(
+    runtimeExports,
+    /\b(?:FilterableOptionList|\w+\s+as\s+FilterableOptionList)\b/u,
+    'Packed runtime does not explicitly export FilterableOptionList',
+  )
+  assert.match(
     declarations,
     /export\s*\{\s*ActivityList\s*\}\s*from\s*['"]\.\/components\/ActivityList\/ActivityList\.js['"]/u,
     'Packed declarations do not explicitly export ActivityList',
+  )
+  assert.match(
+    declarations,
+    /export\s*\{\s*FilterableOptionList\s*\}\s*from\s*['"]\.\/components\/FilterableOptionList\/FilterableOptionList\.js['"]/u,
+    'Packed declarations do not explicitly export FilterableOptionList',
+  )
+  const filterableOptionListTypeExports =
+    declarations.match(
+      /export\s+type\s*\{([^}]*)\}\s*from\s*['"]\.\/components\/FilterableOptionList\/FilterableOptionList\.js['"]/su,
+    )?.[1] ?? ''
+  for (const publicType of [
+    'FilterableOption',
+    'FilterableOptionListProps',
+    'FilterableOptionPredicate',
+  ]) {
+    assert.match(
+      filterableOptionListTypeExports,
+      new RegExp(`\\b${publicType}\\b`, 'u'),
+      `Packed declarations do not explicitly export ${publicType}`,
+    )
+  }
+  for (const ownedContentProp of ['children', 'dangerouslySetInnerHTML']) {
+    assert.match(
+      filterableOptionListDeclarations,
+      new RegExp(`readonly ${ownedContentProp}\\?: never`, 'u'),
+      `Packed FilterableOptionList declarations do not reject ${ownedContentProp}`,
+    )
+  }
+  assert.match(
+    filterableOptionListDeclarations,
+    /filterMode: 'external'[\s\S]*?filterOption\?: never/u,
+    'Packed FilterableOptionList declarations do not reject filterOption in external mode',
   )
   assert.match(
     declarations,
@@ -601,6 +690,10 @@ async function writeFixture(fixtureRoot) {
     'next-consumer',
     consumerFixture,
   )
+  const fixtureManifest = JSON.parse(
+    await readFile(join(fixtureTemplate, 'package.json'), 'utf8'),
+  )
+  assertFixtureFrameworkVersions(fixtureManifest)
   await copyFile(
     join(fixtureTemplate, 'package.json'),
     join(fixtureRoot, 'package.json'),
@@ -662,8 +755,31 @@ export function OptionalForm() {
 `,
   )
   await writeFile(
+    join(fixtureRoot, 'app', 'client-form.js'),
+    `'use client'
+
+import { FilterableOptionList, FormGroup, Input, Label } from '@pathableai/react'
+
+export function ClientFormComposition() {
+  return (
+    <FormGroup data-rsc-client-composition="true">
+      <Label data-rsc-ambiguous-label="true">Mixed controls</Label>
+      <Input aria-label="Standalone mixed input" />
+      <FilterableOptionList
+        data-testid="mixed-filterable-option-list"
+        filterable={false}
+        legend="Mixed service options"
+        options={[{ id: 'mixed-service', label: 'Mixed service' }]}
+      />
+    </FormGroup>
+  )
+}
+`,
+  )
+  await writeFile(
     join(fixtureRoot, 'app', 'page.js'),
-    `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, Link, List, Loading, Tag } from '@pathableai/react'
+    `import { ActivityList, AppShell, AppShellNavItem, Card, DashboardHeader, FilterableOptionList, Link, List, Loading, Tag } from '@pathableai/react'
+import { ClientFormComposition } from './client-form'
 import { OptionalForm } from './optional-form'
 
 export default function Page() {
@@ -696,6 +812,21 @@ export default function Page() {
       <Tag>Consumer tag</Tag>
       <Loading text="Consumer loading state" />
       <OptionalForm />
+      <FilterableOptionList
+        data-testid="consumer-filterable-option-list"
+        legend="Consumer services"
+        filterLabel="Filter consumer services"
+        name="services"
+        options={[
+          {
+            id: 'employment',
+            label: 'Employment support',
+            description: 'Help finding and retaining work.',
+          },
+          { id: 'housing', label: 'Housing support' },
+        ]}
+      />
+      <ClientFormComposition />
       <ActivityList
         groups={[
           {
@@ -873,6 +1004,60 @@ async function assertBrowserConsumer(fixtureRoot) {
       { optionalNote: 'Retained consumer value' },
       'OptionalFormSection collapsed controls do not retain form submission',
     )
+    const optionList = page.getByTestId('consumer-filterable-option-list')
+    assert.equal(
+      await optionList.count(),
+      1,
+      'Rendered page has no unique FilterableOptionList',
+    )
+    assert.equal(
+      await page.locator('.pathable-filterable-option-list').count(),
+      2,
+      'Packed RSC page did not render both FilterableOptionList compositions',
+    )
+    const detailsSpacing = await optionList
+      .locator('.pathable-filterable-option-list__details')
+      .evaluate((element) => {
+        const style = getComputedStyle(element)
+        return { gap: style.gap, marginBlockStart: style.marginBlockStart }
+      })
+    assert.deepEqual(
+      detailsSpacing,
+      { gap: '4px', marginBlockStart: '4px' },
+      'FilterableOptionList detail spacing does not resolve shared tokens',
+    )
+    const mixedComposition = page.locator(
+      '[data-rsc-client-composition="true"]',
+    )
+    assert.equal(
+      await mixedComposition.count(),
+      1,
+      'Packed RSC page did not render the client-owned FormGroup composition',
+    )
+    assert.equal(
+      await mixedComposition
+        .locator('[data-rsc-ambiguous-label="true"]')
+        .getAttribute('for'),
+      null,
+      'FormGroup incorrectly associated a label across an ambiguous client composition',
+    )
+    await optionList.getByRole('searchbox').fill('housing')
+    assert.equal(
+      await optionList.getByRole('checkbox').count(),
+      1,
+      'Packed FilterableOptionList did not filter after hydration',
+    )
+    await optionList.locator('label', { hasText: 'Housing support' }).click()
+    assert.equal(
+      await optionList.getByRole('status').textContent(),
+      '1 selected, 1 match for "housing"',
+      'Packed FilterableOptionList did not update selection status',
+    )
+    assert.equal(
+      await optionList.evaluate((element) => getComputedStyle(element).display),
+      'grid',
+      'FilterableOptionList structural styles are not applied',
+    )
     assert.deepEqual(
       browserErrors,
       [],
@@ -1035,6 +1220,11 @@ allowBuilds:
     /\.pathable-optional-form-section\s*\{/u,
     'Next build CSS omits OptionalFormSection structural styles',
   )
+  assert.match(
+    emittedCss,
+    /\.pathable-filterable-option-list\s*\{[^}]*display\s*:\s*grid(?:\s*;|\s*\})/u,
+    'Next build CSS omits concrete FilterableOptionList structural styles',
+  )
 
   for (const content of [
     'Server-rendered card content',
@@ -1045,6 +1235,10 @@ allowBuilds:
     'Consumer optional details',
     'Consumer optional note',
     'Retained consumer value',
+    'Consumer services',
+    'Filter consumer services',
+    'Employment support',
+    'Housing support',
     'Consumer activity today',
     'Consumer completed activity',
     'Completed',

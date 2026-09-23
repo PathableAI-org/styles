@@ -117,6 +117,9 @@ function startServer() {
 async function checkStory(page, storyId, viewportName) {
   const vp = VIEWPORTS[viewportName]
   await page.setViewportSize(vp)
+  await page.emulateMedia({
+    forcedColors: storyId.endsWith('--forced-colors') ? 'active' : 'none',
+  })
 
   const url = `${BASE_URL}/iframe.html?id=${encodeURIComponent(storyId)}&viewMode=story`
 
@@ -160,6 +163,73 @@ async function checkStory(page, storyId, viewportName) {
         message: `Story failed to render: "${bodyText.slice(0, 200).replace(/\s+/g, ' ')}"`,
       },
     ]
+  }
+
+  if (storyId.endsWith('--forced-colors')) {
+    const forcedColorState = await page.evaluate(() => {
+      const inputs = Array.from(
+        document.querySelectorAll('.pathable-checkbox__input'),
+      )
+      const checked = inputs.find((input) => input.checked)
+      const unchecked = inputs.find(
+        (input) => !input.checked && !input.disabled,
+      )
+      const disabled = inputs.find((input) => input.disabled)
+
+      const markerStyle = (input) => {
+        if (!input?.nextElementSibling) return null
+        const style = getComputedStyle(input.nextElementSibling, '::before')
+        return [
+          style.backgroundColor,
+          style.backgroundImage,
+          style.borderColor,
+          style.boxShadow,
+          style.color,
+          style.opacity,
+        ].join('|')
+      }
+
+      const labelStyle = (input) => {
+        if (!input?.nextElementSibling) return null
+        const style = getComputedStyle(input.nextElementSibling)
+        return [style.color, style.opacity, style.textDecoration].join('|')
+      }
+
+      return {
+        active: matchMedia('(forced-colors: active)').matches,
+        selectedCue:
+          markerStyle(checked) !== null &&
+          markerStyle(checked) !== markerStyle(unchecked),
+        disabledCue:
+          labelStyle(disabled) !== null &&
+          labelStyle(disabled) !== labelStyle(unchecked),
+      }
+    })
+
+    if (!forcedColorState.active) {
+      failures.push({
+        type: 'forced-colors-inactive',
+        storyId,
+        viewport: viewportName,
+        message: 'Forced-colors emulation was not active in the story.',
+      })
+    }
+    if (!forcedColorState.selectedCue) {
+      failures.push({
+        type: 'forced-colors-selected-cue',
+        storyId,
+        viewport: viewportName,
+        message: 'Selected and unselected options have no distinct marker cue.',
+      })
+    }
+    if (!forcedColorState.disabledCue) {
+      failures.push({
+        type: 'forced-colors-disabled-cue',
+        storyId,
+        viewport: viewportName,
+        message: 'Disabled and enabled options have no distinct text cue.',
+      })
+    }
   }
 
   // 2. Take screenshot and check it's not all black or all white
@@ -288,9 +358,6 @@ async function main() {
         totalChecks++
         const page = await browser.newPage()
         try {
-          if (story.id.endsWith('--forced-colors')) {
-            await page.emulateMedia({ forcedColors: 'active' })
-          }
           const failures = await checkStory(page, story.id, vpName)
           if (failures.length > 0) {
             totalFailed++

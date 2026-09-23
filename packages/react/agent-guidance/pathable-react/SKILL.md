@@ -39,6 +39,11 @@ raw HTML and `usa-*` or `pathable-*` classes.
   `Pagination`, `Sidenav`, and `Skipnav` when they match the interaction.
 - Use `SegmentedControl` only for two to five short choices, not for navigation
   or a large option set.
+- Use `FilterableOptionList` when users must filter and select multiple entries
+  from a known catalog of dozens or hundreds. Use `Checkbox` for one choice,
+  `Radio` or `Select` for one-of-many selection, and `ComboBox` for one
+  searchable choice. Use a product-owned remote or virtualized pattern for
+  catalogs too large to render together.
 
 ## Preserve accessibility
 
@@ -56,11 +61,20 @@ raw HTML and `usa-*` or `pathable-*` classes.
   `FormGroup` does not create group semantics and does not auto-wire multiple
   direct controls, including a supported control mixed with a native control or
   a PathAble composite such as `Checkbox`, `Radio`, `ComboBox`, `DatePicker`, or
-  `DateRangePicker`.
+  `DateRangePicker`, or `FilterableOptionList`.
 - Use `OptionalFormSection` to disclose optional fields while retaining their
   values and normal form submission. Supply a heading level that fits the page,
   place `FormGroup` or `Fieldset` inside its body, and keep hidden-field
   validation recovery application-owned. Use `Accordion` for non-form content.
+- Give `FilterableOptionList` a concise `legend` and visible `filterLabel`.
+  Preserve its native checkbox Tab and Space behavior; do not add listbox roles
+  or arrow-key routing. Put supporting content in option `description` or
+  `meta`, and keep group-level validation and its announcements consumer-owned.
+- Choose controlled `values` or `query` when application state owns them, and
+  uncontrolled defaults otherwise. In external filtering mode, the application
+  owns requests, loading, errors, authorization, and supplied results. Hidden
+  or externally absent selected IDs remain selected and are submitted when a
+  shared `name` is provided.
 - Preserve native element semantics, visible focus indicators, keyboard
   behavior, and non-color cues.
 - Give informative images meaningful alternative text and decorative images
