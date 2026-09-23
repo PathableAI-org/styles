@@ -129,6 +129,7 @@ import {
   MediaBlock,
   Loading,
   Modal,
+  OptionalFormSection,
   PageError,
   Pagination,
   ProcessList,
@@ -1261,6 +1262,82 @@ Use `Form` and `FormStack` as alternative form roots; do not nest them. When an 
 #### FormStack Accessibility
 
 Give the form an accessible name when needed, preserve each control's label and description associations, and provide a clearly labeled submit action. FormStack owns layout only; it does not manage field state, validation, submission requests, or server responses.
+
+### OptionalFormSection Props
+
+`OptionalFormSection` progressively discloses optional form fields while keeping
+its child controls mounted. Use it to shorten forms without clearing, disabling,
+or removing successful controls from submission. Use `Accordion` for general
+page-content disclosures and `Fieldset` when related controls need one group
+name.
+
+```tsx
+<OptionalFormSection
+  heading="Additional contact details"
+  headingLevel={3}
+  defaultExpanded={false}
+>
+  <FormGroup>
+    <Label>Alternate email</Label>
+    <Input name="alternateEmail" type="email" />
+  </FormGroup>
+</OptionalFormSection>
+```
+
+Use controlled state when the application needs to coordinate expansion:
+
+```tsx
+import { useState } from 'react'
+
+function ControlledOptionalSection() {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <OptionalFormSection
+      heading="Additional contact details"
+      headingLevel={3}
+      expanded={expanded}
+      onExpandedChange={setExpanded}
+    >
+      <FormGroup>
+        <Label>Alternate email</Label>
+        <Input name="alternateEmail" type="email" />
+      </FormGroup>
+    </OptionalFormSection>
+  )
+}
+```
+
+| Prop               | Type                          | Default | Description                                                        |
+| ------------------ | ----------------------------- | ------- | ------------------------------------------------------------------ |
+| `heading`          | `string`                      | —       | Required non-empty visible heading and disclosure name.            |
+| `headingLevel`     | `2 \| 3 \| 4 \| 5 \| 6`       | —       | Required level matching the surrounding document hierarchy.        |
+| `children`         | `React.ReactNode`             | —       | Form controls or supporting optional content.                      |
+| `expanded`         | `boolean`                     | —       | Consumer-owned expanded state.                                     |
+| `defaultExpanded`  | `boolean`                     | `false` | Initial state when expansion is internally owned.                  |
+| `onExpandedChange` | `(expanded: boolean) => void` | —       | Reports the requested next state after native button activation.   |
+| `className`        | `string`                      | —       | Additional classes appended after the shared component root class. |
+
+Other standard `<div>` attributes, including `id`, `aria-*`, `data-*`, and
+event handlers, are forwarded to the root. The root `id` does not replace the
+component's hydration-stable button and content relationship IDs.
+
+#### OptionalFormSection Accessibility
+
+Choose `headingLevel` from the surrounding page hierarchy rather than for visual
+size. The native button supports pointer, Enter, and Space activation, retains
+focus when toggled, and never submits its containing form. Collapsed content is
+hidden from presentation and keyboard navigation but remains mounted, so nested
+field values and component state survive toggles and successful fields still
+submit while collapsed.
+
+Applications own validation. Expand a collapsed section before directing a
+person to an invalid nested field; the component does not inspect validity,
+clear values, disable controls, or move focus. `OptionalFormSection` has no
+disabled or animated mode. It owns disclosure state and event handling, so place
+it below a client boundary in React Server Component applications; its initial
+server HTML remains meaningful and hydration-stable. The component supports the
+package's React 18 and React 19 peer dependency range.
 
 ### FormGroup Props
 

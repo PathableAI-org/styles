@@ -1,0 +1,95 @@
+// packages/styles/src/pathable-component-wrappers/pathable-optional-form-section.scss
+//
+// Framework-neutral disclosure shell for optional form content. Consumers own
+// state and must synchronize aria-expanded with the content's hidden attribute.
+
+.pathable-optional-form-section {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  color: var(--pathable-color-text);
+  background: var(--pathable-color-surface);
+  border: 1px solid var(--pathable-color-border);
+  border-radius: var(--radius-md);
+}
+
+.pathable-optional-form-section__heading {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.pathable-optional-form-section__button {
+  display: flex;
+  gap: var(--pathable-space-2);
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: var(--pathable-space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  color: inherit;
+  background: transparent;
+  font-family: var(--pathable-font-subheading);
+  font-size: var(--ui-heading-sm);
+  font-weight: var(--pathable-font-weight-bold);
+  line-height: var(--pathable-font-line-height-body);
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--pathable-color-bg);
+  }
+
+  &:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 3px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded='true'] {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+}
+
+.pathable-optional-form-section__indicator {
+  flex: 0 0 auto;
+  width: 0.75em;
+  height: 0.75em;
+  margin-block-start: 0.2em;
+  border-inline-end: 0.125em solid currentcolor;
+  border-block-end: 0.125em solid currentcolor;
+  transform: rotate(45deg);
+}
+
+.pathable-optional-form-section__button[aria-expanded='true']
+  .pathable-optional-form-section__indicator {
+  transform: rotate(225deg);
+}
+
+.pathable-optional-form-section__content {
+  min-width: 0;
+  padding: var(--pathable-space-2);
+  border-block-start: 1px solid var(--pathable-color-border);
+  overflow-wrap: anywhere;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .pathable-optional-form-section,
+  .pathable-optional-form-section__content {
+    border-color: CanvasText;
+  }
+
+  .pathable-optional-form-section__button:focus-visible {
+    outline-color: Highlight;
+  }
+}

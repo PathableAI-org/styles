@@ -26,8 +26,9 @@ raw HTML and `usa-*` or `pathable-*` classes.
 - Structure pages with layout and composition components such as `Stack`,
   `Inline`, `Cluster`, `Container`, `Surface`, `Page`, `SplitLayout`,
   `SidebarLayout`, `CardGrid`, and `AppShell`.
-- Build forms from `Form`, `FormGroup`, `FormStack`, `Fieldset`, `Label`,
-  `Hint`, `ErrorMessage`, and the supplied control wrappers.
+- Build forms from `Form`, `FormGroup`, `FormStack`, `Fieldset`,
+  `OptionalFormSection`, `Label`, `Hint`, `ErrorMessage`, and the supplied
+  control wrappers.
 - Use `Form` for short, linear forms and `FormStack` for wider multi-field or
   multi-section forms. Both render `<form>` by default, so do not nest them;
   use `FormStack as="div"` when an existing form owns submission.
@@ -59,8 +60,12 @@ raw HTML and `usa-*` or `pathable-*` classes.
 - Use `Fieldset` for related controls that need a shared group name;
   `FormGroup` does not create group semantics and does not auto-wire multiple
   direct controls, including a supported control mixed with a native control or
-  a PathAble composite such as `Checkbox`, `Radio`, `ComboBox`, `DatePicker`,
+  a PathAble composite such as `Checkbox`, `Radio`, `ComboBox`, `DatePicker`, or
   `DateRangePicker`, or `FilterableOptionList`.
+- Use `OptionalFormSection` to disclose optional fields while retaining their
+  values and normal form submission. Supply a heading level that fits the page,
+  place `FormGroup` or `Fieldset` inside its body, and keep hidden-field
+  validation recovery application-owned. Use `Accordion` for non-form content.
 - Give `FilterableOptionList` a concise `legend` and visible `filterLabel`.
   Preserve its native checkbox Tab and Space behavior; do not add listbox roles
   or arrow-key routing. Put supporting content in option `description` or

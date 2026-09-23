@@ -110,6 +110,11 @@ export { Form } from './components/Form/Form.js'
 export type { FormProps } from './components/Form/Form.js'
 export { FormGroup } from './components/FormGroup/FormGroup.js'
 export type { FormGroupProps } from './components/FormGroup/FormGroup.js'
+export { OptionalFormSection } from './components/OptionalFormSection/OptionalFormSection.js'
+export type {
+  OptionalFormSectionHeadingLevel,
+  OptionalFormSectionProps,
+} from './components/OptionalFormSection/OptionalFormSection.js'
 export { FilterableOptionList } from './components/FilterableOptionList/FilterableOptionList.js'
 export type {
   FilterableOption,

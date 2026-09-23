@@ -16,6 +16,7 @@ frameworks:
 - `DateRangePicker`
 - `FilterableOptionList`
 - `Modal`
+- `OptionalFormSection`
 
 They own state, effects, browser interaction, or portals. `FilterableOptionList`
 produces meaningful initial server HTML, but filtering, selection, and native
@@ -57,5 +58,5 @@ the application boundary using the framework's supported client-only loading
 mechanism. Do not import it inside individual reusable components.
 
 The React-owned `Accordion`, `Banner`, `ComboBox`, `DatePicker`,
-`DateRangePicker`, and `Modal` components do not require the USWDS JavaScript
-bundle.
+`DateRangePicker`, `Modal`, and `OptionalFormSection` components do not require
+the USWDS JavaScript bundle.

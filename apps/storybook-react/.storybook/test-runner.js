@@ -14,6 +14,12 @@ const config = {
   async preVisit(page, context) {
     await page.setViewportSize({ width: 1280, height: 900 })
     if (
+      context.id ===
+      'components-form-controls-optionalformsection--forced-colors'
+    ) {
+      await page.emulateMedia({ forcedColors: 'active' })
+    }
+    if (
       new Set([
         'components-appshell--mobile-shell',
         'components-appshell--narrow-viewport',
