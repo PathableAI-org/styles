@@ -186,6 +186,6 @@ Task T015: FormData and nested semantic composition tests
 
 ## Format Validation
 
-All tasks are initially unchecked and use the required checkbox, sequential task
-ID, optional parallel marker, user-story label where applicable, actionable
-description, and exact file path.
+All tasks use the required checkbox, sequential task ID, optional parallel
+marker, user-story label where applicable, actionable description, and exact
+file path. Completed implementation tasks are checked above.
