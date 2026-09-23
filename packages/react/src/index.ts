@@ -110,6 +110,12 @@ export { Form } from './components/Form/Form.js'
 export type { FormProps } from './components/Form/Form.js'
 export { FormGroup } from './components/FormGroup/FormGroup.js'
 export type { FormGroupProps } from './components/FormGroup/FormGroup.js'
+export { FilterableOptionList } from './components/FilterableOptionList/FilterableOptionList.js'
+export type {
+  FilterableOption,
+  FilterableOptionListProps,
+  FilterableOptionPredicate,
+} from './components/FilterableOptionList/FilterableOptionList.js'
 export { FormStack } from './components/FormStack/FormStack.js'
 export type {
   FormStackGap,

@@ -8,6 +8,7 @@ import { ComboBox } from '../../ComboBox/ComboBox'
 import { DatePicker } from '../../DatePicker/DatePicker'
 import { DateRangePicker } from '../../DateRangePicker/DateRangePicker'
 import { ErrorMessage } from '../../ErrorMessage/ErrorMessage'
+import { FilterableOptionList } from '../../FilterableOptionList/FilterableOptionList'
 import { Hint } from '../../Hint/Hint'
 import { Input } from '../../Input/Input'
 import { Label } from '../../Label/Label'
@@ -477,6 +478,10 @@ describe('FormGroup', () => {
     [
       'DateRangePicker',
       <DateRangePicker startLabel="Start date" endLabel="End date" />,
+    ],
+    [
+      'FilterableOptionList',
+      <FilterableOptionList legend="Choices" options={[]} />,
     ],
   ])(
     'treats a supported control mixed with direct %s as ambiguous',

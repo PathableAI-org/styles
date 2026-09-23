@@ -28,6 +28,24 @@
   },
   packageRules: [
     {
+      description: 'Keep the Next 15 compatibility fixture on its tested framework major.',
+      matchManagers: ['npm'],
+      matchFileNames: [
+        'scripts/fixtures/next-consumer/next15-react18/package.json',
+      ],
+      matchPackageNames: ['next'],
+      allowedVersions: '>=15 <16',
+    },
+    {
+      description: 'Keep the React 18 compatibility fixture on its tested runtime major.',
+      matchManagers: ['npm'],
+      matchFileNames: [
+        'scripts/fixtures/next-consumer/next15-react18/package.json',
+      ],
+      matchPackageNames: ['react', 'react-dom'],
+      allowedVersions: '>=18 <19',
+    },
+    {
       description: 'Group non-major pnpm workspace dependency updates into a reviewable batch.',
       matchManagers: ['npm'],
       matchUpdateTypes: ['minor', 'patch', 'digest', 'pin', 'pinDigest'],

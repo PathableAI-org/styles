@@ -81,6 +81,46 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-form-stack--with-form-row',
     mode: 'desktop',
   },
+  {
+    id: 'components-form-controls-filterable-option-list--default',
+    mode: 'both',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--selected',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--disabled',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--empty',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--no-matches',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--long-content',
+    mode: 'both',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--many-options',
+    mode: 'desktop',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--narrow',
+    mode: 'mobile',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--increased-text',
+    mode: 'both',
+  },
+  {
+    id: 'components-form-controls-filterable-option-list--forced-colors',
+    mode: 'both',
+  },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
@@ -555,22 +595,41 @@ const auditScript = function auditStory(opts) {
         'output',
         'progress',
       ])
-      let hasLabel = false
+      let labelElement = null
       if (el.id && labelableTags.has(tag)) {
-        hasLabel = !!document.querySelector(`label[for="${CSS.escape(el.id)}"]`)
+        labelElement = document.querySelector(
+          `label[for="${CSS.escape(el.id)}"]`,
+        )
       }
-      if (!hasLabel && labelableTags.has(tag)) {
-        hasLabel = el.closest('label') !== null
+      if (!labelElement && labelableTags.has(tag)) {
+        labelElement = el.closest('label')
+      }
+
+      const hasLabel = labelElement !== null
+      if (!accessibleName && labelElement) {
+        accessibleName = (labelElement.textContent || '')
+          .replace(/\s+/g, ' ')
+          .trim()
       }
 
       const hasName = Boolean(accessibleName || textContent || hasLabel)
 
-      const w = Math.round(rect.width)
-      const h = Math.round(rect.height)
+      const style = getComputedStyle(el)
+      const isVisuallyClipped =
+        style.clipPath !== 'none' ||
+        (style.clip !== 'auto' && style.clip !== '')
+      const touchRect =
+        isVisuallyClipped && labelElement
+          ? labelElement.getBoundingClientRect()
+          : rect
+      const w = Math.round(touchRect.width)
+      const h = Math.round(touchRect.height)
       const isActionControl =
         tag === 'button' ||
         tag === 'a' ||
         tag === 'select' ||
+        (tag === 'input' &&
+          ['checkbox', 'radio'].includes(el.getAttribute('type') || '')) ||
         ['button', 'link', 'menuitem', 'option', 'tab'].includes(
           el.getAttribute('role') || '',
         )
