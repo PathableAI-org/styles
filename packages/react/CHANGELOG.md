@@ -1,5 +1,17 @@
 # @pathableai/react
 
+## 0.5.0
+
+### Minor Changes
+
+- 47aaa40: Add a Styles-first OptionalFormSection disclosure and React wrapper for retaining
+  optional field state and submission behavior in collapsible form sections.
+
+### Patch Changes
+
+- Updated dependencies [47aaa40]
+  - @pathableai/styles@0.4.0
+
 ## 0.4.0
 
 ### Minor Changes
