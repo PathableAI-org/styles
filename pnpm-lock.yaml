@@ -326,8 +326,8 @@ importers:
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/node':
-        specifier: ^24.0.0
-        version: 24.13.3
+        specifier: ^26.0.0
+        version: 26.1.1
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
@@ -336,7 +336,7 @@ importers:
         version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
         specifier: ^6.0.0
-        version: 6.1.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
+        version: 6.1.0(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
       '@vitest/coverage-v8':
         specifier: ^5.0.0
         version: 5.0.0(vitest@5.0.0)
@@ -354,10 +354,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^8.0.0
-        version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
+        version: 8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
       vitest:
         specifier: ^5.0.0
-        version: 5.0.0(@types/node@24.13.3)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
+        version: 5.0.0(@types/node@26.1.1)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
 
   packages/storybook-contracts:
     devDependencies:
@@ -2730,9 +2730,6 @@ packages:
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
-
-  '@types/node@24.13.3':
-    resolution: {integrity: sha512-Dh8vAsV36ig5wa9OX4pXvMc9D3Veibfw2wix0CUwYODLD8nkj9UsLjASr49nPg+2eKzxhBV+v7L8pXvT4e639Q==}
 
   '@types/node@26.1.1':
     resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
@@ -6372,9 +6369,6 @@ packages:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
 
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
-
   undici-types@8.3.0:
     resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
@@ -8746,7 +8740,7 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
     optionalDependencies:
-      vitest: 5.0.0(@types/node@24.13.3)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
+      vitest: 5.0.0(@types/node@26.1.1)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
 
   '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -8826,10 +8820,6 @@ snapshots:
   '@types/mdx@2.0.14': {}
 
   '@types/ms@2.1.0': {}
-
-  '@types/node@24.13.3':
-    dependencies:
-      undici-types: 7.18.2
 
   '@types/node@26.1.1':
     dependencies:
@@ -9091,10 +9081,10 @@ snapshots:
     optionalDependencies:
       sass-embedded-linux-x64: 1.101.0
 
-  '@vitejs/plugin-react@6.1.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))':
+  '@vitejs/plugin-react@6.1.0(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
+      vite: 8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
 
   '@vitest/coverage-v8@5.0.0(vitest@5.0.0)':
     dependencies:
@@ -9106,7 +9096,7 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 5.0.0(@types/node@24.13.3)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
+      vitest: 5.0.0(@types/node@26.1.1)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -9122,14 +9112,14 @@ snapshots:
     dependencies:
       '@vitest/istanbul-lib-coverage': 1.0.1
 
-  '@vitest/mocker@5.0.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))':
+  '@vitest/mocker@5.0.0(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.0
       estree-walker: 3.0.3
       magic-string: 1.2.3
     optionalDependencies:
-      vite: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
+      vite: 8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
 
   '@vitest/pretty-format@3.2.4':
     dependencies:
@@ -13139,8 +13129,6 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  undici-types@7.18.2: {}
-
   undici-types@8.3.0: {}
 
   undici@8.10.0: {}
@@ -13220,21 +13208,6 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0):
-    dependencies:
-      lightningcss: 1.33.0
-      picomatch: 4.0.5
-      postcss: 8.5.26
-      rolldown: 1.2.5
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 24.13.3
-      esbuild: 0.28.2
-      fsevents: 2.3.3
-      jiti: 2.6.1
-      sass: 1.101.0
-      yaml: 2.9.0
-
   vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
@@ -13250,10 +13223,10 @@ snapshots:
       sass: 1.101.0
       yaml: 2.9.0
 
-  vitest@5.0.0(@types/node@24.13.3)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)):
+  vitest@5.0.0(@types/node@26.1.1)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
+      '@vitest/mocker': 5.0.0(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -13264,10 +13237,10 @@ snapshots:
       tinybench: 6.1.4
       tinyexec: 1.3.0
       tinyglobby: 0.2.17
-      vite: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
+      vite: 8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.1.1
       '@vitest/coverage-v8': 5.0.0(vitest@5.0.0)
       jsdom: 30.0.1
     transitivePeerDependencies:
