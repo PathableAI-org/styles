@@ -131,3 +131,7 @@ packages/styles/test/selective-import.css
 packages/styles/test/selective-import.css.map
 
 handoffs/
+
+# Python bytecode
+__pycache__/
+*.pyc
