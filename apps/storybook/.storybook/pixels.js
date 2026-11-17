@@ -9,9 +9,8 @@
  * with the committed baseline through jest-image-snapshot.
  */
 
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { appendFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { expect } from '@jest/globals'
 import { toMatchImageSnapshot } from 'jest-image-snapshot'
 
 const plan = process.env.PIXELS_PLAN
@@ -20,8 +19,13 @@ const plan = process.env.PIXELS_PLAN
 
 export const pixelMode = Boolean(plan)
 
+// The test-runner runs this file inside Jest, which provides `expect` as a
+// global; @jest/globals cannot be imported here because the configuration is
+// loaded as native ESM.
+const jestExpect = () => globalThis.expect
+
 export function setupPixels() {
-  expect.extend({ toMatchImageSnapshot })
+  jestExpect().extend({ toMatchImageSnapshot })
 }
 
 const CONDITIONS = {
@@ -141,7 +145,7 @@ export async function capturePixels(page, context) {
           writeFileSync(join(resultsDir, `${identifier}-received.png`), image)
         }
 
-        expect(image).toMatchImageSnapshot({
+        jestExpect()(image).toMatchImageSnapshot({
           customSnapshotsDir: baselineDir,
           customSnapshotIdentifier: identifier,
           customDiffDir: resultsDir,
@@ -152,6 +156,13 @@ export async function capturePixels(page, context) {
         })
       } catch (error) {
         failures.push(`${story.key} ${identifier}: ${error.message}`)
+      } finally {
+        // test-pixels.mjs checks that every planned capture ran.
+        mkdirSync(plan.resultsDir, { recursive: true })
+        appendFileSync(
+          join(plan.resultsDir, 'captured.txt'),
+          `${story.key}/${identifier}\n`,
+        )
       }
     }
   }

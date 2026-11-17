@@ -45,7 +45,7 @@ const storybooks = ['styles', 'react']
 
 /**
  * Where a claim's evidence was observed. `storybook-test`: the Storybook test runner, rendered axe checks included,
- * for named stories. `visual`: `pnpm test:visual` snapshot diffs. `browser`: Playwright observation of specific
+ * for named stories. `visual`: `pnpm test:visual` render checks and the `pnpm test:pixels-styles` baseline comparison. `browser`: Playwright observation of specific
  * stories (keyboard and focus, narrow and wide viewports, increased text size, forced colors, reduced motion).
  * `package`: `check:package`, `check:types`, `test:next-consumer`. `agent-guidance`: `pnpm check:agent-guidance`.
  * `unit-test`: the `@pathableai/react` unit tests. `assistive-technology`: a person's manual check.

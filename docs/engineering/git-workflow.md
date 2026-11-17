@@ -101,10 +101,10 @@ or changes what a consumer sees:
 A change to a committed [pixel visual-regression](../testing/visual-regression.md)
 baseline in either Storybook workspace is a visible rendering change, so it
 makes work Standard rather than Light. The converse holds only as far as the
-baselines reach: today they cover one story, IconButton `all-variants` in the
-styles Storybook, and nothing in the React Storybook. A rendering change that
-shows only in other stories, including IconButton's other states, updates no
-baseline, so judge it from the change itself.
+baselines reach, which is only the stories listed under
+[Coverage today](../testing/visual-regression.md#coverage-today). A rendering
+change that shows only in other stories updates no baseline, so judge it from
+the change itself.
 
 Otherwise, work is **Light**: documentation, tests, stories for existing
 behaviour, repository tooling, CI, dependency updates (including lockfile-only

@@ -106,18 +106,20 @@ of conditions are not captured. IconButton `all-variants` is captured under
 ```bash
 pnpm build:docs                 # build the styles Storybook first
 pnpm test:pixels-styles         # compare the rollout list with its baselines
-pnpm test:pixels-styles:update -- --component icon-button
+pnpm test:pixels-styles:update --component icon-button
 ```
 
 Both commands run in the pinned container through Docker, with the
-repository mounted at the same path and your user ID. An update needs
+repository mounted at the same path and your user ID. The container uses the
+installed `node_modules`, so this needs a Linux host. An update needs
 `--component <key>`. Failures write a diff image (expected, difference and
 received side by side) and the received image to
 `apps/storybook/test-results/pixels/<component>/<state>/`. The suite also
 fails when `visual-baselines/styles/` holds an image that no rollout capture
-compares.
+compares, or when a planned capture did not run (for example because the
+test-runner skipped its story).
 
-Without Docker, take new or changed baselines from CI: the
+Without Docker or a Linux host, take new or changed baselines from CI: the
 `Styles pixel visual regression` job uploads the `pixels-styles` artifact on
 failure. Review each `-received.png` and copy it to the matching baseline
 path without the `-received` suffix. `--no-container` compares on the host
@@ -143,6 +145,9 @@ difference as a regression (constitution, Visual Regression Protection).
 ## Known limits
 
 - Chromium only, in one Linux image.
+- No story lists `text-200` or `reduced-motion` yet, so those two conditions
+  first run with the story that lists them; each capture fails if its
+  condition is not in effect.
 - `forced-colors` and `prefers-reduced-motion` are emulated in Chromium; they
   do not establish behaviour in Windows High Contrast or other browsers.
 - Storybook 10 has ended official support for the test-runner in favour of its

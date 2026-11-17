@@ -12,7 +12,6 @@
     "@pathableai/styles": "workspace:*"
   },
   "devDependencies": {
-    "@jest/globals": "30.5.2",
     "@pathable/storybook-contracts": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",

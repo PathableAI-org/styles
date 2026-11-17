@@ -16,7 +16,7 @@
  */
 
 import { spawn } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 
@@ -68,7 +68,10 @@ const ROLLOUT = ['icon-button']
 
 // ---------------------------------------------------------------------------
 
+// pnpm forwards a `--` separator to the script; it carries no meaning here.
+const args = process.argv.slice(2).filter((arg) => arg !== '--')
 const { values } = parseArgs({
+  args,
   options: {
     update: { type: 'boolean', default: false },
     component: { type: 'string', multiple: true, default: [] },
@@ -106,7 +109,13 @@ for (const component of values.component) {
 
 // Re-run inside the pinned image, whose tag is the lockfile's Playwright
 // version, so the browser matches the library and local and CI captures agree.
+// The container uses the host's node_modules, so the host must be Linux.
 if (process.env.PIXELS_IN_CONTAINER !== '1' && !values['no-container']) {
+  if (process.platform !== 'linux') {
+    fail(
+      'The pinned container needs a Linux host, because it uses the installed node_modules. On macOS or Windows, take baselines from CI (docs/testing/visual-regression.md).',
+    )
+  }
   const { version } = JSON.parse(
     readFileSync(join(ROOT, 'node_modules/playwright/package.json'), 'utf8'),
   )
@@ -126,7 +135,7 @@ if (process.env.PIXELS_IN_CONTAINER !== '1' && !values['no-container']) {
     image,
     'node',
     relative(ROOT, import.meta.filename),
-    ...process.argv.slice(2),
+    ...args,
   ]).catch((error) =>
     fail(
       `Could not start Docker (${error.message}). See docs/testing/visual-regression.md.`,
@@ -228,6 +237,8 @@ const plan = {
   ),
 }
 
+const capturedLog = join(RESULTS_DIR, 'captured.txt')
+rmSync(capturedLog, { force: true })
 const server = await startServer({ staticDir: STATIC_DIR, port: PORT })
 let code
 try {
@@ -251,7 +262,28 @@ try {
   server.close()
 }
 
+// A story the test-runner skipped (for example through a tag) would pass with
+// nothing compared, so check that every planned capture ran.
+const captured = new Set(
+  existsSync(capturedLog) ? readFileSync(capturedLog, 'utf8').split('\n') : [],
+)
+const missing = planned.flatMap((story) =>
+  plan.stories[story.id].viewports.flatMap(({ name }) =>
+    story.conditions
+      .map((condition) => `${story.key}/${name}-${condition}`)
+      .filter((capture) => !captured.has(capture)),
+  ),
+)
 console.log(`\n${summary.join('\n')}`)
+console.log(
+  `Captures run: ${[...captured].filter(Boolean).length}${values.update ? ` (update: ${selected.join(', ')})` : ''}.`,
+)
+if (missing.length > 0) {
+  console.error(
+    `\n✗ Planned captures that did not run:\n  ${missing.join('\n  ')}`,
+  )
+  code = 1
+}
 if (code !== 0)
   console.log(`\nDiff and received images: ${relative(ROOT, RESULTS_DIR)}/`)
 process.exit(code)
