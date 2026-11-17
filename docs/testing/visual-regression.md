@@ -8,18 +8,22 @@ compare and update baselines. Which risk tier a baseline change implies is in
 ## Coverage today
 
 Each Storybook workspace has its own suite, story list, baselines and CI job.
-A suite compares only components on its workspace's **rollout list**, and its
-output says how many canonical stories it does not compare.
+A suite compares only the story entries of components on its workspace's
+**rollout list**, and its output names the stories it compares and says how
+many canonical stories it does not.
 
-| Workspace                      | Suite                     | Components on the rollout list | Not compared                                                   |
-| ------------------------------ | ------------------------- | ------------------------------ | -------------------------------------------------------------- |
-| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton                     | Every other story in `CANONICAL_STORIES`                       |
-| React (`apps/storybook-react`) | Not built yet             | None                           | Every story; the React suite reuses this harness when it lands |
+| Workspace                      | Suite                     | Stories compared                                | Not compared                                                                                                                                                         |
+| ------------------------------ | ------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton `all-variants` (the reference story) | Every other story in `CANONICAL_STORIES`, including IconButton's other six canonical stories (sizes, circle shape, surfaces, disabled, loading, constrained content) |
+| React (`apps/storybook-react`) | Not built yet             | None                                            | Every story; the React suite reuses this harness when it lands                                                                                                       |
 
-Coverage is partial. A component that is not on its workspace's rollout list
-has no baselines, so a change to its rendering passes the suite without
-comparison. [#271](https://github.com/PathableAI-org/styles/issues/271) tracks
-the rollout: one pull request per component, then a final change that turns
+Coverage is partial, and is counted in stories, not components. A story
+without baselines passes the suite without comparison, even when its
+component is on the rollout list: a change to IconButton's compact, large,
+circle, disabled or loading rendering is not compared today. [#271](https://github.com/PathableAI-org/styles/issues/271) tracks
+the rollout: one pull request per component, which adds all of that
+component's canonical stories (for IconButton, the six not yet listed), then a
+final change that turns
 the list into a check so that a canonical story without baselines fails CI.
 
 The pixel suites are separate from `pnpm test:visual`, the visual smoke test,
@@ -53,10 +57,13 @@ each workspace's story list and rollout list, and `run.mjs` runs a suite.
   colour assertion under `forced-colors`), which does not stop the capture.
 - **Comparison.** Playwright `toHaveScreenshot` with CSS animations and
   transitions disabled and the text caret hidden. A pixel counts as different
-  when its colour distance exceeds 0.05 (Playwright `threshold`, on a 0 to 1
-  scale); no differing pixels are allowed (`maxDiffPixels: 0`). The pinned
-  container makes rendering deterministic, so the small per-pixel tolerance
-  only absorbs anti-aliasing noise; a token colour change exceeds it.
+  when its colour distance exceeds 0.01 (Playwright `threshold`, on a 0 to 1
+  scale), which a uniform shift of about 3/255 per colour channel already
+  exceeds; no differing pixels are allowed (`maxDiffPixels: 0`). Pixels the
+  comparator classifies as anti-aliased edges are not counted. The pinned
+  container makes rendering deterministic, so this tolerance only absorbs
+  rounding noise. A smaller colour change than the threshold passes, and an
+  update does not rewrite a baseline for it.
 - **Baselines.** Plain PNG files in
   [`visual-baselines/`](../../visual-baselines/), outside every package's
   published `files`, named
@@ -125,14 +132,15 @@ differ or are missing. Failures write expected, actual and diff images to
 `apps/storybook/test-results/pixels/`.
 
 Without Docker you cannot write baselines that match CI, so update through
-CI instead:
+CI instead. This works for changed and for new baselines:
 
 1. Push the change. The `Styles pixel visual regression` job fails and
    uploads the `pixels-styles` artifact.
 2. Download the artifact. Each failing capture has an `-actual.png` image
-   rendered in the pinned container.
-3. Review it, then copy it over the baseline path the job printed, dropping
-   the `-actual` suffix, and push.
+   rendered in the pinned container: for a changed baseline next to its
+   `-expected.png` and `-diff.png`, and for a missing baseline on its own.
+3. Review it, then copy it to the baseline path the job printed (`Expected:`
+   or `No baseline at`), dropping the `-actual` suffix, and push.
 
 `node scripts/visual-regression/run.mjs --workspace styles --no-container`
 compares with the host's browser and fonts. Its differences can come from the

@@ -101,10 +101,10 @@ or changes what a consumer sees:
 A change to a committed [pixel visual-regression](../testing/visual-regression.md)
 baseline in either Storybook workspace is a visible rendering change, so it
 makes work Standard rather than Light. The converse holds only as far as the
-baselines reach: today they cover only the components on each workspace's
-rollout list (IconButton in the styles Storybook, nothing yet in the React
-Storybook). A rendering change to any other component updates no baseline, so
-judge it from the change itself.
+baselines reach: today they cover one story, IconButton `all-variants` in the
+styles Storybook, and nothing in the React Storybook. A rendering change that
+shows only in other stories, including IconButton's other states, updates no
+baseline, so judge it from the change itself.
 
 Otherwise, work is **Light**: documentation, tests, stories for existing
 behaviour, repository tooling, CI, dependency updates (including lockfile-only
@@ -170,8 +170,9 @@ Evidence each tier needs, in addition to the checks in
 
 - **Light.** The applicable checks pass. For a refactor or fix inside
   published source, say why there is no consumer-visible change (for example
-  the pixel visual-regression suites pass with no baseline change, the change
-  touches only components they cover, and the declarations are unchanged).
+  the pixel visual-regression suites pass with no baseline change, every
+  state the change can affect has baselines, and the declarations are
+  unchanged).
 - **Standard.** Everything for Light, plus:
   - a deterministic, named story for each new or changed state, in the styles
     Storybook first and then the React Storybook (constitution XIV);

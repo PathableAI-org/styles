@@ -36,7 +36,7 @@ review, and manual review remain separate evidence.
 - [Tooling and structure](tooling-and-structure.md) describes Storybook, its
   browser tests, and the repository layout.
 - [Pixel visual regression](visual-regression.md) describes the screenshot
-  baselines, which components they cover so far, and how to update them.
+  baselines, which stories they cover so far, and how to update them.
 - [Adding tests for a component](adding-component-tests.md) is the practical
   workflow for new work.
 
