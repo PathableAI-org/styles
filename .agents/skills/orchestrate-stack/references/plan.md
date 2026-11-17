@@ -2,8 +2,8 @@
 
 <!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/references/plan.md @ f2ee390. -->
 
-Role: `plan`. High new behaviour only; Standard work plans in the
-specification session.
+Role: `plan`. High new behaviour only; specified Standard work plans in
+the specification session.
 
 ---
 

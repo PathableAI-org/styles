@@ -2,7 +2,7 @@
 
 <!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/references/spec.md @ f2ee390. -->
 
-Role: `specification`. Set `{{combined}}` to `yes` for Standard new behaviour
+Role: `specification`. Set `{{combined}}` to `yes` for specified Standard work
 (one combined specification-and-plan pull request), otherwise `no`.
 
 ---

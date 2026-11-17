@@ -44,8 +44,8 @@ discipline").
 
 ## Pull requests
 
-- One pull request per change, or per phase and slice for new behaviour at
-  High and Standard tier (see [Process by tier](#process-by-tier)).
+- One pull request per change, or per phase and slice for High new behaviour
+  and specified Standard work (see [Process by tier](#process-by-tier)).
 - Use the [pull request template](../../.github/pull_request_template.md).
 - The PR title is a Conventional Commit subject. It becomes the commit subject
   on `main`, so it is the durable history: make it say what changed for a
@@ -137,20 +137,25 @@ with a breaking-change label (constitution principle XIII).
 
 ### Process by tier
 
-| Work                    | Pull requests                                                                                                                                                                                                     |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| High, new behaviour     | A specification pull request (`spec.md`, `verification.md`), then a plan pull request (`plan.md` with its slice table, `quickstart.md`), then one pull request per [implementation slice](#implementation-slices) |
-| High, fix               | One pull request that names its triggers and numbers its claims in the Evidence table                                                                                                                             |
-| Standard, new behaviour | One combined specification-and-plan pull request, then one pull request per implementation slice                                                                                                                  |
-| Standard fix, and Light | One pull request with normal CI                                                                                                                                                                                   |
+| Work                | Pull requests                                                                                                                                                                                                     |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| High, new behaviour | A specification pull request (`spec.md`, `verification.md`), then a plan pull request (`plan.md` with its slice table, `quickstart.md`), then one pull request per [implementation slice](#implementation-slices) |
+| High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table                                                                                                                             |
+| Standard, specified | One combined specification-and-plan pull request, then one pull request per implementation slice                                                                                                                  |
+| Standard, otherwise | One pull request with normal CI                                                                                                                                                                                   |
+| Light               | One pull request with normal CI                                                                                                                                                                                   |
 
 Each phase merges on a person's approval before the next starts (see
 [Spec Kit](spec-kit.md) for the artifacts). A High feature combines
 specification and plan only as the maintainer's explicit choice for a small,
-coherent feature, recorded in the pull request body. The maintainer may waive
-the combined pull request for a small, single-decision Standard addition, such
-as one token or one modifier, recorded in the delivery issue; it then runs as a
-Standard fix. An agent never waives or combines a phase on its own.
+coherent feature, recorded in the pull request body.
+
+Standard work is one pull request by default, new behaviour included. It
+becomes **specified** only when the maintainer asks for a specification, for
+example for a new component or multi-state interactive behaviour, and records
+that in the delivery issue; it then runs as a combined specification-and-plan
+pull request and verified slices. An agent may suggest specifying Standard
+work, but never specifies, waives or combines a phase on its own.
 
 Evidence each tier needs, in addition to the checks in
 [`AGENTS.md`](../../AGENTS.md#before-committing) for the files changed:
@@ -202,8 +207,8 @@ Evidence each tier needs, in addition to the checks in
 
 ### Verification and review
 
-High and Standard new behaviour, and High fixes, run as separate agent
-sessions that an orchestrator starts and briefs. [Orchestration](orchestration.md)
+High new behaviour, specified Standard work, and High fixes, run as separate
+agent sessions that an orchestrator starts and briefs. [Orchestration](orchestration.md)
 owns which sessions each tier gets, the stop points and the models.
 
 - **Claims.** The specification's `verification.md` numbers the claims a
@@ -225,8 +230,8 @@ owns which sessions each tier gets, the stop points and the models.
 - **Human review is still the approval.** The reports and reviews are input to
   it, as are passing checks and Copilot's comments.
 
-Standard fixes and Light work get none of this: normal CI, the checks the pull
-request names, and human review. Every tier runs the advisory
+Other Standard work and Light work get none of this: normal CI, the checks
+the pull request names, and human review. Every tier runs the advisory
 [pre-push self-review](code-review.md#pre-push-self-review).
 
 ## Implementation slices
@@ -252,8 +257,8 @@ retargets N+1 to `main`, and its session merges `origin/main` into it. Agents
 cannot force-push here, so a correction moves upward by merging the lower
 branch into the upper one, never by rebasing a pushed branch. The repository
 squash-merges, so the merge commits never reach `main`. This repository does
-not use the `gh stack` extension or GitHub's native stacks; whether to adopt
-them is an open decision recorded in [Orchestration](orchestration.md).
+not use the `gh stack` extension or GitHub's native stacks, as
+[Orchestration](orchestration.md#decisions) records.
 
 If the planned slices cannot meet these rules, change the plan's slices
 through the [corrections](#corrections) path rather than letting one slice

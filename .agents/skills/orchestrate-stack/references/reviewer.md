@@ -2,7 +2,7 @@
 
 <!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/references/reviewer.md @ f2ee390. -->
 
-Role: `review`. High and Standard new behaviour, and a High fix's single pull
+Role: `review`. High new behaviour, specified Standard work, and a High fix's single pull
 request. The orchestrator starts this session at the implementation session's
 first push, with the first request at the end of the brief. For a High fix
 (`{{fix}}` = yes), the slice ID in requests is `fix`.

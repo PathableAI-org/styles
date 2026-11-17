@@ -3,7 +3,7 @@
 <!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/references/implementer.md @ f2ee390. -->
 
 Role: `implementation`. Set `{{fix}}` to `yes` for a one-pull-request fix
-(High fix, Standard fix, Light), which has no slices; drop the slice lines
+(High fix, other Standard work, Light), which has no slices; drop the slice lines
 then.
 
 ---
@@ -18,10 +18,10 @@ One-pull-request fix: {{fix}}.
 - Slices in order: {{slice_ids}}. Start with `{{slice}}` on branch
   `{{slice_branch}}`, based on `{{base_branch}}` ({{base_state}}).
   {{branch_rule}}
-- Verification and review sessions (High and Standard new behaviour, and a
-  High fix): the orchestrator starts them when you first report `pushed`,
+- Verification and review sessions (High new behaviour, specified Standard
+  work, and a High fix): the orchestrator starts them when you first report `pushed`,
   gives them that first request, and then sends you their session IDs. None
-  for Standard fixes and Light.
+  for other Standard work and Light.
 
 **Read first.**
 

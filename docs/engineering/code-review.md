@@ -18,10 +18,10 @@ input to the human review, not approval.
 
 ## When a reviewer runs
 
-The reviewer runs on every implementation slice of High and Standard new
-behaviour, and on a High fix's single pull request, as
-[risk tiers](git-workflow.md#risk-tiers) define them. Standard fixes and Light
-work get normal CI and human review only. The advisory
+The reviewer runs on every implementation slice of High new behaviour and of
+specified Standard work, and on a High fix's single pull request, as
+[process by tier](git-workflow.md#process-by-tier) defines them. Other
+Standard work and Light work get normal CI and human review only. The advisory
 [pre-push self-review](#pre-push-self-review) runs at every tier and is not a
 review session.
 
@@ -231,8 +231,8 @@ weaken the review or verification session, which stay the only gates.
 
 - **When.** Once the implementation session believes a slice or fix is
   complete, before each push that starts or answers a round. It runs at that
-  milestone only, never from a Git hook. It also runs on Standard fixes and
-  Light work, which get no review or verification session.
+  milestone only, never from a Git hook. It also runs on unspecified Standard
+  work and Light work, which get no review or verification session.
 - **Who.** A subagent from the
   [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) definition,
   which holds its fixed brief, its read-only tools and its model. It starts

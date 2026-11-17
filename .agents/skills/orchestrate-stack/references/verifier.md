@@ -2,7 +2,7 @@
 
 <!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/references/verifier.md @ f2ee390. -->
 
-Role: `verification`. High and Standard new behaviour, and a High fix's single
+Role: `verification`. High new behaviour, specified Standard work, and a High fix's single
 pull request. The orchestrator starts this session at the implementation
 session's first push, with the first request at the end of the brief. For a
 High fix (`{{fix}}` = yes), use the fix lines below.
@@ -41,8 +41,9 @@ Report `verified` with that line, then `waiting next=request`.
 
 **First request.** {{first_request}}
 
-**Boundaries.** Read-only on every branch. The only writes are the note and
-the one pull request comment `pnpm verify:record` posts with it. If posting
+**Boundaries.** Read-only on every branch. The only writes are the note, the
+one pull request comment `pnpm verify:record` posts with it, and, for visual
+claims, one private screenshots page and one comment linking it. If posting
 fails, say so in your reply and retry with `pnpm notes:publish`. Never push the
 notes ref, and post nothing else to GitHub. Escalate, copying the
 orchestrator, under the harness's

@@ -9,7 +9,7 @@ description: Act as the orchestrator for one PathAble design-system delivery iss
 
 Read [Orchestration](../../../docs/engineering/orchestration.md) first. It
 owns the lifecycle by tier, the stop points, the concurrency cap, what you may
-read, notifications, the models-and-effort table and the open decisions. This
+read, notifications, the models-and-effort table and the recorded decisions. This
 skill supplies the procedure and the brief templates under `references/`. Also
 read [Risk tiers](../../../docs/engineering/git-workflow.md#risk-tiers) and
 [Sessions and roles](../../../docs/engineering/verification-harness.md#sessions-and-roles).
@@ -86,13 +86,13 @@ For each session:
 | Phase                         | Session and template                                        | Identifiers to pass                                                                                      | Next trigger                                                             |
 | ----------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Specification (High)          | `spec`, `references/spec.md`                                | Issue, tier and triggers, base `origin/main`                                                             | Its report names the draft pull request and the feature directory. Stop. |
-| Combined (Standard)           | `spec`, `references/spec.md` with `{{combined}}` = yes      | Same                                                                                                     | Same. Stop.                                                              |
+| Combined (specified Standard) | `spec`, `references/spec.md` with `{{combined}}` = yes      | Same                                                                                                     | Same. Stop.                                                              |
 | Plan (High)                   | `plan`, `references/plan.md`                                | Issue, tier, feature directory, specification branch and whether it is merged                            | Its report names the draft plan pull request. Stop.                      |
 | Implementation                | `impl`, `references/implementer.md`                         | Issue, tier, feature directory, slice IDs, first slice and its base branch, merged or not                | Each slice's push, results and readiness, below                          |
-| Verification (High, Standard) | `verify`, `references/verifier.md`, at the first `pushed`   | Feature directory, tier, implementation session ID, orchestrator ID, first request                       | Its pointer to the implementation session; later requests come from it   |
-| Review (High, Standard)       | `review`, `references/reviewer.md`, at the first `pushed`   | Same                                                                                                     | Same                                                                     |
+| Verification (orchestrated)   | `verify`, `references/verifier.md`, at the first `pushed`   | Feature directory, tier, implementation session ID, orchestrator ID, first request                       | Its pointer to the implementation session; later requests come from it   |
+| Review (orchestrated)         | `review`, `references/reviewer.md`, at the first `pushed`   | Same                                                                                                     | Same                                                                     |
 | High fix                      | All three with `{{fix}}` = yes; peers at the first `pushed` | Issue, tier, triggers, base `origin/main`; no slices; `{{feature_dir}}` if any                           | One pull request through the same loop                                   |
-| Standard fix, Light           | `impl` with `{{fix}}` = yes, no peers                       | Issue, tier                                                                                              | Its pull request is ready. Stop.                                         |
+| Other Standard, Light         | `impl` with `{{fix}}` = yes, no peers                       | Issue, tier                                                                                              | Its pull request is ready. Stop.                                         |
 
 Approval of a stop is the trigger for the next phase: start it without asking
 again. When the approved predecessor has not merged, the brief says the new
@@ -105,7 +105,7 @@ on the same pushed SHA. Your part:
 
 1. **Pushed.** On the report `pushed <slice> @ <sha>`, check that the draft
    pull request's head is that SHA.
-   - **First push** (High and Standard): start the verification and review
+   - **First push** (High, specified Standard, High fix): start the verification and review
      sessions now, each brief ending with the first request: branch, SHA, base
      SHA, slice ID (`fix` for a High fix), feature directory and round 1, all
      from the pull request's metadata. Then send the implementation session
