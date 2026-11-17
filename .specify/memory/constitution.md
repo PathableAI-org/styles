@@ -23,16 +23,16 @@
   Sections removed: none
   Migration plan: none required; no docs site work is in flight. Existing
     specs/ and docs/plans/ records are historical and keep their wording.
-  Templates requiring updates:
-    - .specify/templates/plan-template.md → still lists "Astro docs site" under
-      Documentation Surface Ownership; deferred, because the templates are
-      owned by the Spec Kit upgrade workflow and project customisations will
-      move into a preset
-    - .specify/templates/spec-template.md, tasks-template.md → reviewed; no
-      Astro reference
+  Templates requiring updates (deferred: the templates are owned by the Spec
+  Kit upgrade workflow, and project customisations will move into a preset):
+    - .specify/templates/plan-template.md → "Astro docs site" under
+      Documentation Surface Ownership
+    - .specify/templates/tasks-template.md → "Update package README or Astro
+      docs" example task
+    - .specify/templates/spec-template.md → reviewed; no Astro reference
   Follow-up TODOs:
     - Move project-specific template customisations (including the Astro
-      mention above) into a Spec Kit preset.
+      mentions above) into a Spec Kit preset.
   Previous amendment: 1.4.0 → 1.4.1 (2026-11-17) corrected package names to
     `@pathableai/*` in the constitution. The matching template edits were
     reverted so the templates stay identical to the Spec Kit upgrade
