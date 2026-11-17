@@ -98,16 +98,20 @@ The changeset bump sets a minimum tier; a trigger can raise it. Changeset
 rules themselves are in [`.changeset/README.md`](../../.changeset/README.md),
 and version semantics in constitution principle XIII.
 
-| Changeset in the pull request            | Minimum tier |
-| ---------------------------------------- | ------------ |
-| `major`                                  | High         |
-| `minor`                                  | Standard     |
-| `patch` with a consumer-visible change   | Standard     |
-| `patch` with no consumer-visible change  | Light        |
-| None (no published package code changed) | Light        |
+| Changeset in the pull request                               | Minimum tier |
+| ----------------------------------------------------------- | ------------ |
+| `major`                                                     | High         |
+| `minor` marked `**Breaking change**` (packages below 1.0.0) | High         |
+| `minor`                                                     | Standard     |
+| `patch` with a consumer-visible change                      | Standard     |
+| `patch` with no consumer-visible change                     | Light        |
+| None (no published package code changed)                    | Light        |
 
 A High trigger does not by itself mean `major`: a compatible keyboard fix to an
 interactive component is High with a `patch` changeset.
+
+Both packages are below 1.0.0, so breaking changes currently ship as `minor`
+with a breaking-change label (constitution principle XIII).
 
 ### Process by tier
 

@@ -2,41 +2,39 @@
   ------------------------------------------------------------------
   Sync Impact Report
   ------------------------------------------------------------------
-  Version change: 1.4.1 → 1.5.0 (MINOR)
-  Rationale: Principle XII named an Astro documentation site as the curated
-    public entry point, but no such site exists and maintainers decided not to
-    build one. XII now assigns the public entry-point role to the root README
-    and package READMEs. XII's governing rule (one canonical source per fact,
-    other surfaces derive from or link to it) is unchanged.
-  Why MINOR, not MAJOR: no principle is removed and XII's rule is not
-    redefined; the list of documentation surfaces changes and the entry-point
-    responsibility moves to surfaces that already exist. No existing artifact
-    becomes non-compliant, because the Astro site was never built.
+  Version change: 1.5.0 → 1.6.0 (MINOR)
+  Rationale: Both published packages are below 1.0.0. XIII required a major
+    bump for every breaking change, which on 0.x makes Changesets jump to
+    1.0.0 as a side effect. XIII now says breaking changes before 1.0.0 ship
+    as a minor bump, labelled as breaking and with migration notes, and that
+    1.0.0 is a deliberate maintainer decision. The 1.0.0+ rule is unchanged.
+    VIII now defers to XIII instead of stating a conflicting bump rule.
+  Why MINOR, not MAJOR: no principle is removed; XIII's guidance is
+    materially expanded with a pre-1.0 provision and its post-1.0 rule is
+    unchanged. No released version becomes non-compliant.
   Principles modified:
-    - XII: "Documentation Surfaces Have Distinct Responsibilities" — Astro
-      docs site removed; root and package READMEs are the public entry points;
-      contributor/agent instructions keep operational procedures; "even before
-      the full docs site exists" removed
+    - VIII: "Token Naming Must Be Semantic and Stable" — breaking token
+      renames follow XIII and always need a documented migration path
+    - XIII: "Versioning and Release Discipline" — pre-1.0 breaking changes
+      ship as minor; reaching 1.0.0 is a deliberate decision
   Principles added: none
   Principles removed: none
   Sections added: none
   Sections removed: none
-  Migration plan: none required; no docs site work is in flight. Existing
-    specs/ and docs/plans/ records are historical and keep their wording.
-  Templates requiring updates (deferred: the templates are owned by the Spec
-  Kit upgrade workflow, and project customisations will move into a preset):
-    - .specify/templates/plan-template.md → "Astro docs site" under
-      Documentation Surface Ownership
-    - .specify/templates/tasks-template.md → "Update package README or Astro
-      docs" example task
-    - .specify/templates/spec-template.md → reviewed; no Astro reference
-  Follow-up TODOs:
-    - Move project-specific template customisations (including the Astro
-      mentions above) into a Spec Kit preset.
-  Previous amendment: 1.4.0 → 1.4.1 (2026-11-17) corrected package names to
-    `@pathableai/*` in the constitution. The matching template edits were
-    reverted so the templates stay identical to the Spec Kit upgrade
-    workflow's output; they still say `@pathable/*`.
+  Templates and docs:
+    - ✅ .specify/templates/overrides/{plan,spec,tasks}-template.md: reviewed;
+      they defer to "the release and change-management policy" and need no
+      change. These overrides are where project template customisations now
+      live (docs/engineering/spec-kit.md); they already use
+      `@pathableai/styles` and no longer mention the Astro docs site.
+    - ✅ .changeset/README.md: pre-1.0 breaking-change guidance added
+    - ✅ docs/engineering/git-workflow.md: changeset/tier table updated
+    - Core .specify/templates/*.md: not edited; owned by the Spec Kit
+      upgrade workflow and no longer used for generation
+  Follow-up TODOs: none. The 1.5.0 follow-up to move template
+    customisations into a preset is resolved by the project overrides.
+  Previous amendment: 1.4.1 → 1.5.0 (2026-11-17) removed the Astro docs
+    site from XII; root and package READMEs are the public entry points.
   ------------------------------------------------------------------
 -->
 
@@ -145,8 +143,9 @@ Token names MUST follow a semantic convention. Prefer names such as
 `--pathable-radius-md`, and `--pathable-elevation-sm`. Brand or raw value
 tokens MAY exist but application-facing consumers SHOULD use semantic tokens
 whenever possible. Breaking token renames (names that change meaning or remove
-a token) REQUIRE a major version bump OR a clearly documented migration path in
-the release notes.
+a token) are breaking changes: they MUST be versioned as Principle XIII
+requires and MUST ship with a clearly documented migration path in the release
+notes.
 
 ### IX. Design Source Alignment Matters
 
@@ -222,8 +221,18 @@ published package independently.
 
 Semantic versioning MUST be used across all published packages. Token additions
 are usually minor changes. Token value fixes (color hex updates with same name
-and meaning) MAY be patch changes. Token removals or renames are breaking
-changes requiring a major version bump. Before publishing, build output and
+and meaning) MAY be patch changes. Removing or renaming a token, CSS custom
+property, component class, React export or prop, or any other incompatible
+change to a public contract, is a breaking change.
+
+From 1.0.0 onward, a breaking change REQUIRES a major version bump. While a
+package's version is below 1.0.0, a breaking change MUST ship as a minor
+version bump, MUST be labelled as a breaking change in its changeset, and MUST
+include migration notes for consumers; patch bumps remain for compatible
+fixes. Moving a package to 1.0.0 is a deliberate maintainer decision, never a
+side effect of a breaking change.
+
+Before publishing, build output and
 package contents MUST be verified (via `pnpm pack --dry-run` or equivalent).
 Future multi-package releases MUST clearly document which workspace packages
 changed and what the nature of each change was.
@@ -475,4 +484,4 @@ this constitution. Violations MUST be documented in their complexity tracking
 section with justification. Complexity is not automatically forbidden but it
 MUST be transparent and justified.
 
-**Version**: 1.5.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-11-17
+**Version**: 1.6.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-11-17
