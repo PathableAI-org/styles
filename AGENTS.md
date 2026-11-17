@@ -11,19 +11,19 @@ and the constitution wins over both.
 
 ## Where the rules live
 
-| When you are…                                                                                                                                                      | Read                                                                                                                                               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                               |
-| Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                    |
-| Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                         |
-| Changing `@pathableai/react` components or their public API                                                                                                        | [`packages/react/README.md`](packages/react/README.md)                                                                                             |
-| Writing or changing `@pathableai/react` stories                                                                                                                    | [`packages/react/STORYBOOK_STANDARD.md`](packages/react/STORYBOOK_STANDARD.md)                                                                     |
-| Using `@pathableai/react` as a consumer, or checking what its consumer guidance says                                                                               | [`packages/react/agent-guidance/pathable-react/`](packages/react/agent-guidance/pathable-react/)                                                   |
-| Deciding whether a React change must update that consumer guidance                                                                                                 | [`.github/instructions/react-agent-guidance.instructions.md`](.github/instructions/react-agent-guidance.instructions.md)                           |
-| Adding or changing component tests, behavior contracts or parity checks                                                                                            | [`docs/testing/README.md`](docs/testing/README.md)                                                                                                 |
-| Working on theming, `createTheme`, `ThemeProvider` or overridable tokens                                                                                           | [`docs/theming/consumer-guide.md`](docs/theming/consumer-guide.md) and [`docs/theming/token-vocabulary.md`](docs/theming/token-vocabulary.md)      |
-| Changing code in `@pathableai/styles` or `@pathableai/react` (changesets are for code changes only; docs-only changes need none, even docs shipped in the package) | [`.changeset/README.md`](.changeset/README.md)                                                                                                     |
-| Specifying, planning or implementing a feature with Spec Kit                                                                                                       | The `speckit-*` skills in [`.agents/skills/`](.agents/skills/) (also exposed to Claude Code through `.claude/skills/`), and the constitution above |
+| When you are…                                                                                                                                                      | Read                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                                                                                    |
+| Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                                                                         |
+| Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                                                                              |
+| Changing `@pathableai/react` components or their public API                                                                                                        | [`packages/react/README.md`](packages/react/README.md)                                                                                                                                                  |
+| Writing or changing `@pathableai/react` stories                                                                                                                    | [`packages/react/STORYBOOK_STANDARD.md`](packages/react/STORYBOOK_STANDARD.md)                                                                                                                          |
+| Using `@pathableai/react` as a consumer, or checking what its consumer guidance says                                                                               | [`packages/react/agent-guidance/pathable-react/`](packages/react/agent-guidance/pathable-react/)                                                                                                        |
+| Deciding whether a React change must update that consumer guidance                                                                                                 | [`.github/instructions/react-agent-guidance.instructions.md`](.github/instructions/react-agent-guidance.instructions.md)                                                                                |
+| Adding or changing component tests, behavior contracts or parity checks                                                                                            | [`docs/testing/README.md`](docs/testing/README.md)                                                                                                                                                      |
+| Working on theming, `createTheme`, `ThemeProvider` or overridable tokens                                                                                           | [`docs/theming/consumer-guide.md`](docs/theming/consumer-guide.md) and [`docs/theming/token-vocabulary.md`](docs/theming/token-vocabulary.md)                                                           |
+| Changing code in `@pathableai/styles` or `@pathableai/react` (changesets are for code changes only; docs-only changes need none, even docs shipped in the package) | [`.changeset/README.md`](.changeset/README.md)                                                                                                                                                          |
+| Specifying, planning or implementing a feature with Spec Kit                                                                                                       | The `speckit-*` skills in [`.agents/skills/`](.agents/skills/) (also exposed to Claude Code through `.claude/skills/`; see "Spec Kit files and the upgrade workflow" below), and the constitution above |
 
 ## Where current behaviour is documented
 
@@ -84,6 +84,21 @@ Some of these rules are enforced for Claude Code by
 
 Other agents (Codex, OpenCode, Cursor) are not covered by these settings, but
 the rules apply to them all the same.
+
+### Spec Kit files and the upgrade workflow
+
+- `.github/workflows/speckit-upgrade.yml` opens a weekly pull request that
+  upgrades Spec Kit. It owns `.specify/` (including the hash-tracked
+  templates) and `.agents/skills/`. Don't hand-edit those generated files;
+  put project-specific changes in the constitution or a Spec Kit preset.
+- `.claude/skills/speckit-*` are symlinks to `.agents/skills/speckit-*`, so
+  Claude Code picks up whatever the upgrade refreshes there. The `claude`
+  integration is not installed, and `.claude/skills/` is not in the
+  workflow's `add_paths`.
+- If someone later installs the `claude` integration with the `specify` CLI,
+  delete the `.claude/skills/speckit-*` symlinks first. Otherwise the CLI
+  writes through them into the codex-managed files in `.agents/skills/`.
+  After installing it, add `.claude/skills/` to the workflow's `add_paths`.
 
 ## Before committing
 
