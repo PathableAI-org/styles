@@ -80,7 +80,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T010 Add or update the owning `packages/styles` contract before wrapper
       work begins (required for design-system wrapper features)
 - [ ] T011 Verify wrapper package entrypoints import/package required
-      `@pathableai/styles` CSS, fonts, icons, JavaScript helpers, and assets
+      `@pathable/styles` CSS, fonts, icons, JavaScript helpers, and assets
       automatically (required for wrapper features)
 - [ ] T012 Verify each `packages/react` component name is the CamelCase form
       of its equivalent `packages/styles` component name with any `pathable`

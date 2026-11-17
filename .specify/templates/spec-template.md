@@ -89,7 +89,7 @@
   For visual/design-system work, requirements must name the owning
   `packages/styles` source contract before naming framework wrappers. A wrapper
   package requirement must state how the wrapper automatically imports or
-  packages the required `@pathableai/styles` CSS, fonts, icons, JavaScript
+  packages the required `@pathable/styles` CSS, fonts, icons, JavaScript
   helpers, and assets for normal consumer use. A `packages/react` component
   requirement must name the React component as the CamelCase form of the
   equivalent `packages/styles` component name with any `pathable` prefix
