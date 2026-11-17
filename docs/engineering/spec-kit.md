@@ -33,12 +33,25 @@ request that upgrades Spec Kit. Its `add_paths` are `.specify/` and
 Treat these as generated. Do not hand-edit them; change them only through an
 upgrade or a `specify` command:
 
-- `.agents/skills/`
+- `.agents/skills/speckit-*`
 - `.specify/scripts/`
 - the core templates `.specify/templates/*.md`, which are hash-tracked in
   `.specify/integrations/speckit.manifest.json`
 - `.specify/integrations/`, `.specify/presets/` (including `.registry`),
   `.specify/extensions/` and `.specify/workflows/`
+
+The project's own skills also live in `.agents/skills/`, in folders without
+the `speckit-` prefix: `orchestrate-stack`, `verification-harness`,
+`code-reviewer` and `drift-review` (see [Orchestration](orchestration.md)).
+The upgrade does not touch them. `specify integration upgrade` writes only the
+`speckit-*` skills, and its stale-file cleanup removes only paths recorded in
+an integration manifest; `.specify/integrations/codex.manifest.json` records
+only `.agents/skills/speckit-*` paths, and the other manifests record none
+under `.agents/skills/`. Because the workflow's `add_paths` includes
+`.agents/skills/`, check every upgrade pull request for changes outside
+`speckit-*` folders (see
+[Reviewing an upgrade pull request](#reviewing-an-upgrade-pull-request)).
+Never name a project skill `speckit-*`.
 
 These files under `.specify/` are the project's own:
 
@@ -130,7 +143,9 @@ upstream change to consider porting. Keep them unmodified.
 ## The `.claude/skills` symlinks
 
 - `.claude/skills/speckit-*` are symlinks to `.agents/skills/speckit-*`, so
-  Claude Code picks up whatever the upgrade refreshes there. The `claude`
+  Claude Code picks up whatever the upgrade refreshes there. The project's own
+  skills are linked the same way, from `.claude/skills/<name>` to
+  `.agents/skills/<name>`. The `claude`
   integration is not installed, and `.claude/skills/` is not in the workflow's
   `add_paths`.
 - If someone later installs the `claude` integration with the `specify` CLI,
@@ -145,10 +160,22 @@ upstream change to consider porting. Keep them unmodified.
 - When the `speckit-plan` skill reaches its "Agent context update" step, skip
   it. Do not add the markers or a plan pointer back.
 
+## Artifacts the templates do not cover
+
+Orchestrated features add two artifacts that Spec Kit has no template for:
+`verification.md`, written in the specification phase, and the slice table's
+`Full claims`, `Partial claims`, `Quickstart sections` and `Stories` columns in
+`plan.md`, which `pnpm verify:request` reads.
+[The verification harness](verification-harness.md#claims-follow-verification)
+owns both. An override can only replace a template Spec Kit already resolves,
+so `verification.md` is written by hand from that section; adding the slice
+columns to `overrides/plan-template.md` is a follow-up.
+
 ## Reviewing an upgrade pull request
 
 - No files under `.specify/templates/overrides/` or
   `.specify/memory/constitution.md` are deleted or rewritten.
+- No files under `.agents/skills/` outside `speckit-*` folders are changed.
 - `.specify/extensions.yml` keeps the `agent-context` hooks disabled.
 - If upstream templates changed, open a follow-up to port them into the
   overrides (see [Keeping overrides current](#keeping-overrides-current)).
