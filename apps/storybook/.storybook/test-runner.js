@@ -1,7 +1,12 @@
 import { injectAxe, checkA11y } from 'axe-playwright'
 
+import { capturePixels, pixelMode, setupPixels } from './pixels.js'
+
 /** @type { import('@storybook/test-runner').TestRunnerConfig } */
 const config = {
+  setup() {
+    if (pixelMode) setupPixels()
+  },
   async preVisit(page, context) {
     await page.setViewportSize({ width: 1280, height: 900 })
     const storyViewports = new Map([
@@ -36,9 +41,12 @@ const config = {
       await page.setViewportSize(storyViewport)
     }
 
+    // Pixel runs only capture; the accessibility job owns the axe checks.
+    if (pixelMode) return
     await injectAxe(page)
   },
   async postVisit(page, context) {
+    if (pixelMode) return capturePixels(page, context)
     await assertInteractionStatesPointerFeedback(page, context)
     const isFilterableOptionList = context.id.startsWith(
       'components-form-controls-filterable-option-list--',

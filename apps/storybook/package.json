@@ -12,12 +12,14 @@
     "@pathableai/styles": "workspace:*"
   },
   "devDependencies": {
+    "@jest/globals": "30.5.2",
     "@pathable/storybook-contracts": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
     "@storybook/html-vite": "^10.6.7",
     "@storybook/test-runner": "^0.26.0",
     "axe-playwright": "^2.2.2",
+    "jest-image-snapshot": "^6.5.2",
     "sass": "^1.108.2",
     "storybook": "^10.6.7"
   }

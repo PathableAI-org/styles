@@ -1,191 +1,152 @@
 # Pixel visual regression
 
-This document owns the pixel visual-regression suites: what they compare, how
-captures are made, which conditions apply to a story, and the commands to
-compare and update baselines. Which risk tier a baseline change implies is in
+This document owns the pixel visual-regression suite: what it compares, how
+captures are made, which conditions apply to a story, and how to compare and
+update baselines. Which risk tier a baseline change implies is in
 [Risk tiers](../engineering/git-workflow.md#risk-tiers).
 
 ## Coverage today
 
-Each Storybook workspace has its own suite, story list, baselines and CI job.
-A suite compares only the story entries of components on its workspace's
-**rollout list**, and its output names the stories it compares and says how
-many canonical stories it does not.
+The suite compares only the story entries of components on the **rollout
+list**, and its output names the stories it compares and says how many
+canonical stories it does not.
 
-| Workspace                      | Suite                     | Stories compared                                | Not compared                                                                                                                                                         |
-| ------------------------------ | ------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton `all-variants` (the reference story) | Every other story in `CANONICAL_STORIES`, including IconButton's other six canonical stories (sizes, circle shape, surfaces, disabled, loading, constrained content) |
-| React (`apps/storybook-react`) | Not built yet             | None                                            | Every story; the React suite reuses this harness when it lands                                                                                                       |
+| Workspace                      | Suite                     | Stories compared          | Not compared                                                                                 |
+| ------------------------------ | ------------------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
+| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton `all-variants` | Every other story in `CANONICAL_STORIES`, including IconButton's other six canonical stories |
+| React (`apps/storybook-react`) | None yet                  | None                      | Every story                                                                                  |
 
-Coverage is partial, and is counted in stories, not components. A story
-without baselines passes the suite without comparison, even when its
-component is on the rollout list: a change to IconButton's compact, large,
-circle, disabled or loading rendering is not compared today. [#271](https://github.com/PathableAI-org/styles/issues/271) tracks
-the rollout: one pull request per component, which adds all of that
-component's canonical stories (for IconButton, the six not yet listed), then a
-final change that turns
-the list into a check so that a canonical story without baselines fails CI.
+Coverage is partial and counted in stories, not components. A story without
+baselines passes without comparison, even when its component is on the
+rollout list: a change to IconButton's compact, large, circle, disabled or
+loading rendering is not compared today.
+[#271](https://github.com/PathableAI-org/styles/issues/271) tracks the
+rollout: one pull request per component, adding all of that component's
+canonical stories, then a final change that turns the list into a check so
+that a canonical story without baselines fails CI.
 
-The pixel suites are separate from `pnpm test:visual`, the visual smoke test,
-which checks that each canonical styles story renders without blank output or
-horizontal overflow and compares no pixels.
+The suite is separate from `pnpm test:visual`, the visual smoke test, which
+checks that canonical stories render without blank output or horizontal
+overflow and compares no pixels.
 
 ## How a capture is made
 
-The shared harness is in
-[`scripts/visual-regression/`](../../scripts/visual-regression/):
-`harness.mjs` holds everything both workspaces share, `workspaces.mjs` holds
-each workspace's story list and rollout list, and `run.mjs` runs a suite.
+[`packages/styles/scripts/test-pixels.mjs`](../../packages/styles/scripts/test-pixels.mjs)
+holds the story entries, the rollout list and the threshold. It serves the
+built styles Storybook and runs the Storybook test-runner on the planned
+stories' files. The test-runner renders each story and runs its play
+function; then the `postVisit` hook in
+[`apps/storybook/.storybook/pixels.js`](../../apps/storybook/.storybook/pixels.js)
+captures it and compares the capture with its baseline through
+[jest-image-snapshot](https://github.com/americanexpress/jest-image-snapshot).
+The accessibility checks in the same test-runner configuration are skipped
+during pixel runs.
 
 - **Pinned container.** Captures run in
   `mcr.microsoft.com/playwright:v<version>-noble`, where `<version>` is the
-  exact Playwright version in `pnpm-lock.yaml`. The browser build therefore
-  always matches the Playwright library, and a Playwright upgrade moves the
-  image with it. The container runs without network access.
+  exact Playwright version in `pnpm-lock.yaml`, without network access.
 - **Viewports.** The shared `VIEWPORTS` in
-  `packages/styles/scripts/quality-gates.mjs`: mobile 375 px, tablet 768 px,
-  desktop 1280 px. A story's `mode` in the canonical list chooses which, as
-  for `test:visual`: `both` captures all three.
+  `packages/styles/scripts/quality-gates.mjs` (mobile 375 px, tablet 768 px,
+  desktop 1280 px), chosen by the story's `mode` as for `test:visual`: `both`
+  captures all three.
 - **Framing.** The whole story iframe page at the viewport width, full page,
-  with the Storybook preview's own padding and background and no harness
-  decorators. Device scale factor 1, light colour scheme, `en-US`, UTC.
-- **Settling.** The harness waits until Storybook has rendered the story and
-  run its play function, then waits for web fonts and returns focus to the
-  document body, so focus left behind by a play function is not captured. A
-  render error fails the capture. Play-function assertions are the Storybook
-  test-runner's job: under an emulated condition they can fail (for example a
-  colour assertion under `forced-colors`), which does not stop the capture.
-- **Comparison.** Playwright `toHaveScreenshot` with CSS animations and
-  transitions disabled and the text caret hidden. A pixel counts as different
-  when its colour distance exceeds 0.01 (Playwright `threshold`, on a 0 to 1
-  scale), which a uniform shift of about 3/255 per colour channel already
-  exceeds; no differing pixels are allowed (`maxDiffPixels: 0`). Pixels the
-  comparator classifies as anti-aliased edges are not counted. The pinned
-  container makes rendering deterministic, so this tolerance only absorbs
-  rounding noise. A smaller colour change than the threshold passes, and an
-  update does not rewrite a baseline for it.
+  with the Storybook preview's own padding and background.
+- **Settling.** After the play function, the hook waits for web fonts and
+  returns focus to the document body, so focus left by the play function is
+  not captured. Conditions are applied to the rendered story, not before it
+  loads, so play-function assertions always run under default conditions.
+- **Comparison.** CSS animations and transitions are disabled and the text
+  caret is hidden. A pixel differs when its colour distance exceeds 0.01 on a
+  0 to 1 scale, which a uniform shift of about 3/255 per channel exceeds, and
+  no differing pixel is allowed. Anti-aliased edge pixels are not counted. A
+  smaller colour change passes, and an update does not rewrite a baseline for
+  it.
 - **Baselines.** Plain PNG files in
   [`visual-baselines/`](../../visual-baselines/), outside every package's
   published `files`, named
   `<workspace>/<component>/<state>/<viewport>-<condition>.png`. The
-  `<component>/<state>` key comes from the story's entry in `workspaces.mjs`,
-  not from the story ID, so the styles and React captures of the same state
-  share a key and can later be paired.
+  `<component>/<state>` key comes from the story entry, not from the story ID,
+  so a React capture of the same state can share the key and be paired later.
 
 ## Conditions
 
-The harness defines five condition variants, and every capture checks that
-its condition is in effect before the screenshot. The suite also checks every
-condition's emulation on the first rollout story, including conditions no
-rollout story uses yet.
+Each capture checks that its condition is in effect before the screenshot.
 
 | Condition        | How it is applied                                                                          |
 | ---------------- | ------------------------------------------------------------------------------------------ |
 | `default`        | No emulation, nothing focused                                                              |
-| `forced-colors`  | `forced-colors: active`, emulated before the story loads                                   |
+| `forced-colors`  | `forced-colors: active`                                                                    |
 | `text-200`       | The browser's default text size set to 32 px (200 %), as a user enlarging text would       |
-| `reduced-motion` | `prefers-reduced-motion: reduce`, emulated before the story loads                          |
+| `reduced-motion` | `prefers-reduced-motion: reduce`                                                           |
 | `focus-visible`  | One real keyboard Tab from the document start, which focuses the first interactive control |
 
-Each story entry in `workspaces.mjs` lists its conditions, with the reason
-next to it. Apply a condition only where it can change what the story shows:
+Each story entry lists its conditions, with the reason next to it. Apply a
+condition only where it can change what the story shows:
 
-- `default`: every story, unless the story only renders under a condition
-  (below).
+- `default`: every story, unless the story only renders under a condition.
 - `forced-colors`: the component tells states or variants apart by colour,
   background or border, or has `forced-colors` rules.
 - `text-200`: the component renders text, or sizes or positions itself in
   `rem`, `em` or other text-relative units.
-- `reduced-motion`: the component has motion that a still capture can show
-  differently under `reduce`: an animation, or a `prefers-reduced-motion` rule
-  that changes a static property. A rule that only removes transitions does
-  not qualify, because captures disable transitions anyway.
+- `reduced-motion`: the component has an animation, or a
+  `prefers-reduced-motion` rule that changes a static property. A rule that
+  only removes transitions does not qualify, because captures disable
+  transitions anyway.
 - `focus-visible`: the story contains an interactive control with a focus
   indicator.
 
 A story that builds a condition into its markup, such as an
-`--increased-text` story, is captured under `default` only. A
-`--forced-colors` story needs the emulation to render as intended, so it is
-captured under `forced-colors` only. Combinations of conditions, such as a
-focus ring under `forced-colors`, are not captured.
-
-For example, IconButton's `all-variants` story is captured under `default`,
-`forced-colors` and `focus-visible`. It is not captured under `text-200`
-(icon-only and sized in `px`) or `reduced-motion` (its only motion rule
-removes transitions).
+`--increased-text` story, is captured under `default` only; a
+`--forced-colors` story is captured under `forced-colors` only. Combinations
+of conditions are not captured. IconButton `all-variants` is captured under
+`default`, `forced-colors` and `focus-visible`.
 
 ## Commands
 
-Build the workspace's Storybook first; the suite serves the built output.
-
 ```bash
-pnpm build:docs                 # build the styles Storybook
+pnpm build:docs                 # build the styles Storybook first
 pnpm test:pixels-styles         # compare the rollout list with its baselines
 pnpm test:pixels-styles:update -- --component icon-button
 ```
 
-Both commands run inside the pinned container through Docker, with the
-repository mounted at the same path and your user ID, so baselines written by
-an update are owned by you. An update needs `--component <key>` (repeatable)
-or `--all` for every rollout component, and writes only the captures that
-differ or are missing. Failures write expected, actual and diff images to
-`apps/storybook/test-results/pixels/`.
+Both commands run in the pinned container through Docker, with the
+repository mounted at the same path and your user ID. An update needs
+`--component <key>`. Failures write a diff image (expected, difference and
+received side by side) and the received image to
+`apps/storybook/test-results/pixels/<component>/<state>/`. The suite also
+fails when `visual-baselines/styles/` holds an image that no rollout capture
+compares.
 
-Without Docker you cannot write baselines that match CI, so update through
-CI instead. This works for changed and for new baselines:
-
-1. Push the change. The `Styles pixel visual regression` job fails and
-   uploads the `pixels-styles` artifact.
-2. Download the artifact. Each failing capture has an `-actual.png` image
-   rendered in the pinned container: for a changed baseline next to its
-   `-expected.png` and `-diff.png`, and for a missing baseline on its own.
-3. Review it, then copy it to the baseline path the job printed (`Expected:`
-   or `No baseline at`), dropping the `-actual` suffix, and push.
-
-`node scripts/visual-regression/run.mjs --workspace styles --no-container`
-compares with the host's browser and fonts. Its differences can come from the
-host rather than the change, so use it for diagnosis only; it refuses to
-update baselines.
-
-## In CI
-
-The `Styles pixel visual regression` job in
-[`storybook-quality.yml`](../../.github/workflows/storybook-quality.yml) runs
-`pnpm test:pixels-styles` against the shared Storybook build, in the same
-pinned container. On failure it uploads the expected, actual and diff images
-as the `pixels-styles` artifact. It also fails when `visual-baselines/`
-contains an image that no rollout capture compares.
+Without Docker, take new or changed baselines from CI: the
+`Styles pixel visual regression` job uploads the `pixels-styles` artifact on
+failure. Review each `-received.png` and copy it to the matching baseline
+path without the `-received` suffix. `--no-container` compares on the host
+browser for diagnosis only, and refuses to update.
 
 ## Adding a component
 
-Each component's baselines land in a pull request of their own, which changes
-nothing else, so the reviewer judges only that component's images:
+Each component's baselines land in their own pull request, which changes
+nothing else:
 
 1. Check that the component's canonical stories render deterministically. If
    they do not, fix the stories in a separate pull request first.
-2. Add an entry to the workspace's `stories` for each canonical story of the
-   component, with its `<component>/<state>` key and its conditions under the
-   rule above, and add the component to `rollout`.
+2. Add an entry to `STORIES` for each canonical story of the component, with
+   its key and conditions, and add the component to `ROLLOUT`.
 3. Run the update for that component, look at every image, and commit them.
 
-A component whose rendering is visibly wrong today is not added. File a
+A component whose rendering is visibly wrong today is not added: file a
 defect issue, link it from the pull request, and leave the component off the
-rollout list until the defect is fixed or a maintainer accepts the current
-rendering.
-
-## Reviewing a baseline change
-
-A changed baseline is a deliberate change to how a story renders. Review the
-old and new images in the pull request's file diff, confirm the change is the
-one the pull request describes, and treat an unexplained difference as a
-regression, not as a baseline to accept (constitution, Visual Regression
-Protection).
+rollout list until it is fixed or a maintainer accepts its rendering. Review a
+changed baseline in the pull request's file diff, and treat an unexplained
+difference as a regression (constitution, Visual Regression Protection).
 
 ## Known limits
 
-- Chromium only, in one Linux image. No WebKit or Firefox baselines.
+- Chromium only, in one Linux image.
 - `forced-colors` and `prefers-reduced-motion` are emulated in Chromium; they
   do not establish behaviour in Windows High Contrast or other browsers.
+- Storybook 10 has ended official support for the test-runner in favour of its
+  Vitest addon. The repository's accessibility job uses the test-runner too.
 - Text in a story's own framing markup that sets no font family renders in
   the browser's default font, because `@pathableai/styles` applies no base
-  font to `body`. Baselines record that text as it renders in the container.
+  font to `body`.
