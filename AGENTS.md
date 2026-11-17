@@ -11,19 +11,23 @@ and the constitution wins over both.
 
 ## Where the rules live
 
-| When you are…                                                                                                                                                      | Read                                                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                                                                                    |
-| Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                                                                         |
-| Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                                                                              |
-| Changing `@pathableai/react` components or their public API                                                                                                        | [`packages/react/README.md`](packages/react/README.md)                                                                                                                                                  |
-| Writing or changing `@pathableai/react` stories                                                                                                                    | [`packages/react/STORYBOOK_STANDARD.md`](packages/react/STORYBOOK_STANDARD.md)                                                                                                                          |
-| Using `@pathableai/react` as a consumer, or checking what its consumer guidance says                                                                               | [`packages/react/agent-guidance/pathable-react/`](packages/react/agent-guidance/pathable-react/)                                                                                                        |
-| Deciding whether a React change must update that consumer guidance                                                                                                 | [`.github/instructions/react-agent-guidance.instructions.md`](.github/instructions/react-agent-guidance.instructions.md)                                                                                |
-| Adding or changing component tests, behavior contracts or parity checks                                                                                            | [`docs/testing/README.md`](docs/testing/README.md)                                                                                                                                                      |
-| Working on theming, `createTheme`, `ThemeProvider` or overridable tokens                                                                                           | [`docs/theming/consumer-guide.md`](docs/theming/consumer-guide.md) and [`docs/theming/token-vocabulary.md`](docs/theming/token-vocabulary.md)                                                           |
-| Changing code in `@pathableai/styles` or `@pathableai/react` (changesets are for code changes only; docs-only changes need none, even docs shipped in the package) | [`.changeset/README.md`](.changeset/README.md)                                                                                                                                                          |
-| Specifying, planning or implementing a feature with Spec Kit                                                                                                       | The `speckit-*` skills in [`.agents/skills/`](.agents/skills/) (also exposed to Claude Code through `.claude/skills/`; see "Spec Kit files and the upgrade workflow" below), and the constitution above |
+| When you are…                                                                                                                                                      | Read                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                                  |
+| Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/intent.md`](docs/engineering/intent.md)                                                                                            |
+| Choosing a risk tier, branching, opening or merging a pull request                                                                                                 | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                |
+| Filing a delivery issue or writing a pull request body                                                                                                             | [`.github/ISSUE_TEMPLATE/delivery.md`](.github/ISSUE_TEMPLATE/delivery.md) and [`.github/pull_request_template.md`](.github/pull_request_template.md) |
+| Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                       |
+| Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                            |
+| Changing `@pathableai/react` components or their public API                                                                                                        | [`packages/react/README.md`](packages/react/README.md)                                                                                                |
+| Writing or changing `@pathableai/react` stories                                                                                                                    | [`packages/react/STORYBOOK_STANDARD.md`](packages/react/STORYBOOK_STANDARD.md)                                                                        |
+| Using `@pathableai/react` as a consumer, or checking what its consumer guidance says                                                                               | [`packages/react/agent-guidance/pathable-react/`](packages/react/agent-guidance/pathable-react/)                                                      |
+| Deciding whether a React change must update that consumer guidance                                                                                                 | [`.github/instructions/react-agent-guidance.instructions.md`](.github/instructions/react-agent-guidance.instructions.md)                              |
+| Adding or changing component tests, behavior contracts or parity checks                                                                                            | [`docs/testing/README.md`](docs/testing/README.md)                                                                                                    |
+| Working on theming, `createTheme`, `ThemeProvider` or overridable tokens                                                                                           | [`docs/theming/consumer-guide.md`](docs/theming/consumer-guide.md) and [`docs/theming/token-vocabulary.md`](docs/theming/token-vocabulary.md)         |
+| Changing code in `@pathableai/styles` or `@pathableai/react` (changesets are for code changes only; docs-only changes need none, even docs shipped in the package) | [`.changeset/README.md`](.changeset/README.md)                                                                                                        |
+| Specifying, planning or implementing a feature with Spec Kit                                                                                                       | The `speckit-*` skills in [`.agents/skills/`](.agents/skills/) and the constitution above                                                             |
+| Changing Spec Kit templates or presets, reviewing a Spec Kit upgrade, or checking which Spec Kit steps to skip                                                     | [`docs/engineering/spec-kit.md`](docs/engineering/spec-kit.md)                                                                                        |
 
 ## Where current behaviour is documented
 
@@ -37,10 +41,9 @@ and the constitution wins over both.
   behaviour, update those documents as part of the change; do not leave the
   spec as the only description.
 - Do not move or rename existing specs or plans.
-- This file intentionally has no `SPECKIT START`/`SPECKIT END` plan pointer,
-  and the Spec Kit `agent-context` hooks are disabled in
-  `.specify/extensions.yml`. When the `speckit-plan` skill reaches its "agent
-  context update" step, skip it: do not add the markers or a plan pointer back.
+- Spec Kit has a step that must be skipped here (the `speckit-plan` "agent
+  context update") and generated files that must not be hand-edited; see
+  [`docs/engineering/spec-kit.md`](docs/engineering/spec-kit.md).
 
 ## No check suppressions
 
@@ -87,18 +90,11 @@ the rules apply to them all the same.
 
 ### Spec Kit files and the upgrade workflow
 
-- `.github/workflows/speckit-upgrade.yml` opens a weekly pull request that
-  upgrades Spec Kit. It owns `.specify/` (including the hash-tracked
-  templates) and `.agents/skills/`. Don't hand-edit those generated files;
-  put project-specific changes in the constitution or a Spec Kit preset.
-- `.claude/skills/speckit-*` are symlinks to `.agents/skills/speckit-*`, so
-  Claude Code picks up whatever the upgrade refreshes there. The `claude`
-  integration is not installed, and `.claude/skills/` is not in the
-  workflow's `add_paths`.
-- If someone later installs the `claude` integration with the `specify` CLI,
-  delete the `.claude/skills/speckit-*` symlinks first. Otherwise the CLI
-  writes through them into the codex-managed files in `.agents/skills/`.
-  After installing it, add `.claude/skills/` to the workflow's `add_paths`.
+The weekly Spec Kit upgrade owns most of `.specify/` and `.agents/skills/`, and
+`.claude/skills/speckit-*` are symlinks into `.agents/skills/`. What is
+generated, where project customisations live, and what to do before installing
+the `claude` integration are in
+[`docs/engineering/spec-kit.md`](docs/engineering/spec-kit.md).
 
 ## Before committing
 
