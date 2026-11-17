@@ -29,7 +29,16 @@
       "Bash(pnpm --filter @pathableai/react typecheck)",
       "Bash(pnpm --filter @pathableai/react test:unit)",
       "Bash(pnpm --filter @pathableai/styles build)",
-      "Bash(pnpm --filter @pathableai/react build)"
+      "Bash(pnpm --filter @pathableai/react build)",
+      "Bash(pnpm verify:gate)",
+      "Bash(pnpm verify:request:*)",
+      "Bash(pnpm verify:show)",
+      "Bash(pnpm verify:show:*)",
+      "Bash(pnpm verify:render)",
+      "Bash(pnpm review:show)",
+      "Bash(pnpm review:show:*)",
+      "Bash(pnpm notes:sync)",
+      "Bash(pnpm notes:sync:*)"
     ],
     "ask": [
       "Bash(git push:*)",
@@ -93,6 +102,16 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/no-suppressions-hook.mjs\"",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|mcp__github__update_pull_request|mcp__github__create_pull_request",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/pr-ready-hook.mjs\"",
+            "timeout": 60
           }
         ]
       }
