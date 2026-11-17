@@ -136,17 +136,23 @@ describe('visual-regression capture plan', () => {
   })
 
   it('states how much of the canonical story list it does not compare', () => {
+    const summary = coverageSummary(workspaceWith({})).join('\n')
+    assert.match(summary, /rollout list: alpha\./)
+    assert.match(
+      summary,
+      /Comparing 2 of 3 canonical stories \(7 captures\): a--one, a--two\./,
+    )
+    assert.match(summary, /The other 1 canonical stories/)
+    assert.match(summary, /partial coverage, not full coverage/)
+  })
+
+  it('reports coverage of the real configuration against its canonical list', () => {
     const summary = coverageSummary(styles).join('\n')
     const total = styles.canonicalStories.length
     assert.match(
       summary,
-      new RegExp(`Comparing 1 of ${total} canonical stories`),
+      new RegExp(`Comparing \\d+ of ${total} canonical stories`),
     )
-    assert.match(
-      summary,
-      new RegExp(`The other ${total - 1} canonical stories`),
-    )
-    assert.match(summary, /partial coverage, not full coverage/)
   })
 })
 

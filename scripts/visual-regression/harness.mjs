@@ -47,10 +47,12 @@ export function containerImage(root = REPOSITORY_ROOT) {
  * Comparison settings shared by every suite.
  *
  * - `threshold`: per-pixel colour distance (0 to 1, YIQ) below which two
- *   pixels count as equal. 0.05 tolerates sub-perceptual anti-aliasing noise
- *   but catches a token colour change.
+ *   pixels count as equal. At 0.01 a uniform shift of about 3/255 per channel
+ *   already counts as different, so a token colour change is caught, while
+ *   rounding noise is not.
  * - `maxDiffPixels`: pixels allowed beyond `threshold`. Zero: inside the
- *   pinned container rendering is deterministic, so any differing pixel fails.
+ *   pinned container rendering is deterministic. Pixels the comparator
+ *   classifies as anti-aliased edges are not counted.
  * - `animations: 'disabled'` finishes finite CSS animations and transitions
  *   and cancels infinite ones; `caret: 'hide'` hides the text caret.
  * - `fullPage`: the canvas framing is the whole story iframe page at the
@@ -59,7 +61,7 @@ export function containerImage(root = REPOSITORY_ROOT) {
  *   story root are captured.
  */
 export const SCREENSHOT_OPTIONS = Object.freeze({
-  threshold: 0.05,
+  threshold: 0.01,
   maxDiffPixels: 0,
   animations: 'disabled',
   caret: 'hide',
@@ -283,13 +285,13 @@ function listPngFiles(directory) {
  */
 export function coverageSummary(workspace) {
   const captures = planCaptures(workspace)
-  const compared = new Set(captures.map((c) => c.storyId))
+  const compared = [...new Set(captures.map((c) => c.storyId))]
   const total = workspace.canonicalStories.length
-  const uncovered = total - compared.size
+  const uncovered = total - compared.length
   return [
-    `Pixel visual regression (${workspace.name}): the rollout list enforces ${workspace.rollout.length} component(s): ${workspace.rollout.join(', ')}.`,
-    `Comparing ${compared.size} of ${total} canonical stories (${captures.length} captures).`,
-    `The other ${uncovered} canonical stories have no baselines yet: nothing to compare for them. This is partial coverage, not full coverage.`,
+    `Pixel visual regression (${workspace.name}): rollout list: ${workspace.rollout.join(', ')}.`,
+    `Comparing ${compared.length} of ${total} canonical stories (${captures.length} captures): ${compared.join(', ')}.`,
+    `The other ${uncovered} canonical stories, including any other stories of rollout components, have no baselines yet: nothing to compare for them. This is partial coverage, not full coverage.`,
   ]
 }
 
