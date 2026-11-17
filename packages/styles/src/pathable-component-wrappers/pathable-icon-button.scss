@@ -48,7 +48,7 @@
 
   // Default appearance (subtle border for visibility on any bg)
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   background: transparent;
   color: var(--pathable-color-text);
   cursor: pointer;
