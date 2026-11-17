@@ -16,18 +16,46 @@ canonical stories it does not.
 | styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton `all-variants` | Every other story in `CANONICAL_STORIES`, including IconButton's other six canonical stories |
 | React (`apps/storybook-react`) | None yet                  | None                      | Every story                                                                                  |
 
-Coverage is partial and counted in stories, not components. A story without
-baselines passes without comparison, even when its component is on the
-rollout list: a change to IconButton's compact, large, circle, disabled or
-loading rendering is not compared today.
+Coverage is partial. A story without baselines passes without comparison,
+even when its component is on the rollout list: IconButton's sizes, circle
+shape and other surfaces are not compared today, and whether they need a
+baseline is decided by the rule in
+[Which stories get a baseline](#which-stories-get-a-baseline).
 [#271](https://github.com/PathableAI-org/styles/issues/271) tracks the
-rollout: one pull request per component, adding all of that component's
-canonical stories, then a final change that turns the list into a check so
-that a canonical story without baselines fails CI.
+rollout: one pull request per component, adding the stories that rule picks,
+then a final change that turns the list into a check so that a component with
+no baseline fails CI.
 
 The suite is separate from `pnpm test:visual`, the visual smoke test, which
 checks that canonical stories render without blank output or horizontal
 overflow and compares no pixels.
+
+## Which stories get a baseline
+
+The suite does not capture every canonical story. A baseline earns its place
+when it shows CSS that no other baseline shows.
+
+- **One aggregate story per component is the default.** A story that renders
+  all of a component's variants together, such as IconButton `all-variants`,
+  shows most of the component's rules in one image.
+- **Add a further story only when it shows CSS the aggregate does not**, such
+  as a layout under content pressure or a state with its own rules. Give the
+  reason next to the story entry.
+- **A component without an aggregate story** either gets one, in a separate
+  stories pull request first, or uses the smallest set of its existing
+  stories that together show its CSS. A page-level pattern or recipe usually
+  needs only one populated story.
+
+A pixel baseline is for appearance that cannot be written as an assertion:
+how rules combine into alignment, spacing, wrapping, icon position and
+forced-colors rendering. A result that can be named stays in its own check
+and needs no baseline for that reason alone: behaviour, keyboard, focus
+movement, state and ARIA in play functions; accessibility rules in the
+test-runner's axe check; rendering and horizontal overflow in
+`pnpm test:visual`, which covers every canonical story.
+
+Keep the set small. Every baseline is an image a reviewer must look at when
+it changes, and a set too large to look at gets approved unseen.
 
 ## How a capture is made
 
@@ -130,10 +158,14 @@ browser for diagnosis only, and refuses to update.
 Each component's baselines land in their own pull request, which changes
 nothing else:
 
-1. Check that the component's canonical stories render deterministically. If
-   they do not, fix the stories in a separate pull request first.
-2. Add an entry to `STORIES` for each canonical story of the component, with
-   its key and conditions, and add the component to `ROLLOUT`.
+1. Choose the stories by the rule in
+   [Which stories get a baseline](#which-stories-get-a-baseline). If the
+   component needs an aggregate story, or a chosen story does not render
+   deterministically, add or fix the stories in a separate pull request first.
+2. Add an entry to `STORIES` for each chosen story, with its key and
+   conditions, and add the component to `ROLLOUT`. In the pull request, say
+   which of the component's canonical stories have no baseline and why the
+   chosen ones cover their CSS.
 3. Run the update for that component, look at every image, and commit them.
 
 A component whose rendering is visibly wrong today is not added: file a
