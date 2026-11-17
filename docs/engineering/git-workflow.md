@@ -11,7 +11,29 @@ checks to run before committing are in [`AGENTS.md`](../../AGENTS.md#before-comm
 - Name a branch `<type>/<short-slug>`, where `<type>` is the Conventional
   Commit type of the change (for example `fix/modal-escape`). A branch name
   assigned by an agent harness, such as `claude/<slug>`, is also fine.
+- Spec Kit feature work uses [feature branch names](#feature-branches)
+  instead, because the verification gate reads the feature and slice from them.
 - Never push to `main`. Never rewrite history on someone else's branch.
+
+### Feature branches
+
+Spec Kit allocates the feature number and creates the specification branch as
+`{number}-{slug}`, matching `specs/{number}-{slug}/`. Later branches keep the
+same number:
+
+| Branch                         | Holds                                                            |
+| ------------------------------ | ---------------------------------------------------------------- |
+| `{number}-{slug}`              | The specification, or the combined specification and plan        |
+| `{number}-{slug}-plan`         | The plan (High new behaviour only)                               |
+| `{number}-{slug}-impl`         | The first implementation slice                                   |
+| `{number}-{slug}-impl-<slice>` | Each further slice, using the lower-case slice ID from `plan.md` |
+
+Do not put the GitHub issue number in the branch name; issue numbers and Spec
+Kit numbers are different sequences. Name the issue in the pull request title
+and body. Before planning, tasks or implementation, set
+`SPECIFY_FEATURE_DIRECTORY` to `specs/{number}-{slug}`, so a missing or stale
+`.specify/feature.json` cannot point at a different specification. In a cloud
+session, the orchestrator sets the branch when it starts the session.
 
 ## Commits
 
@@ -22,8 +44,8 @@ discipline").
 
 ## Pull requests
 
-- One pull request per change. High-tier new behaviour starts with a separate
-  specification pull request (see [Process by tier](#process-by-tier)).
+- One pull request per change, or per phase and slice for new behaviour at
+  High and Standard tier (see [Process by tier](#process-by-tier)).
 - Use the [pull request template](../../.github/pull_request_template.md).
 - The PR title is a Conventional Commit subject. It becomes the commit subject
   on `main`, so it is the durable history: make it say what changed for a
@@ -115,12 +137,20 @@ with a breaking-change label (constitution principle XIII).
 
 ### Process by tier
 
-| Work                | Pull requests                                                                                                                                                                 |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| High, new behaviour | A specification pull request first (Spec Kit `spec.md` and `plan.md`, see [Spec Kit](spec-kit.md)), merged on the maintainer's approval; then the implementation pull request |
-| High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table                                                                                         |
-| Standard            | One pull request. The maintainer may ask for a specification first for a large new component                                                                                  |
-| Light               | One pull request with normal CI                                                                                                                                               |
+| Work                    | Pull requests                                                                                                                                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| High, new behaviour     | A specification pull request (`spec.md`, `verification.md`), then a plan pull request (`plan.md` with its slice table, `quickstart.md`), then one pull request per [implementation slice](#implementation-slices) |
+| High, fix               | One pull request that names its triggers and numbers its claims in the Evidence table                                                                                                                             |
+| Standard, new behaviour | One combined specification-and-plan pull request, then one pull request per implementation slice                                                                                                                  |
+| Standard fix, and Light | One pull request with normal CI                                                                                                                                                                                   |
+
+Each phase merges on a person's approval before the next starts (see
+[Spec Kit](spec-kit.md) for the artifacts). A High feature combines
+specification and plan only as the maintainer's explicit choice for a small,
+coherent feature, recorded in the pull request body. The maintainer may waive
+the combined pull request for a small, single-decision Standard addition, such
+as one token or one modifier, recorded in the delivery issue; it then runs as a
+Standard fix. An agent never waives or combines a phase on its own.
 
 Evidence each tier needs, in addition to the checks in
 [`AGENTS.md`](../../AGENTS.md#before-committing) for the files changed:
@@ -151,7 +181,8 @@ Evidence each tier needs, in addition to the checks in
   - a package-content check (`pnpm pack --dry-run` or the `check:package` and
     `check:types` scripts) when entry points or files change;
   - migration notes in the changeset for any removal or rename;
-  - numbered claims in the Evidence table, each with its result and evidence.
+  - numbered claims, each with its result and evidence: from `verification.md`
+    for new behaviour, or in the Evidence table for a fix.
 
 ### Recording and changing a tier
 
@@ -171,8 +202,62 @@ Evidence each tier needs, in addition to the checks in
 
 ### Verification and review
 
-Not yet defined. Dedicated verification and review sessions, and how they use
-the numbered claims above, will be added here.
+High and Standard new behaviour, and High fixes, run as separate agent
+sessions that an orchestrator starts and briefs. [Orchestration](orchestration.md)
+owns which sessions each tier gets, the stop points and the models.
+
+- **Claims.** The specification's `verification.md` numbers the claims a
+  feature makes (`V-001`, `V-002`, …), each with the observation that tells it
+  apart from its violation and the evidence channel that can see it. A High
+  fix numbers its claims in the pull request's Evidence table instead.
+  [The verification harness](verification-harness.md) owns the channels and
+  what each tier's `verification.md` holds.
+- **Verification.** A verification session checks each pushed slice in its
+  own detached worktree, through the Storybooks and the packed packages, and
+  records a schema-checked report in a Git note on the exact pushed SHA.
+- **Review.** A review session reviews the same SHA with a clean context
+  against the constitution's lenses and records its findings the same way
+  ([Code review session](code-review.md)).
+- **Gate.** `pnpm verify:gate` passes only when the slice's latest report
+  establishes its claims and its latest review has no open blocking finding.
+  A Claude Code hook runs the gate on every attempt to mark a pull request
+  ready, and blocks a failing one.
+- **Human review is still the approval.** The reports and reviews are input to
+  it, as are passing checks and Copilot's comments.
+
+Standard fixes and Light work get none of this: normal CI, the checks the pull
+request names, and human review. Every tier runs the advisory
+[pre-push self-review](code-review.md#pre-push-self-review).
+
+## Implementation slices
+
+The plan divides implementation into slices. Each slice is one pull request:
+
+- **One decision.** A reviewer can accept the slice without also accepting a
+  later one.
+- **Source first.** A slice that adds React API for new visual behaviour comes
+  after, or includes, the slice that adds the `@pathableai/styles` contract and
+  its styles stories (constitution I and IV).
+- **About 15 hand-written files at most.** Lockfile changes, snapshots and
+  generated output are listed separately. When no coherent stopping point
+  exists below that size, the plan and the pull request body say why.
+- **Vertical.** Each slice passes CI on its own. A public contract lands with
+  its first consumer, its stories and its evidence, not ahead of them.
+- **Verified.** A slice is marked ready only after its latest verification
+  report and review pass [the gate](verification-harness.md#gate-and-escalation).
+
+Slices are sequential. While slice N's pull request is open, slice N+1 may
+branch from N's branch and target it as its base; after N merges, GitHub
+retargets N+1 to `main`, and its session merges `origin/main` into it. Agents
+cannot force-push here, so a correction moves upward by merging the lower
+branch into the upper one, never by rebasing a pushed branch. The repository
+squash-merges, so the merge commits never reach `main`. This repository does
+not use the `gh stack` extension or GitHub's native stacks; whether to adopt
+them is an open decision recorded in [Orchestration](orchestration.md).
+
+If the planned slices cannot meet these rules, change the plan's slices
+through the [corrections](#corrections) path rather than letting one slice
+grow.
 
 ## Merge timing
 
@@ -187,3 +272,50 @@ the numbered claims above, will be added here.
   so High-tier dependency changes still wait for a person.
 - Merging the `ci: version packages` pull request publishes to npm. A person
   decides when that happens.
+
+## Corrections
+
+Change the earliest phase that owns the decision.
+
+| Discovery                                                  | Owner                                           |
+| ---------------------------------------------------------- | ----------------------------------------------- |
+| Algorithm, private implementation or story layout          | Implementation                                  |
+| Component class, token, prop, export, entry point or slice | Plan                                            |
+| Claim, observation or evidence channel                     | Specification                                   |
+| Scope of the delivery issue                                | The maintainer. Stop the affected feature work. |
+
+When the owning pull request is still open, fix that branch, merge it upward
+into each open branch above it, rerun the affected checks, and ask for review
+where a decision changed. When the owning phase is already on `main`, open a
+corrective pull request for that phase, merge it on approval, and merge
+`origin/main` into the open slice branches. Do not hide the correction inside
+an implementation branch.
+
+A merge does not renew approval, and by itself does not renew evidence. A
+slice keeps its verification report and review only when
+[the gate](verification-harness.md#gate-and-escalation) finds that the diff
+from the verified or reviewed commit to the new head changes nothing but the
+feature's `quickstart.md` execution results. Report which decisions changed,
+which public contracts are affected, and which evidence must be repeated.
+
+## Working without GraphQL
+
+Claude Code cloud sessions reach GitHub's REST API but not GraphQL, and `gh pr`
+and `gh issue` subcommands use GraphQL, so they fail there with HTTP 403. Do
+not retry them or ask for a network change. Use the replacements for the rest
+of the session; every gate in this document applies to them unchanged.
+
+| Step with GraphQL                | Replacement                                                                                                                   |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `gh pr view`                     | `gh api repos/{owner}/{repo}/pulls/N`, or the MCP tool `pull_request_read`                                                    |
+| `gh pr create --draft`           | The MCP tool `create_pull_request` with `draft: true`                                                                         |
+| `gh pr edit`                     | The MCP tool `update_pull_request` (`title`, `body`, `base`)                                                                  |
+| `gh pr ready`                    | The MCP tool `update_pull_request` with `draft: false`, or `gh api -X POST repos/{owner}/{repo}/pulls/N/ccr/ready_for_review` |
+| `gh pr ready --undo`             | `update_pull_request` with `draft: true`, or `gh api -X POST repos/{owner}/{repo}/pulls/N/ccr/convert_to_draft`               |
+| `gh pr merge`                    | The MCP tool `merge_pull_request` with `merge_method: squash`, under [Merge timing](#merge-timing)                            |
+| `gh issue view`, `gh issue list` | `gh api repos/{owner}/{repo}/issues/N`, or the MCP tool `issue_read`                                                          |
+
+The ready hook gates the MCP update and the REST route exactly as it gates
+`gh pr ready`; see [the verification gate](verification-harness.md#gate-and-escalation).
+The `ccr/` routes are the cloud proxy's and have not yet been exercised from
+this repository; confirm them on first use.
