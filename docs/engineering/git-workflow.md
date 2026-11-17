@@ -60,7 +60,8 @@ Work is **High** when any of these holds:
 | Removes or renames a published token or CSS custom property, or changes what one means                                                                                  | `packages/styles/src/_*.scss`, `packages/styles/src/_components-custom-properties.scss`, `packages/styles/src/theme-default.scss`; the `pnpm lint:tokens` output          |
 | Removes or renames a `.pathable-*` component, element, modifier or utility class, or a JavaScript helper                                                                | `packages/styles/src/pathable-component-wrappers/`, `packages/styles/src/_utilities*.scss`, `packages/styles/src/js/`                                                     |
 | Removes or renames a React export, or removes, renames or narrows a public prop or its type                                                                             | `packages/react/src/index.ts` and the components it re-exports; the generated declarations checked by `check:types`                                                       |
-| Changes package entry points or dependencies consumers resolve                                                                                                          | `exports`, `files`, `main`, `module`, `types`, `peerDependencies` or `dependencies` in `packages/styles/package.json` or `packages/react/package.json`                    |
+| Changes package entry points                                                                                                                                            | `exports`, `files`, `main`, `module` or `types` in `packages/styles/package.json` or `packages/react/package.json`                                                        |
+| Adds or removes a runtime or peer dependency, changes its range to a new major, or narrows a peer range                                                                 | `dependencies` or `peerDependencies` in `packages/styles/package.json` or `packages/react/package.json`                                                                   |
 | Changes keyboard, focus or ARIA behaviour of an interactive component (focus trapping, Escape handling, roving focus, `aria-*` state, `inert`)                          | Component source in `packages/react/src/components/` or `packages/styles/src/js/`, and the interaction stories that cover it                                              |
 | Changes the theming API                                                                                                                                                 | `packages/react/src/theme/` (`createTheme`, `ThemeProvider`, `tokens.ts`); the overridable tokens in [`docs/theming/token-vocabulary.md`](../theming/token-vocabulary.md) |
 | Changes the consumer agent guidance's contract: removes or reverses advice, or changes required imports, entry points, theming or server/client boundaries it describes | `packages/react/agent-guidance/pathable-react/`                                                                                                                           |
@@ -77,9 +78,10 @@ or changes what a consumer sees:
 - additive consumer agent guidance for new public API.
 
 Otherwise, work is **Light**: documentation, tests, stories for existing
-behaviour, repository tooling, CI, dependency updates, generated Spec Kit
-upgrades, and refactors or fixes that stay inside an existing contract with no
-consumer-visible change (same exports and declarations, no `test:visual`
+behaviour, repository tooling, CI, dependency updates (including lockfile-only
+updates and minor or patch range bumps of runtime dependencies), generated Spec
+Kit upgrades, and refactors or fixes that stay inside an existing contract with
+no consumer-visible change (same exports and declarations, no `test:visual`
 snapshot change). A dependency update that changes rendering is Standard.
 
 When it is unclear whether a trigger matches, use the higher tier.
@@ -172,6 +174,8 @@ the numbered claims above, will be added here.
   only when a person has approved the pull request and explicitly asked that
   agent to merge it. Passing checks and bot review comments are not approval.
 - Renovate's automerge (configured in [`renovate.json5`](../../renovate.json5))
-  is the maintainer's standing exception for dependency updates.
+  is the maintainer's standing exception for dependency updates. It never
+  automerges major upgrades, or `react`, `react-dom`, `next` or `@uswds/uswds`,
+  so High-tier dependency changes still wait for a person.
 - Merging the `ci: version packages` pull request publishes to npm. A person
   decides when that happens.
