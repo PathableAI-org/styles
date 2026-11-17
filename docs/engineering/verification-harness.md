@@ -240,7 +240,10 @@ when the gate fails. It covers `gh pr ready`, a `gh api` call that sets
 with `draft: false`. It refuses paths it cannot judge, such as a GraphQL
 `markPullRequestReadyForReview` mutation or creating an implementation-slice
 pull request without `draft: true`, and names the gated way. Once the gate
-passes or does not apply, marking ready needs no person's confirmation.
+passes or does not apply, the hook approves the MCP update without a prompt.
+`gh pr ready` and the REST ready route still ask a person under the project's
+permission rules; whether to allow them without a prompt, as Pre-ETS does, is
+an [open decision](orchestration.md#open-decisions).
 
 Known limits: the hook cannot see `gh pr create` without `--draft`, any other
 HTTP client, another GitHub MCP server name, or a person in the web interface.
