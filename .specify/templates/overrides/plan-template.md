@@ -6,16 +6,6 @@
 
 **Note**: This template is filled in by the `/speckit-plan` command; its definition describes the execution workflow.
 
-## Table of Contents
-
-- [Summary](#summary)
-- [Technical Context](#technical-context)
-- [Constitution Check](#constitution-check)
-- [Project Structure](#project-structure)
-- [Complexity Tracking](#complexity-tracking)
-- [Design Artifacts](#design-artifacts)
-- [Visual fidelity navigation](#visual-fidelity-navigation)
-
 ## Summary
 
 [Extract from feature spec: primary requirement + technical approach from research]

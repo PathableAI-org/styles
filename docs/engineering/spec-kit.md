@@ -12,8 +12,13 @@ by the [risk tier](git-workflow.md#process-by-tier).
 - Claude Code reaches the same skills through `.claude/skills/speckit-*`, which
   are symlinks to `.agents/skills/speckit-*` (see
   [The `.claude/skills` symlinks](#the-claudeskills-symlinks)).
-- Presets `workflow-preset` and `toc-navigation` and extensions `agent-context`,
-  `critique` and `git` are installed under `.specify/`.
+- The `workflow-preset` preset and the `agent-context`, `critique` and `git`
+  extensions are installed under `.specify/`.
+- The `toc-navigation` preset is still installed but is being removed: generated
+  documents no longer carry a table of contents, and the overrides shadow its
+  templates. A maintainer runs `specify preset remove toc-navigation`, then
+  deletes this bullet and the `toc-navigation` path under
+  [Keeping overrides current](#keeping-overrides-current).
 
 ## What the upgrade workflow owns
 
@@ -77,24 +82,24 @@ upgrades, so they are the smaller and safer mechanism.
 
 ### What the overrides contain
 
-Because an override replaces lower layers, each override folds in what those
-layers contributed before, so generated documents keep their structure:
+Because an override replaces lower layers, an override must carry anything a
+lower layer contributed that the project still wants:
 
 - the project customisations previously written into the core templates, with
   package names corrected to `@pathableai/styles` and the dropped Astro docs
   site removed;
-- the Table of Contents from the `toc-navigation` preset;
 - for `plan-template.md`, the Design Artifacts and visual fidelity navigation
   from the `workflow-preset` preset.
 
 ### Keeping overrides current
 
-Upstream changes to the core templates, or to those two presets' templates, no
-longer reach generated documents on their own. When an upgrade pull request
-changes `.specify/templates/{spec,plan,tasks}-template.md`,
-`.specify/presets/toc-navigation/templates/` or
+Upstream changes to the core templates, or to `workflow-preset`'s plan
+template, no longer reach generated documents on their own. When an upgrade
+pull request changes `.specify/templates/{spec,plan,tasks}-template.md` or
 `.specify/presets/workflow-preset/templates/plan-template.md`, port the
-relevant changes into the overrides in a separate pull request.
+relevant changes into the overrides in a separate pull request. Until
+`toc-navigation` is removed, ignore changes under
+`.specify/presets/toc-navigation/`.
 
 ### Background: why the customisations moved
 

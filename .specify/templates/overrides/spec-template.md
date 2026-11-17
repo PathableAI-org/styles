@@ -8,13 +8,6 @@
 
 **Input**: User description: "$ARGUMENTS"
 
-## Table of Contents
-
-- [User Scenarios & Testing](#user-scenarios--testing-mandatory)
-- [Requirements](#requirements-mandatory)
-- [Success Criteria](#success-criteria-mandatory)
-- [Assumptions](#assumptions)
-
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
