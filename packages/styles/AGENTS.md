@@ -271,7 +271,7 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 
 ### SCSS Utility Token Reference Rules
 
-- Agents MUST use `.pathable-*` utility classes in HTML/Astro templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
+- Agents MUST use `.pathable-*` utility classes in HTML templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
 - Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
 - Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
 - Agents May use `--pathable-{module}-{value}` and `--usa-{module}-{value}` CSS custom properties as alternatives to the class-based utilities.
@@ -324,7 +324,7 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 
 ### Component Wrapper Rules
 
-- Agents MUST use `.pathable-{component}` classes in HTML/Astro templates instead of `.usa-{component}` classes when a wrapper exists.
+- Agents MUST use `.pathable-{component}` classes in HTML templates instead of `.usa-{component}` classes when a wrapper exists.
 - Agents MUST use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Agents MUST use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
 - For JS-driven components (accordion, banner, combo-box, date-picker, date-range-picker, file-input, header, in-page-navigation, input-mask, modal, nav, site-alert, time-picker, tooltip, validation), Agents MUST keep `.usa-{component}` on the DOM element AND add `.pathable-{component}` as an additional class — the USWDS JavaScript selects DOM nodes by `.usa-*` class names, and removing them would break interactivity.

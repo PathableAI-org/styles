@@ -2,38 +2,41 @@
   ------------------------------------------------------------------
   Sync Impact Report
   ------------------------------------------------------------------
-  Version change: 1.4.0 → 1.4.1 (PATCH)
-  Rationale: The constitution named the published packages `@pathable/styles`
-    and `@pathable/react`. The packages are published as `@pathableai/styles`
-    and `@pathableai/react` (see packages/styles/package.json and
-    packages/react/package.json). This is a factual name correction with no
-    change to any rule.
-  Principles modified (wording only, no semantic change):
-    - I: heading and body now name `@pathableai/styles`
-    - XI: heading and body now name `@pathableai/styles`
-    - II, V, VI, VII: package names corrected to `@pathableai/*`
-    - Stack and Dependency Constraints, Wrapper Package Contract: package
-      names corrected to `@pathableai/*`
+  Version change: 1.4.1 → 1.5.0 (MINOR)
+  Rationale: Principle XII named an Astro documentation site as the curated
+    public entry point, but no such site exists and maintainers decided not to
+    build one. XII now assigns the public entry-point role to the root README
+    and package READMEs. XII's governing rule (one canonical source per fact,
+    other surfaces derive from or link to it) is unchanged.
+  Why MINOR, not MAJOR: no principle is removed and XII's rule is not
+    redefined; the list of documentation surfaces changes and the entry-point
+    responsibility moves to surfaces that already exist. No existing artifact
+    becomes non-compliant, because the Astro site was never built.
+  Principles modified:
+    - XII: "Documentation Surfaces Have Distinct Responsibilities" — Astro
+      docs site removed; root and package READMEs are the public entry points;
+      contributor/agent instructions keep operational procedures; "even before
+      the full docs site exists" removed
   Principles added: none
   Principles removed: none
   Sections added: none
   Sections removed: none
-  Migration plan: none required; the rules are unchanged and existing
+  Migration plan: none required; no docs site work is in flight. Existing
     specs/ and docs/plans/ records are historical and keep their wording.
   Templates requiring updates:
-    - .specify/templates/plan-template.md           → updated (package name)
-    - .specify/templates/spec-template.md           → updated (package name)
-    - .specify/templates/tasks-template.md          → updated (package name)
-    - .specify/templates/constitution-template.md   → reviewed; no change
-    - .specify/templates/checklist-template.md      → reviewed; no change
+    - .specify/templates/plan-template.md → still lists "Astro docs site" under
+      Documentation Surface Ownership; deferred, because the templates are
+      owned by the Spec Kit upgrade workflow and project customisations will
+      move into a preset
+    - .specify/templates/spec-template.md, tasks-template.md → reviewed; no
+      Astro reference
   Follow-up TODOs:
-    - Principle XII describes an Astro documentation site as the public entry
-      point, but no docs site workspace exists in this repository. Whether to
-      build it or amend XII is an open decision for a maintainer; XII is left
-      unchanged by this amendment.
-  Previous amendment: 1.3.0 → 1.4.0 (2026-07-19) expanded IV, X and XII and
-    added XIV–XVI plus the Automated Validation & Quality Gates section; see
-    git history for its full report.
+    - Move project-specific template customisations (including the Astro
+      mention above) into a Spec Kit preset.
+  Previous amendment: 1.4.0 → 1.4.1 (2026-11-17) corrected package names to
+    `@pathableai/*` in the constitution. The matching template edits were
+    reverted so the templates stay identical to the Spec Kit upgrade
+    workflow's output; they still say `@pathable/*`.
   ------------------------------------------------------------------
 -->
 
@@ -202,18 +205,18 @@ Documentation surfaces MUST avoid contradictory sources of truth. When the same
 fact must appear on multiple surfaces, one surface is the canonical source and
 others derive from or link to it.
 
-- The Astro documentation site is the curated public entry point for
-  installation, foundations, brand guidance, agent guidance, and roadmap
-  information.
+- The root README and the package READMEs are the public entry points for
+  installation, foundations, brand guidance, and consumer usage of each
+  published package.
 - Storybook is the exhaustive, executable catalog for components, states,
   interactions, accessibility, and compositions.
-- Package READMEs and contributor/agent instructions contain operational
-  commands and authoring procedures.
+- Contributor and agent instructions contain operational commands and
+  authoring procedures.
 - Specifications and plans describe feature-specific requirements and
   implementation decisions.
 
 The repository MUST include enough README documentation to support each
-published package independently, even before the full docs site exists.
+published package independently.
 
 ### XIII. Versioning and Release Discipline
 
@@ -472,4 +475,4 @@ this constitution. Violations MUST be documented in their complexity tracking
 section with justification. Complexity is not automatically forbidden but it
 MUST be transparent and justified.
 
-**Version**: 1.4.1 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-11-17
+**Version**: 1.5.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-11-17

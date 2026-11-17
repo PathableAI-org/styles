@@ -106,16 +106,12 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
-# Astro build artifacts (.astro cache directory)
-.astro/
-
 # pnpm store
 .pnpm-store/
 
 # Build outputs
 build/
 dist/
-apps/docs/dist/
 packages/styles/dist/
 packages/styles/fonts/
 packages/styles/img/

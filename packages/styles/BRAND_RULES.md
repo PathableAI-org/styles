@@ -314,7 +314,7 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 
 ### Component Wrapper Rules
 
-- Use `.pathable-{component}` classes in HTML/Astro templates instead of `.usa-{component}` classes when a wrapper exists.
+- Use `.pathable-{component}` classes in HTML templates instead of `.usa-{component}` classes when a wrapper exists.
 - Use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
 - For components where USWDS does not define a base class (character-count, checkbox, radio, date-picker, date-range-picker, site-title, validation), the wrapper provides element-level selectors or forwards the USWDS bundle — use the available `.pathable-{component}__{element}` classes directly.
