@@ -112,10 +112,11 @@ $_jade-text: #0d7a63;
   // Lived-In Lime 40% over white
   $theme-color-accent-warm-light: #edffc2,
   $theme-color-accent-warm: $_lived-in-lime,
-  // Lived-In Lime 80% with black
-  $theme-color-accent-warm-dark: #a9cc52,
-  // Lived-In Lime 45% with black
-  $theme-color-accent-warm-darker: #5f732e,
+  // USWDS pairs the dark grade with white text, so it must stay dark:
+  // Lived-In Lime 35% with black (7.7:1 with white)
+  $theme-color-accent-warm-dark: #4a5924,
+  // Lived-In Lime 25% with black
+  $theme-color-accent-warm-darker: #354019,
 
   // -------- State tokens --------
   // Error and warning match the semantic danger and warning tokens.
@@ -159,8 +160,8 @@ $_jade-text: #0d7a63;
   $theme-link-active-color: 'primary-dark',
 
   // -------- Focus color --------
-  // Tech Teal, matching --pathable-color-focus-ring.
-  $theme-focus-color: 'accent-cool-dark',
+  // Bright Blue Brooks, matching --pathable-color-focus-ring.
+  $theme-focus-color: 'accent-cool',
 
   // -------- Suppress notifications --------
   $theme-show-notifications: false,

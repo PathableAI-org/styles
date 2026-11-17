@@ -28,13 +28,13 @@ const brandColors = [
     name: 'Bright Blue Brooks',
     exact: '#4899e8',
     role: 'Primary',
-    use: 'Interactive accents and large graphics; not for small text on white',
+    use: 'Focus ring, interactive accents and large graphics; not for small text on white',
   },
   {
     name: 'Tech Teal',
     exact: '#015a76',
     role: 'Secondary',
-    use: 'Links, focus ring, muted text, supporting backgrounds',
+    use: 'Links, muted text, supporting backgrounds',
   },
   {
     name: 'Lived-In Lime',
@@ -65,7 +65,7 @@ const generalTokens = [
   {
     name: 'focus-ring',
     token: '--pathable-color-focus-ring',
-    value: '#015a76',
+    value: '#4899e8',
   },
   { name: 'danger', token: '--pathable-color-danger', value: '#dc3545' },
   { name: 'success', token: '--pathable-color-success', value: '#1cae96' },

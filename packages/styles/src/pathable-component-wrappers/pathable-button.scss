@@ -27,6 +27,12 @@
   // Uses --pathable-color-on-accent for WCAG AA normal text contrast (5.9:1)
   background-color: var(--pathable-brand-bright-blue-brooks);
   color: var(--pathable-color-on-accent);
+
+  // USWDS sets white text on visited links styled as accent-cool buttons,
+  // which is only 3.0:1 on Bright Blue Brooks.
+  &:visited {
+    color: var(--pathable-color-on-accent);
+  }
 }
 
 .pathable-button--accent-warm {

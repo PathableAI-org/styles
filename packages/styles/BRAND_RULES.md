@@ -39,14 +39,14 @@ The USWDS theme in `src/_uswds-theme.scss` is configured with the exact brand he
 | Primary            | PathAble Blue `#00365c`       | lighter `#e6ebef`, light `#99afbe`, vivid Tech Teal `#015a76`, dark `#002845`, darker `#001e33`               |
 | Secondary          | Intelligent Jade `#1cae96`    | lighter `#e8f7f4`, light `#a4dfd5`, dark `#0d7a63`, darker `#0d4e44`                                          |
 | Accent-cool        | Bright Blue Brooks `#4899e8`  | lighter `#edf5fd`, light `#b6d6f6`, dark Tech Teal `#015a76`, darker PathAble Blue `#00365c`                  |
-| Accent-warm        | Lived-In Lime `#d3ff66`       | lighter `#fbfff0`, light `#edffc2`, dark `#a9cc52`, darker `#5f732e`                                          |
+| Accent-warm        | Lived-In Lime `#d3ff66`       | lighter `#fbfff0`, light `#edffc2`, dark `#4a5924`, darker `#354019`                                          |
 | Base               | Shilling Silver `#dde2e8`     | lightest `#f6f8f9`, lighter `#eef0f4`, light `#e6e9ee`, dark `gray-cool-60`, darker/darkest/ink PathAble Blue |
 | Info               | Bright Blue Brooks `#4899e8`  | lighter `#edf5fd`, dark Tech Teal `#015a76`                                                                   |
 | Success            | Intelligent Jade `#1cae96`    | lighter `#e8f7f4`, dark `#0d7a63`                                                                             |
 | Warning            | Amber `#f5a623` (functional)  | lighter `#fef6e9`, dark `#c4851c`                                                                             |
 | Error              | Danger `#dc3545` (functional) | lighter `#fcebec`, dark `#a52834`                                                                             |
 
-USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Tech Teal, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
+USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Bright Blue Brooks, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
 
 The brand book defines no red or amber. Danger (`#dc3545`) and warning (`#f5a623`) are functional status colors added by the design system; use them only for status, never as decoration.
 
@@ -93,7 +93,7 @@ Other pairings used by the design system:
 | PathAble Blue                          | Shilling Silver     | 9.58:1            | Text on dark surfaces                         |
 | Tech Teal                              | White               | 7.71:1            | Dark supporting surfaces                      |
 | Tech Teal                              | Lived-In Lime       | 6.70:1            | Accent words on Tech Teal                     |
-| White                                  | Tech Teal           | 7.71:1            | Links, muted text, focus ring                 |
+| White                                  | Tech Teal           | 7.71:1            | Links and muted text                          |
 | Shilling Silver                        | Tech Teal           | 5.91:1            | Links and muted text on the page background   |
 | Intelligent Jade                       | On-accent `#001a33` | 6.31:1            | Secondary buttons and success status          |
 | Bright Blue Brooks                     | On-accent `#001a33` | 5.85:1            | Accent-cool buttons                           |

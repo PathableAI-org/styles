@@ -32,7 +32,7 @@ compiled stylesheet.
 | `border`              | `--pathable-color-border`                | `#dde2e8`     | Borders and dividers.                                           |
 | `link`                | `--pathable-color-link`                  | `#015a76`     | Links and interactive text accents (Tech Teal).                 |
 | `accent`              | `--pathable-color-accent`                | `#1cae96`     | Brand accent: active states, indicators, and emphasis.          |
-| `focusRing`           | `--pathable-color-focus-ring`            | `#015a76`     | Keyboard focus ring outline (Tech Teal).                        |
+| `focusRing`           | `--pathable-color-focus-ring`            | `#4899e8`     | Keyboard focus ring outline (Bright Blue Brooks).               |
 | `danger`              | `--pathable-color-danger`                | `#dc3545`     | Danger and error foreground (text and icons).                   |
 | `success`             | `--pathable-color-success`               | `#1cae96`     | Success foreground.                                             |
 | `textSuccess`         | `--pathable-color-text-success`          | `#0d7a63`     | WCAG-AA-safe success text on `surface`.                         |

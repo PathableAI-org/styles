@@ -178,16 +178,15 @@
   color: var(--pathable-color-surface);
 }
 
-// The default Tech Teal focus ring does not contrast sufficiently with the
-// brand or inverse surfaces. Let the nearest surface set an IconButton-specific
-// color so nested inverse and brand surfaces do not leak focus context into one
-// another. On the PathAble Blue inverse surface, Bright Blue Brooks keeps 4.2:1.
+// The default blue focus ring does not contrast sufficiently with the brand
+// surface. Let the nearest surface set an IconButton-specific color so nested
+// inverse and brand surfaces do not leak focus context into one another.
 .pathable-surface--brand {
   --pathable-icon-button-focus-ring: var(--pathable-color-text);
 }
 
 .pathable-surface--inverse {
-  --pathable-icon-button-focus-ring: var(--pathable-brand-bright-blue-brooks);
+  --pathable-icon-button-focus-ring: var(--pathable-color-focus-ring);
 }
 
 .pathable-icon-button:focus-visible,

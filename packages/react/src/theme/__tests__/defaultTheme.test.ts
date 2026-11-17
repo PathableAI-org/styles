@@ -12,7 +12,7 @@ describe('defaultTheme', () => {
     border: '#dde2e8',
     link: '#015a76',
     accent: '#1cae96',
-    focusRing: '#015a76',
+    focusRing: '#4899e8',
     danger: '#dc3545',
     success: '#1cae96',
     textSuccess: '#0d7a63',

@@ -11,9 +11,10 @@ $pathable-color-border: #dde2e8;
 // Bright Blue Brooks is only 3.0:1 on white, which fails WCAG AA for text.
 $pathable-color-link: #015a76;
 $pathable-color-accent: #1cae96;
-// Focus ring uses Tech Teal so it keeps at least 3:1 against both white and
-// Shilling Silver (WCAG 1.4.11). Bright Blue Brooks is 2.3:1 on Shilling Silver.
-$pathable-color-focus-ring: #015a76;
+// Focus ring uses Bright Blue Brooks: 3.0:1 on white and 4.2:1 on PathAble Blue
+// (WCAG 1.4.11 needs 3:1), so it stays visible on light and dark surfaces. It is
+// only 2.3:1 directly on Shilling Silver. Tech Teal would fail on dark surfaces.
+$pathable-color-focus-ring: #4899e8;
 $pathable-color-danger: #dc3545;
 $pathable-color-success: #1cae96;
 // Text-safe success color — deep jade validated to pass WCAG AA (≥ 4.5:1)
@@ -56,7 +57,7 @@ $semantic-colors: (
   'border': #dde2e8,
   'link': #015a76,
   'accent': #1cae96,
-  'focus-ring': #015a76,
+  'focus-ring': #4899e8,
   'danger': #dc3545,
   'success': #1cae96,
   'text-success': #0d7a63,
