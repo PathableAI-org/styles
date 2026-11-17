@@ -16,8 +16,11 @@ by the [risk tier](git-workflow.md#process-by-tier).
   extensions are installed under `.specify/`.
 - The `toc-navigation` preset is still installed but is being removed: generated
   documents no longer carry a table of contents, and the overrides shadow its
-  templates. A maintainer runs `specify preset remove toc-navigation`, then
-  deletes this bullet and the `toc-navigation` path under
+  templates. Remove it with `specify preset remove toc-navigation` right after
+  an upgrade pull request merges, using the same Spec Kit version that upgrade
+  installed: removal re-renders the `workflow-preset` composed commands, and a
+  different CLI version renders them for scripts the repository does not have.
+  Then delete this bullet and the `toc-navigation` path under
   [Keeping overrides current](#keeping-overrides-current).
 
 ## What the upgrade workflow owns
