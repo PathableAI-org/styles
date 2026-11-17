@@ -60,6 +60,9 @@ pnpm test
 
 # Run visual smoke tests
 pnpm test:visual
+
+# Compare the styles pixel visual-regression baselines (needs Docker)
+pnpm test:pixels-styles
 ```
 
 `test:storybook-styles` and `test:storybook-react` drive the corresponding
@@ -72,8 +75,10 @@ result.
 
 The current Storybook test command builds each catalog, serves it locally, and
 runs its stories in a browser. CI runs equivalent build, browser-test,
-accessibility, and visual-smoke steps, although workflow wiring may call package
-scripts directly.
+accessibility, visual-smoke and pixel visual-regression steps, although workflow
+wiring may call package scripts directly. The pixel suites, their coverage and
+their update commands are described in
+[Pixel visual regression](visual-regression.md).
 
 ## Shared validation structure
 

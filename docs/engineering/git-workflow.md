@@ -95,16 +95,24 @@ or changes what a consumer sees:
 - a new component, element, variant, modifier, prop, token, utility, export or
   JavaScript helper;
 - a visible change to existing rendering, such as a token value, spacing,
-  typography or layout change in an existing class (a `test:visual` snapshot
-  changes);
+  typography or layout change in an existing class;
 - additive consumer agent guidance for new public API.
+
+A change to a committed [pixel visual-regression](../testing/visual-regression.md)
+baseline in either Storybook workspace is a visible rendering change, so it
+makes work Standard rather than Light. The converse holds only as far as the
+baselines reach: today they cover only the components on each workspace's
+rollout list (IconButton in the styles Storybook, nothing yet in the React
+Storybook). A rendering change to any other component updates no baseline, so
+judge it from the change itself.
 
 Otherwise, work is **Light**: documentation, tests, stories for existing
 behaviour, repository tooling, CI, dependency updates (including lockfile-only
 updates and minor or patch range bumps of runtime dependencies), generated Spec
 Kit upgrades, and refactors or fixes that stay inside an existing contract with
-no consumer-visible change (same exports and declarations, no `test:visual`
-snapshot change). A dependency update that changes rendering is Standard.
+no consumer-visible change (same exports and declarations, no baseline change,
+and no visible rendering change outside baseline coverage). A dependency update
+that changes rendering is Standard.
 
 When it is unclear whether a trigger matches, use the higher tier.
 
@@ -162,14 +170,17 @@ Evidence each tier needs, in addition to the checks in
 
 - **Light.** The applicable checks pass. For a refactor or fix inside
   published source, say why there is no consumer-visible change (for example
-  `pnpm test:visual` with no snapshot change, and unchanged declarations).
+  the pixel visual-regression suites pass with no baseline change, the change
+  touches only components they cover, and the declarations are unchanged).
 - **Standard.** Everything for Light, plus:
   - a deterministic, named story for each new or changed state, in the styles
     Storybook first and then the React Storybook (constitution XIV);
   - `pnpm test:storybook-styles` and/or `pnpm test:storybook-react`, which run
     the Storybook test-runner with rendered accessibility checks;
-  - `pnpm test:visual`, with every snapshot update reviewed and screenshots or
-    story links in the pull request;
+  - `pnpm test:visual`, and the pixel visual-regression suites with every
+    baseline update reviewed in the pull request's file diff; for a rendering
+    change the baselines do not cover, screenshots or story links in the pull
+    request;
   - for `packages/react`: `pnpm --filter @pathableai/react test:unit`,
     `pnpm build`, `pnpm --filter @pathableai/react check:package` and
     `pnpm --filter @pathableai/react check:types`;
@@ -243,8 +254,8 @@ The plan divides implementation into slices. Each slice is one pull request:
 - **Source first.** A slice that adds React API for new visual behaviour comes
   after, or includes, the slice that adds the `@pathableai/styles` contract and
   its styles stories (constitution I and IV).
-- **About 15 hand-written files at most.** Lockfile changes, snapshots and
-  generated output are listed separately. When no coherent stopping point
+- **About 15 hand-written files at most.** Lockfile changes, visual
+  baselines and generated output are listed separately. When no coherent stopping point
   exists below that size, the plan and the pull request body say why.
 - **Vertical.** Each slice passes CI on its own. A public contract lands with
   its first consumer, its stories and its evidence, not ahead of them.
