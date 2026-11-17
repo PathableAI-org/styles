@@ -64,12 +64,17 @@ and the `specify` CLI (`PresetResolver`) search, in order:
 3. extension templates
 4. the core `.specify/templates/<name>.md`
 
-An override always replaces everything below it. The `specify` CLI only writes
-top-level files in `.specify/templates/` when it installs or refreshes shared
-templates, so an upgrade does not touch `overrides/`. (The shared reusable
-workflow that drives the upgrade lives in another repository and was not
-reviewed; the [upgrade review checklist](#reviewing-an-upgrade-pull-request)
-catches it if it ever removes them.)
+An override always replaces everything below it.
+
+The upgrade leaves `overrides/` alone. The shared reusable workflow (in
+`PathableAI-org/github-workflows`, pinned by commit in `speckit-upgrade.yml`)
+installs the latest Spec Kit release and runs, for each installed integration,
+`specify integration upgrade <key> --force`, then `specify extension update`
+and `specify integration use`. It never deletes `.specify/`. In the CLI, the
+shared-template refresh writes only top-level files in `.specify/templates/`,
+and stale-file cleanup removes only paths recorded in an integration's
+manifest, so nothing under `overrides/` is touched. Because of `--force`, every
+upgrade rewrites the core templates with upstream content.
 
 ### Why overrides and not a local preset
 
