@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git blame:*)",
+      "Bash(git grep:*)",
+      "Bash(git fetch:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm build)",
+      "Bash(pnpm check:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm changeset:status)",
+      "Bash(pnpm --filter @pathableai/react typecheck)",
+      "Bash(pnpm --filter @pathableai/react test:unit)",
+      "Bash(pnpm --filter @pathableai/styles build)",
+      "Bash(pnpm --filter @pathableai/react build)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(gh pr merge:*)",
+      "Edit(**/eslint.config.js)",
+      "Edit(**/.stylelintrc.json)",
+      "Edit(**/.markdownlint.json)",
+      "Edit(**/.markdownlintignore)",
+      "Edit(**/.prettierignore)",
+      "Edit(**/.prettierrc)",
+      "Edit(**/.lintstagedrc.json)",
+      "Edit(**/.husky/**)",
+      "Edit(**/commitlint.config.cjs)",
+      "Edit(**/scripts/accessibility-exceptions.mjs)",
+      "Edit(**/tsconfig*.json)",
+      "Edit(**/.claude/settings.json)",
+      "Edit(**/scripts/claude/**)",
+      "Edit(**/.github/workflows/**)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git push --no-verify:*)",
+      "Bash(git commit --no-verify:*)",
+      "Bash(git commit -n:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(git clean -fdx:*)",
+      "Bash(git checkout -- .)",
+      "Bash(git restore .)",
+      "Bash(git branch -D:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(HUSKY=0:*)",
+      "Bash(env)",
+      "Bash(printenv:*)",
+      "Bash(set)",
+      "Bash(export -p)",
+      "Bash(cat .env:*)",
+      "Bash(cat .env.*:*)",
+      "Bash(npm publish:*)",
+      "Bash(pnpm publish:*)",
+      "Bash(pnpm release:*)",
+      "Bash(pnpm changeset publish:*)",
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf ~:*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.npmrc.local)",
+      "Read(~/.npmrc)",
+      "Read(~/.ssh/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/no-suppressions-hook.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

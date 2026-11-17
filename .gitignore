@@ -135,3 +135,6 @@ handoffs/
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Claude Code personal settings
+.claude/settings.local.json
