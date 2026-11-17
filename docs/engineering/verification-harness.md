@@ -59,12 +59,12 @@ never regress needs a committed story or test as well, which the plan names.
 The [risk tier](git-workflow.md#risk-tiers) sets the minimum. A
 `verification.md` may plan more.
 
-| Tier                    | `verification.md`                                                                                                                                                                                               | Verifier                                                                                                                                                     |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| High, new behaviour     | Claims, meaningful violations, observations and channels. Each keyboard, focus or ARIA claim names its `browser` or `storybook-test` observation; each entry-point or dependency claim names `package` evidence | One report per slice through [the verification loop](#the-verification-loop)                                                                                 |
-| High, fix               | None. The pull request's Evidence table numbers the claims the fix establishes `V-001`, `V-002`, and so on, each with its observation and channel. An ID keeps its claim once a report uses it                  | One report on the pull request for those claims at the verified SHA. Slice ID `fix`; the feature directory may be omitted. Every claim must be `established` |
-| Standard, new behaviour | Claims, observations and channels, plus the planned manual procedure                                                                                                                                            | One report per slice through the verification loop                                                                                                           |
-| Standard fix, and Light | None                                                                                                                                                                                                            | None. Normal CI and the checks the pull request names                                                                                                        |
+| Tier                  | `verification.md`                                                                                                                                                                                               | Verifier                                                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| High, new behaviour   | Claims, meaningful violations, observations and channels. Each keyboard, focus or ARIA claim names its `browser` or `storybook-test` observation; each entry-point or dependency claim names `package` evidence | One report per slice through [the verification loop](#the-verification-loop)                                                                                 |
+| High, fix             | None. The pull request's Evidence table numbers the claims the fix establishes `V-001`, `V-002`, and so on, each with its observation and channel. An ID keeps its claim once a report uses it                  | One report on the pull request for those claims at the verified SHA. Slice ID `fix`; the feature directory may be omitted. Every claim must be `established` |
+| Standard, specified   | Claims, observations and channels, plus the planned manual procedure                                                                                                                                            | One report per slice through the verification loop                                                                                                           |
+| Other Standard, Light | None                                                                                                                                                                                                            | None. Normal CI and the checks the pull request names                                                                                                        |
 
 ## Sessions and roles
 
@@ -190,6 +190,19 @@ implementation session only a pointer, such as
 the branch's pull request and prints the report. Raw command output,
 screenshots and transcripts are not committed.
 
+### Screenshots for visual claims
+
+For a claim about visual appearance, such as a token value, spacing, a focus
+indicator or `forced-colors` rendering, the verifier also captures Playwright
+screenshots of the named stories under the claim's conditions. GitHub's REST
+API cannot attach images to a comment, so it publishes them as one private
+review page per run (an Artifact in Claude Code sessions) and posts one pull
+request comment linking it, titled with the verified SHA and run UUID. The
+report's evidence for that claim names the page in its `procedure`. The
+screenshots are evidence for the person reviewing; they are not
+schema-checked, are never committed, and do not decide the gate. Other claims
+get no screenshots.
+
 ### Gate and escalation
 
 The implementation session fixes the slice and requests verification again. A
@@ -240,10 +253,10 @@ when the gate fails. It covers `gh pr ready`, a `gh api` call that sets
 with `draft: false`. It refuses paths it cannot judge, such as a GraphQL
 `markPullRequestReadyForReview` mutation or creating an implementation-slice
 pull request without `draft: true`, and names the gated way. Once the gate
-passes or does not apply, the hook approves the MCP update without a prompt.
-`gh pr ready` and the REST ready route still ask a person under the project's
-permission rules; whether to allow them without a prompt, as Pre-ETS does, is
-an [open decision](orchestration.md#open-decisions).
+passes or does not apply, marking ready needs no person's confirmation: the
+hook approves the MCP update, and the project settings allow `gh pr ready` and
+the REST ready route without a prompt. Removing that prompt does not relax the
+gate, which still decides every attempt.
 
 Known limits: the hook cannot see `gh pr create` without `--draft`, any other
 HTTP client, another GitHub MCP server name, or a person in the web interface.
@@ -290,9 +303,13 @@ no new verification request.
 - `forced-colors` and `prefers-reduced-motion` are emulated in Chromium only.
   They do not establish behaviour in Windows High Contrast or other browsers.
 - `test:visual` measures render health and overflow; it does not compare
-  pixels. A claim about exact visual appearance needs a person's review of the
-  screenshots or story links the pull request names.
-- A claim that a downstream application, such as Pre-ETS, works with a change
-  cannot be established here. `test:next-consumer` is the in-repository
-  consumer proxy; cross-repository evidence is an open decision in
-  [Orchestration](orchestration.md#open-decisions).
+  pixels. A claim about exact visual appearance is judged by a person from the
+  verifier's [screenshots](#screenshots-for-visual-claims) and the story links
+  the pull request names.
+- A claim that a downstream application works with a change cannot be
+  established here, and the verifier never attaches or runs another
+  repository. `test:next-consumer` is the in-repository consumer proxy. When a
+  change matters to a specific consumer, `verification.md` records that as an
+  approved limitation, and a delivery issue in the consumer's repository,
+  linked with `Contributes to`, covers the upgrade and its verification under
+  that repository's own process.

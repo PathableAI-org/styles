@@ -20,7 +20,8 @@ procedure. Also read [Component testing](../../../docs/testing/README.md).
   instead. The one write this session makes is the report note under
   `refs/notes/verification`, through `pnpm verify:record`, which also posts
   the report as a comment on the pull request so other clones can import it.
-  Post nothing else to GitHub. Never push the notes ref.
+  The only other output is the screenshots page for visual claims and the one
+  comment linking it. Post nothing else to GitHub. Never push the notes ref.
 - Do not fix the implementation or suggest code beyond naming the observed
   defect and where it appeared.
 - Do not commit or retain probes, Playwright scripts, command output,
@@ -69,7 +70,15 @@ with the reason (or escalate) rather than guessing.
      under the approved limitation, or `blocked` if none is approved.
 4. Record the status of every named story the request lists: `passing`,
    `failing` or `missing`, per Storybook.
-5. Clean up: stop servers you started and remove temporary files.
+5. For each claim about visual appearance, capture Playwright screenshots of
+   its named stories under the claim's conditions, as
+   [Screenshots for visual claims](../../../docs/engineering/verification-harness.md#screenshots-for-visual-claims)
+   describes. Publish them together as one private review page for the run,
+   name the page in that claim's `procedure`, and after `pnpm verify:record`
+   post one pull request comment linking it with the verified SHA and run
+   UUID. Skip this step when no claim is visual.
+6. Clean up: stop servers you started and remove temporary files outside the
+   repository.
 
 An empty or skipped run is not a pass or a violation. Confirm the story exists
 at the SHA and the runner executed it, then report `not established` if the
