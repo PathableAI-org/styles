@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/note-sync/comment.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/note-sync/comment.ts @ f2ee390 (adapted: comment marker renamed to pathable-note).
 /**
  * The pull request comment that carries one note entry between clones. Its first line is a hidden marker naming the
  * note kind, the annotated SHA, and the entry ID; a markdown rendering of the entry follows for people; the entry
@@ -26,7 +26,7 @@ export const channelNames = ['review', 'verification']
  * @property {unknown} entry
  */
 
-const markerLine = /^<!-- pre-ets-note kind=(\S+) sha=(\S+) id=(\S+) -->$/
+const markerLine = /^<!-- pathable-note kind=(\S+) sha=(\S+) id=(\S+) -->$/
 const entryBlocks = /^(`{3,})json\n([\s\S]*?)\n\1$/gm
 
 const isChannelName = (value) => channelNames.some((name) => name === value)
@@ -42,7 +42,7 @@ export const formatComment = (marker, rendered, entry) => {
   const json = JSON.stringify(entry, null, 2)
   const fence = fenceFor(json)
   return [
-    `<!-- pre-ets-note kind=${marker.kind} sha=${marker.sha} id=${marker.id} -->`,
+    `<!-- pathable-note kind=${marker.kind} sha=${marker.sha} id=${marker.id} -->`,
     rendered,
     '',
     '<details><summary>Machine-readable note (do not edit)</summary>',

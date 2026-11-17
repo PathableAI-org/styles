@@ -100,7 +100,7 @@ void describe('publishing a recorded entry', () => {
     const [body = ''] = bodies(fake)
     assert.ok(
       body.startsWith(
-        `<!-- pre-ets-note kind=review sha=${verified} id=${review.reviewId} -->\n**Code review**`,
+        `<!-- pathable-note kind=review sha=${verified} id=${review.reviewId} -->\n**Code review**`,
       ),
     )
     const json = /^```json\n([\s\S]*?)\n```$/m.exec(body)?.[1] ?? ''
@@ -222,7 +222,7 @@ void describe('syncing pull request comments into local notes', () => {
 
   void it('rejects comments by another account, damaged comments, and invalid entries, and writes none of them', () => {
     const review = JSON.parse(sampleReview(base, verified))
-    const marker = `<!-- pre-ets-note kind=review sha=${verified} id=${String(review.reviewId)} -->`
+    const marker = `<!-- pathable-note kind=review sha=${verified} id=${String(review.reviewId)} -->`
     const entry = (value) =>
       `${marker}\nSummary.\n\n\`\`\`json\n${JSON.stringify(value)}\n\`\`\`\n`
     const fake = fakeGitHub({
@@ -414,7 +414,7 @@ void describe('rendering a note comment for people', () => {
     const [marker = '', ...rest] = body.split('\n')
     assert.match(
       marker,
-      /^<!-- pre-ets-note kind=\S+ sha=[0-9a-f]{40} id=\S+ -->$/,
+      /^<!-- pathable-note kind=\S+ sha=[0-9a-f]{40} id=\S+ -->$/,
     )
     const text = rest.join('\n')
     const end = text.indexOf(
@@ -624,7 +624,7 @@ void describe('rendering a note comment for people', () => {
   void it('still imports a comment in the earlier format, with a summary line and the entry as its only block', () => {
     const review = recordedReview()
     const earlier = [
-      `<!-- pre-ets-note kind=review sha=${verified} id=${review.reviewId} -->`,
+      `<!-- pathable-note kind=review sha=${verified} id=${review.reviewId} -->`,
       `**Code review** Review ${review.reviewId} (round 1) of slice A1 at ${verified}: 0 blocking, 0 advisory, 0 escalations.`,
       '',
       'Recorded in this pull request so other sessions can import it with `pnpm notes:sync`. Do not edit this comment.',
