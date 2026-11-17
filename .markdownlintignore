@@ -17,7 +17,6 @@ FEEDBACK.md
 # Build outputs
 storybook-static
 .pnpm-store
-.astro
 .vite
 .cache
 

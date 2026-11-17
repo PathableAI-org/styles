@@ -7,7 +7,6 @@ pnpm-lock.yaml
 handoffs
 specs
 .pnpm-store
-.astro
 .env*
 *.tsbuildinfo
 coverage

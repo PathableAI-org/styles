@@ -13,7 +13,6 @@ export default defineConfig([
     '**/storybook-static/**',
     '**/storybook-static-modal-css/**',
     '**/.vite/**',
-    '**/.astro/**',
     '**/.cache/**',
     '**/.pnpm-store/**',
     'specs/**',
