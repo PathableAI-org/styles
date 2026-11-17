@@ -5,26 +5,26 @@
   "featureDir": "specs/900-sample",
   "findings": [
     {
-      "category": "correctness",
+      "category": "accessibility",
       "confidence": "high",
-      "failureScenario": "Two tabs renew within the same tick; the second write restores the expired deadline.",
+      "failureScenario": "A keyboard user tabs to the button in forced colors; the ring disappears and focus is invisible.",
       "file": "src/app.ts",
       "id": "R-001",
       "line": 1,
       "severity": "blocking",
-      "summary": "Renewal reads the deadline before the clear and writes it back after.",
-      "verification": "Traced renew() and clear() call order at the reviewed SHA."
+      "summary": "The focus ring is drawn with a box shadow, which forced colors removes.",
+      "verification": "Opened components-button--primary with forced colors emulated at the reviewed SHA."
     },
     {
-      "category": "readability",
+      "category": "token-usage",
       "confidence": "medium",
-      "failureScenario": "A maintainer reads `d` as a duration and adds milliseconds to an absolute time.",
+      "failureScenario": "A theme overrides the focus colour token; the button keeps the raw hex value.",
       "file": "src/app.ts",
       "id": "R-002",
       "line": 1,
       "severity": "advisory",
-      "summary": "The name `d` hides that it is an absolute deadline.",
-      "verification": "Read every use of `d` in the module."
+      "summary": "The ring colour is a raw `#2563eb` where the focus colour token exists.",
+      "verification": "Read every colour in the button rules."
     }
   ],
   "reviewedSha": "2222222222222222222222222222222222222222",

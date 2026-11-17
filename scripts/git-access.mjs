@@ -1,7 +1,7 @@
 // Ported from pathableai-org/pre-ets scripts/git-access.ts @ f2ee390 (types stripped only).
 /**
  * Git access for the agent workflow tooling. Every call runs in `cwd` and reads committed content or notes only.
- * Nothing here fetches or pushes a notes ref: notes travel between clones as pull request comments (note-sync.ts).
+ * Nothing here fetches or pushes a notes ref: notes travel between clones as pull request comments (note-sync.mjs).
  * The one fetch, `fetchCommit`, brings in a single commit by SHA so a note comment on it can be imported.
  */
 import { execFileSync } from 'node:child_process'

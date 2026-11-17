@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/verification-gate.test.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets tests/tooling/verification-gate.test.ts @ f2ee390 (adapted: assertions use stories and evidence channels in place of telemetry rows and forbidden data).
 import assert from 'node:assert/strict'
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -118,8 +118,8 @@ void describe('recording reports in git notes', () => {
       first,
     )
     const steps = results.replace(
-      'Post the action after the deadline.',
-      'Post it twice.',
+      'Tab to the primary button in the styles Storybook.',
+      'Click the primary button.',
     )
     const changed = inputsAt(
       repo.commit('docs: change a step', {
@@ -172,29 +172,56 @@ void describe('the verification gate', () => {
     ])
   })
 
-  void it('fails a missing claim, a wrong scope, a missing telemetry row, forbidden data, and an open escalation', () => {
+  void it('fails a missing claim, a wrong scope, a failing story, and an open escalation', () => {
     record((report) => {
       report.claims = [{ ...claim(report, 0), scope: 'full' }]
-      report.telemetryRows = [
+      report.stories = [
         {
-          detail: 'no denial_cause attribute',
-          id: 'T-001',
-          status: 'unusable',
+          detail: 'axe: color-contrast on the focus ring',
+          id: 'components-button--primary',
+          status: 'failing',
+          storybook: 'styles',
         },
       ]
-      report.forbiddenData = [
-        { field: 'http.request.header.cookie', signal: 'span protectRequest' },
-      ]
       report.escalations = [
-        { detail: 'T-001 lacks the attribute V-004 needs', kind: 'plan' },
+        {
+          detail: 'The plan names no story for forced colors',
+          kind: 'plan',
+        },
       ]
     })
     assert.deepEqual(gateProblems(), [
       'V-001 is reported as full but the plan assigns it partial',
       'V-004 has no result',
-      'telemetry row T-001 is unusable',
-      'forbidden data in span protectRequest field http.request.header.cookie',
-      'open escalation (plan): T-001 lacks the attribute V-004 needs',
+      'story components-button--primary in the styles Storybook is failing',
+      'open escalation (plan): The plan names no story for forced colors',
+    ])
+  })
+
+  void it('fails an assigned story that is not reported, and one passing in only one Storybook', () => {
+    record((report) => {
+      report.stories = []
+    })
+    assert.deepEqual(gateProblems(), [
+      'story components-button--primary has no status',
+    ])
+    record((report) => {
+      report.runId = '59161d0e-59d5-4379-8d7c-736a2fd48c5b'
+      report.stories = [
+        {
+          id: 'components-button--primary',
+          status: 'passing',
+          storybook: 'styles',
+        },
+        {
+          id: 'components-button--primary',
+          status: 'missing',
+          storybook: 'react',
+        },
+      ]
+    })
+    assert.deepEqual(gateProblems(), [
+      'story components-button--primary in the react Storybook is missing',
     ])
   })
 
@@ -213,8 +240,8 @@ void describe('the verification gate', () => {
   void it('fails when a commit after the verified SHA changes run instructions or code', () => {
     record()
     const steps = fixture('quickstart.md').replace(
-      'Post the action after the deadline.',
-      'Post it twice.',
+      'Tab to the primary button in the styles Storybook.',
+      'Click the primary button.',
     )
     repo.commit('docs: change a step', {
       [`${featureDir}/quickstart.md`]: steps,
@@ -368,13 +395,29 @@ void describe('rendering quickstart execution results', () => {
       text,
       new RegExp(`^### Slice A1 — \`${verified}\` \\(2026-11-13\\)\n`),
     )
-    assert.match(text, /\| V-001 \(gate\) +\| established +\| A removed record/)
     assert.match(
       text,
-      /\| V-004 \(no-script unknown; server-expired best effort\) \| not established \(L-2\) \|/,
+      /\| V-001 \(focus ring\) +\| established +\| storybook-test +\| The primary button showed .* Evidence: stories `components-button--primary`; commands `pnpm test:storybook-styles`\. +\|/,
     )
-    assert.match(text, /\*\*Telemetry rows:\*\* T-001 present\./)
+    assert.match(
+      text,
+      /\| V-004 \(forced colors unknown; 200% text best effort\) \| not established \(L-2\) \| browser +\|/,
+    )
+    assert.match(
+      text,
+      /\*\*Stories:\*\*\n\n\| Story +\| Storybook \| Status +\| Detail \|\n.*\n\| `components-button--primary` \| styles +\| passing \| +\|/,
+    )
+    assert.doesNotMatch(text, /Telemetry|Forbidden/)
     assert.ok(updated?.endsWith(`No results recorded yet.\n\n${text}`))
+  })
+
+  void it('says when a report has no stories', () => {
+    record((report) => {
+      report.stories = []
+    })
+    const rendered = renderResults(repo.dir, verified)
+    assert.ok(rendered.ok)
+    assert.match(rendered.value.rendered, /\n\*\*Stories:\*\* none\.\n/)
   })
 
   void it('marks an earlier result for the slice stale, and names a superseded run on the same SHA', () => {

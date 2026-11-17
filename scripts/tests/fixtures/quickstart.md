@@ -1,24 +1,26 @@
+<!-- Ported from pathableai-org/pre-ets tests/tooling/fixtures/quickstart.md @ f2ee390 (adapted: design-system sample content). -->
+
 # Quickstart: Sample
 
-## Module evidence (every slice)
+## Contract evidence (every slice)
 
-Run the module tests.
+Run the Storybook test runner for both Storybooks.
 
-## §A1 — Gate recovery (slice A1)
+## §A1 — Button focus ring (slice A1)
 
-1. Post the action after the deadline.
+1. Tab to the primary button in the styles Storybook.
 
-## §A2 — Forms without scripts (slice A2)
+## §A2 — Disabled buttons (slice A2)
 
-1. Submit with scripts disabled.
+1. Open the disabled story with forced colors on.
 
-## §B — Expiration modal (slice B)
+## §B — Modal focus (slice B)
 
-1. Wait for the deadline in three tabs.
+1. Open the modal at a 320 px viewport.
 
 ## Cleanup
 
-Stop owned processes.
+Stop the Storybook servers.
 
 ## Execution results
 

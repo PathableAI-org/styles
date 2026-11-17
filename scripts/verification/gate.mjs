@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/verification/gate.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/verification/gate.ts @ f2ee390 (adapted: assigned stories must be reported passing in place of telemetry rows present; no forbidden-data condition).
 
 /** @typedef {import('./report.mjs').ClaimReport} ClaimReport */
 /** @typedef {import('./report.mjs').VerificationReport} VerificationReport */
@@ -105,24 +105,30 @@ const unrequestedClaims = (report, request) =>
         `${claim.id} is reported but not assigned to slice ${request.sliceId}`,
     )
 
-const telemetryFindings = (report, request) =>
-  eachRequested(
-    request.telemetryRows,
-    report.telemetryRows,
-    (id) => `telemetry row ${id} has no status`,
-    (row) =>
-      row.status === 'present'
-        ? []
-        : [`telemetry row ${row.id} is ${row.status}`],
-  )
+/** A reported story that is not passing. */
+const storyStatus = (story) =>
+  story.status === 'passing'
+    ? []
+    : [
+        `story ${story.id} in the ${story.storybook} Storybook is ${story.status}`,
+      ]
 
-/** What blocks any report, whatever was requested: a violation seen outside the claims, forbidden data, escalations. */
+/**
+ * Every story the plan assigns to the slice must be reported, and every entry for it passing: a story ID reported for
+ * both Storybooks must pass in both.
+ */
+const storyFindings = (report, request) =>
+  request.stories.flatMap((id) => {
+    const reported = report.stories.filter((story) => story.id === id)
+    return reported.length === 0
+      ? [`story ${id} has no status`]
+      : reported.flatMap(storyStatus)
+  })
+
+/** What blocks any report, whatever was requested: a violation seen outside the claims, escalations. */
 const reportBlockers = (report) => [
   ...report.unrequestedViolations.map(
     (claim) => `${claim.id} was observed violated outside the request`,
-  ),
-  ...report.forbiddenData.map(
-    (finding) => `forbidden data in ${finding.signal} field ${finding.field}`,
   ),
   ...report.escalations.map(
     (escalation) =>
@@ -143,7 +149,7 @@ const evaluateGate = (report, request) => [
     : [`the report is for slice ${report.sliceId}`]),
   ...claimsCoverRequest(report, request),
   ...unrequestedClaims(report, request),
-  ...telemetryFindings(report, request),
+  ...storyFindings(report, request),
   ...reportBlockers(report),
 ]
 
@@ -157,8 +163,8 @@ export const gateForBranch = (report, request, branch) => [
 
 /**
  * Every reason a High fix's latest report does not pass. A fix has no plan to regenerate a request from, so the report
- * must name at least one claim, establish every claim it names, find every telemetry row it lists present, and show
- * no violation, forbidden data, or open escalation. No limitation can excuse a claim, because none is approved.
+ * must name at least one claim, establish every claim it names, find every story it lists passing, and show no
+ * violation or open escalation. No limitation can excuse a claim, because none is approved.
  */
 export const fixReportFindings = (report) => [
   ...(isFixSlice(report.sliceId)
@@ -174,11 +180,7 @@ export const fixReportFindings = (report) => [
           `${claim.id} is ${claim.result}; a High fix must establish every claim`,
         ],
   ),
-  ...report.telemetryRows.flatMap((row) =>
-    row.status === 'present'
-      ? []
-      : [`telemetry row ${row.id} is ${row.status}`],
-  ),
+  ...report.stories.flatMap(storyStatus),
   ...reportBlockers(report),
 ]
 

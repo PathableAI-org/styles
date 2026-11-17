@@ -8,33 +8,40 @@
     "start": "2026-11-13T18:02:00Z",
     "end": "2026-11-13T18:20:00Z"
   },
-  "environment": "Detached verifier worktree, production build on port 3401, local Redis, Keycloak, and otel-lgtm; OTEL on with service.version and service.instance.id set; browser tracing off.",
+  "environment": "Detached verifier worktree; static styles Storybook built from the verified SHA and served on port 6006; Chromium through Playwright.",
   "claims": [
     {
       "id": "V-001",
       "scope": "partial",
       "result": "established",
       "evidence": {
-        "traceIds": ["4bf92f3577b34da6a3ce929d0e0e4736"],
-        "queries": [
-          "{ RUN && name = \"protectRequest\" && span.preets.outcome = \"denied_unauthenticated\" }"
-        ]
+        "channel": "storybook-test",
+        "stories": ["components-button--primary"],
+        "commands": ["pnpm test:storybook-styles"]
       },
-      "observed": "A removed record and a request 5 s after the deadline each gave 401 with no receipt.",
-      "conditions": "Fetch action and no-script navigation, 5-minute scratch tenant"
+      "observed": "The primary button showed a 2 px focus ring on keyboard focus and passed the rendered axe checks.",
+      "conditions": "Keyboard focus in Chromium, default theme"
     },
     {
       "id": "V-004",
       "scope": "partial",
       "result": "not established",
       "limitationId": "L-2",
-      "evidence": { "procedure": "§A1 step 4, two window probes" },
-      "observed": "Both probes missed the pre-eviction window, so no server-observed expired explanation was seen.",
-      "conditions": "Navigation POST within the eviction window"
+      "evidence": {
+        "channel": "browser",
+        "procedure": "§A1 step 1 at 200% and 400% text size"
+      },
+      "observed": "At 400% the browser's minimum font setting overrode the label size, so the ring's spacing was not observed.",
+      "conditions": "Increased text size in Chromium"
     }
   ],
-  "telemetryRows": [{ "id": "T-001", "status": "present" }],
-  "forbiddenData": [],
+  "stories": [
+    {
+      "id": "components-button--primary",
+      "storybook": "styles",
+      "status": "passing"
+    }
+  ],
   "escalations": [],
   "cleanup": { "complete": true },
   "unrequestedViolations": []

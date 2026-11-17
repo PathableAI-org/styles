@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/note-sync/render.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/note-sync/render.ts @ f2ee390 (adapted: a channel column per claim and a stories table replace telemetry rows and forbidden data).
 /**
  * The human-readable part of a note comment, generated from the entry alone so it always matches the JSON below it.
  * Entry text is written as single-line inline text: line breaks are collapsed and anything that would open an HTML
@@ -150,21 +150,18 @@ const reportHeadline = (report) => {
   return `**Verification report** run \`${report.runId}\` of slice ${report.sliceId} at \`${report.verifiedSha}\`: ${
     results.length > 0 ? results.join(', ') : 'no claims'
   }; ${count(
-    report.telemetryRows.filter((row) => row.status !== 'present'),
-    'telemetry rows not present',
-  )}; ${count(
-    report.forbiddenData,
-    'forbidden-data findings',
+    report.stories.filter((story) => story.status !== 'passing'),
+    'stories not passing',
   )}; ${count(report.escalations, 'escalations')}.`
 }
 
-/** The procedure behind a claim: the stated procedure, else the queries and traces it rests on. */
+/** The procedure behind a claim: the stated procedure, else the commands and stories it rests on. */
 const procedure = (claim) => {
-  const { procedure: stated, queries = [], traceIds = [] } = claim.evidence
+  const { commands = [], procedure: stated, stories = [] } = claim.evidence
   if (stated !== undefined) return stated
   return [
-    queries.length === 0 ? '' : `queries ${queries.join('; ')}`,
-    traceIds.length === 0 ? '' : `traces ${traceIds.join(', ')}`,
+    commands.length === 0 ? '' : `commands ${commands.join('; ')}`,
+    stories.length === 0 ? '' : `stories ${stories.join(', ')}`,
   ]
     .filter((part) => part.length > 0)
     .join('; ')
@@ -175,6 +172,7 @@ const claimRow = (claim, unrequested) => [
   claim.limitationId === undefined
     ? claim.result
     : `${claim.result} (${claim.limitationId})`,
+  claim.evidence.channel,
   cell(inline(procedure(claim))),
   cell(inline(claim.conditions)),
 ]
@@ -192,7 +190,7 @@ const reportSupersedes = (report, earlier) => {
   return `Supersedes [run ${short(runId)} at ${verifiedSha.slice(0, 7)}](${superseded.url}).`
 }
 
-/** The report's headline, a claims table, then any escalations, forbidden data, and telemetry rows not present. */
+/** The report's headline, a claims table, then any escalations, and the stories the slice was assigned. */
 export const renderReport = (report, context) => {
   const rows = [
     ...report.claims.map((claim) => claimRow(claim, false)),
@@ -206,7 +204,7 @@ export const renderReport = (report, context) => {
     '',
     rows.length === 0
       ? 'No claims.'
-      : table(['Claim', 'Result', 'Procedure', 'Conditions'], rows),
+      : table(['Claim', 'Result', 'Channel', 'Procedure', 'Conditions'], rows),
     ...section(
       'Escalations',
       report.escalations.map(
@@ -215,19 +213,20 @@ export const renderReport = (report, context) => {
       ),
     ),
     ...section(
-      'Forbidden data',
-      report.forbiddenData.map(
-        (finding) => `- ${inline(finding.signal)} field \`${finding.field}\``,
-      ),
-    ),
-    ...section(
-      'Telemetry rows not present',
-      report.telemetryRows
-        .filter((row) => row.status !== 'present')
-        .map(
-          (row) =>
-            `- ${row.id} **${row.status}**${row.detail === undefined ? '' : `: ${inline(row.detail)}`}`,
-        ),
+      'Stories',
+      report.stories.length === 0
+        ? []
+        : [
+            table(
+              ['Story', 'Storybook', 'Status', 'Detail'],
+              report.stories.map((story) => [
+                `\`${story.id}\``,
+                story.storybook,
+                story.status,
+                cell(inline(story.detail ?? '')),
+              ]),
+            ),
+          ],
     ),
   ].join('\n')
 }

@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/verification/report.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/verification/report.ts @ f2ee390 (adapted: telemetry rows, forbidden data, traces and queries replaced by Storybook stories and per-claim evidence channels).
 
 /** @typedef {import('./request.mjs').ClaimScope} ClaimScope */
 
@@ -20,6 +20,7 @@ import {
   schemaVersion1,
   sha,
   sliceId,
+  storyId,
   text,
   treeId,
   uuid,
@@ -32,9 +33,34 @@ const claimResults = ['established', 'violated', 'not established', 'blocked']
  * @typedef {(typeof claimResults)[number]} ClaimResult
  */
 
-const telemetryStatuses = ['present', 'missing', 'unusable']
+const storyStatuses = ['passing', 'failing', 'missing']
 /**
- * @typedef {(typeof telemetryStatuses)[number]} TelemetryStatus
+ * @typedef {(typeof storyStatuses)[number]} StoryStatus
+ */
+
+const storybooks = ['styles', 'react']
+/**
+ * @typedef {(typeof storybooks)[number]} StorybookName
+ */
+
+/**
+ * Where a claim's evidence was observed. `storybook-test`: the Storybook test runner, rendered axe checks included,
+ * for named stories. `visual`: `pnpm test:visual` snapshot diffs. `browser`: Playwright observation of specific
+ * stories (keyboard and focus, narrow and wide viewports, increased text size, forced colors, reduced motion).
+ * `package`: `check:package`, `check:types`, `test:next-consumer`. `agent-guidance`: `pnpm check:agent-guidance`.
+ * `unit-test`: the `@pathableai/react` unit tests. `assistive-technology`: a person's manual check.
+ */
+const evidenceChannels = [
+  'storybook-test',
+  'visual',
+  'browser',
+  'package',
+  'agent-guidance',
+  'unit-test',
+  'assistive-technology',
+]
+/**
+ * @typedef {(typeof evidenceChannels)[number]} EvidenceChannel
  */
 
 const escalationKinds = ['specification', 'plan', 'disagreement', 'third round']
@@ -58,15 +84,10 @@ const escalationKinds = ['specification', 'plan', 'disagreement', 'third round']
 
 /**
  * @typedef {object} Evidence
- * @property {string | undefined} [procedure] Quickstart steps, BDD run IDs, or browser observations, for channels other than telemetry.
- * @property {readonly string[] | undefined} [queries] Verifier queries, from `contracts/telemetry.md`, with the run filter.
- * @property {readonly string[] | undefined} [traceIds]
- */
-
-/**
- * @typedef {object} ForbiddenDataFinding
- * @property {string} field The attribute, log field, or metric label name. Never its value.
- * @property {string} signal
+ * @property {EvidenceChannel} channel
+ * @property {readonly string[] | undefined} [commands] The commands run, such as `pnpm test:storybook-react`.
+ * @property {string | undefined} [procedure] Quickstart steps or what a person or browser observation did.
+ * @property {readonly string[] | undefined} [stories] Storybook story IDs, such as `components-button--primary`.
  */
 
 /**
@@ -77,26 +98,27 @@ const escalationKinds = ['specification', 'plan', 'disagreement', 'third round']
  */
 
 /**
- * @typedef {object} TelemetryRowReport
+ * A story the plan assigns to the slice, as the Storybook test runner observed it.
+ * @typedef {object} StoryReport
  * @property {string | undefined} [detail]
- * @property {string} id
- * @property {TelemetryStatus} status
+ * @property {string} id The Storybook story ID.
+ * @property {StoryStatus} status
+ * @property {StorybookName} storybook
  */
 
 /**
  * @typedef {object} VerificationReport
  * @property {readonly ClaimReport[]} claims
  * @property {{ readonly complete: boolean; readonly remaining?: string | undefined }} cleanup
- * @property {string} environment Instances, ports, services, and OTEL settings, without header values or credentials.
+ * @property {string} environment Which Storybooks, ports, and builds the run used, without credentials.
  * @property {readonly Escalation[]} escalations
  * @property {string | undefined} [featureDir] The feature's `specs/{number}-{slug}`. A High fix (slice ID `fix`) may omit it.
- * @property {readonly ForbiddenDataFinding[]} forbiddenData
  * @property {ReportInputs | undefined} [inputs]
  * @property {string} runId
  * @property {1} schemaVersion
  * @property {string} sliceId
  * @property {string | undefined} [supersedesRunId] The run ID of the report on the same SHA that this retry replaces.
- * @property {readonly TelemetryRowReport[]} telemetryRows
+ * @property {readonly StoryReport[]} stories
  * @property {{ readonly end: string; readonly start: string }} timeRange
  * @property {readonly ClaimReport[]} unrequestedViolations Claims the request did not name that the run happened to show as violated.
  * @property {string} verifiedSha
@@ -107,23 +129,19 @@ const isoTime = matching(
   'an ISO 8601 time',
 )
 const claimId = matching(/^V-\d+$/, 'a claim ID such as V-001')
-const rowId = matching(/^T-\d+$/, 'a telemetry row ID such as T-001')
-const fieldName = matching(
-  /^[\w.:@/-]{1,128}$/,
-  'a field name without spaces, never a value',
-)
 
 const evidence = (value, path) => {
   const shape = object({
+    channel: oneOf(evidenceChannels),
+    commands: optional(list(text)),
     procedure: optional(text),
-    queries: optional(list(text)),
-    traceIds: optional(list(text)),
+    stories: optional(list(storyId)),
   })(value, path)
   if (shape.length > 0 || !isRecord(value)) return shape
-  const given = [value.procedure, value.queries, value.traceIds].some(
+  const given = [value.stories, value.commands, value.procedure].some(
     (entry) => (Array.isArray(entry) ? entry.length > 0 : entry !== undefined),
   )
-  return given ? ok : [`${path}: give trace IDs, queries, or the procedure`]
+  return given ? ok : [`${path}: give stories, commands, or the procedure`]
 }
 
 const claimShape = object({
@@ -158,7 +176,6 @@ const report = object({
   environment: text,
   escalations: list(object({ detail: text, kind: oneOf(escalationKinds) })),
   featureDir: optional(featureDir),
-  forbiddenData: list(object({ field: fieldName, signal: text })),
   inputs: optional(
     object({ codeTree: treeId, featureInputs: optional(digest) }),
   ),
@@ -166,11 +183,12 @@ const report = object({
   schemaVersion: schemaVersion1,
   sliceId,
   supersedesRunId: optional(uuid),
-  telemetryRows: list(
+  stories: list(
     object({
       detail: optional(text),
-      id: rowId,
-      status: oneOf(telemetryStatuses),
+      id: storyId,
+      status: oneOf(storyStatuses),
+      storybook: oneOf(storybooks),
     }),
   ),
   timeRange: object({ end: isoTime, start: isoTime }),

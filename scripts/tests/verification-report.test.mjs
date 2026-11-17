@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/verification-report.test.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets tests/tooling/verification-report.test.ts @ f2ee390 (adapted: evidence channels and stories replace traces, queries, telemetry rows, and forbidden data).
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
@@ -34,9 +34,29 @@ void describe('report schema', () => {
   void it('requires evidence of some kind', () => {
     assert.deepEqual(
       problems((report) => {
-        firstClaim(report).evidence = { traceIds: [] }
+        firstClaim(report).evidence = { channel: 'storybook-test', stories: [] }
       }),
-      ['$.claims[0].evidence: give trace IDs, queries, or the procedure'],
+      ['$.claims[0].evidence: give stories, commands, or the procedure'],
+    )
+  })
+
+  void it('requires a known evidence channel', () => {
+    assert.deepEqual(
+      problems((report) => {
+        firstClaim(report).evidence = { procedure: 'Looked at it' }
+      }),
+      [
+        '$.claims[0].evidence.channel: expected one of storybook-test, visual, browser, package, agent-guidance, unit-test, assistive-technology',
+      ],
+    )
+    assert.deepEqual(
+      problems((report) => {
+        firstClaim(report).evidence = {
+          channel: 'assistive-technology',
+          procedure: 'NVDA with Firefox read the button name and state',
+        }
+      }),
+      [],
     )
   })
 
@@ -44,19 +64,21 @@ void describe('report schema', () => {
     assert.deepEqual(
       problems((report) => {
         report.environment =
-          'OTEL_EXPORTER_OTLP_HEADERS authorization=Basic Zm9vOmJhcg=='
+          'Chromatic upload with authorization=Basic Zm9vOmJhcg=='
       }),
       ['$.environment: looks like it holds a credential'],
     )
   })
 
-  void it('accepts a forbidden-data field name but not a value', () => {
+  void it('accepts Storybook story IDs but not story titles, and only known Storybooks and statuses', () => {
     assert.deepEqual(
       problems((report) => {
-        report.forbiddenData = [
+        report.stories = [
           {
-            field: 'http.request.header.cookie',
-            signal: 'span protectRequest',
+            detail: 'Rendered axe found no violations.',
+            id: 'components-modal--narrow-viewport',
+            status: 'failing',
+            storybook: 'react',
           },
         ]
       }),
@@ -64,13 +86,30 @@ void describe('report schema', () => {
     )
     assert.deepEqual(
       problems((report) => {
-        report.forbiddenData = [
-          { field: 'pathable-session abc123 def', signal: 'log' },
+        report.stories = [
+          { id: 'Components/Button', status: 'present', storybook: 'docs' },
         ]
+        firstClaim(report).evidence = {
+          channel: 'storybook-test',
+          stories: ['Button/Primary'],
+        }
       }),
       [
-        '$.forbiddenData[0].field: expected a field name without spaces, never a value',
+        '$.claims[0].evidence.stories[0]: expected a Storybook story ID such as components-button--primary',
+        '$.stories[0].id: expected a Storybook story ID such as components-button--primary',
+        '$.stories[0].status: expected one of passing, failing, missing',
+        '$.stories[0].storybook: expected one of styles, react',
       ],
+    )
+  })
+
+  void it('has no telemetry fields', () => {
+    assert.deepEqual(
+      problems((report) => {
+        report.telemetryRows = []
+        report.forbiddenData = []
+      }),
+      ['$.telemetryRows: unknown field', '$.forbiddenData: unknown field'],
     )
   })
 

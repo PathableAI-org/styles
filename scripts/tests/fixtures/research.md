@@ -1,6 +1,8 @@
+<!-- Ported from pathableai-org/pre-ets tests/tooling/fixtures/research.md @ f2ee390 (adapted: design-system sample content). -->
+
 # Research: Sample
 
 ## Plan limitations beyond verification.md
 
-- **L-1:** The modal shows an inert close button until the library ships a non-dismissible mode.
-- **L-2:** The server rarely observes expiry. Server-basis "expired" explanations occur only before eviction.
+- **L-1:** Only the default Windows contrast theme is checked under forced colors.
+- **L-2:** Text larger than 200% depends on each browser's minimum font settings.

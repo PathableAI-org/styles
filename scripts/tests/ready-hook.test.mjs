@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/ready-hook.test.ts @ f2ee390 (adapted: tests the runReadyHook entry in place of spawning scripts/pr-ready-hook.ts).
+// Ported from pathableai-org/pre-ets tests/tooling/ready-hook.test.ts @ f2ee390 (adapted: tests the runReadyHook entry in place of spawning scripts/pr-ready-hook.ts; fixtures name a design-system fix branch).
 import assert from 'node:assert/strict'
 import { afterEach, beforeEach, describe, it } from 'node:test'
 
@@ -300,9 +300,7 @@ void describe("the ready hook's decision", () => {
   void it("gates a High fix's pull request by its risk:high label, and approves any other pull request", () => {
     const fix = fakeGitHub({
       pulls: [
-        restPull(7, { ref: 'fix-session-expiry', sha: verified }, [
-          'risk:high',
-        ]),
+        restPull(7, { ref: 'fix-button-focus', sha: verified }, ['risk:high']),
       ],
     })
     assert.match(
@@ -332,11 +330,7 @@ void describe("the ready hook's decision", () => {
     assert.equal(kind(decide('900-sample')), 'approve')
     assert.equal(kind(decide('900-sample-plan')), 'approve')
     assert.equal(kind(decide('902-later', later)), 'approve')
-    for (const fix of [
-      'fix-session-expiry',
-      '901-session-expiry',
-      '902-later',
-    ]) {
+    for (const fix of ['fix-button-focus', '901-button-focus', '902-later']) {
       assert.match(JSON.stringify(decide(fix)), /no verification report/, fix)
     }
     assert.match(JSON.stringify(decide(slice)), /no verification report/)

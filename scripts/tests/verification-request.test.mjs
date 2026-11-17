@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/verification-request.test.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets tests/tooling/verification-request.test.ts @ f2ee390 (adapted: fixtures and assertions use the Stories column and Storybook story IDs).
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
@@ -29,21 +29,21 @@ void describe('request generation from the legacy slice table', () => {
   void it('reads a qualified claim as partial, keeping a semicolon inside its qualifier', () => {
     const built = request('A1')
     assert.deepEqual(claims(built), [
-      'V-001 partial (gate)',
-      'V-004 partial (no-script unknown; server-expired best effort)',
+      'V-001 partial (focus ring)',
+      'V-004 partial (forced colors unknown; 200% text best effort)',
     ])
-    assert.deepEqual(built.telemetryRows, ['T-001'])
+    assert.deepEqual(built.stories, ['components-button--primary'])
     assert.deepEqual(built.warnings, [])
     assert.equal(built.source, 'legacy-table')
   })
 
-  void it('reads (full) and bare IDs as full claims, and None new as no telemetry rows', () => {
+  void it('reads (full) and bare IDs as full claims, and None new as no stories', () => {
     const built = request('A2')
     assert.deepEqual(claims(built), [
       'V-006 full',
-      'V-001 partial (action-level path)',
+      'V-001 partial (disabled path)',
     ])
-    assert.deepEqual(built.telemetryRows, [])
+    assert.deepEqual(built.stories, [])
   })
 
   void it('expands ranges with their padding and reads a `partial` prefix', () => {
@@ -54,18 +54,21 @@ void describe('request generation from the legacy slice table', () => {
       'V-011 full',
       'V-012 partial',
     ])
-    assert.deepEqual(built.telemetryRows, ['T-002', 'T-003'])
+    assert.deepEqual(built.stories, [
+      'components-modal--open',
+      'components-modal--narrow-viewport',
+    ])
   })
 
-  void it("selects the slice's quickstart sections and the shared module evidence", () => {
+  void it("selects the slice's quickstart sections and the shared contract evidence", () => {
     assert.deepEqual(request('A1').quickstartSections, [
       {
-        anchor: 'module-evidence-every-slice',
-        heading: 'Module evidence (every slice)',
+        anchor: 'contract-evidence-every-slice',
+        heading: 'Contract evidence (every slice)',
       },
       {
-        anchor: 'a1--gate-recovery-slice-a1',
-        heading: '§A1 — Gate recovery (slice A1)',
+        anchor: 'a1--button-focus-ring-slice-a1',
+        heading: '§A1 — Button focus ring (slice A1)',
       },
     ])
   })
@@ -73,7 +76,7 @@ void describe('request generation from the legacy slice table', () => {
   void it('warns rather than guesses on prose it cannot read, and when a slice has no quickstart section', () => {
     assert.deepEqual(request('C').warnings, [
       'Slice C claims: cannot read "full manual procedure for all claims" as a claim ID',
-      'Slice C telemetry rows: cannot read "Uses T-001–T-003 and existing" as a row ID',
+      'Slice C stories: cannot read "Uses every story above" as a story ID',
       'Slice C: no quickstart heading names "(slice C)"',
     ])
   })
@@ -102,19 +105,24 @@ void describe('request generation from the legacy slice table', () => {
 
 void describe('request generation from the structured slice table', () => {
   const structured = [
-    '| Slice | Decision | Telemetry rows | Full claims | Partial claims | Quickstart sections |',
-    '| ----- | -------- | -------------- | ----------- | -------------- | ------------------- |',
-    '| A1    | Denials  | T-001          | V-002       | V-001 (gate)   | Module evidence, §A1 |',
-    '| A2    | Forms    | —              | V-006       | —              | §A9                 |',
+    '| Slice | Decision    | Stories                                     | Full claims | Partial claims     | Quickstart sections    |',
+    '| ----- | ----------- | ------------------------------------------- | ----------- | ------------------ | ---------------------- |',
+    '| A1    | Focus ring  | `components-button--primary`                | V-002       | V-001 (focus ring) | Contract evidence, §A1 |',
+    '| A2    | Disabled    | —                                           | V-006       | —                  | §A9                    |',
+    '| A3    | Story names | components-button--primary, Button/Primary  | V-007       | —                  | §A1                    |',
   ].join('\n')
 
   void it('reads full and partial columns and the named sections', () => {
     const built = request('A1', structured)
     assert.equal(built.source, 'structured')
-    assert.deepEqual(claims(built), ['V-002 full', 'V-001 partial (gate)'])
+    assert.deepEqual(claims(built), [
+      'V-002 full',
+      'V-001 partial (focus ring)',
+    ])
+    assert.deepEqual(built.stories, ['components-button--primary'])
     assert.deepEqual(
       built.quickstartSections.map((section) => section.heading),
-      ['Module evidence (every slice)', '§A1 — Gate recovery (slice A1)'],
+      ['Contract evidence (every slice)', '§A1 — Button focus ring (slice A1)'],
     )
     assert.deepEqual(built.warnings, [])
   })
@@ -122,6 +130,14 @@ void describe('request generation from the structured slice table', () => {
   void it('warns when a named section does not exist', () => {
     assert.deepEqual(request('A2', structured).warnings, [
       'Slice A2 quickstart sections: no quickstart heading starts with "§A9"',
+    ])
+  })
+
+  void it('reads story IDs and warns on a story title that is not an ID', () => {
+    const built = request('A3', structured)
+    assert.deepEqual(built.stories, ['components-button--primary'])
+    assert.deepEqual(built.warnings, [
+      'Slice A3 stories: cannot read "Button/Primary" as a story ID',
     ])
   })
 })

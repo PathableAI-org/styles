@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/schema-checks.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/schema-checks.ts @ f2ee390 (adapted: adds storyId, the Storybook story ID check).
 /**
  * Small composable checks for JSON the agent workflow tooling stores in git notes: verification reports and code reviews. A check takes an unknown value and its JSON path and returns every problem found.
  * @typedef {(value: unknown, path: string) => readonly string[]} Check
@@ -75,6 +75,11 @@ export const uuid = matching(
 export const featureDir = matching(
   /^specs\/\d+-[a-z0-9-]+$/,
   'specs/{number}-{slug}',
+)
+/** A Storybook story ID: the kebab-case title, two hyphens, and the kebab-case story name. */
+export const storyId = matching(
+  /^[a-z0-9]+(?:-[a-z0-9]+)*--[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  'a Storybook story ID such as components-button--primary',
 )
 export const sliceId = matching(/^[A-Za-z0-9]+$/, 'a slice ID such as A1')
 

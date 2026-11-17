@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/fix-gate.test.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets tests/tooling/fix-gate.test.ts @ f2ee390 (adapted: a High fix report lists stories; fixtures name a design-system fix branch).
 import assert from 'node:assert/strict'
 import { afterEach, beforeEach, describe, it } from 'node:test'
 
@@ -31,8 +31,8 @@ let repo
 let verified
 
 beforeEach(() => {
-  repo = sampleRepo('fix-session-expiry')
-  verified = repo.commit('fix: expiry', {
+  repo = sampleRepo('fix-button-focus')
+  verified = repo.commit('fix: button focus', {
     'src/app.ts': 'export const app = 2\n',
   })
 })
@@ -112,17 +112,17 @@ void describe('the High fix gate', () => {
   void it('passes a fix branch labelled risk:high with an established report and a clean review on HEAD', () => {
     record()
     const gate = runGate(repo.dir, checkedOut(repo.dir, ['risk:high']))
-    assert.equal(gate.ok && gate.value.branch, 'fix-session-expiry')
+    assert.equal(gate.ok && gate.value.branch, 'fix-button-focus')
   })
 
   void it("needs the pull request's labels to gate a branch that is not an implementation slice", () => {
     record()
     const unlabelled = runGate(repo.dir)
     assert.deepEqual(unlabelled.ok ? [] : unlabelled.problems, [
-      'fix-session-expiry is not an implementation-slice branch, and no pull request was found to show a High fix',
+      'fix-button-focus is not an implementation-slice branch, and no pull request was found to show a High fix',
     ])
     assert.deepEqual(fixGate(['risk:standard']), [
-      'fix-session-expiry is not an implementation-slice branch or a High fix labelled risk:high',
+      'fix-button-focus is not an implementation-slice branch or a High fix labelled risk:high',
     ])
   })
 
@@ -136,24 +136,26 @@ void describe('the High fix gate', () => {
     ])
   })
 
-  void it('fails any claim that is not established, an empty report, a missing row, forbidden data, and escalations', () => {
+  void it('fails any claim that is not established, a story not passing, and escalations', () => {
     record((report) => {
       const [first] = report.claims
       report.claims = [
         { ...first, result: 'violated' },
         { ...first, id: 'V-002', limitationId: 'L-1', result: 'blocked' },
       ]
-      report.telemetryRows = [{ id: 'T-001', status: 'missing' }]
-      report.forbiddenData = [
-        { field: 'http.request.header.cookie', signal: 'span protectRequest' },
+      report.stories = [
+        {
+          id: 'components-button--primary',
+          status: 'missing',
+          storybook: 'react',
+        },
       ]
       report.escalations = [{ detail: 'The claim needs a plan.', kind: 'plan' }]
     })
     assert.deepEqual(fixGate(), [
       'V-001 is violated; a High fix must establish every claim',
       'V-002 is blocked; a High fix must establish every claim',
-      'telemetry row T-001 is missing',
-      'forbidden data in span protectRequest field http.request.header.cookie',
+      'story components-button--primary in the react Storybook is missing',
       'open escalation (plan): The claim needs a plan.',
     ])
   })
@@ -179,13 +181,13 @@ void describe('the High fix gate', () => {
         {
           category: 'correctness',
           confidence: 'high',
-          failureScenario: 'An expired session renews.',
+          failureScenario: 'Focus is invisible in forced colors.',
           file: 'src/app.ts',
           id: 'R-001',
           line: 1,
           severity: 'blocking',
-          summary: 'Renewal ignores the deadline.',
-          verification: 'Read renew().',
+          summary: 'The focus ring is a box shadow.',
+          verification: 'Read the focus rules.',
         },
       ]
     })
@@ -219,11 +221,11 @@ void describe('the High fix gate', () => {
       gateApplies(repo.dir, { branch, head: verified, labels })
     assert.equal(applies('900-sample'), false)
     assert.equal(applies('900-sample-plan'), false)
-    assert.equal(applies('fix-session-expiry'), true)
-    assert.equal(applies('901-session-expiry'), true)
+    assert.equal(applies('fix-button-focus'), true)
+    assert.equal(applies('901-button-focus'), true)
     assert.equal(applies('900-sample-impl', []), true)
     assert.equal(applies('900-sample-impl-b2', []), true)
-    assert.equal(applies('fix-session-expiry', ['risk:standard']), false)
+    assert.equal(applies('fix-button-focus', ['risk:standard']), false)
   })
 
   void it('reads the feature directory from the tree at the head, not the working tree', () => {

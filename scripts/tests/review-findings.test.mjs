@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/review-findings.test.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets tests/tooling/review-findings.test.ts @ f2ee390 (adapted: covers the design-system finding categories).
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -59,6 +59,37 @@ void describe('review schema', () => {
         Object.assign(findings(review)[0] ?? {}, { confidence: 'low' })
       }),
       ['$.findings[0].confidence: expected one of high, medium'],
+    )
+  })
+
+  void it('accepts the design-system categories and no longer accepts module-ownership', () => {
+    for (const category of [
+      'source-first',
+      'wrapper-styling',
+      'naming-parity',
+      'token-usage',
+      'story-contract',
+      'accessibility',
+      'guidance-drift',
+      'ownership',
+    ]) {
+      assert.deepEqual(
+        problems((review) => {
+          Object.assign(findings(review)[0] ?? {}, { category })
+        }),
+        [],
+        category,
+      )
+    }
+    assert.deepEqual(
+      problems((review) => {
+        Object.assign(findings(review)[0] ?? {}, {
+          category: 'module-ownership',
+        })
+      }),
+      [
+        '$.findings[0].category: expected one of correctness, duplication, readability, complexity, test-meaningfulness, contract-drift, source-first, wrapper-styling, naming-parity, token-usage, story-contract, accessibility, guidance-drift, ownership',
+      ],
     )
   })
 

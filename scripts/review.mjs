@@ -73,5 +73,5 @@ const commands = { record, show }
 runCommand(
   commands,
   command,
-  'Usage: review.ts record|show (see the header of scripts/review.ts)',
+  'Usage: review.mjs record|show (see the header of scripts/review.mjs)',
 )

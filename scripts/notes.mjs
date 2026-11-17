@@ -73,5 +73,5 @@ const commands = { publish, sync }
 runCommand(
   commands,
   command,
-  'Usage: notes.ts sync|publish (see the header of scripts/notes.ts)',
+  'Usage: notes.mjs sync|publish (see the header of scripts/notes.mjs)',
 )

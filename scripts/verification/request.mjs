@@ -1,7 +1,7 @@
-// Ported from pathableai-org/pre-ets scripts/verification/request.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/verification/request.ts @ f2ee390 (adapted: the slice table's Telemetry rows column is now Stories, read as Storybook story IDs).
 /**
  * Builds a slice's verification request from its feature artifacts at one revision. The request is derived, never
- * hand-picked: claims and telemetry rows come from the slice's `plan.md` row, sections from `quickstart.md`, and
+ * hand-picked: claims and Storybook stories come from the slice's `plan.md` row, sections from `quickstart.md`, and
  * approved limitations from `verification.md` and the plan.
  */
 import {
@@ -13,6 +13,7 @@ import {
   tables,
   topLevelItems,
 } from './markdown.mjs'
+import { storyId } from '../schema-checks.mjs'
 /** @typedef {import('./markdown.mjs').Table} Table */
 
 /**
@@ -64,7 +65,7 @@ import {
  * @property {string} sha
  * @property {string} sliceId
  * @property {"legacy-table" | "structured"} source `structured` reads the ID-only slice columns; `legacy-table` reads the older prose "Claim IDs advanced" cell.
- * @property {readonly string[]} telemetryRows
+ * @property {readonly string[]} stories Storybook story IDs the plan assigns to the slice.
  * @property {readonly string[]} warnings Anything the parser could not read. A request with warnings does not pass the gate.
  */
 
@@ -124,17 +125,16 @@ const claimsFrom = (cell, defaultScope, label) => {
   }
 }
 
-const telemetryFrom = (cell, label) => {
+const storiesFrom = (cell, label) => {
   if (isNone(cell)) return { value: [], warnings: [] }
-  const rows = []
+  const stories = []
   const warnings = []
   for (const item of topLevelItems(plain(cell))) {
-    const match = idItemPattern('T').exec(item)
-    if (match?.[2] === undefined || match[1] !== undefined)
-      warnings.push(`${label}: cannot read "${item}" as a row ID`)
-    else rows.push(...expandRange(match[2], match[3]))
+    if (storyId(item, label).length > 0)
+      warnings.push(`${label}: cannot read "${item}" as a story ID`)
+    else stories.push(item)
   }
-  return { value: rows, warnings }
+  return { value: stories, warnings }
 }
 
 const column = (table, name) =>
@@ -239,7 +239,7 @@ const planLimitations = (document, source) =>
  * @property {Parsed<readonly RequestedClaim[]>} claims
  * @property {Parsed<readonly SectionRef[]>} sections
  * @property {VerificationRequest["source"]} source
- * @property {Parsed<readonly string[]>} telemetry
+ * @property {Parsed<readonly string[]>} stories
  */
 
 const structuredFields = (table, row, quickstart, label) => {
@@ -265,10 +265,7 @@ const structuredFields = (table, row, quickstart, label) => {
       `${label} quickstart sections`,
     ),
     source: 'structured',
-    telemetry: telemetryFrom(
-      cell(/^telemetry rows$/i),
-      `${label} telemetry rows`,
-    ),
+    stories: storiesFrom(cell(/^stories$/i), `${label} stories`),
   }
 }
 
@@ -282,10 +279,7 @@ const legacyFields = (table, row, quickstart, label, sliceId) => {
     ),
     sections: legacySections(quickstart, sliceId),
     source: 'legacy-table',
-    telemetry: telemetryFrom(
-      cell(/^telemetry rows$/i),
-      `${label} telemetry rows`,
-    ),
+    stories: storiesFrom(cell(/^stories$/i), `${label} stories`),
   }
 }
 
@@ -304,7 +298,7 @@ const empty = {
   claims: { value: [], warnings: [] },
   sections: { value: [], warnings: [] },
   source: 'legacy-table',
-  telemetry: { value: [], warnings: [] },
+  stories: { value: [], warnings: [] },
 }
 
 /** The request for one slice. It never throws on content; anything unreadable is a warning. */
@@ -332,11 +326,11 @@ export const buildRequest = (artifacts, target) => {
     sha: target.sha,
     sliceId: target.sliceId,
     source: found.source,
-    telemetryRows: found.telemetry.value,
+    stories: found.stories.value,
     warnings: [
       ...(typeof fields === 'string' ? [fields] : claimWarnings),
       ...found.claims.warnings,
-      ...found.telemetry.warnings,
+      ...found.stories.warnings,
       ...found.sections.warnings,
     ],
   }

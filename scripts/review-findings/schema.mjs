@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/review-findings/schema.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/review-findings/schema.ts @ f2ee390 (adapted: module-ownership replaced by design-system categories).
 /**
  * The code review the reviewer session writes to git notes. `validateReview` is the schema: it accepts unknown JSON
  * and returns either the typed review or every problem found, each with its JSON path. See
@@ -24,14 +24,29 @@ import {
 /** @typedef {import('../schema-checks.mjs').Validated} Validated */
 
 const severities = ['blocking', 'advisory']
+/**
+ * The general categories, then the design system's own. `source-first`: a wrapper exposes behaviour before the
+ * styles contract exists. `wrapper-styling`: wrapper-only or private CSS. `naming-parity`: a React name that is not
+ * the CamelCase of the styles component name without `pathable`. `token-usage`: a raw value where a semantic token
+ * exists. `story-contract`: stories that are not deterministic, named contracts. `accessibility`: keyboard, focus, or
+ * ARIA behaviour. `guidance-drift`: consumer agent guidance out of date. `ownership`: code in the wrong package or
+ * layer.
+ */
 const categories = [
   'correctness',
-  'module-ownership',
   'duplication',
   'readability',
   'complexity',
   'test-meaningfulness',
   'contract-drift',
+  'source-first',
+  'wrapper-styling',
+  'naming-parity',
+  'token-usage',
+  'story-contract',
+  'accessibility',
+  'guidance-drift',
+  'ownership',
 ]
 const confidences = ['high', 'medium']
 const closures = ['fixed', 'justified', 'withdrawn']

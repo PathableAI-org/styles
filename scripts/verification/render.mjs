@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets scripts/verification/render.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets scripts/verification/render.ts @ f2ee390 (adapted: a channel column per claim and a stories table replace telemetry rows and forbidden data).
 
 /** @typedef {import('./report.mjs').ClaimReport} ClaimReport */
 /** @typedef {import('./report.mjs').VerificationReport} VerificationReport */
@@ -29,11 +29,11 @@ const resultLabel = (claim) =>
 
 const evidenceText = (claim) => {
   const parts = [
-    claim.evidence.traceIds?.length
-      ? `traces ${claim.evidence.traceIds.map((id) => `\`${id}\``).join(', ')}`
+    claim.evidence.stories?.length
+      ? `stories ${claim.evidence.stories.map((id) => `\`${id}\``).join(', ')}`
       : '',
-    claim.evidence.queries?.length
-      ? `queries ${claim.evidence.queries.map((query) => `\`${query}\``).join('; ')}`
+    claim.evidence.commands?.length
+      ? `commands ${claim.evidence.commands.map((command) => `\`${command}\``).join('; ')}`
       : '',
     claim.evidence.procedure ?? '',
   ].filter((part) => part.length > 0)
@@ -47,14 +47,23 @@ const observation = (claim) =>
 
 const listOrNone = (items) => (items.length === 0 ? 'none' : items.join('; '))
 
-const telemetryLine = (report) => {
-  const rows = report.telemetryRows.map((row) =>
-    row.detail === undefined
-      ? `${row.id} ${row.status}`
-      : `${row.id} ${row.status} (${row.detail})`,
-  )
-  return `**Telemetry rows:** ${listOrNone(rows)}.`
-}
+/** The stories the plan assigns to the slice as the test runner observed them, or a line saying there are none. */
+const storyLines = (report) =>
+  report.stories.length === 0
+    ? ['**Stories:** none.']
+    : [
+        '**Stories:**',
+        '',
+        table(
+          ['Story', 'Storybook', 'Status', 'Detail'],
+          report.stories.map((story) => [
+            `\`${story.id}\``,
+            story.storybook,
+            story.status,
+            cell(story.detail ?? ''),
+          ]),
+        ),
+      ]
 
 const supersedesLine = (report, earlierSha) => {
   const lines = []
@@ -80,6 +89,7 @@ export const renderReport = (report, options = {}) => {
   const rows = claims.map((claim) => [
     claimLabel(claim, options.request),
     resultLabel(claim),
+    claim.evidence.channel,
     observation(claim),
   ])
   return [
@@ -94,15 +104,9 @@ export const renderReport = (report, options = {}) => {
     '',
     `**Conditions:** ${report.environment}`,
     '',
-    table(['Claim', 'Result', 'Observation'], rows),
+    table(['Claim', 'Result', 'Channel', 'Observation'], rows),
     '',
-    telemetryLine(report),
-    '',
-    `**Forbidden data observed:** ${listOrNone(
-      report.forbiddenData.map(
-        (finding) => `${finding.signal} field \`${finding.field}\``,
-      ),
-    )}.`,
+    ...storyLines(report),
     '',
     `**Escalation:** ${listOrNone(
       report.escalations.map(

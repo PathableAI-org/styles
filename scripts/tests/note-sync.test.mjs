@@ -1,4 +1,4 @@
-// Ported from pathableai-org/pre-ets tests/tooling/note-sync.test.ts @ f2ee390 (types stripped only).
+// Ported from pathableai-org/pre-ets tests/tooling/note-sync.test.ts @ f2ee390 (adapted: fixtures and assertions use stories and evidence channels in place of telemetry rows and forbidden data).
 import assert from 'node:assert/strict'
 import { afterEach, beforeEach, describe, it } from 'node:test'
 
@@ -444,12 +444,13 @@ void describe('rendering a note comment for people', () => {
         {
           closure: 'fixed',
           id: 'R-003',
-          note: 'Fixed in abc1234 by clearing before renewal.',
+          note: 'Fixed in abc1234 by drawing the ring with an outline.',
         },
       ]
       entry.escalations = [
         {
-          detail: 'The implementation session disputes the race.',
+          detail:
+            'The implementation session disputes the forced-colors finding.',
           findingIds: ['R-001'],
           kind: 'disagreement',
         },
@@ -464,18 +465,18 @@ void describe('rendering a note comment for people', () => {
         '',
         '#### Findings',
         '',
-        `- **blocking** R-001 [\`src/app.ts:1\`](${repository}/blob/${verified}/src/app.ts#L1) (correctness): Renewal reads the deadline before the clear and writes it back after.`,
-        '  - Failure scenario: Two tabs renew within the same tick; the second write restores the expired deadline.',
-        `- **advisory** R-002 [\`src/app.ts:1\`](${repository}/blob/${verified}/src/app.ts#L1) (readability): The name \`d\` hides that it is an absolute deadline.`,
-        '  - Failure scenario: A maintainer reads `d` as a duration and adds milliseconds to an absolute time.',
+        `- **blocking** R-001 [\`src/app.ts:1\`](${repository}/blob/${verified}/src/app.ts#L1) (accessibility): The focus ring is drawn with a box shadow, which forced colors removes.`,
+        '  - Failure scenario: A keyboard user tabs to the button in forced colors; the ring disappears and focus is invisible.',
+        `- **advisory** R-002 [\`src/app.ts:1\`](${repository}/blob/${verified}/src/app.ts#L1) (token-usage): The ring colour is a raw \`#2563eb\` where the focus colour token exists.`,
+        '  - Failure scenario: A theme overrides the focus colour token; the button keeps the raw hex value.',
         '',
         '#### Closures',
         '',
-        '- R-003 **fixed**: Fixed in abc1234 by clearing before renewal.',
+        '- R-003 **fixed**: Fixed in abc1234 by drawing the ring with an outline.',
         '',
         '#### Escalations',
         '',
-        '- **disagreement** (R-001): The implementation session disputes the race.',
+        '- **disagreement** (R-001): The implementation session disputes the forced-colors finding.',
       ].join('\n'),
     )
   })
@@ -491,7 +492,7 @@ void describe('rendering a note comment for people', () => {
     )
   })
 
-  void it("tabulates claims with result, procedure, and conditions, then the report's problems", () => {
+  void it("tabulates claims with result, channel, procedure, and conditions, then the report's escalations and stories", () => {
     const fake = github()
     const recorded = recordReport(
       source.dir,
@@ -499,21 +500,28 @@ void describe('rendering a note comment for people', () => {
         report.escalations = [
           { detail: 'The plan names no window for V-004.', kind: 'plan' },
         ]
-        report.forbiddenData = [{ field: 'enduser.email', signal: 'trace' }]
-        report.telemetryRows = [
-          { id: 'T-001', status: 'present' },
+        report.stories = [
           {
-            detail: 'No span for renew | clear.',
-            id: 'T-002',
+            id: 'components-button--primary',
+            status: 'passing',
+            storybook: 'styles',
+          },
+          {
+            detail: 'No story named open | dismissible.',
+            id: 'components-modal--open',
             status: 'missing',
+            storybook: 'react',
           },
         ]
         report.unrequestedViolations = [
           {
-            conditions: 'Two tabs',
-            evidence: { procedure: 'Opened two tabs and renewed in both' },
+            conditions: '320 px viewport',
+            evidence: {
+              channel: 'browser',
+              procedure: 'Opened the modal story at 320 px',
+            },
             id: 'V-009',
-            observed: 'The second renewal restored the deadline.',
+            observed: 'The close button overflowed the viewport.',
             result: 'violated',
             scope: 'full',
           },
@@ -529,26 +537,41 @@ void describe('rendering a note comment for people', () => {
       ),
     )
     assert.deepEqual(tableRows(text), [
-      ['Claim', 'Result', 'Procedure', 'Conditions'],
+      ['Claim', 'Result', 'Channel', 'Procedure', 'Conditions'],
       [
         'V-001 (partial)',
         'established',
-        'queries { RUN && name = "protectRequest" && span.preets.outcome = "denied_unauthenticated" }; traces 4bf92f3577b34da6a3ce929d0e0e4736',
-        'Fetch action and no-script navigation, 5-minute scratch tenant',
+        'storybook-test',
+        'commands pnpm test:storybook-styles; stories components-button--primary',
+        'Keyboard focus in Chromium, default theme',
       ],
       [
         'V-004 (partial)',
         'not established (L-2)',
-        '§A1 step 4, two window probes',
-        'Navigation POST within the eviction window',
+        'browser',
+        '§A1 step 1 at 200% and 400% text size',
+        'Increased text size in Chromium',
       ],
       [
         'V-009 (unrequested)',
         'violated',
-        'Opened two tabs and renewed in both',
-        'Two tabs',
+        'browser',
+        'Opened the modal story at 320 px',
+        '320 px viewport',
+      ],
+      ['Story', 'Storybook', 'Status', 'Detail'],
+      ['`components-button--primary`', 'styles', 'passing', ''],
+      [
+        '`components-modal--open`',
+        'react',
+        'missing',
+        'No story named open \\| dismissible.',
       ],
     ])
+    assert.match(
+      text,
+      /: 1 established, 1 not established; 1 stories not passing; 1 escalations\.\n/,
+    )
     assert.ok(
       text.endsWith(
         [
@@ -556,13 +579,12 @@ void describe('rendering a note comment for people', () => {
           '',
           '- **plan**: The plan names no window for V-004.',
           '',
-          '#### Forbidden data',
+          '#### Stories',
           '',
-          '- trace field `enduser.email`',
-          '',
-          '#### Telemetry rows not present',
-          '',
-          '- T-002 **missing**: No span for renew | clear.',
+          '| Story                        | Storybook | Status  | Detail                              |',
+          '| ---------------------------- | --------- | ------- | ----------------------------------- |',
+          '| `components-button--primary` | styles    | passing |                                     |',
+          '| `components-modal--open`     | react     | missing | No story named open \\| dismissible. |',
         ].join('\n'),
       ),
     )

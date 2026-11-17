@@ -10,7 +10,7 @@
  *   pnpm verify:render [<rev>] [--write]                                   render quickstart execution results
  *
  * `show` and `gate` first sync the checked-out branch's pull request comments into the local notes, and read the
- * local notes as they are when there is no pull request or GitHub cannot be reached. See scripts/note-sync.ts.
+ * local notes as they are when there is no pull request or GitHub cannot be reached. See scripts/note-sync.mjs.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
@@ -162,5 +162,5 @@ const commands = {
 runCommand(
   commands,
   command,
-  'Usage: verify.ts request|record|show|gate|render (see the header of scripts/verify.ts)',
+  'Usage: verify.mjs request|record|show|gate|render (see the header of scripts/verify.mjs)',
 )
