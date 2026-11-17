@@ -1,0 +1,8 @@
+---
+description: Repository agent instructions
+alwaysApply: true
+---
+
+Follow the repository agent instructions in @AGENTS.md. It routes each kind of
+task to the document that owns its rules, and its "No check suppressions"
+section applies to every change.
