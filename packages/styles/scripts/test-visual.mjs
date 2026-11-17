@@ -30,7 +30,11 @@ import { constants } from 'node:fs'
 import { chromium } from 'playwright'
 
 // Import shared constants from quality-gates.mjs
-import { CANONICAL_STORIES, VIEWPORTS } from './quality-gates.mjs'
+import {
+  CANONICAL_STORIES,
+  VIEWPORTS,
+  visualViewportNames,
+} from './quality-gates.mjs'
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -354,10 +358,7 @@ async function main() {
     browser = await chromium.launch({ headless: true })
 
     for (const story of CANONICAL_STORIES) {
-      const viewports =
-        story.mode === 'both' ? ['desktop', 'tablet', 'mobile'] : [story.mode]
-
-      for (const vpName of viewports) {
+      for (const vpName of visualViewportNames(story.mode)) {
         totalChecks++
         const page = await browser.newPage()
         try {

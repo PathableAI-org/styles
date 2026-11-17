@@ -28,7 +28,7 @@ import { constants } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 
-export { CANONICAL_STORIES, VIEWPORTS }
+export { CANONICAL_STORIES, VIEWPORTS, visualViewportNames }
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -251,6 +251,16 @@ const VIEWPORTS = {
   mobile: { width: 375, height: 812 },
 }
 
+/**
+ * Viewports at which the visual checks (the `test:visual` smoke test and the
+ * pixel visual-regression suites) capture a canonical story. A `both` story is
+ * captured at every viewport, including tablet; the DOM audit below checks
+ * `both` stories at desktop and mobile only.
+ */
+function visualViewportNames(mode) {
+  return mode === 'both' ? ['desktop', 'tablet', 'mobile'] : [mode]
+}
+
 // ---------------------------------------------------------------------------
 // Allowlists
 //
@@ -446,7 +456,12 @@ const MIME_TYPES = {
   '.txt': 'text/plain; charset=utf-8',
 }
 
-export function startServer() {
+/**
+ * Serve a built Storybook from `staticDir` on 127.0.0.1:`port`. The defaults
+ * serve the styles Storybook for the quality gates; the pixel
+ * visual-regression harness passes each workspace's own directory and port.
+ */
+export function startServer({ staticDir = STATIC_DIR, port = PORT } = {}) {
   return new Promise((resolvePromise, reject) => {
     const server = createServer(async (req, res) => {
       // req.url is optional in Node's IncomingMessage — guard against
@@ -456,15 +471,15 @@ export function startServer() {
         res.end('Bad request')
         return
       }
-      const url = new URL(req.url, BASE_URL)
+      const url = new URL(req.url, `http://127.0.0.1:${port}`)
       const pathname = url.pathname.slice(1) || 'index.html'
-      const filePath = resolve(STATIC_DIR, pathname)
+      const filePath = resolve(staticDir, pathname)
 
       // Prevent directory traversal.  Resolve the absolute path and then
-      // enforce that it stays inside STATIC_DIR by checking for a trailing
+      // enforce that it stays inside staticDir by checking for a trailing
       // path separator (platform-aware), not just a string prefix.
-      const dir = STATIC_DIR + sep
-      if (!filePath.startsWith(dir) && filePath !== STATIC_DIR) {
+      const dir = staticDir + sep
+      if (!filePath.startsWith(dir) && filePath !== staticDir) {
         res.writeHead(403)
         res.end('Forbidden')
         return
@@ -490,7 +505,7 @@ export function startServer() {
           return
         }
         try {
-          const fallback = resolve(STATIC_DIR, 'index.html')
+          const fallback = resolve(staticDir, 'index.html')
           const data = await readFile(fallback)
           res.writeHead(200, {
             'Content-Type': 'text/html; charset=utf-8',
@@ -503,7 +518,7 @@ export function startServer() {
       }
     })
 
-    server.listen(PORT, '127.0.0.1', () => resolvePromise(server))
+    server.listen(port, '127.0.0.1', () => resolvePromise(server))
     server.on('error', reject)
   })
 }
