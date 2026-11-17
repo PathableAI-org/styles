@@ -9,11 +9,12 @@ it can verify as GitHub issues labelled `drift`, and leaves triage and fixes
 to a person.
 
 This document owns the area list, the review scope, the finding shape and the
-issue format. The `drift-review` skill supplies the procedure. It is meant to
-run weekly against the default branch as a cloud scheduled task. That task and
-the `drift` label do not exist yet; creating them is an
-[open decision](orchestration.md#open-decisions) for the maintainer. Until
-then, a person runs the skill on demand.
+issue format. The `drift-review` skill supplies the procedure. Drift review
+is [not started yet](orchestration.md#decisions): the `drift` label, the
+**Drift review log** tracking issue and any scheduled task do not exist, so
+the skill can only report findings, in a `dry-run` or interactive run. When
+the maintainer starts it, the intended form is a scheduled cloud task running
+the skill against the default branch.
 
 ## Scope
 

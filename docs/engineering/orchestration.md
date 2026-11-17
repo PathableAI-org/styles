@@ -15,9 +15,10 @@ reviewer's loop. This document does not restate them.
 This workflow is adapted from the one the sister repository
 `pathableai-org/pre-ets` uses. The notes and gate tooling under `scripts/` is a
 JavaScript port of Pre-ETS's TypeScript tooling, and every ported file names
-its Pre-ETS source path and commit in a provenance header. The two copies are
-kept structurally close so they can later be extracted into one shared package;
-until then, a fix to one copy should be offered to the other.
+its Pre-ETS source path and commit in a provenance header. The two copies
+are maintained separately and may diverge: each repository evolves its own
+schemas and gate, and a fix in one copy is ported to the other only when it
+applies there. The provenance headers record where each file started.
 
 ## What the orchestrator does
 
@@ -55,12 +56,12 @@ a loop; a new one follows only a new brief.
 The [risk tier](git-workflow.md#risk-tiers) on the delivery issue decides the
 phases, as [Process by tier](git-workflow.md#process-by-tier) sets them:
 
-| Work                    | Sessions the orchestrator starts                                                                                                          |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| High, new behaviour     | Specification; after approval, plan; after approval, one implementation, one verification and one review session for the feature's slices |
-| High, fix               | One implementation, one verification and one review session for the single pull request                                                   |
-| Standard, new behaviour | One combined specification-and-plan session; after approval, implementation, verification and review sessions for the slices              |
-| Standard fix, and Light | One implementation session. No verifier or reviewer; normal CI and human review apply                                                     |
+| Work                  | Sessions the orchestrator starts                                                                                                          |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| High, new behaviour   | Specification; after approval, plan; after approval, one implementation, one verification and one review session for the feature's slices |
+| High, fix             | One implementation, one verification and one review session for the single pull request                                                   |
+| Standard, specified   | One combined specification-and-plan session; after approval, implementation, verification and review sessions for the slices              |
+| Other Standard, Light | One implementation session. No verifier or reviewer; normal CI and human review apply                                                     |
 
 The verification and review sessions start when the implementation session
 first reports `pushed`, not with it. Until then they would only wait, holding a
@@ -231,20 +232,20 @@ request is open, as a stop point above. It reports which
 matching their changed paths against each area's pathspecs, so a person can
 choose whether to review one early. It files nothing.
 
-## Open decisions
+## Decisions
 
-These are the maintainer's to make. Each has a working proposal, which this
-document and the ones it links follow until it is decided.
+The maintainer decided these on 2026-11-17. Change one by editing its row and
+the documents it links in the same pull request.
 
-| Decision                                | Proposal in force                                                                                                                                                                                                                                                                                                                                          |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Models and effort                       | The [table above](#models-and-effort), copied from Pre-ETS                                                                                                                                                                                                                                                                                                 |
-| Phases for Standard new behaviour       | A combined specification-and-plan pull request, then slices, as in Pre-ETS. Before this workflow, Standard work was one pull request; the maintainer may still waive the combined pull request for a single-decision addition ([Process by tier](git-workflow.md#process-by-tier))                                                                         |
-| Stacked pull requests                   | No `gh stack` extension and no native GitHub stacks: `gh stack` is not installed in cloud sessions here, its submit and ready steps need GraphQL, which cloud sessions cannot reach, and force pushes are denied here, which restacking needs. Slices use plain branches and merge upward ([Implementation slices](git-workflow.md#implementation-slices)) |
-| Drift review schedule                   | A weekly cloud scheduled task running the `drift-review` skill against `main`, plus the `drift` label and the **Drift review log** issue. None of them exists yet                                                                                                                                                                                          |
-| Screenshots as evidence                 | The verifier attaches no screenshots; reports carry story IDs and observations. Visual appearance stays a person's review of the story links or screenshots the implementation pull request names                                                                                                                                                          |
-| Evidence from consumers such as Pre-ETS | Out of scope for the verifier, which cannot run another repository's application. `test:next-consumer` is the in-repository consumer proxy. A consumer-side check would be a delivery issue in the consumer's repository, linked with `Contributes to`                                                                                                     |
-| Labels                                  | The gate needs `risk:high` to recognise a High fix. The `risk:*` labels are assumed to exist, as [Recording and changing a tier](git-workflow.md#recording-and-changing-a-tier) requires                                                                                                                                                                   |
-| Ready without a prompt                  | The hook approves the MCP `update_pull_request` ready call when the gate passes. `gh pr ready` and the REST `ccr/ready_for_review` route are not in the allow list, so they still prompt. Pre-ETS allows both, relying on the hook                                                                                                                         |
-| PR comment marker                       | Note comments start with `<!-- pre-ets-note kind=… sha=… id=… -->`, unchanged from Pre-ETS so both repositories can share the tooling. Renaming it is a one-line change in `scripts/note-sync/comment.mjs` plus its tests                                                                                                                                  |
-| Shared tooling package                  | The notes and gate tooling stays a JavaScript port with provenance headers until it is extracted, with Pre-ETS's TypeScript copy, into one shared package                                                                                                                                                                                                  |
+| Decision                    | Outcome                                                                                                                                                                                                                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Models and effort           | Keep the [table above](#models-and-effort), copied from Pre-ETS. Revisit it after the first orchestrated feature, using [the measures](#revisiting-the-table)                                                                        |
+| Standard process            | One pull request by default. The maintainer asks for a specification when the work warrants it, and the work then runs as a combined pull request and verified slices ([Process by tier](git-workflow.md#process-by-tier))           |
+| Stacked pull requests       | No `gh stack` and no native GitHub stacks. Slices use plain branches and merge upward, because force pushes are denied here and cloud sessions cannot reach GraphQL ([Implementation slices](git-workflow.md#implementation-slices)) |
+| Drift review                | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                    |
+| Screenshots                 | The verifier publishes screenshots for visual claims only, as a private page linked from one pull request comment ([Screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims))                           |
+| Evidence from consumers     | In-repository only. Consumer impact is an approved limitation plus a linked delivery issue in the consumer's repository ([Known limits](verification-harness.md#known-limits))                                                       |
+| Labels                      | `risk:high`, `risk:standard` and `risk:light` exist; the gate reads `risk:high`                                                                                                                                                      |
+| Ready without a prompt      | Allowed. `gh pr ready` and the REST ready route are in the project allow list, and the hook approves the MCP call; the gate decides every attempt                                                                                    |
+| Pull request comment marker | `<!-- pathable-note kind=… sha=… id=… -->`, renamed from Pre-ETS's marker                                                                                                                                                            |
+| Shared tooling package      | None. The JavaScript port is maintained separately from Pre-ETS's copy                                                                                                                                                               |
