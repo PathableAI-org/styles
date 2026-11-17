@@ -222,6 +222,8 @@ jobs:
             eslint-${{ runner.os }}-
       - name: JS lint
         run: pnpm exec eslint ${{ steps.scope.outputs.path }} --max-warnings=0 --cache --cache-location .eslintcache
+      - name: Test repository tooling
+        run: pnpm test:tooling
       - name: Save ESLint cache
         if: always()
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
