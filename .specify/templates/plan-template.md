@@ -57,7 +57,7 @@
 ### Consumer and Publishable Validation
 
 - Verify consumers can install and import wrapper packages without adding a
-  separate application import of `@pathable/styles`; required CSS, fonts,
+  separate application import of `@pathableai/styles`; required CSS, fonts,
   icons, JavaScript helpers, and assets must flow through the wrapper package.
 - Confirm public component APIs and generated declarations are type-safe and
   suitable for consumers.
