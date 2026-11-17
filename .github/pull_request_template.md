@@ -8,7 +8,7 @@
 
 <!-- See "Risk tiers" in docs/engineering/git-workflow.md. -->
 
-- Risk tier: High / Standard / Light
+- Risk tier: High / Standard / Light <!-- and add the matching risk:high, risk:standard or risk:light label -->
 - Triggers that matched, or why none applies:
 - Issue: <!-- Closes <url-or-#n> only if this pull request satisfies the issue; otherwise Contributes to <url-or-#n>. -->
 

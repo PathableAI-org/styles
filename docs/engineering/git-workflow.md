@@ -159,6 +159,10 @@ Evidence each tier needs, in addition to the checks in
   that matched, or the condition that makes the work Standard or Light. An
   agent drafting the issue proposes the tier; the maintainer sets it.
 - Each pull request states its tier and triggers in its **Tier** section.
+- Each delivery issue and each pull request carries exactly one label:
+  `risk:high`, `risk:standard` or `risk:light`. The label is the filterable
+  copy of the tier; the body records the triggers and reasons. When a tier
+  changes, change the label in the same step.
 - Anyone, including an agent, may raise a tier at any point by recording the
   trigger that matched. Work already approved stays approved; add the evidence
   the higher tier needs.

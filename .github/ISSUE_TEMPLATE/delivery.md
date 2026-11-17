@@ -14,7 +14,7 @@ title: ''
 
 ## Risk tier
 
-<!-- High, Standard, or Light, with every trigger that matched, or the condition that makes the work Standard or Light. The drafting agent proposes; the maintainer sets it. Only the maintainer may lower it, with the reason recorded here. See "Risk tiers" in docs/engineering/git-workflow.md. -->
+<!-- High, Standard, or Light, with every trigger that matched, or the condition that makes the work Standard or Light. The drafting agent proposes; the maintainer sets it. Only the maintainer may lower it, with the reason recorded here. Add the matching risk:high, risk:standard or risk:light label. See "Risk tiers" in docs/engineering/git-workflow.md. -->
 
 ## In scope
 
