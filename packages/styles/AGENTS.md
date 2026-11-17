@@ -48,7 +48,7 @@ Examples:
 
 Agents MAY use raw brand colors only when defining tokens, documenting the palette, or creating intentionally branded one-off assets.
 
-Color Rules
+## Color Rules
 
 Agents MUST keep PathAble Blue, Intelligent Jade, and Bright Blue Brooks visually prominent.
 
@@ -68,7 +68,7 @@ Agents MUST NOT use Lived-In Lime for small web text unless contrast has been ve
 
 Agents MUST prioritize accessibility over brand subtlety.
 
-Tertiary Colors
+## Tertiary Colors
 
 Agents MAY derive tertiary colors from brand colors at 10% opacity.
 
@@ -78,15 +78,16 @@ Agents MUST NOT use tertiary colors for primary text.
 
 Agents MUST NOT use tertiary colors when they reduce readability.
 
-Typography Tokens
+## Typography Tokens
 
 Agents MUST use these typography roles:
 
-Role Font Weight
-Heading Fredoka Regular
-Alternate Heading Montserrat Bold
-Subheading Poppins Bold
-Body Text Nunito Regular
+| Role              | Font       | Weight  |
+| ----------------- | ---------- | ------- |
+| Heading           | Fredoka    | Regular |
+| Alternate Heading | Montserrat | Bold    |
+| Subheading        | Poppins    | Bold    |
+| Body Text         | Nunito     | Regular |
 
 Agents MUST use Fredoka Regular for headings when available.
 
@@ -96,7 +97,7 @@ Agents MUST use Poppins Bold for subheadings.
 
 Agents MUST use Nunito Regular for body text.
 
-Typography Rules
+## Typography Rules
 
 Agents MUST make headings the most prominent text element.
 
@@ -120,7 +121,7 @@ Agents MUST preserve breathing room around text.
 
 Agents MUST preserve clear hierarchy between heading, subheading, and body text.
 
-Theme Rules
+## Theme Rules
 
 Agents MAY create light, dark, and high-contrast themes by mapping semantic tokens to approved brand colors or reviewed derived colors.
 
@@ -134,7 +135,7 @@ High-contrast themes MUST prioritize WCAG contrast over subtle brand expression.
 
 High-contrast themes MAY reduce the palette to black, white, PathAble Blue, and Lived-In Lime.
 
-Implementation Rules
+## Implementation Rules
 
 Agents MUST use existing package tokens before creating new ones.
 
@@ -142,15 +143,19 @@ Agents MUST add new tokens semantically, not by visual description alone.
 
 Good token names:
 
+```css
 --pathable-color-text
 --pathable-color-surface
 --pathable-color-focus-ring
+```
 
 Avoid token names like:
 
+```css
 --pathable-color-pretty-blue
 --pathable-color-random-bg
 --pathable-color-card-thing
+```
 
 Agents MUST document any new token with its intended role.
 
@@ -165,7 +170,7 @@ This package wraps USWDS v3.x theme color tokens. When creating or editing SCSS 
 - Agents MUST use `uswds.color("token-name")` to reference brand colors in SCSS (e.g., `uswds.color("blue-warm-80v")` for PathAble Blue)
 - Agents MUST NOT use `$theme-color-primary` directly — that returns a string token name, not a hex color
 - Agents MUST NOT edit `_uswds-theme.scss` to add new theme overrides without explicit instructions
-- Agents MUST keep all USWDS theme color overrides scoped within `_uswds-theme.scss` per FR-008
+- Agents MUST keep all USWDS theme color overrides scoped within `_uswds-theme.scss`
 - Agents MAY reference the USWDS token mapping table in BRAND_RULES.md for token lookups
 
 For SCSS consumers, the correct pattern is:
@@ -197,7 +202,7 @@ Most typography CSS custom properties are emitted in two namespaces: `--pathable
 - Agents MUST use `uswds-core` functions to reference typography theme tokens (e.g., `uswds.family('heading')`, `uswds.type-scale('lg')`)
 - Agents MUST NOT use `$theme-font-*` variables directly — those are USWDS internal configuration values
 - Agents MUST NOT edit `_uswds-theme.scss` to add new typography overrides without explicit instructions
-- Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss` per FR-011
+- Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss`
 - Agents MAY reference the `--pathable-font-*` or `--usa-font-*` CSS custom properties from CSS
 - For SCSS consumers: `@use 'uswds-core' as uswds;` then `uswds.family('heading')`
 - For CSS consumers: the compiled output contains resolved values via `--pathable-font-*` and `--usa-font-*` custom properties
