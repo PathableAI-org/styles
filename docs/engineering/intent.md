@@ -49,6 +49,10 @@ this repository proves the contract before it ships.
 
 ## How a consumer need flows
 
+Open delivery issues in this repository are the backlog; there is no roadmap
+file. An organization-level GitHub Project orders them, alongside consumer work
+in other PathAble repositories.
+
 1. **File it here.** A consumer that needs something it cannot do with the
    released packages files an issue in this repository, using the
    [delivery template](../../.github/ISSUE_TEMPLATE/delivery.md). The issue
