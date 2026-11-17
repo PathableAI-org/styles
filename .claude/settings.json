@@ -38,7 +38,10 @@
       "Bash(pnpm review:show)",
       "Bash(pnpm review:show:*)",
       "Bash(pnpm notes:sync)",
-      "Bash(pnpm notes:sync:*)"
+      "Bash(pnpm notes:sync:*)",
+      "Bash(gh pr ready)",
+      "Bash(gh pr ready:*)",
+      "Bash(gh api *pulls/*/ccr/ready_for_review*)"
     ],
     "ask": [
       "Bash(git push:*)",
