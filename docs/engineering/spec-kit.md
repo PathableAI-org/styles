@@ -96,10 +96,10 @@ changes `.specify/templates/{spec,plan,tasks}-template.md`,
 `.specify/presets/workflow-preset/templates/plan-template.md`, port the
 relevant changes into the overrides in a separate pull request.
 
-### Background: the core templates on `main`
+### Background: why the customisations moved
 
-Before the overrides existed, the customisations were written straight into the
-core templates. Two things were wrong with that:
+The customisations used to be written straight into the core templates. Two
+things were wrong with that:
 
 - They never reached generated documents. Both presets outrank core templates,
   so `spec.md` and `tasks.md` started from the `toc-navigation` templates, and
@@ -108,10 +108,11 @@ core templates. Two things were wrong with that:
   `workflow-preset`'s `wrap` template as-is: new plans started with a literal
   `{CORE_TEMPLATE}` line. The override avoids this.
 
-The customised core templates are now redundant. They differ from their
-manifest hashes, so the CLI preserves them on an upgrade run without `--force`
-and replaces them with upstream content on one with `--force`. Either outcome
-is fine; do not hand-edit them.
+When the overrides were added, the core templates were restored to the exact
+files Spec Kit generated (from the `setup specify` commit), so they match their
+hashes in `.specify/integrations/speckit.manifest.json` again. That lets every
+upgrade refresh them, and an upgrade pull request's diff to them is a real
+upstream change to consider porting. Keep them unmodified.
 
 ## The `.claude/skills` symlinks
 
