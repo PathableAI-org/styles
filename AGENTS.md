@@ -11,19 +11,19 @@ and the constitution wins over both.
 
 ## Where the rules live
 
-| When you are…                                                                        | Read                                                                                                                                               |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Making any architectural, packaging, release or quality-gate decision                | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                               |
-| Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI           | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                    |
-| Writing or changing `@pathableai/styles` Storybook stories                           | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                         |
-| Changing `@pathableai/react` components or their public API                          | [`packages/react/README.md`](packages/react/README.md)                                                                                             |
-| Writing or changing `@pathableai/react` stories                                      | [`packages/react/STORYBOOK_STANDARD.md`](packages/react/STORYBOOK_STANDARD.md)                                                                     |
-| Using `@pathableai/react` as a consumer, or checking what its consumer guidance says | [`packages/react/agent-guidance/pathable-react/`](packages/react/agent-guidance/pathable-react/)                                                   |
-| Deciding whether a React change must update that consumer guidance                   | [`.github/instructions/react-agent-guidance.instructions.md`](.github/instructions/react-agent-guidance.instructions.md)                           |
-| Adding or changing component tests, behavior contracts or parity checks              | [`docs/testing/README.md`](docs/testing/README.md)                                                                                                 |
-| Working on theming, `createTheme`, `ThemeProvider` or overridable tokens             | [`docs/theming/consumer-guide.md`](docs/theming/consumer-guide.md) and [`docs/theming/token-vocabulary.md`](docs/theming/token-vocabulary.md)      |
-| Changing anything published in `@pathableai/styles` or `@pathableai/react`           | [`.changeset/README.md`](.changeset/README.md)                                                                                                     |
-| Specifying, planning or implementing a feature with Spec Kit                         | The `speckit-*` skills in [`.agents/skills/`](.agents/skills/) (also exposed to Claude Code through `.claude/skills/`), and the constitution above |
+| When you are…                                                                                                                                                      | Read                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                               |
+| Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                    |
+| Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                         |
+| Changing `@pathableai/react` components or their public API                                                                                                        | [`packages/react/README.md`](packages/react/README.md)                                                                                             |
+| Writing or changing `@pathableai/react` stories                                                                                                                    | [`packages/react/STORYBOOK_STANDARD.md`](packages/react/STORYBOOK_STANDARD.md)                                                                     |
+| Using `@pathableai/react` as a consumer, or checking what its consumer guidance says                                                                               | [`packages/react/agent-guidance/pathable-react/`](packages/react/agent-guidance/pathable-react/)                                                   |
+| Deciding whether a React change must update that consumer guidance                                                                                                 | [`.github/instructions/react-agent-guidance.instructions.md`](.github/instructions/react-agent-guidance.instructions.md)                           |
+| Adding or changing component tests, behavior contracts or parity checks                                                                                            | [`docs/testing/README.md`](docs/testing/README.md)                                                                                                 |
+| Working on theming, `createTheme`, `ThemeProvider` or overridable tokens                                                                                           | [`docs/theming/consumer-guide.md`](docs/theming/consumer-guide.md) and [`docs/theming/token-vocabulary.md`](docs/theming/token-vocabulary.md)      |
+| Changing code in `@pathableai/styles` or `@pathableai/react` (changesets are for code changes only; docs-only changes need none, even docs shipped in the package) | [`.changeset/README.md`](.changeset/README.md)                                                                                                     |
+| Specifying, planning or implementing a feature with Spec Kit                                                                                                       | The `speckit-*` skills in [`.agents/skills/`](.agents/skills/) (also exposed to Claude Code through `.claude/skills/`), and the constitution above |
 
 ## Where current behaviour is documented
 
@@ -89,17 +89,17 @@ the rules apply to them all the same.
 
 Run the checks that cover what you changed, from the repository root:
 
-| Check                                       | When                                                                                      |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `pnpm lint`                                 | Always. Runs ESLint, stylelint, markdownlint, the token lint and the Prettier check.      |
-| `pnpm typecheck`                            | Any TypeScript change in `packages/react`.                                                |
-| `pnpm build`                                | Any change to package source, build scripts or package entry points.                      |
-| `pnpm test:storybook-styles`                | Changes to `packages/styles`, its stories or `packages/storybook-contracts`.              |
-| `pnpm test:storybook-react`                 | Changes to `packages/react`, its stories or `packages/storybook-contracts`.               |
-| `pnpm --filter @pathableai/react test:unit` | Changes to `packages/react` source.                                                       |
-| `pnpm check:agent-guidance`                 | Changes to `packages/react` public API or `packages/react/agent-guidance/`.               |
-| `pnpm test:tooling`                         | Changes to `scripts/claude/`.                                                             |
-| `pnpm changeset`                            | Any change that alters a published package (`@pathableai/styles` or `@pathableai/react`). |
+| Check                                       | When                                                                                                                                                       |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`                                 | Always. Runs ESLint, stylelint, markdownlint, the token lint and the Prettier check.                                                                       |
+| `pnpm typecheck`                            | Any TypeScript change in `packages/react`.                                                                                                                 |
+| `pnpm build`                                | Any change to package source, build scripts or package entry points.                                                                                       |
+| `pnpm test:storybook-styles`                | Changes to `packages/styles`, its stories or `packages/storybook-contracts`.                                                                               |
+| `pnpm test:storybook-react`                 | Changes to `packages/react`, its stories or `packages/storybook-contracts`.                                                                                |
+| `pnpm --filter @pathableai/react test:unit` | Changes to `packages/react` source.                                                                                                                        |
+| `pnpm check:agent-guidance`                 | Changes to `packages/react` public API or `packages/react/agent-guidance/`.                                                                                |
+| `pnpm test:tooling`                         | Changes to `scripts/claude/`.                                                                                                                              |
+| `pnpm changeset`                            | Code changes to a published package (`@pathableai/styles` or `@pathableai/react`). Not for documentation-only changes, even docs that ship in the package. |
 
 Commit messages follow Conventional Commits; commitlint and lint-staged run in
 the Husky hooks. Do not bypass them.

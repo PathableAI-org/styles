@@ -11,9 +11,14 @@ pnpm changeset
 ```
 
 Select each package affected by the change, choose the appropriate semantic
-version bump, and write a consumer-focused summary. Repository-only changes to
-documentation, tests, or tooling do not require a changeset when they do not
-alter either published package.
+version bump, and write a consumer-focused summary.
+
+Changesets are only for code changes to a published package: source, styles,
+build output, entry points, types or other runtime behaviour of
+`@pathableai/styles` or `@pathableai/react`. Documentation-only changes do not
+need a changeset, even when the documentation ships inside the package tarball
+(for example `README.md`, `AGENTS.md` or `BRAND_RULES.md`). Changes to tests,
+stories or repository tooling do not need one either.
 
 Inspect pending releases without changing package manifests:
 
