@@ -50,15 +50,16 @@ $pathable-utilities: (
   'bg': (
     'class': 'pathable-bg',
     'property': 'background-color',
+    // Exact brand and semantic values (see _colors.scss and _semantic.scss).
     'values': (
-      'primary': uswds.color('blue-warm-80v'),
-      'base': uswds.color('gray-cool-10'),
+      'primary': #00365c,
+      'base': #dde2e8,
       'surface': #ffffff,
-      'accent': uswds.color('mint-cool-30v'),
-      'link': uswds.color('blue-30v'),
-      'focus-ring': uswds.color('blue-40v'),
+      'accent': #1cae96,
+      'link': #015a76,
+      'focus-ring': #015a76,
       'danger': #dc3545,
-      'success': uswds.color('mint-cool-30v'),
+      'success': #1cae96,
       'transparent': transparent,
     ),
     'responsive': false,
@@ -72,12 +73,13 @@ $pathable-utilities: (
   'text': (
     'class': 'pathable-text',
     'property': 'color',
+    // Exact brand and semantic values (see _colors.scss and _semantic.scss).
     'values': (
-      'base': uswds.color('gray-cool-10'),
-      'primary': uswds.color('blue-warm-80v'),
-      'muted': uswds.color('cyan-60v'),
-      'accent': uswds.color('mint-cool-30v'),
-      'link': uswds.color('blue-30v'),
+      'base': #dde2e8,
+      'primary': #00365c,
+      'muted': #015a76,
+      'accent': #1cae96,
+      'link': #015a76,
       'white': #ffffff,
     ),
     'responsive': false,

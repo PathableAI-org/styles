@@ -62,7 +62,7 @@ Agents MUST use high-contrast foreground and background combinations for small t
 
 Agents SHOULD prefer Shilling Silver with PathAble Blue for highly legible light-background designs.
 
-Agents MAY use Lived-In Lime as an accent, focus, or highlight color on dark backgrounds.
+Agents MAY use Lived-In Lime as an accent or highlight color on dark backgrounds.
 
 Agents MUST NOT use Lived-In Lime for small web text unless contrast has been verified.
 
@@ -165,19 +165,20 @@ Agents MUST NOT hardcode brand values throughout application code when a token e
 
 ## USWDS Token Usage
 
-This package wraps USWDS v3.x theme color tokens. When creating or editing SCSS that references brand colors:
+This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:
 
-- Agents MUST use `uswds.color("token-name")` to reference brand colors in SCSS (e.g., `uswds.color("blue-warm-80v")` for PathAble Blue)
-- Agents MUST NOT use `$theme-color-primary` directly — that returns a string token name, not a hex color
+- Agents MUST prefer `--pathable-*` custom properties (for example `var(--pathable-color-text)` or `var(--pathable-brand-pathable-blue)`) in component styles
+- When a USWDS function needs a color, Agents MUST use theme tokens such as `uswds.color('primary')` (PathAble Blue) or `uswds.color('accent-cool-dark')` (Tech Teal), which resolve to the brand values
+- Agents MUST NOT use USWDS system tokens such as `blue-warm-80v` for brand colors; they are only approximations of the brand palette
+- Agents MUST NOT use `$theme-color-primary` and other `$theme-*` settings directly — they are USWDS configuration values, not resolved colors
 - Agents MUST NOT edit `_uswds-theme.scss` to add new theme overrides without explicit instructions
 - Agents MUST keep all USWDS theme color overrides scoped within `_uswds-theme.scss`
-- Agents MAY reference the USWDS token mapping table in BRAND_RULES.md for token lookups
 
 For SCSS consumers, the correct pattern is:
 
 ```scss
 @use 'uswds-core' as uswds;
-$my-variable: uswds.color('blue-warm-80v');
+$my-variable: uswds.color('primary'); // #00365c, PathAble Blue
 ```
 
 For CSS consumers, the compiled output contains resolved hex values via `--pathable-*` custom properties.

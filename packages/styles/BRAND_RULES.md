@@ -26,26 +26,35 @@ Visual design should support trust, clarity, and human connection. Brand express
 | Lived-In Lime      | `#d3ff66` | `rgb(211, 255, 102)` |   `17%, 0%, 60%, 0%` | `388 C`  |
 | Shilling Silver    | `#dde2e8` | `rgb(221, 226, 232)` |     `5%, 3%, 0%, 9%` | `656 C`  |
 
-## USWDS System Token Mapping
+## USWDS Theme Colors
 
-Each brand color is mapped to the closest USWDS v3.x system token. These mappings are configured in `src/_uswds-theme.scss` and are the single source of truth for theme color overrides.
+The USWDS theme in `src/_uswds-theme.scss` is configured with the exact brand hex values, so components built on USWDS render in the brand palette rather than the nearest USWDS system color. Each family's other grades are derived from its brand color:
 
-| Brand Color        | Hex       | USWDS Theme Family | USWDS System Token | Mapped Hex | ΔE    |
-| ------------------ | --------- | ------------------ | ------------------ | ---------- | ----- |
-| PathAble Blue      | `#00365c` | Primary            | `blue-warm-80v`    | `#162e51`  | 5.56  |
-| Intelligent Jade   | `#1cae96` | Secondary          | `mint-cool-30v`    | `#1dc2ae`  | 7.84  |
-| Bright Blue Brooks | `#4899e8` | Accent-cool        | `blue-30v`         | `#58b4ff`  | 10.70 |
-| Tech Teal          | `#015a76` | Accent-cool-dark   | `cyan-60v`         | `#00687d`  | 8.10  |
-| Lived-In Lime      | `#d3ff66` | Accent-warm        | `green-warm-10v`   | `#e7f434`  | 18.97 |
-| Shilling Silver    | `#dde2e8` | Base               | `gray-cool-10`     | `#dfe1e2`  | 2.79  |
+- `lighter` grades are the brand color at 10% over white, the same as the tertiary colors below.
+- `light` grades are the brand color at 40% over white.
+- `dark` and `darker` grades are the brand color mixed with black, or another brand color where one fits the role.
 
-**ΔE (deltaE 1976)**: Perceptual color distance. Values below 10 are imperceptible to most viewers. Lived-In Lime has the furthest match (ΔE 18.97) — documented as an anticipated edge case.
+| USWDS theme family | Brand grade                   | Derived grades                                                                                                |
+| ------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Primary            | PathAble Blue `#00365c`       | lighter `#e6ebef`, light `#99afbe`, vivid Tech Teal `#015a76`, dark `#002845`, darker `#001e33`               |
+| Secondary          | Intelligent Jade `#1cae96`    | lighter `#e8f7f4`, light `#a4dfd5`, dark `#0d7a63`, darker `#0d4e44`                                          |
+| Accent-cool        | Bright Blue Brooks `#4899e8`  | lighter `#edf5fd`, light `#b6d6f6`, dark Tech Teal `#015a76`, darker PathAble Blue `#00365c`                  |
+| Accent-warm        | Lived-In Lime `#d3ff66`       | lighter `#fbfff0`, light `#edffc2`, dark `#a9cc52`, darker `#5f732e`                                          |
+| Base               | Shilling Silver `#dde2e8`     | lightest `#f6f8f9`, lighter `#eef0f4`, light `#e6e9ee`, dark `gray-cool-60`, darker/darkest/ink PathAble Blue |
+| Info               | Bright Blue Brooks `#4899e8`  | lighter `#edf5fd`, dark Tech Teal `#015a76`                                                                   |
+| Success            | Intelligent Jade `#1cae96`    | lighter `#e8f7f4`, dark `#0d7a63`                                                                             |
+| Warning            | Amber `#f5a623` (functional)  | lighter `#fef6e9`, dark `#c4851c`                                                                             |
+| Error              | Danger `#dc3545` (functional) | lighter `#fcebec`, dark `#a52834`                                                                             |
+
+USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Tech Teal, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
+
+The brand book defines no red or amber. Danger (`#dc3545`) and warning (`#f5a623`) are functional status colors added by the design system; use them only for status, never as decoration.
 
 ## Color Hierarchy
 
 PathAble Blue, Intelligent Jade, and Bright Blue Brooks are the primary brand colors and should appear most prominently.
 
-Tech Teal, Lived-In Lime, and Shilling Silver are supporting colors and should usually be used as accents, backgrounds, borders, or secondary visual elements.
+Tech Teal, Lived-In Lime, and Shilling Silver are secondary colors and should usually be used as accents, backgrounds, borders, or secondary visual elements.
 
 Secondary colors should not dominate the primary palette.
 
@@ -55,35 +64,58 @@ Tertiary colors are derived from brand colors at `10%` opacity. They are intende
 
 Recommended tertiary colors:
 
-| Name                   | Source                     |
-| ---------------------- | -------------------------- |
-| Bright Blue Brooks 10% | `rgba(72, 153, 232, 0.1)`  |
-| Shilling Silver 10%    | `rgba(221, 226, 232, 0.1)` |
-| Intelligent Jade 10%   | `rgba(28, 174, 150, 0.1)`  |
+| Name                   | Source                     | Solid equivalent on white |
+| ---------------------- | -------------------------- | ------------------------- |
+| Bright Blue Brooks 10% | `rgba(72, 153, 232, 0.1)`  | `#edf5fd`                 |
+| Shilling Silver 10%    | `rgba(221, 226, 232, 0.1)` | `#fcfcfd`                 |
+| Intelligent Jade 10%   | `rgba(28, 174, 150, 0.1)`  | `#e8f7f4`                 |
 
 Tertiary colors should add character without reducing readability.
 
 ## Color Pairing
 
-The strongest general-purpose pairing is:
+The brand book rates its approved pairings with stars: one star for large text and graphics only, two stars for use anywhere. The measured WCAG contrast does not always agree with those ratings, so this table records both. Where they disagree, follow the measured contrast.
 
-| Background      | Foreground    | Usage                                               |
-| --------------- | ------------- | --------------------------------------------------- |
-| Shilling Silver | PathAble Blue | Preferred high-legibility pairing for web and print |
+| Background         | Foreground    | Brand book | Measured contrast | Use in the design system                             |
+| ------------------ | ------------- | ---------- | ----------------- | ---------------------------------------------------- |
+| Shilling Silver    | PathAble Blue | ★★         | 9.58:1            | Preferred high-legibility pairing for web and print  |
+| PathAble Blue      | Lived-In Lime | ★          | 10.86:1           | Accent words or highlights; passes for any text size |
+| Lived-In Lime      | PathAble Blue | ★          | 10.86:1           | Accent surfaces; passes for any text size            |
+| Bright Blue Brooks | White         | ★          | 3.00:1            | Large text (18pt+, or bold 14pt+) and graphics only  |
+| Intelligent Jade   | White         | ★          | 2.78:1            | Fails WCAG for all text; do not use for text         |
 
-Other approved pairings include:
+Other pairings used by the design system:
 
-| Background             | Foreground               | Usage                                |
-| ---------------------- | ------------------------ | ------------------------------------ |
-| PathAble Blue          | White or Shilling Silver | Strong contrast                      |
-| Tech Teal              | White                    | Strong contrast                      |
-| Intelligent Jade       | White                    | Strong contrast                      |
-| Bright Blue Brooks     | White                    | Use when contrast remains sufficient |
-| Dark brand backgrounds | Lived-In Lime            | Accent or highlight only             |
+| Background                             | Foreground          | Measured contrast | Usage                                         |
+| -------------------------------------- | ------------------- | ----------------- | --------------------------------------------- |
+| White                                  | PathAble Blue       | 12.48:1           | Body and heading text                         |
+| PathAble Blue                          | White               | 12.48:1           | Primary actions and dark surfaces             |
+| PathAble Blue                          | Shilling Silver     | 9.58:1            | Text on dark surfaces                         |
+| Tech Teal                              | White               | 7.71:1            | Dark supporting surfaces                      |
+| Tech Teal                              | Lived-In Lime       | 6.70:1            | Accent words on Tech Teal                     |
+| White                                  | Tech Teal           | 7.71:1            | Links, muted text, focus ring                 |
+| Shilling Silver                        | Tech Teal           | 5.91:1            | Links and muted text on the page background   |
+| Intelligent Jade                       | On-accent `#001a33` | 6.31:1            | Secondary buttons and success status          |
+| Bright Blue Brooks                     | On-accent `#001a33` | 5.85:1            | Accent-cool buttons                           |
+| Intelligent Jade or Bright Blue Brooks | PathAble Blue       | 4.48:1 / 4.16:1   | Large text only; use on-accent for small text |
 
-Lived-In Lime may be used as an accent on darker backgrounds to highlight key words, focus states, or important moments. It should be used sparingly.
+The brand book's button examples use white labels on Intelligent Jade and Bright Blue Brooks. Those fail WCAG at button text sizes, so design-system buttons on those colors use the dark on-accent text color (`#001a33`) instead.
 
-Lived-In Lime is better suited for print or large accent use than for small web text, because it may lack sufficient contrast in some combinations.
+Lived-In Lime may be used sparingly as an accent on darker backgrounds to highlight key words or phrases.
+
+Lived-In Lime must never be used as text on light backgrounds (1.15:1 on white). The brand book notes it is better suited to print than web because of this.
+
+Bright Blue Brooks text on white or Shilling Silver (3.00:1 and 2.30:1) is not used for links or small text. Links use Tech Teal.
+
+## Color Violations
+
+Do not implement colors from outside the palette into the identity. The functional danger and warning colors above are the only additions, and only for status.
+
+Do not use undesignated color combinations. They often look harsh.
+
+Do not use low-contrast colors for small text.
+
+Do not let secondary colors overpower the primary palette.
 
 ## Accessibility
 
@@ -103,6 +135,12 @@ When brand expression and accessibility conflict, accessibility takes priority.
 | Alternate Heading | `Montserrat` | `Bold`    |
 | Subheading        | `Poppins`    | `Bold`    |
 | Body Text         | `Nunito`     | `Regular` |
+
+Montserrat Bold is only for headings when Fredoka is not available.
+
+Highlights use italic body text (Nunito) and should be used sparingly.
+
+The design system also uses Nunito SemiBold (600) for UI labels. This weight is a design-system addition, not part of the brand book.
 
 ## USWDS Typography Token Mapping
 
@@ -173,6 +211,27 @@ Do not format body text in all caps.
 Do not crowd text. Preserve breathing room around text blocks and UI elements.
 
 Do not break the intended hierarchy by making body text visually compete with headings.
+
+## Logos
+
+The brand has two logos:
+
+- **Primary logo**: the "PathAble" wordmark with three stepped lines (the "jar") below and to the right. Use it whenever possible.
+- **Secondary logo**: the stacked "PA" mark with the same three lines, for layouts where horizontal space is limited.
+
+In the full-color logo, the wordmark and top line are PathAble Blue, the middle line is Tech Teal, and the bottom line is Intelligent Jade. On dark backgrounds, use the light version of the logo.
+
+Clear space: the unit `x` is one-sixth of the height of the jar. Keep at least `2x` around the jar and `4x` above and below the letters. Use more space whenever possible, and always scale the logo proportionally.
+
+Do not stretch or warp the logo, create new color layouts for it, add a drop shadow, display it in unbranded colors, outline it, or rearrange it into a new variation.
+
+This package does not ship logo files. Use the official logo assets supplied by the PathAble brand team.
+
+## Iconography
+
+Use familiar, widely recognized icons to communicate ideas quickly across disability, technology, and artificial-intelligence contexts. Icons are not unique to PathAble.
+
+Icons may sit on a circle of a tertiary (10%) color, with the icon in the matching full color, for example a Bright Blue Brooks icon on Bright Blue Brooks 10%.
 
 ## Themes
 

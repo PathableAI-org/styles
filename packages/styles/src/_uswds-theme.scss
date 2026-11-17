@@ -24,116 +24,143 @@
 // unexpected typography changes. Only this file needs review.
 //
 // ==========================================
-// Base Family (gray-cool) — Shilling Silver (#dde2e8)
+// Brand Color Families
 // ==========================================
-// Shilling Silver maps to gray-cool-10 (ΔE 2.79 — near-perfect match).
-// Neutral grades use standard USWDS gray-cool tokens.
-// ==========================================
-
-// ==========================================
-// Primary Family (blue-warm) — PathAble Blue (#00365c)
-// ==========================================
-// PathAble Blue maps to blue-warm-80v (ΔE 5.56 — same token as USWDS
-// default primary-darker).
-// ==========================================
-
-// ==========================================
-// Secondary Family (mint-cool) — Intelligent Jade (#1cae96)
-// ==========================================
-// Intelligent Jade maps to mint-cool-30v (ΔE 7.84 — slightly more
-// saturated teal-green).
+// USWDS theme color settings accept hex values as well as system tokens, so
+// every brand grade below is the exact brand hex from BRAND_RULES.md. The
+// other grades in each family are derived from that brand color:
+//   - "lighter" grades are the brand color at 10% over white, matching the
+//     brand book's tertiary colors;
+//   - "light" grades are the brand color at 40% over white;
+//   - "dark" and "darker" grades are the brand color mixed with black, or
+//     another brand color where one fits the role.
+// Derived grades are written as precomputed hex values (rounded to whole
+// RGB channels) because USWDS contrast functions need integer channels.
+// Using exact values keeps USWDS-based component styles on brand instead of
+// the nearest USWDS system token.
 // ==========================================
 
-// ==========================================
-// Accent-cool Family (blue) — Bright Blue Brooks (#4899e8)
-// ==========================================
-// Bright Blue Brooks maps to blue-30v (ΔE 10.70 — slightly brighter,
-// more saturated). Tech Teal (#015a76) maps to cyan-60v (ΔE 8.10)
-// and fills the accent-cool-dark grade.
-// ==========================================
+// Brand primitives (kept in sync with _colors.scss).
+$_pathable-blue: #00365c;
+$_intelligent-jade: #1cae96;
+$_bright-blue-brooks: #4899e8;
+$_tech-teal: #015a76;
+$_lived-in-lime: #d3ff66;
+$_shilling-silver: #dde2e8;
 
-// ==========================================
-// Accent-warm Family (green-warm) — Lived-in Lime (#d3ff66)
-// ==========================================
-// Lived-in Lime maps to green-warm-10v (ΔE 18.97 — furthest match;
-// documented edge case in spec).
-// ==========================================
+// Functional status colors. The brand book defines no red or amber, so these
+// match the semantic danger and warning tokens in _semantic.scss.
+$_danger: #dc3545;
+$_warning: #f5a623;
+
+// Text-safe deep jade (5.3:1 on white), matching --pathable-color-text-success.
+$_jade-text: #0d7a63;
 
 @use 'uswds-core' with (
-  // -------- Base family: Shilling Silver --------
-  $theme-color-base-lightest: 'gray-cool-5',
-  $theme-color-base-lighter: 'gray-cool-2',
-  $theme-color-base-light: 'gray-cool-3',
-  $theme-color-base: 'gray-cool-10',
-  $theme-color-base-dark: 'gray-cool-80',
-  $theme-color-base-darker: 'gray-cool-90',
-  $theme-color-base-darkest: 'gray-90',
-  $theme-color-base-ink: 'gray-90',
+  // -------- Base family: Shilling Silver and PathAble Blue ink --------
+  // Light grades are tints of Shilling Silver, from lightest to base. The dark
+  // grade stays a neutral cool gray for borders and tags. Darker, darkest and
+  // ink use PathAble Blue, the brand text color, so default text is on brand
+  // instead of USWDS neutral gray.
+  // Shilling Silver 25% over white
+  $theme-color-base-lightest: #f6f8f9,
+  // Shilling Silver 50% over white
+  $theme-color-base-lighter: #eef0f4,
+  // Shilling Silver 75% over white
+  $theme-color-base-light: #e6e9ee,
+  $theme-color-base: $_shilling-silver,
+  $theme-color-base-dark: 'gray-cool-60',
+  $theme-color-base-darker: $_pathable-blue,
+  $theme-color-base-darkest: $_pathable-blue,
+  $theme-color-base-ink: $_pathable-blue,
 
   // -------- Primary family: PathAble Blue --------
-  $theme-color-primary-lighter: 'blue-warm-10',
-  $theme-color-primary-light: 'blue-warm-20',
-  $theme-color-primary: 'blue-warm-80v',
-  $theme-color-primary-vivid: 'blue-warm-70v',
-  $theme-color-primary-dark: 'blue-warm-80',
-  $theme-color-primary-darker: 'blue-warm-90',
+  // PathAble Blue 10% over white
+  $theme-color-primary-lighter: #e6ebef,
+  // PathAble Blue 40% over white
+  $theme-color-primary-light: #99afbe,
+  $theme-color-primary: $_pathable-blue,
+  $theme-color-primary-vivid: $_tech-teal,
+  // PathAble Blue 75% with black
+  $theme-color-primary-dark: #002845,
+  // PathAble Blue 55% with black
+  $theme-color-primary-darker: #001e33,
 
   // -------- Secondary family: Intelligent Jade --------
-  $theme-color-secondary-lighter: 'mint-cool-10',
-  $theme-color-secondary-light: 'mint-cool-20',
-  $theme-color-secondary: 'mint-cool-30v',
-  $theme-color-secondary-vivid: 'mint-cool-40v',
-  $theme-color-secondary-dark: 'mint-cool-80v',
-  $theme-color-secondary-darker: 'mint-cool-90',
+  // Intelligent Jade 10% over white
+  $theme-color-secondary-lighter: #e8f7f4,
+  // Intelligent Jade 40% over white
+  $theme-color-secondary-light: #a4dfd5,
+  $theme-color-secondary: $_intelligent-jade,
+  $theme-color-secondary-vivid: $_intelligent-jade,
+  $theme-color-secondary-dark: $_jade-text,
+  // Intelligent Jade 45% with black
+  $theme-color-secondary-darker: #0d4e44,
 
   // -------- Accent-cool family: Bright Blue Brooks + Tech Teal --------
-  $theme-color-accent-cool-lighter: 'blue-10',
-  $theme-color-accent-cool-light: 'blue-20',
-  $theme-color-accent-cool: 'blue-30v',
-  $theme-color-accent-cool-dark: 'cyan-60v',
-  $theme-color-accent-cool-darker: 'blue-90',
+  // Bright Blue Brooks 10% over white
+  $theme-color-accent-cool-lighter: #edf5fd,
+  // Bright Blue Brooks 40% over white
+  $theme-color-accent-cool-light: #b6d6f6,
+  $theme-color-accent-cool: $_bright-blue-brooks,
+  $theme-color-accent-cool-dark: $_tech-teal,
+  $theme-color-accent-cool-darker: $_pathable-blue,
 
-  // -------- Accent-warm family: Lived-in Lime --------
-  $theme-color-accent-warm-lighter: 'green-warm-10',
-  $theme-color-accent-warm-light: 'green-warm-20',
-  $theme-color-accent-warm: 'green-warm-10v',
-  $theme-color-accent-warm-dark: 'green-warm-80',
-  $theme-color-accent-warm-darker: 'green-warm-90',
+  // -------- Accent-warm family: Lived-In Lime --------
+  // Lived-In Lime 10% over white
+  $theme-color-accent-warm-lighter: #fbfff0,
+  // Lived-In Lime 40% over white
+  $theme-color-accent-warm-light: #edffc2,
+  $theme-color-accent-warm: $_lived-in-lime,
+  // Lived-In Lime 80% with black
+  $theme-color-accent-warm-dark: #a9cc52,
+  // Lived-In Lime 45% with black
+  $theme-color-accent-warm-darker: #5f732e,
 
   // -------- State tokens --------
-  // Error: #dc3545 via red-60v (existing semantic token, no direct USWDS mapping)
-  $theme-color-error: 'red-60v',
-  $theme-color-error-dark: 'red-70v',
-  $theme-color-error-lighter: 'red-10',
+  // Error and warning match the semantic danger and warning tokens.
+  $theme-color-error: $_danger,
+  // danger 75% with black
+  $theme-color-error-dark: #a52834,
+  // danger 10% over white
+  $theme-color-error-lighter: #fcebec,
 
-  // Warning: gold-20v
-  $theme-color-warning: 'gold-20v',
-  $theme-color-warning-dark: 'gold-30v',
-  $theme-color-warning-lighter: 'gold-5',
+  $theme-color-warning: $_warning,
+  // warning 80% with black
+  $theme-color-warning-dark: #c4851c,
+  // warning 10% over white
+  $theme-color-warning-lighter: #fef6e9,
 
-  // Success: Intelligent Jade via mint-cool-30v
-  $theme-color-success: 'mint-cool-30v',
-  $theme-color-success-dark: 'mint-cool-40v',
-  $theme-color-success-lighter: 'mint-cool-5',
+  // Success: Intelligent Jade
+  $theme-color-success: $_intelligent-jade,
+  $theme-color-success-dark: $_jade-text,
+  // Intelligent Jade 10% over white
+  $theme-color-success-lighter: #e8f7f4,
 
-  // Info: Bright Blue Brooks via blue-30v
-  $theme-color-info: 'blue-30v',
-  $theme-color-info-dark: 'blue-40v',
-  $theme-color-info-lighter: 'blue-5',
+  // Info: Bright Blue Brooks
+  $theme-color-info: $_bright-blue-brooks,
+  $theme-color-info-dark: $_tech-teal,
+  // Bright Blue Brooks 10% over white
+  $theme-color-info-lighter: #edf5fd,
 
-  // Disabled: gray-cool-20
+  // Disabled: neutral cool gray
   $theme-color-disabled: 'gray-cool-20',
-  $theme-color-disabled-dark: 'gray-30',
+  $theme-color-disabled-dark: 'gray-cool-30',
 
   // -------- Link colors --------
-  // blue-60v (#005ea2) chosen over blue-30v because blue-30v fails
-  // WCAG AA contrast on light backgrounds (white, base-lightest,
-  // success/warning/error/info-lighter). blue-60v passes AA on all of them.
-  $theme-link-color: 'blue-60v',
-  $theme-link-visited-color: 'blue-60v',
+  // Tech Teal (7.7:1 on white, 5.9:1 on Shilling Silver) matches
+  // --pathable-color-link. Bright Blue Brooks is only 3.0:1 on white, so it
+  // is not used for link text. USWDS link and focus settings take theme
+  // token names, not hex values: accent-cool-dark is Tech Teal and primary
+  // is PathAble Blue (see the families above).
+  $theme-link-color: 'accent-cool-dark',
+  $theme-link-visited-color: 'accent-cool-dark',
+  $theme-link-hover-color: 'primary',
+  $theme-link-active-color: 'primary-dark',
 
   // -------- Focus color --------
-  $theme-focus-color: 'blue-40v',
+  // Tech Teal, matching --pathable-color-focus-ring.
+  $theme-focus-color: 'accent-cool-dark',
 
   // -------- Suppress notifications --------
   $theme-show-notifications: false,

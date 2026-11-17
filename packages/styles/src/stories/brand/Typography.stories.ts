@@ -201,12 +201,12 @@ const typographyViolations = [
 
 export const Default = {
   render: () => `
-    <div style="font-family: system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 2rem; color: #162e51;">
+    <div style="font-family: system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 2rem; color: #00365c;">
 
       <!-- Section 1: Introduction -->
       <section style="margin-bottom: 3rem;">
-        <h1 style="font-size: 1.75rem; font-weight: 700; margin: 0 0 1rem; color: #162e51;">Brand Typography</h1>
-        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 1rem; color: #00687d;">
+        <h1 style="font-size: 1.75rem; font-weight: 700; margin: 0 0 1rem; color: #00365c;">Brand Typography</h1>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 1rem; color: #015a76;">
           PathAble uses four distinct typefaces, each assigned to a typographic role with specific weight and usage guidelines.
         </p>
         <p style="font-size: 0.875rem; line-height: 1.6; margin: 0; color: #555;">
@@ -217,14 +217,14 @@ export const Default = {
 
       <!-- Section 2: Font Roles -->
       <section style="margin-bottom: 3rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #162e51;">Font Roles</h2>
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #00365c;">Font Roles</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
           ${fontRoles
             .map(
               (r) => `
             <div style="flex: 0 0 420px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #fff;">
               <div style="padding: 1.5rem 1.25rem 1rem;">
-                <div style="font-family: ${r.fontStack}; font-size: 1.75rem; font-weight: ${r.weight}; margin-bottom: 0.75rem; color: #162e51; line-height: 1.2;">
+                <div style="font-family: ${r.fontStack}; font-size: 1.75rem; font-weight: ${r.weight}; margin-bottom: 0.75rem; color: #00365c; line-height: 1.2;">
                   ${r.typeface} ${r.weightName}
                 </div>
                 <div style="font-family: ${r.fontStack}; font-size: 1rem; font-weight: ${r.weight}; margin-bottom: 0.75rem; color: #555;">
@@ -233,11 +233,11 @@ export const Default = {
               </div>
               <div style="padding: 0 1.25rem 1rem;">
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
-                  <span style="background: #162e51; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">${r.typeface}</span>
-                  <span style="background: #00687d; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">${r.weightName}</span>
+                  <span style="background: #00365c; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">${r.typeface}</span>
+                  <span style="background: #015a76; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">${r.weightName}</span>
                   ${
                     r.uswdsRole
-                      ? `<span style="background: #4899e8; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">USWDS: ${r.uswdsRole}</span>`
+                      ? `<span style="background: #4899e8; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">USWDS: ${r.uswdsRole}</span>`
                       : `<span style="background: #888; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
                   }
                 </div>
@@ -263,14 +263,14 @@ export const Default = {
 
       <!-- Section 3: Type Scale -->
       <section style="margin-bottom: 3rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #162e51;">Type Scale</h2>
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #00365c;">Type Scale</h2>
         <p style="font-size: 0.875rem; line-height: 1.6; margin: 0 0 1rem; color: #555;">
           The complete typography scale with font size, line height, font weight, and CSS custom property references.
         </p>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
             <thead>
-              <tr style="background: #162e51; color: #fff;">
+              <tr style="background: #00365c; color: #fff;">
                 <th style="padding: 0.5rem 0.75rem; text-align: left;">Token</th>
                 <th style="padding: 0.5rem 0.75rem; text-align: left;">Typeface</th>
                 <th style="padding: 0.5rem 0.75rem; text-align: center;">Font Size</th>
@@ -303,14 +303,14 @@ export const Default = {
 
       <!-- Section 4: Long-Text Examples -->
       <section style="margin-bottom: 3rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #162e51;">Long-Text Examples</h2>
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #00365c;">Long-Text Examples</h2>
         <p style="font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.5rem; color: #555;">
           Body text samples at the standard sizes, rendered in Nunito with correct line height and font weight.
         </p>
 
         <div style="margin-bottom: 2rem; padding: 1.25rem; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #1cae96;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-            <span style="font-weight: 600; font-size: 0.8rem; color: #162e51;">Body Medium</span>
+            <span style="font-weight: 600; font-size: 0.8rem; color: #00365c;">Body Medium</span>
             <span style="background: #1cae96; color: #00365c; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">16px / 1.5</span>
             <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-md</span>
           </div>
@@ -321,8 +321,8 @@ export const Default = {
 
         <div style="padding: 1.25rem; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #4899e8;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-            <span style="font-weight: 600; font-size: 0.8rem; color: #162e51;">Body Large</span>
-            <span style="background: #4899e8; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">18px / 1.5</span>
+            <span style="font-weight: 600; font-size: 0.8rem; color: #00365c;">Body Large</span>
+            <span style="background: #4899e8; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">18px / 1.5</span>
             <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-lg</span>
           </div>
           <p style="font-family: Nunito, system-ui, serif; font-size: 18px; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
@@ -333,7 +333,7 @@ export const Default = {
 
       <!-- Section 5: Typography Violations -->
       <section>
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #162e51;">Typography Violations</h2>
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; color: #00365c;">Typography Violations</h2>
         <p style="font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.5rem; color: #555;">
           Common brand rule violations that should be avoided. Each example shows the incorrect usage alongside a note about the correct approach.
         </p>

@@ -16,9 +16,11 @@ $pathable-brand-tech-teal: #015a76;
 $pathable-brand-lived-in-lime: #d3ff66;
 $pathable-brand-shilling-silver: #dde2e8;
 
-// USWDS Color Approximations — for documentation/mapping only
-// These are the closest USWDS v3.x system tokens to each brand color.
-// See _uswds-theme.scss for the USWDS theme configuration source of truth.
+// USWDS Color Approximations — reference only
+// These are the closest USWDS v3.x system tokens to each brand color. The
+// USWDS theme no longer uses them: _uswds-theme.scss sets every theme color
+// family from the exact brand hex values above. They are kept so existing
+// Sass consumers of these variables do not break.
 $pathable-uswds-pathable-blue-approx: uswds.color('blue-warm-80v');
 $pathable-uswds-intelligent-jade-approx: uswds.color('mint-cool-30v');
 $pathable-uswds-bright-blue-brooks-approx: uswds.color('blue-30v');

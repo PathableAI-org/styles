@@ -92,7 +92,7 @@ ensure your bundler copies those assets, or use the copy command below.
 
 ### USWDS Integration
 
-This package configures USWDS v3.x theme tokens to match PathAble brand colors.
+This package configures the USWDS v3.x theme color families with the exact PathAble brand hex values.
 Compile the PathAble source before USWDS in the same Sass build to apply that
 configuration to USWDS components.
 
@@ -118,10 +118,11 @@ pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/pa
 node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
 ```
 
-The compiled PathAble CSS does **not** include USWDS component styles. Importing
-the stock precompiled USWDS CSS adds stock components; it does not apply the
-PathAble Sass configuration. Use the combined Sass build above for brand-aligned
-USWDS components.
+The compiled PathAble CSS already includes the USWDS component styles that the
+`.pathable-*` wrappers use, compiled with the PathAble theme. Importing the stock
+precompiled USWDS CSS adds stock, unbranded components; it does not apply the
+PathAble Sass configuration. Use the combined Sass build above for any other
+brand-aligned USWDS components.
 
 For detailed setup instructions, see the
 [USWDS theme quickstart](https://github.com/PathableAI-org/styles/blob/main/specs/003-wrap-uswds-theme/quickstart.md).

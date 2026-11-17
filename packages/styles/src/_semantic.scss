@@ -7,9 +7,13 @@ $pathable-color-surface: #ffffff;
 $pathable-color-text: #00365c;
 $pathable-color-text-muted: #015a76;
 $pathable-color-border: #dde2e8;
-$pathable-color-link: #4899e8;
+// Link text uses Tech Teal (7.7:1 on white, 5.9:1 on Shilling Silver).
+// Bright Blue Brooks is only 3.0:1 on white, which fails WCAG AA for text.
+$pathable-color-link: #015a76;
 $pathable-color-accent: #1cae96;
-$pathable-color-focus-ring: #4497f5;
+// Focus ring uses Tech Teal so it keeps at least 3:1 against both white and
+// Shilling Silver (WCAG 1.4.11). Bright Blue Brooks is 2.3:1 on Shilling Silver.
+$pathable-color-focus-ring: #015a76;
 $pathable-color-danger: #dc3545;
 $pathable-color-success: #1cae96;
 // Text-safe success color — deep jade validated to pass WCAG AA (≥ 4.5:1)
@@ -39,8 +43,9 @@ $pathable-color-workflow-blocked: #dc3545;
 
 // Accessibility-Derived Token — a very dark blue for text on accent/success/warning
 // backgrounds where PathAble Blue (#00365c) does not provide sufficient WCAG AA
-// contrast. Reviewed against Intelligent Jade (#1cae96): ~5.5:1; Bright Blue
-// Brooks (#4899e8): ~5.8:1; warning amber (#f5a623): ~6.4:1. All pass AA normal text.
+// contrast (Intelligent Jade 4.48:1, Bright Blue Brooks 4.16:1). Measured
+// against Intelligent Jade (#1cae96): 6.3:1; Bright Blue Brooks (#4899e8):
+// 5.9:1; warning amber (#f5a623): 8.7:1. All pass AA normal text.
 $pathable-color-on-accent: #001a33;
 
 $semantic-colors: (
@@ -49,9 +54,9 @@ $semantic-colors: (
   'text': #00365c,
   'text-muted': #015a76,
   'border': #dde2e8,
-  'link': #4899e8,
+  'link': #015a76,
   'accent': #1cae96,
-  'focus-ring': #4497f5,
+  'focus-ring': #015a76,
   'danger': #dc3545,
   'success': #1cae96,
   'text-success': #0d7a63,
