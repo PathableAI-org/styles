@@ -1,0 +1,140 @@
+# Spec Kit
+
+This document owns how [Spec Kit](https://github.com/github/spec-kit) is set up
+here: which files the weekly upgrade owns, where project customisations live,
+and the steps agents must skip. When to write a specification at all is decided
+by the [risk tier](git-workflow.md#process-by-tier).
+
+## What is installed
+
+- The `speckit-*` skills live in `.agents/skills/`. The installed integrations
+  are `codex` and `opencode` (`.specify/integration.json`).
+- Claude Code reaches the same skills through `.claude/skills/speckit-*`, which
+  are symlinks to `.agents/skills/speckit-*` (see
+  [The `.claude/skills` symlinks](#the-claudeskills-symlinks)).
+- Presets `workflow-preset` and `toc-navigation` and extensions `agent-context`,
+  `critique` and `git` are installed under `.specify/`.
+
+## What the upgrade workflow owns
+
+[`.github/workflows/speckit-upgrade.yml`](../../.github/workflows/speckit-upgrade.yml)
+runs weekly (and on demand) through a shared reusable workflow and opens a pull
+request that upgrades Spec Kit. Its `add_paths` are `.specify/` and
+`.agents/skills/`.
+
+Treat these as generated. Do not hand-edit them; change them only through an
+upgrade or a `specify` command:
+
+- `.agents/skills/`
+- `.specify/scripts/`
+- the core templates `.specify/templates/*.md`, which are hash-tracked in
+  `.specify/integrations/speckit.manifest.json`
+- `.specify/integrations/`, `.specify/presets/` (including `.registry`),
+  `.specify/extensions/` and `.specify/workflows/`
+
+These files under `.specify/` are the project's own:
+
+- `.specify/memory/constitution.md`, changed through the `speckit-constitution`
+  skill
+- `.specify/templates/overrides/`, the project's template customisations
+  (below)
+- the project's choices in `.specify/extensions.yml`, such as the disabled
+  `agent-context` hooks
+
+## Where project customisations live
+
+Project-specific template content lives in
+`.specify/templates/overrides/`: `spec-template.md`, `plan-template.md` and
+`tasks-template.md`. They carry the design-system, Storybook, accessibility,
+responsive, visual-regression and validation sections, the Constitution Check
+subsections and the conditional task categories.
+
+### How Spec Kit picks a template
+
+Both the bash scripts (`resolve_template` in `.specify/scripts/bash/common.sh`)
+and the `specify` CLI (`PresetResolver`) search, in order:
+
+1. `.specify/templates/overrides/<name>.md`
+2. each enabled preset in `.specify/presets/.registry`, by priority
+3. extension templates
+4. the core `.specify/templates/<name>.md`
+
+An override always replaces everything below it. The `specify` CLI only writes
+top-level files in `.specify/templates/` when it installs or refreshes shared
+templates, so an upgrade does not touch `overrides/`. (The shared reusable
+workflow that drives the upgrade lives in another repository and was not
+reviewed; the [upgrade review checklist](#reviewing-an-upgrade-pull-request)
+catches it if it ever removes them.)
+
+### Why overrides and not a local preset
+
+A preset is only consulted when it is registered in
+`.specify/presets/.registry`; the CLI treats the registry as authoritative and
+does not fall back to unregistered preset directories. Registering one means
+running `specify preset add --dev <path>`, which writes CLI-owned state.
+Overrides need no registration, outrank every preset, and are left alone by
+upgrades, so they are the smaller and safer mechanism.
+
+### What the overrides contain
+
+Because an override replaces lower layers, each override folds in what those
+layers contributed before, so generated documents keep their structure:
+
+- the project customisations previously written into the core templates, with
+  package names corrected to `@pathableai/styles` and the dropped Astro docs
+  site removed;
+- the Table of Contents from the `toc-navigation` preset;
+- for `plan-template.md`, the Design Artifacts and visual fidelity navigation
+  from the `workflow-preset` preset.
+
+### Keeping overrides current
+
+Upstream changes to the core templates, or to those two presets' templates, no
+longer reach generated documents on their own. When an upgrade pull request
+changes `.specify/templates/{spec,plan,tasks}-template.md`,
+`.specify/presets/toc-navigation/templates/` or
+`.specify/presets/workflow-preset/templates/plan-template.md`, port the
+relevant changes into the overrides in a separate pull request.
+
+### Background: the core templates on `main`
+
+Before the overrides existed, the customisations were written straight into the
+core templates. Two things were wrong with that:
+
+- They never reached generated documents. Both presets outrank core templates,
+  so `spec.md` and `tasks.md` started from the `toc-navigation` templates, and
+  `plan.md` from `workflow-preset`'s plan template.
+- `setup-plan.sh` resolves a path, not composed content, so it copied
+  `workflow-preset`'s `wrap` template as-is: new plans started with a literal
+  `{CORE_TEMPLATE}` line. The override avoids this.
+
+The customised core templates are now redundant. They differ from their
+manifest hashes, so the CLI preserves them on an upgrade run without `--force`
+and replaces them with upstream content on one with `--force`. Either outcome
+is fine; do not hand-edit them.
+
+## The `.claude/skills` symlinks
+
+- `.claude/skills/speckit-*` are symlinks to `.agents/skills/speckit-*`, so
+  Claude Code picks up whatever the upgrade refreshes there. The `claude`
+  integration is not installed, and `.claude/skills/` is not in the workflow's
+  `add_paths`.
+- If someone later installs the `claude` integration with the `specify` CLI,
+  delete the `.claude/skills/speckit-*` symlinks first. Otherwise the CLI
+  writes through them into the codex-managed files in `.agents/skills/`.
+  After installing it, add `.claude/skills/` to the workflow's `add_paths`.
+
+## Steps to skip
+
+- `AGENTS.md` intentionally has no `SPECKIT START`/`SPECKIT END` plan pointer,
+  and the `agent-context` hooks are disabled in `.specify/extensions.yml`.
+- When the `speckit-plan` skill reaches its "Agent context update" step, skip
+  it. Do not add the markers or a plan pointer back.
+
+## Reviewing an upgrade pull request
+
+- No files under `.specify/templates/overrides/` or
+  `.specify/memory/constitution.md` are deleted or rewritten.
+- `.specify/extensions.yml` keeps the `agent-context` hooks disabled.
+- If upstream templates changed, open a follow-up to port them into the
+  overrides (see [Keeping overrides current](#keeping-overrides-current)).
