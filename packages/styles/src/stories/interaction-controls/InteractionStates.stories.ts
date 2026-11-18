@@ -69,6 +69,29 @@ async function expectStylesReady(element: HTMLElement, view: Window) {
   await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
 }
 
+// The ::after spinner has no element to measure, so its border box is derived
+// from its resolved geometry, which is relative to the control's padding box
+// (clientWidth/clientHeight).
+async function expectSpinnerWithinControl(control: HTMLElement, view: Window) {
+  const controlStyle = view.getComputedStyle(control)
+  const spinner = view.getComputedStyle(control, '::after')
+  const fontSize = parseFloat(controlStyle.fontSize)
+  const width = parseFloat(spinner.width)
+  const height = parseFloat(spinner.height)
+  const top = parseFloat(spinner.top) + parseFloat(spinner.marginTop)
+  const left = parseFloat(spinner.left) + parseFloat(spinner.marginLeft)
+
+  await expect(spinner.content).toBe('""')
+  await expect(spinner.position).toBe('absolute')
+  await expect(spinner.boxSizing).toBe('border-box')
+  await expect(width).toBeCloseTo(fontSize, 1)
+  await expect(height).toBeCloseTo(fontSize, 1)
+  await expect(top).toBeGreaterThanOrEqual(0)
+  await expect(left).toBeGreaterThanOrEqual(0)
+  await expect(top + height).toBeLessThanOrEqual(control.clientHeight)
+  await expect(left + width).toBeLessThanOrEqual(control.clientWidth)
+}
+
 async function runInteractionStatesProof(
   storyId: string,
   capability: string,
@@ -270,6 +293,7 @@ export const LoadingState = {
         await expect(spinner.content).toBe('""')
         await expect(spinner.position).toBe('absolute')
         await expect(spinner.borderTopWidth).toBe('2px')
+        await expectSpinnerWithinControl(loading, view)
         await expect(loadingBounds.width).toBeCloseTo(readyBounds.width, 3)
         await expect(loadingBounds.height).toBeCloseTo(readyBounds.height, 3)
         const loadingHitTarget = canvasElement.ownerDocument.elementFromPoint(
@@ -336,6 +360,7 @@ export const StatePrecedence = {
         await expect(loadingDisabled).toBeDisabled()
         await expect(loadingDisabled).toHaveAttribute('aria-busy', 'true')
         await expect(loadingStyle.pointerEvents).toBe('none')
+        await expectSpinnerWithinControl(loadingDisabled, view)
       },
     )
   },
