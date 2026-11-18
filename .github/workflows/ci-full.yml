@@ -41,7 +41,8 @@ jobs:
       react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react == 'true' }}
       behavior_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.behavior_contracts == 'true' }}
       next_consumer: ${{ github.event_name != 'pull_request' || steps.filter.outputs.next_consumer == 'true' }}
-      storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.storybook == 'true' }}
+      stylelint: ${{ github.event_name != 'pull_request' || steps.filter.outputs.stylelint == 'true' }}
+      formattable: ${{ github.event_name != 'pull_request' || steps.filter.outputs.formattable == 'true' }}
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
         if: github.event_name == 'pull_request'
@@ -155,13 +156,30 @@ jobs:
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
-            storybook:
-              - 'apps/storybook/**'
-              - 'apps/storybook-react/**'
-              - 'packages/**'
-              - '.storybook/**'
-              - '**/*.stories.*'
-              - '**/*.mdx'
+            stylelint:
+              - 'packages/**/*.scss'
+              - 'packages/**/*.sass'
+              - 'packages/**/*.css'
+              - 'packages/**/*.js'
+              - 'packages/**/*.jsx'
+              - 'packages/**/*.ts'
+              - 'packages/**/*.tsx'
+              - 'packages/**/*.mjs'
+              - 'packages/**/tsconfig*.json'
+              - 'packages/**/.stylelintrc*'
+              - '.stylelintrc.json'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+            formattable:
+              - '**/*.scss'
+              - '**/*.sass'
+              - '**/*.css'
+              - '**/*.json'
+              - '**/*.yaml'
+              - '**/*.yml'
+              - '**/*.md'
+              - '.prettierrc'
+              - '.prettierignore'
               - 'package.json'
               - 'pnpm-lock.yaml'
 
@@ -286,6 +304,43 @@ jobs:
       - name: Markdownlint
         run: pnpm exec markdownlint ${{ steps.scope.outputs.path }} --ignore-path .markdownlintignore
 
+  stylelint:
+    needs: changes
+    if: needs.changes.outputs.stylelint == 'true'
+    name: Stylelint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - name: Lint styles
+        run: pnpm lint:styles
+      - name: Token custom property lint
+        run: pnpm lint:tokens
+
+  format:
+    needs: changes
+    if: needs.changes.outputs.formattable == 'true'
+    name: Prettier Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - name: Restore Prettier cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .prettiercache
+          key: prettier-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            prettier-${{ runner.os }}-
+      - name: Check formatting
+        run: pnpm check:format
+      - name: Save Prettier cache
+        if: always()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .prettiercache
+          key: prettier-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.run_id }}
+
   react-typecheck:
     needs: changes
     if: needs.changes.outputs.react == 'true'
@@ -298,6 +353,17 @@ jobs:
         run: pnpm --filter @pathableai/react test:unit
       - name: Typecheck React
         run: pnpm --filter @pathableai/react typecheck
+      - name: Audit React server compatibility (advisory)
+        if: always()
+        continue-on-error: true
+        run: pnpm test:storybook-react-server
+      - name: Upload server compatibility report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: react-server-compatibility
+          path: apps/storybook-react/test-results/server-compatibility.*
+          if-no-files-found: warn
 
   react-build:
     needs: changes
@@ -364,19 +430,3 @@ jobs:
           node scripts/check-agent-guidance-impact.mjs
           --base origin/${{ github.base_ref }}
           --head ${{ github.sha }}
-  storybook-build:
-    needs: changes
-    if: needs.changes.outputs.storybook == 'true'
-    name: Storybook build (HTML + React)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - name: Build styles
-        run: pnpm --filter @pathableai/styles build
-      - name: Build React package
-        run: pnpm --filter @pathableai/react build
-      - name: Build HTML Storybook
-        run: pnpm --filter @pathable/storybook build-storybook
-      - name: Build React Storybook
-        run: pnpm --filter @pathable/storybook-react build-storybook

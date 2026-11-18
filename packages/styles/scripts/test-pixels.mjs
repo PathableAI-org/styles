@@ -93,6 +93,17 @@ const STORIES = [
     id: 'components-button--outline',
     key: 'button/outline',
   },
+  // Integration toolbar: stroke-only (fill="none") icons on the bare, subtle
+  // and bordered icon-button surfaces, which the filled icons of IconButton
+  // `all-variants` do not show. The play function asserts the shapes stay
+  // unfilled (#278); this image adds what an assertion cannot name: stroke
+  // weight, line caps, and icon size and position in each surface. The
+  // full-composition story has no baseline while its segmented control lacks
+  // its gap (#277).
+  {
+    id: 'interaction-controls-integration--toolbar-panel',
+    key: 'integration/toolbar-panel',
+  },
   // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
   // story renders one labelled field as the only control, so the capture's Tab
   // shows its brand focus ring (#282) beside its label. Desktop only: the
@@ -149,6 +160,7 @@ const ROLLOUT = [
   'form-row',
   'icon-button',
   'icon-tile',
+  'integration',
   'input',
   'interaction-states',
   'modal',
@@ -211,6 +223,14 @@ if (process.env.PIXELS_IN_CONTAINER !== '1' && !values['no-container']) {
     readFileSync(join(ROOT, 'node_modules/playwright/package.json'), 'utf8'),
   )
   const image = `mcr.microsoft.com/playwright:v${version}-noble`
+  const daemon = await run('docker', ['info'], { stdio: 'ignore' }).catch(
+    () => 1,
+  )
+  if (daemon !== 0) {
+    fail(
+      'The Docker daemon is not reachable. Docker may be installed with its daemon stopped, as in Claude Code cloud sessions: start it with `(nohup dockerd > /tmp/dockerd.log 2>&1 &)`, wait for `docker info` to succeed, and run this again. Do not take baselines from CI artifacts on a Linux host. See "In a Claude Code cloud session" in docs/testing/visual-regression.md.',
+    )
+  }
   console.log(`Running in the pinned container ${image}\n`)
   const code = await run('docker', [
     'run',
