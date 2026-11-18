@@ -79,10 +79,16 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Modal has no aggregate story. `open` shows the overlay, the centred
+  // dialog and the close button in its top-right corner; it is the first
+  // control, so the capture's Tab shows its focus ring. Not shown: `narrow`
+  // and `long-content`, whose mobile layout and content padding have open
+  // defects (#286, #284) and get baselines once fixed.
+  { id: 'components-communication-modal--open', key: 'modal/open' },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section', 'modal']
 
 // ---------------------------------------------------------------------------
 
