@@ -201,7 +201,11 @@ async function verifyIconButtonSemantics(
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
     await expect(icon).toHaveAttribute('focusable', 'false')
     // The toolbar icons are stroke-only outlines; no rule may fill them.
-    await expect(getComputedStyle(icon).fill).toBe('none')
+    const shapes = icon.querySelectorAll('path, circle, line, polyline, rect')
+    await expect(shapes.length).toBeGreaterThan(0)
+    for (const shape of shapes) {
+      await expect(getComputedStyle(shape).fill).toBe('none')
+    }
   }
 
   const representativeName = names[0]
