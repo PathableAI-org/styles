@@ -30,9 +30,16 @@ export const AccentCool = {
 /**
  * Resolves a CSS custom property to the browser's computed `rgb()` color, so a
  * play function can compare a computed style with a token without restating
- * its hex value.
+ * its hex value. Throws for an undefined token, which would otherwise resolve
+ * to the inherited color and match an equally broken button.
  */
-const resolveColor = (canvasElement: HTMLElement, token: string) => {
+const resolveColorToken = (canvasElement: HTMLElement, token: string) => {
+  const tokenValue = getComputedStyle(canvasElement)
+    .getPropertyValue(token)
+    .trim()
+
+  if (!tokenValue) throw new Error(`Button token ${token} is undefined`)
+
   const probe = document.createElement('span')
   probe.style.color = `var(${token})`
   canvasElement.append(probe)
@@ -46,7 +53,7 @@ export const AccentWarm = {
     docs: {
       description: {
         story:
-          'The accent-warm modifier fills the button with Lived-In Lime and sets its text in the text color, so it reads as a highlighted action beside the primary button.',
+          'The accent-warm modifier fills the button with Lived-In Lime and sets its text in PathAble Blue, so it reads as a highlighted action beside the primary button.',
       },
     },
   },
@@ -66,10 +73,10 @@ export const AccentWarm = {
     )
 
     await expect(accentWarm.backgroundColor).toBe(
-      resolveColor(canvasElement, '--pathable-brand-lived-in-lime'),
+      resolveColorToken(canvasElement, '--pathable-brand-lived-in-lime'),
     )
     await expect(accentWarm.color).toBe(
-      resolveColor(canvasElement, '--pathable-color-text'),
+      resolveColorToken(canvasElement, '--pathable-brand-pathable-blue'),
     )
     await expect(accentWarm.backgroundColor).not.toBe(primary.backgroundColor)
     await expect(accentWarm.color).not.toBe(primary.color)
