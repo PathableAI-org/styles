@@ -25,6 +25,8 @@ const EXPECTED_COVERAGE = {
   Brand: ['brand-color-usage--default', 'brand-typography--default'],
   'Basic components': [
     'components-button--primary',
+    'components-button--outline',
+    'components-button--outline-inverse',
     'components-button-group--default',
     'components-card--default',
     'components-link--default',

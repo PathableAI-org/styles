@@ -65,6 +65,34 @@ export const Outline = {
   },
 }
 
+export const OutlineInverse = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The outline modifier combined with the inverse modifier, on a dark surface. Its resting background stays transparent, with a light inset border and text.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-bg-primary pathable-padding-3">
+      <button type="button" class="pathable-button pathable-button--outline pathable-button--inverse">Cancel</button>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button', { name: 'Cancel' })
+    const inverse = getComputedStyle(button)
+    const surface = getComputedStyle(button.parentElement as HTMLElement)
+
+    await expect(inverse.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(inverse.boxShadow).toBe(
+      `${inverse.color} 0px 0px 0px 2px inset`,
+    )
+    await expect(inverse.color).not.toBe(surface.backgroundColor)
+  },
+}
+
 export const Inverse = {
   render: () =>
     '<button class="pathable-button pathable-button--inverse">Inverse</button>',
