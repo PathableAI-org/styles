@@ -42,9 +42,10 @@ const config = {
     }
     // Stories named `--forced-colors` render and run their play functions with
     // forced colors active, matching quality-gates.mjs and test-visual.mjs.
-    // Pixel runs do this too, so those play functions pass there; no pixel
-    // baseline captures a forced-colors story. The page is reused across the
-    // stories of one file, so every other story resets the emulation.
+    // This runs before the pixel-mode return so a play function sees the same
+    // rendering in both runs; no pixel baseline captures a forced-colors story.
+    // The page is reused across the stories of one file, so every other story
+    // resets the emulation.
     await page.emulateMedia({
       forcedColors: context.id.endsWith('--forced-colors') ? 'active' : null,
     })
