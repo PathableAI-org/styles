@@ -46,10 +46,11 @@
   // so the primary fill and text would win. Redeclare the outline's resting
   // state here, after .pathable-button, so the outline modifier stays an
   // outline. USWDS :hover, :active, :disabled and inverse rules are more
-  // specific and still apply.
+  // specific and still apply. Text and border use the text token, the
+  // foreground role that matches the USWDS outline color.
   background-color: transparent;
-  box-shadow: inset 0 0 0 2px var(--pathable-color-action-primary-bg);
-  color: var(--pathable-color-action-primary-bg);
+  box-shadow: inset 0 0 0 2px var(--pathable-color-text);
+  color: var(--pathable-color-text);
 }
 
 .pathable-button--inverse {

@@ -37,13 +37,15 @@ export const Outline = {
     docs: {
       description: {
         story:
-          'The outline modifier keeps a transparent background, an inset border and text in the primary action color, so it reads as a lower-emphasis action beside the primary button.',
+          'The outline modifier keeps a transparent background, an inset border and text in the text color, so it reads as a lower-emphasis action beside the primary button.',
       },
     },
   },
   render: () => `
-    <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
-    <button type="button" class="pathable-button pathable-button--outline">Cancel</button>
+    <div class="pathable-button-group">
+      <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
+      <button type="button" class="pathable-button pathable-button--outline">Cancel</button>
+    </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -57,9 +59,9 @@ export const Outline = {
     await expect(outline.backgroundColor).toBe('rgba(0, 0, 0, 0)')
     await expect(outline.backgroundColor).not.toBe(primary.backgroundColor)
     await expect(outline.boxShadow).toBe(
-      `${primary.backgroundColor} 0px 0px 0px 2px inset`,
+      `${outline.color} 0px 0px 0px 2px inset`,
     )
-    await expect(outline.color).toBe(primary.backgroundColor)
+    await expect(outline.color).not.toBe(primary.color)
   },
 }
 
