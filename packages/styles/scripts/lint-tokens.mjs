@@ -13,7 +13,7 @@
  *   node packages/styles/scripts/lint-tokens.mjs
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, realpathSync, statSync } from 'node:fs'
 import { resolve, relative, dirname, basename } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -213,12 +213,28 @@ function parseNestedMapValues(content, mapName) {
 // ---------------------------------------------------------------------------
 
 /**
- * A custom-property declaration: `--name:` not preceded by a word character
- * or hyphen, so a BEM modifier before a pseudo-class (`.card--sm:hover`) is
- * not mistaken for a `--sm` declaration. Interpolated names (`--usa-#{$x}:`)
- * do not match; the map parsers below cover those.
+ * A custom-property declaration: `--name:` not preceded by a word character,
+ * hyphen or `&`, so a BEM modifier before a pseudo-class (`.card--sm:hover`,
+ * `&--sm:hover`) is not mistaken for a `--sm` declaration. Interpolated names
+ * (`--usa-#{$x}:`) do not match; the map parsers below cover those. Callers
+ * strip comments first (see stripComments).
  */
-const DECLARATION_PATTERN = /(?<![\w-])(--[a-zA-Z0-9_-]+)\s*:/g
+const DECLARATION_PATTERN = /(?<![\w&-])(--[a-zA-Z0-9_-]+)\s*:/g
+
+/**
+ * Remove block comments and line comments, so prose such as
+ * `// --space-2: unused` is not read as a declaration. A `//` only starts a
+ * comment at the start of a line or after whitespace, which leaves URLs such
+ * as `url(https://…)` intact.
+ *
+ * @param {string} content
+ * @returns {string}
+ */
+function stripComments(content) {
+  return content
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|\s)\/\/.*$/gm, '$1')
+}
 
 /**
  * Extract static custom-property tokens from :root and :where(:root) blocks.
@@ -229,7 +245,7 @@ function extractStaticTokens(content, tokens) {
   let rm
   while ((rm = rootRe.exec(content)) !== null) {
     const startIdx = rm.index + rm[0].length
-    const block = extractBraceBlock(content, startIdx)
+    const block = stripComments(extractBraceBlock(content, startIdx))
     for (const pm of block.matchAll(DECLARATION_PATTERN)) {
       tokens.add(pm[1])
     }
@@ -310,21 +326,22 @@ export function extractDefinedTokens(src = SRC) {
 // Scanning for var(--*) references
 // ---------------------------------------------------------------------------
 
+/**
+ * Find var(--*) references across the whole file, so a reference that
+ * Prettier wraps (`var(\n  --space-4\n)`) is still checked. The reported line
+ * is the line of the token name.
+ */
 function findTokenReferences(filePath, fileContent) {
-  const lines = fileContent.split('\n')
   const refs = []
   const varRe = /var\(\s*(--[a-zA-Z0-9_-]+)\s*([),])/g
-  for (let i = 0; i < lines.length; i++) {
-    varRe.lastIndex = 0
-    let m
-    while ((m = varRe.exec(lines[i])) !== null) {
-      refs.push({
-        token: m[1],
-        line: i + 1,
-        file: filePath,
-        hasFallback: m[2] === ',',
-      })
-    }
+  for (const m of fileContent.matchAll(varRe)) {
+    const tokenIndex = m.index + m[0].indexOf(m[1])
+    refs.push({
+      token: m[1],
+      line: fileContent.slice(0, tokenIndex).split('\n').length,
+      file: filePath,
+      hasFallback: m[2] === ',',
+    })
   }
   return refs
 }
@@ -338,7 +355,7 @@ function findTokenReferences(filePath, fileContent) {
  */
 export function extractDeclaredTokens(fileContent) {
   const tokens = new Set()
-  for (const m of fileContent.matchAll(DECLARATION_PATTERN)) {
+  for (const m of stripComments(fileContent).matchAll(DECLARATION_PATTERN)) {
     tokens.add(m[1])
   }
   return tokens
@@ -720,9 +737,10 @@ function main() {
   process.exit(1)
 }
 
+// Compare real paths so a run through a symlinked checkout still lints.
 if (
   process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
+  import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href
 ) {
   main()
 }
