@@ -90,6 +90,15 @@
   color: var(--pathable-color-text);
   font-size: var(--pathable-font-size-heading-lg);
   line-height: 1;
+  cursor: pointer;
+
+  // USWDS hover/active only darkens the glyph to ink, which now matches the
+  // resting colour; keep visible feedback with a subtle background instead.
+  &:hover,
+  &:active {
+    background-color: var(--pathable-color-bg);
+    color: var(--pathable-color-text);
+  }
 
   &:focus-visible {
     outline: 2px solid var(--pathable-color-focus-ring);
