@@ -78,7 +78,7 @@
 // Optional status signal (add class to card heading or a sibling element)
 .pathable-card--workflow .pathable-card__status {
   color: var(--pathable-color-accent);
-  font-size: var(--usa-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
   font-weight: var(--usa-font-weight-bold);
 }
 
@@ -91,7 +91,7 @@
 // Metadata row styling
 .pathable-card--workflow .pathable-card__meta {
   color: var(--pathable-color-text-muted);
-  font-size: var(--usa-font-size-sm);
+  font-size: var(--pathable-font-size-body-sm);
 }
 
 // Focus state for the entire card when any child is focused
