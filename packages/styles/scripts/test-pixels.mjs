@@ -101,7 +101,7 @@ const STORIES = [
   // Unstyled guards the unstyled modifier against the same cascade regression
   // (#304): link text with no fill or padding beside the primary button, and
   // the disabled unstyled text. The mobile image shows the touch-target
-  // min-height the wrapper adds below the mobile-lg breakpoint.
+  // min-height the wrapper adds below 40em or on a coarse pointer.
   {
     id: 'components-button--unstyled',
     key: 'button/unstyled',
