@@ -72,6 +72,13 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--expanded',
     key: 'optional-form-section/expanded',
   },
+  // Content pressure: a wrapping heading shows the button's gap, the
+  // indicator's `flex: 0 0 auto` and `overflow-wrap`, which a one-line heading
+  // does not exercise; its play function asserts only the absence of overflow.
+  {
+    id: 'components-form-controls-optional-form-section--narrow',
+    key: 'optional-form-section/narrow',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
