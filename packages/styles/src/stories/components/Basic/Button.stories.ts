@@ -1,3 +1,5 @@
+import { expect, within } from 'storybook/test'
+
 export default {
   title: 'Components/Button',
   tags: ['autodocs'],
@@ -31,8 +33,34 @@ export const AccentWarm = {
 }
 
 export const Outline = {
-  render: () =>
-    '<button class="pathable-button pathable-button--outline">Outline</button>',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The outline modifier keeps a transparent background, an inset border and text in the primary action color, so it reads as a lower-emphasis action beside the primary button.',
+      },
+    },
+  },
+  render: () => `
+    <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
+    <button type="button" class="pathable-button pathable-button--outline">Cancel</button>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const primary = getComputedStyle(
+      canvas.getByRole('button', { name: 'Save Coaching Note' }),
+    )
+    const outline = getComputedStyle(
+      canvas.getByRole('button', { name: 'Cancel' }),
+    )
+
+    await expect(outline.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(outline.backgroundColor).not.toBe(primary.backgroundColor)
+    await expect(outline.boxShadow).toBe(
+      `${primary.backgroundColor} 0px 0px 0px 2px inset`,
+    )
+    await expect(outline.color).toBe(primary.backgroundColor)
+  },
 }
 
 export const Inverse = {
