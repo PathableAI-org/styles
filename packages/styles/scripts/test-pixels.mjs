@@ -87,6 +87,17 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Integration toolbar: stroke-only (fill="none") icons on the bare, subtle
+  // and bordered icon-button surfaces, which the filled icons of IconButton
+  // `all-variants` do not show. The play function asserts the shapes stay
+  // unfilled (#278); this image adds what an assertion cannot name: stroke
+  // weight, line caps, and icon size and position in each surface. The
+  // full-composition story has no baseline while its segmented control lacks
+  // its gap (#277).
+  {
+    id: 'interaction-controls-integration--toolbar-panel',
+    key: 'integration/toolbar-panel',
+  },
   // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
   // story renders one labelled field as the only control, so the capture's Tab
   // shows its brand focus ring (#282) beside its label. Desktop only: the
@@ -156,6 +167,7 @@ const ROLLOUT = [
   'form-row',
   'icon-button',
   'icon-tile',
+  'integration',
   'input',
   'interaction-states',
   'modal',
