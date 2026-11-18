@@ -1,3 +1,59 @@
+import { expect, within } from 'storybook/test'
+
+type PlayContext = { canvasElement: HTMLElement }
+
+function horizontalCentre(element: HTMLElement) {
+  const bounds = element.getBoundingClientRect()
+  return bounds.left + bounds.width / 2
+}
+
+function getActions(canvasElement: HTMLElement, navName: string) {
+  const canvas = within(canvasElement)
+  const heading = canvas.getByRole('heading')
+  const panel = heading.parentElement as HTMLElement
+  const retry = canvas.getByRole('button', { name: 'Try again' })
+  const nav = canvas.getByRole('link', { name: navName })
+
+  return { heading, panel, retry, nav }
+}
+
+// Full-page actions share the centre line of the panel and the heading, so
+// they line up with the centred icon, heading and body.
+async function expectCentredActions(
+  canvasElement: HTMLElement,
+  navName: string,
+) {
+  const { heading, panel, retry, nav } = getActions(canvasElement, navName)
+  const panelCentre = horizontalCentre(panel)
+
+  await expect(
+    Math.abs(horizontalCentre(heading) - panelCentre),
+  ).toBeLessThanOrEqual(1)
+
+  for (const action of [retry, nav]) {
+    await expect(
+      Math.abs(horizontalCentre(action) - panelCentre),
+    ).toBeLessThanOrEqual(1)
+  }
+}
+
+// Compact actions stay at the start edge, aligned with the heading, and are
+// not stretched across the panel by the column's default alignment.
+async function expectStartAlignedActions(
+  canvasElement: HTMLElement,
+  navName: string,
+) {
+  const { heading, retry, nav } = getActions(canvasElement, navName)
+  const headingLeft = heading.getBoundingClientRect().left
+
+  for (const action of [retry, nav]) {
+    await expect(
+      Math.abs(action.getBoundingClientRect().left - headingLeft),
+    ).toBeLessThanOrEqual(1)
+    await expect(getComputedStyle(action).alignSelf).toBe('flex-start')
+  }
+}
+
 export default {
   title: 'Components/Feedback/PageError',
   tags: ['autodocs'],
@@ -23,6 +79,9 @@ export const Compact = {
       <a href="#" class="pathable-page-error__nav">Go back</a>
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    await expectStartAlignedActions(canvasElement, 'Go back')
+  },
 }
 
 export const FullPage = {
@@ -37,6 +96,9 @@ export const FullPage = {
       <a href="#" class="pathable-page-error__nav">Go to home</a>
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    await expectCentredActions(canvasElement, 'Go to home')
+  },
 }
 
 export const NotFound = {
@@ -79,4 +141,7 @@ export const MobileFullPage = {
       <a href="#" class="pathable-page-error__nav">Go home</a>
     </div>
   `,
+  play: async ({ canvasElement }: PlayContext) => {
+    await expectCentredActions(canvasElement, 'Go home')
+  },
 }
