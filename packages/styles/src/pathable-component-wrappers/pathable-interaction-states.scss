@@ -15,6 +15,7 @@
 //   --pathable-color-bg                    — hover/disabled background
 //   --pathable-color-surface               — selected/resting background
 //   --pathable-color-border                — selected/pressed border color
+//   --space-8                              — loading spinner inline-end offset
 //   --pathable-color-text                  — demo class text color
 //
 // Text color: the mixins set no `color`. A consuming control MUST set its own
@@ -34,7 +35,7 @@
 //   state-pressed          — &:active inset shadow + border shift (alt to active)
 //   state-selected         — &.is-selected, &[aria-selected="true"]
 //   state-disabled         — &:disabled, &[aria-disabled="true"]
-//   state-loading          — &.is-loading with CSS-only border spinner
+//   state-loading          — &.is-loading with an icon-sized CSS border spinner
 //   interaction-states     — combined: hover, focus, active, selected, disabled, loading
 //
 // Demo class (for documentation):
