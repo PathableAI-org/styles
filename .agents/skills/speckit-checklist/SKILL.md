@@ -1,11 +1,77 @@
 ---
-name: "speckit-checklist"
-description: "Generate a custom checklist for the current feature based on user requirements."
-compatibility: "Requires spec-kit project structure with .specify/ directory"
+name: speckit-checklist
+description: Wrap core checklist generation with BDD, NFR, and Visual Fidelity readiness
+  gate.
+compatibility: Requires spec-kit project structure with .specify/ directory
 metadata:
-  author: "github-spec-kit"
-  source: "templates/commands/checklist.md"
+  author: github-spec-kit
+  source: preset:workflow-preset
+  version: 1.3.11
 ---
+
+# Speckit Checklist Skill
+
+## Checklist Purpose: "Unit Tests for English"
+
+This wrapper must not redefine core-owned User Input, Pre-Execution Checks, extension hooks, base path resolution, or core file handling.
+
+Checklists validate whether requirements are complete, clear, consistent, measurable, and ready for downstream planning. NOT for verification/testing: do not test implementation behavior, code execution, UI rendering, API responses, or whether the built system works.
+
+CORE PRINCIPLE - Test the Requirements, Not the Implementation. Checklist questions must use requirement-quality forms such as "Are ... specified?", "Is ... quantified?", "Can ... be objectively verified?", or "Are ... requirements consistent?"
+
+Use `$ARGUMENTS` as checklist intent. Generate dynamic clarifying questions with no pre-baked catalog only when the answer changes BDD, NFR, or Visual Fidelity checklist content. Use Q1/Q2/Q3 for initial questions and Q4/Q5 only for justified follow-up gaps.
+
+For `checklists/behavior-testability.md`, create the file when absent; otherwise append or update without deleting existing checklist content. Before finishing, report the full path, item count, update mode, focus areas, depth level, actor/timing, must-have items, readiness status, and blockers.
+
+## BDD Readiness Gate
+
+Create or update `checklists/behavior-testability.md` as checklist artifacts only. This checklist is the plan-entry quality gate for BDD readiness and must evaluate requirements directly from `spec.md`; it must not depend on behavior drafts.
+
+Include these sections:
+
+- User Story Readiness
+- Acceptance Criteria Quality
+- Scenario Coverage
+- Case Coverage Matrix
+- Given Readiness
+- When Readiness
+- Then Readiness
+- Visual Fidelity Readiness
+- Visual Fidelity Evidence Matrix
+- Non-Functional Requirement Readiness
+- Gate Status
+- Blocking Items
+
+Check that each applicable user story has observable acceptance behavior, each acceptance criterion is verifiable, and primary, alternate, exception, boundary, permission, validation, and state_conflict paths are covered when applicable.
+
+Build a Case Coverage Matrix with one row per story or capability case type. Use case status: Required|Not Applicable|Unknown. Cover positive, negative, boundary, permission, validation, and state_conflict case types. Each row must have a stable Case ID. Required rows must cite the source `spec.md` section. Scenario IDs and `case_coverage_blockers` are assigned during `/speckit.plan`. Not Applicable requires rationale. Unknown must appear in Blocking Items. Required case type without observable acceptance behavior blocks PASS.
+
+Check Given readiness from `spec.md`: required roles, permissions, starting state, entity state, and data are explicit enough for later fixture setup.
+
+Check When readiness from `spec.md`: each trigger is an executable user action, request case, or system trigger.
+
+Check Then readiness from `spec.md`: each outcome maps to feedback, business state, error semantics, or assertion intent.
+
+Check Visual Fidelity Readiness when `spec.md` contains design-derived requirements, a design source, provider evidence blockers, or provider-specific design evidence requests. Also apply it when `spec.md` contains product-side visual requirements such as pixel-perfect, brand-critical, responsive visual, or UI visual acceptance requirements.
+Use the behavior-testability checklist template as the visual gate authority.
+Require source traceability, provider readiness status, evidence refs, and blockers, and clear visual requirements for state, responsive, accessibility, component mapping, and accepted exception coverage.
+Build a Visual Fidelity Evidence Matrix with one row per visual requirement or visual proof obligation. Record Screenshot evidence level, declared visual proof required, provider evidence refs or screenshot refs, and any Gate Status: BLOCKED item in Blocking Items.
+The Visual Fidelity Evidence Matrix alone decides visual planning readiness, proof level sufficiency, screenshot sufficiency, accepted exception rules, Gate Status, and Blocking Items.
+Use one Visual Fidelity Evidence Matrix as the single visual readiness record; do not duplicate visual evidence decisions outside the matrix and Blocking Items.
+Read visual facts from `spec.md` and evidence refs; do not call Figma, re-extract Figma evidence, rebuild provider matrices, or create another visual readiness path.
+Do not add historical visual rules or alternate visual decision paths.
+Responsive visual requirements block PASS only when they are complex, multi-state, or declare L2 or L3 visual proof; missing viewport-specific evidence then sets Gate Status: BLOCKED and lists the item in Blocking Items.
+Screenshots support visual facts but do not create product semantics.
+
+Check Non-Functional Requirement Readiness from `spec.md`: applicable performance, security and privacy, reliability and recovery, accessibility, compliance and auditability, observability, compatibility, data lifecycle, and cost or operational constraints are explicitly declared in `spec.md` as `Required`, `Not Applicable`, or `Unknown`.
+
+For each NFR dimension, require either verifiable product-level criteria, a `Not Applicable` rationale, or an `Unknown` marker that identifies what must be clarified. Do not require technical designs such as SLAs, RTO/RPO formulas, cache layers, queues, deployment topology, or infrastructure choices unless the product requirement already states them.
+
+Treat these NFR readiness gaps as blocking items: Required but missing from `spec.md`; Required but not verifiable from product-level criteria; Unknown and affects downstream design. Do not block planning for NFR dimensions marked `Not Applicable` with a rationale or for dimensions with explicit no-special-requirement statements.
+
+Set `Gate Status: PASS` only when every applicable readiness item is checked and `Blocking Items: none`. Otherwise set `Gate Status: BLOCKED` and list each unchecked readiness item that prevents behavior projection or downstream planning.
+
+Unchecked readiness items that prevent behavior projection or downstream planning are blocking items. Do not proceed to `/speckit.plan`. Requirement ambiguity returns to `/speckit.clarify` or `/speckit.specify` to resolve missing requirements before planning. Provider evidence readiness blockers return to `/speckit.specify` or provider intake, not `/speckit.clarify`.
 
 
 ## Checklist Purpose: "Unit Tests for English"
@@ -29,6 +95,15 @@ metadata:
 
 **Metaphor**: If your spec is code written in English, the checklist is its unit test suite. You're testing whether the requirements are well-written, complete, unambiguous, and ready for implementation - NOT whether the implementation works.
 
+**Ownership and checkbox lifecycle**:
+
+- Custom checklists generated by this command are reviewer-owned requirements-quality review artifacts.
+- `[x]` means the reviewer determined the requirements-quality criterion is satisfied.
+- `[x]` does NOT mean implementation work is complete.
+- This command generates or appends checklist items; it MUST NOT mark generated items `[x]`.
+- An agent may assist with evaluating items only when explicitly asked by the reviewer.
+- `checklists/requirements.md` is a separate built-in spec-quality checklist maintained by `$speckit-specify` and `$speckit-clarify`; do not treat that exception as applying to custom checklists generated here.
+
 ## User Input
 
 ```text
@@ -42,12 +117,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 **Check for extension hooks (before checklist generation)**:
 - Check if `.specify/extensions.yml` exists in the project root.
 - If it exists, read it and look for entries under the `hooks.before_checklist` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
+- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue normally
 - Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
 - For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
   - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
   - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing slash commands from hook command names, replace dots (`.`) with hyphens (`-`). For example, `speckit.git.commit` → `/speckit-git-commit`.
+- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `speckit.git.commit` → `$speckit-git-commit`.
 - For each executable hook, output the following based on its `optional` flag:
   - **Optional hook** (`optional: true`):
     ```
@@ -75,7 +150,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Execution Steps
 
-1. **Setup**: Run `.specify/scripts/bash/check-prerequisites.sh --json` from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS list.
+1. **Setup**: Run `.specify/scripts/bash/check-prerequisites.sh --json --template checklist-template` from repo root and parse JSON for FEATURE_DIR, AVAILABLE_DOCS list, and TEMPLATE_CONTENT.
    - All file paths must be absolute.
    - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
@@ -130,7 +205,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Use progressive disclosure: add follow-on retrieval only if gaps detected
    - If source docs are large, generate interim summary items instead of embedding raw text
 
-6. **Generate checklist** - Create "Unit Tests for Requirements":
+6. **Generate checklist** - Use TEMPLATE_CONTENT as the structural template and create "Unit Tests for Requirements":
    - Create `FEATURE_DIR/checklists/` directory if it doesn't exist
    - Generate unique checklist filename:
      - Use short, descriptive name based on domain (e.g., `ux.md`, `api.md`, `security.md`)
@@ -139,6 +214,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      - If file does NOT exist: Create new file and number items starting from CHK001
      - If file exists: Append new items to existing file, continuing from the last CHK ID (e.g., if last item is CHK015, start new items at CHK016)
    - Never delete or replace existing checklist content - always preserve and append
+   - Leave every newly generated item unchecked (`[ ]`); checkbox state belongs to the reviewer
 
    **CORE PRINCIPLE - Test the Requirements, Not the Implementation**:
    Every checklist item MUST evaluate the REQUIREMENTS THEMSELVES for:
@@ -248,7 +324,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - ✅ "Are [edge cases/scenarios] addressed in requirements?"
    - ✅ "Does the spec define [missing aspect]?"
 
-7. **Structure Reference**: Generate the checklist following the canonical template in `.specify/templates/checklist-template.md` for title, meta section, category headings, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001.
+7. **Structure Reference**: Generate the checklist following the canonical template in `.specify/templates/checklist-template.md` for title, meta section, category headings, ownership note, notes section, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, an ownership note explaining that `[x]` means reviewer approval of requirements quality, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001, and notes that `$speckit-implement` reads checklist state but does not modify markers.
 
 8. **Report**: Output full path to checklist file, item count, and summarize whether the run created a new file or appended to an existing one. Summarize:
    - Focus areas selected
@@ -256,7 +332,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Actor/timing
    - Any explicit user-specified must-have items incorporated
 
-**Important**: Each `/speckit-checklist` command invocation uses a short, descriptive checklist filename and either creates a new file or appends to an existing one. This allows:
+**Important**: Each `$speckit-checklist` command invocation uses a short, descriptive checklist filename and either creates a new file or appends to an existing one. This allows:
 
 - Multiple checklists of different types (e.g., `ux.md`, `test.md`, `security.md`)
 - Simple, memorable filenames that indicate checklist purpose
@@ -343,12 +419,12 @@ Sample items:
 **Check for extension hooks (after checklist generation)**:
 Check if `.specify/extensions.yml` exists in the project root.
 - If it exists, read it and look for entries under the `hooks.after_checklist` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
+- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue normally
 - Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
 - For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
   - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
   - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing slash commands from hook command names, replace dots (`.`) with hyphens (`-`). For example, `speckit.git.commit` → `/speckit-git-commit`.
+- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `speckit.git.commit` → `$speckit-git-commit`.
 - For each executable hook, output the following based on its `optional` flag:
   - **Optional hook** (`optional: true`):
     ```
@@ -371,3 +447,8 @@ Check if `.specify/extensions.yml` exists in the project root.
     ```
     After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
 - If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+
+
+## Behavior Checklist Reporting
+
+Before finishing, report the BDD, NFR, and Visual Fidelity readiness status and call out unchecked items that block planning.
