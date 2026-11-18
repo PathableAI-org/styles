@@ -49,8 +49,10 @@
 
 // The USWDS button keeps its `margin-right: units(1)` once it turns
 // `width: auto` at mobile-lg, so the stack's stretched column would end the
-// button 8 px short of the fields' right edge.
-.pathable-form-stack > .pathable-button {
+// button 8 px short of the fields' right edge. `:where()` keeps the
+// specificity at one class: the rule still follows and beats the button
+// wrapper, and a margin utility loaded after the components still wins.
+.pathable-form-stack > :where(.pathable-button) {
   margin-right: 0;
 }
 
