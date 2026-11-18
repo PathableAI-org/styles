@@ -16,8 +16,9 @@
 // React Checkbox). Block layout puts the control on its own line, so it does
 // not continue the line of an inline sibling such as a .pathable-hint.
 // Some recipes put the class on a bare native <input>; that markup keeps its
-// inline layout.
-.pathable-checkbox:not(input) {
+// inline layout. A root with the `hidden` attribute stays hidden. :where()
+// keeps the selector at one class's specificity.
+.pathable-checkbox:where(:not(input, [hidden])) {
   display: block;
 }
 
