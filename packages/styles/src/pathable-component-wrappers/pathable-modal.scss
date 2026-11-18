@@ -61,8 +61,6 @@
 
 .pathable-modal {
   @extend .usa-modal;
-  // max-width (30rem) and width: 100% bound the whole dialog box.
-  box-sizing: border-box;
 }
 
 .pathable-modal__content {
