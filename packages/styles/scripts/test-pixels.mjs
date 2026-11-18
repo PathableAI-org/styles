@@ -87,13 +87,46 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // SegmentedControl has no aggregate story. Single select shows the option
+  // icon-to-label gap, the selected option and the container padding; the gap
+  // does not change with the viewport, so one desktop image is enough.
+  {
+    id: 'interaction-controls-segmentedcontrol--single-select',
+    key: 'segmented-control/single-select',
+  },
+  // The app shell has no aggregate story: the desktop shell shows the sidebar
+  // and the gap between navigation items, and the mobile shell shows the
+  // mobile layout with the bottom navigation and its icon-to-label gap.
+  {
+    id: 'application-shell-desktop-shell--default',
+    key: 'app-shell/desktop',
+  },
+  // The capture's Tab focuses the story's focusable content region, which has
+  // no brand focus rule, so the image shows the browser's default ring
+  // (#312), accepted by the maintainer for #277; its fix updates the image.
+  {
+    id: 'application-shell-mobile-shell--default',
+    key: 'app-shell/mobile',
+  },
+  // The workflow card's status text has rules of its own (colour, weight and
+  // font size) that no other Card story shows; its meta text, also shown by
+  // `workflow-card`, is captured here alongside it. The
+  // capture's Tab focuses the action link, which has no brand focus rule, so
+  // the image shows the browser's default ring inside the card's focus-within
+  // outline (#312). The status text is Intelligent Jade on white, about 2.8:1,
+  // which fails text contrast (#314). The maintainer accepted both for #277;
+  // their fixes update the image.
+  {
+    id: 'components-card--workflow-card-with-status',
+    key: 'card/workflow-with-status',
+  },
   // Integration toolbar: stroke-only (fill="none") icons on the bare, subtle
   // and bordered icon-button surfaces, which the filled icons of IconButton
   // `all-variants` do not show. The play function asserts the shapes stay
   // unfilled (#278); this image adds what an assertion cannot name: stroke
   // weight, line caps, and icon size and position in each surface. The
-  // full-composition story has no baseline while its segmented control lacks
-  // its gap (#277).
+  // full-composition story has no baseline yet: it waited on its segmented
+  // control's missing gap, which #277 fixes.
   {
     id: 'interaction-controls-integration--toolbar-panel',
     key: 'integration/toolbar-panel',
@@ -139,10 +172,10 @@ const STORIES = [
     key: 'filterable-option-list/empty',
   },
   // Modal has no aggregate story. `open` shows the overlay, the centred
-  // dialog and the close button in its top-right corner; it is the first
-  // control, so the capture's Tab shows its focus ring. Its image also shows
-  // the open content-padding (#284) and outline-button (#287) defects,
-  // accepted by the maintainer for #285; their fixes update it. Not shown:
+  // dialog, the content padding on every side and the close button in its
+  // top-right corner; it is the first control, so the capture's Tab shows its
+  // focus ring. Its image also shows the open outline-button defect (#287),
+  // accepted by the maintainer for #285; its fix updates it. Not shown:
   // `narrow` and `long-content`, which wait on the mobile layout fix (#286).
   { id: 'components-communication-modal--open', key: 'modal/open' },
   // PageError has no aggregate story; `full-page` is its only canonical story.
@@ -161,6 +194,8 @@ const STORIES = [
 
 /** Components whose baselines are enforced. Only these are compared. */
 const ROLLOUT = [
+  'app-shell',
+  'card',
   'filterable-option-list',
   'form-row',
   'icon-button',
@@ -171,6 +206,7 @@ const ROLLOUT = [
   'modal',
   'optional-form-section',
   'page-error',
+  'segmented-control',
   'select',
   'textarea',
 ]
