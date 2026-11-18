@@ -24,9 +24,7 @@ const formFields = (prefix: string) => `
 // below the previous one, and each form group's first label starts at the top
 // of its group.
 const expectStackGapSpacing = async (form: HTMLElement, gap: number) => {
-  const children = Array.from(form.children).filter(
-    (child) => child.tagName !== 'STYLE',
-  )
+  const children = Array.from(form.children)
   const formTop = form.getBoundingClientRect().top
 
   await expect(window.getComputedStyle(form).rowGap).toBe(`${gap}px`)
