@@ -15,7 +15,7 @@ export default {
 
 const iconButton = (modifiers: string, label: string, iconContent: string) => `
   <button type="button" class="pathable-icon-button ${modifiers}" aria-label="${label}">
-    <svg class="pathable-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       ${iconContent}
     </svg>
   </button>
@@ -200,6 +200,12 @@ async function verifyIconButtonSemantics(
     await expect(button).toHaveAttribute('type', 'button')
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
     await expect(icon).toHaveAttribute('focusable', 'false')
+    // The toolbar icons are stroke-only outlines; no rule may fill them.
+    const shapes = icon.querySelectorAll('path, circle, line, polyline, rect')
+    await expect(shapes.length).toBeGreaterThan(0)
+    for (const shape of shapes) {
+      await expect(getComputedStyle(shape).fill).toBe('none')
+    }
   }
 
   const representativeName = names[0]
