@@ -37,9 +37,11 @@ async function expectCentredActions(
   }
 }
 
-// Compact actions stay at the start edge, aligned with the heading, and keep
-// their content width: the heading fills the panel's content box, so a
-// stretched action would be as wide as it.
+// Compact actions stay at the start edge, aligned with the heading. The
+// navigation link also keeps its content width: the heading fills the panel's
+// content box, so a stretched link would be as wide as it. (The retry button
+// is full width below 480px through the USWDS button, so its width is not
+// checked.)
 async function expectStartAlignedActions(
   canvasElement: HTMLElement,
   navName: string,
@@ -48,13 +50,13 @@ async function expectStartAlignedActions(
   const headingBounds = heading.getBoundingClientRect()
 
   for (const action of [retry, nav]) {
-    const actionBounds = action.getBoundingClientRect()
-
     await expect(
-      Math.abs(actionBounds.left - headingBounds.left),
+      Math.abs(action.getBoundingClientRect().left - headingBounds.left),
     ).toBeLessThanOrEqual(1)
-    await expect(actionBounds.width).toBeLessThan(headingBounds.width)
   }
+  await expect(nav.getBoundingClientRect().width).toBeLessThan(
+    headingBounds.width,
+  )
 }
 
 export default {
@@ -145,7 +147,8 @@ export const MobileFullPage = {
     </div>
   `,
   play: async ({ canvasElement }: PlayContext) => {
-    await expect(window.innerWidth).toBe(375)
+    // Below the 480px breakpoint, where the full-page rules change.
+    await expect(window.innerWidth).toBeLessThan(480)
     await expectCentredActions(canvasElement, 'Go home')
   },
 }
