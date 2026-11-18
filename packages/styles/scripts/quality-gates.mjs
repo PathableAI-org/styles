@@ -199,6 +199,8 @@ const CANONICAL_STORIES = [
     mode: 'both',
   },
   // Components - Basic
+  // The outline modifier beside the primary button (#287).
+  { id: 'components-button--outline', mode: 'both' },
   { id: 'components-card--workflow-card-with-status', mode: 'desktop' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
