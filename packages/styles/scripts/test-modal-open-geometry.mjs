@@ -5,8 +5,10 @@
  * Asserts for the styles (CSS-only harness) and React Modal stories, with
  * Open at a desktop viewport and Narrow at 375 px and 320 px wide viewports:
  *   1. Overlay covers the viewport
- *   2. Dialog lies inside the viewport
- *   3. Dialog is centered within documented tolerance
+ *   2. Dialog lies inside the viewport (horizontally always; vertically when
+ *      it fits the overlay, otherwise its top is at the top of the overlay)
+ *   3. Dialog is centered within documented tolerance (vertically only when
+ *      it fits the overlay)
  *   4. Overlay dims the page (background not fully transparent)
  *   5. Overlay jumps, rather than smooth-scrolls, to focused controls
  *   6. Close control shows a visible focus-visible indicator when focused
@@ -279,36 +281,60 @@ async function assertOpenGeometry(page, target) {
   if (!dialogBox) {
     failures.push(`${label}: dialog has no bounding box`)
   } else {
-    const insideViewport =
-      dialogBox.x >= 0 &&
-      dialogBox.y >= 0 &&
-      dialogBox.x + dialogBox.width <= viewport.width &&
-      dialogBox.y + dialogBox.height <= viewport.height
-    if (!insideViewport) {
-      failures.push(
-        `${label}: dialog is not inside the viewport (box=${JSON.stringify({
-          x: dialogBox.x,
-          y: dialogBox.y,
-          width: dialogBox.width,
-          height: dialogBox.height,
-        })})`,
-      )
+    // A dialog that fits the overlay's content box (with its own vertical
+    // margins) is centred on both axes and lies inside the viewport. A taller
+    // one cannot be centred: it starts at the top of the scrolling overlay
+    // (overlay padding plus dialog margin), so its top stays in view.
+    const spacing = await dialog.evaluate((el) => {
+      const overlayStyle = getComputedStyle(el.parentElement)
+      const dialogStyle = getComputedStyle(el)
+      return {
+        overlayTop: Number.parseFloat(overlayStyle.paddingTop) || 0,
+        overlayBottom: Number.parseFloat(overlayStyle.paddingBottom) || 0,
+        marginTop: Number.parseFloat(dialogStyle.marginTop) || 0,
+        marginBottom: Number.parseFloat(dialogStyle.marginBottom) || 0,
+      }
+    })
+    const fitsOverlay =
+      dialogBox.height + spacing.marginTop + spacing.marginBottom <=
+      viewport.height - spacing.overlayTop - spacing.overlayBottom
+    const box = JSON.stringify({
+      x: dialogBox.x,
+      y: dialogBox.y,
+      width: dialogBox.width,
+      height: dialogBox.height,
+    })
+
+    const insideHorizontally =
+      dialogBox.x >= 0 && dialogBox.x + dialogBox.width <= viewport.width
+    const insideVertically =
+      dialogBox.y >= 0 && dialogBox.y + dialogBox.height <= viewport.height
+    if (!insideHorizontally || (fitsOverlay && !insideVertically)) {
+      failures.push(`${label}: dialog is not inside the viewport (box=${box})`)
     }
 
     const dialogCenterX = dialogBox.x + dialogBox.width / 2
     const dialogCenterY = dialogBox.y + dialogBox.height / 2
-    const vpCenterX = viewport.width / 2
-    const vpCenterY = viewport.height / 2
     const tolX = viewport.width * CENTER_TOLERANCE_RATIO
     const tolY = viewport.height * CENTER_TOLERANCE_RATIO
-    const dx = Math.abs(dialogCenterX - vpCenterX)
-    const dy = Math.abs(dialogCenterY - vpCenterY)
-    if (dx > tolX || dy > tolY) {
+    const dx = Math.abs(dialogCenterX - viewport.width / 2)
+    const dy = Math.abs(dialogCenterY - viewport.height / 2)
+    if (dx > tolX || (fitsOverlay && dy > tolY)) {
       failures.push(
         `${label}: dialog not centered within ${CENTER_TOLERANCE_RATIO * 100}% tolerance ` +
           `(dx=${dx.toFixed(1)}>${tolX.toFixed(1)} or dy=${dy.toFixed(1)}>${tolY.toFixed(1)}; ` +
           `dialogCenter=(${dialogCenterX.toFixed(1)}, ${dialogCenterY.toFixed(1)}))`,
       )
+    }
+
+    if (!fitsOverlay) {
+      const expectedTop = spacing.overlayTop + spacing.marginTop
+      if (Math.abs(dialogBox.y - expectedTop) > 1) {
+        failures.push(
+          `${label}: dialog taller than the overlay does not start at its top ` +
+            `(y=${dialogBox.y.toFixed(1)}, expected ${expectedTop.toFixed(1)}; box=${box})`,
+        )
+      }
     }
   }
 
