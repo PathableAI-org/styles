@@ -1,3 +1,7 @@
+import { within } from 'storybook/test'
+
+import { expectKeyboardFocusIndicator } from './focus-indicator'
+
 export default {
   title: 'Components/Form Controls/Input',
   tags: ['autodocs'],
@@ -82,4 +86,45 @@ export const WorkflowRequiredComplianceField = {
   </span>
 </form>
   `,
+}
+
+export const KeyboardFocus = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Keyboard focus shows the brand focus outline in `--pathable-color-focus-ring` (Bright Blue Brooks). The play function tabs to the text input and checks the outline.',
+      },
+    },
+  },
+  render: () => `
+<label class="pathable-label" for="input-keyboard-focus">Text input</label>
+<input id="input-keyboard-focus" class="pathable-input" type="text" />
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectKeyboardFocusIndicator(
+      canvasElement,
+      within(canvasElement).getByRole('textbox', { name: 'Text input' }),
+    ),
+}
+
+export const ForcedColors = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Run with forced-colors emulation. Keyboard focus keeps a visible outline in the system `Highlight` colour. The play function tabs to the text input and checks the outline.',
+      },
+    },
+  },
+  render: () => `
+<label class="pathable-label" for="input-forced-colors">Text input</label>
+<input id="input-forced-colors" class="pathable-input" type="text" />
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectKeyboardFocusIndicator(
+      canvasElement,
+      within(canvasElement).getByRole('textbox', { name: 'Text input' }),
+      { forcedColors: true },
+    ),
 }

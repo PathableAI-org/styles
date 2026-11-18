@@ -40,6 +40,14 @@ const config = {
     if (storyViewport) {
       await page.setViewportSize(storyViewport)
     }
+    // Stories named `--forced-colors` render and run their play functions with
+    // forced colors active, matching quality-gates.mjs and test-visual.mjs.
+    // Pixel runs do this too, so those play functions pass there; no pixel
+    // baseline captures a forced-colors story. The page is reused across the
+    // stories of one file, so every other story resets the emulation.
+    await page.emulateMedia({
+      forcedColors: context.id.endsWith('--forced-colors') ? 'active' : null,
+    })
 
     // Pixel runs only capture; the accessibility job owns the axe checks.
     if (pixelMode) return
