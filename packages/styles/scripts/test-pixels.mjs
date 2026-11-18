@@ -229,6 +229,12 @@ const STORIES = [
     id: 'components-feedback-pageerror--full-page',
     key: 'page-error/full-page',
   },
+  // Toast has no aggregate story and `stacked` is its only canonical story:
+  // info, success and warning, dismissible and plain padding, the reversed
+  // stack order and the dismiss button's focus outline. Not shown: the error
+  // and progress variants, `--has-action` with its action link, and the
+  // max-width 480px rules; covering them needs an aggregate story first.
+  { id: 'components-feedback-toast--stacked', key: 'toast/stacked' },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
@@ -250,6 +256,7 @@ const ROLLOUT = [
   'segmented-control',
   'select',
   'textarea',
+  'toast',
 ]
 
 // ---------------------------------------------------------------------------
