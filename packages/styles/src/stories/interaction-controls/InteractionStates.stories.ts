@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only SCSS mixins with semantics supplied by the consuming control.\n\n**States verified**: The combined mixin provides hover, focus-visible, focus-within, active, selected, disabled, and loading feedback. Fixtures verify disabled/loading precedence and compatibility with consumer-owned narrow and increased-text containment. The alternative granular pressed mixin is not part of the combined demo.\n\n**Consumers must**: Include the appropriate interaction-state mixins in component SCSS. Use native disabled semantics or application logic to suppress activation while unavailable or loading, and expose persistent state with the ARIA semantics appropriate to the control.',
+          '**Interaction Model**: CSS-only SCSS mixins with semantics supplied by the consuming control.\n\n**States verified**: The combined mixin provides hover, focus-visible, focus-within, active, selected, disabled, and loading feedback. Fixtures verify disabled/loading precedence and compatibility with consumer-owned narrow and increased-text containment. The alternative granular pressed mixin is not part of the combined demo.\n\n**Consumers must**: Include the appropriate interaction-state mixins in component SCSS, and set a `color` on the control itself: the mixins set none, so a natively disabled `<button>` without one falls back to the disabled text colour of the browser instead of matching an `aria-disabled` control. Use native disabled semantics or application logic to suppress activation while unavailable or loading, and expose persistent state with the ARIA semantics appropriate to the control.',
       },
     },
   },
