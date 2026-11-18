@@ -1,0 +1,134 @@
+// packages/styles/src/pathable-component-wrappers/_pathable-interaction-state-mixins.scss
+//
+// The interaction-state mixins only. Using this partial emits no CSS, so a
+// component wrapper can include a state mixin (for example state-focus)
+// without also emitting the documentation demo class and keyframes that
+// pathable-interaction-states.scss adds. That module forwards these mixins,
+// and documents each one.
+//
+// state-loading animates with the pathable-spin keyframes, which
+// pathable-interaction-states.scss emits.
+
+// Hover: elevation increase + background shift
+@mixin state-hover {
+  &:hover {
+    box-shadow: var(--elevation-md);
+    background: var(--pathable-color-bg);
+  }
+}
+
+// Focus: visible outline ring for keyboard and focus-within
+@mixin state-focus {
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  // forced-colors: use system Highlight for focus indicators
+  @media (forced-colors: active) {
+    &:focus-visible,
+    &:focus-within {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// Active: momentary elevation drop (no shadow)
+@mixin state-active {
+  &:active {
+    box-shadow: none;
+  }
+}
+
+// Pressed: momentary inset shadow + border color shift (alternative to active)
+@mixin state-pressed {
+  &:active {
+    box-shadow: inset var(--elevation-sm);
+    border-color: var(--pathable-color-border);
+  }
+}
+
+// Selected: persistent border, background tint, and increased weight
+@mixin state-selected {
+  &.is-selected,
+  &[aria-selected='true'] {
+    border: 2px solid var(--pathable-color-border);
+    background: var(--pathable-color-surface);
+    font-weight: 700;
+  }
+}
+
+// Disabled: reduced opacity, suppressed hover/focus/active responses
+@mixin state-disabled {
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: default;
+    box-shadow: none;
+    outline: none;
+    background: var(--pathable-color-bg);
+  }
+
+  &:disabled:hover,
+  &[aria-disabled='true']:hover {
+    box-shadow: none;
+    background: var(--pathable-color-bg);
+  }
+
+  &:disabled:focus-visible,
+  &[aria-disabled='true']:focus-visible,
+  &:disabled:focus-within,
+  &[aria-disabled='true']:focus-within {
+    outline: none;
+  }
+
+  &:disabled:active,
+  &[aria-disabled='true']:active {
+    box-shadow: none;
+  }
+}
+
+// Loading: suppressed interaction + CSS-only border spinner pseudo-element
+@mixin state-loading($selector: '.is-loading') {
+  &#{$selector} {
+    pointer-events: none;
+    cursor: wait;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid var(--pathable-color-border);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: pathable-spin 0.6s linear infinite;
+    }
+
+    // reduced motion: disable spinner animation
+    @media (prefers-reduced-motion: reduce) {
+      &::after {
+        animation: none;
+      }
+    }
+  }
+}
+
+// Combined mixin: emits all individual state mixins (excludes state-pressed
+// since it conflicts with state-active on &:active)
+@mixin interaction-states {
+  @include state-hover;
+  @include state-focus;
+  @include state-active;
+  @include state-selected;
+  @include state-disabled;
+  @include state-loading;
+}

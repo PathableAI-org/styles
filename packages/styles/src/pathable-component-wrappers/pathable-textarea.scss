@@ -6,7 +6,7 @@
 // Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
-@use 'pathable-interaction-states' as states;
+@use 'pathable-interaction-state-mixins' as states;
 
 @use 'usa-textarea/src/styles';
 
