@@ -93,14 +93,67 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
+  // story renders one labelled field as the only control, so the capture's Tab
+  // shows its brand focus ring (#282) beside its label. Desktop only: the
+  // focus rule has no viewport dependency, and the controls' mobile
+  // min-height rule is outside that fix.
+  {
+    id: 'components-form-controls-input--keyboard-focus',
+    key: 'input/keyboard-focus',
+  },
+  {
+    id: 'components-form-controls-select--keyboard-focus',
+    key: 'select/keyboard-focus',
+  },
+  {
+    id: 'components-form-controls-textarea--keyboard-focus',
+    key: 'textarea/keyboard-focus',
+  },
+  // FormRow aggregate: control alignment under uneven hints, side by side at
+  // desktop and stacked below 1024 px, with the first control (a select)
+  // showing its focus ring.
+  {
+    id: 'components-form-controls-form-row--default',
+    key: 'form-row/default',
+  },
+  // FilterableOptionList main story: the filter input (focused), the bounded
+  // option region and the status line.
+  {
+    id: 'components-form-controls-filterable-option-list--default',
+    key: 'filterable-option-list/default',
+  },
+  // The only canonical story with checked checkboxes outside forced colors.
+  {
+    id: 'components-form-controls-filterable-option-list--selected',
+    key: 'filterable-option-list/selected',
+  },
+  // The `__empty` message rule, which no other baseline shows.
+  {
+    id: 'components-form-controls-filterable-option-list--empty',
+    key: 'filterable-option-list/empty',
+  },
+  // Modal has no aggregate story. `open` shows the overlay, the centred
+  // dialog and the close button in its top-right corner; it is the first
+  // control, so the capture's Tab shows its focus ring. Its image also shows
+  // the open content-padding (#284) and outline-button (#287) defects,
+  // accepted by the maintainer for #285; their fixes update it. Not shown:
+  // `narrow` and `long-content`, which wait on the mobile layout fix (#286).
+  { id: 'components-communication-modal--open', key: 'modal/open' },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
 const ROLLOUT = [
+  'filterable-option-list',
+  'form-row',
   'icon-button',
   'icon-tile',
+  'input',
   'interaction-states',
+  'modal',
   'optional-form-section',
+  'select',
+  'textarea',
 ]
 
 // ---------------------------------------------------------------------------

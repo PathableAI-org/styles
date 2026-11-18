@@ -86,8 +86,10 @@ Some of these rules are enforced for Claude Code by
   workflows, the hook itself and `.claude/settings.json`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
-- Pushing and merging ask first. Read-only git and `gh` commands and the check
-  scripts below run without a prompt.
+- Merging a pull request (`gh pr merge`) asks first. Day-to-day git work
+  (`add`, `commit`, `checkout`, `switch`, `merge`, `pull`, `stash`, `tag` and
+  non-force `push`), read-only git and `gh` commands and the check scripts
+  below run without a prompt. Force pushes and `--no-verify` remain denied.
 
 Other agents (Codex, OpenCode, Cursor) are not covered by these settings, but
 the rules apply to them all the same.
