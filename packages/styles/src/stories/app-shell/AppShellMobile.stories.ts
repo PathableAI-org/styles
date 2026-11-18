@@ -1,6 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test'
 
-import { expectKeyboardFocusIndicator } from '../components/FormControls/focus-indicator'
+import { expectKeyboardFocusIndicator } from '../shared/focus-indicator'
 
 export default {
   title: 'Application Shell/Mobile Shell',
