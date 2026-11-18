@@ -79,10 +79,29 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // FormStack has no aggregate story. Default shows the stack gap between
+  // form groups and a trailing action, the first-label reset and the
+  // full-width input, select and textarea at every viewport.
+  {
+    id: 'components-form-controls-form-stack--default',
+    key: 'form-stack/default',
+  },
+  // A form row inside the stack: the row's desktop column tracks and the
+  // stack gap between a row and a following form group, which Default does
+  // not render.
+  {
+    id: 'components-form-controls-form-stack--with-form-row',
+    key: 'form-stack/with-form-row',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = [
+  'icon-button',
+  'icon-tile',
+  'optional-form-section',
+  'form-stack',
+]
 
 // ---------------------------------------------------------------------------
 
