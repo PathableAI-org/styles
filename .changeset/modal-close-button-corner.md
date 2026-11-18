@@ -1,0 +1,5 @@
+---
+'@pathableai/styles': patch
+---
+
+Place the Modal close button (`.pathable-modal__close`) in the dialog's top-right corner, show its × in the text colour (`--pathable-color-text`) at icon size without the native button border, and give it the brand focus ring (`--pathable-color-focus-ring`) on keyboard focus. No class is added, renamed or removed.
