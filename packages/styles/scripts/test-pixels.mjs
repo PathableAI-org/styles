@@ -62,11 +62,16 @@ const STORIES = [
   },
   // The aggregate: rest with the focus ring, selected, natively disabled and
   // aria-disabled side by side, so the two disabled forms are compared.
-  // `state-precedence` (selected-and-disabled, and the loading spinner) is
-  // not compared yet: its spinner renders wrongly until #275 is fixed.
   {
     id: 'interaction-controls-interaction-states--all-states',
     key: 'interaction-states/all-states',
+  },
+  // State precedence shows rules `all-states` does not: the loading spinner's
+  // size and placement inside the control, and selected styling under
+  // disabled.
+  {
+    id: 'interaction-controls-interaction-states--state-precedence',
+    key: 'interaction-states/state-precedence',
   },
   // OptionalFormSection has no aggregate story. Collapsed (`default`) shows
   // the button, its focus outline and the down indicator at every viewport.

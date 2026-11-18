@@ -69,6 +69,52 @@ async function expectStylesReady(element: HTMLElement, view: Window) {
   await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
 }
 
+// The ::after spinner has no element to measure, so its border box is derived
+// from its resolved geometry, which is relative to the control's padding box
+// (clientWidth/clientHeight).
+async function expectSpinnerWithinControl(control: HTMLElement, view: Window) {
+  const controlStyle = view.getComputedStyle(control)
+  const spinner = view.getComputedStyle(control, '::after')
+  const fontSize = parseFloat(controlStyle.fontSize)
+  const width = parseFloat(spinner.width)
+  const height = parseFloat(spinner.height)
+  const top = parseFloat(spinner.top) + parseFloat(spinner.marginTop)
+  const left = parseFloat(spinner.left) + parseFloat(spinner.marginLeft)
+
+  await expect(spinner.content).toBe('""')
+  await expect(spinner.position).toBe('absolute')
+  await expect(spinner.boxSizing).toBe('border-box')
+  await expect(width).toBeCloseTo(fontSize, 1)
+  await expect(height).toBeCloseTo(fontSize, 1)
+  await expect(top).toBeGreaterThanOrEqual(0)
+  await expect(left).toBeGreaterThanOrEqual(0)
+  await expect(top + height).toBeLessThanOrEqual(control.clientHeight)
+  await expect(left + width).toBeLessThanOrEqual(control.clientWidth)
+  // The spinner must not overlap the control's label text. Each label span's
+  // text extent is measured with a Range, since the spans are block boxes as
+  // wide as the control.
+  const controlBounds = control.getBoundingClientRect()
+  const spinnerLeft = controlBounds.left + control.clientLeft + left
+  const spinnerTop = controlBounds.top + control.clientTop + top
+  const labels = Array.from(control.querySelectorAll('span'))
+  await expect(labels.length).toBeGreaterThan(0)
+  for (const label of labels) {
+    const range = control.ownerDocument.createRange()
+    range.selectNodeContents(label)
+    const text = range.getBoundingClientRect()
+    const overlaps =
+      spinnerLeft < text.right &&
+      spinnerLeft + width > text.left &&
+      spinnerTop < text.bottom &&
+      spinnerTop + height > text.top
+    await expect(overlaps).toBe(false)
+  }
+  // currentColor keeps it distinct from the disabled background, which the
+  // border token can match.
+  await expect(spinner.borderRightColor).toBe(controlStyle.color)
+  await expect(spinner.borderTopColor).toBe('rgba(0, 0, 0, 0)')
+}
+
 // Asserts that a demo control and its visible label compute to
 // --pathable-color-text. Called on natively disabled, aria-disabled and enabled
 // controls, it shows that disabling a control does not swap in the browser's
@@ -297,9 +343,8 @@ export const LoadingState = {
         await expect(loading).toHaveAttribute('aria-busy', 'true')
         await expect(activations).toBe(0)
         await expect(loadingStyle.pointerEvents).toBe('none')
-        await expect(spinner.content).toBe('""')
-        await expect(spinner.position).toBe('absolute')
         await expect(spinner.borderTopWidth).toBe('2px')
+        await expectSpinnerWithinControl(loading, view)
         await expect(loadingBounds.width).toBeCloseTo(readyBounds.width, 3)
         await expect(loadingBounds.height).toBeCloseTo(readyBounds.height, 3)
         const loadingHitTarget = canvasElement.ownerDocument.elementFromPoint(
@@ -373,6 +418,7 @@ export const StatePrecedence = {
         await expect(loadingDisabled).toBeDisabled()
         await expect(loadingDisabled).toHaveAttribute('aria-busy', 'true')
         await expect(loadingStyle.pointerEvents).toBe('none')
+        await expectSpinnerWithinControl(loadingDisabled, view)
         await expectTextTokenLabelColor(
           canvasElement,
           view,

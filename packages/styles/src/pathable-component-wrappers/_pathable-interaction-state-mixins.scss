@@ -93,7 +93,14 @@
   }
 }
 
-// Loading: suppressed interaction + CSS-only border spinner pseudo-element
+// Loading: suppressed interaction + CSS-only border spinner pseudo-element.
+// The spinner is icon-sized (1em, like an inline icon), vertically centred
+// and 8px in from the control's inline end, inside its bounds, so it does not
+// resize the control. It overlays the control rather than reserving space:
+// it stays clear of content only when the control's inline-end padding is at
+// least 8px + 1em (the demo's 24px padding at 16px text). It uses
+// currentColor because the border token can match the disabled background.
+// Icon-only controls re-centre and resize it, as IconButton does.
 @mixin state-loading($selector: '.is-loading') {
   &#{$selector} {
     pointer-events: none;
@@ -103,11 +110,13 @@
     &::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 2px solid var(--pathable-color-border);
+      inset-block: 0;
+      inset-inline: auto var(--space-8, 8px);
+      width: 1em;
+      height: 1em;
+      box-sizing: border-box;
+      margin-block: auto;
+      border: 2px solid currentColor;
       border-top-color: transparent;
       border-radius: 50%;
       animation: pathable-spin 0.6s linear infinite;
