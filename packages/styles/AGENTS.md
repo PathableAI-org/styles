@@ -163,7 +163,7 @@ Agents MUST check contrast before using color pairs for text.
 
 Agents MUST NOT hardcode brand values throughout application code when a token exists.
 
-Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`, `--usa-*`), that the token source files do not define and no SCSS source file declares. The only exceptions are the two legacy tokens in the script's `LEGACY_ALLOWED_TOKENS` (`--pathable-font-size-body-xs` and `--pathable-font-size-heading-xl`), which are undefined and must not be used in new code.
+Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`, `--usa-*`), that the token source files do not define and no SCSS source file declares. The only exceptions are the two legacy tokens in the script's `LEGACY_ALLOWED_TOKENS` (`--pathable-font-size-body-xs` and `--pathable-font-size-heading-xl`), which are undefined and must not be used in new code; #313 tracks replacing them.
 
 ## USWDS Token Usage
 

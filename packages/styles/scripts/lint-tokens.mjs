@@ -20,6 +20,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const STYLES_ROOT = resolve(__dirname, '..')
 const SRC = resolve(STYLES_ROOT, 'src')
+// Undefined tokens that existing declarations still reference without a
+// fallback, exempted by name until #313 replaces them. Do not add to this list
+// or use these tokens in new code.
 const LEGACY_ALLOWED_TOKENS = new Set([
   '--pathable-font-size-body-xs',
   '--pathable-font-size-heading-xl',
