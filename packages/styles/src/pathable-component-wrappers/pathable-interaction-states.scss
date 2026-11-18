@@ -16,6 +16,15 @@
 //   --pathable-color-surface               — selected/resting background
 //   --pathable-color-border                — selected/pressed border color
 //   --space-8                              — loading spinner inline-end offset
+//   --pathable-color-text                  — demo class text color
+//
+// Text color: the mixins set no `color`. A consuming control MUST set its own
+// `color` (as .pathable-icon-button and .pathable-segmented-control do), so a
+// natively disabled <button> keeps it instead of falling back to the browser's
+// disabled text color. Native `:disabled` and `[aria-disabled="true"]` then
+// render alike: with the mixin's defaults, the control's own text color at
+// reduced opacity. A consumer may restyle its disabled state, as
+// .pathable-segmented-control does with full opacity and muted text.
 //
 // Available mixins (defined in _pathable-interaction-state-mixins.scss and
 // forwarded here; @use that partial to include a mixin without emitting the
@@ -53,6 +62,7 @@
   cursor: pointer;
   box-shadow: var(--elevation-sm);
   background: var(--pathable-color-surface);
+  color: var(--pathable-color-text);
   border-radius: var(--radius-md);
   user-select: none;
 }
