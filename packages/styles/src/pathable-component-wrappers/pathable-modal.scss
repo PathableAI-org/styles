@@ -58,6 +58,12 @@
   @extend .usa-modal__content;
   // PathAble DOM order is title → body → footer; override USWDS column-reverse.
   flex-direction: column;
+  // USWDS puts the side and bottom padding on .usa-modal__main, which PathAble
+  // markup does not use; pad the content box on every side instead. The top
+  // keeps the USWDS value, units(4). Border-box keeps the padded box inside
+  // the dialog, because USWDS also sets width: 100% here.
+  box-sizing: border-box;
+  padding: units(4);
 }
 
 .pathable-modal__heading {
