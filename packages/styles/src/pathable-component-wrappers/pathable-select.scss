@@ -6,11 +6,15 @@
 // Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
+@use 'pathable-interaction-states' as states;
 
 @use 'usa-select/src/styles';
 
 .pathable-select {
   @extend .usa-select;
+  // USWDS colours this focus outline only through its global element rule,
+  // which this package does not include, so apply the shared brand focus ring.
+  @include states.state-focus;
 }
 
 @media (max-width: 39.99em), (pointer: coarse) {
