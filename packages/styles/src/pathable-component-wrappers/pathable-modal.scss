@@ -62,6 +62,9 @@
 
 .pathable-modal__heading {
   @extend .usa-modal__heading;
+  // Keep a wrapping title clear of the corner-pinned close button below
+  // (its inset plus its 44 px box), whatever margin the heading element has.
+  padding-inline-end: calc(var(--pathable-space-1) + 44px);
 }
 
 .pathable-modal__footer {
@@ -75,8 +78,8 @@
 .pathable-modal__close {
   @extend .usa-modal__close;
   position: absolute;
-  top: units(1);
-  right: units(1);
+  inset-block-start: var(--pathable-space-1);
+  inset-inline-end: var(--pathable-space-1);
   justify-content: center;
   margin: 0;
   // USWDS markup pairs the close with .usa-button for its reset; PathAble
