@@ -60,6 +60,12 @@ const STORIES = [
     id: 'interaction-controls-icon-tile--all-variants',
     key: 'icon-tile/all-variants',
   },
+  // The aggregate: rest with the focus ring, selected, natively disabled and
+  // aria-disabled side by side, so the two disabled forms are compared.
+  {
+    id: 'interaction-controls-interaction-states--all-states',
+    key: 'interaction-states/all-states',
+  },
   // OptionalFormSection has no aggregate story. Collapsed (`default`) shows
   // the button, its focus outline and the down indicator at every viewport.
   {
@@ -82,7 +88,12 @@ const STORIES = [
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = [
+  'icon-button',
+  'icon-tile',
+  'interaction-states',
+  'optional-form-section',
+]
 
 // ---------------------------------------------------------------------------
 
