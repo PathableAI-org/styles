@@ -16,8 +16,9 @@ text inherited its size.
   select and clear action; FilterPill; KpiGrid trend and trend label;
   ScheduleItem date month and status; Table status cell text.
 - The DashboardHeader title and the KpiGrid card value now use
-  `--pathable-font-size-display-lg` (32px).
+  `--pathable-font-size-display-lg` (32px). The existing overrides are
+  unchanged: the DashboardHeader title is still 24px at viewports up to 640px,
+  and the value of an unavailable KpiGrid card is still 24px.
 
-This text is now visibly smaller (or, for the title and value, sized to 32px)
-wherever it previously inherited a different size. No token or class is added,
-renamed or removed.
+This text now renders at these sizes wherever it previously inherited a
+different size. No token or class is added, renamed or removed.
