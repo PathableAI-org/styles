@@ -58,6 +58,67 @@ function openShellMarkup(options?: {
   `
 }
 
+/** Close control must sit within this distance of the dialog's top and right edges. */
+const CLOSE_CORNER_TOLERANCE_PX = 16
+
+/** Resolves a colour custom property to the computed `rgb()` string. */
+function resolveColorToken(token: string, doc: Document): string {
+  if (!getComputedStyle(doc.documentElement).getPropertyValue(token).trim()) {
+    throw new Error(`Modal story token ${token} is undefined`)
+  }
+  const probe = doc.createElement('span')
+  probe.style.color = `var(${token})`
+  doc.body.append(probe)
+  const value = getComputedStyle(probe).color
+  probe.remove()
+  return value
+}
+
+async function assertCloseButtonPlacement(canvasElement: HTMLElement) {
+  const dialog = within(canvasElement).getByRole('dialog', {
+    name: DIALOG_NAME,
+  })
+  const close = within(dialog).getByRole('button', { name: /Close modal/i })
+  const heading = within(dialog).getByRole('heading', { name: DIALOG_NAME })
+  const dialogBox = dialog.getBoundingClientRect()
+  const closeBox = close.getBoundingClientRect()
+  const headingBox = heading.getBoundingClientRect()
+
+  // Top-right corner of the dialog, above the heading (not beside or under it).
+  await expect(dialogBox.right - closeBox.right).toBeGreaterThanOrEqual(0)
+  await expect(dialogBox.right - closeBox.right).toBeLessThanOrEqual(
+    CLOSE_CORNER_TOLERANCE_PX,
+  )
+  await expect(closeBox.top - dialogBox.top).toBeGreaterThanOrEqual(0)
+  await expect(closeBox.top - dialogBox.top).toBeLessThanOrEqual(
+    CLOSE_CORNER_TOLERANCE_PX,
+  )
+  await expect(closeBox.bottom).toBeLessThanOrEqual(headingBox.top)
+
+  // The × glyph uses the text colour, not the USWDS light-grey base colour.
+  await expect(getComputedStyle(close).color).toBe(
+    resolveColorToken('--pathable-color-text', close.ownerDocument),
+  )
+}
+
+async function assertCloseButtonFocusRing(canvasElement: HTMLElement) {
+  const close = within(canvasElement).getByRole('button', {
+    name: /Close modal/i,
+  })
+
+  // The close control is the first tabbable element in the fixture.
+  await userEvent.tab()
+  await expect(close).toHaveFocus()
+  await expect(close.matches(':focus-visible')).toBe(true)
+
+  const style = getComputedStyle(close)
+  await expect(style.outlineStyle).toBe('solid')
+  await expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThan(0)
+  await expect(style.outlineColor).toBe(
+    resolveColorToken('--pathable-color-focus-ring', close.ownerDocument),
+  )
+}
+
 async function assertOpenShell(canvasElement: HTMLElement) {
   const harness = harnessFor(canvasElement)
   const root = harness.within(harness.root)
@@ -84,13 +145,15 @@ export const Open = {
     docs: {
       description: {
         story:
-          'PathAble-only open Modal shell: `.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` → `.pathable-modal.usa-modal`. Backdrop and centering come from styles CSS with static `.is-visible` — no USWDS modal JS.',
+          "PathAble-only open Modal shell: `.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` → `.pathable-modal.usa-modal`. Backdrop and centering come from styles CSS with static `.is-visible` — no USWDS modal JS. The play function also asserts the close button sits in the dialog's top-right corner with a text-coloured icon and shows the `--pathable-color-focus-ring` outline on keyboard focus.",
       },
     },
   },
   render: () => openShellMarkup({ headingId: 'modal-heading-open' }),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     await assertOpenShell(canvasElement)
+    await assertCloseButtonPlacement(canvasElement)
+    await assertCloseButtonFocusRing(canvasElement)
   },
 }
 

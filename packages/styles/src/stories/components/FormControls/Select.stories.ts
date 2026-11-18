@@ -1,3 +1,7 @@
+import { within } from 'storybook/test'
+
+import { expectKeyboardFocusIndicator } from './focus-indicator'
+
 export default {
   title: 'Components/Form Controls/Select',
   tags: ['autodocs'],
@@ -51,4 +55,50 @@ export const WorkflowParticipantGoal = {
   </select>
 </form>
   `,
+}
+
+export const KeyboardFocus = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Keyboard focus shows the brand focus outline in `--pathable-color-focus-ring` (Bright Blue Brooks). The play function tabs to the select and checks the outline.',
+      },
+    },
+  },
+  render: () => `
+<label class="pathable-label" for="select-keyboard-focus">Select an option</label>
+<select id="select-keyboard-focus" class="pathable-select">
+  <option>Option 1</option>
+  <option>Option 2</option>
+</select>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectKeyboardFocusIndicator(
+      canvasElement,
+      within(canvasElement).getByRole('combobox', { name: 'Select an option' }),
+    ),
+}
+
+export const ForcedColors = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Run with forced-colors emulation (the test-runner turns it on for this story). Keyboard focus keeps a visible solid outline in the system `Highlight` colour. The play function tabs to the select and checks the outline.',
+      },
+    },
+  },
+  render: () => `
+<label class="pathable-label" for="select-forced-colors">Select an option</label>
+<select id="select-forced-colors" class="pathable-select">
+  <option>Option 1</option>
+  <option>Option 2</option>
+</select>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectKeyboardFocusIndicator(
+      canvasElement,
+      within(canvasElement).getByRole('combobox', { name: 'Select an option' }),
+    ),
 }
