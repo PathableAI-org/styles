@@ -150,13 +150,8 @@ export const AccessibilityCheck: Story = {
 // ---------------------------------------------------------------------------
 
 /** Tags used as status indicators within a workflow card, demonstrating
- *  the typical pattern of using tags for metadata alongside content.
- *
- *  The status badge (.pathable-card__status) has insufficient color contrast
- *  against the card background — a pre-existing design token issue in
- *  @pathableai/styles. Tracked for future fix. */
+ *  the typical pattern of using tags for metadata alongside content. */
 export const AsStatusIndicators: Story = {
-  tags: ['skip-a11y'],
   render: () => {
     return (
       <Card
