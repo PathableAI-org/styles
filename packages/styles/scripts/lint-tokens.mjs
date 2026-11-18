@@ -1,22 +1,30 @@
 /**
  * Token Custom-Property Lint
  *
- * Validates that every var(--pathable-*) reference in SCSS source files and
- * story files references a token that is actually defined in the token source
- * files. Reports undefined references with file:line and Levenshtein-based
- * suggestions.
+ * Validates that every var(--*) reference in SCSS source files and story files
+ * references a custom property that is actually defined. That covers the
+ * --pathable-* namespace and the non-prefixed design tokens (--space-*,
+ * --radius-*, --elevation-*, --ui-*) and their --usa-* aliases. A reference
+ * resolves when the token source files define it, when any SCSS source file
+ * declares it, or when it carries a fallback value. References inside comments
+ * are checked too, so a comment that names a token must name a real one;
+ * declarations inside comments do not count. Reports undefined references with
+ * file:line and Levenshtein-based suggestions.
  *
  * Usage:
  *   node packages/styles/scripts/lint-tokens.mjs
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, realpathSync, statSync } from 'node:fs'
 import { resolve, relative, dirname, basename } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const STYLES_ROOT = resolve(__dirname, '..')
 const SRC = resolve(STYLES_ROOT, 'src')
+// Undefined tokens that existing declarations still reference without a
+// fallback, exempted by name until #313 replaces them. Do not add to this list
+// or use these tokens in new code.
 const LEGACY_ALLOWED_TOKENS = new Set([
   '--pathable-font-size-body-xs',
   '--pathable-font-size-heading-xl',
@@ -210,7 +218,34 @@ function parseNestedMapValues(content, mapName) {
 // ---------------------------------------------------------------------------
 
 /**
- * Extract static --pathable-* tokens from :root and :where(:root) blocks.
+ * A custom-property declaration: `--name:` not preceded by a word character,
+ * hyphen, `&`, `}` or `(`, so a BEM modifier before a pseudo-class
+ * (`.card--sm:hover`, `&--sm:hover`, `#{&}--sm:hover`) and an `@supports`
+ * feature query (`(--x: y)`) are not mistaken for declarations. Interpolated
+ * names (`--usa-#{$x}:`) do not match; the map parsers below cover those.
+ * Callers strip comments first (see stripComments).
+ */
+const DECLARATION_PATTERN = /(?<![\w&}(-])(--[a-zA-Z0-9_-]+)\s*:/g
+
+/**
+ * Remove block comments and line comments, so prose such as
+ * `// --space-2: unused` is not read as a declaration. A `//` only starts a
+ * comment at the start of a line or after whitespace, which leaves URLs such
+ * as `url(https://…)` intact.
+ *
+ * @param {string} content
+ * @returns {string}
+ */
+function stripComments(content) {
+  // One left-to-right pass, so a `/*` inside a line comment (or `//` inside a
+  // block comment) does not start a second comment.
+  return content.replace(/\/\*[\s\S]*?\*\/|(^|\s)\/\/.*$/gm, (match, lead) =>
+    match.startsWith('/*') ? '' : lead,
+  )
+}
+
+/**
+ * Extract static custom-property tokens from :root and :where(:root) blocks.
  * Uses brace counting to handle nested interpolations like #{...}.
  */
 function extractStaticTokens(content, tokens) {
@@ -218,16 +253,20 @@ function extractStaticTokens(content, tokens) {
   let rm
   while ((rm = rootRe.exec(content)) !== null) {
     const startIdx = rm.index + rm[0].length
-    const block = extractBraceBlock(content, startIdx)
-    const propRe = /--pathable-[a-zA-Z0-9_-]+\s*:/g
-    let pm
-    while ((pm = propRe.exec(block)) !== null) {
-      tokens.add(pm[0].replace(/\s*:\s*$/, '').trim())
+    const block = stripComments(extractBraceBlock(content, startIdx))
+    for (const pm of block.matchAll(DECLARATION_PATTERN)) {
+      tokens.add(pm[1])
     }
   }
 }
 
-function extractDefinedTokens() {
+/**
+ * Collect every token the token source files define, including the tokens
+ * generated from SCSS maps. Exported for the tooling tests.
+ *
+ * @returns {string[]} sorted token names
+ */
+export function extractDefinedTokens() {
   const tokens = new Set()
 
   // _colors.scss — static --pathable-brand-* in :root
@@ -246,9 +285,15 @@ function extractDefinedTokens() {
   const typographyTokensMap = parseScssMap(typography, 'typography-tokens')
   for (const key of typographyTokensMap.keys()) {
     tokens.add(`--pathable-${key}`)
+    tokens.add(`--usa-${key}`)
   }
 
-  // _spacing.scss — @each over $pathable-spacing-scale
+  // _radius.scss and _elevation.scss — static --radius-* and --elevation-*
+  for (const file of ['_radius.scss', '_elevation.scss']) {
+    extractStaticTokens(readFileSync(resolve(SRC, file), 'utf-8'), tokens)
+  }
+
+  // _spacing.scss — static --space-* plus @each over $pathable-spacing-scale
   const spacing = readFileSync(resolve(SRC, '_spacing.scss'), 'utf-8')
   extractStaticTokens(spacing, tokens)
 
@@ -270,6 +315,7 @@ function extractDefinedTokens() {
   for (const [moduleName, valueKeys] of utilEntries) {
     for (const vk of valueKeys) {
       tokens.add(`--pathable-${moduleName}-${vk}`)
+      tokens.add(`--usa-${moduleName}-${vk}`)
     }
   }
 
@@ -284,36 +330,70 @@ function extractDefinedTokens() {
 }
 
 // ---------------------------------------------------------------------------
-// Scanning for var(--pathable-*) references
+// Scanning for var(--*) references
 // ---------------------------------------------------------------------------
 
-function findPathableReferences(filePath, fileContent) {
-  const lines = fileContent.split('\n')
+/**
+ * Find var(--*) references across the whole file, so a reference that
+ * Prettier wraps (`var(\n  --space-4\n)`) is still checked. The reported line
+ * is the line of the token name.
+ */
+function findTokenReferences(filePath, fileContent) {
   const refs = []
-  const varRe = /var\(\s*(--pathable-[a-zA-Z0-9_-]+)\s*([),])/g
-  for (let i = 0; i < lines.length; i++) {
-    varRe.lastIndex = 0
-    let m
-    while ((m = varRe.exec(lines[i])) !== null) {
-      refs.push({
-        token: m[1],
-        line: i + 1,
-        file: filePath,
-        hasFallback: m[2] === ',',
-      })
-    }
+  const varRe = /var\(\s*(--[a-zA-Z0-9_-]+)\s*([),])/g
+  for (const m of fileContent.matchAll(varRe)) {
+    const tokenIndex = m.index + m[0].indexOf(m[1])
+    refs.push({
+      token: m[1],
+      line: fileContent.slice(0, tokenIndex).split('\n').length,
+      file: filePath,
+      hasFallback: m[2] === ',',
+    })
   }
   return refs
 }
 
-function extractDeclaredTokens(fileContent) {
+/**
+ * Custom properties declared anywhere in a file, such as component-scoped
+ * properties set on a selector. Exported for the tooling tests.
+ *
+ * @param {string} fileContent
+ * @returns {Set<string>}
+ */
+export function extractDeclaredTokens(fileContent) {
   const tokens = new Set()
-  const declRe = /(--pathable-[a-zA-Z0-9_-]+)\s*:/g
-  let m
-  while ((m = declRe.exec(fileContent)) !== null) {
+  for (const m of stripComments(fileContent).matchAll(DECLARATION_PATTERN)) {
     tokens.add(m[1])
   }
   return tokens
+}
+
+/**
+ * Report every var(--*) reference without a fallback that resolves to neither
+ * a defined token nor a declared custom property. Exported for the tooling
+ * tests.
+ *
+ * @param {{ file: string, content: string }[]} files files to scan
+ * @param {string[]} definedTokens tokens from the token source files
+ * @param {Set<string>} declaredTokens custom properties declared in SCSS
+ * @returns {{ token: string, line: number, file: string, hasFallback: boolean, suggestions: string[] }[]}
+ */
+export function findUndefinedReferences(files, definedTokens, declaredTokens) {
+  const definedSet = new Set(definedTokens)
+  const issues = []
+  for (const { file, content } of files) {
+    for (const ref of findTokenReferences(file, content)) {
+      if (
+        !definedSet.has(ref.token) &&
+        !declaredTokens.has(ref.token) &&
+        !ref.hasFallback &&
+        !LEGACY_ALLOWED_TOKENS.has(ref.token)
+      ) {
+        issues.push({ ...ref, suggestions: suggest(ref.token, definedTokens) })
+      }
+    }
+  }
+  return issues
 }
 
 // ---------------------------------------------------------------------------
@@ -591,6 +671,22 @@ function checkDefaultThemeValueSync() {
   return issues
 }
 
+/**
+ * The files the lint scans: every SCSS source file, and every JavaScript or
+ * TypeScript file under `src/stories` (story files and their helpers).
+ * Exported for the tooling tests.
+ *
+ * @returns {{ scssFiles: string[], storyFiles: string[] }}
+ */
+export function listScannedFiles() {
+  return {
+    scssFiles: walkDir(SRC, (name) => name.endsWith('.scss')),
+    storyFiles: walkDir(resolve(SRC, 'stories'), (name) =>
+      /\.(js|ts)$/.test(name),
+    ),
+  }
+}
+
 function main() {
   const themeSyncIssues = checkThemeTokenSync()
   if (themeSyncIssues.length > 0) {
@@ -620,15 +716,10 @@ function main() {
   }
 
   const definedTokens = extractDefinedTokens()
-  const definedSet = new Set(definedTokens)
 
   console.log(`Defined tokens: ${definedTokens.length}\n`)
 
-  // Scan SCSS source files and story files
-  const scssFiles = walkDir(SRC, (name) => name.endsWith('.scss'))
-  const storyFiles = walkDir(resolve(SRC, 'stories'), (name) =>
-    name.endsWith('.stories.js'),
-  )
+  const { scssFiles, storyFiles } = listScannedFiles()
 
   const declaredInScss = new Set()
   for (const file of scssFiles) {
@@ -638,27 +729,18 @@ function main() {
     }
   }
 
-  const allFiles = [...scssFiles, ...storyFiles]
-  const issues = []
-
-  for (const file of allFiles) {
-    const content = readFileSync(file, 'utf-8')
-    const refs = findPathableReferences(file, content)
-    for (const ref of refs) {
-      if (
-        !definedSet.has(ref.token) &&
-        !declaredInScss.has(ref.token) &&
-        !ref.hasFallback &&
-        !LEGACY_ALLOWED_TOKENS.has(ref.token)
-      ) {
-        const suggestions = suggest(ref.token, definedTokens)
-        issues.push({ ...ref, suggestions })
-      }
-    }
-  }
+  const allFiles = [...scssFiles, ...storyFiles].map((file) => ({
+    file,
+    content: readFileSync(file, 'utf-8'),
+  }))
+  const issues = findUndefinedReferences(
+    allFiles,
+    definedTokens,
+    declaredInScss,
+  )
 
   if (issues.length === 0) {
-    console.log('All var(--pathable-*) references resolve to defined tokens.')
+    console.log('All var(--*) references resolve to defined tokens.')
     process.exit(0)
   }
 
@@ -674,4 +756,10 @@ function main() {
   process.exit(1)
 }
 
-main()
+// Compare real paths so a run through a symlinked checkout still lints.
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href
+) {
+  main()
+}

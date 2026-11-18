@@ -87,6 +87,50 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // SegmentedControl has no aggregate story. Single select shows the option
+  // icon-to-label gap, the selected option and the container padding; the gap
+  // does not change with the viewport, so one desktop image is enough.
+  {
+    id: 'interaction-controls-segmentedcontrol--single-select',
+    key: 'segmented-control/single-select',
+  },
+  // The app shell has no aggregate story: the desktop shell shows the sidebar
+  // and the gap between navigation items, and the mobile shell shows the
+  // mobile layout with the bottom navigation and its icon-to-label gap.
+  {
+    id: 'application-shell-desktop-shell--default',
+    key: 'app-shell/desktop',
+  },
+  // The capture's Tab focuses the story's focusable content region, which has
+  // no brand focus rule, so the image shows the browser's default ring
+  // (#312), accepted by the maintainer for #277; its fix updates the image.
+  {
+    id: 'application-shell-mobile-shell--default',
+    key: 'app-shell/mobile',
+  },
+  // The workflow card's status text has rules of its own (colour, weight and
+  // font size) that no other Card story shows; its meta text, also shown by
+  // `workflow-card`, is captured here alongside it. The
+  // capture's Tab focuses the action link, which has no brand focus rule, so
+  // the image shows the browser's default ring inside the card's focus-within
+  // outline (#312). The status text is Intelligent Jade on white, about 2.8:1,
+  // which fails text contrast (#314). The maintainer accepted both for #277;
+  // their fixes update the image.
+  {
+    id: 'components-card--workflow-card-with-status',
+    key: 'card/workflow-with-status',
+  },
+  // Integration toolbar: stroke-only (fill="none") icons on the bare, subtle
+  // and bordered icon-button surfaces, which the filled icons of IconButton
+  // `all-variants` do not show. The play function asserts the shapes stay
+  // unfilled (#278); this image adds what an assertion cannot name: stroke
+  // weight, line caps, and icon size and position in each surface. The
+  // full-composition story has no baseline yet: it waited on its segmented
+  // control's missing gap, which #277 fixes.
+  {
+    id: 'interaction-controls-integration--toolbar-panel',
+    key: 'integration/toolbar-panel',
+  },
   // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
   // story renders one labelled field as the only control, so the capture's Tab
   // shows its brand focus ring (#282) beside its label. Desktop only: the
@@ -143,25 +187,29 @@ const STORIES = [
     key: 'filterable-option-list/empty',
   },
   // Modal has no aggregate story. `open` shows the overlay, the centred
-  // dialog and the close button in its top-right corner; it is the first
-  // control, so the capture's Tab shows its focus ring. Its image also shows
-  // the open content-padding (#284) and outline-button (#287) defects,
-  // accepted by the maintainer for #285; their fixes update it. Not shown:
+  // dialog, the content padding on every side and the close button in its
+  // top-right corner; it is the first control, so the capture's Tab shows its
+  // focus ring. Its image also shows the open outline-button defect (#287),
+  // accepted by the maintainer for #285; its fix updates it. Not shown:
   // `narrow` and `long-content`, which wait on the mobile layout fix (#286).
   { id: 'components-communication-modal--open', key: 'modal/open' },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
 const ROLLOUT = [
+  'app-shell',
+  'card',
   'filterable-option-list',
   'form-row',
   'form-stack',
   'icon-button',
   'icon-tile',
+  'integration',
   'input',
   'interaction-states',
   'modal',
   'optional-form-section',
+  'segmented-control',
   'select',
   'textarea',
 ]
@@ -220,6 +268,14 @@ if (process.env.PIXELS_IN_CONTAINER !== '1' && !values['no-container']) {
     readFileSync(join(ROOT, 'node_modules/playwright/package.json'), 'utf8'),
   )
   const image = `mcr.microsoft.com/playwright:v${version}-noble`
+  const daemon = await run('docker', ['info'], { stdio: 'ignore' }).catch(
+    () => 1,
+  )
+  if (daemon !== 0) {
+    fail(
+      'The Docker daemon is not reachable. Docker may be installed with its daemon stopped, as in Claude Code cloud sessions: start it with `(nohup dockerd > /tmp/dockerd.log 2>&1 &)`, wait for `docker info` to succeed, and run this again. Do not take baselines from CI artifacts on a Linux host. See "In a Claude Code cloud session" in docs/testing/visual-regression.md.',
+    )
+  }
   console.log(`Running in the pinned container ${image}\n`)
   const code = await run('docker', [
     'run',
