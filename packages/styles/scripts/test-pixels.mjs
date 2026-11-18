@@ -155,6 +155,21 @@ const STORIES = [
     id: 'components-form-controls-form-row--default',
     key: 'form-row/default',
   },
+  // FormStack has no aggregate story. Default shows the stack gap between
+  // form groups and a trailing action, the first-label reset and the
+  // full-width input, select and textarea at every viewport.
+  {
+    id: 'components-form-controls-form-stack--default',
+    key: 'form-stack/default',
+  },
+  // A form row inside the stack at desktop: the stack's full-width control
+  // rule applied inside the row's columns, and how the row's own zeroed group
+  // margins sit next to a following stack-level group. Default renders no row,
+  // so neither combination appears in its images.
+  {
+    id: 'components-form-controls-form-stack--with-form-row',
+    key: 'form-stack/with-form-row',
+  },
   // FilterableOptionList main story: the filter input (focused), the bounded
   // option region and the status line.
   {
@@ -211,6 +226,7 @@ const ROLLOUT = [
   'card',
   'filterable-option-list',
   'form-row',
+  'form-stack',
   'icon-button',
   'icon-tile',
   'integration',
