@@ -92,6 +92,12 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Button has no aggregate story yet. Outline guards the outline modifier
+  // against the cascade regression in #287, beside the primary button.
+  {
+    id: 'components-button--outline',
+    key: 'button/outline',
+  },
   // SegmentedControl has no aggregate story. Single select shows the option
   // icon-to-label gap, the selected option and the container padding; the gap
   // does not change with the viewport, so one desktop image is enough.
@@ -192,15 +198,15 @@ const STORIES = [
     key: 'filterable-option-list/empty',
   },
   // Modal has no aggregate story. `open` shows the overlay, the centred
-  // dialog, the content padding on every side and the close button in its
-  // top-right corner; it is the first control, so the capture's Tab shows its
-  // focus ring. Its image also shows the open outline-button defect (#287),
-  // accepted by the maintainer for #285; its fix updates it.
+  // dialog, the content padding on every side, the close button in its
+  // top-right corner and the outline Cancel button beside the primary action;
+  // the close button is the first control, so the capture's Tab shows its
+  // focus ring.
   { id: 'components-communication-modal--open', key: 'modal/open' },
   // Narrow (mobile) is the only state where the overlay's padding, not the
   // dialog's max-width, sets the dialog width; it must still fit the viewport
-  // (#286). Its image also shows #287 and the stacked footer buttons
-  // touching with no gap, accepted by the maintainer for #286.
+  // (#286). Its image also shows the stacked footer buttons touching with no
+  // gap, accepted by the maintainer for #286.
   {
     id: 'components-communication-modal--narrow',
     key: 'modal/narrow',
@@ -228,6 +234,7 @@ const STORIES = [
 /** Components whose baselines are enforced. Only these are compared. */
 const ROLLOUT = [
   'app-shell',
+  'button',
   'card',
   'filterable-option-list',
   'form-row',
