@@ -4,6 +4,10 @@
 // USWDS dependencies: uswds-fonts
 // JS-driven: No
 // Requires .usa-* on DOM: No
+//
+// The form group sets the top margin, so its first pathable-label drops its
+// own. USWDS ships this reset for .usa-label only; @extend does not carry it
+// across modules to .pathable-label.
 
 @use 'uswds-core' as *;
 
@@ -11,4 +15,8 @@
 
 .pathable-form-group {
   @extend .usa-form-group;
+}
+
+.pathable-form-group .pathable-label:first-child {
+  margin-top: 0;
 }
