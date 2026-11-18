@@ -63,6 +63,9 @@ const CLOSE_CORNER_TOLERANCE_PX = 16
 
 /** Resolves a colour custom property to the computed `rgb()` string. */
 function resolveColorToken(token: string, doc: Document): string {
+  if (!getComputedStyle(doc.documentElement).getPropertyValue(token).trim()) {
+    throw new Error(`Modal story token ${token} is undefined`)
+  }
   const probe = doc.createElement('span')
   probe.style.color = `var(${token})`
   doc.body.append(probe)
