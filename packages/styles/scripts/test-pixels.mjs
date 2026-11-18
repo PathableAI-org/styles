@@ -79,10 +79,34 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
+  // story renders one labelled field as the only control, so the capture's Tab
+  // shows its brand focus ring (#282) beside its label. Desktop only: the
+  // focus rule has no viewport dependency, and the controls' mobile
+  // min-height rule is outside that fix.
+  {
+    id: 'components-form-controls-input--keyboard-focus',
+    key: 'input/keyboard-focus',
+  },
+  {
+    id: 'components-form-controls-select--keyboard-focus',
+    key: 'select/keyboard-focus',
+  },
+  {
+    id: 'components-form-controls-textarea--keyboard-focus',
+    key: 'textarea/keyboard-focus',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = [
+  'icon-button',
+  'icon-tile',
+  'input',
+  'optional-form-section',
+  'select',
+  'textarea',
+]
 
 // ---------------------------------------------------------------------------
 
