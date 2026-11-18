@@ -32,13 +32,22 @@
   // Explicit overlay geometry for PathAble-only open markup (backdrop + centering).
   background: rgba(0, 0, 0, 0.7);
   bottom: 0;
+  // Keep the padded overlay inside the viewport; content-box sizing made it
+  // 3rem wider and taller than the viewport and pushed the dialog off centre.
+  box-sizing: border-box;
+  // Collapse the whitespace between ::before and the dialog so a full-width
+  // dialog stays on the ::before line instead of wrapping below the viewport.
+  // The dialog resets its own rem-based font size.
+  font-size: 0;
   height: 100%;
   left: 0;
   overflow: scroll;
   overflow-x: hidden;
   padding: 1.5rem;
   position: fixed;
-  scroll-behavior: smooth;
+  // Jump, rather than smooth-scroll, to focused controls so the open state
+  // settles immediately.
+  scroll-behavior: auto;
   top: 0;
   width: 100%;
 
@@ -52,6 +61,8 @@
 
 .pathable-modal {
   @extend .usa-modal;
+  // max-width (30rem) and width: 100% bound the whole dialog box.
+  box-sizing: border-box;
 }
 
 .pathable-modal__content {
