@@ -114,7 +114,7 @@ Run the checks that cover what you changed, from the repository root:
 | `pnpm test:storybook-react`                 | Changes to `packages/react`, its stories or `packages/storybook-contracts`.                                                                                                 |
 | `pnpm --filter @pathableai/react test:unit` | Changes to `packages/react` source.                                                                                                                                         |
 | `pnpm check:agent-guidance`                 | Changes to `packages/react` public API or `packages/react/agent-guidance/`.                                                                                                 |
-| `pnpm test:tooling`                         | Changes to `scripts/claude/`.                                                                                                                                               |
+| `pnpm test:tooling`                         | Changes to `scripts/claude/`, `scripts/tests/` or the scripts they test, including `packages/styles/scripts/lint-tokens.mjs`.                                               |
 | `pnpm changeset`                            | Code changes to a published package (`@pathableai/styles` or `@pathableai/react`). Not for documentation-only changes, even docs that ship in the package.                  |
 
 Commit messages follow Conventional Commits; commitlint and lint-staged run in

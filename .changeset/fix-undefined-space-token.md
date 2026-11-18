@@ -4,9 +4,9 @@
 
 Fix declarations that referenced undefined tokens, which the browser dropped.
 
-- The SegmentedControl option gap (icon to label), the app shell navigation
-  list gap (between items) and the bottom navigation item gap (icon to label)
-  referenced `--space-2` and rendered as 0. They now use `--space-4` (4px).
+- The gap between a SegmentedControl option's icon and label, the gap between
+  app shell navigation items, and the gap between a bottom navigation item's
+  icon and label referenced `--space-2` and rendered as 0. They now use `--space-4` (4px).
 - Workflow card status and meta text (`.pathable-card__status` and
   `.pathable-card__meta` inside `.pathable-card--workflow`) referenced
   `--usa-font-size-sm` and inherited the card's font size. They now use
