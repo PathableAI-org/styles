@@ -201,6 +201,8 @@ const CANONICAL_STORIES = [
   // Components - Basic
   // The outline modifier beside the primary button (#287).
   { id: 'components-button--outline', mode: 'both' },
+  // The accent-warm modifier beside the primary button (#303).
+  { id: 'components-button--accent-warm', mode: 'desktop' },
   { id: 'components-card--workflow-card-with-status', mode: 'desktop' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },

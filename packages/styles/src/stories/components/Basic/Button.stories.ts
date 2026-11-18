@@ -27,9 +27,53 @@ export const AccentCool = {
     '<button class="pathable-button pathable-button--accent-cool">Accent Cool</button>',
 }
 
+/**
+ * Resolves a CSS custom property to the browser's computed `rgb()` color, so a
+ * play function can compare a computed style with a token without restating
+ * its hex value.
+ */
+const resolveColor = (canvasElement: HTMLElement, token: string) => {
+  const probe = document.createElement('span')
+  probe.style.color = `var(${token})`
+  canvasElement.append(probe)
+  const { color } = getComputedStyle(probe)
+  probe.remove()
+  return color
+}
+
 export const AccentWarm = {
-  render: () =>
-    '<button class="pathable-button pathable-button--accent-warm">Accent Warm</button>',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The accent-warm modifier fills the button with Lived-In Lime and sets its text in the text color, so it reads as a highlighted action beside the primary button.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-cluster pathable-cluster--gap-sm">
+      <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
+      <button type="button" class="pathable-button pathable-button--accent-warm">Share Progress</button>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const primary = getComputedStyle(
+      canvas.getByRole('button', { name: 'Save Coaching Note' }),
+    )
+    const accentWarm = getComputedStyle(
+      canvas.getByRole('button', { name: 'Share Progress' }),
+    )
+
+    await expect(accentWarm.backgroundColor).toBe(
+      resolveColor(canvasElement, '--pathable-brand-lived-in-lime'),
+    )
+    await expect(accentWarm.color).toBe(
+      resolveColor(canvasElement, '--pathable-color-text'),
+    )
+    await expect(accentWarm.backgroundColor).not.toBe(primary.backgroundColor)
+    await expect(accentWarm.color).not.toBe(primary.color)
+  },
 }
 
 export const Outline = {

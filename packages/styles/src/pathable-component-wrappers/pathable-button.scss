@@ -37,6 +37,15 @@
 
 .pathable-button--accent-warm {
   @extend .usa-button--accent-warm;
+  // The @extend puts this selector in the USWDS accent-warm rule, which
+  // compiles before the .pathable-button brand rule above. Both have equal
+  // specificity, so the primary fill and text would win. Redeclare the
+  // resting state here, after .pathable-button: a Lived-In Lime fill with
+  // text in the text token (PathAble Blue by default, 10.9:1 on the lime),
+  // the colors USWDS gives. USWDS :visited, :hover and :active rules are more
+  // specific and still apply.
+  background-color: var(--pathable-brand-lived-in-lime);
+  color: var(--pathable-color-text);
 }
 
 .pathable-button--outline {
