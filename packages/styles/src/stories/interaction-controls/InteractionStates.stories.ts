@@ -90,6 +90,12 @@ async function expectSpinnerWithinControl(control: HTMLElement, view: Window) {
   await expect(left).toBeGreaterThanOrEqual(0)
   await expect(top + height).toBeLessThanOrEqual(control.clientHeight)
   await expect(left + width).toBeLessThanOrEqual(control.clientWidth)
+  // Inline-end placement keeps it clear of start-aligned labels.
+  await expect(left + width / 2).toBeGreaterThan(control.clientWidth / 2)
+  // currentColor keeps it distinct from the disabled background, which the
+  // border token can match.
+  await expect(spinner.borderRightColor).toBe(controlStyle.color)
+  await expect(spinner.borderTopColor).toBe('rgba(0, 0, 0, 0)')
 }
 
 async function runInteractionStatesProof(
@@ -290,8 +296,6 @@ export const LoadingState = {
         await expect(loading).toHaveAttribute('aria-busy', 'true')
         await expect(activations).toBe(0)
         await expect(loadingStyle.pointerEvents).toBe('none')
-        await expect(spinner.content).toBe('""')
-        await expect(spinner.position).toBe('absolute')
         await expect(spinner.borderTopWidth).toBe('2px')
         await expectSpinnerWithinControl(loading, view)
         await expect(loadingBounds.width).toBeCloseTo(readyBounds.width, 3)
