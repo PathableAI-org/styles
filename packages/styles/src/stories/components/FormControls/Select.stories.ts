@@ -85,7 +85,7 @@ export const ForcedColors = {
     docs: {
       description: {
         story:
-          'Run with forced-colors emulation. Keyboard focus keeps a visible outline in the system `Highlight` colour. The play function tabs to the select and checks the outline.',
+          'Run with forced-colors emulation (the test-runner turns it on for this story). Keyboard focus keeps a visible solid outline in the system `Highlight` colour. The play function tabs to the select and checks the outline.',
       },
     },
   },
@@ -100,6 +100,5 @@ export const ForcedColors = {
     expectKeyboardFocusIndicator(
       canvasElement,
       within(canvasElement).getByRole('combobox', { name: 'Select an option' }),
-      { forcedColors: true },
     ),
 }

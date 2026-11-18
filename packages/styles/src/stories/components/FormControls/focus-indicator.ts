@@ -7,6 +7,7 @@ import { expect, userEvent } from 'storybook/test'
  */
 const resolveColor = (canvasElement: HTMLElement, value: string) => {
   const probe = canvasElement.ownerDocument.createElement('span')
+  probe.hidden = true
   probe.style.color = value
   canvasElement.append(probe)
   const resolved = getComputedStyle(probe).color
@@ -16,15 +17,21 @@ const resolveColor = (canvasElement: HTMLElement, value: string) => {
 
 /**
  * Moves keyboard focus from the document start to `field` with Tab and asserts
- * it shows the brand focus outline: `--pathable-color-focus-ring` normally, and
- * the system `Highlight` colour when forced colors are active.
+ * it shows a solid outline at least 2px wide: in `--pathable-color-focus-ring`
+ * normally, and in the system `Highlight` colour when forced colors are active.
+ *
+ * The expected colour follows the current forced-colors state, so the story
+ * passes in any browser. The Storybook test-runner turns forced colors on for
+ * stories named `--forced-colors` (`apps/storybook/.storybook/test-runner.js`).
+ * Under forced colors Chromium replaces a non-system outline colour with
+ * `Highlight` itself, so that run proves the outline stays visible, not which
+ * rule picked its colour.
  */
 export const expectKeyboardFocusIndicator = async (
   canvasElement: HTMLElement,
   field: HTMLElement,
-  { forcedColors = false }: { forcedColors?: boolean } = {},
 ) => {
-  await expect(matchMedia('(forced-colors: active)').matches).toBe(forcedColors)
+  const forcedColors = matchMedia('(forced-colors: active)').matches
 
   const active = field.ownerDocument.activeElement
   if (active instanceof HTMLElement) active.blur()
