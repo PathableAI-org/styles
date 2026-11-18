@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only SCSS mixins with semantics supplied by the consuming control.\n\n**States verified**: The combined mixin provides hover, focus-visible, focus-within, active, selected, disabled, and loading feedback. Fixtures verify disabled/loading precedence and compatibility with consumer-owned narrow and increased-text containment. The alternative granular pressed mixin is not part of the combined demo.\n\n**Consumers must**: Include the appropriate interaction-state mixins in component SCSS. Use native disabled semantics or application logic to suppress activation while unavailable or loading, and expose persistent state with the ARIA semantics appropriate to the control.',
+          '**Interaction Model**: CSS-only SCSS mixins with semantics supplied by the consuming control.\n\n**States verified**: The combined mixin provides hover, focus-visible, focus-within, active, selected, disabled, and loading feedback. Fixtures verify disabled/loading precedence and compatibility with consumer-owned narrow and increased-text containment. The alternative granular pressed mixin is not part of the combined demo.\n\n**Consumers must**: Include the appropriate interaction-state mixins in component SCSS, and set a `color` on the control itself: the mixins set none, so a natively disabled `<button>` without one falls back to the disabled text colour of the browser instead of matching an `aria-disabled` control. Use native disabled semantics or application logic to suppress activation while unavailable or loading, and expose persistent state with the ARIA semantics appropriate to the control.',
       },
     },
   },
@@ -67,6 +67,28 @@ async function expectStylesReady(element: HTMLElement, view: Window) {
 
   await expect(style.boxShadow).not.toBe('none')
   await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+}
+
+// Asserts that a demo control and its visible label compute to
+// --pathable-color-text. Called on natively disabled, aria-disabled and enabled
+// controls, it shows that disabling a control does not swap in the browser's
+// disabled text color, so native and aria-disabled controls render alike.
+// It does not measure contrast.
+async function expectTextTokenLabelColor(
+  canvasElement: HTMLElement,
+  view: Window,
+  control: HTMLElement,
+  labelText: string,
+) {
+  const label = within(control).getByText(labelText)
+  const textColor = resolveColorToken(
+    canvasElement,
+    view,
+    '--pathable-color-text',
+  )
+
+  await expect(view.getComputedStyle(control).color).toBe(textColor)
+  await expect(view.getComputedStyle(label).color).toBe(textColor)
 }
 
 async function runInteractionStatesProof(
@@ -176,6 +198,14 @@ const runAllStatesPlay = async (
     await expect(ariaDisabledStyle.cursor).toBe('default')
     await expect(ariaDisabledStyle.boxShadow).toBe('none')
     await expect(ariaDisabledStyle.opacity).toBe('0.5')
+
+    await expectTextTokenLabelColor(canvasElement, view, disabled, 'Disabled')
+    await expectTextTokenLabelColor(
+      canvasElement,
+      view,
+      ariaDisabled,
+      'ARIA disabled',
+    )
 
     await userEvent.tab()
     await expect(selected).toHaveFocus()
@@ -331,11 +361,24 @@ export const StatePrecedence = {
           resolveColorToken(canvasElement, view, '--pathable-color-bg'),
         )
         await expect(selectedDisabledStyle.fontWeight).toBe('700')
+        await expectTextTokenLabelColor(canvasElement, view, rest, 'Rest')
+        await expectTextTokenLabelColor(
+          canvasElement,
+          view,
+          selectedDisabled,
+          'Selected disabled',
+        )
 
         const loadingStyle = view.getComputedStyle(loadingDisabled)
         await expect(loadingDisabled).toBeDisabled()
         await expect(loadingDisabled).toHaveAttribute('aria-busy', 'true')
         await expect(loadingStyle.pointerEvents).toBe('none')
+        await expectTextTokenLabelColor(
+          canvasElement,
+          view,
+          loadingDisabled,
+          'Loading disabled',
+        )
       },
     )
   },
