@@ -67,6 +67,13 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-checkbox--with-hint-and-error',
     mode: 'both',
   },
+  // Keyboard focus ring of the single-field controls (pixel baselines, #282)
+  { id: 'components-form-controls-input--keyboard-focus', mode: 'desktop' },
+  { id: 'components-form-controls-select--keyboard-focus', mode: 'desktop' },
+  {
+    id: 'components-form-controls-textarea--keyboard-focus',
+    mode: 'desktop',
+  },
   { id: 'components-form-controls-form-row--default', mode: 'both' },
   {
     id: 'components-form-controls-form-row--constrained-three-fields',

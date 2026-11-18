@@ -62,15 +62,55 @@
 
 .pathable-modal__heading {
   @extend .usa-modal__heading;
+  // Keep a wrapping title clear of the corner-pinned close button below
+  // (its inset plus its 44 px box), whatever margin the heading element has.
+  padding-inline-end: calc(var(--pathable-space-1) + 44px);
 }
 
 .pathable-modal__footer {
   @extend .usa-modal__footer;
 }
 
+// USWDS places the close button as the last child of a column-reverse
+// .usa-modal__content and pulls it up with a negative top margin. PathAble
+// nests it in .pathable-modal__heading under a column content box, so pin it
+// to the dialog's top-right corner instead (.usa-modal is position: relative).
 .pathable-modal__close {
   @extend .usa-modal__close;
+  position: absolute;
+  inset-block-start: var(--pathable-space-1);
+  inset-inline-end: var(--pathable-space-1);
+  justify-content: center;
+  margin: 0;
+  // USWDS markup pairs the close with .usa-button for its reset; PathAble
+  // markup does not, so drop the native button border here.
+  border: 0;
   // Meet quality-gates 44 px minimum touch target (USWDS close is ~20×28).
   min-height: 44px;
   min-width: 44px;
+  // The text × glyph replaces the USWDS SVG icon: size it as an icon and use
+  // the text colour so it reads on the white dialog surface.
+  color: var(--pathable-color-text);
+  font-size: var(--pathable-font-size-heading-lg);
+  line-height: 1;
+  cursor: pointer;
+
+  // USWDS hover/active only darkens the glyph to ink, which now matches the
+  // resting colour; keep visible feedback with a subtle background instead.
+  &:hover,
+  &:active {
+    background-color: var(--pathable-color-bg);
+    color: var(--pathable-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--pathable-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
 }
