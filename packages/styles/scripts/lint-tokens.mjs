@@ -256,22 +256,21 @@ function extractStaticTokens(content, tokens) {
  * Collect every token the token source files define, including the tokens
  * generated from SCSS maps. Exported for the tooling tests.
  *
- * @param {string} [src] the styles `src` directory
  * @returns {string[]} sorted token names
  */
-export function extractDefinedTokens(src = SRC) {
+export function extractDefinedTokens() {
   const tokens = new Set()
 
   // _colors.scss — static --pathable-brand-* in :root
-  const colors = readFileSync(resolve(src, '_colors.scss'), 'utf-8')
+  const colors = readFileSync(resolve(SRC, '_colors.scss'), 'utf-8')
   extractStaticTokens(colors, tokens)
 
   // _semantic.scss — static --pathable-color-* in :root
-  const semantic = readFileSync(resolve(src, '_semantic.scss'), 'utf-8')
+  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
   extractStaticTokens(semantic, tokens)
 
   // _typography.scss — static tokens in :root (font roles) + @each over $typography-tokens
-  const typography = readFileSync(resolve(src, '_typography.scss'), 'utf-8')
+  const typography = readFileSync(resolve(SRC, '_typography.scss'), 'utf-8')
   extractStaticTokens(typography, tokens)
 
   // Parse $typography-tokens map for dynamically generated tokens
@@ -283,11 +282,11 @@ export function extractDefinedTokens(src = SRC) {
 
   // _radius.scss and _elevation.scss — static --radius-* and --elevation-*
   for (const file of ['_radius.scss', '_elevation.scss']) {
-    extractStaticTokens(readFileSync(resolve(src, file), 'utf-8'), tokens)
+    extractStaticTokens(readFileSync(resolve(SRC, file), 'utf-8'), tokens)
   }
 
   // _spacing.scss — static --space-* plus @each over $pathable-spacing-scale
-  const spacing = readFileSync(resolve(src, '_spacing.scss'), 'utf-8')
+  const spacing = readFileSync(resolve(SRC, '_spacing.scss'), 'utf-8')
   extractStaticTokens(spacing, tokens)
 
   const spacingScale = parseScssMap(spacing, 'pathable-spacing-scale')
@@ -299,7 +298,7 @@ export function extractDefinedTokens(src = SRC) {
   // (extracted from _utilities.scss in this feature). Parse it for dynamically
   // generated utility tokens; _utilities-tokens.scss emits them from the same map.
   const utilConfig = readFileSync(
-    resolve(src, '_utilities-config.scss'),
+    resolve(SRC, '_utilities-config.scss'),
     'utf-8',
   )
   extractStaticTokens(utilConfig, tokens)
@@ -314,7 +313,7 @@ export function extractDefinedTokens(src = SRC) {
 
   // _components-custom-properties.scss — static --pathable-* in :root
   const comp = readFileSync(
-    resolve(src, '_components-custom-properties.scss'),
+    resolve(SRC, '_components-custom-properties.scss'),
     'utf-8',
   )
   extractStaticTokens(comp, tokens)
