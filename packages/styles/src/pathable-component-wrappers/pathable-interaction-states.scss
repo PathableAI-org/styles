@@ -15,6 +15,13 @@
 //   --pathable-color-bg                    — hover/disabled background
 //   --pathable-color-surface               — selected/resting background
 //   --pathable-color-border                — selected/pressed border color
+//   --pathable-color-text                  — demo class text color
+//
+// Text color: the mixins set no `color`. A consuming control MUST set its own
+// `color` (as .pathable-icon-button and .pathable-segmented-control do), so a
+// natively disabled <button> keeps it instead of falling back to the browser's
+// disabled text color. Native `:disabled` and `[aria-disabled="true"]` then
+// render alike: the same text color at the mixin's reduced opacity.
 //
 // Available mixins:
 //   state-hover            — &:hover elevation increase + background shift
@@ -171,6 +178,7 @@
   cursor: pointer;
   box-shadow: var(--elevation-sm);
   background: var(--pathable-color-surface);
+  color: var(--pathable-color-text);
   border-radius: var(--radius-md);
   user-select: none;
 }

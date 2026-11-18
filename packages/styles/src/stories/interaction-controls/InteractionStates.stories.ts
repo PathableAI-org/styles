@@ -69,6 +69,26 @@ async function expectStylesReady(element: HTMLElement, view: Window) {
   await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
 }
 
+// Native :disabled and [aria-disabled="true"] must render alike: the label keeps
+// the demo's text color instead of the browser's disabled text color.
+async function expectReadableLabelColor(
+  canvasElement: HTMLElement,
+  view: Window,
+  control: HTMLElement,
+) {
+  const label = control.querySelector('span')
+
+  if (!label) throw new Error('InteractionStates control has no label span')
+  const textColor = resolveColorToken(
+    canvasElement,
+    view,
+    '--pathable-color-text',
+  )
+
+  await expect(view.getComputedStyle(control).color).toBe(textColor)
+  await expect(view.getComputedStyle(label).color).toBe(textColor)
+}
+
 async function runInteractionStatesProof(
   storyId: string,
   capability: string,
@@ -176,6 +196,10 @@ const runAllStatesPlay = async (
     await expect(ariaDisabledStyle.cursor).toBe('default')
     await expect(ariaDisabledStyle.boxShadow).toBe('none')
     await expect(ariaDisabledStyle.opacity).toBe('0.5')
+
+    await expectReadableLabelColor(canvasElement, view, disabled)
+    await expectReadableLabelColor(canvasElement, view, ariaDisabled)
+    await expect(disabledStyle.color).toBe(ariaDisabledStyle.color)
 
     await userEvent.tab()
     await expect(selected).toHaveFocus()
@@ -331,11 +355,14 @@ export const StatePrecedence = {
           resolveColorToken(canvasElement, view, '--pathable-color-bg'),
         )
         await expect(selectedDisabledStyle.fontWeight).toBe('700')
+        await expectReadableLabelColor(canvasElement, view, rest)
+        await expectReadableLabelColor(canvasElement, view, selectedDisabled)
 
         const loadingStyle = view.getComputedStyle(loadingDisabled)
         await expect(loadingDisabled).toBeDisabled()
         await expect(loadingDisabled).toHaveAttribute('aria-busy', 'true')
         await expect(loadingStyle.pointerEvents).toBe('none')
+        await expectReadableLabelColor(canvasElement, view, loadingDisabled)
       },
     )
   },
