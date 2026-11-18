@@ -7,7 +7,7 @@
  * capture plan, so its postVisit hook (apps/storybook/.storybook/pixels.js)
  * screenshots each planned story and compares it with the committed baselines
  * through jest-image-snapshot. Everything runs in the pinned Playwright
- * container. The mechanism, the condition rule and the commands are in
+ * container. The mechanism, the story rule and the commands are in
  * docs/testing/visual-regression.md.
  *
  *   node packages/styles/scripts/test-pixels.mjs                  compare
@@ -46,20 +46,15 @@ const PORT = 6014
 const THRESHOLD = 0.01
 
 /**
- * Story entries: each canonical story with baselines, its
+ * Story entries: each canonical story with baselines and its
  * renderer-independent `<component>/<state>` key (the baseline directory, not
  * derived from the story ID, so a React capture of the same state can share
- * it) and its conditions, chosen by the rule in the docs.
+ * it). One image per viewport; which stories get an entry is in the docs.
  */
 const STORIES = [
   {
     id: 'interaction-controls-iconbutton--all-variants',
     key: 'icon-button/all-variants',
-    // forced-colors: variants differ by colour, background and border, and
-    // the component has forced-colors rules. focus-visible: interactive.
-    // Not text-200: icon-only and sized in px. Not reduced-motion: its only
-    // motion rule removes transitions, which a still capture never shows.
-    conditions: ['default', 'forced-colors', 'focus-visible'],
   },
 ]
 
@@ -170,9 +165,7 @@ for (const story of STORIES) {
 
 const enforced = STORIES.filter((story) => ROLLOUT.includes(componentOf(story)))
 const captureCount = enforced.reduce(
-  (sum, story) =>
-    sum +
-    visualViewportNames(modes.get(story.id)).length * story.conditions.length,
+  (sum, story) => sum + visualViewportNames(modes.get(story.id)).length,
   0,
 )
 const summary = [
@@ -187,10 +180,8 @@ console.log(`${summary.join('\n')}\n`)
 if (!values.update) {
   const expected = new Set(
     enforced.flatMap((story) =>
-      visualViewportNames(modes.get(story.id)).flatMap((viewport) =>
-        story.conditions.map((condition) =>
-          join(BASELINE_DIR, story.key, `${viewport}-${condition}.png`),
-        ),
+      visualViewportNames(modes.get(story.id)).map((viewport) =>
+        join(BASELINE_DIR, story.key, `${viewport}.png`),
       ),
     ),
   )
@@ -227,7 +218,6 @@ const plan = {
       story.id,
       {
         key: story.key,
-        conditions: story.conditions,
         viewports: visualViewportNames(modes.get(story.id)).map((name) => ({
           name,
           ...VIEWPORTS[name],
@@ -268,11 +258,9 @@ const captured = new Set(
   existsSync(capturedLog) ? readFileSync(capturedLog, 'utf8').split('\n') : [],
 )
 const missing = planned.flatMap((story) =>
-  plan.stories[story.id].viewports.flatMap(({ name }) =>
-    story.conditions
-      .map((condition) => `${story.key}/${name}-${condition}`)
-      .filter((capture) => !captured.has(capture)),
-  ),
+  plan.stories[story.id].viewports
+    .map(({ name }) => `${story.key}/${name}`)
+    .filter((capture) => !captured.has(capture)),
 )
 console.log(`\n${summary.join('\n')}`)
 console.log(

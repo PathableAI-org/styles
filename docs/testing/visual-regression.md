@@ -1,7 +1,7 @@
 # Pixel visual regression
 
 This document owns the pixel visual-regression suite: what it compares, how
-captures are made, which conditions apply to a story, and how to compare and
+captures are made, which stories get a baseline, and how to compare and
 update baselines. Which risk tier a baseline change implies is in
 [Risk tiers](../engineering/git-workflow.md#risk-tiers).
 
@@ -79,10 +79,12 @@ during pixel runs.
   captures all three.
 - **Framing.** The whole story iframe page at the viewport width, full page,
   with the Storybook preview's own padding and background.
-- **Settling.** After the play function, the hook waits for web fonts and
-  returns focus to the document body, so focus left by the play function is
-  not captured. Conditions are applied to the rendered story, not before it
-  loads, so play-function assertions always run under default conditions.
+- **Settling and focus.** After the play function, the hook waits for web
+  fonts and returns focus to the document body, so focus left by the play
+  function is not captured. It then presses Tab once, a real key press, so
+  the first interactive control has `:focus-visible` and the image shows one
+  focus indicator next to the unfocused controls. A story without an
+  interactive control is captured with nothing focused.
 - **Comparison.** CSS animations and transitions are disabled and the text
   caret is hidden. A pixel differs when its colour distance exceeds 0.01 on a
   0 to 1 scale, which a uniform shift of about 3/255 per channel exceeds, and
@@ -92,42 +94,23 @@ during pixel runs.
 - **Baselines.** Plain PNG files in
   [`visual-baselines/`](../../visual-baselines/), outside every package's
   published `files`, named
-  `<workspace>/<component>/<state>/<viewport>-<condition>.png`. The
+  `<workspace>/<component>/<state>/<viewport>.png`. The
   `<component>/<state>` key comes from the story entry, not from the story ID,
   so a React capture of the same state can share the key and be paired later.
 
-## Conditions
+## One image per viewport
 
-Each capture checks that its condition is in effect before the screenshot.
+Each story entry gets one image per viewport: the default rendering, with
+keyboard focus on the first interactive control. IconButton `all-variants`
+has three images.
 
-| Condition        | How it is applied                                                                          |
-| ---------------- | ------------------------------------------------------------------------------------------ |
-| `default`        | No emulation, nothing focused                                                              |
-| `forced-colors`  | `forced-colors: active`                                                                    |
-| `text-200`       | The browser's default text size set to 32 px (200 %), as a user enlarging text would       |
-| `reduced-motion` | `prefers-reduced-motion: reduce`                                                           |
-| `focus-visible`  | One real keyboard Tab from the document start, which focuses the first interactive control |
-
-Each story entry lists its conditions, with the reason next to it. Apply a
-condition only where it can change what the story shows:
-
-- `default`: every story, unless the story only renders under a condition.
-- `forced-colors`: the component tells states or variants apart by colour,
-  background or border, or has `forced-colors` rules.
-- `text-200`: the component renders text, or sizes or positions itself in
-  `rem`, `em` or other text-relative units.
-- `reduced-motion`: the component has an animation, or a
-  `prefers-reduced-motion` rule that changes a static property. A rule that
-  only removes transitions does not qualify, because captures disable
-  transitions anyway.
-- `focus-visible`: the story contains an interactive control with a focus
-  indicator.
-
-A story that builds a condition into its markup, such as an
-`--increased-text` story, is captured under `default` only; a
-`--forced-colors` story is captured under `forced-colors` only. Combinations
-of conditions are not captured. IconButton `all-variants` is captured under
-`default`, `forced-colors` and `focus-visible`.
+`forced-colors`, increased text size and `prefers-reduced-motion` are not
+captured, because each would add a further image per viewport for every
+story. They are not pixel-checked. A claim about them is observed through the
+`browser` channel of the
+[verification harness](../engineering/verification-harness.md#evidence-channels),
+and a story that builds one into its markup, such as an `--increased-text`
+story, can get a baseline of its own by the rule above.
 
 ## Commands
 
@@ -162,8 +145,8 @@ nothing else:
    [Which stories get a baseline](#which-stories-get-a-baseline). If the
    component needs an aggregate story, or a chosen story does not render
    deterministically, add or fix the stories in a separate pull request first.
-2. Add an entry to `STORIES` for each chosen story, with its key and
-   conditions, and add the component to `ROLLOUT`. In the pull request, say
+2. Add an entry to `STORIES` for each chosen story, with its key,
+   and add the component to `ROLLOUT`. In the pull request, say
    which of the component's canonical stories have no baseline and why the
    chosen ones cover their CSS.
 3. Run the update for that component, look at every image, and commit them.
@@ -177,11 +160,9 @@ difference as a regression (constitution, Visual Regression Protection).
 ## Known limits
 
 - Chromium only, in one Linux image.
-- No story lists `text-200` or `reduced-motion` yet, so those two conditions
-  first run with the story that lists them; each capture fails if its
-  condition is not in effect.
-- `forced-colors` and `prefers-reduced-motion` are emulated in Chromium; they
-  do not establish behaviour in Windows High Contrast or other browsers.
+- Rendering under `forced-colors`, increased text size and
+  `prefers-reduced-motion` is not compared.
+- Only the first interactive control in a story is captured focused.
 - Storybook 10 has ended official support for the test-runner in favour of its
   Vitest addon. The repository's accessibility job uses the test-runner too.
 - Text in a story's own framing markup that sets no font family renders in

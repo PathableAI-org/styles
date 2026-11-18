@@ -195,11 +195,12 @@ screenshots and transcripts are not committed.
 For a claim about visual appearance, such as a token value, spacing, a focus
 indicator or `forced-colors` rendering, the evidence is the committed
 [pixel baselines](../testing/visual-regression.md) where they cover the named
-story and condition: the `visual` channel compares them, and the pull
-request's file diff shows any baseline change. Baselines cover only the
-stories listed for each workspace's rollout components, and only the
-conditions each story lists. For the rest, the verifier captures Playwright screenshots of
-the named stories under the claim's conditions. GitHub's REST
+story: the `visual` channel compares them, and the pull request's file diff
+shows any baseline change. Baselines cover only the stories listed for each
+workspace's rollout components, in their default rendering with the first
+interactive control focused. For the rest, including `forced-colors`,
+increased text size and reduced motion, the verifier captures Playwright
+screenshots of the named stories under the claim's conditions. GitHub's REST
 API cannot attach images to a comment, so it publishes them as one private
 review page per run (an Artifact in Claude Code sessions) and posts one pull
 request comment linking it, titled with the verified SHA and run UUID. The

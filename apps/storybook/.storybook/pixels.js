@@ -5,7 +5,8 @@
  * test-runner with a capture plan in `PIXELS_PLAN`; it is the only supported
  * entry point (docs/testing/visual-regression.md). After the test-runner has
  * rendered a planned story and run its play function, `capturePixels` takes a
- * full-page screenshot at each planned viewport and condition and compares it
+ * full-page screenshot at each planned viewport, with keyboard focus on the
+ * first interactive control, and compares it
  * with the committed baseline through jest-image-snapshot.
  */
 
@@ -28,34 +29,11 @@ export function setupPixels() {
   jestExpect().extend({ toMatchImageSnapshot })
 }
 
-const CONDITIONS = {
-  default: { expect: { focusOnBody: true } },
-  'forced-colors': {
-    apply: (page) => page.emulateMedia({ forcedColors: 'active' }),
-    expect: { forcedColors: true, focusOnBody: true },
-  },
-  'reduced-motion': {
-    apply: (page) => page.emulateMedia({ reducedMotion: 'reduce' }),
-    expect: { reducedMotion: true, focusOnBody: true },
-  },
-  // The browser's text-size setting at 200 %, through a DevTools session that
-  // stays attached until the capture is done (detaching drops the override).
-  'text-200': {
-    apply: (_page, session) =>
-      session.send('Page.setFontSizes', {
-        fontSizes: { standard: 32, fixed: 26 },
-      }),
-    expect: { defaultFontSize: '32px', focusOnBody: true },
-  },
-  // A real keyboard Tab from the document start focuses the first interactive
-  // control, so the browser applies :focus-visible itself.
-  'focus-visible': {
-    apply: (page) => page.keyboard.press('Tab'),
-    expect: { focusOnBody: false, focusVisible: true },
-  },
-}
-
-async function resetFocus(page) {
+async function capture(page, viewport) {
+  await page.setViewportSize({
+    width: viewport.width,
+    height: viewport.height,
+  })
   await page.evaluate(async () => {
     await document.fonts.ready
     document.activeElement?.blur()
@@ -67,60 +45,17 @@ async function resetFocus(page) {
     body.removeAttribute('tabindex')
     body.blur()
   })
-}
+  // A real keyboard Tab from the document start focuses the first interactive
+  // control, so the browser applies :focus-visible itself and the image shows
+  // one focus indicator. A story without a control is captured with no focus.
+  await page.keyboard.press('Tab')
 
-function readState(page) {
-  return page.evaluate(() => {
-    const probe = document.createElement('div')
-    probe.style.fontSize = 'medium'
-    document.body.append(probe)
-    const defaultFontSize = getComputedStyle(probe).fontSize
-    probe.remove()
-    const active = document.activeElement
-    return {
-      forcedColors: matchMedia('(forced-colors: active)').matches,
-      reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-      defaultFontSize,
-      focusOnBody: !active || active === document.body,
-      focusVisible: Boolean(active?.matches(':focus-visible')),
-    }
+  return page.screenshot({
+    fullPage: true,
+    animations: 'disabled',
+    caret: 'hide',
+    scale: 'css',
   })
-}
-
-async function capture(page, viewport, condition) {
-  const variant = CONDITIONS[condition]
-  const session = await page.context().newCDPSession(page)
-  try {
-    await page.setViewportSize({
-      width: viewport.width,
-      height: viewport.height,
-    })
-    await resetFocus(page)
-    await variant.apply?.(page, session)
-
-    const state = await readState(page)
-    const wrong = Object.entries(variant.expect).filter(
-      ([name, value]) => state[name] !== value,
-    )
-    if (wrong.length > 0) {
-      throw new Error(
-        `Condition "${condition}" is not in effect: ${JSON.stringify(state)}`,
-      )
-    }
-
-    return await page.screenshot({
-      fullPage: true,
-      animations: 'disabled',
-      caret: 'hide',
-      scale: 'css',
-    })
-  } finally {
-    await page.emulateMedia({
-      forcedColors: 'none',
-      reducedMotion: 'no-preference',
-    })
-    await session.detach()
-  }
 }
 
 export async function capturePixels(page, context) {
@@ -132,38 +67,36 @@ export async function capturePixels(page, context) {
   const failures = []
 
   for (const viewport of story.viewports) {
-    for (const condition of story.conditions) {
-      const identifier = `${viewport.name}-${condition}`
-      try {
-        const image = await capture(page, viewport, condition)
+    const identifier = viewport.name
+    try {
+      const image = await capture(page, viewport)
 
-        // jest-image-snapshot fails a missing baseline without saving the
-        // capture. Save it, so a new baseline can be taken from CI's artifact.
-        const baseline = join(baselineDir, `${identifier}.png`)
-        if (!plan.update && !existsSync(baseline)) {
-          mkdirSync(resultsDir, { recursive: true })
-          writeFileSync(join(resultsDir, `${identifier}-received.png`), image)
-        }
-
-        jestExpect()(image).toMatchImageSnapshot({
-          customSnapshotsDir: baselineDir,
-          customSnapshotIdentifier: identifier,
-          customDiffDir: resultsDir,
-          storeReceivedOnFailure: true,
-          customReceivedDir: resultsDir,
-          failureThreshold: 0,
-          customDiffConfig: { threshold: plan.threshold },
-        })
-      } catch (error) {
-        failures.push(`${story.key} ${identifier}: ${error.message}`)
-      } finally {
-        // test-pixels.mjs checks that every planned capture ran.
-        mkdirSync(plan.resultsDir, { recursive: true })
-        appendFileSync(
-          join(plan.resultsDir, 'captured.txt'),
-          `${story.key}/${identifier}\n`,
-        )
+      // jest-image-snapshot fails a missing baseline without saving the
+      // capture. Save it, so a new baseline can be taken from CI's artifact.
+      const baseline = join(baselineDir, `${identifier}.png`)
+      if (!plan.update && !existsSync(baseline)) {
+        mkdirSync(resultsDir, { recursive: true })
+        writeFileSync(join(resultsDir, `${identifier}-received.png`), image)
       }
+
+      jestExpect()(image).toMatchImageSnapshot({
+        customSnapshotsDir: baselineDir,
+        customSnapshotIdentifier: identifier,
+        customDiffDir: resultsDir,
+        storeReceivedOnFailure: true,
+        customReceivedDir: resultsDir,
+        failureThreshold: 0,
+        customDiffConfig: { threshold: plan.threshold },
+      })
+    } catch (error) {
+      failures.push(`${story.key} ${identifier}: ${error.message}`)
+    } finally {
+      // test-pixels.mjs checks that every planned capture ran.
+      mkdirSync(plan.resultsDir, { recursive: true })
+      appendFileSync(
+        join(plan.resultsDir, 'captured.txt'),
+        `${story.key}/${identifier}\n`,
+      )
     }
   }
 
