@@ -11,10 +11,10 @@ The suite compares only the story entries of components on the **rollout
 list**, and its output names the stories it compares and says how many
 canonical stories it does not.
 
-| Workspace                      | Suite                     | Stories compared          | Not compared                                                                                 |
-| ------------------------------ | ------------------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
-| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton `all-variants` | Every other story in `CANONICAL_STORIES`, including IconButton's other six canonical stories |
-| React (`apps/storybook-react`) | None yet                  | None                      | Every story                                                                                  |
+| Workspace                      | Suite                     | Stories compared                                   | Not compared                                                                                               |
+| ------------------------------ | ------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | IconButton `all-variants`, IconTile `all-variants` | Every other story in `CANONICAL_STORIES`, including the other canonical stories of IconButton and IconTile |
+| React (`apps/storybook-react`) | None yet                  | None                                               | Every story                                                                                                |
 
 Coverage is partial. A story without baselines passes without comparison,
 even when its component is on the rollout list: IconButton's sizes, circle
@@ -22,9 +22,9 @@ shape and other surfaces are not compared today, and whether they need a
 baseline is decided by the rule in
 [Which stories get a baseline](#which-stories-get-a-baseline).
 [#271](https://github.com/PathableAI-org/styles/issues/271) tracks the
-rollout: one pull request per component, adding the stories that rule picks,
-then a final change that turns the list into a check so that a component with
-no baseline fails CI.
+rollout: one pull request per Storybook category, adding the stories that
+rule picks for each component in it, then a final change that turns the list
+into a check so that a component with no baseline fails CI.
 
 The suite is separate from `pnpm test:visual`, the visual smoke test, which
 checks that canonical stories render without blank output or horizontal
@@ -138,8 +138,8 @@ browser for diagnosis only, and refuses to update.
 
 ## Adding a component
 
-Each component's baselines land in their own pull request, which changes
-nothing else:
+The baselines of one Storybook category's components land together in their
+own pull request, which changes nothing else. For each component:
 
 1. Choose the stories by the rule in
    [Which stories get a baseline](#which-stories-get-a-baseline). If the
