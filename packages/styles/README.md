@@ -167,6 +167,10 @@ PathAble-only wrapper and overlay classes with `.is-visible` on the wrapper are
 enough for the open presentation (backdrop + centering) without USWDS JavaScript.
 When dual-classing (for example `@pathableai/react`), also include
 `.usa-modal-wrapper` and `.usa-modal-overlay` beside the PathAble shell classes.
+The overlay fits the viewport and keeps the dialog inside it and centred within
+the overlay at every width, down to 320 px. Place only the dialog inside the overlay: the overlay sets
+`font-size: 0` so the dialog stays on its centring line, and the dialog sets its
+own font size.
 See BRAND_RULES.md for the full PathAble ↔ USWDS Modal catalogue.
 
 ## Guidance
