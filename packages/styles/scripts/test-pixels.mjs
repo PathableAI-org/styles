@@ -79,10 +79,18 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Modal has no aggregate story. Open (desktop) shows the open shell: the
+  // dimmed overlay, the dialog, the content padding on every side, the
+  // heading, body and footer spacing and the close button's focus outline.
+  // Not compared: `narrow`, whose dialog renders below the viewport at 375px
+  // until #286 is fixed, and `long-content`, whose capture ends at the
+  // viewport before the dialog's bottom edge and so shows no CSS `open` does
+  // not.
+  { id: 'components-communication-modal--open', key: 'modal/open' },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section', 'modal']
 
 // ---------------------------------------------------------------------------
 
