@@ -28,7 +28,13 @@ import { constants } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 
-export { CANONICAL_STORIES, VIEWPORTS, visualViewportNames }
+export {
+  CANONICAL_STORIES,
+  VIEWPORTS,
+  visualViewportNames,
+  STORY_CHECK_CONCURRENCY,
+  mapWithConcurrency,
+}
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -37,6 +43,34 @@ export { CANONICAL_STORIES, VIEWPORTS, visualViewportNames }
 const STATIC_DIR = resolve('apps/storybook/storybook-static')
 const PORT = parseInt(process.env.QUALITY_GATES_PORT || '6012', 10)
 const BASE_URL = `http://127.0.0.1:${PORT}`
+
+/**
+ * How many story pages the Playwright checks (here and in test-visual.mjs)
+ * load at once. Each check is mostly waiting (networkidle plus a fixed
+ * settle delay), so a few pages in parallel cut the run time several-fold.
+ * Every check opens its own page and browser context, so they share no state.
+ */
+const STORY_CHECK_CONCURRENCY = Math.max(
+  1,
+  parseInt(process.env.STORY_CHECK_CONCURRENCY || '4', 10) || 1,
+)
+
+/**
+ * Map `items` through async `worker` with at most `limit` in flight, and
+ * return the results in input order so the report stays deterministic.
+ */
+async function mapWithConcurrency(items, limit, worker) {
+  const results = new Array(items.length)
+  let next = 0
+  async function run() {
+    while (next < items.length) {
+      const index = next++
+      results[index] = await worker(items[index], index)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run))
+  return results
+}
 
 /**
  * Canonical stories to audit at the specified viewport(s).
@@ -948,48 +982,55 @@ async function main(checkMode = 'all') {
 
     // 4. Check each canonical story
     console.log('\n3. Canonical story checks')
-    for (const story of CANONICAL_STORIES) {
-      const viewports =
-        story.mode === 'both' ? ['desktop', 'mobile'] : [story.mode]
-
-      for (const vpName of viewports) {
-        const vp = VIEWPORTS[vpName]
+    const checks = CANONICAL_STORIES.flatMap((story) =>
+      (story.mode === 'both' ? ['desktop', 'mobile'] : [story.mode]).map(
+        (vpName) => ({ story, vpName }),
+      ),
+    )
+    const results = await mapWithConcurrency(
+      checks,
+      STORY_CHECK_CONCURRENCY,
+      async ({ story, vpName }) => {
         const page = await browser.newPage()
-
         try {
           if (story.id.endsWith('--forced-colors')) {
             await page.emulateMedia({ forcedColors: 'active' })
           }
-          const failures = await checkStory(page, story.id, vpName)
-          storiesChecked++
-
-          // Log allowlisted overflows for visibility
-          const overflowNote = HORIZONTAL_OVERFLOW_ALLOWLIST[story.id]?.[vpName]
-          if (
-            overflowNote &&
-            !failures.some((f) => f.type === 'horizontal-overflow')
-          ) {
-            allowedOverflows.push(
-              `   ~ ${story.id} @ ${vpName} (${vp.width} px): allowlisted overflow`,
-            )
-          }
-
-          if (failures.length === 0) {
-            storiesPassed++
-          } else {
-            console.log(
-              `   ✗ ${story.id} @ ${vpName} (${vp.width} px): ${failures.length} failure(s)`,
-            )
-            for (const f of failures) {
-              console.log(`      [${f.type}] ${f.message}`)
-            }
-            allFailures.push(...failures)
-          }
+          return await checkStory(page, story.id, vpName)
         } finally {
           await page.close()
         }
+      },
+    )
+
+    checks.forEach(({ story, vpName }, index) => {
+      const vp = VIEWPORTS[vpName]
+      const failures = results[index]
+      storiesChecked++
+
+      // Log allowlisted overflows for visibility
+      const overflowNote = HORIZONTAL_OVERFLOW_ALLOWLIST[story.id]?.[vpName]
+      if (
+        overflowNote &&
+        !failures.some((f) => f.type === 'horizontal-overflow')
+      ) {
+        allowedOverflows.push(
+          `   ~ ${story.id} @ ${vpName} (${vp.width} px): allowlisted overflow`,
+        )
       }
-    }
+
+      if (failures.length === 0) {
+        storiesPassed++
+      } else {
+        console.log(
+          `   ✗ ${story.id} @ ${vpName} (${vp.width} px): ${failures.length} failure(s)`,
+        )
+        for (const f of failures) {
+          console.log(`      [${f.type}] ${f.message}`)
+        }
+        allFailures.push(...failures)
+      }
+    })
 
     // Print allowlisted overflows (informational)
     if (allowedOverflows.length > 0) {

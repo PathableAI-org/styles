@@ -139,22 +139,21 @@ const STORIES = [
     key: 'filterable-option-list/empty',
   },
   // Modal has no aggregate story. `open` shows the overlay, the centred
-  // dialog and the close button in its top-right corner; it is the first
-  // control, so the capture's Tab shows its focus ring. Its image also shows
-  // the open content-padding (#284) and outline-button (#287) defects,
-  // accepted by the maintainer for #285; their fixes update it.
+  // dialog, the content padding on every side and the close button in its
+  // top-right corner; it is the first control, so the capture's Tab shows its
+  // focus ring. Its image also shows the open outline-button defect (#287),
+  // accepted by the maintainer for #285; its fix updates it.
   { id: 'components-communication-modal--open', key: 'modal/open' },
   // Narrow (mobile) is the only state where the overlay's padding, not the
   // dialog's max-width, sets the dialog width; it must still fit the viewport
-  // (#286). Its image also shows #284, #287 and the stacked footer buttons
+  // (#286). Its image also shows #287 and the stacked footer buttons
   // touching with no gap, accepted by the maintainer for #286.
   {
     id: 'components-communication-modal--narrow',
     key: 'modal/narrow',
   },
   // Long content: a dialog taller than the viewport sits at the top of the
-  // scrolling overlay (padding plus dialog margin) instead of centring. Its
-  // image also shows #284, accepted by the maintainer for #286.
+  // scrolling overlay (padding plus dialog margin) instead of centring.
   {
     id: 'components-communication-modal--long-content',
     key: 'modal/long-content',

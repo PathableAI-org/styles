@@ -34,6 +34,8 @@ import {
   CANONICAL_STORIES,
   VIEWPORTS,
   visualViewportNames,
+  STORY_CHECK_CONCURRENCY,
+  mapWithConcurrency,
 } from './quality-gates.mjs'
 
 // ---------------------------------------------------------------------------
@@ -357,27 +359,36 @@ async function main() {
   try {
     browser = await chromium.launch({ headless: true })
 
-    for (const story of CANONICAL_STORIES) {
-      for (const vpName of visualViewportNames(story.mode)) {
-        totalChecks++
+    const checks = CANONICAL_STORIES.flatMap((story) =>
+      visualViewportNames(story.mode).map((vpName) => ({ story, vpName })),
+    )
+    const results = await mapWithConcurrency(
+      checks,
+      STORY_CHECK_CONCURRENCY,
+      async ({ story, vpName }) => {
         const page = await browser.newPage()
         try {
-          const failures = await checkStory(page, story.id, vpName)
-          if (failures.length > 0) {
-            totalFailed++
-            console.log(
-              `   ✗ ${story.id} @ ${vpName}: ${failures.length} failure(s)`,
-            )
-            for (const f of failures) {
-              console.log(`      [${f.type}] ${f.message}`)
-            }
-            allFailures.push(...failures)
-          }
+          return await checkStory(page, story.id, vpName)
         } finally {
           await page.close()
         }
+      },
+    )
+
+    checks.forEach(({ story, vpName }, index) => {
+      const failures = results[index]
+      totalChecks++
+      if (failures.length > 0) {
+        totalFailed++
+        console.log(
+          `   ✗ ${story.id} @ ${vpName}: ${failures.length} failure(s)`,
+        )
+        for (const f of failures) {
+          console.log(`      [${f.type}] ${f.message}`)
+        }
+        allFailures.push(...failures)
       }
-    }
+    })
   } finally {
     if (browser) await browser.close()
     server.close()
