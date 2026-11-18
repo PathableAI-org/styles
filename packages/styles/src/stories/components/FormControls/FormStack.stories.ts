@@ -49,6 +49,23 @@ const expectStackGapSpacing = async (form: HTMLElement, gap: number) => {
   }
 }
 
+// Asserts that a button placed directly in the stack spans the stack's
+// column: it starts and ends at the field's edges, with no right margin left
+// from the USWDS button. Below mobile-lg the button is `width: 100%`; from
+// mobile-lg up it is `width: auto` and the column stretches it, so the check
+// covers whichever branch the story's viewport selects.
+const expectButtonFlushWithField = async (
+  button: HTMLElement,
+  field: HTMLElement,
+) => {
+  const buttonBox = button.getBoundingClientRect()
+  const fieldBox = field.getBoundingClientRect()
+
+  await expect(window.getComputedStyle(button).marginRight).toBe('0px')
+  await expect(buttonBox.left).toBeCloseTo(fieldBox.left, 0)
+  await expect(buttonBox.right).toBeCloseTo(fieldBox.right, 0)
+}
+
 export default {
   title: 'Components/Form Controls/Form Stack',
   tags: ['autodocs'],
@@ -87,6 +104,10 @@ export const Default = {
     }
     await expect(form.scrollWidth).toBeLessThanOrEqual(form.clientWidth + 2)
     await expectStackGapSpacing(form, 16)
+    await expectButtonFlushWithField(
+      canvas.getByRole('button', { name: 'Save participant' }),
+      canvas.getByLabelText('Participant name'),
+    )
   },
 }
 
@@ -187,6 +208,7 @@ export const Narrow = {
   render: () => `
     <form class="pathable-stack pathable-form-stack pathable-stack--gap-md" aria-label="Narrow participant planning" data-testid="narrow-form-stack">
       ${formFields('form-stack-narrow')}
+      <button class="pathable-button pathable-button--primary" type="submit">Save participant</button>
     </form>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -197,5 +219,9 @@ export const Narrow = {
 
     await expect(window.innerWidth).toBe(320)
     await expect(form.scrollWidth).toBeLessThanOrEqual(form.clientWidth + 2)
+    await expectButtonFlushWithField(
+      canvas.getByRole('button', { name: 'Save participant' }),
+      canvas.getByLabelText('Participant name'),
+    )
   },
 }
