@@ -114,6 +114,15 @@ const STORIES = [
     id: 'application-shell-mobile-shell--default',
     key: 'app-shell/mobile',
   },
+  // The shared-navigation modifier has mobile rules of its own that the
+  // default shell does not use: the sidebar navigation moved into the bottom
+  // row with its border and safe-area padding, the horizontally scrolling
+  // destination row with 44 px items, and the skip link, which the capture's
+  // Tab focuses and so shows.
+  {
+    id: 'application-shell-mobile-shell--shared-navigation',
+    key: 'app-shell/mobile-shared-navigation',
+  },
   // The workflow card's status text has rules of its own (colour, weight and
   // font size) that no other Card story shows; its meta text, also shown by
   // `workflow-card`, is captured here alongside it. The
