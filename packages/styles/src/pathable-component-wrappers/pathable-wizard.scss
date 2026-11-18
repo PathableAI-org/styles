@@ -5,7 +5,7 @@
 // Reuses pathable-step-indicator for the step context region.
 //
 // CSS custom properties:
-//   --pathable-wizard-max-width  (default: var(--space-desktop)) — max-width of the wizard
+//   --pathable-wizard-max-width  (default: units('desktop')) — max-width of the wizard
 //   --pathable-wizard-gap        (default: var(--space-16)) — gap between wizard regions
 
 @use 'uswds-core' as *;
