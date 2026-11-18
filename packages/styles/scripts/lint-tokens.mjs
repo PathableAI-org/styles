@@ -664,6 +664,22 @@ function checkDefaultThemeValueSync() {
   return issues
 }
 
+/**
+ * The files the lint scans: every SCSS source file, and every JavaScript or
+ * TypeScript file under `src/stories` (story files and their helpers).
+ * Exported for the tooling tests.
+ *
+ * @returns {{ scssFiles: string[], storyFiles: string[] }}
+ */
+export function listScannedFiles() {
+  return {
+    scssFiles: walkDir(SRC, (name) => name.endsWith('.scss')),
+    storyFiles: walkDir(resolve(SRC, 'stories'), (name) =>
+      /\.(js|ts)$/.test(name),
+    ),
+  }
+}
+
 function main() {
   const themeSyncIssues = checkThemeTokenSync()
   if (themeSyncIssues.length > 0) {
@@ -696,11 +712,7 @@ function main() {
 
   console.log(`Defined tokens: ${definedTokens.length}\n`)
 
-  // Scan SCSS source files and story files
-  const scssFiles = walkDir(SRC, (name) => name.endsWith('.scss'))
-  const storyFiles = walkDir(resolve(SRC, 'stories'), (name) =>
-    /\.stories\.(js|ts)$/.test(name),
-  )
+  const { scssFiles, storyFiles } = listScannedFiles()
 
   const declaredInScss = new Set()
   for (const file of scssFiles) {

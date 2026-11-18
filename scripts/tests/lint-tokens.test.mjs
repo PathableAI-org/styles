@@ -1,11 +1,19 @@
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
+import { basename } from 'node:path'
 import { describe, it } from 'node:test'
+import { fileURLToPath } from 'node:url'
 
 import {
   extractDeclaredTokens,
   extractDefinedTokens,
   findUndefinedReferences,
+  listScannedFiles,
 } from '../../packages/styles/scripts/lint-tokens.mjs'
+
+const LINT_SCRIPT = fileURLToPath(
+  new URL('../../packages/styles/scripts/lint-tokens.mjs', import.meta.url),
+)
 
 /**
  * A synthetic defined-token set, so the reference tests do not depend on the
@@ -146,5 +154,27 @@ describe('lint-tokens undefined references', () => {
       ),
       ['--space-2', '--space-3'],
     )
+  })
+})
+
+describe('lint-tokens scanned files and entry point', () => {
+  it('scans SCSS sources, TypeScript story files and story helpers', () => {
+    const { scssFiles, storyFiles } = listScannedFiles()
+    assert.ok(scssFiles.some((file) => basename(file) === '_spacing.scss'))
+    assert.ok(storyFiles.some((file) => file.endsWith('.stories.ts')))
+    assert.ok(
+      storyFiles.some(
+        (file) => !file.includes('.stories.') && /\.(js|ts)$/.test(file),
+      ),
+      'expected a story helper that is not itself a story file',
+    )
+  })
+
+  it('runs and reports when invoked as a script', () => {
+    const result = spawnSync(process.execPath, [LINT_SCRIPT], {
+      encoding: 'utf-8',
+    })
+    assert.equal(result.status, 0, result.stdout + result.stderr)
+    assert.match(result.stdout, /Defined tokens: \d+/)
   })
 })

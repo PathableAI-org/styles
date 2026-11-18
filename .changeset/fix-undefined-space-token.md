@@ -2,7 +2,7 @@
 '@pathableai/styles': patch
 ---
 
-Fix declarations that referenced undefined tokens, which the browser dropped.
+Fix five declarations that referenced undefined tokens, which the browser dropped.
 
 - The gap between a SegmentedControl option's icon and label, the gap between
   app shell navigation items, and the gap between a bottom navigation item's
