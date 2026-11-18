@@ -37,12 +37,12 @@ runs:
       shell: bash
       run: pnpm install --frozen-lockfile
 
-    - name: Install Playwright browsers
-      if: inputs.install_playwright == 'true' && runner.os == 'Linux'
-      shell: bash
-      run: pnpm exec playwright install --with-deps chromium
-
+    # No --with-deps: the hosted runner image already has every library
+    # Chromium needs, and --with-deps only adds an apt-get update plus extra
+    # font packages that are not cached and have taken up to five minutes to
+    # download. Pixel baselines render inside the pinned Playwright container,
+    # so they do not depend on the runner's fonts.
     - name: Install Playwright browser
-      if: inputs.install_playwright == 'true' && runner.os != 'Linux'
+      if: inputs.install_playwright == 'true'
       shell: bash
       run: pnpm exec playwright install chromium

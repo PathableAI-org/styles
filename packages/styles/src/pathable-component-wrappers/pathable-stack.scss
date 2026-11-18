@@ -14,7 +14,10 @@
 //   .pathable-stack--gap-xl  — gap var(--space-32)
 //
 // Form specialization:
-//   .pathable-form-stack — expands supported controls to the stack width
+//   .pathable-form-stack — expands supported controls to the stack width and
+//   removes the top margin of direct pathable-form-group children, so the
+//   stack gap alone spaces them. Other direct children, such as a fieldset
+//   whose legend has a top margin, keep their own margins
 
 .pathable-stack {
   display: flex;
@@ -36,6 +39,10 @@
 
 .pathable-stack--gap-xl {
   --pathable-stack-gap: var(--space-32);
+}
+
+.pathable-form-stack > .pathable-form-group {
+  margin-top: 0;
 }
 
 .pathable-form-stack

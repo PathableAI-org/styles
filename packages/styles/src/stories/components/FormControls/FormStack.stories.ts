@@ -19,6 +19,36 @@ const formFields = (prefix: string) => `
   </div>
 `
 
+// Asserts that the stack gap alone spaces the form's direct children: the
+// first child starts at the top of the form, each later child starts one gap
+// below the previous one, and each form group's first label starts at the top
+// of its group.
+const expectStackGapSpacing = async (form: HTMLElement, gap: number) => {
+  const children = Array.from(form.children)
+  const formTop = form.getBoundingClientRect().top
+
+  await expect(window.getComputedStyle(form).rowGap).toBe(`${gap}px`)
+  await expect(children[0].getBoundingClientRect().top).toBeCloseTo(formTop, 0)
+  for (let index = 1; index < children.length; index += 1) {
+    await expect(
+      children[index].getBoundingClientRect().top -
+        children[index - 1].getBoundingClientRect().bottom,
+    ).toBeCloseTo(gap, 0)
+  }
+  for (const group of form.querySelectorAll<HTMLElement>(
+    '.pathable-form-group',
+  )) {
+    const label = group.querySelector<HTMLElement>(
+      ':scope > .pathable-label:first-child',
+    )
+    await expect(label).not.toBeNull()
+    await expect(label?.getBoundingClientRect().top).toBeCloseTo(
+      group.getBoundingClientRect().top,
+      0,
+    )
+  }
+}
+
 export default {
   title: 'Components/Form Controls/Form Stack',
   tags: ['autodocs'],
@@ -56,6 +86,7 @@ export const Default = {
       )
     }
     await expect(form.scrollWidth).toBeLessThanOrEqual(form.clientWidth + 2)
+    await expectStackGapSpacing(form, 16)
   },
 }
 
@@ -128,6 +159,10 @@ export const WithFormRow = {
           </select>
         </div>
       </div>
+      <div class="pathable-form-group">
+        <label class="pathable-label" for="form-stack-schedule-notes">Scheduling notes</label>
+        <textarea class="pathable-textarea" id="form-stack-schedule-notes" name="scheduleNotes" rows="3"></textarea>
+      </div>
     </form>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -143,6 +178,7 @@ export const WithFormRow = {
       0,
     )
     await expect(form.scrollWidth).toBeLessThanOrEqual(form.clientWidth + 2)
+    await expectStackGapSpacing(form, 24)
   },
 }
 

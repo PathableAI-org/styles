@@ -38,10 +38,6 @@
   margin-top: 0;
 }
 
-.pathable-form-row > .pathable-form-group > .pathable-label:first-child {
-  margin-top: 0;
-}
-
 @media (min-width: 1024px) {
   .pathable-form-row {
     grid-template-rows: auto auto auto auto;
