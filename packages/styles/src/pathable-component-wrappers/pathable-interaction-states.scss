@@ -15,7 +15,7 @@
 //   --pathable-color-bg                    — hover/disabled background
 //   --pathable-color-surface               — selected/resting background
 //   --pathable-color-border                — selected/pressed border color
-//   --space-12                             — loading spinner inline-end offset
+//   --space-8                              — loading spinner inline-end offset
 //
 // Available mixins:
 //   state-hover            — &:hover elevation increase + background shift
@@ -115,11 +115,13 @@
 }
 
 // Loading: suppressed interaction + CSS-only border spinner pseudo-element.
-// The spinner is icon-sized (1em, like an inline icon) and sits vertically
-// centred at the control's inline end, inside its bounds, so it neither
-// resizes the control nor covers start-aligned content. It uses currentColor
-// because the border token can match the disabled background. Icon-only
-// controls re-centre and resize it, as IconButton does.
+// The spinner is icon-sized (1em, like an inline icon), vertically centred
+// and 8px in from the control's inline end, inside its bounds, so it does not
+// resize the control. It overlays the control rather than reserving space:
+// it stays clear of content only when the control's inline-end padding is at
+// least 8px + 1em (the demo's 24px padding at 16px text). It uses
+// currentColor because the border token can match the disabled background.
+// Icon-only controls re-centre and resize it, as IconButton does.
 @mixin state-loading($selector: '.is-loading') {
   &#{$selector} {
     pointer-events: none;
@@ -130,7 +132,7 @@
       content: '';
       position: absolute;
       inset-block: 0;
-      inset-inline: auto var(--space-12, 12px);
+      inset-inline: auto var(--space-8, 8px);
       width: 1em;
       height: 1em;
       box-sizing: border-box;

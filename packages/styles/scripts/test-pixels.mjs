@@ -60,9 +60,9 @@ const STORIES = [
     id: 'interaction-controls-icon-tile--all-variants',
     key: 'icon-tile/all-variants',
   },
-  // Interaction States has no single aggregate story. `all-states` shows the
-  // combined mixin's rest, focus-visible, selected, disabled and ARIA-disabled
-  // rules together.
+  // Interaction States' aggregate story: `all-states` shows the combined
+  // mixin's rest, focus-visible, selected, disabled and ARIA-disabled rules
+  // together.
   {
     id: 'interaction-controls-interaction-states--all-states',
     key: 'interaction-states/all-states',

@@ -90,8 +90,25 @@ async function expectSpinnerWithinControl(control: HTMLElement, view: Window) {
   await expect(left).toBeGreaterThanOrEqual(0)
   await expect(top + height).toBeLessThanOrEqual(control.clientHeight)
   await expect(left + width).toBeLessThanOrEqual(control.clientWidth)
-  // Inline-end placement keeps it clear of start-aligned labels.
-  await expect(left + width / 2).toBeGreaterThan(control.clientWidth / 2)
+  // The spinner must not overlap the control's label text. Each label span's
+  // text extent is measured with a Range, since the spans are block boxes as
+  // wide as the control.
+  const controlBounds = control.getBoundingClientRect()
+  const spinnerLeft = controlBounds.left + control.clientLeft + left
+  const spinnerTop = controlBounds.top + control.clientTop + top
+  const labels = Array.from(control.querySelectorAll('span'))
+  await expect(labels.length).toBeGreaterThan(0)
+  for (const label of labels) {
+    const range = control.ownerDocument.createRange()
+    range.selectNodeContents(label)
+    const text = range.getBoundingClientRect()
+    const overlaps =
+      spinnerLeft < text.right &&
+      spinnerLeft + width > text.left &&
+      spinnerTop < text.bottom &&
+      spinnerTop + height > text.top
+    await expect(overlaps).toBe(false)
+  }
   // currentColor keeps it distinct from the disabled background, which the
   // border token can match.
   await expect(spinner.borderRightColor).toBe(controlStyle.color)
