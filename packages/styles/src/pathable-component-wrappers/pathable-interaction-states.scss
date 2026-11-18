@@ -21,7 +21,9 @@
 // `color` (as .pathable-icon-button and .pathable-segmented-control do), so a
 // natively disabled <button> keeps it instead of falling back to the browser's
 // disabled text color. Native `:disabled` and `[aria-disabled="true"]` then
-// render alike: the same text color at the mixin's reduced opacity.
+// render alike: with the mixin's defaults, the control's own text color at
+// reduced opacity. A consumer may restyle its disabled state, as
+// .pathable-segmented-control does with full opacity and muted text.
 //
 // Available mixins:
 //   state-hover            — &:hover elevation increase + background shift

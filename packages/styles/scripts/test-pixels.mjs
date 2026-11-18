@@ -62,6 +62,8 @@ const STORIES = [
   },
   // The aggregate: rest with the focus ring, selected, natively disabled and
   // aria-disabled side by side, so the two disabled forms are compared.
+  // `state-precedence` (selected-and-disabled, and the loading spinner) is
+  // not compared yet: its spinner renders wrongly until #275 is fixed.
   {
     id: 'interaction-controls-interaction-states--all-states',
     key: 'interaction-states/all-states',
