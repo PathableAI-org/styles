@@ -88,7 +88,7 @@
 
 .pathable-kpi-card__value {
   font-family: var(--pathable-font-heading);
-  font-size: var(--pathable-font-size-heading-xl);
+  font-size: var(--pathable-font-size-display-lg);
   font-weight: var(--pathable-font-weight-bold);
   color: var(--pathable-color-text);
   line-height: 1.1;
@@ -100,7 +100,7 @@
 // --- Label — explains what the value represents ---
 
 .pathable-kpi-card__label {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   line-height: var(--pathable-font-line-height-body);
   margin: 0;
@@ -112,7 +112,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--pathable-space-1);
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-label-sm);
   font-weight: var(--pathable-font-weight-semibold);
   margin-block-start: var(--pathable-space-1);
 
@@ -164,7 +164,7 @@
 
 .pathable-kpi-card__trend-label {
   display: inline;
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-label-sm);
   color: inherit;
 }
 

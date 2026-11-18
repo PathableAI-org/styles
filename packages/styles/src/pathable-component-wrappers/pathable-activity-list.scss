@@ -99,7 +99,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--pathable-color-text);
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-label-sm);
 }
 
 // --- Row body: title + context ---
@@ -123,7 +123,7 @@
 }
 
 .pathable-activity-row__context {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
   overflow: hidden;
@@ -134,7 +134,7 @@
 // --- Date/time ---
 
 .pathable-activity-row__date {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   white-space: nowrap;
   min-width: 0;
@@ -146,7 +146,7 @@
 // --- Owner / participant ---
 
 .pathable-activity-row__owner {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text);
   white-space: nowrap;
   min-width: 0;
@@ -196,7 +196,7 @@
   }
 
   .pathable-activity-row__title {
-    font-size: var(--pathable-font-size-body-xs);
+    font-size: var(--pathable-font-size-label-sm);
   }
 }
 

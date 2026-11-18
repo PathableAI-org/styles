@@ -138,7 +138,7 @@
 }
 
 .pathable-resource-card__provider {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
 }
@@ -162,7 +162,7 @@
 }
 
 .pathable-resource-card__metadata {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
 }
@@ -178,7 +178,7 @@
 }
 
 .pathable-resource-card__source {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   font-style: italic;
   margin: 0;
