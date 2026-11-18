@@ -37,20 +37,23 @@ async function expectCentredActions(
   }
 }
 
-// Compact actions stay at the start edge, aligned with the heading, and are
-// not stretched across the panel by the column's default alignment.
+// Compact actions stay at the start edge, aligned with the heading, and keep
+// their content width: the heading fills the panel's content box, so a
+// stretched action would be as wide as it.
 async function expectStartAlignedActions(
   canvasElement: HTMLElement,
   navName: string,
 ) {
   const { heading, retry, nav } = getActions(canvasElement, navName)
-  const headingLeft = heading.getBoundingClientRect().left
+  const headingBounds = heading.getBoundingClientRect()
 
   for (const action of [retry, nav]) {
+    const actionBounds = action.getBoundingClientRect()
+
     await expect(
-      Math.abs(action.getBoundingClientRect().left - headingLeft),
+      Math.abs(actionBounds.left - headingBounds.left),
     ).toBeLessThanOrEqual(1)
-    await expect(getComputedStyle(action).alignSelf).toBe('flex-start')
+    await expect(actionBounds.width).toBeLessThan(headingBounds.width)
   }
 }
 
@@ -142,6 +145,7 @@ export const MobileFullPage = {
     </div>
   `,
   play: async ({ canvasElement }: PlayContext) => {
+    await expect(window.innerWidth).toBe(375)
     await expectCentredActions(canvasElement, 'Go home')
   },
 }

@@ -95,10 +95,12 @@
 
 // Centre the actions with the icon, heading and body. The compact panel's
 // `align-self: flex-start` on the action row would otherwise override the
-// full-page `align-items: center`.
+// full-page `align-items: center`, and the button wrapper's one-sided
+// `margin-right` would pull a centred retry button off the centre line.
 .pathable-page-error--full-page .pathable-page-error__retry,
 .pathable-page-error--full-page .pathable-page-error__nav {
   align-self: center;
+  margin-inline: 0;
 }
 
 // --- Variants ---
