@@ -31,6 +31,7 @@ import { constants } from 'node:fs'
 import { dirname, extname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
+import { VIEWPORTS } from './quality-gates.mjs'
 
 const repositoryRoot = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -61,11 +62,11 @@ const REACT_PORT = parseInt(process.env.MODAL_GEOMETRY_REACT_PORT || '6019', 10)
 const GEOMETRY_CASES = [
   {
     storyId: 'components-communication-modal--open',
-    viewport: { width: 1280, height: 900 },
+    viewport: VIEWPORTS.desktop,
   },
   {
     storyId: 'components-communication-modal--narrow',
-    viewport: { width: 375, height: 812 },
+    viewport: VIEWPORTS.mobile,
   },
   {
     storyId: 'components-communication-modal--narrow',

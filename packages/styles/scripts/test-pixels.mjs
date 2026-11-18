@@ -127,13 +127,15 @@ const STORIES = [
   { id: 'components-communication-modal--open', key: 'modal/open' },
   // Narrow (mobile) is the only state where the overlay's padding, not the
   // dialog's max-width, sets the dialog width; it must still fit the viewport
-  // (#286).
+  // (#286). Its image also shows #284, #287 and the stacked footer buttons
+  // touching with no gap, accepted by the maintainer for #286.
   {
     id: 'components-communication-modal--narrow',
     key: 'modal/narrow',
   },
   // Long content: a dialog taller than the viewport sits at the top of the
-  // scrolling overlay (padding plus dialog margin) instead of centring.
+  // scrolling overlay (padding plus dialog margin) instead of centring. Its
+  // image also shows #284, accepted by the maintainer for #286.
   {
     id: 'components-communication-modal--long-content',
     key: 'modal/long-content',
