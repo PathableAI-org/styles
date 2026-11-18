@@ -129,8 +129,8 @@ const STORIES = [
   // PageError has no aggregate story; `full-page` is its only canonical story.
   // It shows the centred column (icon, heading, body and actions on one centre
   // line, #288), the large heading and icon sizes, the borderless transparent
-  // panel and the retry button under keyboard focus (Chromium's default ring
-  // until #282 gives buttons a token focus style). Not compared: the compact
+  // panel and the retry button under keyboard focus (Chromium's default ring,
+  // accepted by the maintainer until #302 gives buttons a token focus style). Not compared: the compact
   // panel's border, surface, radius and start-aligned actions, the not-found
   // and access-restricted icon colours, and the max-width 480px rules.
   {
