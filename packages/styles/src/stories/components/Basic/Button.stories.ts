@@ -42,7 +42,7 @@ export const Outline = {
     },
   },
   render: () => `
-    <div class="pathable-button-group">
+    <div class="pathable-cluster pathable-cluster--gap-sm">
       <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
       <button type="button" class="pathable-button pathable-button--outline">Cancel</button>
     </div>
