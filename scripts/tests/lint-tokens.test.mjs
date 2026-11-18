@@ -59,6 +59,7 @@ describe('lint-tokens defined token set', () => {
       '--ui-',
       '--usa-font-size-',
       '--pathable-space-',
+      '--usa-bg-',
     ]) {
       assert.ok(
         definedTokens.some((token) => token.startsWith(prefix)),
@@ -144,6 +145,22 @@ describe('lint-tokens undefined references', () => {
         '.fixture {\n  #{&}--active:hover {\n    gap: var(--active);\n  }\n}\n@supports (--css: variables) {\n  .fixture { gap: var(--css); }\n}\n',
       ),
       ['--active', '--css'],
+    )
+  })
+
+  it('does not let a line comment containing /* hide later declarations', () => {
+    assert.deepEqual(
+      undefinedTokens(
+        '// see stories/*.ts for usage\n.a { --fixture-x: 1px; }\n/* note */\n.b { margin: var(--fixture-x); }\n',
+      ),
+      [],
+    )
+  })
+
+  it('checks references inside comments', () => {
+    assert.deepEqual(
+      undefinedTokens('margin: 0; // was var(--fixture-old)\n'),
+      ['--fixture-old'],
     )
   })
 

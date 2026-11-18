@@ -122,8 +122,8 @@ const STORIES = [
   // `all-variants` do not show. The play function asserts the shapes stay
   // unfilled (#278); this image adds what an assertion cannot name: stroke
   // weight, line caps, and icon size and position in each surface. The
-  // full-composition story has no baseline while its segmented control lacks
-  // its gap (#277).
+  // full-composition story has no baseline yet: it waited on its segmented
+  // control's missing gap, which #277 fixes.
   {
     id: 'interaction-controls-integration--toolbar-panel',
     key: 'integration/toolbar-panel',

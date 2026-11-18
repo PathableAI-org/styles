@@ -6,8 +6,10 @@
  * --pathable-* namespace and the non-prefixed design tokens (--space-*,
  * --radius-*, --elevation-*, --ui-*) and their --usa-* aliases. A reference
  * resolves when the token source files define it, when any SCSS source file
- * declares it, or when it carries a fallback value. Reports undefined
- * references with file:line and Levenshtein-based suggestions.
+ * declares it, or when it carries a fallback value. References inside comments
+ * are checked too, so a comment that names a token must name a real one;
+ * declarations inside comments do not count. Reports undefined references with
+ * file:line and Levenshtein-based suggestions.
  *
  * Usage:
  *   node packages/styles/scripts/lint-tokens.mjs
@@ -235,9 +237,11 @@ const DECLARATION_PATTERN = /(?<![\w&}(-])(--[a-zA-Z0-9_-]+)\s*:/g
  * @returns {string}
  */
 function stripComments(content) {
-  return content
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/(^|\s)\/\/.*$/gm, '$1')
+  // One left-to-right pass, so a `/*` inside a line comment (or `//` inside a
+  // block comment) does not start a second comment.
+  return content.replace(/\/\*[\s\S]*?\*\/|(^|\s)\/\/.*$/gm, (match, lead) =>
+    match.startsWith('/*') ? '' : lead,
+  )
 }
 
 /**
