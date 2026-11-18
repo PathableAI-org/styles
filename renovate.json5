@@ -28,6 +28,13 @@
   },
   packageRules: [
     {
+      description: 'Match the pnpm supply-chain policy. pnpm 12 defaults minimumReleaseAge to 1 day and `pnpm install --frozen-lockfile` fails with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION when the lockfile holds anything newer, so Renovate must not propose npm versions younger than that. 3 days leaves headroom over the pnpm floor and lets bad releases get yanked first.',
+      matchManagers: ['npm'],
+      matchDatasources: ['npm'],
+      minimumReleaseAge: '3 days',
+      internalChecksFilter: 'strict',
+    },
+    {
       description: 'Keep the Next 15 compatibility fixture on its tested framework major.',
       matchManagers: ['npm'],
       matchFileNames: [
