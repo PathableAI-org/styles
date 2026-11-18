@@ -14,20 +14,17 @@
           "speckit.git.remote",
           "speckit.git.initialize",
           "speckit.git.commit"
+        ],
+        "codex": [
+          "speckit.git.feature",
+          "speckit.git.validate",
+          "speckit.git.remote",
+          "speckit.git.initialize",
+          "speckit.git.commit"
         ]
       },
       "registered_skills": [],
       "installed_at": "2026-07-04T11:16:25.353323+00:00"
-    },
-    "agent-context": {
-      "version": "1.0.0",
-      "source": "local",
-      "manifest_hash": "sha256:9a1dc02d2d0139bb03860392ecacef79183be2c442feda2f9ccaa4e5907b1e47",
-      "enabled": false,
-      "priority": 10,
-      "registered_commands": {},
-      "registered_skills": [],
-      "installed_at": "2026-07-04T11:16:31.033865+00:00"
     },
     "critique": {
       "version": "1.0.0",
@@ -35,9 +32,33 @@
       "manifest_hash": "sha256:0b63a1835415df730cbd487c90c1252b294980176c10c14a3fa9c31a7cb882e0",
       "enabled": true,
       "priority": 10,
-      "registered_commands": {},
+      "registered_commands": {
+        "opencode": [
+          "speckit.critique.run"
+        ],
+        "codex": [
+          "speckit.critique.run"
+        ]
+      },
       "registered_skills": [],
       "installed_at": "2026-09-18T14:40:35.343212+00:00"
+    },
+    "agent-context": {
+      "version": "1.0.3",
+      "source": {
+        "kind": "catalog",
+        "catalog": "default"
+      },
+      "manifest_hash": "sha256:790fe14ee139490b46d25ebdc37964b9e620e88c65d92ba21e6bdf5274ea7a81",
+      "enabled": false,
+      "priority": 10,
+      "registered_commands": {
+        "opencode": [
+          "speckit.agent-context.update"
+        ]
+      },
+      "registered_skills": [],
+      "installed_at": "2026-07-04T11:16:31.033865+00:00"
     }
   }
 }

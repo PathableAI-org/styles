@@ -6,9 +6,13 @@
 // Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
+@use 'pathable-interaction-state-mixins' as states;
 
 @use 'usa-textarea/src/styles';
 
 .pathable-textarea {
   @extend .usa-textarea;
+  // USWDS colours this focus outline only through its global element rule,
+  // which this package does not include, so apply the shared brand focus ring.
+  @include states.state-focus;
 }

@@ -1,3 +1,7 @@
+import { within } from 'storybook/test'
+
+import { expectKeyboardFocusIndicator } from './focus-indicator'
+
 export default {
   title: 'Components/Form Controls/Textarea',
   tags: ['autodocs'],
@@ -67,4 +71,44 @@ export const WorkflowSupervisorComment = {
   ></textarea>
 </form>
   `,
+}
+
+export const KeyboardFocus = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Keyboard focus shows the brand focus outline in `--pathable-color-focus-ring` (Bright Blue Brooks). The play function tabs to the textarea and checks the outline.',
+      },
+    },
+  },
+  render: () => `
+<label class="pathable-label" for="textarea-keyboard-focus">Textarea</label>
+<textarea id="textarea-keyboard-focus" class="pathable-textarea" rows="4"></textarea>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectKeyboardFocusIndicator(
+      canvasElement,
+      within(canvasElement).getByRole('textbox', { name: 'Textarea' }),
+    ),
+}
+
+export const ForcedColors = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Run with forced-colors emulation (the test-runner turns it on for this story). Keyboard focus keeps a visible solid outline in the system `Highlight` colour. The play function tabs to the textarea and checks the outline.',
+      },
+    },
+  },
+  render: () => `
+<label class="pathable-label" for="textarea-forced-colors">Textarea</label>
+<textarea id="textarea-forced-colors" class="pathable-textarea" rows="4"></textarea>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectKeyboardFocusIndicator(
+      canvasElement,
+      within(canvasElement).getByRole('textbox', { name: 'Textarea' }),
+    ),
 }
