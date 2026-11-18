@@ -56,10 +56,14 @@ const STORIES = [
     id: 'interaction-controls-iconbutton--all-variants',
     key: 'icon-button/all-variants',
   },
+  {
+    id: 'interaction-controls-icon-tile--all-variants',
+    key: 'icon-tile/all-variants',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button']
+const ROLLOUT = ['icon-button', 'icon-tile']
 
 // ---------------------------------------------------------------------------
 
