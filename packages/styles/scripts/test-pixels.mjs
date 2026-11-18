@@ -93,12 +93,18 @@ const STORIES = [
     id: 'application-shell-desktop-shell--default',
     key: 'app-shell/desktop',
   },
+  // The capture's Tab focuses the story's focusable content region, which has
+  // no brand focus rule, so the image shows the browser's default ring
+  // (#312), accepted by the maintainer for #277; its fix updates the image.
   {
     id: 'application-shell-mobile-shell--default',
     key: 'app-shell/mobile',
   },
   // The workflow card's status and meta text have rules of their own (colour,
-  // weight and font size) that the other Card stories do not show.
+  // weight and font size) that the other Card stories do not show. The
+  // capture's Tab focuses the action link, which has no brand focus rule, so
+  // the image shows the browser's default ring inside the card's focus-within
+  // outline (#312), accepted by the maintainer for #277; its fix updates it.
   {
     id: 'components-card--workflow-card-with-status',
     key: 'card/workflow-with-status',
