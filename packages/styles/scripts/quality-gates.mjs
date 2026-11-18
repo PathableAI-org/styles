@@ -201,6 +201,10 @@ const CANONICAL_STORIES = [
   },
   { id: 'interaction-controls-icon-tile--increased-text', mode: 'both' },
   {
+    id: 'interaction-controls-integration--toolbar-panel',
+    mode: 'both',
+  },
+  {
     id: 'interaction-controls-integration--full-composition',
     mode: 'both',
   },
