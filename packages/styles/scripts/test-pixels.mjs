@@ -79,10 +79,59 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
+  // story renders one labelled field as the only control, so the capture's Tab
+  // shows its brand focus ring (#282) beside its label. Desktop only: the
+  // focus rule has no viewport dependency, and the controls' mobile
+  // min-height rule is outside that fix.
+  {
+    id: 'components-form-controls-input--keyboard-focus',
+    key: 'input/keyboard-focus',
+  },
+  {
+    id: 'components-form-controls-select--keyboard-focus',
+    key: 'select/keyboard-focus',
+  },
+  {
+    id: 'components-form-controls-textarea--keyboard-focus',
+    key: 'textarea/keyboard-focus',
+  },
+  // FormRow aggregate: control alignment under uneven hints, side by side at
+  // desktop and stacked below 1024 px, with the first control (a select)
+  // showing its focus ring.
+  {
+    id: 'components-form-controls-form-row--default',
+    key: 'form-row/default',
+  },
+  // FilterableOptionList main story: the filter input (focused), the bounded
+  // option region and the status line.
+  {
+    id: 'components-form-controls-filterable-option-list--default',
+    key: 'filterable-option-list/default',
+  },
+  // The only canonical story with checked checkboxes outside forced colors.
+  {
+    id: 'components-form-controls-filterable-option-list--selected',
+    key: 'filterable-option-list/selected',
+  },
+  // The `__empty` message rule, which no other baseline shows.
+  {
+    id: 'components-form-controls-filterable-option-list--empty',
+    key: 'filterable-option-list/empty',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = [
+  'filterable-option-list',
+  'form-row',
+  'icon-button',
+  'icon-tile',
+  'input',
+  'optional-form-section',
+  'select',
+  'textarea',
+]
 
 // ---------------------------------------------------------------------------
 
