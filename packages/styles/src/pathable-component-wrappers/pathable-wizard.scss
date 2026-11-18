@@ -6,7 +6,7 @@
 //
 // CSS custom properties:
 //   --pathable-wizard-max-width  (default: units('desktop')) — max-width of the wizard
-//   --pathable-wizard-gap        (default: var(--space-16)) — gap between wizard regions
+//   --pathable-wizard-gap        (default: units(2)) — gap between wizard regions
 
 @use 'uswds-core' as *;
 
