@@ -12,6 +12,15 @@
       "Bash(git blame:*)",
       "Bash(git grep:*)",
       "Bash(git fetch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git merge:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git tag:*)",
+      "Bash(git push:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr diff:*)",
@@ -44,7 +53,6 @@
       "Bash(gh api *pulls/*/ccr/ready_for_review*)"
     ],
     "ask": [
-      "Bash(git push:*)",
       "Bash(gh pr merge:*)",
       "Edit(**/eslint.config.js)",
       "Edit(**/.stylelintrc.json)",

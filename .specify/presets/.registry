@@ -17,18 +17,47 @@
           "speckit.plan",
           "speckit.tasks",
           "speckit.implement"
+        ],
+        "opencode": [
+          "speckit.specify",
+          "speckit.clarify",
+          "speckit.checklist",
+          "speckit.constitution",
+          "speckit.analyze",
+          "speckit.plan",
+          "speckit.tasks",
+          "speckit.implement"
+        ],
+        "codex": [
+          "speckit.specify",
+          "speckit.clarify",
+          "speckit.checklist",
+          "speckit.constitution",
+          "speckit.analyze",
+          "speckit.plan",
+          "speckit.tasks",
+          "speckit.implement"
         ]
       },
-      "registered_skills": [
-        "speckit-specify",
-        "speckit-clarify",
-        "speckit-checklist",
-        "speckit-constitution",
-        "speckit-analyze",
-        "speckit-plan",
-        "speckit-tasks",
-        "speckit-implement"
-      ],
+      "registered_skills": {
+        "cursor-agent": [
+          "speckit-clarify",
+          "speckit-checklist",
+          "speckit-constitution",
+          "speckit-analyze",
+          "speckit-implement"
+        ],
+        "codex": [
+          "speckit-specify",
+          "speckit-clarify",
+          "speckit-checklist",
+          "speckit-constitution",
+          "speckit-analyze",
+          "speckit-plan",
+          "speckit-tasks",
+          "speckit-implement"
+        ]
+      },
       "installed_at": "2026-07-04T11:17:11.392091+00:00"
     },
     "toc-navigation": {
@@ -42,13 +71,30 @@
           "speckit.specify",
           "speckit.plan",
           "speckit.tasks"
+        ],
+        "opencode": [
+          "speckit.specify",
+          "speckit.plan",
+          "speckit.tasks"
+        ],
+        "codex": [
+          "speckit.specify",
+          "speckit.plan",
+          "speckit.tasks"
         ]
       },
-      "registered_skills": [
-        "speckit-specify",
-        "speckit-plan",
-        "speckit-tasks"
-      ],
+      "registered_skills": {
+        "cursor-agent": [
+          "speckit-specify",
+          "speckit-plan",
+          "speckit-tasks"
+        ],
+        "codex": [
+          "speckit-specify",
+          "speckit-plan",
+          "speckit-tasks"
+        ]
+      },
       "installed_at": "2026-07-04T11:17:20.489207+00:00"
     }
   }
