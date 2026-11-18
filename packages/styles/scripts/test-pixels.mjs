@@ -79,6 +79,17 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  { id: 'components-feedback-toast--stacked', key: 'toast/stacked' },
+  {
+    id: 'components-feedback-pageerror--full-page',
+    key: 'page-error/full-page',
+  },
+  { id: 'components-communication-modal--open', key: 'modal/open' },
+  { id: 'components-communication-modal--narrow', key: 'modal/narrow' },
+  {
+    id: 'components-communication-modal--long-content',
+    key: 'modal/long-content',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
