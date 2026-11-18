@@ -98,6 +98,14 @@ const STORIES = [
     id: 'components-button--outline',
     key: 'button/outline',
   },
+  // Unstyled guards the unstyled modifier against the same cascade regression
+  // (#304): link text with no fill or padding beside the primary button, and
+  // the disabled unstyled text. The mobile image shows the touch-target
+  // min-height the wrapper adds below the mobile-lg breakpoint.
+  {
+    id: 'components-button--unstyled',
+    key: 'button/unstyled',
+  },
   // SegmentedControl has no aggregate story. Single select shows the option
   // icon-to-label gap, the selected option and the container padding; the gap
   // does not change with the viewport, so one desktop image is enough.
