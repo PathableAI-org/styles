@@ -69,7 +69,7 @@ async function expectStylesReady(element: HTMLElement, view: Window) {
   await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
 }
 
-// Asserts that a demo control and its label span compute to
+// Asserts that a demo control and its visible label compute to
 // --pathable-color-text. Called on natively disabled, aria-disabled and enabled
 // controls, it shows that disabling a control does not swap in the browser's
 // disabled text color, so native and aria-disabled controls render alike.
@@ -78,10 +78,9 @@ async function expectTextTokenLabelColor(
   canvasElement: HTMLElement,
   view: Window,
   control: HTMLElement,
+  labelText: string,
 ) {
-  const label = control.querySelector('span')
-
-  if (!label) throw new Error('InteractionStates control has no label span')
+  const label = within(control).getByText(labelText)
   const textColor = resolveColorToken(
     canvasElement,
     view,
@@ -200,8 +199,13 @@ const runAllStatesPlay = async (
     await expect(ariaDisabledStyle.boxShadow).toBe('none')
     await expect(ariaDisabledStyle.opacity).toBe('0.5')
 
-    await expectTextTokenLabelColor(canvasElement, view, disabled)
-    await expectTextTokenLabelColor(canvasElement, view, ariaDisabled)
+    await expectTextTokenLabelColor(canvasElement, view, disabled, 'Disabled')
+    await expectTextTokenLabelColor(
+      canvasElement,
+      view,
+      ariaDisabled,
+      'ARIA disabled',
+    )
 
     await userEvent.tab()
     await expect(selected).toHaveFocus()
@@ -357,14 +361,24 @@ export const StatePrecedence = {
           resolveColorToken(canvasElement, view, '--pathable-color-bg'),
         )
         await expect(selectedDisabledStyle.fontWeight).toBe('700')
-        await expectTextTokenLabelColor(canvasElement, view, rest)
-        await expectTextTokenLabelColor(canvasElement, view, selectedDisabled)
+        await expectTextTokenLabelColor(canvasElement, view, rest, 'Rest')
+        await expectTextTokenLabelColor(
+          canvasElement,
+          view,
+          selectedDisabled,
+          'Selected disabled',
+        )
 
         const loadingStyle = view.getComputedStyle(loadingDisabled)
         await expect(loadingDisabled).toBeDisabled()
         await expect(loadingDisabled).toHaveAttribute('aria-busy', 'true')
         await expect(loadingStyle.pointerEvents).toBe('none')
-        await expectTextTokenLabelColor(canvasElement, view, loadingDisabled)
+        await expectTextTokenLabelColor(
+          canvasElement,
+          view,
+          loadingDisabled,
+          'Loading disabled',
+        )
       },
     )
   },
