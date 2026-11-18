@@ -163,6 +163,8 @@ Agents MUST check contrast before using color pairs for text.
 
 Agents MUST NOT hardcode brand values throughout application code when a token exists.
 
+Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`, `--usa-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. The only exceptions are the two legacy tokens in the script's `LEGACY_ALLOWED_TOKENS` (`--pathable-font-size-body-xs` and `--pathable-font-size-heading-xl`), which are undefined and must not be used in new code; #313 tracks replacing them.
+
 ## USWDS Token Usage
 
 This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:

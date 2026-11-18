@@ -201,6 +201,7 @@ const CANONICAL_STORIES = [
   // Components - Basic
   // The outline modifier beside the primary button (#287).
   { id: 'components-button--outline', mode: 'both' },
+  { id: 'components-card--workflow-card-with-status', mode: 'desktop' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
@@ -244,6 +245,10 @@ const CANONICAL_STORIES = [
     mode: 'both',
   },
   { id: 'interaction-controls-icon-tile--increased-text', mode: 'both' },
+  {
+    id: 'interaction-controls-segmentedcontrol--single-select',
+    mode: 'desktop',
+  },
   {
     id: 'interaction-controls-integration--toolbar-panel',
     mode: 'both',
