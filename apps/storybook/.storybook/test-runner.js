@@ -28,6 +28,10 @@ const config = {
         { width: 320, height: 700 },
       ],
       [
+        'components-feedback-pageerror--mobile-full-page',
+        { width: 375, height: 812 },
+      ],
+      [
         'components-form-controls-form-row--at-desktop-breakpoint',
         { width: 1024, height: 900 },
       ],
