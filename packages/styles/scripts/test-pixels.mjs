@@ -79,10 +79,29 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Modal has no aggregate story. Open (desktop) shows the dimmed overlay
+  // filling the viewport, the dialog centred at its 30rem max-width and the
+  // focused close control.
+  {
+    id: 'components-communication-modal--open',
+    key: 'modal/open',
+  },
+  // Narrow (mobile) is the only state where the overlay's padding, not the
+  // dialog's max-width, sets the dialog width; it must still fit the viewport.
+  {
+    id: 'components-communication-modal--narrow',
+    key: 'modal/narrow',
+  },
+  // Long content: a dialog taller than the viewport sits at the top of the
+  // scrolling overlay (padding plus dialog margin) instead of centring.
+  {
+    id: 'components-communication-modal--long-content',
+    key: 'modal/long-content',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = ['icon-button', 'icon-tile', 'modal', 'optional-form-section']
 
 // ---------------------------------------------------------------------------
 
