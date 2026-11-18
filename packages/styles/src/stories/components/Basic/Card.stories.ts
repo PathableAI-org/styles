@@ -1,5 +1,7 @@
 import { expect, within } from 'storybook/test'
 
+import { expectKeyboardFocusIndicator } from '../FormControls/focus-indicator'
+
 export default {
   title: 'Components/Card',
   tags: ['autodocs'],
@@ -168,12 +170,13 @@ export const WorkflowCardWithStatus = {
     const card = canvas.getByTestId('workflow-status-card')
     const status = canvas.getByText('Completed', { exact: false })
 
+    const action = canvas.getByRole('link', { name: 'Download full report →' })
+
     await expect(card).not.toHaveAttribute('tabindex')
     await expect(status).toHaveClass('pathable-card__status')
     await expect(status).toBeVisible()
-    await expect(
-      canvas.getByRole('link', { name: 'Download full report →' }),
-    ).toHaveClass('pathable-card__action')
+    await expect(action).toHaveClass('pathable-card__action')
+    await expectKeyboardFocusIndicator(canvasElement, action)
   },
 }
 

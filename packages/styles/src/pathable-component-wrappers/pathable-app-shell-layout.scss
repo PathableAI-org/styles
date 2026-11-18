@@ -46,6 +46,8 @@
 //
 // Accessibility:
 //   - Skip link targets #main-content — reuse pathable-skipnav
+//   - A focusable content region (scrollable, or a skip-link target) shows
+//     the brand focus ring, inset, on :focus-visible
 //   - Focus order follows DOM order across all breakpoints
 //   - Active nav items use color + weight + border inset marker (not color alone)
 //   - Forced-colors mode preserves boundaries and active states
@@ -157,6 +159,17 @@
   overflow-y: auto;
 }
 
+// A consumer makes the content region focusable when it scrolls (tabindex="0",
+// so keyboard users can scroll it) or as a skip-link target (tabindex="-1").
+// The ring is inset because the region fills the viewport width on mobile and
+// sits between the top bar and the bottom navigation, which would clip or
+// cover an outer ring. :focus-visible only, so focus on a control inside the
+// region does not outline the whole region.
+.pathable-app-shell__content:focus-visible {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: -2px;
+}
+
 .pathable-app-shell__content--wide {
   --pathable-app-shell-content-max-width: var(
     --pathable-app-shell-content-max-width-wide,
@@ -249,6 +262,10 @@
   .pathable-app-shell__nav-item:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 2px;
+  }
+
+  .pathable-app-shell__content:focus-visible {
+    outline-color: Highlight;
   }
 }
 

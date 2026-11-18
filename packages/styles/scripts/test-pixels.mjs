@@ -112,9 +112,8 @@ const STORIES = [
     id: 'application-shell-desktop-shell--default',
     key: 'app-shell/desktop',
   },
-  // The capture's Tab focuses the story's focusable content region, which has
-  // no brand focus rule, so the image shows the browser's default ring
-  // (#312), accepted by the maintainer for #277; its fix updates the image.
+  // The capture's Tab focuses the story's focusable content region, so the
+  // image also shows its inset brand focus ring (#312).
   {
     id: 'application-shell-mobile-shell--default',
     key: 'app-shell/mobile',
@@ -122,11 +121,10 @@ const STORIES = [
   // The workflow card's status text has rules of its own (colour, weight and
   // font size) that no other Card story shows; its meta text, also shown by
   // `workflow-card`, is captured here alongside it. The
-  // capture's Tab focuses the action link, which has no brand focus rule, so
-  // the image shows the browser's default ring inside the card's focus-within
-  // outline (#312). The status text is Intelligent Jade on white, about 2.8:1,
-  // which fails text contrast (#314). The maintainer accepted both for #277;
-  // their fixes update the image.
+  // capture's Tab focuses the action link, so the image shows its brand focus
+  // ring inside the card's focus-within outline (#312). The status text is
+  // Intelligent Jade on white, about 2.8:1, which fails text contrast (#314),
+  // accepted by the maintainer for #277; its fix updates the image.
   {
     id: 'components-card--workflow-card-with-status',
     key: 'card/workflow-with-status',

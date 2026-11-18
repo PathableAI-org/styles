@@ -88,6 +88,15 @@
   text-decoration: underline;
 }
 
+// USWDS colours link focus outlines only through its global element rule,
+// which this package does not include, so the action link gets the brand
+// focus ring itself. :focus-visible only, so a mouse click shows no ring; the
+// card's :focus-within outline below marks the card as a whole.
+.pathable-card--workflow .pathable-card__action:focus-visible {
+  outline: 2px solid var(--pathable-color-focus-ring);
+  outline-offset: 2px;
+}
+
 // Metadata row styling
 .pathable-card--workflow .pathable-card__meta {
   color: var(--pathable-color-text-muted);
@@ -98,4 +107,10 @@
 .pathable-card--workflow:focus-within {
   outline: 2px solid var(--pathable-color-focus-ring);
   outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .pathable-card--workflow .pathable-card__action:focus-visible {
+    outline-color: Highlight;
+  }
 }
