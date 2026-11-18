@@ -65,6 +65,25 @@ export const Outline = {
   },
 }
 
+/** WCAG relative luminance of a computed `rgb()`/`rgba()` color. */
+const luminance = (color: string) => {
+  const [r, g, b] = (color.match(/\d+(\.\d+)?/g) ?? [])
+    .slice(0, 3)
+    .map((value) => {
+      const channel = Number(value) / 255
+      return channel <= 0.03928
+        ? channel / 12.92
+        : ((channel + 0.055) / 1.055) ** 2.4
+    })
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+/** WCAG contrast ratio between two computed colors. */
+const contrastRatio = (a: string, b: string) => {
+  const [lighter, darker] = [luminance(a), luminance(b)].sort((x, y) => y - x)
+  return (lighter + 0.05) / (darker + 0.05)
+}
+
 export const OutlineInverse = {
   parameters: {
     docs: {
@@ -89,7 +108,11 @@ export const OutlineInverse = {
     await expect(inverse.boxShadow).toBe(
       `${inverse.color} 0px 0px 0px 2px inset`,
     )
-    await expect(inverse.color).not.toBe(surface.backgroundColor)
+    // Light text and border on the dark surface: WCAG AA contrast for normal
+    // text, which the regular outline's dark text cannot reach here.
+    await expect(
+      contrastRatio(inverse.color, surface.backgroundColor),
+    ).toBeGreaterThanOrEqual(4.5)
   },
 }
 
