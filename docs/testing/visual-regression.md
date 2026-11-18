@@ -11,10 +11,10 @@ The suite compares only the story entries of components on the **rollout
 list**, and its output names the stories it compares and says how many
 canonical stories it does not.
 
-| Workspace                      | Suite                     | Stories compared                                                     | Not compared                                                                                               |
-| ------------------------------ | ------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | Button `outline`, IconButton `all-variants`, IconTile `all-variants` | Every other story in `CANONICAL_STORIES`, including the other canonical stories of IconButton and IconTile |
-| React (`apps/storybook-react`) | None yet                  | None                                                                 | Every story                                                                                                |
+| Workspace                      | Suite                     | Stories compared                                                                                                             | Not compared                                                                                                                    |
+| ------------------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| styles (`apps/storybook`)      | `pnpm test:pixels-styles` | Button `outline`, IconButton `all-variants`, IconTile `all-variants`, OptionalFormSection `default`, `expanded` and `narrow` | Every other story in `CANONICAL_STORIES`, including the other canonical stories of IconButton, IconTile and OptionalFormSection |
+| React (`apps/storybook-react`) | None yet                  | None                                                                                                                         | Every story                                                                                                                     |
 
 Coverage is partial. A story without baselines passes without comparison,
 even when its component is on the rollout list: IconButton's sizes, circle
