@@ -108,8 +108,9 @@ const STORIES = [
     id: 'application-shell-mobile-shell--default',
     key: 'app-shell/mobile',
   },
-  // The workflow card's status and meta text have rules of their own (colour,
-  // weight and font size) that the other Card stories do not show. The
+  // The workflow card's status text has rules of its own (colour, weight and
+  // font size) that no other Card story shows; its meta text, also shown by
+  // `workflow-card`, is captured here alongside it. The
   // capture's Tab focuses the action link, which has no brand focus rule, so
   // the image shows the browser's default ring inside the card's focus-within
   // outline (#312). The status text is Intelligent Jade on white, about 2.8:1,
