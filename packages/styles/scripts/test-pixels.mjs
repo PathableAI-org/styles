@@ -230,6 +230,14 @@ if (process.env.PIXELS_IN_CONTAINER !== '1' && !values['no-container']) {
     readFileSync(join(ROOT, 'node_modules/playwright/package.json'), 'utf8'),
   )
   const image = `mcr.microsoft.com/playwright:v${version}-noble`
+  const daemon = await run('docker', ['info'], { stdio: 'ignore' }).catch(
+    () => 1,
+  )
+  if (daemon !== 0) {
+    fail(
+      'The Docker daemon is not reachable. Docker may be installed with its daemon stopped, as in Claude Code cloud sessions: start it with `(nohup dockerd > /tmp/dockerd.log 2>&1 &)`, wait for `docker info` to succeed, and run this again. Do not take baselines from CI artifacts on a Linux host. See "In a Claude Code cloud session" in docs/testing/visual-regression.md.',
+    )
+  }
   console.log(`Running in the pinned container ${image}\n`)
   const code = await run('docker', [
     'run',

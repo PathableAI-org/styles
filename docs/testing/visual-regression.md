@@ -115,10 +115,14 @@ story, can get a baseline of its own by the rule above.
 ## Commands
 
 ```bash
-pnpm build:docs                 # build the styles Storybook first
+pnpm build                      # build the packages; the Storybook imports them
+pnpm build:docs                 # build the styles Storybook
 pnpm test:pixels-styles         # compare the rollout list with its baselines
 pnpm test:pixels-styles:update --component icon-button
 ```
+
+`pnpm build:docs` fails to resolve `@pathableai/styles/js` until
+`pnpm build` has run in the checkout.
 
 Both commands run in the pinned container through Docker, with the
 repository mounted at the same path and your user ID. The container uses the
@@ -130,7 +134,39 @@ fails when `visual-baselines/styles/` holds an image that no rollout capture
 compares, or when a planned capture did not run (for example because the
 test-runner skipped its story).
 
-Without Docker or a Linux host, take new or changed baselines from CI: the
+### In a Claude Code cloud session
+
+Cloud sessions are Linux containers with Docker installed, but the Docker
+daemon is not running when the session starts. `docker info` then reports
+`Cannot connect to the Docker daemon` and `/var/run/docker.sock` is missing.
+That means the daemon is stopped, not that Docker is unavailable. Start it,
+then run the commands above as usual:
+
+```bash
+(nohup dockerd > /tmp/dockerd.log 2>&1 &)
+```
+
+```bash
+for i in $(seq 1 30); do docker info > /dev/null 2>&1 && break; sleep 1; done; docker info --format '{{.ServerVersion}}'
+```
+
+The session runs as root, so no `sudo` is needed. The first run pulls the
+pinned Playwright image from `mcr.microsoft.com` through the session's proxy,
+which the default network policy allows; it needs no extra allowed host. The
+capture itself runs with `--network=none`.
+
+Do not take baselines from CI's artifact in a cloud session, and do not ask
+for a network allowlist change to download one. GitHub Actions artifacts are
+served from Azure blob hosts such as
+`productionresultssa3.blob.core.windows.net`, and adding one to an
+environment widens the network of every later session that uses it, for
+something a local run does without. If `dockerd` will not start, stop and
+report the error from its log instead.
+
+### Without Docker
+
+Only on a machine that cannot run Docker on Linux, such as a macOS or Windows
+workstation, take new or changed baselines from CI: the
 `Styles pixel visual regression` job uploads the `pixels-styles` artifact on
 failure. Review each `-received.png` and copy it to the matching baseline
 path without the `-received` suffix. `--no-container` compares on the host
