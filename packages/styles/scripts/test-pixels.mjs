@@ -60,6 +60,14 @@ const STORIES = [
     id: 'interaction-controls-icon-tile--all-variants',
     key: 'icon-tile/all-variants',
   },
+  // The aggregate: rest with the focus ring, selected, natively disabled and
+  // aria-disabled side by side, so the two disabled forms are compared.
+  // `state-precedence` (selected-and-disabled, and the loading spinner) is
+  // not compared yet: its spinner renders wrongly until #275 is fixed.
+  {
+    id: 'interaction-controls-interaction-states--all-states',
+    key: 'interaction-states/all-states',
+  },
   // OptionalFormSection has no aggregate story. Collapsed (`default`) shows
   // the button, its focus outline and the down indicator at every viewport.
   {
@@ -167,6 +175,7 @@ const ROLLOUT = [
   'icon-button',
   'icon-tile',
   'input',
+  'interaction-states',
   'modal',
   'optional-form-section',
   'segmented-control',
