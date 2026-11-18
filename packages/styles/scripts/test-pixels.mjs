@@ -86,9 +86,10 @@ const STORIES = [
     id: 'components-form-controls-form-stack--default',
     key: 'form-stack/default',
   },
-  // A form row inside the stack: the row's desktop column tracks and the
-  // stack gap between a row and a following form group, which Default does
-  // not render.
+  // A form row inside the stack at desktop: the stack's full-width control
+  // rule applied inside the row's columns, and how the row's own zeroed group
+  // margins sit next to a following stack-level group. Default renders no row,
+  // so neither combination appears in its images.
   {
     id: 'components-form-controls-form-stack--with-form-row',
     key: 'form-stack/with-form-row',

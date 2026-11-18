@@ -41,12 +41,11 @@ const expectStackGapSpacing = async (form: HTMLElement, gap: number) => {
     const label = group.querySelector<HTMLElement>(
       ':scope > .pathable-label:first-child',
     )
-    if (label) {
-      await expect(label.getBoundingClientRect().top).toBeCloseTo(
-        group.getBoundingClientRect().top,
-        0,
-      )
-    }
+    await expect(label).not.toBeNull()
+    await expect(label?.getBoundingClientRect().top).toBeCloseTo(
+      group.getBoundingClientRect().top,
+      0,
+    )
   }
 }
 
