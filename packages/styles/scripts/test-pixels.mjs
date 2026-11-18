@@ -60,6 +60,20 @@ const STORIES = [
     id: 'interaction-controls-icon-tile--all-variants',
     key: 'icon-tile/all-variants',
   },
+  // Interaction States has no single aggregate story. `all-states` shows the
+  // combined mixin's rest, focus-visible, selected, disabled and ARIA-disabled
+  // rules together.
+  {
+    id: 'interaction-controls-interaction-states--all-states',
+    key: 'interaction-states/all-states',
+  },
+  // State precedence shows rules `all-states` does not: the loading spinner's
+  // size and placement inside the control, and selected styling under
+  // disabled.
+  {
+    id: 'interaction-controls-interaction-states--state-precedence',
+    key: 'interaction-states/state-precedence',
+  },
   // OptionalFormSection has no aggregate story. Collapsed (`default`) shows
   // the button, its focus outline and the down indicator at every viewport.
   {
@@ -82,7 +96,12 @@ const STORIES = [
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = [
+  'icon-button',
+  'icon-tile',
+  'interaction-states',
+  'optional-form-section',
+]
 
 // ---------------------------------------------------------------------------
 
