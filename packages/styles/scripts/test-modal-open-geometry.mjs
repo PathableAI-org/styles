@@ -8,7 +8,8 @@
  *   2. Dialog lies inside the viewport
  *   3. Dialog is centered within documented tolerance
  *   4. Overlay dims the page (background not fully transparent)
- *   5. Close control shows a visible focus-visible indicator when focused
+ *   5. Overlay jumps, rather than smooth-scrolls, to focused controls
+ *   6. Close control shows a visible focus-visible indicator when focused
  *
  * Documented centering tolerance: dialog center must lie within 1% of each
  * viewport dimension from the viewport center (no intentional-placement escape).
@@ -193,6 +194,11 @@ async function stopServer(server) {
   })
 }
 
+/** Short name for a geometry case, such as `narrow 375x812`. */
+function caseName(storyId, viewport) {
+  return `${storyId.split('--')[1]} ${viewport.width}x${viewport.height}`
+}
+
 function parseAlpha(color) {
   if (!color || color === 'transparent') return 0
   const rgba = color.match(
@@ -219,7 +225,7 @@ function parseAlpha(color) {
 async function assertOpenGeometry(page, target) {
   const failures = []
   const { storyId, baseUrl, viewport } = target
-  const label = `${target.label} ${storyId.split('--')[1]} ${viewport.width}x${viewport.height}`
+  const label = `${target.label} ${caseName(storyId, viewport)}`
 
   await page.setViewportSize(viewport)
   const url = `${baseUrl}/iframe.html?id=${encodeURIComponent(storyId)}&viewMode=story`
@@ -310,12 +316,20 @@ async function assertOpenGeometry(page, target) {
     return {
       backgroundColor: style.backgroundColor,
       opacity: Number(style.opacity),
+      scrollBehavior: style.scrollBehavior,
     }
   })
   const alpha = parseAlpha(dimmer.backgroundColor)
   if (!(alpha > 0) || !(dimmer.opacity > 0)) {
     failures.push(
       `${label}: overlay does not dim the page (backgroundColor=${JSON.stringify(dimmer.backgroundColor)}, opacity=${dimmer.opacity})`,
+    )
+  }
+  // Smooth scrolling to a focused control leaves the open state settling
+  // after focus moves, which makes screenshots racy.
+  if (dimmer.scrollBehavior !== 'auto') {
+    failures.push(
+      `${label}: overlay scroll-behavior is ${JSON.stringify(dimmer.scrollBehavior)}, expected "auto"`,
     )
   }
 
@@ -448,9 +462,10 @@ async function main() {
             baseUrl,
             viewport,
           })
-          const caseName = `${storyId.split('--')[1]} ${viewport.width}x${viewport.height}`
           if (failures.length === 0) {
-            console.log(`   ✓ ${label} ${caseName} geometry passed`)
+            console.log(
+              `   ✓ ${label} ${caseName(storyId, viewport)} geometry passed`,
+            )
           } else {
             for (const f of failures) console.log(`   ✗ ${f}`)
             allFailures.push(...failures)
