@@ -79,21 +79,14 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // Toast has no aggregate story and `stacked` is its only canonical story:
+  // info, success and warning, dismissible and plain padding, the reversed
+  // stack order and the dismiss button's focus outline.
   { id: 'components-feedback-toast--stacked', key: 'toast/stacked' },
-  {
-    id: 'components-feedback-pageerror--full-page',
-    key: 'page-error/full-page',
-  },
-  { id: 'components-communication-modal--open', key: 'modal/open' },
-  { id: 'components-communication-modal--narrow', key: 'modal/narrow' },
-  {
-    id: 'components-communication-modal--long-content',
-    key: 'modal/long-content',
-  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section', 'toast']
 
 // ---------------------------------------------------------------------------
 
