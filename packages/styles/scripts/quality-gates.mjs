@@ -157,6 +157,9 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-filterable-option-list--forced-colors',
     mode: 'both',
   },
+  // Components - Basic
+  // The outline modifier beside the primary button (#287).
+  { id: 'components-button--outline', mode: 'both' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },

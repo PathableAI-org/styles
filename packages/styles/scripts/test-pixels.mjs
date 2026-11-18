@@ -60,10 +60,16 @@ const STORIES = [
     id: 'interaction-controls-icon-tile--all-variants',
     key: 'icon-tile/all-variants',
   },
+  // Button has no aggregate story yet. Outline guards the outline modifier
+  // against the cascade regression in #287, beside the primary button.
+  {
+    id: 'components-button--outline',
+    key: 'button/outline',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile']
+const ROLLOUT = ['button', 'icon-button', 'icon-tile']
 
 // ---------------------------------------------------------------------------
 
