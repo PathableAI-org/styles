@@ -157,6 +157,8 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-filterable-option-list--forced-colors',
     mode: 'both',
   },
+  // Components - Basic
+  { id: 'components-card--workflow-card-with-status', mode: 'desktop' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
   { id: 'components-feedback-pageerror--full-page', mode: 'desktop' },
@@ -200,6 +202,10 @@ const CANONICAL_STORIES = [
     mode: 'both',
   },
   { id: 'interaction-controls-icon-tile--increased-text', mode: 'both' },
+  {
+    id: 'interaction-controls-segmentedcontrol--single-select',
+    mode: 'desktop',
+  },
   {
     id: 'interaction-controls-integration--full-composition',
     mode: 'both',

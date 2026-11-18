@@ -79,10 +79,41 @@ const STORIES = [
     id: 'components-form-controls-optional-form-section--narrow',
     key: 'optional-form-section/narrow',
   },
+  // SegmentedControl has no aggregate story. Single select shows the option
+  // icon-to-label gap, the selected option and the container padding; the gap
+  // does not change with the viewport, so one desktop image is enough.
+  {
+    id: 'interaction-controls-segmentedcontrol--single-select',
+    key: 'segmented-control/single-select',
+  },
+  // The app shell has no aggregate story: the desktop shell shows the sidebar
+  // and the gap between navigation items, and the mobile shell shows the
+  // mobile layout with the bottom navigation and its icon-to-label gap.
+  {
+    id: 'application-shell-desktop-shell--default',
+    key: 'app-shell/desktop',
+  },
+  {
+    id: 'application-shell-mobile-shell--default',
+    key: 'app-shell/mobile',
+  },
+  // The workflow card's status and meta text have rules of their own (colour,
+  // weight and font size) that the other Card stories do not show.
+  {
+    id: 'components-card--workflow-card-with-status',
+    key: 'card/workflow-with-status',
+  },
 ]
 
 /** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = ['icon-button', 'icon-tile', 'optional-form-section']
+const ROLLOUT = [
+  'icon-button',
+  'icon-tile',
+  'optional-form-section',
+  'segmented-control',
+  'app-shell',
+  'card',
+]
 
 // ---------------------------------------------------------------------------
 
