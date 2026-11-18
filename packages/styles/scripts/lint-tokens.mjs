@@ -214,12 +214,13 @@ function parseNestedMapValues(content, mapName) {
 
 /**
  * A custom-property declaration: `--name:` not preceded by a word character,
- * hyphen or `&`, so a BEM modifier before a pseudo-class (`.card--sm:hover`,
- * `&--sm:hover`) is not mistaken for a `--sm` declaration. Interpolated names
- * (`--usa-#{$x}:`) do not match; the map parsers below cover those. Callers
- * strip comments first (see stripComments).
+ * hyphen, `&`, `}` or `(`, so a BEM modifier before a pseudo-class
+ * (`.card--sm:hover`, `&--sm:hover`, `#{&}--sm:hover`) and an `@supports`
+ * feature query (`(--x: y)`) are not mistaken for declarations. Interpolated
+ * names (`--usa-#{$x}:`) do not match; the map parsers below cover those.
+ * Callers strip comments first (see stripComments).
  */
-const DECLARATION_PATTERN = /(?<![\w&-])(--[a-zA-Z0-9_-]+)\s*:/g
+const DECLARATION_PATTERN = /(?<![\w&}(-])(--[a-zA-Z0-9_-]+)\s*:/g
 
 /**
  * Remove block comments and line comments, so prose such as

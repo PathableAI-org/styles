@@ -130,6 +130,15 @@ describe('lint-tokens undefined references', () => {
     )
   })
 
+  it('does not treat an interpolated modifier or a feature query as a declaration', () => {
+    assert.deepEqual(
+      undefinedTokens(
+        '.fixture {\n  #{&}--active:hover {\n    gap: var(--active);\n  }\n}\n@supports (--css: variables) {\n  .fixture { gap: var(--css); }\n}\n',
+      ),
+      ['--active', '--css'],
+    )
+  })
+
   it('does not treat a declaration in a comment as a declaration', () => {
     assert.deepEqual(
       undefinedTokens(
