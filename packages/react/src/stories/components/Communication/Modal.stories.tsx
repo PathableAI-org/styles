@@ -82,6 +82,19 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+/** Close control must sit within this distance of the dialog's top and right edges. */
+const CLOSE_CORNER_TOLERANCE_PX = 16
+
+/** Resolves a colour custom property to the computed `rgb()` string. */
+function resolveColorToken(token: string): string {
+  const probe = document.createElement('span')
+  probe.style.color = `var(${token})`
+  document.body.append(probe)
+  const value = getComputedStyle(probe).color
+  probe.remove()
+  return value
+}
+
 // ---------------------------------------------------------------------------
 // Playground
 // ---------------------------------------------------------------------------
@@ -155,7 +168,7 @@ export const Open: Story = {
     docs: {
       description: {
         story:
-          'Open Modal (`open: true`) portals the dual-class shell so styles CSS shows a dimmed full-viewport backdrop and a centered dialog.',
+          "Open Modal (`open: true`) portals the dual-class shell so styles CSS shows a dimmed full-viewport backdrop and a centered dialog. The close button sits in the dialog's top-right corner with a text-coloured icon and shows the `--pathable-color-focus-ring` outline when focused.",
       },
     },
   },
@@ -173,6 +186,53 @@ export const Open: Story = {
       await expect(wrapper).not.toBeNull()
       await expect(overlay).not.toBeNull()
       await expect(dialog).not.toBeNull()
+    })
+
+    await step(
+      'close button sits top right with a text-coloured icon',
+      async () => {
+        const dialog = within(document.body).getByRole('dialog', {
+          name: 'Confirm Deletion',
+        })
+        const close = within(dialog).getByRole('button', {
+          name: 'Close modal',
+        })
+        const heading = within(dialog).getByRole('heading', {
+          name: 'Confirm Deletion',
+        })
+        const dialogBox = dialog.getBoundingClientRect()
+        const closeBox = close.getBoundingClientRect()
+        const headingBox = heading.getBoundingClientRect()
+
+        await expect(dialogBox.right - closeBox.right).toBeGreaterThanOrEqual(0)
+        await expect(dialogBox.right - closeBox.right).toBeLessThanOrEqual(
+          CLOSE_CORNER_TOLERANCE_PX,
+        )
+        await expect(closeBox.top - dialogBox.top).toBeGreaterThanOrEqual(0)
+        await expect(closeBox.top - dialogBox.top).toBeLessThanOrEqual(
+          CLOSE_CORNER_TOLERANCE_PX,
+        )
+        await expect(closeBox.bottom).toBeLessThanOrEqual(headingBox.top)
+        await expect(getComputedStyle(close).color).toBe(
+          resolveColorToken('--pathable-color-text'),
+        )
+      },
+    )
+
+    await step('focused close button shows the brand focus ring', async () => {
+      const close = within(document.body).getByRole('button', {
+        name: 'Close modal',
+      })
+      // The Modal moves focus to the close button when it opens.
+      await waitFor(() => expect(close).toHaveFocus())
+      await expect(close.matches(':focus-visible')).toBe(true)
+
+      const style = getComputedStyle(close)
+      await expect(style.outlineStyle).toBe('solid')
+      await expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThan(0)
+      await expect(style.outlineColor).toBe(
+        resolveColorToken('--pathable-color-focus-ring'),
+      )
     })
   },
 }
