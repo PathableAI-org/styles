@@ -29,7 +29,7 @@ guarantees:
     claim: The spinner keeps its size when the status text wraps onto several lines in a narrow container.
   - id: forced-colours
     status: unverified
-    claim: In forced colours mode the ring is drawn in the system ButtonText colour and its top quarter stays transparent.
+    claim: In forced colours mode the ring is drawn in a system colour; in Chromium its top quarter is not kept transparent, so the ring shows as a closed circle and its turning is not visible.
 ---
 
 # Loading

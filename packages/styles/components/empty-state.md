@@ -125,7 +125,8 @@ changes these tokens changes them.
   fits the page outline.
 - `pathable-empty-state__body` goes on a `<p>` of one or two sentences.
 - `pathable-empty-state__action` is optional. Put it on the one link or button
-  that resolves the empty state, together with `pathable-button`.
+  that resolves the empty state, together with `pathable-button`. The button
+  brings a 0.5rem right margin, which sets the action 4px left of centre.
 - Keep the children in that order. The block adds no background; place it on
   the page or inside the `pathable-card` or panel that would hold the content.
 - The block is as wide as its container. Its padding shrinks on a narrow

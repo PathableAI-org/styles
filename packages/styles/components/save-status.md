@@ -120,7 +120,9 @@ the text inherits the size of the text around it. Set
 `--pathable-save-status-font-size` yourself, for example to `0.875rem`.
 
 The contrast is unmet: on white, saved is 2.78:1, offline 2.03:1 and error
-4.53:1; on the default page background they are 2.14:1, 1.56:1 and 3.48:1.
+4.53:1; on the theme's background colour, Shilling Silver (`#dde2e8`), which
+an application may use as its page background, they are 2.14:1, 1.56:1 and
+3.48:1. The stylesheet does not paint the page itself.
 Until it is met, place the indicator on white and do not rely on the saved or
 offline colour being readable.
 
