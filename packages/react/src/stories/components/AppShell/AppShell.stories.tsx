@@ -212,7 +212,7 @@ export const MobileShell: Story = {
     const canvas = within(canvasElement)
 
     await step(
-      'each bottom navigation link renders filled artwork',
+      'each bottom navigation link renders one 20px filled icon',
       async () => {
         const bottomNav = canvas.getByRole('navigation', { name: 'Primary' })
         const links = within(bottomNav).getAllByRole('link')
