@@ -80,10 +80,20 @@
   // Keep a wrapping title clear of the corner-pinned close button below
   // (its inset plus its 44 px box), whatever margin the heading element has.
   padding-inline-end: calc(var(--pathable-space-1) + 44px);
+  // At 200 % text a long word is wider than the dialog's content box; break
+  // it rather than let it run past the dialog (WCAG 1.4.4).
+  overflow-wrap: anywhere;
 }
 
 .pathable-modal__footer {
   @extend .usa-modal__footer;
+
+  // A button row inside the footer wraps when the buttons are wider than the
+  // dialog (increased text size, narrow viewport) instead of overflowing it.
+  > * {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
 }
 
 // USWDS places the close button as the last child of a column-reverse
