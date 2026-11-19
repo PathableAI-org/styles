@@ -24,6 +24,9 @@ guarantees:
   - id: long-identity
     status: unverified
     claim: The body can shrink below its content width and a long name breaks inside words rather than overflowing the panel.
+  - id: name-weight
+    status: unmet
+    claim: The name is set in the heading typeface at weight 400, Fredoka Regular.
   - id: metadata-row
     status: unverified
     claim: Metadata items sit in a wrapping row with a 1rem gap and a middle dot before every item after the first, with no list markers or indent.
@@ -101,18 +104,18 @@ two axes combine freely.
 
 ## Tokens
 
-| What                       | Token                                                                                       |
-| -------------------------- | ------------------------------------------------------------------------------------------- |
-| Media size (default 4rem)  | `--pathable-record-header-avatar-size`                                                      |
-| Gap between regions        | `--pathable-record-header-gap`                                                              |
-| Panel background, border   | `--pathable-color-surface`, `--pathable-color-border`                                       |
-| Corner radius              | `--radius-md`                                                                               |
-| Media background and icon  | `--pathable-color-bg`, `--pathable-color-text-muted`                                        |
-| No-image background        | `--pathable-color-accent`                                                                   |
-| Name font, size and weight | `--pathable-font-heading`, `--pathable-font-size-heading-md`, `--pathable-font-weight-bold` |
-| Name colour                | `--pathable-color-text`                                                                     |
-| Body font, metadata size   | `--pathable-font-body`, `--pathable-font-size-caption-md`                                   |
-| Spacing                    | `--pathable-space-1`, `--pathable-space-2`, `--pathable-space-4`                            |
+| What                      | Token                                                            |
+| ------------------------- | ---------------------------------------------------------------- |
+| Media size (default 4rem) | `--pathable-record-header-avatar-size`                           |
+| Gap between regions       | `--pathable-record-header-gap`                                   |
+| Panel background, border  | `--pathable-color-surface`, `--pathable-color-border`            |
+| Corner radius             | `--radius-md`                                                    |
+| Media background and icon | `--pathable-color-bg`, `--pathable-color-text-muted`             |
+| No-image background       | `--pathable-color-accent`                                        |
+| Name font and size        | `--pathable-font-heading`, `--pathable-font-size-heading-md`     |
+| Name colour               | `--pathable-color-text`                                          |
+| Body font, metadata size  | `--pathable-font-body`, `--pathable-font-size-caption-md`        |
+| Spacing                   | `--pathable-space-1`, `--pathable-space-2`, `--pathable-space-4` |
 
 The two component properties are read on the media and the panel; set them on
 the panel or above it. When the gap property is unset the gap is
@@ -127,8 +130,8 @@ default theme, where the spacing tokens 1, 2 and 4 are 0.5, 1 and 2rem and
   icon.
 - `pathable-record-header__body` holds the name, metadata and tags in a column
   with a 0.5rem gap.
-- `pathable-record-header__identity` is the name, at 20 px bold in the heading
-  font. Use a heading at the right level for the page.
+- `pathable-record-header__identity` is the name, at 20 px in the heading font
+  at weight 400. Use a heading at the right level for the page.
 - `pathable-record-header__metadata` is a `<ul>` of short facts at 12 px in the
   muted colour. The dots between items are drawn by the stylesheet; do not
   type them.
@@ -160,6 +163,9 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+Today the name asks for bold, and the package ships only Fredoka Regular (400),
+so browsers draw a synthesised bold; `name-weight` is unmet.
 
 ## The consumer owns
 

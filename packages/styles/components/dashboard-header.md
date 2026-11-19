@@ -24,6 +24,9 @@ guarantees:
   - id: narrow
     status: unverified
     claim: At a viewport of 640 px or less the title is 24 px instead of 32 px, the padding is 2rem, and the actions region is full width with each child growing to fill the space left on its line.
+  - id: title-weight
+    status: unmet
+    claim: The title is set in the heading typeface at weight 400, Fredoka Regular.
   - id: action-target
     status: unverified
     claim: Every pathable-button in the actions region is at least 44 by 44 px.
@@ -112,7 +115,6 @@ The two axes combine freely.
 | Body font (breadcrumb, context, text)   | `--pathable-font-body`                                                                                       |
 | Title font                              | `--pathable-font-heading`                                                                                    |
 | Title size, wide and narrow             | `--pathable-font-size-display-lg`, `--pathable-font-size-heading-lg`                                         |
-| Title weight                            | `--pathable-font-weight-bold`                                                                                |
 | Breadcrumb size                         | `--pathable-font-size-caption-md`                                                                            |
 | Context and description size            | `--pathable-font-size-body-sm`                                                                               |
 | Description line height                 | `--pathable-font-line-height-body`                                                                           |
@@ -168,9 +170,12 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The unmet guarantee is the two custom properties the component's source
-describes; the compiled stylesheet does not read either, so setting them does
-nothing.
+The `custom-properties` guarantee is unmet: it is the two custom properties the
+component's source describes; the compiled stylesheet does not read either, so
+setting them does nothing.
+
+Today the title asks for bold, and the package ships only Fredoka Regular (400),
+so browsers draw a synthesised bold; `title-weight` is unmet.
 
 ## The consumer owns
 
