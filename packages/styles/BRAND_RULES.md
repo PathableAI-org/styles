@@ -308,7 +308,7 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 | button-group        | `.pathable-button-group`        | `.usa-button-group`    |                                                                        |
 | card                | `.pathable-card`                | `.usa-card`            |                                                                        |
 | character-count     | —                               | —                      | USWDS has no base class; only `__status` selectors                     |
-| checkbox            | `.pathable-checkbox__*`         | `.usa-checkbox__*`     | USWDS has no base `.usa-checkbox` class; only element selectors        |
+| checkbox            | `.pathable-checkbox__*`         | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level  |
 | checklist           | `.pathable-checklist`           | `.usa-checklist`       |                                                                        |
 | collection          | `.pathable-collection`          | `.usa-collection`      |                                                                        |
 | combo-box           | `.pathable-combo-box`           | `.usa-combo-box`       |                                                                        |

@@ -98,6 +98,14 @@ const STORIES = [
     id: 'components-button--outline',
     key: 'button/outline',
   },
+  // Unstyled guards the unstyled modifier against the same cascade regression
+  // (#304): link text with no fill or padding beside the primary button, and
+  // the disabled unstyled text. The mobile image shows the touch-target
+  // min-height the wrapper adds below 40em or on a coarse pointer.
+  {
+    id: 'components-button--unstyled',
+    key: 'button/unstyled',
+  },
   // SegmentedControl has no aggregate story. Single select shows the option
   // icon-to-label gap, the selected option and the container padding; the gap
   // does not change with the viewport, so one desktop image is enough.
@@ -192,6 +200,20 @@ const STORIES = [
     id: 'components-form-controls-form-stack--with-form-row',
     key: 'form-stack/with-form-row',
   },
+  // Checkbox has no aggregate story. With hint and error shows the root's
+  // block layout (the control on its own line between the hint and the error
+  // message, #281), the unchecked box, its label and its focus ring at every
+  // viewport.
+  {
+    id: 'components-form-controls-checkbox--with-hint-and-error',
+    key: 'checkbox/with-hint-and-error',
+  },
+  // The disabled box and label colours, which no other baseline shows. The
+  // checked box is compared through FilterableOptionList `selected`.
+  {
+    id: 'components-form-controls-checkbox--disabled',
+    key: 'checkbox/disabled',
+  },
   // FilterableOptionList main story: the filter input (focused), the bounded
   // option region and the status line.
   {
@@ -253,6 +275,7 @@ const ROLLOUT = [
   'app-shell',
   'button',
   'card',
+  'checkbox',
   'filterable-option-list',
   'form-row',
   'form-stack',
