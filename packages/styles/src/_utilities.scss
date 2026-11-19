@@ -69,3 +69,12 @@
     }
   }
 }
+
+// Dark background utilities reset the surface focus ring
+// (pathable-component-wrappers/pathable-surface.scss), so a control in a dark
+// container nested in a light surface that sets a dark ring falls back to
+// --pathable-color-focus-ring instead of inheriting it.
+.pathable-bg-primary,
+.pathable-bg-link {
+  --pathable-surface-focus-ring: initial;
+}
