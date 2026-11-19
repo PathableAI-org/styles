@@ -17,7 +17,7 @@ guarantees:
     claim: The media is a 4rem circle that does not shrink, an image inside covers it without distortion, and an SVG inside is half its width and height, centred.
   - id: row-layout
     status: unverified
-    claim: Media, body and actions sit in one top-aligned row with a 2rem gap, and the actions are pushed to the inline end.
+    claim: Media, body and actions sit in one top-aligned row with a 2rem gap, and the actions region is pushed to the inline end.
   - id: panel
     status: unverified
     claim: The panel has 2rem padding, 8 px rounded corners, a 1 px border and the surface background, and fills its container's width.
@@ -92,12 +92,12 @@ Load the stylesheet once in the application; no JavaScript is needed:
 Add at most one modifier class from each axis to `pathable-record-header`. The
 two axes combine freely.
 
-| Axis      | Value      | Class                              | What it is for                                       |
-| --------- | ---------- | ---------------------------------- | ---------------------------------------------------- |
-| alignment | `start`    | none                               | Picture at the start, actions at the end, in one row |
-| alignment | `centered` | `pathable-record-header--centered` | Everything stacked and centred, for a narrow column  |
-| media     | `image`    | none                               | A photo or logo, on the page background colour       |
-| media     | `no-image` | `pathable-record-header--no-image` | A fallback icon on an accent-coloured circle         |
+| Axis      | Value      | Class                              | What it is for                                                                                        |
+| --------- | ---------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| alignment | `start`    | none                               | Picture at the start, actions at the end, in one row                                                  |
+| alignment | `centered` | `pathable-record-header--centered` | Everything stacked and centred, for a narrow column (see Composition for viewports of 640 px or less) |
+| media     | `image`    | none                               | A photo or logo, on the page background colour                                                        |
+| media     | `no-image` | `pathable-record-header--no-image` | A fallback icon on an accent-coloured circle                                                          |
 
 ## Tokens
 
@@ -133,15 +133,22 @@ default theme, where the spacing tokens 1, 2 and 4 are 0.5, 1 and 2rem and
   muted colour. The dots between items are drawn by the stylesheet; do not
   type them.
 - `pathable-record-header__badges` is a wrapping row of `pathable-tag`
-  elements, 0.5rem apart, with 0.5rem above.
+  elements, 0.5rem apart. Its own 0.5rem top margin adds to the body's 0.5rem
+  gap, so there is 1rem above it.
 - `pathable-record-header__actions` is a wrapping row of buttons with a 1rem
-  gap. It does not resize the buttons.
+  gap. It does not resize the buttons on a wide screen. Each `pathable-button`
+  keeps its own 0.5rem right margin, so buttons appear 1.5rem apart and the
+  last one stops 0.5rem short of the panel's inline end; on a narrow screen
+  the buttons fill the row less that 0.5rem.
 - `pathable-record-header__overflow` is a positioning wrapper for a "more
   actions" control inside the actions region. It only sets
   `position: relative` and a flex row; the menu itself is yours.
 - With `pathable-record-header--no-image` the media circle uses the accent
   colour with the icon in the surface colour, and the whole circle is drawn at
   80% opacity.
+- At a viewport of 640 px or less the media gets an extra 1rem below it, on
+  top of the gap. With `pathable-record-header--centered` at that width the
+  text and actions stay centred but the picture moves to the start edge.
 - In forced-colours mode the panel gets a 2 px border and the media a 1 px
   border.
 

@@ -11,7 +11,7 @@ guarantees:
     claim: The hero paints the package's stock hero photograph as a centred background that covers its whole box, and sets its text colour to white.
   - id: callout-panel
     status: unverified
-    claim: The callout has a #001e33 background and 2rem padding on every side, fills its container below a 40em viewport and is at most 20rem wide from 40em.
+    claim: 'The callout has a #001e33 background and 2rem padding on every side, fills its container below a 40em viewport and, from 40em, its content is at most 20rem wide, so the panel with its padding is at most 24rem.'
   - id: heading-type
     status: unverified
     claim: The heading is bold Fredoka at 1.12rem with a line height of 1.2, coloured #4899e8, and has no margin of its own when it is the only child.
@@ -91,7 +91,9 @@ values, and a theme does not change them.
   width, and add vertical padding to it (for example `pathable-padding-y-4`),
   or the callout touches the top and bottom of the photograph.
 - `pathable-hero__callout` is the dark panel that keeps text readable over the
-  photograph. Put the heading, the message and the action inside it.
+  photograph. Put the heading, the message and the action inside it. From
+  40em it is at most 24rem wide: 20rem of content plus its 2rem padding on
+  each side.
 - `pathable-hero__heading` is the panel's heading. Use a real heading element
   at the right level for the page, usually `<h1>`.
 - Paragraphs and other content in the callout inherit the white text; the

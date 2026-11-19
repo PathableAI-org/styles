@@ -14,13 +14,13 @@ guarantees:
     claim: Each segment draws a 0.5rem-tall bar along its top edge, #919191 for an upcoming step, #001e33 for a complete step and #00365c for the current step.
   - id: labels-by-width
     status: unverified
-    claim: Below a 40em viewport segment labels are not displayed, and from 40em each label shows left-aligned under its bar with a 1rem gap.
+    claim: Below a 40em viewport segment labels are not displayed, and from 40em each label shows left-aligned under its bar with 0.5rem between the bar and the label.
   - id: label-state
     status: unverified
     claim: From 40em an upcoming step's label is #565c65, a complete step's label is #001e33, and the current step's label is bold #00365c.
   - id: counter
     status: unverified
-    claim: The current-step counter is a 2.5rem circle with a #00365c background and white text.
+    claim: 'The current-step counter is a circle at least 2.5rem across, about 3rem at the default heading size, with a #00365c background and white text.'
   - id: heading-size
     status: unverified
     claim: The heading is bold #00365c at 1.12rem with a 1rem top margin below a 40em viewport, and 1.49rem with a 2rem top margin from 40em.
@@ -30,8 +30,10 @@ guarantees:
 
 A horizontal progress bar for a multi-step process, one equal segment per step,
 with an optional heading that names the current step. Put the class on a
-`<div>` that holds an ordered list of segments. It is not interactive: steps
-are not links and the class adds no role or state.
+`<section>` or `<div>` that holds an ordered list of segments. It is not
+interactive: steps are not links and the class adds no role or state. To name
+the block with `aria-label`, use an element with a role, such as `<section>`;
+a plain `<div>` cannot take a name.
 
 ## When to use
 
@@ -55,26 +57,29 @@ Load the stylesheet once in the application; no JavaScript is needed:
 ```
 
 ```html
-<div class="pathable-step-indicator" aria-label="Progress">
+<section class="pathable-step-indicator" aria-label="Progress">
   <ol class="pathable-step-indicator__segments">
     <li
       class="pathable-step-indicator__segment pathable-step-indicator__segment--complete"
     >
-      <span class="pathable-step-indicator__segment-label">
-        Create account <span class="pathable-sr-only">completed</span>
+      <span class="pathable-sr-only">Create account, completed</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true">
+        Create account
       </span>
     </li>
     <li
       class="pathable-step-indicator__segment pathable-step-indicator__segment--current"
       aria-current="step"
     >
-      <span class="pathable-step-indicator__segment-label"
-        >Verify identity</span
-      >
+      <span class="pathable-sr-only">Verify identity</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true">
+        Verify identity
+      </span>
     </li>
     <li class="pathable-step-indicator__segment">
-      <span class="pathable-step-indicator__segment-label">
-        Set up profile <span class="pathable-sr-only">not completed</span>
+      <span class="pathable-sr-only">Set up profile, not completed</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true">
+        Set up profile
       </span>
     </li>
   </ol>
@@ -86,7 +91,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
       Verify identity
     </h2>
   </div>
-</div>
+</section>
 ```
 
 ## Variants
@@ -112,11 +117,13 @@ not follow a theme.
   `pathable-step-indicator__segment--current` to the one current step; a
   segment with neither is upcoming. `pathable-step-indicator__segment--completed`
   is the same as `pathable-step-indicator__segment--complete`.
-- `pathable-step-indicator__segment-label` is the step's name inside the
-  segment.
+- `pathable-step-indicator__segment-label` is the step's visible name inside
+  the segment. From 40em it sits 0.5rem below the bar. Below 40em it is not
+  displayed.
 - `pathable-step-indicator__header` is a flex row, aligned on the text
   baseline, under the segments. Put the `pathable-step-indicator__heading`
-  inside it, with `pathable-step-indicator__current-step` (the circled number)
+  inside it, with `pathable-step-indicator__current-step` (the circled number,
+  about 3rem across at the default heading size)
   and `pathable-step-indicator__total-steps` (for example "of 3", followed by
   a 0.5rem gap) before the step name.
 - `pathable-step-indicator__step`, `pathable-step-indicator__step--current`,
@@ -142,9 +149,11 @@ row's right-hand part empty.
 - Accessibility. Below 40em the labels are `display: none`, so they are hidden
   from assistive technology as well as from sight. Always include the heading
   with the current step's number and name, or another text equivalent. Mark
-  the current segment with `aria-current="step"`, and give complete and
-  upcoming steps hidden text, as in the example, because the bars carry the
-  state in colour only.
+  the current segment with `aria-current="step"`, and give each step its name
+  and state in `pathable-sr-only` text directly in the `<li>`, outside
+  `pathable-step-indicator__segment-label`, as in the example. Text inside the
+  label is lost below 40em, and the bars carry the state in colour only. Hide
+  the visible label with `aria-hidden="true"` so the name is not read twice.
 - Keeping the classes and the text in step: the stylesheet does not count
   steps or work out which is current.
 - The heading level, and the label text and its length.

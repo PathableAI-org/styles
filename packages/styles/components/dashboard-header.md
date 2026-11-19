@@ -125,16 +125,22 @@ own.
 
 - `pathable-dashboard-header__breadcrumb` is the optional trail, first in the
   header. Each direct child after the first gets a "/" separator before it, in
-  the muted colour at half opacity. Long trails wrap.
+  the muted colour at half opacity. Long trails wrap. At a viewport of 640 px
+  or less the trail clips anything that overflows it, and that also clips the
+  focus outline of its links; give the links padding or an inset focus style.
 - `pathable-dashboard-header__row` holds the title, the context and the
   actions, spread across the row with a 1.5rem gap and aligned to the top.
 - `pathable-dashboard-header__title` is the page title; use the page's `<h1>`.
   It wraps long titles.
-- `pathable-dashboard-header__context` is a short status line beside the title,
-  such as "Draft · Q2 2026". Keep it short: it does not wrap.
+- `pathable-dashboard-header__context` is a short status line after the title,
+  such as "Draft · Q2 2026". The title takes the free space, so on a wide row
+  the context sits at the far end, next to the actions. Keep it short: it does
+  not wrap.
 - `pathable-dashboard-header__actions` holds the page actions in a wrapping row
-  with a 1rem gap. It makes each `pathable-button` an inline flex box of at
-  least 44 by 44 px; it does not size links or other controls.
+  with a 1rem gap. Each `pathable-button` keeps its own 0.5rem right margin, so
+  buttons appear 1.5rem apart and the last one stops 0.5rem short of the
+  header's end. The region makes each `pathable-button` an inline flex box of
+  at least 44 by 44 px; it does not size links or other controls.
 - `pathable-dashboard-header__description` is an optional paragraph after the
   row.
 - In forced-colours mode the header gets a 1 px bottom border and 2rem bottom
