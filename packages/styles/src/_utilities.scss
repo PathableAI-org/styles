@@ -81,11 +81,15 @@
 // these classes itself keeps that surface's ring. On Tech Teal the fallback is
 // 2.6:1 (#382); a light ring there would inherit into light containers nested
 // in it.
+// The :where() keeps the reset at the utility's own specificity, so a
+// container's own --pathable-surface-focus-ring, or a surface variant on the
+// same element, still wins. Keep the list in step with the selectors that
+// include state-focus (pathable-button.scss explains the button modifiers).
 $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive, .pathable-icon-button, .pathable-input, .pathable-select, .pathable-textarea';
 
-.pathable-bg-primary:not(#{$-surface-focus-ring-controls}),
-.hover\:pathable-bg-primary:hover:not(#{$-surface-focus-ring-controls}),
-.pathable-bg-link:not(#{$-surface-focus-ring-controls}),
-.hover\:pathable-bg-link:hover:not(#{$-surface-focus-ring-controls}) {
+.pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-primary:hover:not(:where(#{$-surface-focus-ring-controls})),
+.pathable-bg-link:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: initial;
 }
