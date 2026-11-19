@@ -141,6 +141,11 @@ jobs:
             react:
               - 'packages/react/**'
               - 'packages/styles/**'
+              - 'scripts/component-pages.mjs'
+              - 'scripts/check-component-pages.mjs'
+              - 'scripts/check-component-pages.test.mjs'
+              - 'scripts/markdown.mjs'
+              - 'visual-baselines/styles/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
             next_consumer:
@@ -383,6 +388,8 @@ jobs:
         run: pnpm --filter @pathableai/react check:types
       - name: Validate agent guidance
         run: pnpm check:agent-guidance
+      - name: Validate component pages against the code
+        run: pnpm check:component-pages
 
   next-consumer:
     needs: changes
