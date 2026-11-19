@@ -82,7 +82,10 @@ the constitution; the general ones are the same as in Pre-ETS.
 It does not repeat lint, stylelint, token-lint, typecheck or test-runner
 findings, and does not re-verify claims; those belong to the checks and the
 verifier. It does not review pre-existing code the slice did not change,
-unless the slice makes an existing defect reachable.
+unless the slice makes an existing defect reachable. A pre-existing defect it
+comes across anyway is filed as a bug issue under
+[Defects found along the way](orchestration.md#defects-found-along-the-way),
+not reported as a finding.
 
 ## Findings
 
@@ -226,8 +229,9 @@ continuing the loop when:
 
 The reviewer is read-only. It edits no branch, pull request, issue or `specs/`
 file, and does not fix the code or write patches. It names the defect, where
-it is and how it fails. It writes only its note, and the one GitHub write it
-makes is the note comment `pnpm review:record` posts on the pull request.
+it is and how it fails. It writes only its note. Its GitHub writes are the
+note comment `pnpm review:record` posts on the pull request, and bug issues
+for [unrelated defects](orchestration.md#defects-found-along-the-way).
 
 ## Pre-push self-review
 

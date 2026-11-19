@@ -166,6 +166,28 @@ that in the delivery issue; it then runs as a combined specification-and-plan
 pull request and verified slices. An agent may suggest specifying Standard
 work, but never specifies, waives or combines a phase on its own.
 
+#### Visual-only styles work
+
+Specifications are for behaviour, not appearance. Work that only changes how
+`@pathableai/styles` looks never gets a Spec Kit specification, plan or slices,
+at any tier. It is visual-only when every changed path is in `packages/styles`
+(SCSS, tokens, fonts, icons and other assets), its styles stories,
+`apps/storybook` or `visual-baselines/`, and it changes no behaviour: no
+JavaScript helper, no keyboard, focus or ARIA behaviour, no interaction story's
+play function asserting new behaviour, and no React source or API.
+
+- **Standard or Light.** One pull request, with the code review and the
+  [visual review](visual-review.md) as its evidence, merged under
+  [agent merge](#agent-merge).
+- **High** (for example renaming or removing a token or class). One pull
+  request that runs like a High fix: numbered claims in its Evidence table,
+  code review, verification and visual review, and a person's merge. Migration notes go in
+  the changeset as usual.
+
+A change that adds React API for the new appearance, or any behaviour, is not
+visual-only. Split the visual part out first when it can land on its own, as
+source-first sequencing asks.
+
 Evidence each tier needs, in addition to the checks in
 [`AGENTS.md`](../../AGENTS.md#before-committing) for the files changed:
 

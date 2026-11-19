@@ -21,11 +21,17 @@ procedure. Also read [Component testing](../../../docs/testing/README.md).
   `refs/notes/verification`, through `pnpm verify:record`, which also posts
   the report as a comment on the pull request so other clones can import it.
   The only other output is the screenshots page for visual claims and the one
-  comment linking it. Post nothing else to GitHub. Never push the notes ref.
+  comment linking it, and bug issues for unrelated defects. Post nothing else
+  to GitHub. Never push the notes ref.
 - Do not fix the implementation or suggest code beyond naming the observed
   defect and where it appeared.
 - Do not commit or retain probes, Playwright scripts, command output,
   screenshots or transcripts in the repository.
+- If you find a defect unrelated to the change under review, which the base
+  already has, file a bug issue for it as
+  [Defects found along the way](../../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, and name it in your reply. That issue is the one GitHub write
+  beyond your record.
 
 ## Inputs
 

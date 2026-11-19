@@ -59,10 +59,15 @@ the change makes an existing defect reachable.
 - Use Bash only for read-only commands: `git log`, `git diff`, `git show`,
   `git status`, `git ls-files`, `git merge-base`, `git rev-parse`, `rg`, and a
   focused unit test run of a file the change touches when it confirms a
-  candidate. Never run a command that writes to the repository or its refs.
-- Record nothing: no git notes, no `pnpm review:record`, no pull request or
-  issue comments, no messages to other sessions. Your reply to the
+  candidate, plus the `gh api` issue search and create calls for a bug issue
+  below. Never run a command that writes to the repository or its refs.
+- Record nothing about this change: no git notes, no `pnpm review:record`, no
+  pull request or issue comments, no messages to other sessions. Your reply to the
   lead session is the only output.
+- If you find a defect unrelated to the change you were asked about, which
+  the base already has, file a bug issue for it as
+  [Defects found along the way](../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, name it in your reply, and do not report it as a finding.
 
 ## Reply
 

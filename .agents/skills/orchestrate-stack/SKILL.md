@@ -35,6 +35,10 @@ skill supplies the procedure.
 - Use `gh api` REST paths or the GitHub MCP tools, never `gh pr` or
   `gh issue` subcommands; see
   [Working without GraphQL](../../../docs/engineering/git-workflow.md#working-without-graphql).
+- When you find a defect unrelated to the current change, file a bug issue as
+  [Defects found along the way](../../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, list it in your round summary, and keep it out of the current
+  pull request.
 
 ## Start
 
@@ -43,7 +47,10 @@ From the person: the delivery issue number.
 1. `gh api repos/{owner}/{repo}/issues/<N> --jq .body` and read its **Risk
    tier** section: the tier, its triggers, whether the work is new behaviour
    or a fix inside an existing contract, and whether the maintainer asked for
-   a specification. If the tier is missing or a trigger obviously matches a
+   a specification. Work that only changes how `@pathableai/styles` looks is
+   [visual-only](../../../docs/engineering/git-workflow.md#visual-only-styles-work)
+   and gets no specification unless the maintainer explicitly overrides that
+   in the issue. If the tier is missing or a trigger obviously matches a
    higher tier, stop and ask. Never lower it.
 2. Look for an existing feature directory (`specs/{number}-{slug}/` naming
    the issue) and pull requests for the issue, and resume from the phase they
@@ -66,6 +73,7 @@ From the person: the delivery issue number.
 | High, fix             | One [round](#rounds) loop on one pull request, slice ID `fix`                              |
 | Standard, specified   | [Specification](#specification) combined with the plan, stop; one round loop per slice     |
 | Other Standard, Light | One round loop on one pull request, slice ID `fix`                                         |
+| Visual-only styles    | One round loop on one pull request, slice ID `fix`, at every tier; never specified         |
 
 A person's approval of a stop starts the next phase without asking again.
 When the approved predecessor has not merged, cut the next branch from it and
@@ -127,7 +135,8 @@ or a `<type>/<slug>` branch:
    SHA, each with its [request](#requests):
    - `code-reviewer`, always
    - `verifier`, for a slice or a High fix
-   - `visual-reviewer`, for agent-merge work whose changed files
+   - `visual-reviewer`, for visual-only styles work at any tier, and for
+     agent-merge work whose changed files
      (`gh api --paginate repos/{owner}/{repo}/pulls/<n>/files --jq '.[].filename'`)
      include a
      [rendering path](../../../docs/engineering/visual-review.md#when-a-visual-review-runs)

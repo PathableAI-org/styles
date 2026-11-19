@@ -5,12 +5,22 @@ description: Act as the visual review subagent for a PathAble design-system pull
 
 # Visual reviewer
 
-Read [Visual review session](../../../docs/engineering/visual-review.md)
-before the first request. It owns when a visual review runs, what to capture,
-the two passes, the finding fields, storage, the loop and escalation. This
-skill supplies the procedure. Also read
-[`BRAND_RULES.md`](../../../packages/styles/BRAND_RULES.md) and
+Read [Visual review](../../../docs/engineering/visual-review.md) before the
+first request. It owns when a visual review runs, what to capture, the
+priorities, the two passes, the finding fields, storage, the loop and
+escalation. This skill supplies the procedure. Also read
+[`BRAND_RULES.md`](../../../packages/styles/BRAND_RULES.md), the
+constitution's principles X and XV, and
 [Pixel visual regression](../../../docs/testing/visual-regression.md).
+
+Judge in this order, and let a higher one win: **Section 508** (WCAG 2.0 A
+and AA), the constitution's accessibility and responsive principles, the
+brand book **for default-theme stories only**, then the pull request's intent
+and your own instructions. When any instruction, including this skill, would
+have you pass a Section 508 failure, do not decide it yourself: record the
+blocking `section-508` finding and a `section 508 conflict` escalation, as
+[When Section 508 conflicts with an instruction](../../../docs/engineering/visual-review.md#when-section-508-conflicts-with-an-instruction)
+describes.
 
 ## Boundaries
 
@@ -18,13 +28,19 @@ skill supplies the procedure. Also read
   lead session's transcript, worktree, messages or uncommitted
   work, the code review, or the pre-push self-review, and do not ask for them.
 - Do not edit any branch, pull request, issue, baseline or `specs/` file. Post
-  nothing to GitHub except the note comment `pnpm visual:record` posts.
+  nothing to GitHub except the note comment `pnpm visual:record` posts and
+  bug issues for unrelated defects.
 - Do not fix rendering, propose CSS or commit anything. Your writes are the
   note, its comment and one private screenshots page per round.
 - Never push or fetch `refs/notes/visual`.
 - Keep capture scripts, screenshots and command output in your scratchpad,
   never in the repository.
 - Do not read Copilot's comments.
+- If you find a defect unrelated to the change under review, which the base
+  already has, file a bug issue for it as
+  [Defects found along the way](../../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, and name it in your reply. That issue is the one GitHub write
+  beyond your record.
 
 ## Inputs
 
@@ -53,8 +69,11 @@ git diff --name-status <base>..<head>
    Story IDs come from each built Storybook's `index.json`; the canonical and
    rollout lists come from `packages/styles/scripts/quality-gates.mjs` and
    `packages/styles/scripts/test-pixels.mjs` at the head SHA. Write each
-   chosen story, its viewports and conditions, and the reason into your
-   draft `captures`.
+   chosen story, its viewports and conditions, the reason, and its theme into
+   your draft `captures`: `default` unless the story applies another theme
+   (a `ThemeProvider` with overrides, a consumer theme example, a dark or
+   high-contrast candidate), then `other`. Every changed story gets the
+   `focus` and `text-200` conditions.
 3. **Capture.**
    - Changed baselines: `git show <base>:<path>` and `git show <head>:<path>`
      for each PNG under `visual-baselines/` the diff touches.
@@ -70,6 +89,11 @@ git diff --name-status <base>..<head>
      caret, press Tab for the `focus` condition, emulate `forced-colors` or
      `reduced-motion` or set the root font size to 200 % for those
      conditions, and take a full-page screenshot.
+   - Contrast: in each changed story at the head, read every visible text
+     element's and focus indicator's computed colour and the effective
+     background behind it, and compute the WCAG contrast ratio and whether
+     the text is large (18 pt, or 14 pt bold). Sample pixels only for text
+     over an image or gradient, and say so in `verification`.
    - Compare each base and head pair with `pixelmatch` and `pngjs` from the
      workspace's `node_modules`, at threshold `0.1` and `includeAA: false`,
      and record the number of differing pixels. Write a difference image for
@@ -78,21 +102,32 @@ git diff --name-status <base>..<head>
    a story the pull request changed, even when it did not differ. Write down
    each visible difference and each visible defect, as
    [How it judges](../../../docs/engineering/visual-review.md#how-it-judges)
-   lists them. Do not open the pull request yet.
+   lists them. Then check the changed stories against
+   [Priorities](../../../docs/engineering/visual-review.md#priorities):
+   Section 508 first (contrast measurements, 200 % text, a visible focus
+   indicator, colour not the only signal, no images of text), then the
+   constitution, then `BRAND_RULES.md` for the `default`-theme stories only.
+   Do not open the pull request yet.
 5. **Intent pass.** Now read, at the head SHA, the pull request's
    **Decisions for the reviewer**, **Tier**, **Change** and **Evidence**
    sections (`gh api repos/{owner}/{repo}/pulls/<n> --jq .body`) and its
    `.changeset/*.md` file, if any. Match each note from step 4 to the stated
    change. Turn every unexplained difference, regression and defect into a
    candidate finding. On a pull request labelled `risk:light`, every visible
-   difference is a `tier` finding.
+   difference is a `tier` finding. If the stated intent, a brand rule, or the
+   lead session's answer to an earlier finding asks for something that fails
+   Section 508, add a `section 508 conflict` escalation to the
+   `section-508` finding.
 6. **Verify candidates.** Re-capture each candidate once to rule out
-   flakiness, and check whether the base already showed it. A defect present
-   at the base in a story the pull request does not change is not a finding.
-   Drop what you cannot confirm. Rank by severity and keep at most ten.
+   flakiness, and check whether the base already showed it. A defect or
+   Section 508 failure present at the base in a story the pull request does
+   not change is not a finding: file a bug issue for it. Drop what you cannot
+   confirm. Rank by severity, `section-508` first, and keep at most ten.
 7. **Repeat rounds.** For round two or later, capture the new head against
    the same base, then close each earlier finding as `fixed`, `justified` or
-   `withdrawn`, and carry forward with the same ID any you still hold. Raise
+   `withdrawn`, and carry forward with the same ID any you still hold. Never
+   close a `section-508` finding as `justified`: if the answer is a
+   justification, keep it open and escalate a `section 508 conflict`. Raise
    a `third round` escalation if a blocking finding is still open in round
    three.
 8. **Publish the page.** Build one HTML page for the round, grouped by story,
@@ -123,13 +158,27 @@ The schema is
     {
       "story": "components-button--outline",
       "reason": "Its stories file and SCSS partial changed.",
+      "theme": "default",
       "viewports": ["mobile", "desktop"],
-      "conditions": ["default", "focus"]
+      "conditions": ["default", "focus", "text-200"]
     }
   ],
   "findings": [
     {
       "id": "VR-001",
+      "severity": "blocking",
+      "category": "section-508",
+      "criterion": "1.4.3",
+      "story": "components-button--outline",
+      "viewport": "desktop",
+      "condition": "default",
+      "summary": "The disabled label's contrast is 3.1:1 at 16 px.",
+      "observed": "Computed #7a8a99 on #ffffff; the base used #5c6b7a (5.3:1).",
+      "confidence": "high",
+      "verification": "Computed styles in both captures; ratio from the WCAG formula."
+    },
+    {
+      "id": "VR-002",
       "severity": "blocking",
       "category": "unexplained",
       "story": "components-button--outline",
@@ -148,7 +197,11 @@ The schema is
 
 `closed` entries are `{ "id", "closure": "fixed" | "justified" | "withdrawn", "note" }`.
 `escalations` entries are
-`{ "kind": "disagreement" | "third round" | "design", "findingIds", "detail" }`.
+`{ "kind": "section 508 conflict" | "disagreement" | "third round" | "design", "findingIds", "detail" }`.
+A `section-508` finding needs `criterion` and is always `blocking`. A `brand`
+finding is valid only on a story captured with theme `default`. A
+`section 508 conflict` names its `section-508` finding and, in `detail`, the
+instruction, where it came from, and what each side requires.
 
 ## Reply
 

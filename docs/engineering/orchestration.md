@@ -76,6 +76,11 @@ phases, as [Process by tier](git-workflow.md#process-by-tier) sets them:
 | Standard, specified   | Combined specification-and-plan pull request; stop. One pull request per slice        | Code review, verification, visual review        | Agent merge, per slice     |
 | Other Standard, Light | One pull request                                                                      | Code review; visual review for a rendering path | Agent merge                |
 
+[Visual-only styles work](git-workflow.md#visual-only-styles-work) is never
+specified: at Standard or Light it is one pull request with code review and
+visual review, and at High it runs like a High fix with a visual review
+added.
+
 Every round also starts with the pre-push self-review. Visual review runs only
 when the pull request touches a
 [rendering path](visual-review.md#when-a-visual-review-runs).
@@ -141,6 +146,39 @@ notifies the person, and goes on.
 
 Approval reaches the lead session as the person's message, an approving review
 on the pull request, or the phase having merged.
+
+## Defects found along the way
+
+Any agent, the lead session or a subagent, that finds a defect unrelated to
+the change it is working on files a bug issue for it and carries on. It does
+not fix it in the current pull request, and does not report it as a finding
+on that pull request. A defect is unrelated when the base branch already has
+it and the current change neither causes it nor touches the code or story
+that shows it.
+
+1. **Confirm it.** Reproduce it at the base SHA or on `main`: a story, a
+   command, or a measurement. Drop anything that cannot be reproduced.
+2. **Look for an existing issue.**
+   `gh api -X GET search/issues -f q='repo:PathableAI-org/styles is:issue is:open <key words>'`.
+   When one matches, add a comment with the new evidence instead of filing.
+3. **File it** with `gh api repos/{owner}/{repo}/issues -f title=… -f body=…`
+   and the `bug` label. The title is a plain sentence naming the component
+   and the defect. The body gives:
+   - **Observed** and **expected**, with the story ID, viewport and condition,
+     or the file and line
+   - **How to reproduce**, and the SHA it was seen on
+   - **Proposed risk tier** with the trigger or condition, for the maintainer
+     to set; do not add a `risk:` label
+   - **Found by**: the role (lead, code review, verification, visual review or
+     pre-push self-review) and the pull request it was working on
+   - for a Section 508 failure, the WCAG criterion it fails
+4. **Mention it** in the subagent's reply, or the lead session's round
+   summary, by issue number. The lead never adds the defect to the current
+   pull request's scope.
+
+Filing a bug issue is the one GitHub write every role may make beyond its
+records. It needs no person's approval, because an issue changes no code.
+Use only synthetic content in it, as in the stories.
 
 ## Concurrency
 

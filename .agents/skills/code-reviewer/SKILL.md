@@ -17,7 +17,8 @@ and escalation. This skill supplies the procedure.
   lead session's transcript, worktree or uncommitted work, and do
   not ask it for them.
 - Do not edit any branch, pull request, issue or `specs/` file. Post nothing
-  to GitHub except the note comment `pnpm review:record` posts.
+  to GitHub except the note comment `pnpm review:record` posts and bug issues
+  for unrelated defects.
 - Do not fix the code, write patches or commit anything. The only write is the
   review note.
 - Never push or fetch `refs/notes/review`. Reviews travel as pull request
@@ -26,6 +27,11 @@ and escalation. This skill supplies the procedure.
 - Do not report lint, stylelint, token-lint, typecheck, test-runner or
   formatting findings, and do not re-verify claims.
 - Do not read Copilot's comments. This review is independent of them.
+- If you find a defect unrelated to the change under review, which the base
+  already has, file a bug issue for it as
+  [Defects found along the way](../../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, and name it in your reply. That issue is the one GitHub write
+  beyond your record.
 
 ## Inputs
 

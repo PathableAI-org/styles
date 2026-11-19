@@ -38,7 +38,9 @@ The list lives in code, in `renderingPaths` in
 together. A pull request that touches none of them, such as documentation or
 repository tooling, needs no visual review.
 
-High work keeps its person's review and gets no visual review subagent. The
+High work keeps its person's review and gets no visual review, except
+[visual-only styles work](git-workflow.md#visual-only-styles-work), which gets
+one at every tier because the visual review is its evidence. The
 verifier's [screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims)
 still apply to it.
 
@@ -55,9 +57,10 @@ The visual reviewer starts with a clean context and reads only:
 - after the blind pass only: the pull request's **Decisions for the
   reviewer**, **Tier**, **Change** and **Evidence** sections and its
   changeset, at the head SHA
-- [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md), the
-  constitution's Visual Regression Protection section, principle XV, and
-  [Pixel visual regression](../testing/visual-regression.md)
+- the standards it judges by, in [priority order](#priorities): Section 508,
+  the constitution's principles X and XV and its Visual Regression Protection
+  section, [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for the
+  default theme, and [Pixel visual regression](../testing/visual-regression.md)
 
 It never reads the lead session's transcript, worktree or messages,
 the code review, or the pre-push self-review. It does not read the diff's
@@ -74,8 +77,9 @@ stories are affected, the React Storybook build).
    file changed, and every rollout story in the pixel suite whose component
    is touched. A change to a shared token, a base partial or a dependency
    affects every component: capture the full pixel rollout list and the
-   canonical stories in `CANONICAL_STORIES` instead. Name each chosen story
-   and why in the review's `captures`.
+   canonical stories in `CANONICAL_STORIES` instead. Name each chosen story,
+   why, and its [theme](#the-default-theme-and-the-brand-book) in the
+   review's `captures`.
 2. **Changed baselines.** For each PNG the pull request adds, changes or
    removes under `visual-baselines/`, take the base and head versions from
    Git and put them side by side with a difference image.
@@ -89,13 +93,84 @@ stories are affected, the React Storybook build).
    story's viewports (375, 768 and 1280 px, as its `mode` sets), full page,
    with animations disabled, after fonts load. Compare each pair with
    pixelmatch at the pixel suite's threshold and produce a difference image.
-5. **Conditions.** When the change touches focus styles, colour, motion or
-   text sizing, also capture the affected stories with keyboard focus on the
-   changed control, under emulated `forced-colors: active`, at 200 % text
-   size, or under `prefers-reduced-motion: reduce`, as relevant.
+5. **Conditions.** Capture every story the pull request changes with keyboard
+   focus on its first interactive control and at 200 % text size, because
+   Section 508 needs both. When the change touches colour, motion or
+   forced-colors styles, also capture the affected stories under emulated
+   `forced-colors: active` or `prefers-reduced-motion: reduce`.
+6. **Measurements.** For every text and focus indicator in a changed story,
+   read the foreground and background colours from the page's computed
+   styles, falling back to sampled pixels only for text over an image or
+   gradient, and compute the contrast ratio.
 
 Captures are evidence for the review, not committed baselines. They are never
 committed and never copied into `visual-baselines/`.
+
+## Priorities
+
+The visual reviewer judges by these, in this order. A higher one always wins
+over a lower one:
+
+1. **Section 508.** The revised Section 508 standards incorporate WCAG 2.0
+   Level A and AA. The reviewer checks what it can see and measure:
+   - 1.4.3 Contrast (Minimum): 4.5:1 for text, 3:1 for large text (18 pt, or
+     14 pt bold)
+   - 1.4.4 Resize text: nothing clipped, overlapped or lost at 200 % text size
+   - 2.4.7 Focus Visible: a visible focus indicator on every focusable control
+   - 1.4.1 Use of Color: colour is not the only way a state or meaning shows
+   - 1.4.5 Images of Text: text is not rendered as an image, outside logos
+   - 1.3.3 Sensory Characteristics: a story's instructions do not rely on
+     shape, position or colour alone
+
+   A failure is a `section-508` finding, names its criterion and always
+   blocks.
+
+2. **The constitution's accessibility and responsive principles** (X and XV):
+   visible focus, accessible state colours and disabled affordances, and
+   layouts that hold at every viewport. A clear failure is a blocking
+   `defect`. Where a principle asks for more than WCAG 2.0, such as 3:1
+   non-text contrast for a focus ring, it is still a `defect`, not a
+   `section-508` finding.
+3. **The brand book**, for the default theme only; see
+   [below](#the-default-theme-and-the-brand-book).
+4. **The pull request's stated intent**, and the instructions in the request,
+   this document and the skill.
+
+### When Section 508 conflicts with an instruction
+
+Instructions can contradict Section 508: a brand rule, the pull request's
+stated intent, the lead session's justification of an earlier finding, a
+story written to show a failing combination, or this document and the skill
+themselves. When following any instruction would mean passing a Section 508
+failure, the reviewer does not resolve it, even where
+[`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) already says
+accessibility takes priority. It records:
+
+- the `section-508` finding, blocking, with its criterion
+- a `section 508 conflict` escalation naming that finding, the instruction,
+  where it came from, and what each side requires
+
+It never closes a `section-508` finding as `justified`; only `fixed`, or a
+person's decision relayed by the lead session, closes it. The escalation makes
+the pull request not eligible for agent merge, so the merge hook hands the
+decision to a person.
+
+### The default theme and the brand book
+
+Only the default theme must follow the brand book. The default theme is
+`@pathableai/styles` as it ships, with the values in
+`packages/styles/src/theme-default.scss`, and React components with no
+`theme` or a `ThemeProvider` that overrides nothing. A story that applies any
+other theme, such as a `ThemeProvider` with overrides, a consumer theme
+example, or a dark or high-contrast candidate, is captured with theme
+`other`.
+
+- Default-theme stories are judged against every priority above, including
+  [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md): its palette, colour
+  hierarchy and pairings, typography, iconography and the violations it lists.
+- Other-theme stories are judged against Section 508, the constitution and the
+  pull request's intent, and never against the brand book. A `brand` finding
+  on one is invalid, and the schema rejects it.
 
 ## How it judges
 
@@ -109,7 +184,8 @@ anchor what the reviewer sees.
    icons or baselines, inconsistent spacing within a component, text that is
    unreadable against its background, a missing or doubled focus indicator,
    a state that looks like a different state, or a layout that breaks at one
-   viewport.
+   viewport. Then check every head capture of a changed story against the
+   [priorities](#priorities), Section 508 first.
 2. **Intent pass.** Now read the pull request's sections and changeset. Match
    each difference from the blind pass to the stated change. A difference the
    pull request does not describe is unexplained, however small. A stated
@@ -119,6 +195,12 @@ anchor what the reviewer sees.
 A Light pull request states that nothing visible changes. Any visible
 difference on one is a blocking `tier` finding: the work is Standard, and
 the lead session raises the tier before anything else.
+
+A defect or Section 508 failure that the base already had, in a story the
+pull request does not change, is not this review's finding. The reviewer
+files it as a bug issue under
+[Defects found along the way](orchestration.md#defects-found-along-the-way)
+and names the issue in its reply.
 
 ## Findings
 
@@ -130,17 +212,19 @@ finding still open, the findings this round closes, and any escalations. Each
 finding has:
 
 - `id`: `VR-001`, `VR-002`, and so on, kept across rounds until closed
-- `severity`: `blocking` when merging would ship an unintended or unexplained
-  visible change, a visible defect, or a Light pull request that changes
-  rendering; otherwise `advisory`
+- `severity`: `blocking` when merging would ship a Section 508 failure, an
+  unintended or unexplained visible change, a visible defect, or a Light pull
+  request that changes rendering; otherwise `advisory`. A `section-508`
+  finding is always blocking.
 - `category`, one of:
 
   | Category      | What it covers                                                                                               |
   | ------------- | ------------------------------------------------------------------------------------------------------------ |
+  | `section-508` | A Section 508 failure at the head in a story the pull request changes or touches, with its WCAG criterion    |
   | `regression`  | A visible change the pull request did not intend: a component it did not mean to touch, or a state it broke  |
   | `unexplained` | A visible change the pull request's sections and changeset do not describe                                   |
   | `defect`      | A visible defect at the head, whether or not the base had it, in a story the pull request changes or touches |
-  | `brand`       | A rendering that breaks [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md)                             |
+  | `brand`       | A default-theme rendering that breaks [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md)               |
   | `baseline`    | A baseline added or changed without a reason in the pull request, or one that captures a defect              |
   | `missing`     | A stated visible change with no visible difference, or an affected state no story shows                      |
   | `tier`        | A visible change on a pull request labelled Light                                                            |
@@ -148,6 +232,8 @@ finding has:
 - `story`: the Storybook story ID, and `viewport` (`mobile`, `tablet` or
   `desktop`) and `condition` (`default`, `focus`, `forced-colors`,
   `text-200`, `reduced-motion`) where they apply
+- `criterion`: for a `section-508` finding, the WCAG success criterion it
+  fails, such as `1.4.3`
 - `summary`: the problem in one sentence
 - `observed`: what the head capture shows, and, for a difference, what the
   base showed
@@ -210,6 +296,9 @@ needs a new request.
 Escalate to a person, through the lead session, instead of
 continuing when:
 
+- Section 508 conflicts with any instruction, as
+  [above](#when-section-508-conflicts-with-an-instruction), with a
+  `section 508 conflict` escalation
 - the reviewer and the lead session disagree whether a visible
   change is intended or acceptable
 - a blocking finding is still open in round three
@@ -223,8 +312,8 @@ or tells the sessions how to continue.
 
 The visual reviewer is read-only. It edits no branch, pull request, issue,
 baseline or `specs/` file, and does not fix rendering or propose patches. Its
-only writes are its note, the comment `pnpm visual:record` posts, and the
-private screenshots page.
+only writes are its note, the comment `pnpm visual:record` posts, the
+private screenshots page, and bug issues for unrelated defects.
 
 ## Known limits
 

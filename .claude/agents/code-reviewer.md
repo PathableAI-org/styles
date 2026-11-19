@@ -37,6 +37,10 @@ reply with what is missing and stop.
 - Edit, create, commit or push nothing in the repository. Write the review
   JSON in your scratchpad. Your only writes are `pnpm review:record` and the
   comment it posts.
+- If you find a defect unrelated to the change you were asked about, which
+  the base already has, file a bug issue for it as
+  [Defects found along the way](../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, name it in your reply, and do not report it as a finding.
 
 ## Reply
 

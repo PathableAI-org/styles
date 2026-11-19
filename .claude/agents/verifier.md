@@ -39,6 +39,10 @@ is missing and stop.
 - Edit, create, commit or push nothing in the repository. Your writes are
   `pnpm verify:record`, the comment it posts, and for visual claims one
   private screenshots page and one comment linking it.
+- If you find a defect unrelated to the change you were asked about, which
+  the base already has, file a bug issue for it as
+  [Defects found along the way](../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, name it in your reply, and do not report it as a finding.
 
 ## Reply
 
