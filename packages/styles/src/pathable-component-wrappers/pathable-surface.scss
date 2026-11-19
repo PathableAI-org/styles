@@ -47,7 +47,6 @@
 
 // Variant: raised — elevated card/panel
 .pathable-surface--raised {
-  color: var(--pathable-color-text);
   --pathable-surface-focus-ring: initial;
   background: var(--pathable-color-surface);
   border: none;
@@ -56,7 +55,6 @@
 
 // Variant: inset — recessed area
 .pathable-surface--inset {
-  color: var(--pathable-color-text);
   --pathable-surface-focus-ring: var(--pathable-color-text);
   background: var(--pathable-color-bg);
   border: none;
@@ -65,7 +63,6 @@
 
 // Variant: interactive — clickable with hover/focus states
 .pathable-surface--interactive {
-  color: var(--pathable-color-text);
   --pathable-surface-focus-ring: initial;
   background: var(--pathable-color-surface);
   border: 2px solid transparent;
@@ -213,4 +210,16 @@
   .pathable-surface {
     transition: none;
   }
+}
+
+// A light surface inside a dark container sets the theme text colour so its
+// content does not inherit the container's white. Outside a dark container
+// these surfaces set no colour. :where() keeps the specificity of the variant.
+:where(.pathable-section--dark, .pathable-dark-background)
+  :is(
+    .pathable-surface--raised,
+    .pathable-surface--inset,
+    .pathable-surface--interactive
+  ) {
+  color: var(--pathable-color-text);
 }
