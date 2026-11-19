@@ -55,7 +55,9 @@ const processList = `
 
 export const InsideProse = {
   render: () => `
+    <p style="margin: 0 0 0.5rem; font-weight: 700;">Inside pathable-prose</p>
     <div class="pathable-prose" data-testid="in-prose">${processList}</div>
+    <p style="margin: 2rem 0 0.5rem; font-weight: 700;">Outside pathable-prose</p>
     <div data-testid="outside-prose">${processList}</div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
