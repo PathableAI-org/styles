@@ -99,10 +99,16 @@ type FocusCase = {
   dark?: boolean
 }
 
-const focusControls = ({ label, dark = false }: FocusCase) => {
+// Top-level surfaces also get a select and a textarea; nested cases test which
+// container decides the ring, the same for every state-focus control.
+const focusControls = (
+  { label, dark = false }: FocusCase,
+  { withFields = false } = {},
+) => {
   const id = `focus-${label.toLowerCase().replaceAll(' ', '-')}`
+  // The outline modifier keeps the button's edge visible on a dark panel.
   const button = dark
-    ? 'pathable-button pathable-button--inverse'
+    ? 'pathable-button pathable-button--outline pathable-button--inverse'
     : 'pathable-button'
   const iconButton = dark
     ? 'pathable-icon-button--inverse'
@@ -113,6 +119,18 @@ const focusControls = ({ label, dark = false }: FocusCase) => {
       <button type="button" class="pathable-icon-button ${iconButton}" aria-label="Close on ${label}">${closeIcon}</button>
       <label class="pathable-label" for="${id}">Note on ${label}</label>
       <input id="${id}" class="pathable-input" type="text" />
+      ${
+        withFields
+          ? `
+      <label class="pathable-label" for="${id}-goal">Goal on ${label}</label>
+      <select id="${id}-goal" class="pathable-select">
+        <option>Find a job coach</option>
+        <option>Request an accommodation</option>
+      </select>
+      <label class="pathable-label" for="${id}-details">Details on ${label}</label>
+      <textarea id="${id}-details" class="pathable-textarea" rows="2"></textarea>`
+          : ''
+      }
   `
 }
 
@@ -237,7 +255,7 @@ export const KeyboardFocusOnSurfaces = {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button` and a `.pathable-input` on each surface variant with a background of its own, and in twelve nested cases. Each nested case puts a surface, a dark utility or a dark component container inside a surface that sets a different ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, white on Tech Teal, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark blues. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in twelve nested cases. Each nested case puts a surface, a dark utility or a dark component container inside a surface that sets a different ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, white on Tech Teal, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark blues. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.",
       },
     },
   },
@@ -247,7 +265,7 @@ export const KeyboardFocusOnSurfaces = {
         .map(
           (focusCase) => `
         <div class="pathable-surface pathable-surface--${focusCase.variant} pathable-stack pathable-stack--gap-sm" style="${blockStyle}">
-          ${focusControls(focusCase)}
+          ${focusControls(focusCase, { withFields: true })}
         </div>`,
         )
         .join('')}
@@ -269,7 +287,7 @@ export const KeyboardFocusOnSurfaces = {
 
     if (!view) throw new Error('Surface story window is unavailable')
 
-    const controls = focusCases.flatMap(({ label, ring }) => [
+    const baseControls = ({ label, ring }: FocusCase) => [
       {
         control: canvas.getByRole('button', { name: `Save on ${label}` }),
         ring,
@@ -282,6 +300,20 @@ export const KeyboardFocusOnSurfaces = {
         control: canvas.getByRole('textbox', { name: `Note on ${label}` }),
         ring,
       },
+    ]
+    const fieldControls = ({ label, ring }: FocusCase) => [
+      {
+        control: canvas.getByRole('combobox', { name: `Goal on ${label}` }),
+        ring,
+      },
+      {
+        control: canvas.getByRole('textbox', { name: `Details on ${label}` }),
+        ring,
+      },
+    ]
+    const controls = focusCases.flatMap((focusCase) => [
+      ...baseControls(focusCase),
+      ...('variant' in focusCase ? fieldControls(focusCase) : []),
     ])
 
     for (const [index, { control, ring }] of controls.entries()) {

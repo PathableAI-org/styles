@@ -365,7 +365,7 @@ export const OnDifferentSurfaces = {
         </button>
       </div>
     </div>
-    <p style="color: #888; font-size: 0.8rem; margin-top: 0.75rem;">
+    <p style="color: var(--pathable-color-text-muted); font-size: 0.8rem; margin-top: 0.75rem;">
       Surfaces (left to right): base, brand (<code>.pathable-surface--brand</code>), inverse (<code>.pathable-surface--inverse</code>).
     </p>
   `,
