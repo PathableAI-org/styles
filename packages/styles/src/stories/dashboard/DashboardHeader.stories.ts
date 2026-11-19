@@ -17,7 +17,7 @@ export const Default = {
   render: () => `
     <div class="pathable-dashboard-header">
       <div class="pathable-dashboard-header__breadcrumb">
-        <a href="#">Home</a>
+        <a class="pathable-link" href="#">Home</a>
         <span>Programs</span>
         <span>Employment Pathways</span>
       </div>
@@ -60,7 +60,7 @@ export const WithManyActions = {
   render: () => `
     <div class="pathable-dashboard-header">
       <div class="pathable-dashboard-header__breadcrumb">
-        <a href="#">Admin</a>
+        <a class="pathable-link" href="#">Admin</a>
         <span>Reports</span>
       </div>
       <div class="pathable-dashboard-header__row">
@@ -98,7 +98,7 @@ export const Mobile = {
   render: () => `
     <div class="pathable-dashboard-header" style="max-width: 375px;">
       <div class="pathable-dashboard-header__breadcrumb">
-        <a href="#">Home</a>
+        <a class="pathable-link" href="#">Home</a>
         <span>Programs</span>
       </div>
       <div class="pathable-dashboard-header__row">
@@ -120,7 +120,7 @@ export const LongTitle = {
   render: () => `
     <div class="pathable-dashboard-header">
       <div class="pathable-dashboard-header__breadcrumb">
-        <a href="#">Home</a>
+        <a class="pathable-link" href="#">Home</a>
         <span>Programs</span>
         <span>Employment Pathways</span>
         <span>Vocational Rehabilitation</span>
