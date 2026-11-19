@@ -50,10 +50,17 @@ Use this checklist when creating or updating Storybook stories for
 - [ ] When a component has a page under `packages/styles/components/`, wrap the
       assertions that prove one of its guarantees in
       `guarantee(step, '<page>/<guarantee-id>', async () => { … })` from
-      `src/stories/shared/guarantee.ts`. A guarantee proved by a pixel baseline
-      is listed in that story's `covers` in `scripts/pixel-stories.mjs` instead.
-- [ ] Run `pnpm check:component-pages`. `pnpm trace:component-pages` prints
-      which test cites each guarantee.
+      `src/stories/shared/guarantee.ts`. A failure names the guarantee.
+- [ ] For a guarantee the page marks `status: unmet`, use
+      `guarantee.unmet(step, id, …)`: it passes while the assertions fail and
+      fails once they pass, until the page and the call are changed to met.
+- [ ] A guarantee the pixel baseline shows is also listed in that story's
+      `covers` in `scripts/pixel-stories.mjs`.
+- [ ] After `pnpm build`, run
+      `pnpm --filter @pathableai/styles check:component-pages`. After
+      `pnpm test:storybook-styles`, run
+      `pnpm --filter @pathableai/styles check:component-pages:executed`;
+      `trace:component-pages` prints which test covers each guarantee.
 
 ## PR Checklist
 

@@ -3,116 +3,33 @@
  * packages/styles/components/, is the product specification for that
  * component and ships as agent documentation in @pathableai/styles.
  *
- * This module reads the pages and derives the one generated file, the catalog
- * index, from their front matter. The checks that tie a page to the code are
- * in check-component-pages.mjs.
+ * This module reads the pages and writes the one derived file, the catalog
+ * index. The index is build output: the package's `build` script writes it,
+ * it is not committed, and it ships through `files` like `dist/`. The checks
+ * that tie a page to the code are in check-component-pages.mjs.
  *
- *   node scripts/component-pages.mjs index   rewrite components/index.md
+ *   node scripts/component-pages.mjs index   write components/index.md
  */
 
 import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { basename, dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { basename, join, resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
-import { table } from './markdown.mjs'
-
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { parse } from 'yaml'
 
 /** Where the pages live: the styles package owns the component contract. */
-export const pagesDir = join(repoRoot, 'packages/styles/components')
+export const pagesDir = resolve(import.meta.dirname, '../components')
 export const indexFile = 'index.md'
 
-// ---------------------------------------------------------------------------
-// Front matter
-// ---------------------------------------------------------------------------
-
-const KEY = /^([a-z][a-z0-9-]*):(?: (.*))?$/u
-
-function parseScalar(raw) {
-  const value = raw.trim()
-  if (value.startsWith('[') && value.endsWith(']')) {
-    const inner = value.slice(1, -1).trim()
-    return inner === '' ? [] : inner.split(',').map((item) => item.trim())
-  }
-  if (/^(['"]).*\1$/u.test(value)) return value.slice(1, -1)
-  return value
-}
-
-const indentOf = (line) => line.length - line.trimStart().length
-
-/**
- * Parses the small YAML subset the pages use: `key: value`, flow lists
- * (`[a, b]`), block lists of scalars, and block lists of maps whose values are
- * themselves scalars, flow lists or block lists. Anything else is an error, so
- * a page cannot silently say something the checks do not read.
- */
-function parseBlock(lines, start, indent) {
-  const first = lines[start]
-  const isList = first.trimStart().startsWith('- ')
-  const result = isList ? [] : {}
-  let index = start
-
-  while (index < lines.length && indentOf(lines[index]) === indent) {
-    const text = lines[index].trimStart()
-
-    if (isList) {
-      if (!text.startsWith('- ')) {
-        throw new Error(`Expected a list item: ${lines[index]}`)
-      }
-      const item = text.slice(2)
-      if (KEY.test(item)) {
-        // A map item: re-read its first line as a map line two columns in.
-        const mapLines = [...lines]
-        mapLines[index] = `${' '.repeat(indent + 2)}${item}`
-        const [map, next] = parseBlock(mapLines, index, indent + 2)
-        result.push(map)
-        index = next
-      } else {
-        result.push(parseScalar(item))
-        index += 1
-      }
-      continue
-    }
-
-    const match = text.match(KEY)
-    if (!match) throw new Error(`Expected "key: value": ${lines[index]}`)
-    const [, key, value] = match
-    if (key in result) throw new Error(`Duplicate key: ${key}`)
-    if (value !== undefined) {
-      result[key] = parseScalar(value)
-      index += 1
-    } else if (
-      index + 1 < lines.length &&
-      indentOf(lines[index + 1]) > indent
-    ) {
-      const [block, next] = parseBlock(
-        lines,
-        index + 1,
-        indentOf(lines[index + 1]),
-      )
-      result[key] = block
-      index = next
-    } else {
-      throw new Error(`Key has no value: ${key}`)
-    }
-  }
-
-  if (index < lines.length && indentOf(lines[index]) > indent) {
-    throw new Error(`Unexpected indentation: ${lines[index]}`)
-  }
-  return [result, index]
-}
-
-/** Splits a page into its front matter (parsed) and its Markdown body. */
+/** Splits a page into its front matter (parsed as YAML) and its Markdown body. */
 export function parsePage(markdown) {
   const normalized = markdown.replace(/\r\n?/gu, '\n')
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n/u)
   if (!match) throw new Error('A component page must start with front matter')
 
-  const lines = match[1].split('\n').filter((line) => line.trim() !== '')
-  const [data, end] = parseBlock(lines, 0, 0)
-  if (end !== lines.length) {
-    throw new Error(`Unexpected front matter line: ${lines[end]}`)
+  const data = parse(match[1])
+  if (data === null || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('The front matter must be a YAML mapping')
   }
   return { data, body: normalized.slice(match[0].length) }
 }
@@ -136,44 +53,30 @@ export async function readPages(dir = pagesDir) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// The derived index
-// ---------------------------------------------------------------------------
-
-const code = (value) => `\`${value}\``
-
-/** Renders the catalog index from the pages' front matter. */
+/** Renders the catalog index: one line per page, from its front matter. */
 export function renderIndex(pages) {
-  const rows = [...pages]
+  const lines = [...pages]
     .sort((a, b) => a.data.name.localeCompare(b.data.name))
-    .map(({ file, data }) => [
-      `[${data.name}](${file})`,
-      data.kind,
-      data.summary,
-      code(data['styles-class']),
-    ])
+    .map(
+      ({ file, data }) =>
+        `- [${data.name}](${file}) (\`${data['styles-class']}\`, ${data.kind}): ${data.summary}`,
+    )
 
   return [
-    '<!-- Generated from the front matter of each page by `pnpm build:component-index`. Do not edit by hand. -->',
-    '',
     '# Component pages',
     '',
     'Each page describes one component: what it is for, a minimal example, its',
-    'variants and states, how to compose it, what it guarantees, what you own and',
-    'its known defects. A static component has no interactive states; a',
-    'behavioural one does.',
+    'variants, the tokens it uses, how to compose it, what it guarantees and',
+    'what you own. A guarantee marked `status: unmet` is expected behaviour the',
+    'component does not have yet.',
     '',
     'Components not listed here have no page yet. For those, use the package',
     'README and the stylesheet source under `src/`.',
     '',
-    table(['Component', 'Kind', 'Purpose', 'Class'], rows),
+    ...lines,
     '',
   ].join('\n')
 }
-
-// ---------------------------------------------------------------------------
-// CLI
-// ---------------------------------------------------------------------------
 
 async function writeIndex() {
   const pages = await readPages()
@@ -181,20 +84,15 @@ async function writeIndex() {
   console.log(`[component-pages] Wrote ${indexFile} with ${pages.length} pages`)
 }
 
-const commands = { index: writeIndex }
-
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
-  const command = commands[process.argv[2]]
-  if (!command) {
-    console.error(
-      `Usage: component-pages.mjs ${Object.keys(commands).join('|')}`,
-    )
+  if (process.argv[2] !== 'index') {
+    console.error('Usage: component-pages.mjs index')
     process.exitCode = 1
   } else {
-    command().catch((error) => {
+    writeIndex().catch((error) => {
       console.error(`[component-pages] ${error.message}`)
       process.exitCode = 1
     })

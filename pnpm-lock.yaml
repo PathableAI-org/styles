@@ -404,12 +404,21 @@ importers:
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
+      postcss:
+        specifier: ^8.5.33
+        version: 8.5.33
+      postcss-selector-parser:
+        specifier: ^7.2.1
+        version: 7.2.1
       sass:
         specifier: ^1.108.2
         version: 1.108.2
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+      yaml:
+        specifier: ^2.9.1
+        version: 2.9.1
 
 packages:
 

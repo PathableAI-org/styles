@@ -30,10 +30,14 @@
     "access": "public"
   },
   "scripts": {
-    "build": "node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs",
+    "build": "node scripts/build-js.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node scripts/component-pages.mjs index",
     "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss:dist/styles.css src/components.scss:dist/components.css src/utilities.scss:dist/utilities.css src/theme-default.scss:dist/theme-default.css",
     "lint:styles": "stylelint \"src/**/*.scss\"",
-    "lint:tokens": "node scripts/lint-tokens.mjs"
+    "lint:tokens": "node scripts/lint-tokens.mjs",
+    "check:component-pages": "node scripts/check-component-pages.mjs",
+    "check:component-pages:executed": "node scripts/check-component-pages.mjs --executed",
+    "trace:component-pages": "node scripts/check-component-pages.mjs --executed --trace",
+    "test:component-pages": "node --test scripts/check-component-pages.test.mjs"
   },
   "dependencies": {
     "@uswds/uswds": "^3.0.0"
@@ -45,7 +49,10 @@
     "@fontsource/poppins": "^5.3.0",
     "@pathable/storybook-contracts": "workspace:*",
     "esbuild": "^0.28.2",
+    "postcss": "^8.5.33",
+    "postcss-selector-parser": "^7.2.1",
     "sass": "^1.108.2",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "yaml": "^2.9.1"
   }
 }

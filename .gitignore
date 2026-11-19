@@ -134,3 +134,6 @@ __pycache__/
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Component page index, written by the styles build
+packages/styles/components/index.md

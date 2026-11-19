@@ -14,7 +14,6 @@ variants:
   - axis: status
     default: default
     values: [default, success, error, warning, info]
-states: []
 guarantees:
   - id: fixed-size
     claim: The tile is 32, 44 or 52 px square at compact, default and large, and the icon box inside it is 16, 20 or 24 px.
@@ -28,6 +27,9 @@ guarantees:
     claim: The tile keeps its size beside long text in a flex row.
   - id: custom-size
     claim: Setting the two size custom properties on the tile resizes the tile and the icon box, and the icon stays centred.
+  - id: icon-contrast
+    status: unmet
+    claim: At every status, the icon colour has a contrast of at least 3:1 against the tile background.
 ---
 
 # IconTile
@@ -54,13 +56,14 @@ Use something else when:
 
 ## Example
 
-With the `@pathableai/styles` stylesheet loaded; no JavaScript is needed:
+Load the stylesheet once in the application; no JavaScript is needed:
+
+```css
+@import '@pathableai/styles';
+```
 
 ```html
-<div
-  class="pathable-inline pathable-inline--gap-sm"
-  style="align-items: center"
->
+<div class="pathable-inline pathable-inline--gap-sm pathable-flex-align-center">
   <span
     class="pathable-icon-tile pathable-icon-tile--success"
     aria-hidden="true"
@@ -88,7 +91,7 @@ three axes combine freely.
 | status | `default` | none                          | Normal text colour, no status meaning           |
 | status | `success` | `pathable-icon-tile--success` | Completed or approved                           |
 | status | `error`   | `pathable-icon-tile--error`   | Failed, missing or blocked                      |
-| status | `warning` | `pathable-icon-tile--warning` | Needs attention; see known defects              |
+| status | `warning` | `pathable-icon-tile--warning` | Needs attention                                 |
 | status | `info`    | `pathable-icon-tile--info`    | Neutral information, such as new messages       |
 
 For a size outside these three, set `--pathable-icon-tile-size` and
@@ -96,10 +99,23 @@ For a size outside these three, set `--pathable-icon-tile-size` and
 inherit, so setting them on a container also resizes every default-size tile
 inside it.
 
-## States
+## Tokens
 
-None. IconTile is static: it has no hover, focus, pressed, disabled or loading
-state, and nothing about it changes after it renders.
+The tile takes its colours and corner radius from theme tokens:
+
+| What                 | Token                                  |
+| -------------------- | -------------------------------------- |
+| Tile background      | `--pathable-color-bg`                  |
+| Square corner radius | `--radius-sm`                          |
+| Default icon colour  | `--pathable-color-text`                |
+| Success icon colour  | `--pathable-color-success`             |
+| Error icon colour    | `--pathable-color-danger`              |
+| Warning icon colour  | `--pathable-color-status-warning-text` |
+| Info icon colour     | `--pathable-color-link`                |
+
+The corner radius in pixels, the colours and the contrast figure in the
+guarantees are those of the default theme. A theme that changes these tokens
+changes them.
 
 ## Composition
 
@@ -111,30 +127,24 @@ state, and nothing about it changes after it renders.
   `stroke="currentColor"`.
 - Place the tile beside its text in a flex row with a gap, such as
   `pathable-inline` with `pathable-inline--gap-sm`. That row does not centre
-  its children, so set `align-items: center` on it. The tile adds no space
+  its children; add `pathable-flex-align-center`. The tile adds no space
   around itself.
-- The tile background is `--pathable-color-bg`, the page background token. On
-  a page or panel that already uses that colour, the tile's edge is not
-  visible, so square and circle look the same. Place tiles on a surface, such
-  as `pathable-card` or `pathable-surface--raised`.
+- The tile background is the page background token. On a page or panel that
+  already uses that colour, the tile's edge is not visible, so square and
+  circle look the same. Place tiles on a surface, such as `pathable-card` or
+  `pathable-surface--raised`.
 - Do not put a tile inside a `pathable-button` or a link to make it clickable,
   and do not put interactive content inside a tile. Use `pathable-icon-button`
   for an icon action.
 
 ## Guarantees
 
-What the package guarantees. Each line matches a guarantee in the front matter,
-and the package's tests cite those by id:
+The guarantees are the list in the front matter at the top of this page. Each
+is expected behaviour. One marked `status: unmet` is behaviour the component
+does not have yet: do not rely on it.
 
-- Size: 32, 44 or 52 px square tiles with 16, 20 or 24 px icon boxes.
-- Centring: the icon box is centred in the tile within 0.01 px, at every size,
-  shape and status. This is the box, not the drawing inside it: artwork that is
-  off-centre in its own view box still looks off-centre.
-- Shape: 4 px rounded corners for square tiles, fully round for circle tiles.
-- Status colour: status changes only the icon colour, never the background.
-- The tile does not shrink in a flex row beside long text.
-- The two size custom properties resize the tile and icon box and keep the icon
-  centred.
+The centring guarantee is about the icon's box, not the drawing inside it:
+artwork that is off-centre in its own view box still looks off-centre.
 
 ## The consumer owns
 
@@ -146,11 +156,3 @@ and the package's tests cite those by id:
 - Never relying on colour alone: say the status in text or another visible cue.
 - The icon artwork, and keeping it centred in its own view box.
 - Layout around the tile: gap, alignment with text and wrapping.
-
-## Known defects
-
-- The success icon colour has a contrast of about 2.1:1 against the tile
-  background, below the 3:1 that a meaningful icon needs. Keep success tiles
-  decorative and say the status in text.
-- The warning status renders a near-black navy, not amber, and is hard to tell
-  apart from the default status by colour.
