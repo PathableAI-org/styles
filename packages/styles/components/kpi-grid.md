@@ -24,6 +24,9 @@ guarantees:
   - id: full-width
     status: unverified
     claim: The grid is as wide as its container, and in a container narrower than 200 px its single column is the container's width.
+  - id: value-weight
+    status: unmet
+    claim: The value is set in the heading typeface at weight 400, Fredoka Regular.
   - id: trend-shape
     status: unverified
     claim: A trend marked up, down or neutral starts with an upward triangle, a downward triangle or two small triangles point to point (an hourglass), so the direction is shown by shape as well as colour.
@@ -132,7 +135,7 @@ tokens, so a theme that changes those tokens changes the cards.
     for example with the `pathable-icon` class; an `<img>` keeps its own
     colours.
   - `pathable-kpi-card__value`, required: the number, in the heading font at
-    display size and bold. Long values wrap rather than overflow.
+    display size and weight 400. Long values wrap rather than overflow.
   - `pathable-kpi-card__label`, required: what the number counts, in muted
     caption text.
   - `pathable-kpi-card__trend`, optional: the comparison. Set `data-trend` to
@@ -158,6 +161,9 @@ does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
 The 480 px breakpoint follows the viewport, not the grid's container.
+
+Today the value asks for bold, and the package ships only Fredoka Regular (400),
+so browsers draw a synthesised bold; `value-weight` is unmet.
 
 The up-trend contrast guarantee is unmet. In the default theme an up trend's
 text is Intelligent Jade, 0.75rem (12 px) and semibold, on the card's white

@@ -14,7 +14,10 @@ guarantees:
     claim: 'The callout has a #001e33 background and 2rem padding on every side, fills its container below a 40em viewport and, from 40em, has a 20rem max-width on its content box (the package leaves it content-box), so with its padding the panel is at most 24rem wide.'
   - id: heading-type
     status: unverified
-    claim: 'The heading is bold Fredoka at 1.12rem with a line height of 1.2, coloured #4899e8, and has no margin of its own when it is the only child.'
+    claim: 'The heading is Fredoka at 1.12rem with a line height of 1.2, coloured #4899e8, and has no margin of its own when it is the only child.'
+  - id: heading-weight
+    status: unmet
+    claim: The heading is set in Fredoka at weight 400, Fredoka Regular.
   - id: heading-spacing
     status: unverified
     claim: A heading that follows another element gets a 1.5em top margin, and the element after a heading gets a 1em top margin.
@@ -109,6 +112,10 @@ from the package source and no test checks it yet.
 
 The contrast guarantee covers the callout only. Text placed on the photograph
 outside the callout has no contrast guarantee.
+
+Today the heading asks for weight 700 in Fredoka, and the package ships only
+Fredoka Regular (400), so browsers draw a synthesised bold; `heading-weight` is
+unmet.
 
 ## The consumer owns
 

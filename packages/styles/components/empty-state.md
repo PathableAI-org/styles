@@ -23,7 +23,10 @@ guarantees:
     claim: Kind changes only the icon's colour and opacity, 0.5 by default and 0.6 for every other kind, and leaves the heading, body and action unchanged.
   - id: text
     status: unverified
-    claim: The heading is 1.25rem bold in the heading typeface and the text colour, and the body is 0.875rem with a line height of 1.5 in the muted text colour and no wider than 28rem; at a 16 px root font size the sizes are 20 px and 14 px.
+    claim: The heading is 1.25rem in the heading typeface and the text colour, and the body is 0.875rem with a line height of 1.5 in the muted text colour and no wider than 28rem; at a 16 px root font size the sizes are 20 px and 14 px.
+  - id: heading-weight
+    status: unmet
+    claim: The heading is set in the heading typeface at weight 400, Fredoka Regular.
   - id: scales-with-root
     status: unmet
     claim: The heading and body font sizes follow the root font size, so at a 200% root font size both sizes double.
@@ -102,20 +105,20 @@ only the icon colour; pick it by why the view is empty.
 
 ## Tokens
 
-| What                           | Token                                                                                       |
-| ------------------------------ | ------------------------------------------------------------------------------------------- |
-| Padding                        | `--pathable-space-8`, `--pathable-space-4`                                                  |
-| Padding, narrow viewport       | `--pathable-space-6`, `--pathable-space-2`                                                  |
-| Gap between children           | `--pathable-space-3`                                                                        |
-| Extra space above action       | `--pathable-space-2`                                                                        |
-| Body and default icon colour   | `--pathable-color-text-muted`                                                               |
-| Heading colour                 | `--pathable-color-text`                                                                     |
-| Heading typeface, size, weight | `--pathable-font-heading`, `--pathable-font-size-heading-md`, `--pathable-font-weight-bold` |
-| Body size, line height         | `--pathable-font-size-body-sm`, `--pathable-font-line-height-body`                          |
-| No-data icon colour            | `--pathable-color-link`                                                                     |
-| No-results icon colour         | `--pathable-color-status-warning-text`                                                      |
-| Setup-required icon colour     | `--pathable-color-accent`                                                                   |
-| Completed icon colour          | `--pathable-color-success`                                                                  |
+| What                         | Token                                                              |
+| ---------------------------- | ------------------------------------------------------------------ |
+| Padding                      | `--pathable-space-8`, `--pathable-space-4`                         |
+| Padding, narrow viewport     | `--pathable-space-6`, `--pathable-space-2`                         |
+| Gap between children         | `--pathable-space-3`                                               |
+| Extra space above action     | `--pathable-space-2`                                               |
+| Body and default icon colour | `--pathable-color-text-muted`                                      |
+| Heading colour               | `--pathable-color-text`                                            |
+| Heading typeface, size       | `--pathable-font-heading`, `--pathable-font-size-heading-md`       |
+| Body size, line height       | `--pathable-font-size-body-sm`, `--pathable-font-line-height-body` |
+| No-data icon colour          | `--pathable-color-link`                                            |
+| No-results icon colour       | `--pathable-color-status-warning-text`                             |
+| Setup-required icon colour   | `--pathable-color-accent`                                          |
+| Completed icon colour        | `--pathable-color-success`                                         |
 
 The spacing, the icon size and the heading and body text sizes are in rem, so
 they scale with the root font size: at a 16 px root, 1rem is 16 px. The sizes in
@@ -143,6 +146,9 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+Today the heading asks for bold, and the package ships only Fredoka Regular
+(400), so browsers draw a synthesised bold; `heading-weight` is unmet.
 
 The scales-with-root guarantee is unmet. Today the font-size tokens are fixed px
 values, so the heading and body sizes do not follow the user's default font

@@ -33,6 +33,9 @@ guarantees:
   - id: group-heading-spacing
     status: unverified
     claim: A group heading has a 32 px top margin and a 16 px bottom margin, except a heading that is the first child of its parent, which has no top margin; inside a pathable-activity-list these add to its gap, giving 48 px above and 32 px below by default.
+  - id: group-heading-weight
+    status: unmet
+    claim: A group heading is set in the heading typeface at weight 400, Fredoka Regular.
   - id: empty-message
     status: unverified
     claim: With the empty modifier, the empty message is centred with 64 px of padding above and below and 32 px at the sides.
@@ -111,14 +114,14 @@ show; it only styles a `pathable-activity-list__empty` element inside it.
 
 ## Tokens
 
-| What                          | Token                                                            |
-| ----------------------------- | ---------------------------------------------------------------- |
-| Gap between rows              | `--pathable-activity-list-gap`, else `--pathable-space-2`        |
-| Group heading size and weight | `--pathable-font-size-heading-sm`, `--pathable-font-weight-bold` |
-| Group heading colour          | `--pathable-color-text`                                          |
-| Compact padding and gap       | `--pathable-space-2`                                             |
-| Comfortable padding and gap   | `--pathable-space-4`                                             |
-| Empty message colour          | `--pathable-color-text-muted`                                    |
+| What                        | Token                                                     |
+| --------------------------- | --------------------------------------------------------- |
+| Gap between rows            | `--pathable-activity-list-gap`, else `--pathable-space-2` |
+| Group heading size          | `--pathable-font-size-heading-sm`                         |
+| Group heading colour        | `--pathable-color-text`                                   |
+| Compact padding and gap     | `--pathable-space-2`                                      |
+| Comfortable padding and gap | `--pathable-space-4`                                      |
+| Empty message colour        | `--pathable-color-text-muted`                             |
 
 The pixel figures on this page are those of the default theme. Rows have a
 white surface, a 1 px border in the theme border colour and 4 px rounded
@@ -165,6 +168,9 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source, and no test checks it yet.
+
+Today a group heading asks for bold, and the package ships only Fredoka Regular
+(400), so browsers draw a synthesised bold; `group-heading-weight` is unmet.
 
 Truncation hides the end of long text on screen; the full text stays in the
 document.

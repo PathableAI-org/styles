@@ -15,6 +15,9 @@ guarantees:
   - id: surface
     status: unverified
     claim: A bordered panel has a 1 px border and no shadow, and a raised panel has the medium elevation shadow and no border.
+  - id: heading-weight
+    status: unmet
+    claim: The heading is set in the heading typeface at weight 400, Fredoka Regular.
   - id: question-columns
     status: unverified
     claim: Above a 1024 px viewport, question groups sit side by side 48 px apart, each at least 224 px wide, sharing the width equally and wrapping when they do not fit.
@@ -142,7 +145,8 @@ Children stack in a column in source order:
 
 - `pathable-wayfinder__icon`: an optional decorative `<svg>`, 48 px square,
   in the accent colour at 80% opacity. Draw it in `currentColor`.
-- `pathable-wayfinder__heading`: the panel's heading, bold, with no margin.
+- `pathable-wayfinder__heading`: the panel's heading, in the heading font at
+  weight 400, with no margin.
 - `pathable-wayfinder__text`: a short explanation in muted text.
 - `pathable-wayfinder__questions`: holds one or more question groups.
 - `pathable-wayfinder__question`: a `<fieldset>`, with its border, padding
@@ -173,6 +177,9 @@ The choice-contrast guarantee is unmet. Today a checked radio button or
 checkbox takes the accent colour, which in the default theme is Intelligent
 Jade (`#1cae96`). On the panel's white background, under either surface, it
 measures 2.8:1, below the 3:1 a control's state needs.
+
+Today the heading asks for bold, and the package ships only Fredoka Regular
+(400), so browsers draw a synthesised bold; `heading-weight` is unmet.
 
 ## The consumer owns
 
