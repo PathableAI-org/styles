@@ -7,128 +7,176 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Semantics verified**: Meaningful icons expose an image role and accessible name. Decorative icons are hidden from assistive technology while adjacent text retains the meaning.\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required.',
+          '**Interaction Model**: CSS-only\n\n**Semantics verified**: Meaningful icons expose an image role and accessible name. Decorative icons are hidden from assistive technology while adjacent text retains the meaning. Every icon renders at 24 px from `font-size` and paints its shapes in the current text colour, which the stories set to `--pathable-color-text`.\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required. Use filled artwork, such as the USWDS icon set these stories draw from: `.pathable-icon` paints with `fill: currentColor`, which overrides a `fill="none"` attribute, so stroke-only artwork renders as solid shapes. Size the icon through `font-size`: `.pathable-icon` is `1em` square, which overrides the `width` and `height` attributes, so these stories leave them out.',
       },
     },
   },
 }
 
+/**
+ * Filled artwork from the USWDS icon set (`@uswds/uswds/dist/img/usa-icons`),
+ * which `.pathable-icon` wraps through `.usa-icon`.
+ */
+type IconArtwork = { name: string; paths: readonly string[] }
+
+/** The clock artwork, also used by the meaningful and decorative stories. */
+const SCHEDULE: IconArtwork = {
+  name: 'schedule',
+  paths: [
+    'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',
+    'M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z',
+  ],
+}
+
+const ICONS: readonly IconArtwork[] = [
+  SCHEDULE,
+  {
+    name: 'insights',
+    paths: [
+      'M21 8c-1.45 0-2.26 1.44-1.93 2.51l-3.55 3.56c-.3-.09-.74-.09-1.04 0l-2.55-2.55C12.27 10.45 11.46 9 10 9c-1.45 0-2.27 1.44-1.93 2.52l-4.56 4.55C2.44 15.74 1 16.55 1 18c0 1.1.9 2 2 2 1.45 0 2.26-1.44 1.93-2.51l4.55-4.56c.3.09.74.09 1.04 0l2.55 2.55C12.73 16.55 13.54 18 15 18c1.45 0 2.27-1.44 1.93-2.52l3.56-3.55c1.07.33 2.51-.48 2.51-1.93 0-1.1-.9-2-2-2z',
+      'm15 9 .94-2.07L18 6l-2.06-.93L15 3l-.92 2.07L12 6l2.08.93zM3.5 11 4 9l2-.5L4 8l-.5-2L3 8l-2 .5L3 9z',
+    ],
+  },
+  {
+    name: 'notifications',
+    paths: [
+      'M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z',
+    ],
+  },
+  {
+    name: 'folder',
+    paths: [
+      'M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z',
+    ],
+  },
+  {
+    name: 'launch',
+    paths: [
+      'M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z',
+    ],
+  },
+  {
+    name: 'file_present',
+    paths: [
+      'M15 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7l-5-5zM6 20V4h8v4h4v12H6zm10-10v5c0 2.21-1.79 4-4 4s-4-1.79-4-4V8.5a2.5 2.5 0 0 1 2.76-2.49c1.3.13 2.24 1.32 2.24 2.63V15h-2V8.5c0-.28-.22-.5-.5-.5s-.5.22-.5.5V15c0 1.1.9 2 2 2s2-.9 2-2v-5h2z',
+    ],
+  },
+  {
+    name: 'search',
+    paths: [
+      'M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z',
+    ],
+  },
+  {
+    name: 'verified_user',
+    paths: [
+      'M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z',
+    ],
+  },
+  {
+    name: 'trending_up',
+    paths: [
+      'm16 6 2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z',
+    ],
+  },
+  {
+    name: 'check_circle',
+    paths: [
+      'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
+    ],
+  },
+  {
+    name: 'person',
+    paths: [
+      'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z',
+    ],
+  },
+  {
+    name: 'mail',
+    paths: [
+      'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z',
+    ],
+  },
+]
+
+/**
+ * `.pathable-icon` is `1em` square, so 1.5rem sizes the icon to 24 px. The
+ * text token colour is not the browser's default black, which is also the SVG
+ * initial fill, so the play functions can tell `fill: currentColor` applied.
+ */
+const ICON_STYLE = 'font-size: 1.5rem; color: var(--pathable-color-text);'
+
+const iconPaths = (paths: readonly string[]) =>
+  paths.map((d) => `<path d="${d}" />`).join('')
+
+const iconTile = ({ name, paths }: IconArtwork) => `
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
+    <svg class="pathable-icon" style="${ICON_STYLE}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${iconPaths(paths)}</svg>
+    <span style="font-size: 0.75rem;">${name}</span>
+  </div>`
+
+/**
+ * The icon renders at its intended 24 px and paints every shape with the
+ * current text colour, both from `.pathable-icon`: the SVGs carry no `width`,
+ * `height` or `fill` attributes, so without the class they would render at the
+ * SVG default size with a black fill. The artwork is filled, not stroked:
+ * `.pathable-icon` fills stroke-only artwork into solid shapes (#310), so no
+ * shape may carry a stroke.
+ */
+const verifyIconRendering = async (icon: Element) => {
+  const style = getComputedStyle(icon)
+
+  await expect(icon).toHaveClass('pathable-icon')
+  // Black is the SVG initial fill, so the fill check needs another colour.
+  await expect(style.color).not.toBe('rgb(0, 0, 0)')
+  await expect(style.width).toBe('24px')
+  await expect(style.height).toBe('24px')
+  await expect(style.fill).toBe(style.color)
+  await expect(style.stroke).toBe('none')
+
+  const shapes = icon.querySelectorAll('path')
+  await expect(shapes.length).toBeGreaterThan(0)
+  for (const shape of shapes) {
+    const shapeStyle = getComputedStyle(shape)
+    await expect(shapeStyle.fill).toBe(style.color)
+    await expect(shapeStyle.stroke).toBe('none')
+  }
+}
+
 export const AllIcons = {
   render: () => `
-<div style="display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem;">
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </svg>
-    <span style="font-size: 0.75rem;">clock</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-    </svg>
-    <span style="font-size: 0.75rem;">activity</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-    <span style="font-size: 0.75rem;">bell</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <line x1="3" y1="9" x2="21" y2="9" />
-      <line x1="9" y1="21" x2="9" y2="9" />
-    </svg>
-    <span style="font-size: 0.75rem;">archive</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M21.5 2v6h-6M2.5 22v-6h6M2 2l20 20" />
-    </svg>
-    <span style="font-size: 0.75rem;">external-link</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
-    </svg>
-    <span style="font-size: 0.75rem;">file</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-    <span style="font-size: 0.75rem;">search</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-    <span style="font-size: 0.75rem;">shield</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-    </svg>
-    <span style="font-size: 0.75rem;">trending</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-    <span style="font-size: 0.75rem;">check-circle</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-    <span style="font-size: 0.75rem;">user</span>
-  </div>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-      <polyline points="22,6 12,13 2,6" />
-    </svg>
-    <span style="font-size: 0.75rem;">mail</span>
-  </div>
+<div style="display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem;">${ICONS.map(iconTile).join('')}
 </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const icons = canvasElement.querySelectorAll('svg')
+
+    await expect(icons).toHaveLength(ICONS.length)
+    for (const icon of icons) {
+      await verifyIconRendering(icon)
+    }
+  },
 }
 
 export const Default = AllIcons
 
 export const MeaningfulIcon = {
   render: () => `
-    <svg class="pathable-icon" role="img" aria-label="Upcoming appointment" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </svg>
+    <svg class="pathable-icon" style="${ICON_STYLE}" role="img" aria-label="Upcoming appointment" focusable="false" viewBox="0 0 24 24">${iconPaths(SCHEDULE.paths)}</svg>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
     const icon = canvas.getByRole('img', { name: 'Upcoming appointment' })
 
-    await expect(icon).toHaveClass('pathable-icon')
     await expect(icon).toHaveAttribute('focusable', 'false')
+    await verifyIconRendering(icon)
   },
 }
 
 export const DecorativeIcon = {
   render: () => `
     <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
-      <svg data-testid="decorative-icon" class="pathable-icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 6v6l4 2" />
-      </svg>
+      <svg data-testid="decorative-icon" class="pathable-icon" style="${ICON_STYLE}" aria-hidden="true" focusable="false" viewBox="0 0 24 24">${iconPaths(SCHEDULE.paths)}</svg>
       <span>Upcoming appointment at 2:00 PM</span>
     </span>
   `,
@@ -142,5 +190,6 @@ export const DecorativeIcon = {
     await expect(canvas.queryByRole('img')).toBeNull()
     await expect(text).toBeVisible()
     await expect(text.closest('[aria-hidden="true"]')).toBeNull()
+    await verifyIconRendering(icon)
   },
 }

@@ -168,6 +168,17 @@ const STORIES = [
     id: 'interaction-controls-integration--toolbar-panel',
     key: 'integration/toolbar-panel',
   },
+  // Icon aggregate: twelve filled icons from the USWDS icon set (#310). The
+  // SVGs carry no width, height or fill attributes, so the image shows the
+  // class's own rules: the 1em box sized to 24 px by font-size and the
+  // currentColor fill in the text token colour, plus the artwork's shapes and
+  // their alignment above the labels as the row wraps. The play function
+  // asserts the size and fill. Not shown: the meaningful and decorative
+  // stories, which differ only in ARIA.
+  {
+    id: 'components-layout-icon--all-icons',
+    key: 'icon/all-icons',
+  },
   // Input, Select and Textarea have no aggregate story. Each KeyboardFocus
   // story renders one labelled field as the only control, so the capture's Tab
   // shows its brand focus ring (#282) beside its label. Desktop only: the
@@ -287,6 +298,7 @@ const ROLLOUT = [
   'filterable-option-list',
   'form-row',
   'form-stack',
+  'icon',
   'icon-button',
   'icon-tile',
   'integration',
