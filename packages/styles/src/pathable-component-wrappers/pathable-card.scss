@@ -38,9 +38,10 @@
 }
 
 // Media scales to the card width at every viewport instead of keeping an
-// intrinsic width attribute that overflows narrow cards. Flag cards keep the
-// USWDS crop-to-column behaviour.
-.pathable-card:not(.pathable-card--flag) .pathable-card__media {
+// intrinsic width attribute that overflows narrow cards. USWDS crops flag card
+// media to a fixed column from the tablet breakpoint up, so flag cards keep
+// that behaviour there and are sized like any other card below it.
+@mixin pathable-card-media-fit {
   > img,
   > svg,
   > video,
@@ -50,6 +51,16 @@
     width: 100%;
     max-width: 100%;
     height: auto;
+  }
+}
+
+.pathable-card:not(.pathable-card--flag) .pathable-card__media {
+  @include pathable-card-media-fit;
+}
+
+@media (max-width: 39.99em) {
+  .pathable-card--flag .pathable-card__media {
+    @include pathable-card-media-fit;
   }
 }
 
