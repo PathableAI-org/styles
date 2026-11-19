@@ -24,6 +24,10 @@
   align-self: start;
   height: auto;
   min-height: units(5);
+  // Size the block padding so a one-line control is exactly units(5) tall
+  // (border 1px + padding + one line), which a bare `height: auto` misses by a
+  // fraction of a pixel. At larger text the floor keeps some breathing room.
+  padding-block: max(#{units(0.5)}, calc((#{units(5)} - 2px - 1lh) / 2));
   white-space: normal;
 }
 
