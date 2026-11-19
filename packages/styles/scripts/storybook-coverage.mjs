@@ -139,6 +139,7 @@ const EXPECTED_COVERAGE = {
     'discovery-filter-bar--default',
     'discovery-filter-pill--default',
     'discovery-resource-card--grid',
+    'discovery-resource-card--list-layout-mobile',
     'discovery-wayfinder--default',
   ],
   'Structured Workflow / Wizard': [
