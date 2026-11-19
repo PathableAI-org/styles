@@ -251,7 +251,7 @@ export const ContentPressure = {
             <p>Review transportation access, workplace accommodations, documentation deadlines, and follow-up responsibilities with the participant and regional support team.</p>
           </div>
           <div class="pathable-card__footer">
-            <a href="#review-plan" class="pathable-card__action">Review coordinated support plan</a>
+            <a href="#review-plan" class="pathable-link">Review coordinated support plan</a>
           </div>
         </div>
       </div>
@@ -272,6 +272,10 @@ export const ContentPressure = {
     await expect(heading).toHaveClass('pathable-card__heading')
     await expect(action).toBeVisible()
     await expect(action.parentElement).toHaveClass('pathable-card__footer')
+    await expect(getComputedStyle(action).color).toBe(
+      resolveColor(canvasElement, 'var(--pathable-color-link)'),
+    )
+    await expectKeyboardFocusIndicator(canvasElement, action)
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
 }
