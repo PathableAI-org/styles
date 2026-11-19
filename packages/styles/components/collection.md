@@ -8,10 +8,13 @@ variants: []
 guarantees:
   - id: item-rule
     status: unverified
-    claim: Every item, the first included, has a 1px solid top border in the current text colour, a top margin of 1rem and 1rem of padding between the border and the content, and every item but the last has a bottom margin of 1rem unless the list is a direct child of pathable-prose.
+    claim: Every item, the first included, has a 1px solid top border in the current text colour, a top margin of 1rem and 1rem of padding between the border and the content, and every item but the last has a bottom margin of 1rem.
   - id: no-markers
     status: unverified
-    claim: The list and its items show no bullets or numbers, the items have no left padding, and the list has none unless it is a direct child of pathable-prose.
+    claim: The list and its items show no bullets or numbers, and neither the list nor its items have left padding.
+  - id: inside-prose
+    status: unmet
+    claim: A list that is a direct child of pathable-prose renders the same as one outside it, with the same list padding and item spacing.
   - id: thumbnail-size
     status: unverified
     claim: The thumbnail is 4rem wide below a 40em viewport and 5rem from 40em, has a 1rem right margin and does not shrink.
@@ -106,10 +109,6 @@ colour of its own: it takes the item's text colour.
   as `pathable-inline`.
 - The description is an ordinary `<p>`; it keeps its own margins.
 - The list's text is Nunito at 0.99rem with a line height of 1.6.
-- Do not put the list directly inside `pathable-prose`: there it takes the
-  prose list spacing today, a 3ch left padding and a 0.25em bottom margin on
-  each item but the last. Wrapping it in another element inside the prose
-  avoids those rules.
 
 ## Guarantees
 
@@ -117,6 +116,11 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+Today a list placed directly inside `pathable-prose` takes the prose list
+spacing, a 3ch left padding and a 0.25em bottom margin on each item but the
+last, so `inside-prose` is unmet. Until the fix lands, wrapping the list in
+another element inside the prose avoids those rules.
 
 The heading is set in Nunito, the body typeface, at weight 700. The brand rules
 give Fredoka Regular for headings, so `heading-typeface` is unmet.
