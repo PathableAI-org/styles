@@ -37,7 +37,8 @@ skill supplies the procedure.
   [Working without GraphQL](../../../docs/engineering/git-workflow.md#working-without-graphql).
 - When you find a defect unrelated to the current change, file a bug issue as
   [Defects found along the way](../../../docs/engineering/orchestration.md#defects-found-along-the-way)
-  describes, list it in your round summary, and keep it out of the current
+  describes (with its `package:styles` or `package:react` label, and one issue
+  per package when both are affected), list it in your round summary, and keep it out of the current
   pull request.
 
 ## Start

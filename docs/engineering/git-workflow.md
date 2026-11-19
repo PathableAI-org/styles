@@ -234,6 +234,11 @@ Evidence each tier needs, in addition to the checks in
   `risk:high`, `risk:standard` or `risk:light`. The label is the filterable
   copy of the tier; the body records the triggers and reasons. When a tier
   changes, change the label in the same step.
+- Each issue labelled `bug` also carries exactly one package label,
+  `package:styles` or `package:react`, for the package the defect is in. A bug
+  that affects both packages is filed as two issues, one per package, each
+  linking the other. A bug in neither package, such as repository tooling,
+  carries neither label.
 - Anyone, including an agent, may raise a tier at any point by recording the
   trigger that matched. Work already approved stays approved; add the evidence
   the higher tier needs.
