@@ -311,8 +311,8 @@ const filledButtonNames = [
 ]
 
 // Tabs through every button in order. Filled variants show the shared 2px
-// focus-ring outline; the unstyled modifier keeps the USWDS 4px Bright Blue
-// Brooks ring. Under forced colors the helper expects `Highlight` instead.
+// focus-ring outline; the unstyled modifier keeps the USWDS 4px ring, in the
+// surface's ring colour (Bright Blue Brooks outside a surface). Under forced colors the helper expects `Highlight` instead.
 const expectButtonFocusIndicators = async ({
   canvasElement,
 }: {

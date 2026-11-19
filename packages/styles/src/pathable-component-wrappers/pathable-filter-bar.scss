@@ -11,6 +11,9 @@
 @use 'uswds-core' as *;
 
 .pathable-filter-bar {
+  // A white container: the outlines inside it are drawn on white, so a light
+  // ring from a dark container around it is not inherited.
+  --pathable-surface-focus-ring: initial;
   font-family: var(--pathable-font-body);
   display: flex;
   flex-wrap: wrap;

@@ -66,6 +66,9 @@
 }
 
 .pathable-app-shell__sidebar {
+  // A white container: the outlines inside it are drawn on white, so a light
+  // ring from a dark container around it is not inherited.
+  --pathable-surface-focus-ring: initial;
   grid-area: sidebar;
   position: sticky;
   top: 0;

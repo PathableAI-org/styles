@@ -39,6 +39,9 @@
 // --- Individual Toast ---
 
 .pathable-toast {
+  // A white container: the outlines inside it are drawn on white, so a light
+  // ring from a dark container around it is not inherited.
+  --pathable-surface-focus-ring: initial;
   display: flex;
   gap: var(--pathable-space-2);
   align-items: flex-start;
