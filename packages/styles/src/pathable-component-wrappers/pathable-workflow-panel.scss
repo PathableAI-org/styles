@@ -90,21 +90,21 @@
 // Loading state
 .pathable-workflow-panel--loading {
   .pathable-workflow-panel__status {
-    color: color('gray-cool-60');
+    color: var(--pathable-color-text-muted);
   }
 }
 
 // Saving state
 .pathable-workflow-panel--saving {
   .pathable-workflow-panel__status {
-    color: color('gray-cool-60');
+    color: var(--pathable-color-text-muted);
   }
 }
 
 // Saved confirmation state
 .pathable-workflow-panel--saved {
   .pathable-workflow-panel__status {
-    color: color('success-dark');
+    color: var(--pathable-color-text-success);
   }
 }
 
@@ -143,11 +143,16 @@
   .pathable-workflow-panel__status {
     font-size: type-scale('md');
     font-weight: var(--pathable-font-weight-bold);
-    color: color('success-dark');
+    color: var(--pathable-color-text-success);
   }
 }
 
 // --- Empty region handling ---
+// An empty status region draws nothing, so a state box never shows without text
+.pathable-workflow-panel__status:empty {
+  display: none;
+}
+
 // Hide objective and current-activity regions when they have no content
 .pathable-workflow-panel__objective:empty,
 .pathable-workflow-panel__current-activity:empty {

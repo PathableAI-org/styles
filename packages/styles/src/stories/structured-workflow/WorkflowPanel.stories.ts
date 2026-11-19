@@ -97,7 +97,7 @@ export const Saved = {
         <label for="saved-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="saved-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
-      <div class="pathable-workflow-panel__status" role="status">✓ Saved</div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">✓</span> Saved</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue">Continue</button>
@@ -124,7 +124,7 @@ export const Offline = {
         <label for="offline-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="offline-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
-      <div class="pathable-workflow-panel__status" role="status">⚠ You're offline. Changes will sync when connected.</div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">⚠</span> You're offline. Changes will sync when connected.</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue" disabled>Continue</button>
@@ -153,7 +153,7 @@ export const ValidationError = {
         <textarea class="pathable-textarea" id="ve-notes" rows="3" aria-label="Assessment notes" style="width: 100%;"></textarea>
         <span class="usa-error-message" role="alert">Assessment notes are required before continuing.</span>
       </div>
-      <div class="pathable-workflow-panel__status" role="status">⚠ Please fix errors before continuing.</div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">⚠</span> Please fix errors before continuing.</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue">Continue</button>
@@ -180,7 +180,7 @@ export const Completed = {
         <label for="completed-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="completed-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Assessment completed. Jamie enrolled in Employment Pathways program.</textarea>
       </div>
-      <div class="pathable-workflow-panel__status" role="status">✓ Completed</div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">✓</span> Completed</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--continue">Start New Assessment</button>
       </div>
