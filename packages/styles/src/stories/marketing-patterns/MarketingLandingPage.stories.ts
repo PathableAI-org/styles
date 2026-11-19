@@ -45,7 +45,7 @@ const heroHtml = `
   <div class="pathable-container pathable-container--standard" style="text-align: center;">
     <div class="pathable-stack pathable-stack--gap-lg" style="align-items: center;">
       <p style="margin: 0; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--pathable-color-text-muted);">
-        <span class="pathable-text-highlight pathable-text-highlight--soft-bg">Trusted by 500+ organizations</span>
+        <span class="pathable-text-highlight pathable-text-highlight--soft-bg" style="color: var(--pathable-color-text);">Trusted by 500+ organizations</span>
       </p>
       <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700; line-height: 1.2; max-width: 720px;">
         Streamline your
