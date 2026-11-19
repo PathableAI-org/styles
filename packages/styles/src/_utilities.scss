@@ -93,3 +93,29 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 .hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: initial;
 }
+
+// Jade, Silver and danger backgrounds set the ring for the controls and
+// components on them. Bright Blue Brooks is 1.1:1 on Intelligent Jade, 2.3:1 on
+// Shilling Silver and 1.5:1 on the danger red (WCAG 1.4.11 needs 3:1), so the
+// on-accent dark blue (6.3:1), the text blue (9.6:1) and white (4.5:1) take
+// its place. The shared state-focus controls are left out for the same reason
+// as above: a control that carries the class itself sits on the surface
+// behind it.
+.pathable-bg-accent:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-accent:hover:not(:where(#{$-surface-focus-ring-controls})),
+.pathable-bg-success:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-success:hover:not(
+    :where(#{$-surface-focus-ring-controls})
+  ) {
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
+}
+
+.pathable-bg-base:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-base:hover:not(:where(#{$-surface-focus-ring-controls})) {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
+}
+
+.pathable-bg-danger:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-danger:hover:not(:where(#{$-surface-focus-ring-controls})) {
+  --pathable-surface-focus-ring: var(--pathable-color-surface);
+}

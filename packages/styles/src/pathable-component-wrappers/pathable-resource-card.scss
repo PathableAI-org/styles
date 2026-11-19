@@ -46,7 +46,8 @@
   }
 
   &:focus-within {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
   }
 
@@ -197,7 +198,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
@@ -217,7 +219,8 @@
   z-index: 1;
 
   &:focus-visible {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }

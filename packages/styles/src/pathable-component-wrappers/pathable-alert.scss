@@ -56,6 +56,9 @@
 
 .pathable-alert--emergency {
   @extend .usa-alert--emergency;
+
+  // Bright Blue Brooks is 2.3:1 on the emergency red; white is 6.8:1.
+  --pathable-surface-focus-ring: var(--pathable-color-surface);
 }
 
 .pathable-alert--slim {

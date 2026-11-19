@@ -117,7 +117,8 @@
 .pathable-card--workflow
   .pathable-card__action
   a:where(:not([class]), [class=''], .pathable-link, .usa-link):focus-visible {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 
@@ -138,7 +139,8 @@
 
 // Focus state for the entire card when any child is focused
 .pathable-card--workflow:focus-within {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 
