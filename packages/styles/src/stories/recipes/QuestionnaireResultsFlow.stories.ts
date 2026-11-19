@@ -128,7 +128,7 @@ const resultsHtml = `
     <p style="margin:0.5rem 0 0;font-size:0.8rem;color:var(--pathable-color-text-muted);">Moderate — additional support recommended</p>
   </div>
   <div class="pathable-surface pathable-surface--raised" style="padding:1.5rem;text-align:center;">
-    <output style="display:block;font-family:var(--pathable-font-heading);font-size:2.5rem;font-weight:400;color:var(--pathable-color-accent);line-height:1;">3</output>
+    <output style="display:block;font-family:var(--pathable-font-heading);font-size:2.5rem;font-weight:400;color: var(--pathable-color-link);line-height:1;">3</output>
     <p style="margin:0.25rem 0 0;font-size:0.875rem;font-weight:600;color:var(--pathable-color-text);">Barriers Identified</p>
     <p style="margin:0.5rem 0 0;font-size:0.8rem;color:var(--pathable-color-text-muted);">Transportation, Skills Gap, Interview Skills</p>
   </div>
