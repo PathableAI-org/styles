@@ -58,7 +58,8 @@
   // This region wraps the input for layout spacing
 }
 
-// Progress/save-status region
+// Progress/save-status region. The application supplies the text; the state
+// modifiers below only style it.
 .pathable-workflow-panel__status {
   font-size: type-scale('sm');
 }
@@ -81,48 +82,39 @@
 }
 
 // --- State modifier classes ---
+//
+// A state modifier only styles the status text the application puts in
+// `.pathable-workflow-panel__status` (give that element `role="status"`).
+// No modifier writes a message of its own.
 
 // Loading state
 .pathable-workflow-panel--loading {
-  .pathable-workflow-panel__status::before {
-    content: 'Loading…';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
+    color: color('gray-cool-60');
   }
 }
 
 // Saving state
 .pathable-workflow-panel--saving {
-  .pathable-workflow-panel__status::before {
-    content: 'Saving…';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
+    color: color('gray-cool-60');
   }
 }
 
 // Saved confirmation state
 .pathable-workflow-panel--saved {
-  .pathable-workflow-panel__status::before {
-    content: '✓ Saved';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
-    color: color('success');
+  .pathable-workflow-panel__status {
+    color: color('success-dark');
   }
 }
 
 // Offline state
 .pathable-workflow-panel--offline {
-  .pathable-workflow-panel__status::before {
-    content: "⚠ You're offline. Changes will sync when connected.";
-    display: block;
+  .pathable-workflow-panel__status {
     padding: units(1);
     background-color: color('warning-lighter');
     border-radius: radius('sm');
     color: color('warning-darker');
-    font-size: type-scale('sm');
   }
 
   .pathable-workflow-panel__actions .pathable-button--continue {
@@ -133,14 +125,11 @@
 
 // Validation error state
 .pathable-workflow-panel--validation-error {
-  .pathable-workflow-panel__status::before {
-    content: '⚠ Please fix errors before continuing.';
-    display: block;
+  .pathable-workflow-panel__status {
     padding: units(1);
     background-color: color('error-lighter');
     border-radius: radius('sm');
     color: color('error-darker');
-    font-size: type-scale('sm');
   }
 }
 
@@ -151,14 +140,10 @@
     display: none;
   }
 
-  .pathable-workflow-panel__status::before {
-    content: '✓ Completed';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
     font-size: type-scale('md');
     font-weight: var(--pathable-font-weight-bold);
-    color: color('success');
+    color: color('success-dark');
   }
 }
 
