@@ -478,9 +478,9 @@ test('renders the index as one unpadded line per page', () => {
   )
 })
 
-test('the index explains every guarantee status a page can use', () => {
+test('the index explains the unmet and unverified guarantee statuses', () => {
   const index = renderIndex([page()]).replace(/\n/g, ' ')
 
-  assert.match(index, /status: unmet` is expected behaviour/)
+  assert.match(index, /status: unmet` is expected behaviour.*do not rely on it/)
   assert.match(index, /status: unverified` was read from the package source/)
 })
