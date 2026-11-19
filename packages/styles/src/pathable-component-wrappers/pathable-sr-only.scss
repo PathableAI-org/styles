@@ -10,4 +10,12 @@
 
 .pathable-sr-only {
   @extend .usa-sr-only;
+
+  // usa-sr-only offsets the element with `left: -999em`. In a right-to-left
+  // page the area to the left of the viewport is scrollable, so every hidden
+  // element added about 999em of horizontal scroll. The inline-start edge is
+  // the side that does not scroll in either writing direction: the left in
+  // left-to-right, the right in right-to-left.
+  left: auto;
+  inset-inline-start: -999em;
 }
