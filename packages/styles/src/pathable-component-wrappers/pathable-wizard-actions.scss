@@ -21,6 +21,8 @@
   border-top: 1px solid color('gray-20');
 
   .pathable-button {
+    // The region's gap spaces buttons; drop usa-button's own right margin.
+    margin-right: 0;
     min-height: 44px;
     min-width: 44px;
     display: inline-flex;

@@ -173,6 +173,11 @@
   gap: var(--pathable-space-1);
   flex-shrink: 0;
 
+  // The region's gap spaces buttons; drop usa-button's own right margin.
+  .pathable-button {
+    margin-right: 0;
+  }
+
   // Actions visible on row hover/focus
   opacity: 0;
   transition: opacity 0.15s;
