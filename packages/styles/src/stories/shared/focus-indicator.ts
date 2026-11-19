@@ -15,10 +15,23 @@ const resolveColor = (canvasElement: HTMLElement, value: string) => {
   return resolved
 }
 
+type FocusIndicatorOptions = {
+  /** Exact outline width in px. Without it, the outline must be at least 2px. */
+  width?: number
+  /** Outline colour outside forced colors. Defaults to the focus-ring token. */
+  color?: string
+  /**
+   * Press Tab from the element that has focus now, instead of from the
+   * document start, to check controls one after another in tab order.
+   */
+  fromCurrentFocus?: boolean
+}
+
 /**
- * Moves keyboard focus from the document start to `element` with Tab and
- * asserts it shows a solid outline at least 2px wide: in `--pathable-color-focus-ring`
+ * Moves keyboard focus to `element` with Tab and asserts it shows a solid
+ * outline: by default at least 2px wide, in `--pathable-color-focus-ring`
  * normally, and in the system `Highlight` colour when forced colors are active.
+ * Tab starts from the document start unless `fromCurrentFocus` is set.
  *
  * The expected colour follows the current forced-colors state, so the story
  * passes in any browser. The Storybook test-runner turns forced colors on for
@@ -30,21 +43,30 @@ const resolveColor = (canvasElement: HTMLElement, value: string) => {
 export const expectKeyboardFocusIndicator = async (
   canvasElement: HTMLElement,
   element: HTMLElement,
+  {
+    width,
+    color = 'var(--pathable-color-focus-ring)',
+    fromCurrentFocus = false,
+  }: FocusIndicatorOptions = {},
 ) => {
   const forcedColors = matchMedia('(forced-colors: active)').matches
 
-  const active = element.ownerDocument.activeElement
-  if (active instanceof HTMLElement) active.blur()
+  if (!fromCurrentFocus) {
+    const active = element.ownerDocument.activeElement
+    if (active instanceof HTMLElement) active.blur()
+  }
   await userEvent.tab()
   await expect(element).toHaveFocus()
 
   const style = getComputedStyle(element)
+  const outlineWidth = Number.parseFloat(style.outlineWidth)
   await expect(style.outlineStyle).toBe('solid')
-  await expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThanOrEqual(2)
+  if (width === undefined) {
+    await expect(outlineWidth).toBeGreaterThanOrEqual(2)
+  } else {
+    await expect(outlineWidth).toBe(width)
+  }
   await expect(style.outlineColor).toBe(
-    resolveColor(
-      canvasElement,
-      forcedColors ? 'Highlight' : 'var(--pathable-color-focus-ring)',
-    ),
+    resolveColor(canvasElement, forcedColors ? 'Highlight' : color),
   )
 }

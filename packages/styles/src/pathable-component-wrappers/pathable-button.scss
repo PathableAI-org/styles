@@ -6,6 +6,7 @@
 // Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
+@use 'pathable-interaction-state-mixins' as states;
 
 @use 'usa-button/src/styles';
 
@@ -84,6 +85,21 @@
 
 .pathable-button--big {
   @extend .usa-button--big;
+}
+
+// USWDS colours button focus outlines only through its global element rule,
+// which this package does not include, so apply the shared brand focus ring.
+// The other modifiers are used with .pathable-button, which carries the ring.
+// --primary and --continue @extend .pathable-button and --destructive
+// @extends .usa-button, so each also renders a whole button on its own; the
+// first two pick the ring up through that @extend and --destructive is listed.
+// The mixin's :focus-within also shows the ring after a pointer click, as on
+// the icon button. USWDS's more specific .usa-button:not([disabled]):focus
+// rule keeps its 0.25rem outline-offset. This rule stays above --unstyled, so
+// its later :focus rule keeps the USWDS 4px ring at equal specificity.
+.pathable-button,
+.pathable-button--destructive {
+  @include states.state-focus;
 }
 
 .pathable-button--unstyled {
