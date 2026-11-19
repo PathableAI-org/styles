@@ -11,7 +11,9 @@
 //
 // CSS custom properties consumed:
 //   --elevation-sm, --elevation-md         — box-shadow elevation levels
-//   --pathable-color-focus-ring            — focus outline color
+//   --pathable-surface-focus-ring          — focus outline color set by the
+//                                            nearest pathable-surface variant
+//   --pathable-color-focus-ring            — focus outline color outside a surface
 //   --pathable-color-bg                    — hover/disabled background
 //   --pathable-color-surface               — selected/resting background
 //   --pathable-color-border                — selected/pressed border color

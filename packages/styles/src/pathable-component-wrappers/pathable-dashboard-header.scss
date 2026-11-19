@@ -17,6 +17,7 @@
 // --- Base container ---
 
 .pathable-dashboard-header {
+  font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;
   gap: var(--pathable-space-3);

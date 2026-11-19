@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Dashboard/Dashboard Header',
   tags: ['autodocs'],
@@ -32,6 +34,12 @@ export const Default = {
       </p>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-dashboard-header__breadcrumb',
+      '.pathable-dashboard-header__context',
+      '.pathable-dashboard-header__description',
+    ]),
 }
 
 export const WithoutActions = {

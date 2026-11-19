@@ -11,4 +11,9 @@
 
 .pathable-dark-background {
   @extend .usa-dark-background;
+
+  // A dark container resets the surface focus ring (pathable-surface.scss), so
+  // controls in it fall back to --pathable-color-focus-ring even inside a
+  // light surface that sets a dark ring.
+  --pathable-surface-focus-ring: initial;
 }

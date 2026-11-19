@@ -178,22 +178,15 @@
   color: var(--pathable-color-surface);
 }
 
-// The default blue focus ring does not contrast sufficiently with the brand
-// surface. Let the nearest surface set an IconButton-specific color so nested
-// inverse and brand surfaces do not leak focus context into one another.
-.pathable-surface--brand {
-  --pathable-icon-button-focus-ring: var(--pathable-color-text);
-}
-
-.pathable-surface--inverse {
-  --pathable-icon-button-focus-ring: var(--pathable-color-focus-ring);
-}
-
+// The focus ring follows the nearest surface through the shared
+// --pathable-surface-focus-ring (pathable-surface.scss), as the other
+// state-focus controls do. --pathable-icon-button-focus-ring, when set, still
+// overrides it for icon buttons.
 .pathable-icon-button:focus-visible,
 .pathable-icon-button:focus-within {
   outline-color: var(
     --pathable-icon-button-focus-ring,
-    var(--pathable-color-focus-ring)
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring))
   );
 }
 

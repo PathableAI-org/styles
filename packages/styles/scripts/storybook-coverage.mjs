@@ -132,6 +132,9 @@ const EXPECTED_COVERAGE = {
     'components-communication-modal--narrow',
     'components-communication-modal--long-content',
   ],
+  'Layout composition': [
+    'layout-composition-surface--keyboard-focus-on-surfaces',
+  ],
   'Discovery / Resource Finder': [
     'discovery-filter-bar--default',
     'discovery-filter-pill--default',

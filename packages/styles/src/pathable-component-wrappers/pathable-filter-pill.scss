@@ -6,6 +6,7 @@
 @use 'uswds-core' as *;
 
 .pathable-filter-pill {
+  font-family: var(--pathable-font-body);
   display: inline-flex;
   align-items: center;
   gap: var(--pathable-space-1);
@@ -28,6 +29,7 @@
 }
 
 .pathable-filter-pill__dismiss {
+  font-family: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;

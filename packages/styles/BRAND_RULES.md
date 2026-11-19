@@ -48,6 +48,8 @@ The USWDS theme in `src/_uswds-theme.scss` is configured with the exact brand he
 
 USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Bright Blue Brooks, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
 
+The shared PathAble focus outline (used by `.pathable-button`, `.pathable-input`, `.pathable-select`, `.pathable-textarea` and `.pathable-icon-button`) is drawn on the surface behind the control, so each `.pathable-surface` variant sets its colour through `--pathable-surface-focus-ring`. It is Bright Blue Brooks by default. On the Intelligent Jade surfaces (`--brand`, `--tone-primary`) it is the on-accent dark blue, and on the Shilling Silver surfaces (`--inset`, `--tone-subtle`) it is PathAble Blue. Bright Blue Brooks is only 1.1:1 and 2.3:1 on those, and a focus outline needs 3:1. Dark containers reset it to Bright Blue Brooks: the `--inverse` surface, the `pathable-bg-primary` and `pathable-bg-link` utilities, `.pathable-section--dark`, `.pathable-dark-background`, `.pathable-hero__callout` and `.pathable-identifier`. Other Jade or Silver backgrounds, such as the `pathable-bg-accent` and `pathable-bg-base` utilities, do not set it. On Tech Teal (`pathable-bg-link`) Bright Blue Brooks is only 2.6:1 (#382).
+
 The brand book defines no red or amber. Danger (`#dc3545`) and warning (`#f5a623`) are functional status colors added by the design system; use them only for status, never as decoration.
 
 ## Color Hierarchy

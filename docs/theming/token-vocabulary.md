@@ -51,6 +51,8 @@ compiled stylesheet.
 | `workflowBlocked`     | `--pathable-color-workflow-blocked`      | `#dc3545`     | Blocked workflow-state marker.                                  |
 | `onAccent`            | `--pathable-color-on-accent`             | `#001a33`     | Text on accent, success, or warning backgrounds (WCAG-AA safe). |
 
+The focus outline is drawn on the surface behind a control, so `focusRing` is not used on every surface. Bright Blue Brooks is under 3:1 on Intelligent Jade and Shilling Silver. On those surfaces the outline uses `onAccent` instead: the styles `.pathable-surface--brand` and `--tone-primary` classes, and the React `Surface` `variant="primary"`. It uses `text` instead on `.pathable-surface--inset` and `--tone-subtle`, and the React `variant="subtle"`. Each surface sets this through `--pathable-surface-focus-ring`. The other surfaces and the dark containers reset it: the styles `--raised`, `--interactive`, `--inverse` and `--tone-default` surfaces, the React `variant="default"`, the `pathable-bg-primary` and `pathable-bg-link` utilities, `.pathable-section--dark`, `.pathable-dark-background`, `.pathable-hero__callout` and `.pathable-identifier`. There, and outside any surface, the outline uses `focusRing`, and a scoped `ThemeProvider` override of `focusRing` applies as usual.
+
 ## Staying in sync
 
 `pnpm lint:tokens` enforces that the 25-key set stays in lockstep between the

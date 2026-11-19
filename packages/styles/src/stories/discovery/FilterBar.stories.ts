@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Discovery/Filter Bar',
   tags: ['autodocs'],
@@ -65,6 +67,13 @@ export const HasFilters = {
       <button class="pathable-filter-bar__clear">Clear all</button>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-filter-bar__count',
+      '.pathable-filter-bar__clear',
+      '.pathable-filter-pill__label',
+      '.pathable-filter-pill__dismiss',
+    ]),
 }
 
 export const DrawerMode = {
@@ -81,6 +90,8 @@ export const DrawerMode = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-filter-bar__drawer-trigger']),
 }
 
 export const Wrapped = {

@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Dashboard/Activity List',
   tags: ['autodocs'],
@@ -56,6 +58,14 @@ export const Default = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-activity-row__status-text',
+      '.pathable-activity-row__title',
+      '.pathable-activity-row__context',
+      '.pathable-activity-row__date',
+      '.pathable-activity-row__owner-text',
+    ]),
 }
 
 export const Compact = {

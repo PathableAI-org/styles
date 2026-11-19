@@ -17,6 +17,7 @@
 // --- Base container ---
 
 .pathable-record-header {
+  font-family: var(--pathable-font-body);
   display: flex;
   gap: var(--pathable-record-header-gap, var(--pathable-space-4));
   align-items: flex-start;
