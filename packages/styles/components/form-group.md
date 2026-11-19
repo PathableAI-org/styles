@@ -17,7 +17,7 @@ guarantees:
     claim: A `pathable-label` that is not the group's first direct child, including one nested deeper, keeps its 24 px top margin.
   - id: in-stack
     status: unverified
-    claim: A group that is a direct child of `pathable-form-stack` or `pathable-form-row` has no top margin, so only that container's gap separates it from its neighbours.
+    claim: A group that is a direct child of `pathable-form-stack` or `pathable-form-row` has no top margin, so only the gap of `pathable-stack` (used with `pathable-form-stack`) or of `pathable-form-row` separates it from its neighbours.
   - id: row-alignment
     status: unverified
     claim: At viewport widths of 1024 px and wider, in groups that are direct children of one `pathable-form-row`, the tops of the direct-child controls line up even when their labels and hints differ in height.
@@ -39,8 +39,8 @@ Use something else when:
 
 - the controls are a set of radios or checkboxes, or several controls share
   one name: use a `<fieldset>` with `pathable-fieldset`;
-- you need to space a whole form: put the groups directly in
-  `pathable-form-stack`, which spaces them with a gap;
+- you need to space a whole form: put the groups directly in an element with
+  both `pathable-stack` and `pathable-form-stack`, whose stack gap spaces them;
 - fields should sit side by side on wide screens: put the groups directly in
   `pathable-form-row`.
 
@@ -94,9 +94,11 @@ property.
   four-row grid: label, hint, control, error message. Only direct children
   with those classes are placed; a wrapped or composite control is not
   aligned.
-- In `pathable-form-stack` and `pathable-form-row`, the container's gap spaces
-  the groups. Anywhere else, the group's 24 px top margin does, including
-  above the first group.
+- In `pathable-form-stack` and `pathable-form-row`, the group's top margin is
+  removed. `pathable-form-row` has its own gap; `pathable-form-stack` does not,
+  so use it together with `pathable-stack` and a gap modifier, or the groups
+  touch. Anywhere else, the group's 24 px top margin spaces the groups,
+  including above the first group.
 - The group has no element classes.
 
 ## Guarantees

@@ -11,7 +11,7 @@ guarantees:
     claim: The error message is display block, so it takes its own line even when it is a `<span>`.
   - id: bold
     status: unverified
-    claim: The error message text has font weight 700.
+    claim: The error message text has font weight 700. In Nunito it renders in SemiBold (600), the heaviest Nunito face the package ships.
   - id: padding
     status: unverified
     claim: The error message has 0.25rem (4 px at a 16 px root) of padding above and below its text, no horizontal padding and no margin.

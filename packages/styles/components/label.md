@@ -82,7 +82,8 @@ The label takes its colour from its container.
   optional `pathable-hint` and `pathable-error-message`. As the group's first
   child the label drops its top margin and the group's own margin spaces the
   field. Anywhere else, including directly inside `pathable-form-stack`, the
-  label keeps its 24 px top margin.
+  label keeps its 24 px top margin, except as the first child of
+  `pathable-filterable-option-list__filter`, which also removes it.
 - Inside `pathable-form-row`, at viewport widths of 1024 px and wider, a label
   that is a direct child of a direct `pathable-form-group` sits in the group's
   first row, so the controls of neighbouring fields line up.
@@ -108,5 +109,6 @@ root size, because every length is in `rem`.
 - One label per control, with text that names the control on its own.
 - Marking a required field in words, not by colour or an asterisk alone.
 - Layout around the label: the field width, and the spacing between fields
-  when you do not use `pathable-form-group`, `pathable-form-stack` or
-  `pathable-form-row`.
+  when you do not use `pathable-form-group`, `pathable-form-row`, or
+  `pathable-form-stack` together with `pathable-stack`. On its own,
+  `pathable-form-stack` adds no gap.

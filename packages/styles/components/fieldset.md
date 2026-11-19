@@ -14,7 +14,7 @@ guarantees:
     claim: The fieldset has zero margin and zero padding on every side, so its contents start at its own edges.
   - id: legend-aligned
     status: unverified
-    claim: The left edge of a `pathable-legend` inside the fieldset is the left edge of the fieldset's other children.
+    claim: The left edge of a `pathable-legend` box inside the fieldset is the left edge of the fieldset's other children.
   - id: type
     status: unverified
     claim: The fieldset sets a font size of 0.99rem (15.84 px at a 16 px root) and line-height 1.4, in Nunito, which its contents inherit unless they set their own.
@@ -36,8 +36,8 @@ the browser's box around it.
 
 Use something else when:
 
-- the fields are related only by layout: use `pathable-form-row` or
-  `pathable-form-stack` without a fieldset;
+- the fields are related only by layout: use `pathable-form-row`, or
+  `pathable-stack` with `pathable-form-stack`, without a fieldset;
 - one control and its label are the whole field: use `pathable-form-group`;
 - the group needs a visible box: put the fieldset inside a `pathable-card` or
   another surface.
@@ -83,14 +83,18 @@ stylesheet, not custom properties.
 ## Composition
 
 - Put a `<legend>` with `pathable-legend` as the fieldset's first child. It
-  names the group.
+  names the group. The legend class does not reset the browser's small inline
+  padding on `<legend>`, so the legend text can sit a few pixels in from the
+  other children.
 - After the legend: an optional `pathable-hint`, the controls, then an
   optional `pathable-error-message`, in that order.
 - Connect the hint and the error message to the controls with
   `aria-describedby` on each control, listing the hint's `id` and the error
   message's `id` separated by a space. The fieldset does not do this for you.
 - The fieldset adds no space around itself or its contents. Space it from its
-  neighbours with `pathable-form-stack`, or with your own margin.
+  neighbours with `pathable-stack` together with `pathable-form-stack`, or
+  with your own margin. On its own, `pathable-form-stack` adds no gap, and do
+  not count on the legend's top margin for space above the group.
 - The fieldset keeps the browser's minimum width, which is the width of its
   widest unbreakable content. Long words or wide controls inside it widen the
   fieldset instead of wrapping; keep content inside narrow layouts breakable.

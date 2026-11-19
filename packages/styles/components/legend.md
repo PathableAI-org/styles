@@ -14,10 +14,10 @@ guarantees:
     claim: The legend text is 0.99rem (15.84 px at a 16 px root), font weight 400 and line-height 1.4, in Nunito.
   - id: matches-label
     status: unverified
-    claim: A legend and a `pathable-label` with the same text render at the same font size, weight, line-height, top margin and maximum width.
+    claim: The legend class sets the same font size, weight, line-height, top margin and maximum width as `pathable-label`.
   - id: top-margin
     status: unverified
-    claim: The legend has a 1.5rem (24 px at a 16 px root) top margin and no bottom margin.
+    claim: The class sets a 1.5rem (24 px at a 16 px root) top margin and no bottom margin.
   - id: max-width
     status: unverified
     claim: The legend is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
@@ -95,7 +95,12 @@ The legend takes its colour from its container.
 - Put the legend as the first child of a `<fieldset>`. Only a legend in that
   position names the group; anywhere else it is plain text.
 - Use `pathable-fieldset` on the fieldset. It removes the browser's border and
-  padding, so the legend lines up with the controls under it.
+  padding, so the legend's box lines up with the controls under it. The legend
+  class does not reset the browser's small inline padding on `<legend>`, so
+  the legend text can sit a few pixels in from a label's.
+- Browsers lay out a fieldset's first legend in a special way, and the
+  legend's top margin may add no space above the group. Do not rely on it:
+  space the fieldset from what comes before it with the layout.
 - Follow the legend with an optional `pathable-hint`, then the controls, then
   an optional `pathable-error-message`.
 - Inside `pathable-filterable-option-list`, a legend that is a direct child of
