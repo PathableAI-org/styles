@@ -15,6 +15,14 @@
   // USWDS colours this focus outline only through its global element rule,
   // which this package does not include, so apply the shared brand focus ring.
   @include states.state-focus;
+
+  // USWDS fixes the control's height and keeps its value on one line, so at
+  // larger text sizes on narrow screens a long selected value is cut off
+  // behind the arrow area (WCAG 1.4.4). Let the value wrap and the control
+  // grow, keeping the USWDS height as the minimum.
+  height: auto;
+  min-height: 2.5rem;
+  white-space: normal;
 }
 
 @media (max-width: 39.99em), (pointer: coarse) {
