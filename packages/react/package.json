@@ -24,7 +24,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json && node ../../scripts/component-pages.mjs copy-to-react",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "lint": "eslint src --max-warnings=0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check:package": "publint --pack false",
