@@ -233,6 +233,18 @@ const STORIES = [
     id: 'components-form-controls-checkbox--disabled',
     key: 'checkbox/disabled',
   },
+  // Radio has no aggregate story. With hint and error shows the root's block
+  // layout (each control on its own line, between the hint and the error
+  // message, #329), the unchecked radios, their labels and the first radio's
+  // focus ring at every viewport.
+  // Not compared: the checked radio's dot, the disabled radio and label
+  // colours and the `__label-description` text, because no styles story
+  // renders a checked or disabled `.pathable-radio__input` or a description;
+  // covering them needs such a story first.
+  {
+    id: 'components-form-controls-radio--with-hint-and-error',
+    key: 'radio/with-hint-and-error',
+  },
   // FilterableOptionList main story: the filter input (focused), the bounded
   // option region and the status line.
   {
@@ -307,6 +319,7 @@ const ROLLOUT = [
   'modal',
   'optional-form-section',
   'page-error',
+  'radio',
   'segmented-control',
   'select',
   'textarea',
