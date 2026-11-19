@@ -13,13 +13,10 @@
 
   // usa-sr-only offsets the element with `left: -999em`. In a right-to-left
   // page the viewport scrolls toward the left, so every hidden element added
-  // about 999em of horizontal scroll. The side that never scrolls is the
-  // page's inline-start side, and the page's direction is the root's `dir`, not
-  // the element's: a logical `inset-inline-start` would follow the element's
-  // own direction and add scroll for a right-to-left phrase in a
-  // left-to-right page.
-  :root[dir='rtl'] & {
-    left: auto;
-    right: -999em;
-  }
+  // about 999em of horizontal scroll. No offset direction is safe in every
+  // direction, scroller and writing mode, so take the element out of every
+  // scroller's overflow instead: a fixed-position box never adds scrollable
+  // overflow and never scrolls into view. Its text stays off screen, in the
+  // accessibility tree and at its natural size.
+  position: fixed;
 }
