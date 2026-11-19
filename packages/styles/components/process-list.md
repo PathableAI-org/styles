@@ -7,23 +7,23 @@ styles-class: pathable-process-list
 variants: []
 guarantees:
   - id: numbered-marker
-    status: unverified
-    claim: Each item shows its position in the list, starting at 1, as a bold number centred in a circle 3rem across overall, a 2.5rem white circle inside a 0.25rem PathAble Blue border.
+    status: unmet
+    claim: Each item shows its position in the list, starting at 1, as a number centred in a white circle 2.5rem across overall, including its 0.25rem PathAble Blue border.
   - id: connector
-    status: unverified
-    claim: Every item but the last has a 0.5rem left border in lighter PathAble Blue that runs from its marker to the next, 4px left of the markers' centre, and the last item's border is transparent.
+    status: unmet
+    claim: Every item but the last has a 0.5rem left border in lighter PathAble Blue that runs from its marker to the next, centred under the markers, and the last item's border is transparent.
   - id: item-spacing
     status: unverified
-    claim: Each item has 2rem of space below it and 2rem of left padding inside its border, and is at most 72ex wide.
+    claim: Each item has 2rem of bottom padding and 2rem of left padding inside its border, and is at most 72ex wide.
   - id: no-native-markers
     status: unverified
-    claim: The list shows no browser bullets or numbers, and its padding is 20px at the top, 1rem on the left and none on the right or bottom.
+    claim: The list shows no browser bullets or numbers, its padding is 20px at the top and none on the right or bottom, and its left padding is 1rem unless the list is a direct child of pathable-prose.
   - id: heading-style
     status: unverified
     claim: The heading is 1.49rem, PathAble Blue, with no margin, and the element after it has a 0.25rem top margin.
   - id: heading-typeface
     status: unmet
-    claim: The heading is set in the brand heading typeface, Fredoka.
+    claim: The heading is set in the brand heading typeface, Fredoka Regular.
 ---
 
 # ProcessList
@@ -93,7 +93,11 @@ does not change them.
   between its items. The first and last child of an item have no outer margin.
 - The markers are placed against the list's left edge. Do not add left padding
   to the list, or the markers and the line come apart. Even without it, the
-  line runs 4px left of the circles' centre.
+  line runs 4px left of the circles' centre today.
+- Do not put the list directly inside `pathable-prose`: there it takes the
+  prose list spacing today, including a 3ch left padding that moves the line
+  further right of the markers and a 0.25em bottom margin on each item but the
+  last. Wrapping it in another element inside the prose avoids those rules.
 - The list's text is Nunito at 0.99rem with a line height of 1.6; the marker
   numbers are 1.49rem.
 
@@ -104,8 +108,13 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The heading is set in Nunito, the body typeface. The brand rules give Fredoka
-for headings, so `heading-typeface` is unmet.
+Today the circle's 0.25rem border is added outside its 2.5rem width, so the
+marker is 3rem across and the line runs 4px left of its centre: `numbered-marker`
+and `connector` are unmet. A list placed directly inside `pathable-prose` has
+the prose list's left padding instead of 1rem: see Composition.
+
+The heading is set in Nunito, the body typeface, at weight 700. The brand rules
+give Fredoka Regular for headings, so `heading-typeface` is unmet.
 
 ## The consumer owns
 

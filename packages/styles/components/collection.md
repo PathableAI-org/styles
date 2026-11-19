@@ -8,10 +8,10 @@ variants: []
 guarantees:
   - id: item-rule
     status: unverified
-    claim: Every item, the first included, has a 1px solid top border in the current text colour, a top margin of 1rem and 1rem of padding between the border and the content, and every item but the last has a bottom margin of 1rem.
+    claim: Every item, the first included, has a 1px solid top border in the current text colour, a top margin of 1rem and 1rem of padding between the border and the content, and every item but the last has a bottom margin of 1rem unless the list is a direct child of pathable-prose.
   - id: no-markers
     status: unverified
-    claim: The list and its items show no bullets or numbers and have no left padding.
+    claim: The list and its items show no bullets or numbers, the items have no left padding, and the list has none unless it is a direct child of pathable-prose.
   - id: thumbnail-size
     status: unverified
     claim: The thumbnail is 4rem wide below a 40em viewport and 5rem from 40em, has a 1rem right margin and does not shrink.
@@ -26,7 +26,7 @@ guarantees:
     claim: The heading is 1.12rem with a line height of 1.4 and no margin, and the metadata list below it has a 0.25em top margin.
   - id: heading-typeface
     status: unmet
-    claim: The heading is set in the brand heading typeface, Fredoka.
+    claim: The heading is set in the brand heading typeface, Fredoka Regular.
 ---
 
 # Collection
@@ -106,6 +106,10 @@ colour of its own: it takes the item's text colour.
   as `pathable-inline`.
 - The description is an ordinary `<p>`; it keeps its own margins.
 - The list's text is Nunito at 0.99rem with a line height of 1.6.
+- Do not put the list directly inside `pathable-prose`: there it takes the
+  prose list spacing today, a 3ch left padding and a 0.25em bottom margin on
+  each item but the last. Wrapping it in another element inside the prose
+  avoids those rules.
 
 ## Guarantees
 
@@ -114,8 +118,8 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The heading is set in Nunito, the body typeface. The brand rules give Fredoka
-for headings, so `heading-typeface` is unmet.
+The heading is set in Nunito, the body typeface, at weight 700. The brand rules
+give Fredoka Regular for headings, so `heading-typeface` is unmet.
 
 ## The consumer owns
 

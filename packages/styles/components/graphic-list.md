@@ -10,8 +10,8 @@ guarantees:
     status: unverified
     claim: Text in the list is Nunito at 0.99rem with a line height of 1.6.
   - id: heading-type
-    status: unverified
-    claim: The heading is Fredoka at 1.12rem with a line height of 1.4, at weight 700, which the browser synthesises because the stylesheet loads only Fredoka Regular.
+    status: unmet
+    claim: The heading is Fredoka Regular at 1.12rem with a line height of 1.4.
   - id: heading-spacing
     status: unverified
     claim: The heading has no top margin when it is the first child, a 1.5em top margin when it follows another element and no bottom margin, and the element after it has a 1em top margin.
@@ -105,8 +105,11 @@ None. The typefaces, sizes and spacing are fixed in the stylesheet.
   a 0.5rem image gap and no space between blocks. Until the unmet guarantees
   are met, add the spacing between blocks yourself, for example with
   `pathable-stack`.
-- The package has no class for laying the blocks out in columns. Put them in a
-  grid of the consumer's own if the design needs more than one column.
+- For more than one column, put the blocks in a `pathable-grid` with
+  `pathable-grid--cols-2`, `pathable-grid--cols-3` or `pathable-grid--cols-4`;
+  its row gap also spaces the blocks. Those columns hold at every viewport
+  width, so switch the modifier yourself where a narrow screen needs fewer.
+  There is no column modifier specific to `pathable-graphic-list`.
 - Headings inside each block's body keep their own size and margins.
 
 ## Guarantees
@@ -116,7 +119,11 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The three unmet guarantees are spacing the stylesheet has for this list but
+Today the heading asks for weight 700 in Fredoka, and the stylesheet loads only
+Fredoka Regular, so the browser draws a synthesised bold; the brand rules give
+Fredoka Regular for headings, so `heading-type` is unmet.
+
+The other three unmet guarantees are spacing the stylesheet has for this list but
 does not apply to `pathable-media-block` children, although the package says
 the wrapper needs no other classes in the markup. The stylesheet writes the
 block spacing per row, against the framework's row element, which has no
@@ -129,6 +136,6 @@ blocks with no row element, which is how this list is built today.
   the same thing, and a real `alt` only when the image adds information.
 - Heading levels that fit the page outline, for the section heading and the
   heading in each block.
-- Spacing between the blocks, and any column layout, until the unmet
-  guarantees are met.
+- Spacing between the blocks until the unmet guarantees are met, and any
+  column layout.
 - Layout around the section: its width and the space above and below it.

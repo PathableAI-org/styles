@@ -8,7 +8,7 @@ variants: []
 guarantees:
   - id: ratio
     status: unverified
-    claim: In a parent with no set height, the box is as wide as its parent and its height is 9/16 of its width.
+    claim: In a parent with no set height that is not a flex row, the box is as wide as its parent and its height is 9/16 of its width.
   - id: fills
     status: unverified
     claim: An iframe, object, embed or other direct child is positioned over the whole box at 100% of its width and height, whatever width and height attributes it has.
@@ -75,9 +75,15 @@ None. The ratio is fixed in the stylesheet.
   `width` and `height` attributes are overridden.
 - The box takes its width from its parent. Constrain the width on the parent,
   such as a grid column, not on the box.
-- Do not set a height on the parent. The box inherits that height and then
-  narrows to keep 16:9, so it no longer fills the width. The parent's padding
-  is copied into the box too, but does not change its size.
+- Do not make the box a direct child of a flex row, such as `pathable-inline`,
+  `pathable-media-block` or `pathable-collection__item`. The box has no width
+  of its own and nothing in flow, so there it shrinks to nothing and the embed
+  disappears. Wrap it in an element that has a width.
+- Do not set a height on the parent. The box inherits that height. A parent
+  shorter than 9/16 of its width makes the box narrow to keep 16:9, so it no
+  longer fills the width; a taller parent makes the box fill the width at the
+  parent's height, so it is no longer 16:9. The parent's padding is copied into
+  the box too, but does not change its size.
 - The `<iframe>` keeps the browser's default border, which is clipped at the
   right and bottom edges. Set `border: 0` on it to fill the box edge to edge.
 - The class also works on an `<img>` itself, which is then cropped to 16:9.
