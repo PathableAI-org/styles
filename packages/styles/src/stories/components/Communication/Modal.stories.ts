@@ -31,13 +31,20 @@ const DIALOG_NAME = /Add Support Activity/i
 function openShellMarkup(options?: {
   headingId?: string
   bodyHtml?: string
+  footerHtml?: string
+  preamble?: string
 }): string {
   const headingId = options?.headingId ?? 'modal-heading'
   const bodyHtml =
     options?.bodyHtml ??
     `<p>Select the type of support activity to add to this participant's coaching plan. Activities are tied to employment goals and require supervisor approval.</p>`
 
-  return `
+  const footerHtml =
+    options?.footerHtml ??
+    `<button class="pathable-button">Add Activity</button>
+          <button class="pathable-button pathable-button--outline">Cancel</button>`
+
+  return `${options?.preamble ?? ''}
 <div class="pathable-modal-wrapper is-visible">
   <div class="pathable-modal-overlay">
     <div class="pathable-modal usa-modal" role="dialog" aria-modal="true" aria-labelledby="${headingId}">
@@ -48,8 +55,7 @@ function openShellMarkup(options?: {
         </div>
         ${bodyHtml}
         <div class="pathable-modal__footer">
-          <button class="pathable-button">Add Activity</button>
-          <button class="pathable-button pathable-button--outline">Cancel</button>
+          ${footerHtml}
         </div>
       </div>
     </div>
@@ -180,42 +186,45 @@ export const Narrow = {
 }
 
 /**
- * Increased-text fixture (WCAG 1.4.4): at 200 % root text on a narrow viewport
- * a long heading word and a footer button row stay inside the dialog.
+ * Increased-text fixture (WCAG 1.4.4): at 200 % root text on a 375px viewport
+ * the heading and a flex row of footer buttons stay inside the dialog. The
+ * row is an unclassed flex container, as in the React Modal stories.
  */
 export const IncreasedText = {
-  globals: { viewport: { value: 'mobile320', isRotated: false } },
   parameters: {
     docs: {
       description: {
         story:
-          'Open Modal with the root font size at 200 % on a 320px viewport. The heading breaks inside the dialog and the footer buttons wrap and stay inside it.',
+          'Open Modal with the root font size at 200 % on a 375px viewport. The heading breaks inside the dialog and the footer button row wraps and stays inside it.',
       },
     },
   },
-  render: () => openShellMarkup({ headingId: 'modal-heading-increased-text' }),
+  render: () =>
+    openShellMarkup({
+      headingId: 'modal-heading-increased-text',
+      // The rem-based dialog follows the root size, so the story sets it from
+      // a style element that goes away with the story.
+      preamble: '<style>:root { font-size: 200%; }</style>',
+      footerHtml: `<div style="display: flex; gap: 0.5rem; justify-content: flex-end">
+            <button class="pathable-button pathable-button--outline" type="button">Cancel</button>
+            <button class="pathable-button" type="button">Add Activity</button>
+          </div>`,
+    }),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     await assertOpenShell(canvasElement)
-    const doc = canvasElement.ownerDocument
-    const root = doc.documentElement
-    const previous = root.style.fontSize
-    root.style.fontSize = '200%'
-    try {
-      const dialog = doc.querySelector('.pathable-modal') as HTMLElement
-      const heading = doc.getElementById(
-        'modal-heading-increased-text',
-      ) as HTMLElement
-      const dialogBox = dialog.getBoundingClientRect()
-      expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
-      doc
-        .querySelectorAll('.pathable-modal__footer .pathable-button')
-        .forEach((button) => {
-          const box = button.getBoundingClientRect()
-          expect(box.left).toBeGreaterThanOrEqual(dialogBox.left)
-          expect(box.right).toBeLessThanOrEqual(dialogBox.right)
-        })
-    } finally {
-      root.style.fontSize = previous
+    const canvas = within(canvasElement)
+    const dialog = canvas.getByRole('dialog', { name: DIALOG_NAME })
+    const heading = within(dialog).getByRole('heading', {
+      name: DIALOG_NAME,
+    })
+    const dialogBox = dialog.getBoundingClientRect()
+    expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
+    for (const name of ['Cancel', 'Add Activity']) {
+      const box = within(dialog)
+        .getByRole('button', { name })
+        .getBoundingClientRect()
+      expect(box.left).toBeGreaterThanOrEqual(dialogBox.left)
+      expect(box.right).toBeLessThanOrEqual(dialogBox.right)
     }
   },
 }

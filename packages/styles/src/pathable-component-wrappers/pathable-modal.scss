@@ -92,7 +92,6 @@
   // dialog (increased text size, narrow viewport) instead of overflowing it.
   > * {
     flex-wrap: wrap;
-    max-width: 100%;
   }
 
   // A button wider than the footer breaks its label rather than overflowing.
