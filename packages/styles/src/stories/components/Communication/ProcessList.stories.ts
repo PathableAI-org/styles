@@ -24,17 +24,22 @@ export const Default = {
 
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
     const marker = getComputedStyle(item, '::before')
-    const line = getComputedStyle(item)
-    const listStyle = getComputedStyle(list)
+    const itemStyle = getComputedStyle(item)
 
     // The marker is 2.5rem across including its border.
     await expect(marker.boxSizing).toBe('border-box')
     await expect(parseFloat(marker.width)).toBeCloseTo(2.5 * rem, 1)
 
-    // The connector line is centred under the marker.
-    const markerCentre = 1.25 * rem
+    // The marker is absolutely positioned against the list, so its centre is
+    // measured from the list's edge; the connector line is the item's left
+    // border, measured from the item's edge. Both centres must coincide.
+    const markerCentre =
+      list.getBoundingClientRect().left +
+      parseFloat(marker.left) +
+      parseFloat(marker.width) / 2
     const lineCentre =
-      parseFloat(listStyle.paddingLeft) + parseFloat(line.borderLeftWidth) / 2
+      item.getBoundingClientRect().left +
+      parseFloat(itemStyle.borderLeftWidth) / 2
     await expect(lineCentre).toBeCloseTo(markerCentre, 1)
   },
   render: () => `
