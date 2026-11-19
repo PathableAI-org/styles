@@ -13,6 +13,31 @@
   @extend .usa-link;
 }
 
+// USWDS compiles the link, visited, hover, active and focus colours from the
+// theme settings, so a theme override of --pathable-color-link or
+// --pathable-color-focus-ring would not reach them. .pathable-link reads the
+// properties instead; their defaults are the values the settings give.
+// Hover and active darken the link colour, so they follow a themed link.
+.pathable-link {
+  color: var(--pathable-color-link);
+
+  &:visited {
+    color: var(--pathable-color-link);
+  }
+
+  &:hover {
+    color: color-mix(in srgb, var(--pathable-color-link) 75%, black);
+  }
+
+  &:active {
+    color: color-mix(in srgb, var(--pathable-color-link) 55%, black);
+  }
+
+  &:focus {
+    outline-color: var(--pathable-color-focus-ring);
+  }
+}
+
 .pathable-link--external {
   @extend .usa-link--external;
 }

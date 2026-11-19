@@ -1,3 +1,5 @@
+import { expect, userEvent, within } from 'storybook/test'
+
 export default {
   title: 'Components/Link',
   tags: ['autodocs'],
@@ -23,4 +25,24 @@ export const External = {
 export const NavLink = {
   render: () =>
     '<a href="#" class="pathable-link pathable-link--nav">Nav Link</a>',
+}
+
+// A theme override of link or focusRing, as ThemeProvider sets it on an
+// ancestor, reaches the link's colour and its focus outline.
+export const ThemeOverride = {
+  render: () =>
+    '<div style="--pathable-color-link: rgb(122, 31, 92); --pathable-color-focus-ring: rgb(200, 0, 0)"><a href="#" class="pathable-link">Themed Link</a></div>',
+  play: async ({
+    canvasElement,
+  }: {
+    canvasElement: HTMLElement
+  }): Promise<void> => {
+    const link = within(canvasElement).getByRole('link', {
+      name: 'Themed Link',
+    })
+    await expect(getComputedStyle(link).color).toBe('rgb(122, 31, 92)')
+    await userEvent.tab()
+    await expect(link).toHaveFocus()
+    await expect(getComputedStyle(link).outlineColor).toBe('rgb(200, 0, 0)')
+  },
 }
