@@ -16,9 +16,10 @@ and the constitution wins over both.
 | Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                                  |
 | Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/intent.md`](docs/engineering/intent.md)                                                                                            |
 | Choosing a risk tier, branching, opening or merging a pull request                                                                                                 | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                |
-| Orchestrating a feature across specification, plan, implementation, verification and review sessions, or choosing a role's model and effort                        | [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md) and the `orchestrate-stack` skill                                            |
+| Leading a delivery issue through specification, plan, implementation and its review and verification subagents, or choosing a role's model and effort              | [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md) and the `orchestrate-stack` skill                                            |
 | Verifying a slice, writing `verification.md` claims, or recording a verification report                                                                            | [`docs/engineering/verification-harness.md`](docs/engineering/verification-harness.md) and the `verification-harness` skill                           |
-| Reviewing a pushed slice as the review session, or running the pre-push self-review                                                                                | [`docs/engineering/code-review.md`](docs/engineering/code-review.md) and the `code-reviewer` skill                                                    |
+| Reviewing a pushed revision as the `code-reviewer` subagent, or running the pre-push self-review                                                                   | [`docs/engineering/code-review.md`](docs/engineering/code-review.md) and the `code-reviewer` skill                                                    |
+| Reviewing what a pushed revision renders as the `visual-reviewer` subagent                                                                                         | [`docs/engineering/visual-review.md`](docs/engineering/visual-review.md) and the `visual-reviewer` skill                                              |
 | Running a drift review of one area of the design system                                                                                                            | [`docs/engineering/drift-review.md`](docs/engineering/drift-review.md) and the `drift-review` skill                                                   |
 | Filing a delivery issue or writing a pull request body                                                                                                             | [`.github/ISSUE_TEMPLATE/delivery.md`](.github/ISSUE_TEMPLATE/delivery.md) and [`.github/pull_request_template.md`](.github/pull_request_template.md) |
 | Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                       |
@@ -86,7 +87,12 @@ Some of these rules are enforced for Claude Code by
   workflows, the hook itself and `.claude/settings.json`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
-- Merging a pull request (`gh pr merge`) asks first. Day-to-day git work
+- A `PreToolUse` hook, `scripts/claude/pr-merge-hook.mjs`, runs the
+  [merge gate](docs/engineering/git-workflow.md#the-merge-gate) on every merge
+  attempt. It approves the GitHub MCP `merge_pull_request` call for a Standard
+  or Light pull request that passes, blocks one that fails, asks a person for
+  any other pull request, and always blocks GitHub auto-merge. `gh pr merge`
+  still asks first. Day-to-day git work
   (`add`, `commit`, `checkout`, `switch`, `merge`, `pull`, `stash`, `tag` and
   non-force `push`), read-only git and `gh` commands and the check scripts
   below run without a prompt. Force pushes and `--no-verify` remain denied.

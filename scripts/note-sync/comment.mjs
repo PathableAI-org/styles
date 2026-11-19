@@ -9,7 +9,7 @@
 
 /** @typedef {import('../schema-checks.mjs').Validated} Validated */
 
-export const channelNames = ['review', 'verification']
+export const channelNames = ['review', 'verification', 'visual']
 /**
  * @typedef {(typeof channelNames)[number]} ChannelName
  */

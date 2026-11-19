@@ -48,6 +48,9 @@
       "Bash(pnpm review:show:*)",
       "Bash(pnpm notes:sync)",
       "Bash(pnpm notes:sync:*)",
+      "Bash(pnpm visual:show)",
+      "Bash(pnpm visual:show:*)",
+      "Bash(pnpm merge:gate:*)",
       "Bash(gh pr ready)",
       "Bash(gh pr ready:*)",
       "Bash(gh api *pulls/*/ccr/ready_for_review*)"
@@ -122,6 +125,16 @@
           {
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/pr-ready-hook.mjs\"",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|mcp__github__merge_pull_request|mcp__github__enable_pr_auto_merge",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/pr-merge-hook.mjs\"",
             "timeout": 60
           }
         ]

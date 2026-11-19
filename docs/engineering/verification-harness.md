@@ -1,7 +1,7 @@
 # Verification harness
 
 This document describes how a feature's verification plan decides what
-evidence each claim needs, and how a verification session gathers that
+evidence each claim needs, and how a verifier subagent gathers that
 evidence for each implementation slice before review.
 [Git workflow](git-workflow.md) owns tiers, branches and review gates.
 [Component testing](../testing/README.md) owns how component tests and
@@ -68,26 +68,26 @@ The [risk tier](git-workflow.md#risk-tiers) sets the minimum. A
 
 ## Sessions and roles
 
-| Session        | Owns                                                                                                   | Does not                                                                                   |
-| -------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| Orchestrator   | Starting and briefing the other sessions, relaying human decisions and escalations, reporting state    | Edit, merge or mark ready any branch, approve a phase, or read code                        |
-| Specification  | `spec.md`, `verification.md`, the specification pull request                                           | Plan components, classes, props or slices                                                  |
-| Plan           | `plan.md` and its slice table, `quickstart.md`, `research.md`, `contracts/`                            | Change acceptance criteria or claims                                                       |
-| Implementation | `tasks.md`, the code and stories for each slice, slice pull requests, changesets                       | Mark a slice ready without a passing verification report, or with an open blocking finding |
-| Verification   | Building pushed revisions, observing the Storybooks and packed packages, reports                       | Edit any branch or fix the implementation                                                  |
-| Review         | Reviewing pushed revisions for correctness reasoning, constitution lenses and maintainability, reviews | Edit any branch or fix the implementation                                                  |
+| Role          | Owns                                                                                                   | Does not                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| Lead session  | `spec.md`, `verification.md`, `plan.md`, `quickstart.md`, `tasks.md`, code, stories, pull requests     | Mark a slice ready without a passing verification report, or with an open blocking finding |
+| Verification  | Building pushed revisions, observing the Storybooks and packed packages, reports                       | Edit any branch or fix the implementation                                                  |
+| Review        | Reviewing pushed revisions for correctness reasoning, constitution lenses and maintainability, reviews | Edit any branch or fix the implementation                                                  |
+| Visual review | Capturing and judging what a pushed revision renders against its base, visual reviews                  | Edit any branch, baseline or fix the rendering                                             |
 
-The orchestrator starts one verification session and one review session per
-feature when the implementation session first pushes. [Code review
-session](code-review.md) owns the reviewer's scope, findings and loop. Only a
-person approves and merges a phase.
+Verification, review and visual review run as subagents of the lead session,
+from `.claude/agents/` definitions, on each pushed SHA, as
+[Orchestration](orchestration.md) describes. [Code review](code-review.md)
+owns the reviewer's scope, findings and loop. Only a
+person approves a specification or plan phase and merges High work; Standard
+slices merge under [agent merge](git-workflow.md#agent-merge).
 
 ## The verification loop
 
 ### Request
 
 When a slice is committed and pushed as a draft pull request, the
-implementation session generates the request instead of choosing claims by
+lead session generates the request instead of choosing claims by
 hand:
 
 ```sh
@@ -112,24 +112,25 @@ under `warnings`. A request with warnings cannot pass the gate, so correct the
 plan through the [corrections](git-workflow.md#corrections) path rather than
 working around it.
 
-The implementation session then sends the verification session the branch,
-the pushed SHA, the slice ID, and any change to the run instructions since the
-last request. The verifier regenerates the request from the SHA itself. It
-checks only pushed commits and never reads the implementation session's
+The lead session then starts the verifier subagent with only the branch, the
+pushed SHA, the base SHA, the slice ID, the pull request number, the round and
+any change to the run instructions since the last request. The verifier regenerates the request from the SHA itself. It
+checks only pushed commits and never reads the lead session's
 uncommitted work.
 
 ### Environment
 
-The verification session owns its environment:
+The verifier subagent owns its environment:
 
 - Its own worktree, detached at the requested SHA, with
   `pnpm install --frozen-lockfile`. It is read-only with respect to the
   implementation branch.
 - Its own builds from that worktree: `pnpm build`, then the Storybook builds
-  the request needs. Nothing is reused from another session's output.
+  the request needs. Nothing is reused from the lead session's output.
 - Its own ports. `scripts/test-storybook.mjs` uses 6006 and 6007 and fails on
-  an occupied port; a cloud session has its own container, but on a shared
-  machine, run one verifier at a time.
+  an occupied port, so run one verifier at a time per machine. The visual
+  reviewer uses 6020 and 6021 and the pixel suite 6014, so they can run
+  alongside it.
 - The pre-installed Playwright Chromium. Do not install another browser.
 - Synthetic content only, as in the stories (constitution X).
 
@@ -148,7 +149,7 @@ executed it.
 
 ### Report
 
-The verification session records one result per requested claim ID:
+The verifier subagent records one result per requested claim ID:
 
 | Result            | Meaning                                                                          |
 | ----------------- | -------------------------------------------------------------------------------- |
@@ -184,8 +185,8 @@ session's clone can import it. [Code review storage](code-review.md#storage)
 owns how entries are published and synced, the author rule and the trust
 model. Do not push or configure pushing for the notes ref itself.
 
-The note is the record. The verification session then sends the
-implementation session only a pointer, such as
+The note is the record. The verifier subagent then replies to the lead
+session with only a pointer, such as
 `refs/notes/verification @ <SHA> (run <uuid>)`. `pnpm verify:show <SHA>` syncs
 the branch's pull request and prints the report. Raw command output,
 screenshots and transcripts are not committed.
@@ -211,7 +212,7 @@ get no screenshots.
 
 ### Gate and escalation
 
-The implementation session fixes the slice and requests verification again. A
+The lead session fixes the slice and requests verification again. A
 slice may be marked ready for review only when its latest report shows all of
 the following:
 
@@ -274,7 +275,7 @@ A slice pull request cannot create its own exception. A new limitation goes
 back through the [corrections](git-workflow.md#corrections) path to the phase
 that owns it.
 
-Escalate to the orchestrator, and through it to a person, instead of patching
+Escalate to a person, through the lead session, instead of patching
 the implementation when:
 
 - a finding belongs to the specification or plan under the
@@ -291,7 +292,7 @@ those analyses need into the one escalation.
 
 ### Recording
 
-The implementation session does not summarize the report by hand. It runs
+The lead session does not summarize the report by hand. It runs
 `pnpm verify:render --write`, which appends the latest report on HEAD (or on a
 named commit: `pnpm verify:render <SHA> --write`) to the feature's
 `quickstart.md` execution results. The generated section names the slice's
@@ -310,7 +311,9 @@ no new verification request.
   They do not establish behaviour in Windows High Contrast or other browsers.
 - `test:visual` measures render health and overflow; it does not compare
   pixels. The pixel suites compare pixels only for the stories listed for
-  rollout components. A claim about exact visual appearance outside that coverage is judged
+  rollout components. For Standard work the
+  [visual review](visual-review.md) judges appearance outside that coverage.
+  For High work a claim about exact visual appearance outside that coverage is judged
   by a person from the verifier's
   [screenshots](#screenshots-for-visual-claims) and the story links the pull
   request names.

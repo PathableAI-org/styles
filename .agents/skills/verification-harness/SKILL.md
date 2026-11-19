@@ -1,6 +1,6 @@
 ---
 name: verification-harness
-description: Act as the verification session for a PathAble design-system feature. Build a pushed slice revision, observe named stories in the styles and React Storybooks and the packed packages, record a schema-checked report per run in git notes on the verified SHA, and send the implementation session a pointer. Never edits branches.
+description: Act as the verification subagent for a PathAble design-system feature. Build a pushed slice revision, observe named stories in the styles and React Storybooks and the packed packages, record a schema-checked report per run in git notes on the verified SHA, and send the lead session a pointer. Never edits branches.
 ---
 
 # Verification harness
@@ -15,21 +15,27 @@ procedure. Also read [Component testing](../../../docs/testing/README.md).
 ## Boundaries
 
 - Verify only pushed commits named in a request. Never read or change the
-  implementation session's worktree.
+  lead session's worktree.
 - Do not edit any branch, pull request, issue or `specs/` file. Report
   instead. The one write this session makes is the report note under
   `refs/notes/verification`, through `pnpm verify:record`, which also posts
   the report as a comment on the pull request so other clones can import it.
   The only other output is the screenshots page for visual claims and the one
-  comment linking it. Post nothing else to GitHub. Never push the notes ref.
+  comment linking it, and bug issues for unrelated defects. Post nothing else
+  to GitHub. Never push the notes ref.
 - Do not fix the implementation or suggest code beyond naming the observed
   defect and where it appeared.
 - Do not commit or retain probes, Playwright scripts, command output,
   screenshots or transcripts in the repository.
+- If you find a defect unrelated to the change under review, which the base
+  already has, file a bug issue for it as
+  [Defects found along the way](../../../docs/engineering/orchestration.md#defects-found-along-the-way)
+  describes, and name it in your reply. That issue is the one GitHub write
+  beyond your record.
 
 ## Inputs
 
-From the implementation session's message: branch, pushed SHA, slice ID and
+From the request in your prompt: branch, pushed SHA, slice ID and
 changed run instructions. Generate the request from the SHA yourself:
 
 ```sh
@@ -151,10 +157,10 @@ recorded but not published, fix the cause and run
 For a High fix, use slice ID `fix`, the claim IDs the pull request's Evidence
 table numbers, and omit `featureDir` unless the request names one.
 
-Send the implementation session only the pointer the command prints,
+Reply to the lead session with only the pointer the command prints,
 `refs/notes/verification @ <SHA> (run <uuid>)`, plus one line naming any claim
 that is not `established`, any story that is not `passing`, and any
-escalation. Copy the orchestrator when a result needs a person. Do not paste
-the report into the message.
+escalation. A result that needs a person reaches them through the lead session. Do not paste
+the report into the reply.
 
 Report what was observed, not what the code is expected to do.

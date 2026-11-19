@@ -29,7 +29,11 @@ import {
 /** @typedef {import('./github-access.mjs').RestAccess} RestAccess */
 import { formatComment, parseComment } from './note-sync/comment.mjs'
 /** @typedef {import('./note-sync/comment.mjs').ChannelName} ChannelName */
-import { renderReport, renderReview } from './note-sync/render.mjs'
+import {
+  renderReport,
+  renderReview,
+  renderVisualReview,
+} from './note-sync/render.mjs'
 /** @typedef {import('./note-sync/render.mjs').Earlier} Earlier */
 /** @typedef {import('./note-sync/render.mjs').RenderContext} RenderContext */
 import {
@@ -41,14 +45,23 @@ import {
 /** @typedef {import('./review-findings.mjs').Review} Review */
 import { importReport, reportAt, validateReport } from './verification.mjs'
 /** @typedef {import('./verification.mjs').VerificationReport} VerificationReport */
+import {
+  defaultVisualNotesRef,
+  importVisualReview,
+  latestVisualReview,
+  validateVisualReview,
+} from './visual-review.mjs'
+/** @typedef {import('./visual-review.mjs').VisualReview} VisualReview */
 
 export { channelNames } from './note-sync/comment.mjs'
 /** @typedef {import('./note-sync/comment.mjs').ChannelName} ChannelName */
 
 /**
- * The review notes ref, which trials may change. Verification reports always use refs/notes/verification.
+ * The review and visual review notes refs, which trials may change; the visual ref defaults to refs/notes/visual.
+ * Verification reports always use refs/notes/verification.
  * @typedef {object} NoteRefs
  * @property {string} review
+ * @property {string | undefined} [visual]
  */
 
 /**
@@ -101,6 +114,23 @@ const review = {
   sha: (entry) => entry.reviewedSha,
   validate: validateReview,
 }
+
+/** The visual review notes ref of `refs`, refs/notes/visual unless a trial names another. */
+const visualRef = (refs) => refs?.visual ?? defaultVisualNotesRef
+
+const visual = {
+  id: (entry) => entry.visualReviewId,
+  import: (cwd, refs, json) => importVisualReview(cwd, visualRef(refs), json),
+  latest: (cwd, refs, revision) =>
+    latestVisualReview(cwd, visualRef(refs), revision),
+  name: 'visual',
+  render: renderVisualReview,
+  sha: (entry) => entry.reviewedSha,
+  validate: validateVisualReview,
+}
+
+/** Every channel by its comment marker kind. */
+const channels = { review, verification, visual }
 
 /** The open pull request whose head branch has `sha` at its tip, or pull request `pr` when the caller names one. */
 const pullForSha = (cwd, rest, sha, pr) => {
@@ -198,22 +228,18 @@ export const publishReport = (target, report) =>
 /** Posts a recorded review on the pull request for its reviewed SHA, unless that pull request already has it. */
 export const publishReview = (target, entry) => publish(review, target, entry)
 
-/** Posts the latest local entry of `kind` on `revision`, for a record whose posting failed. */
-export const publishLatest = (
-  target,
+/** Posts a recorded visual review on the pull request for its reviewed SHA, unless that pull request already has it. */
+export const publishVisualReview = (target, entry) =>
+  publish(visual, target, entry)
 
-  kind,
-  revision,
-) => {
+/** Posts the latest local entry of `kind` on `revision`, for a record whose posting failed. */
+export const publishLatest = (target, kind, revision) => {
   const pr = pullRequestOption(target.pr)
   if (!pr.ok) return pr
   const options = { ...target, pr: pr.value }
-  if (kind === 'review') {
-    const latest = review.latest(target.cwd, target.refs, revision)
-    return latest.ok ? publish(review, options, latest.value) : latest
-  }
-  const latest = verification.latest(target.cwd, target.refs, revision)
-  return latest.ok ? publish(verification, options, latest.value) : latest
+  const channel = channels[kind]
+  const latest = channel.latest(target.cwd, target.refs, revision)
+  return latest.ok ? publish(channel, options, latest.value) : latest
 }
 
 /** Publishes an entry a record command just recorded and writes the outcome. Returns the command's exit code. */
@@ -243,6 +269,19 @@ export const publishRecordedReview = (target, entry) => {
     return publishAndWrite(review, target, entry)
   process.stdout.write(
     `Not published: ${target.ref} is a trial ref, and only ${defaultNotesRef} entries are posted.\n`,
+  )
+  return 0
+}
+
+/**
+ * Publishes a visual review `visual:record` just recorded, like `publishRecordedReview`: one recorded in a trial ref
+ * is not posted.
+ */
+export const publishRecordedVisualReview = (target, entry) => {
+  if (target.ref === defaultVisualNotesRef)
+    return publishAndWrite(visual, target, entry)
+  process.stdout.write(
+    `Not published: ${target.ref} is a trial ref, and only ${defaultVisualNotesRef} entries are posted.\n`,
   )
   return 0
 }
@@ -318,10 +357,11 @@ const syncComment = (target, comment) => {
     }
   }
   if (!parsed.ok) return { rejected: `${label}: ${parsed.problems.join('; ')}` }
-  const outcome =
-    parsed.value.kind === 'review'
-      ? importComment(review, target, parsed.value)
-      : importComment(verification, target, parsed.value)
+  const outcome = importComment(
+    channels[parsed.value.kind],
+    target,
+    parsed.value,
+  )
   if (!outcome.ok)
     return { rejected: `${label}: ${outcome.problems.join('; ')}` }
   return outcome.value === 'unavailable'
