@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only\n\n**Semantics verified**: Meaningful icons expose an image role and accessible name. Decorative icons are hidden from assistive technology while adjacent text retains the meaning. Every icon renders at 24 px and paints its shapes in the current text colour.\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required. Use filled artwork, such as the USWDS icon set these stories draw from: `.pathable-icon` paints with `fill: currentColor`, which overrides a `fill="none"` attribute, so stroke-only artwork renders as solid shapes. Size the icon through `font-size`: `.pathable-icon` is `1em` square, which overrides the `width` and `height` attributes. Keep those attributes at the intended size as the fallback when the CSS has not loaded.',
+          '**Interaction Model**: CSS-only\n\n**Semantics verified**: Meaningful icons expose an image role and accessible name. Decorative icons are hidden from assistive technology while adjacent text retains the meaning. Every icon renders at 24 px from `font-size` and paints its shapes in the current text colour, which the stories set to `--pathable-color-text`.\n\n**Consumers must**: Import `@pathableai/styles` CSS. No JavaScript required. Use filled artwork, such as the USWDS icon set these stories draw from: `.pathable-icon` paints with `fill: currentColor`, which overrides a `fill="none"` attribute, so stroke-only artwork renders as solid shapes. Size the icon through `font-size`: `.pathable-icon` is `1em` square, which overrides the `width` and `height` attributes, so these stories leave them out.',
       },
     },
   },
@@ -17,14 +17,19 @@ export default {
  * Filled artwork from the USWDS icon set (`@uswds/uswds/dist/img/usa-icons`),
  * which `.pathable-icon` wraps through `.usa-icon`.
  */
-const ICONS: ReadonlyArray<{ name: string; paths: readonly string[] }> = [
-  {
-    name: 'schedule',
-    paths: [
-      'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',
-      'M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z',
-    ],
-  },
+type IconArtwork = { name: string; paths: readonly string[] }
+
+/** The clock artwork, also used by the meaningful and decorative stories. */
+const SCHEDULE: IconArtwork = {
+  name: 'schedule',
+  paths: [
+    'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',
+    'M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z',
+  ],
+}
+
+const ICONS: readonly IconArtwork[] = [
+  SCHEDULE,
   {
     name: 'insights',
     paths: [
@@ -94,30 +99,36 @@ const ICONS: ReadonlyArray<{ name: string; paths: readonly string[] }> = [
   },
 ]
 
-const CLOCK = ICONS[0]
-
-/** `.pathable-icon` is `1em` square, so 1.5rem sizes the icon to 24 px. */
-const ICON_SIZE_STYLE = 'font-size: 1.5rem;'
+/**
+ * `.pathable-icon` is `1em` square, so 1.5rem sizes the icon to 24 px. The
+ * text token colour is not the browser's default black, which is also the SVG
+ * initial fill, so the play functions can tell `fill: currentColor` applied.
+ */
+const ICON_STYLE = 'font-size: 1.5rem; color: var(--pathable-color-text);'
 
 const iconPaths = (paths: readonly string[]) =>
   paths.map((d) => `<path d="${d}" />`).join('')
 
-const iconTile = ({ name, paths }: (typeof ICONS)[number]) => `
+const iconTile = ({ name, paths }: IconArtwork) => `
   <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100px; text-align: center;">
-    <svg class="pathable-icon" style="${ICON_SIZE_STYLE}" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${iconPaths(paths)}</svg>
+    <svg class="pathable-icon" style="${ICON_STYLE}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${iconPaths(paths)}</svg>
     <span style="font-size: 0.75rem;">${name}</span>
   </div>`
 
 /**
  * The icon renders at its intended 24 px and paints every shape with the
- * current text colour. The artwork is filled, not stroked: `.pathable-icon`
- * fills stroke-only artwork into solid shapes (#310), so no shape may carry a
- * stroke.
+ * current text colour, both from `.pathable-icon`: the SVGs carry no `width`,
+ * `height` or `fill` attributes, so without the class they would render at the
+ * SVG default size with a black fill. The artwork is filled, not stroked:
+ * `.pathable-icon` fills stroke-only artwork into solid shapes (#310), so no
+ * shape may carry a stroke.
  */
 const verifyIconRendering = async (icon: Element) => {
   const style = getComputedStyle(icon)
 
   await expect(icon).toHaveClass('pathable-icon')
+  // Black is the SVG initial fill, so the fill check needs another colour.
+  await expect(style.color).not.toBe('rgb(0, 0, 0)')
   await expect(style.width).toBe('24px')
   await expect(style.height).toBe('24px')
   await expect(style.fill).toBe(style.color)
@@ -151,7 +162,7 @@ export const Default = AllIcons
 
 export const MeaningfulIcon = {
   render: () => `
-    <svg class="pathable-icon" style="${ICON_SIZE_STYLE}" role="img" aria-label="Upcoming appointment" focusable="false" width="24" height="24" viewBox="0 0 24 24">${iconPaths(CLOCK.paths)}</svg>
+    <svg class="pathable-icon" style="${ICON_STYLE}" role="img" aria-label="Upcoming appointment" focusable="false" viewBox="0 0 24 24">${iconPaths(SCHEDULE.paths)}</svg>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
@@ -165,7 +176,7 @@ export const MeaningfulIcon = {
 export const DecorativeIcon = {
   render: () => `
     <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
-      <svg data-testid="decorative-icon" class="pathable-icon" style="${ICON_SIZE_STYLE}" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24">${iconPaths(CLOCK.paths)}</svg>
+      <svg data-testid="decorative-icon" class="pathable-icon" style="${ICON_STYLE}" aria-hidden="true" focusable="false" viewBox="0 0 24 24">${iconPaths(SCHEDULE.paths)}</svg>
       <span>Upcoming appointment at 2:00 PM</span>
     </span>
   `,

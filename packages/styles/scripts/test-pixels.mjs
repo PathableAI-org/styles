@@ -142,13 +142,13 @@ const STORIES = [
     id: 'interaction-controls-integration--toolbar-panel',
     key: 'integration/toolbar-panel',
   },
-  // Icon aggregate: twelve filled icons from the USWDS icon set, each sized
-  // through font-size to 24 px and painted in the current text colour (#310).
-  // The play function asserts the size and fill; this image adds what an
-  // assertion cannot name: the artwork's shapes and their alignment above the
-  // labels as the row wraps at each viewport. Not shown: the meaningful and
-  // decorative stories, which differ only in ARIA, and the default 1em size
-  // without a font-size.
+  // Icon aggregate: twelve filled icons from the USWDS icon set (#310). The
+  // SVGs carry no width, height or fill attributes, so the image shows the
+  // class's own rules: the 1em box sized to 24 px by font-size and the
+  // currentColor fill in the text token colour, plus the artwork's shapes and
+  // their alignment above the labels as the row wraps. The play function
+  // asserts the size and fill. Not shown: the meaningful and decorative
+  // stories, which differ only in ARIA.
   {
     id: 'components-layout-icon--all-icons',
     key: 'icon/all-icons',
