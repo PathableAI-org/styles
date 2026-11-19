@@ -1,4 +1,4 @@
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, within } from 'storybook/test'
 
 import { contrastRatio, findOpaqueBackground } from '../shared/contrast'
 import { expectKeyboardFocusIndicator } from '../shared/focus-indicator'
@@ -254,14 +254,15 @@ const nestedCases: (FocusCase & { outer: string; inner: string })[] = [
 ]
 
 // The dark background utilities reset the ring on containers only. On the
-// controls themselves, including their hover variants, the ring stays the
-// surface's.
+// controls themselves the ring stays the surface's. The hover: variants use
+// the same exclusion, but a play function cannot put an element in CSS
+// :hover, so they are not asserted here.
 const utilitiesOnControls: FocusCase & { outer: string; inner: string } = {
   label: 'Utilities on controls in brand',
   outer: 'pathable-surface pathable-surface--brand',
   inner: 'pathable-surface pathable-surface--base',
   ring: '--pathable-color-on-accent',
-  controlClass: 'pathable-bg-primary hover:pathable-bg-link',
+  controlClass: 'pathable-bg-primary',
 }
 nestedCases.push(utilitiesOnControls)
 
@@ -272,7 +273,7 @@ export const KeyboardFocusOnSurfaces = {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utilities (and a hover variant) on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; #362 tracks that component-owned outline.",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; #362 tracks that component-owned outline.",
       },
     },
   },
@@ -358,19 +359,6 @@ export const KeyboardFocusOnSurfaces = {
         ),
       ).toBeGreaterThanOrEqual(3)
     }
-
-    // Hovering a focused control that carries hover:pathable-bg-link keeps
-    // the surface's ring.
-    const hovered = canvas.getByRole('button', {
-      name: `Close on ${utilitiesOnControls.label}`,
-    })
-    hovered.focus()
-    const ringBeforeHover = view.getComputedStyle(hovered).outlineColor
-    await userEvent.hover(hovered)
-    await expect(view.getComputedStyle(hovered).outlineColor).toBe(
-      ringBeforeHover,
-    )
-    await userEvent.unhover(hovered)
   },
 }
 
