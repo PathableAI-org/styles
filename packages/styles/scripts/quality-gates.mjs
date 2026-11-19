@@ -380,6 +380,13 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
         'Native checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
     },
   ],
+  'components-form-controls-radio--with-hint-and-error': [
+    {
+      selector: 'input[type="radio"]',
+      reason:
+        'Native radio inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
+    },
+  ],
   'components-form-controls-optional-form-section--form-composition': [
     {
       selector: 'input[type="radio"]',
