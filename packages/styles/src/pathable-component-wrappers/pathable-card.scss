@@ -42,6 +42,11 @@
 // media to a fixed column from the tablet breakpoint up, so flag cards keep
 // that behaviour there and are sized like any other card below it.
 @mixin pathable-card-media-fit {
+  // Full-width media must not square off the container's rounded top corners.
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+
   > img,
   > svg,
   > video,
@@ -58,7 +63,7 @@
   @include pathable-card-media-fit;
 }
 
-@media (max-width: 39.99em) {
+@include at-media-max($theme-card-flag-min-width) {
   .pathable-card--flag .pathable-card__media {
     @include pathable-card-media-fit;
   }

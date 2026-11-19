@@ -126,6 +126,36 @@ export const MediaCardNarrow = {
   },
 }
 
+export const FlagMediaCard = {
+  render: () => `
+    <div class="pathable-card pathable-card--flag" data-testid="flag-media-card">
+      <div class="pathable-card__container">
+        <div class="pathable-card__media" data-testid="flag-media">
+          <svg role="img" aria-label="Flag card media" focusable="false" viewBox="0 0 600 400" width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="400" fill="currentColor" opacity="0.08" />
+          </svg>
+        </div>
+        <div class="pathable-card__header">
+          <h3 class="pathable-card__heading">Flag Media Card</h3>
+        </div>
+        <div class="pathable-card__body">
+          <p>Flag cards crop their media to a column from the tablet breakpoint up and scale it to the card width below it.</p>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const card = canvas.getByTestId('flag-media-card')
+    const media = canvas.getByTestId('flag-media')
+
+    await expect(card).toHaveClass('pathable-card--flag')
+    await expect(media.getBoundingClientRect().width).toBeLessThan(
+      card.getBoundingClientRect().width / 2,
+    )
+  },
+}
+
 export const CardWithVariants = {
   render: () => `
     <div class="pathable-card pathable-card--header-first" data-testid="header-first-card">
