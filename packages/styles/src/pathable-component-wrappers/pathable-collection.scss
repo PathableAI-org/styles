@@ -19,6 +19,7 @@
 
 .pathable-collection__heading {
   @extend .usa-collection__heading;
+  font-family: var(--pathable-font-heading);
 }
 
 .pathable-collection__body {
