@@ -37,7 +37,7 @@
 
 .pathable-workflow-panel__current-activity {
   font-size: type-scale('sm');
-  color: color('gray-30');
+  color: color('gray-60');
   font-weight: var(--pathable-font-weight-normal);
 }
 
@@ -109,7 +109,7 @@
     display: inline-flex;
     align-items: center;
     gap: units(0.5);
-    color: color('success');
+    color: color('success-dark');
   }
 }
 
@@ -121,7 +121,7 @@
     padding: units(1);
     background-color: color('warning-lighter');
     border-radius: radius('sm');
-    color: color('warning-darker');
+    color: color('ink');
     font-size: type-scale('sm');
   }
 
@@ -158,7 +158,7 @@
     gap: units(0.5);
     font-size: type-scale('md');
     font-weight: var(--pathable-font-weight-bold);
-    color: color('success');
+    color: color('success-dark');
   }
 }
 
