@@ -5,7 +5,7 @@ import { expect, userEvent } from 'storybook/test'
  * to the computed `rgb()` string the browser uses, so focus assertions compare
  * against the token rather than a hard-coded value.
  */
-const resolveColor = (canvasElement: HTMLElement, value: string) => {
+export const resolveColor = (canvasElement: HTMLElement, value: string) => {
   const probe = canvasElement.ownerDocument.createElement('span')
   probe.hidden = true
   probe.style.color = value
