@@ -275,51 +275,61 @@ const focusCases = [...focusSurfaces, ...nestedCases]
 const componentRingCases = [
   {
     label: 'Inset',
+    text: '--pathable-color-text',
     outer: 'pathable-surface pathable-surface--inset',
     ring: '--pathable-color-text',
   },
   {
     label: 'Brand',
+    text: '--pathable-color-on-accent',
     outer: 'pathable-surface pathable-surface--brand',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Accent utility',
+    text: '--pathable-color-on-accent',
     outer: 'pathable-bg-accent',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Success utility',
+    text: '--pathable-color-on-accent',
     outer: 'pathable-bg-success',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Base utility',
+    text: '--pathable-color-text',
     outer: 'pathable-bg-base',
     ring: '--pathable-color-text',
   },
   {
     label: 'Danger utility',
+    text: '--pathable-color-status-danger-text',
     outer: 'pathable-bg-danger',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Success alert',
+    text: '--pathable-color-on-accent',
     outer: 'pathable-alert pathable-alert--success',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Warning alert',
+    text: '--pathable-color-on-accent',
     outer: 'pathable-alert pathable-alert--warning',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Error alert',
+    text: '--pathable-color-status-danger-text',
     outer: 'pathable-alert pathable-alert--error',
     ring: '--pathable-color-on-accent',
   },
   {
     label: 'Emergency alert',
+    text: '--pathable-color-status-danger-text',
     outer: 'pathable-alert pathable-alert--emergency',
     ring: '--pathable-color-status-danger-text',
   },
@@ -338,12 +348,12 @@ export const ComponentFocusOnBackgrounds = {
     <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: stretch;">
       ${componentRingCases
         .map(
-          ({ label, outer }) => `
-        <div class="${outer} pathable-stack pathable-stack--gap-sm pathable-padding-3" style="${blockStyle}">
+          ({ label, outer, text }) => `
+        <div class="${outer} pathable-stack pathable-stack--gap-sm pathable-padding-3" style="${blockStyle} margin: 0; color: var(${text});">
           <div style="font-size: 0.875rem; font-weight: 600;">${label}</div>
           <div class="pathable-surface pathable-surface--interactive pathable-padding-2" tabindex="0" aria-label="Card on ${label}">Card</div>
-          <a class="pathable-link" href="#focus-${label.replaceAll(' ', '-')}">Link on ${label}</a>
-          <button type="button" class="pathable-button pathable-button--unstyled">Unstyled on ${label}</button>
+          <a class="pathable-link" style="color: inherit;" href="#focus-${label.replaceAll(' ', '-')}">Link on ${label}</a>
+          <button type="button" class="pathable-button pathable-button--unstyled" style="color: inherit;">Unstyled on ${label}</button>
           <span class="pathable-filter-pill">
             <span class="pathable-filter-pill__label">Pill</span>
             <button type="button" class="pathable-filter-pill__dismiss" aria-label="Remove pill on ${label}">&times;</button>
