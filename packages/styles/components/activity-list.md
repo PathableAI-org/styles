@@ -17,7 +17,7 @@ guarantees:
     claim: Rows stack in one column 16 px apart by default, and setting --pathable-activity-list-gap on the list changes that gap.
   - id: density
     status: unverified
-    claim: Row padding and the gap between a row's parts are 16, 24 or 32 px and the title is 12, 14 or 16 px at compact, default and comfortable.
+    claim: Row padding and the gap between a row's parts are 16, 24 or 32 px and the title is 12, 14 or 16 px at compact, default and comfortable, except that at a viewport 640 px wide or narrower the default row's gap is 16 px.
   - id: single-line-truncation
     status: unverified
     claim: The title, context, status text, date and owner text each stay on one line and end in an ellipsis instead of wrapping or overflowing the row.
@@ -32,7 +32,7 @@ guarantees:
     claim: At a viewport 640 px wide or narrower a row wraps, and the date moves to its own full-width line above the rest of the row.
   - id: group-heading-spacing
     status: unverified
-    claim: A group heading has 32 px above it and 16 px below it, except a heading that is the first child of its list, which has no space above.
+    claim: A group heading has a 32 px top margin and a 16 px bottom margin, except a heading that is the first child of its list, which has no top margin; inside a list these add to the list's gap, giving 48 px above and 32 px below by default.
   - id: empty-message
     status: unverified
     claim: With the empty modifier, the empty message is centred with 64 px of padding above and below and 32 px at the sides.
@@ -96,13 +96,13 @@ Load the stylesheet once in the application; no JavaScript is needed:
 Add at most one modifier class from each axis to `pathable-activity-list`. A
 density modifier also applies to rows in lists nested inside it.
 
-| Axis    | Value         | Class                                 | What it is for                                |
-| ------- | ------------- | ------------------------------------- | --------------------------------------------- |
-| density | `compact`     | `pathable-activity-list--compact`     | 16 px row padding and gap, 12 px title        |
-| density | `default`     | none                                  | 24 px row padding and gap, 14 px title        |
-| density | `comfortable` | `pathable-activity-list--comfortable` | 32 px row padding and gap, 16 px title        |
-| empty   | `default`     | none                                  | The list holds rows                           |
-| empty   | `empty`       | `pathable-activity-list--empty`       | The list holds only an empty message, centred |
+| Axis    | Value         | Class                                 | What it is for                                                           |
+| ------- | ------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| density | `compact`     | `pathable-activity-list--compact`     | 16 px row padding and gap, 12 px title                                   |
+| density | `default`     | none                                  | 24 px row padding and gap (16 px gap at 640 px or narrower), 14 px title |
+| density | `comfortable` | `pathable-activity-list--comfortable` | 32 px row padding and gap, 16 px title                                   |
+| empty   | `default`     | none                                  | The list holds rows                                                      |
+| empty   | `empty`       | `pathable-activity-list--empty`       | The list holds only an empty message, centred                            |
 
 The empty modifier is a state the application sets when there is nothing to
 show; it only styles a `pathable-activity-list__empty` element inside it.
@@ -127,7 +127,9 @@ corners; on hover the row background changes to the page background colour.
 - `pathable-activity-list__group-heading`: a heading (such as an `<h3>`) that
   names a group. To group rows, put headings and nested
   `pathable-activity-list` containers inside an outer list, and label each
-  nested list with its heading through `aria-labelledby`.
+  nested list with its heading through `aria-labelledby`. The heading's
+  margins add to the outer list's gap, so by default a heading has 48 px
+  above it and 32 px below it.
 - `pathable-activity-row`: one item, a flex row with its parts centred
   vertically. Its parts, in order:
   - `pathable-activity-row__status`: an empty `<span>` with a `data-status`
@@ -142,7 +144,9 @@ corners; on hover the row background changes to the page background colour.
     `pathable-activity-row__owner-text`, which truncates; an avatar or icon
     can sit beside it with an 8 px gap.
   - `pathable-activity-row__actions`: optional trailing controls, kept at
-    their own width with an 8 px gap.
+    their own width with an 8 px gap. Each `pathable-button` keeps its own
+    0.5rem right margin, so buttons appear 16 px apart and the last one stops
+    0.5rem short of the row's padding edge.
 - `pathable-activity-list__empty`: the empty message, inside a list with
   `pathable-activity-list--empty`.
 - The list fills its container's width; it has no padding of its own.

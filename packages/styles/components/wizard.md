@@ -20,7 +20,7 @@ guarantees:
     claim: Every pathable-button in the action footer is at least 44 by 44 px at every viewport width.
   - id: action-order
     status: unverified
-    claim: Above a 640 px viewport, footer buttons sit in a wrapping row 8 px apart, and the continue button, the submit button and the last button are pushed to the inline end.
+    claim: At a viewport 640 px wide or wider, footer buttons sit in a wrapping row 16 px apart (an 8 px gap plus each button's 0.5rem right margin), and the continue button, the submit button and the last button are pushed to the inline end, stopping 0.5rem short of it.
   - id: mobile-footer
     status: unverified
     claim: Below a 640 px viewport, the action footer sticks to the bottom of the viewport as two equal columns, with a save button alone and centred on the first row.
@@ -137,6 +137,13 @@ Direct children stack in source order, each separated by the wizard gap:
   (`pathable-button--save`), back (`pathable-button--back`), then continue
   (`pathable-button--continue`) or, on the final step, submit
   (`pathable-button--submit`). Leave out the back button on the first step.
+  The footer puts an 8 px gap between buttons, and each `pathable-button`
+  keeps its own 0.5rem right margin, so buttons appear 16 px apart and the
+  last one stops 0.5rem short of the footer's end.
+
+The wizard sets no working font size for `pathable-wizard__heading`,
+`pathable-wizard__section` or `pathable-wizard__mobile-summary`, so they render
+at the inherited or element default size; set a size yourself if you need one.
 
 ## Guarantees
 

@@ -23,7 +23,7 @@ guarantees:
     claim: At a viewport 1024 px wide or narrower, question groups stack in one column and the action is full width and at least 44 px tall.
   - id: choice-target
     status: unverified
-    claim: Every label inside a question's controls is at least 44 px tall, with the input and its text centred vertically 8 px apart.
+    claim: Every label inside a question's controls is at least 44 px tall, with the input and its text centred vertically and an 8 px gap between them.
   - id: text-measure
     status: unverified
     claim: The explanatory text is at most 640 px wide whatever the panel's width.
@@ -99,7 +99,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
       </div>
     </fieldset>
   </div>
-  <button type="submit" class="pathable-button pathable-wayfinder__action">
+  <button type="button" class="pathable-button pathable-wayfinder__action">
     Show results
   </button>
 </section>
@@ -147,8 +147,11 @@ Children stack in a column in source order:
   - `pathable-wayfinder__question-label`: the `<legend>` that asks the
     question;
   - `pathable-wayfinder__question-controls`: a column of `<label>` elements,
-    each wrapping one radio button or checkbox and its text. Radio buttons
-    and checkboxes take the accent colour.
+    each wrapping one radio button or checkbox and its text. Each label is
+    60 px tall at least: a 44 px minimum height plus 8 px padding above and
+    below. The browser's own input margins add about 3 px to the 8 px gap
+    and indent the input about 5 px. Radio buttons and checkboxes take the
+    accent colour.
 - `pathable-wayfinder__action`: the result action, usually a
   `pathable-button`, placed last.
 
@@ -169,9 +172,13 @@ from the package source, and no test checks it yet.
   `<fieldset>` with a `<legend>`, and hide the icon with `aria-hidden="true"`.
 - The controls. The wayfinder styles only the `<label>` elements in a
   question's controls and the accent colour of radio buttons and checkboxes.
-  It does not style other inputs, such as selects or text fields; give those
+  In the default theme that accent is 2.8:1 on white, below the 3:1 a
+  control's state needs, so check the selected state is clear. It does not
+  style other inputs, such as selects or text fields; give those
   their own component classes. The action keeps its `pathable-button` look;
   the wayfinder only places and, on narrow screens, widens it.
 - What the answers do: reading them, validating them and showing results.
+  Wrap the panel in a `<form>` and make the action `type="submit"` if it
+  should submit; the example uses `type="button"` for a scripted action.
 - The heading level, the wording and the number of questions; keep them few.
 - Layout around the panel, including its maximum width.

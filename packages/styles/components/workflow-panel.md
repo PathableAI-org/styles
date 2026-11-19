@@ -15,7 +15,7 @@ guarantees:
     claim: The panel is a single column at most --pathable-workflow-panel-max-width wide (320 px by default) with --pathable-workflow-panel-gap (12 px by default) between its regions.
   - id: prompt-scroll
     status: unverified
-    claim: The prompt has 12 px padding and is at most 320 px tall, scrolling vertically inside itself when its content is longer.
+    claim: The prompt has 12 px padding and its content is at most 320 px tall (344 px with the padding), scrolling vertically inside itself when its content is longer.
   - id: status-text
     status: unverified
     claim: Each state modifier writes a fixed English message before the status region's content (Loading…, Saving…, ✓ Saved, the offline warning, the validation warning or ✓ Completed), and the default state writes none.
@@ -24,16 +24,13 @@ guarantees:
     claim: In the completed state the prompt and input regions are not displayed and every other region still is.
   - id: empty-regions
     status: unverified
-    claim: An objective or current-activity region with no content is not displayed and leaves no gap.
+    claim: An objective or current-activity region with no child nodes at all, not even whitespace, is not displayed and leaves no gap.
   - id: action-targets
     status: unverified
     claim: Every pathable-button in the actions region is at least 44 by 44 px, and below a 640 px viewport the actions region sticks to the bottom of the viewport.
   - id: text-contrast
     status: unmet
     claim: The current-activity text and the saved, completed and offline status messages each have a contrast of at least 4.5:1 against their background.
-  - id: offline-continue
-    status: unmet
-    claim: In the offline state the continue button cannot be activated by pointer or keyboard.
 ---
 
 # WorkflowPanel
@@ -135,18 +132,27 @@ Regions stack in source order; each is optional:
 - `pathable-workflow-panel__context-header`: who or what the task is about,
   semibold.
 - `pathable-workflow-panel__objective`: the task's goal, bold. Hidden when
-  empty.
+  it has no child nodes at all; whitespace or a line break inside it keeps it
+  displayed.
 - `pathable-workflow-panel__current-activity`: the current activity, in grey.
-  Hidden when empty.
+  Hidden on the same terms as the objective.
 - `pathable-workflow-panel__prompt`: instructions on a grey background with
-  2 px rounded corners, scrolling past 320 px tall.
+  2 px rounded corners, scrolling once its content passes 320 px tall (344 px
+  with its padding).
 - `pathable-workflow-panel__input`: a wrapper for the note field, such as a
   labelled `pathable-textarea`. It adds no spacing of its own.
 - `pathable-workflow-panel__status`: the save and progress status. The state
   modifiers put their message at its start.
 - `pathable-workflow-panel__actions`: a wrapping row of `pathable-button`
-  elements, 8 px apart. Mark the primary one `pathable-button--continue`: the
-  offline state dims it to 60% opacity and ignores pointer clicks on it.
+  elements with an 8 px gap. Each button keeps its own 0.5rem right margin, so
+  buttons appear 16 px apart and the last one stops 0.5rem short of the
+  panel's end. Mark the primary one `pathable-button--continue`: the offline
+  state dims it to 60% opacity and ignores pointer clicks on it, but it can
+  still be reached and pressed with the keyboard.
+
+The panel sets no working font size for the context header, objective,
+current activity, prompt or status regions, or for the status messages, so
+they render at the inherited size; set a size yourself if you need one.
 
 ## Guarantees
 
@@ -155,8 +161,9 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source, and no test checks it yet.
 
-Today the current-activity text is about 2.2:1 on white, and in the offline
-state the continue button can still be reached and pressed with the keyboard.
+Today all four fall short: the current-activity text is about 2.2:1 on white,
+the saved and completed messages about 2.8:1 on white, and the offline message
+about 4.3:1 on its amber box.
 
 ## The consumer owns
 
