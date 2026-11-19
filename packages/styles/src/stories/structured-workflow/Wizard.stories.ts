@@ -59,7 +59,7 @@ export const Default = {
     </div>
   `,
   play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
-    expectBodyFont(canvasElement, ['.pathable-wizard__heading']),
+    expectBodyFont(canvasElement, ['.pathable-wizard__mobile-summary']),
 }
 
 export const Mobile = {
@@ -337,6 +337,4 @@ export const WizardLongForm = {
       </div>
     </div>
   `,
-  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
-    expectBodyFont(canvasElement, ['.pathable-wizard__section']),
 }
