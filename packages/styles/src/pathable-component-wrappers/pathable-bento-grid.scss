@@ -37,6 +37,7 @@
 
 // Bento tile base
 .pathable-bento-tile {
+  font-family: var(--pathable-font-body);
   padding: var(
     --pathable-bento-tile-padding,
     var(--usa-bento-tile-padding, #{units(3)})

@@ -1,0 +1,5 @@
+---
+'@pathableai/styles': patch
+---
+
+Render body text in the app shell, feedback, form, marketing and workflow components in Nunito, the brand body typeface, without a page-level font. `pathable-app-shell`, `pathable-bottom-navigation`, `pathable-site-alert`, `pathable-empty-state`, `pathable-loading`, `pathable-page-error`, `pathable-toast`, `pathable-error-message`, `pathable-optional-form-section`, `pathable-segmented-control`, `pathable-bento-tile`, `pathable-chip-rail`, `pathable-screenshot-frame`, `pathable-workflow-panel`, `pathable-wizard`, `pathable-accordion`, `pathable-banner` and `pathable-modal` now set `font-family: var(--pathable-font-body)` on their root, and the toast dismiss and action controls, the accordion and banner buttons inherit it, and the modal close button sets it. Before, text these components left to inherit fell back to the browser's default serif font, and their buttons to the user agent's button font, when the page set none. Headings that set their own typeface keep it. Text widths and line heights shift slightly because Nunito's metrics differ from the fallback fonts.

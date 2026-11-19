@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../shared/body-font'
 export default {
   title: 'Structured Workflow/Wizard',
   tags: ['autodocs'],
@@ -57,6 +58,8 @@ export const Default = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-wizard__heading']),
 }
 
 export const Mobile = {
@@ -334,4 +337,6 @@ export const WizardLongForm = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-wizard__section']),
 }

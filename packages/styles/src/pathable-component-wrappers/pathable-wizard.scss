@@ -11,6 +11,7 @@
 @use 'uswds-core' as *;
 
 .pathable-wizard {
+  font-family: var(--pathable-font-body);
   max-width: var(--pathable-wizard-max-width);
   margin-inline: auto;
 

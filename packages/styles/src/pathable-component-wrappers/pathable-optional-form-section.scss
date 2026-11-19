@@ -4,6 +4,7 @@
 // state and must synchronize aria-expanded with the content's hidden attribute.
 
 .pathable-optional-form-section {
+  font-family: var(--pathable-font-body);
   width: 100%;
   min-width: 0;
   box-sizing: border-box;

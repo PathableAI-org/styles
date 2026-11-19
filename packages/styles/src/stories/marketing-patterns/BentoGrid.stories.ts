@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../shared/body-font'
 export default {
   title: 'Marketing Patterns/Bento Grid',
   tags: ['autodocs'],
@@ -44,4 +45,10 @@ export const MixedLayout = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-bento-tile',
+      '.pathable-bento-tile__value',
+      '.pathable-bento-tile__label',
+    ]),
 }
