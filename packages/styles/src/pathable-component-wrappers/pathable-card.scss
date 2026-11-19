@@ -35,6 +35,18 @@
 
 .pathable-card__media {
   @extend .usa-card__media;
+
+  // Media scales to the card width at every viewport instead of keeping an
+  // intrinsic width attribute that overflows narrow cards.
+  > img,
+  > svg,
+  > picture,
+  > video {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .pathable-card__media--exdent {
