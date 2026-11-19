@@ -30,6 +30,7 @@
 /scripts/merge-gate.mjs @j-shilling
 /scripts/merge-hook.mjs @j-shilling
 /scripts/ready-hook.mjs @j-shilling
+/scripts/guardrail-write.mjs @j-shilling
 /scripts/verification.mjs @j-shilling
 /scripts/verification/ @j-shilling
 /scripts/review-findings/ @j-shilling
