@@ -88,6 +88,18 @@
 
 .pathable-button--unstyled {
   @extend .usa-button--unstyled;
+  // The @extend puts this selector in the USWDS unstyled rule, which compiles
+  // before the .pathable-button brand rule above. Both have equal specificity,
+  // so the primary fill and text would win. Sass also drops the extended
+  // :disabled:hover, :disabled:active and [aria-disabled]:focus selectors as
+  // redundant, so the .pathable-button disabled fill would win there. Include
+  // the USWDS mixin again here, after .pathable-button, so every unstyled
+  // state is redeclared at equal specificity and the modifier stays a
+  // link-styled button. The inverse unstyled rules are more specific and still
+  // apply. The resting text uses the link token, which matches the USWDS link
+  // color.
+  @include button-unstyled;
+  color: var(--pathable-color-link);
 }
 
 // Workflow-intent variant classes (T016-T020)

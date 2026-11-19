@@ -27,6 +27,8 @@ const EXPECTED_COVERAGE = {
     'components-button--primary',
     'components-button--outline',
     'components-button--outline-inverse',
+    'components-button--unstyled',
+    'components-button--unstyled-inverse',
     'components-button--accent-warm',
     'components-button-group--default',
     'components-card--default',

@@ -98,6 +98,14 @@ const STORIES = [
     id: 'components-button--outline',
     key: 'button/outline',
   },
+  // Unstyled guards the unstyled modifier against the same cascade regression
+  // (#304): link text with no fill or padding beside the primary button, and
+  // the disabled unstyled text. The mobile image shows the touch-target
+  // min-height the wrapper adds below 40em or on a coarse pointer.
+  {
+    id: 'components-button--unstyled',
+    key: 'button/unstyled',
+  },
   // Accent warm guards the accent-warm modifier against the same cascade
   // regression (#303), beside the primary button. Its colors do not change
   // with the viewport, and the outline images already show the narrow-screen
