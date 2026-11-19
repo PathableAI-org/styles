@@ -66,16 +66,20 @@ void describe('path matching', () => {
       'scripts/verification/gate.mjs',
       'scripts/visual-review/schema.mjs',
       'AGENTS.md',
+      'packages/styles/AGENTS.md',
+      'CLAUDE.md',
+      'package.json',
+      'scripts/review.mjs',
       'docs/engineering/git-workflow.md',
       '.specify/memory/constitution.md',
     ]) {
       assert.ok(matchesAny([path], guardrailPaths), path)
     }
     for (const path of [
-      'packages/styles/AGENTS.md',
       'docs/theming/consumer-guide.md',
       '.changeset/button-ring.md',
-      'scripts/review.mjs',
+      'packages/styles/package.json',
+      'scripts/test-storybook.mjs',
       'packages/styles/src/button.scss',
     ]) {
       assert.equal(matchesAny([path], guardrailPaths), false, path)

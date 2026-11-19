@@ -345,12 +345,18 @@ tier, because it changes the rules agents work under:
   `tsconfig*.json`
 - `.github/` (workflows, instructions and templates), `renovate.json5` and
   `.changeset/config.json`
-- the gates and their notes tooling: `scripts/merge-gate.mjs`,
+- the gates, their commands and their notes tooling: `scripts/merge-gate.mjs`,
   `scripts/merge-hook.mjs`, `scripts/ready-hook.mjs`,
-  `scripts/verification.mjs`, `scripts/verification/`, `scripts/review-findings/`,
-  `scripts/visual-review/`, `scripts/note-sync.mjs`, `scripts/note-sync/` and
-  `scripts/note-store.mjs`
-- `.specify/memory/constitution.md`, [`AGENTS.md`](../../AGENTS.md), and the
+  `scripts/verification.mjs`, `scripts/verification/`,
+  `scripts/review-findings.mjs`, `scripts/review-findings/`,
+  `scripts/visual-review.mjs`, `scripts/visual-review/`,
+  `scripts/note-sync.mjs`, `scripts/note-sync/`, `scripts/note-store.mjs`,
+  `scripts/schema-checks.mjs`, `scripts/git-access.mjs`,
+  `scripts/github-access.mjs`, `scripts/cli.mjs`, and the CLIs
+  `scripts/merge.mjs`, `scripts/verify.mjs`, `scripts/review.mjs`,
+  `scripts/visual.mjs` and `scripts/notes.mjs`
+- the root `package.json`, whose scripts name those commands
+- `.specify/memory/constitution.md`, every `AGENTS.md`, `CLAUDE.md`, and the
   process documents in `docs/engineering/`
 
 The list lives in code, in `guardrailPaths` in
