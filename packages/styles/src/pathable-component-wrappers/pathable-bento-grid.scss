@@ -18,11 +18,13 @@
   gap: var(--pathable-bento-gap, var(--usa-bento-gap, #{units(2)}));
 
   // Default 3-column layout with featured spanning 2 columns
-  // The second image tile must use .pathable-bento-tile--image2 modifier
+  // The second image tile must use .pathable-bento-tile--image2 modifier.
+  // Every named area must be one rectangle, so each name appears once and the
+  // unused cell in the last row is `.`.
   grid-template-areas:
     'featured featured standard'
     'featured featured metric'
-    'image    standard image2';
+    'image    .        image2';
 
   @include at-media-max('tablet') {
     grid-template-columns: 1fr;
