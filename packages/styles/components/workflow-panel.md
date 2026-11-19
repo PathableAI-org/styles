@@ -34,6 +34,9 @@ guarantees:
   - id: offline-continue
     status: unmet
     claim: The offline modifier does not change the continue button's opacity or pointer behaviour; a continue button the application disables with disabled or aria-disabled="true" looks disabled through pathable-button's own disabled styles.
+  - id: region-sizes
+    status: unmet
+    claim: At a 16 px root, the context header, current activity, prompt and status regions and the offline and validation-error status messages are set at the theme's small type size, 1rem (16 px), and the objective and the completed status message at its medium size, 1.125rem (18 px), instead of the inherited size.
 ---
 
 # WorkflowPanel
@@ -160,10 +163,6 @@ Regions stack in source order; each is optional:
   The offline state does not disable it; the application does, as described
   under The consumer owns.
 
-The panel sets no working font size for the context header, objective,
-current activity, prompt or status regions, or for the status messages, so
-they render at the inherited size; set a size yourself if you need one.
-
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
@@ -183,6 +182,9 @@ Today the offline state also dims the continue button to 60% opacity and
 ignores pointer clicks on it, but it stays in the tab order and can still be
 pressed with the keyboard, and no disabled state reaches assistive technology.
 So `offline-continue` is unmet.
+
+Today the region and status message sizes compile to invalid declarations, so
+the text renders at the inherited size and `region-sizes` is unmet.
 
 ## The consumer owns
 

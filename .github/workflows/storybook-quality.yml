@@ -15,7 +15,13 @@ permissions:
 
 jobs:
   # The workflow runs on every pull request so its aggregate check always
-  # reports. This job decides whether the Storybook jobs need to run.
+  # reports. This job decides which Storybook jobs need to run:
+  #   html_storybook   the HTML (styles) Storybook jobs
+  #   react_storybook  the React Storybook jobs
+  #   component_pages  only the jobs that check component pages
+  #                    (packages/styles/components/*.md) against the tests
+  # Markdown outside the component pages changes no Storybook, so it runs
+  # nothing here. Patterns use picomatch with dot: true; `!(…)` excludes.
   changes:
     name: Detect changed paths
     runs-on: ubuntu-latest
@@ -23,29 +29,56 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.storybook == 'true' }}
+      html_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.html_storybook == 'true' }}
+      react_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react_storybook == 'true' }}
+      component_pages: ${{ github.event_name != 'pull_request' || steps.filter.outputs.component_pages == 'true' }}
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
         if: github.event_name == 'pull_request'
         id: filter
         with:
           filters: |
-            storybook:
-              - 'packages/**'
-              - 'apps/storybook/**'
-              - 'apps/storybook-react/**'
-              - 'visual-baselines/**'
-              - '.storybook/**'
-              - '**/*.stories.*'
-              - '**/*.mdx'
+            shared: &shared
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
+              - '.npmrc'
+              - '.github/actions/setup/**'
+              - '.github/workflows/storybook-quality.yml'
+              - 'scripts/test-storybook-modal-css.mjs'
+              - '**/*.mdx'
+            # Everything both Storybooks consume from packages/styles: all
+            # but its Markdown, component pages and stories.
+            styles_source: &styles_source
+              - 'packages/styles/!(*.md)'
+              - 'packages/styles/!(src|components|*.md)/**/!(*.md)'
+              - 'packages/styles/src/!(*.md)'
+              - 'packages/styles/src/!(stories|*.md)/**/!(*.md)'
+            contracts: &contracts
+              - 'packages/storybook-contracts/**/!(*.md)'
+            html_storybook:
+              - *shared
+              - *styles_source
+              - *contracts
+              - 'packages/styles/src/stories/**'
+              - 'apps/storybook/**/!(*.md)'
+              - 'visual-baselines/**'
+            react_storybook:
+              - *shared
+              - *styles_source
+              - *contracts
+              - 'packages/react/**/!(*.md)'
+              - 'apps/storybook-react/**/!(*.md)'
+            component_pages:
+              - 'packages/styles/components/**'
 
   build:
     name: Shared build (styles + React + Storybooks)
     needs: changes
-    if: needs.changes.outputs.storybook == 'true'
+    if: >-
+      needs.changes.outputs.html_storybook == 'true' ||
+      needs.changes.outputs.react_storybook == 'true' ||
+      needs.changes.outputs.component_pages == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -84,7 +117,8 @@ jobs:
 
   accessibility-tests:
     name: Storybook accessibility tests
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.html_storybook == 'true' || needs.changes.outputs.component_pages == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -127,7 +161,8 @@ jobs:
   # parallel with the HTML one instead of after it.
   accessibility-tests-react:
     name: Storybook accessibility tests (React)
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.react_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -165,7 +200,8 @@ jobs:
 
   visual-smoke:
     name: Storybook visual smoke
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -195,7 +231,8 @@ jobs:
   # container through Docker (docs/testing/visual-regression.md).
   pixels-styles:
     name: Styles pixel visual regression
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -222,7 +259,8 @@ jobs:
   # Blank/overflow visual smoke alone is not sufficient — these runners are required on PRs.
   modal-backdrop-gates:
     name: Modal backdrop gates
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.html_storybook == 'true' || needs.changes.outputs.react_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -244,7 +282,8 @@ jobs:
 
   coverage:
     name: Storybook coverage
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -269,7 +308,8 @@ jobs:
 
   quality-gates:
     name: Storybook Quality Gates
-    needs: build
+    needs: [changes, build]
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -287,8 +327,8 @@ jobs:
         run: pnpm quality-gates
 
   # One aggregate check for the branch ruleset to require. It passes when
-  # every needed job succeeded or was skipped because no Storybook path
-  # changed.
+  # every needed job succeeded or was skipped by the path filters in the
+  # changes job.
   storybook-result:
     name: Storybook result
     if: always()
