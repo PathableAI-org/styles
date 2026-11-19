@@ -130,6 +130,10 @@ Wrap the phrase in an `<em>` if it should be italic.
 - Accessibility. The mark is visual only and is not announced. When the
   emphasis matters to the meaning, use `<em>` or `<strong>` as the element so
   assistive technology can convey it.
-- Contrast when you change the text colour or the highlight colours.
+- Contrast when you change the text colour or the highlight colours. Muted
+  text and link text are also a change of text colour: in the default theme
+  both are Tech Teal (`#015a76`), which is 6.42:1 on the marker band but only
+  3.39:1 on the soft fill, below 4.5:1. A soft-background highlight in muted
+  or link text needs a darker text colour or a lighter fill.
 - Using highlights sparingly, so they still draw attention.
 - The text and the layout of the paragraph around it.
