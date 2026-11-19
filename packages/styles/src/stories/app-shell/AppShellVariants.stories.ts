@@ -97,7 +97,7 @@ export const FixedSidebar = {
     <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
       Desktop shell with fixed sidebar positioning. The sidebar stays in place while content scrolls.
     </p>
-    <div class="pathable-app-shell">
+    <div class="pathable-app-shell" style="contain: layout;">
       ${sidebar(longNavItems).replace('pathable-app-shell__sidebar', 'pathable-app-shell__sidebar pathable-app-shell__sidebar--fixed')}
       ${topbar()}
       ${mainContent()}
