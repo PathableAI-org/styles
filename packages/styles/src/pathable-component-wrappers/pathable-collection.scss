@@ -9,6 +9,12 @@
 
 @use 'usa-collection/src/styles';
 
+// The framework scopes its list overrides to .usa-prose. Make the same
+// scope apply to .pathable-prose so these lists render the same inside it.
+.pathable-prose {
+  @extend .usa-prose;
+}
+
 .pathable-collection {
   @extend .usa-collection;
 }
