@@ -17,7 +17,7 @@ export const Default = {
       <li class="pathable-collection__item">
         <div class="pathable-collection__body">
           <h3 class="pathable-collection__heading">Preparing for your first appointment</h3>
-          <p class="pathable-collection__description">What to bring and what to expect when you arrive.</p>
+          <p>What to bring and what to expect when you arrive.</p>
           <ul class="pathable-collection__meta">
             <li>Guide</li>
           </ul>
@@ -26,7 +26,7 @@ export const Default = {
       <li class="pathable-collection__item">
         <div class="pathable-collection__body">
           <h3 class="pathable-collection__heading">Understanding your accommodations</h3>
-          <p class="pathable-collection__description">How accommodations are requested, reviewed and approved.</p>
+          <p>How accommodations are requested, reviewed and approved.</p>
           <ul class="pathable-collection__meta">
             <li>Article</li>
           </ul>
