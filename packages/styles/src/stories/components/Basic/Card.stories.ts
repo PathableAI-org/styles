@@ -188,7 +188,8 @@ export const WorkflowCardWithStatus = {
 // action link styling, the `.pathable-link` keeps its own link colour and
 // underline, and both get the action focus ring. The anchor styled as a
 // button keeps its own styling, and the container itself is not drawn as a
-// link.
+// link. `.pathable-cluster` spaces the actions so their focus rings do not
+// overlap; the container has no spacing of its own (#368).
 export const WorkflowCardActionContainer = {
   render: () => `
     <div class="pathable-card pathable-card--workflow" data-testid="workflow-action-container-card">
@@ -199,7 +200,7 @@ export const WorkflowCardActionContainer = {
         <div class="pathable-card__body">
           <p>Session 12 of 24 — Focus: Workplace communication skills and job readiness practice.</p>
           <p class="pathable-card__meta">Last updated: Today, 2:30 PM | Duration: 45 min</p>
-          <div class="pathable-card__action" data-testid="workflow-action-container">
+          <div class="pathable-card__action pathable-cluster pathable-cluster--gap-lg" data-testid="workflow-action-container">
             <a href="#session-notes">View session notes →</a>
             <a href="#message-coach" class="pathable-link">Message coach</a>
             <a href="#start-session" class="pathable-button">Start session</a>
