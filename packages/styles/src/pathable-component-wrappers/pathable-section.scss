@@ -21,3 +21,28 @@
   // light surface that sets a dark ring.
   --pathable-surface-focus-ring: initial;
 }
+
+// A card's container is a light surface. The dark section colours every <p>,
+// heading and link white or light blue, which would draw them on the card's
+// white background (1.00:1 for a paragraph), so text inside the container takes
+// the container's own text colour again, and links the link colour.
+// Specificity (0,2,1) beats the section's element rules; the link states are
+// listed because the section sets a colour for each.
+.pathable-section--dark .pathable-card__container {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: inherit;
+  }
+
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    color: var(--pathable-color-link);
+  }
+}

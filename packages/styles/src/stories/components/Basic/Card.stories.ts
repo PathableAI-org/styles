@@ -1,5 +1,6 @@
 import { expect, within } from 'storybook/test'
 
+import { contrastRatio, findOpaqueBackground } from '../../shared/contrast'
 import {
   expectKeyboardFocusIndicator,
   resolveColor,
@@ -273,5 +274,41 @@ export const ContentPressure = {
     await expect(action).toBeVisible()
     await expect(action.parentElement).toHaveClass('pathable-card__footer')
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+  },
+}
+
+export const InDarkSection = {
+  render: () => `
+    <section class="pathable-section pathable-section--dark">
+      <div class="pathable-card" data-testid="dark-section-card">
+        <div class="pathable-card__container" data-testid="dark-section-card-container">
+          <div class="pathable-card__header">
+            <h3 class="pathable-card__heading">Card in a dark section</h3>
+          </div>
+          <div class="pathable-card__body">
+            <p data-testid="dark-section-card-text">The card is a light surface, so its text stays readable.</p>
+            <a href="#" data-testid="dark-section-card-link">Read the guide</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView as Window
+    const surface = view.getComputedStyle(
+      canvas.getByTestId('dark-section-card-container'),
+    ).backgroundColor
+
+    for (const id of ['dark-section-card-text', 'dark-section-card-link']) {
+      const element = canvas.getByTestId(id)
+      const ratio = contrastRatio(
+        view.getComputedStyle(element).color,
+        findOpaqueBackground(element, view),
+      )
+
+      await expect(findOpaqueBackground(element, view)).toBe(surface)
+      await expect(ratio).toBeGreaterThanOrEqual(4.5)
+    }
   },
 }
