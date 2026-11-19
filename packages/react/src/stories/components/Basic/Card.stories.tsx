@@ -167,8 +167,8 @@ function resolveColorToken(token: string): string {
   return value
 }
 
-/** Verifies that the action link has the workflow action colour and
- *  underline, and shows the brand focus outline on keyboard focus, as the
+/** Verifies that the action link has the link colour and underline, and
+ *  shows the workflow action's brand focus outline on keyboard focus, as the
  *  styles workflow card's action link does. */
 export const WorkflowPresentation: Story = {
   render: () => (
@@ -189,7 +189,7 @@ export const WorkflowPresentation: Story = {
     const canvas = within(canvasElement)
     const action = canvas.getByRole('link', { name: 'View session notes' })
 
-    await step('action link has the workflow action styling', async () => {
+    await step('action link has the link colour and underline', async () => {
       const style = getComputedStyle(action)
       await expect(style.color).toBe(resolveColorToken('--pathable-color-link'))
       await expect(style.textDecorationLine).toBe('underline')
