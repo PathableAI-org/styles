@@ -39,6 +39,7 @@ jobs:
       md_docs: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_docs == 'true' }}
       md_config: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_config == 'true' }}
       react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react == 'true' }}
+      react_build: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react_build == 'true' }}
       behavior_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.behavior_contracts == 'true' }}
       next_consumer: ${{ github.event_name != 'pull_request' || steps.filter.outputs.next_consumer == 'true' }}
       stylelint: ${{ github.event_name != 'pull_request' || steps.filter.outputs.stylelint == 'true' }}
@@ -138,34 +139,66 @@ jobs:
             md_config:
               - '.markdownlint.json'
               - '.markdownlintignore'
+            # React source the build, typecheck and unit tests read: all
+            # of packages/react but its Markdown and stories (tsconfig and
+            # vitest exclude src/stories). Patterns use picomatch with
+            # dot: true; `!(…)` excludes.
+            react_source: &react_source
+              - 'packages/react/!(*.md)'
+              - 'packages/react/!(src|*.md)/**/!(*.md)'
+              - 'packages/react/src/!(*.md)'
+              - 'packages/react/src/!(stories|*.md)/**/!(*.md)'
+            # Styles source the packed packages are built from: all of
+            # packages/styles but its Markdown, component pages and stories.
+            styles_source: &styles_source
+              - 'packages/styles/!(*.md)'
+              - 'packages/styles/!(src|components|*.md)/**/!(*.md)'
+              - 'packages/styles/src/!(*.md)'
+              - 'packages/styles/src/!(stories|*.md)/**/!(*.md)'
+            # Markdown that check:agent-guidance validates and the packed
+            # consumer test checks in the React tarball.
+            agent_guidance: &agent_guidance
+              - 'packages/react/README.md'
+              - 'packages/react/agent-guidance/**'
+              - 'scripts/check-agent-guidance.mjs'
+              - 'scripts/check-agent-guidance*.test.mjs'
             react:
-              - 'packages/react/**'
-              - 'packages/styles/**'
+              - *react_source
+              - *styles_source
+              - '.github/actions/setup/**'
+              - '.github/workflows/ci-full.yml'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+            react_build:
+              - *react_source
+              - *styles_source
+              - *agent_guidance
+              - '.github/actions/setup/**'
+              - '.github/workflows/ci-full.yml'
               - 'package.json'
               - 'pnpm-lock.yaml'
             next_consumer:
+              - *react_source
+              - *styles_source
+              - *agent_guidance
               - 'scripts/test-next-consumer.mjs'
-              - 'scripts/check-agent-guidance.mjs'
               - 'scripts/fixtures/next-consumer/**'
               - '.github/actions/setup/**'
               - '.github/workflows/ci-full.yml'
-              - 'packages/react/**'
-              - 'packages/styles/**'
               - '.gitattributes'
               - '.npmrc'
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
+            # pnpm lint:styles lints packages/styles/src/**/*.scss; the token
+            # lint also reads the styles stories and the React theme files.
             stylelint:
               - 'packages/**/*.scss'
               - 'packages/**/*.sass'
               - 'packages/**/*.css'
-              - 'packages/**/*.js'
-              - 'packages/**/*.jsx'
-              - 'packages/**/*.ts'
-              - 'packages/**/*.tsx'
-              - 'packages/**/*.mjs'
-              - 'packages/**/tsconfig*.json'
+              - 'packages/styles/src/**'
+              - 'packages/styles/scripts/lint-tokens.mjs'
+              - 'packages/react/src/theme/**'
               - 'packages/**/.stylelintrc*'
               - '.stylelintrc.json'
               - 'package.json'
@@ -367,7 +400,7 @@ jobs:
 
   react-build:
     needs: changes
-    if: needs.changes.outputs.react == 'true'
+    if: needs.changes.outputs.react_build == 'true'
     name: React build + package validation
     runs-on: ubuntu-latest
     steps:
