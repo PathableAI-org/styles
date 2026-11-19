@@ -294,9 +294,6 @@ export const WorkflowCardButtonActions = {
       groupContainer.getBoundingClientRect().width,
     )
     await expect(getComputedStyle(group).minWidth).toBe('0px')
-    await expect(
-      Number.parseFloat(getComputedStyle(group).rowGap),
-    ).toBeGreaterThanOrEqual(8)
     // A utility on the container still sets its own gap.
     await expect(
       Number.parseFloat(getComputedStyle(cluster).columnGap),

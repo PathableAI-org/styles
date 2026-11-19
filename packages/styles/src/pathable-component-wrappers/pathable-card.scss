@@ -137,8 +137,8 @@
 
 // Inside that flex container the actions are spaced by the gap alone, so a
 // button drops its own right margin. A .pathable-button-group fills the
-// container's width, as it does outside it, and keeps its stacked buttons
-// apart so a focused button's ring is not covered by the next one.
+// container's width, as it does outside it, and can shrink below its widest
+// button at large text sizes.
 .pathable-card--workflow
   .pathable-card__action
   > :is(button, .pathable-button, .usa-button) {
@@ -148,7 +148,6 @@
 .pathable-card--workflow .pathable-card__action > .pathable-button-group {
   flex: 1 1 100%;
   min-width: 0;
-  row-gap: var(--pathable-space-2);
 }
 
 // A plain link gets no focus outline from this package (USWDS styles one
