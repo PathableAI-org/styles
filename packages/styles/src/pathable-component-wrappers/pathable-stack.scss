@@ -16,8 +16,10 @@
 // Form specialization:
 //   .pathable-form-stack — expands supported controls to the stack width and
 //   removes the top margin of direct pathable-form-group children, so the
-//   stack gap alone spaces them. Other direct children, such as a fieldset
-//   whose legend has a top margin, keep their own margins
+//   stack gap alone spaces them. It also removes the right margin of direct
+//   pathable-button children, so a button the column stretches ends flush
+//   with the fields. Other direct children, such as a fieldset whose legend
+//   has a top margin, keep their own margins
 
 .pathable-stack {
   display: flex;
@@ -43,6 +45,15 @@
 
 .pathable-form-stack > .pathable-form-group {
   margin-top: 0;
+}
+
+// The USWDS button keeps its `margin-right: units(1)` once it turns
+// `width: auto` at mobile-lg, so the stack's stretched column would end the
+// button 8 px short of the fields' right edge. `:where()` keeps the
+// specificity at one class: the rule still follows and beats the button
+// wrapper, and a margin utility loaded after the components still wins.
+.pathable-form-stack > :where(.pathable-button) {
+  margin-right: 0;
 }
 
 .pathable-form-stack

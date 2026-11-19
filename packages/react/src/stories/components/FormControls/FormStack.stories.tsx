@@ -127,6 +127,16 @@ export const Default: Story = {
       await expect(window.getComputedStyle(control).maxWidth).toBe('none')
       await expect(control.getBoundingClientRect().width).toBeGreaterThan(480)
     }
+
+    // The stack removes the USWDS button's right margin, so the stretched
+    // submit button ends flush with the fields.
+    const button = canvas.getByRole('button', { name: 'Save participant' })
+    const field = canvas.getByLabelText('Participant name')
+    await expect(window.getComputedStyle(button).marginRight).toBe('0px')
+    await expect(button.getBoundingClientRect().right).toBeCloseTo(
+      field.getBoundingClientRect().right,
+      0,
+    )
   },
 }
 
