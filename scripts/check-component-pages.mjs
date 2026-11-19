@@ -4,32 +4,44 @@
  * this check fails when the page and the code disagree. It reads source files
  * only, so it needs no build.
  *
+ * A page states guarantees; it does not say how they are tested. The tests
+ * cite the guarantees they cover, as `<page>/<guarantee-id>`:
+ *   - a story's play function, with `guarantee(step, '<id>', …)` from
+ *     packages/styles/src/stories/shared/guarantee.ts;
+ *   - a pixel baseline entry, with `covers: ['<id>']` in
+ *     packages/styles/scripts/pixel-stories.mjs.
+ * The check fails when a guarantee is cited by no test, and when a test cites
+ * a page or guarantee that does not exist. A guarantee added to a page
+ * therefore fails until a test cites it.
+ *
  * For every component that has a page under packages/styles/components/:
  *   - the front matter has the required fields and the body the required
  *     sections, and the page does not mention the underlying framework classes;
  *   - the styles class has a rule in the SCSS;
  *   - every variant value that is not a default has a modifier rule, the page
- *     names that modifier class, and the canonical story's file renders it;
+ *     names that modifier class, and a story whose pixel baseline covers the
+ *     page renders it;
  *   - every modifier the SCSS defines for the class is a variant on the page;
  *   - every state names a story that exists;
- *   - the canonical story exists and is a canonical story of the quality
- *     gates, and the baseline key is a committed pixel baseline of that story;
  *   - the markup example, and every class the body names in a code span, uses
  *     only classes the SCSS defines;
- *   - every guarantee cites evidence that exists: a pixel baseline, or a story
- *     play function, optionally a named `step` in it;
+ *   - every guarantee is cited by a test, and a static component by at least
+ *     one pixel baseline;
  *   - the derived index is current.
  *
  * Components without a page are counted, not failed: pages are opt-in while
  * the format is trialled.
  *
- *   node scripts/check-component-pages.mjs
+ *   pnpm check:component-pages   check, then run this script's tests
+ *   pnpm trace:component-pages   check, and print which test cites each guarantee
  */
 
 import { existsSync, readdirSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+
+import ts from 'typescript'
 
 import {
   indexFile,
@@ -46,7 +58,6 @@ export const REQUIRED_FIELDS = [
   'kind',
   'summary',
   'styles-class',
-  'canonical-story',
   'variants',
   'states',
   'guarantees',
@@ -65,8 +76,11 @@ export const REQUIRED_SECTIONS = [
 
 const KINDS = ['static', 'behavioural']
 
+/** The helper story play functions cite a guarantee with. */
+const HELPER = 'guarantee'
+
 // ---------------------------------------------------------------------------
-// Pure checks: a page against facts gathered from the repository
+// Pure checks: pages against facts gathered from the repository
 // ---------------------------------------------------------------------------
 
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
@@ -93,6 +107,12 @@ const fencedBlocks = (body, language) =>
     ),
   ].map((match) => match[1])
 
+const list = (value) => (Array.isArray(value) ? value : [])
+
+/** The citations of one page: those whose id starts with its slug. */
+const citing = (page, citations) =>
+  citations.filter((citation) => citation.id.split('/')[0] === page.slug)
+
 function checkFrontMatter(page, errors) {
   const { data, slug } = page
   for (const field of REQUIRED_FIELDS) {
@@ -105,11 +125,6 @@ function checkFrontMatter(page, errors) {
   if (data.kind !== undefined && !KINDS.includes(data.kind)) {
     errors.push(
       `kind must be one of ${KINDS.join(', ')}; received "${data.kind}"`,
-    )
-  }
-  if (data.kind === 'static' && !data.baseline) {
-    errors.push(
-      'a static component needs a "baseline": its pixel baseline is its main evidence',
     )
   }
   for (const field of ['variants', 'states', 'guarantees']) {
@@ -137,19 +152,15 @@ function checkBody(page, errors) {
   }
 }
 
-function checkStory(id, facts, errors, context) {
-  const story = facts.stories.get(id)
-  if (!story) errors.push(`${context}: no story "${id}"`)
-  return story
-}
-
 function checkVariants(page, facts, errors) {
   const { data } = page
   const cls = data['styles-class']
-  const storySource = facts.stories.get(data['canonical-story'])?.fileSource
+  const rendered = citing(page, facts.citations)
+    .filter((citation) => citation.kind === 'pixel')
+    .map((citation) => facts.stories.get(citation.story) ?? '')
   const listed = new Set()
 
-  for (const variant of Array.isArray(data.variants) ? data.variants : []) {
+  for (const variant of list(data.variants)) {
     const { axis, values } = variant
     if (!axis || !Array.isArray(values) || variant.default === undefined) {
       errors.push('each variant needs "axis", "default" and a "values" list')
@@ -179,9 +190,12 @@ function checkVariants(page, facts, errors) {
       if (!page.body.includes(`\`${modifier}\``)) {
         errors.push(`${label}: the page body never names \`${modifier}\``)
       }
-      if (storySource !== undefined && !storySource.includes(modifier)) {
+      if (
+        rendered.length > 0 &&
+        !rendered.some((source) => source.includes(modifier))
+      ) {
         errors.push(
-          `${label}: the canonical story's file never renders .${modifier}`,
+          `${label}: no story with a pixel baseline covering this page renders .${modifier}`,
         )
       }
     }
@@ -198,42 +212,15 @@ function checkVariants(page, facts, errors) {
 
 function checkStates(page, facts, errors) {
   const { data } = page
-  for (const state of Array.isArray(data.states) ? data.states : []) {
+  for (const state of list(data.states)) {
     if (!state?.name || !state?.story) {
       errors.push('each state needs "name" and "story" (a story id)')
-      continue
+    } else if (!facts.stories.has(state.story)) {
+      errors.push(`state "${state.name}": no story "${state.story}"`)
     }
-    checkStory(state.story, facts, errors, `state "${state.name}"`)
   }
-  if (
-    data.kind === 'static' &&
-    Array.isArray(data.states) &&
-    data.states.length > 0
-  ) {
+  if (data.kind === 'static' && list(data.states).length > 0) {
     errors.push('a static component has no states; mark it behavioural instead')
-  }
-}
-
-function checkStoriesAndBaseline(page, facts, errors) {
-  const { data } = page
-  const id = data['canonical-story']
-  checkStory(id, facts, errors, 'canonical-story')
-  if (id && !facts.canonicalStories.has(id)) {
-    errors.push(
-      `canonical-story "${id}" is not in the quality gates' CANONICAL_STORIES`,
-    )
-  }
-  if (data.baseline) {
-    const baselineStory = facts.baselines.get(data.baseline)
-    if (!baselineStory) {
-      errors.push(
-        `baseline "${data.baseline}" is not a committed pixel baseline`,
-      )
-    } else if (baselineStory !== id) {
-      errors.push(
-        `baseline "${data.baseline}" captures "${baselineStory}", not the canonical story`,
-      )
-    }
   }
 }
 
@@ -267,48 +254,37 @@ function checkClasses(page, facts, errors) {
   }
 }
 
-const EVIDENCE =
-  /^(?:pixel (?<baseline>\S+)|play (?<story>\S+?)(?: > (?<step>.+))?)$/u
-
 function checkGuarantees(page, facts, errors) {
+  const cited = citing(page, facts.citations)
   const ids = new Set()
-  for (const guarantee of Array.isArray(page.data.guarantees)
-    ? page.data.guarantees
-    : []) {
-    const { id, claim, evidence } = guarantee ?? {}
-    if (!id || !claim || !Array.isArray(evidence) || evidence.length === 0) {
-      errors.push(
-        'each guarantee needs "id", "claim" and a non-empty "evidence" list',
-      )
+
+  for (const guarantee of list(page.data.guarantees)) {
+    const { id, claim, ...rest } = guarantee ?? {}
+    if (!id || !claim) {
+      errors.push('each guarantee needs "id" and "claim"')
       continue
+    }
+    if (Object.keys(rest).length > 0) {
+      errors.push(
+        `guarantee "${id}": only "id" and "claim" belong on the page; tests cite the guarantee, not the other way round (found "${Object.keys(rest).join('", "')}")`,
+      )
     }
     if (ids.has(id)) errors.push(`duplicate guarantee id "${id}"`)
     ids.add(id)
-
-    for (const item of evidence) {
-      const match = String(item).match(EVIDENCE)
-      if (!match) {
-        errors.push(
-          `guarantee "${id}": evidence "${item}" is neither "pixel <key>" nor "play <story-id>[ > <step>]"`,
-        )
-        continue
-      }
-      const { baseline, story, step } = match.groups
-      if (baseline && !facts.baselines.has(baseline)) {
-        errors.push(
-          `guarantee "${id}": no committed pixel baseline "${baseline}"`,
-        )
-      }
-      if (story) {
-        const found = checkStory(story, facts, errors, `guarantee "${id}"`)
-        if (found && !found.play) {
-          errors.push(`guarantee "${id}": ${story} has no play function`)
-        }
-        if (found && step && !found.steps.includes(step)) {
-          errors.push(`guarantee "${id}": ${story} has no step "${step}"`)
-        }
-      }
+    if (!cited.some((citation) => citation.id === `${page.slug}/${id}`)) {
+      errors.push(
+        `guarantee "${id}" is cited by no test: cite "${page.slug}/${id}" from a play step (${HELPER}) or a pixel entry (covers)`,
+      )
     }
+  }
+
+  if (
+    page.data.kind === 'static' &&
+    !cited.some((citation) => citation.kind === 'pixel')
+  ) {
+    errors.push(
+      'a static component needs a pixel baseline: no pixel entry covers a guarantee of this page',
+    )
   }
 }
 
@@ -327,10 +303,55 @@ export function checkPage(page, facts) {
   checkBody(page, errors)
   checkVariants(page, facts, errors)
   checkStates(page, facts, errors)
-  checkStoriesAndBaseline(page, facts, errors)
   checkClasses(page, facts, errors)
   checkGuarantees(page, facts, errors)
   return errors
+}
+
+/** Every citation that is malformed or points at nothing, as messages. */
+export function checkCitations(pages, citations) {
+  const guarantees = new Map(
+    pages.map((page) => [
+      page.slug,
+      new Set(list(page.data.guarantees).map((guarantee) => guarantee?.id)),
+    ]),
+  )
+  const errors = []
+
+  for (const citation of citations) {
+    const where = `${citation.source} cites "${citation.id}"`
+    for (const problem of citation.problems ?? []) {
+      errors.push(`${where}: ${problem}`)
+    }
+    const [slug, id, ...extra] = citation.id.split('/')
+    if (!slug || !id || extra.length > 0) {
+      errors.push(`${where}, which is not "<page>/<guarantee-id>"`)
+    } else if (!guarantees.has(slug)) {
+      errors.push(`${where}, but there is no component page "${slug}.md"`)
+    } else if (!guarantees.get(slug).has(id)) {
+      errors.push(`${where}, but ${slug}.md has no guarantee "${id}"`)
+    }
+  }
+  return errors
+}
+
+/** The traceability table: page → guarantee → the tests that cite it. */
+export function renderTrace(pages, citations) {
+  const lines = []
+  for (const page of pages) {
+    lines.push(`${page.data.name} (${page.file})`)
+    for (const { id, claim } of list(page.data.guarantees)) {
+      lines.push(`  ${id}: ${claim}`)
+      const cited = citations.filter(
+        (citation) => citation.id === `${page.slug}/${id}`,
+      )
+      for (const citation of cited) {
+        lines.push(`    ${citation.kind.padEnd(5)} ${citation.source}`)
+      }
+      if (cited.length === 0) lines.push('    (no test cites this)')
+    }
+  }
+  return lines.join('\n')
 }
 
 // ---------------------------------------------------------------------------
@@ -353,67 +374,109 @@ export const sanitize = (value) =>
 export const storyId = (title, exportName) =>
   `${sanitize(title)}--${sanitize(exportName.replace(/([a-z0-9])([A-Z])/gu, '$1 $2'))}`
 
-/** Parses a CSF file's stories: id, play function and named steps per export. */
-export function readStories(source) {
-  const title = source.match(/\btitle:\s*['"]([^'"]+)['"]/u)?.[1]
-  if (!title) return []
-  const exports = [...source.matchAll(/^export const (\w+)/gmu)]
-  return exports.map((match, index) => {
-    const block = source.slice(
-      match.index,
-      exports[index + 1]?.index ?? source.length,
-    )
-    const alias = block.match(
-      /^export const \w+(?::\s*\w+)?\s*=\s*(\w+)\s*$/mu,
-    )?.[1]
-    const target = alias
-      ? exports.find((other) => other[1] === alias)
-      : undefined
-    const own = target
-      ? source.slice(
-          target.index,
-          exports[exports.indexOf(target) + 1]?.index ?? source.length,
-        )
-      : block
-    return {
-      id: storyId(title, match[1]),
-      play: /\bplay:/u.test(own),
-      steps: [...own.matchAll(/\bstep\(\s*['"]([^'"]+)['"]/gu)].map(
-        (step) => step[1],
-      ),
-      fileSource: source,
-    }
-  })
-}
+const isText = (node) =>
+  node && (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node))
 
-async function readStorybook(dir, pattern) {
-  const stories = new Map()
-  for (const file of listFiles(dir, pattern)) {
-    for (const story of readStories(await readFile(file, 'utf8'))) {
-      stories.set(story.id, story)
+/** The `title` of a CSF file's default export, read from the syntax tree. */
+function csfTitle(file) {
+  const literals = new Map()
+  let meta
+  for (const statement of file.statements) {
+    if (ts.isVariableStatement(statement)) {
+      for (const { name, initializer } of statement.declarationList
+        .declarations) {
+        if (ts.isIdentifier(name) && initializer)
+          literals.set(name.text, initializer)
+      }
     }
+    if (ts.isExportAssignment(statement)) meta = statement.expression
   }
-  return stories
-}
-
-async function readBaselines() {
-  const source = await readFile(
-    join(repoRoot, 'packages/styles/scripts/test-pixels.mjs'),
-    'utf8',
+  while (meta && !ts.isObjectLiteralExpression(meta)) {
+    meta = ts.isIdentifier(meta) ? literals.get(meta.text) : meta.expression
+  }
+  const title = meta?.properties.find(
+    (property) =>
+      ts.isPropertyAssignment(property) &&
+      property.name.getText(file) === 'title',
   )
-  const baselines = new Map()
-  for (const [, id, key] of source.matchAll(
-    /id:\s*'([^']+)',\s*key:\s*'([^']+)'/gu,
-  )) {
-    const dir = join(repoRoot, 'visual-baselines/styles', key)
+  return isText(title?.initializer) ? title.initializer.text : undefined
+}
+
+/**
+ * Parses a CSF file with the TypeScript parser (no type check): the ids of
+ * its stories, and each `guarantee(step, '<id>', …)` call with the story whose
+ * export contains it.
+ */
+export function readStoryFile(source, fileName = 'story.ts') {
+  const file = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest)
+  const title = csfTitle(file)
+  const stories = []
+  const citations = []
+  if (!title) return { stories, citations }
+
+  const visit = (node, story) => {
     if (
-      existsSync(dir) &&
-      readdirSync(dir).some((file) => file.endsWith('.png'))
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      node.expression.text === HELPER
     ) {
-      baselines.set(key, id)
+      const id = node.arguments[1]
+      const problems = []
+      if (!isText(id)) problems.push('the id must be a string literal')
+      if (!story) {
+        problems.push(
+          `call ${HELPER}() directly in a story's play function, so the story is known`,
+        )
+      }
+      citations.push({
+        id: isText(id) ? id.text : '?',
+        kind: 'play',
+        story,
+        source: `${story ?? 'no story'} (${fileName})`,
+        problems,
+      })
+    }
+    ts.forEachChild(node, (child) => visit(child, story))
+  }
+
+  for (const statement of file.statements) {
+    const exported =
+      ts.isVariableStatement(statement) &&
+      statement.modifiers?.some(
+        (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+      )
+    if (!exported) {
+      visit(statement)
+      continue
+    }
+    for (const declaration of statement.declarationList.declarations) {
+      const id = storyId(title, declaration.name.getText(file))
+      stories.push(id)
+      visit(declaration, id)
     }
   }
-  return baselines
+  return { stories, citations }
+}
+
+/**
+ * Pixel citations: each `covers` id of a pixel story entry. The entry's
+ * baseline images, one per viewport of the story's mode, must be committed.
+ */
+export function pixelCitations(entries, { viewportsOf, hasBaseline }) {
+  return entries.flatMap((entry) =>
+    (entry.covers ?? []).map((id) => ({
+      id,
+      kind: 'pixel',
+      story: entry.id,
+      source: `baseline ${entry.key} of ${entry.id}`,
+      problems: viewportsOf(entry.id)
+        .filter((viewport) => !hasBaseline(entry.key, viewport))
+        .map(
+          (viewport) =>
+            `the baseline ${entry.key}/${viewport}.png is not committed`,
+        ),
+    })),
+  )
 }
 
 /**
@@ -427,7 +490,10 @@ export function wrapperComponents(files) {
     .map(({ name }) => name)
 }
 
-/** Gathers everything the checks compare a page with. */
+const importScript = (path) =>
+  import(pathToFileURL(join(repoRoot, 'packages/styles/scripts', path)).href)
+
+/** Gathers everything the checks compare the pages with. */
 export async function gatherFacts() {
   const sources = join(repoRoot, 'packages/styles/src')
   const files = await Promise.all(
@@ -439,9 +505,29 @@ export async function gatherFacts() {
   )
   const wrappers = join(sources, 'pathable-component-wrappers')
 
-  const { CANONICAL_STORIES } = await import(
-    pathToFileURL(join(repoRoot, 'packages/styles/scripts/quality-gates.mjs'))
-      .href
+  const stories = new Map()
+  const citations = []
+  for (const file of listFiles(join(sources, 'stories'), /\.stories\.ts$/u)) {
+    const source = await readFile(file, 'utf8')
+    const parsed = readStoryFile(source, relative(repoRoot, file))
+    for (const id of parsed.stories) stories.set(id, source)
+    citations.push(...parsed.citations)
+  }
+
+  const { STORIES } = await importScript('pixel-stories.mjs')
+  const { CANONICAL_STORIES, visualViewportNames } =
+    await importScript('quality-gates.mjs')
+  const modes = new Map(
+    CANONICAL_STORIES.map((story) => [story.id, story.mode]),
+  )
+  citations.push(
+    ...pixelCitations(STORIES, {
+      viewportsOf: (id) => visualViewportNames(modes.get(id)),
+      hasBaseline: (key, viewport) =>
+        existsSync(
+          join(repoRoot, 'visual-baselines/styles', key, `${viewport}.png`),
+        ),
+    }),
   )
 
   return {
@@ -449,9 +535,8 @@ export async function gatherFacts() {
     components: wrapperComponents(
       files.filter(({ file }) => dirname(file) === wrappers),
     ),
-    stories: await readStorybook(join(sources, 'stories'), /\.stories\.ts$/u),
-    canonicalStories: new Set(CANONICAL_STORIES.map((story) => story.id)),
-    baselines: await readBaselines(),
+    stories,
+    citations,
   }
 }
 
@@ -470,6 +555,10 @@ async function main() {
       console.error(`[component-pages] ${page.file}: ${error}`)
     failed ||= errors.length > 0
   }
+  for (const error of checkCitations(pages, facts.citations)) {
+    console.error(`[component-pages] ${error}`)
+    failed = true
+  }
 
   const indexPath = join(pagesDir, indexFile)
   const committed = existsSync(indexPath)
@@ -482,6 +571,9 @@ async function main() {
     failed = true
   }
 
+  if (process.argv.includes('--trace')) {
+    console.log(renderTrace(pages, facts.citations))
+  }
   const withPage = new Set(pages.map((page) => page.data['styles-class']))
   const covered = facts.components.filter((name) => withPage.has(name)).length
   console.log(

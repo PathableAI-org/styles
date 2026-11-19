@@ -4,8 +4,6 @@ slug: icon-tile
 kind: static
 summary: A fixed-size square or circular tile that centres one icon and colours it by status.
 styles-class: pathable-icon-tile
-canonical-story: interaction-controls-icon-tile--all-variants
-baseline: icon-tile/all-variants
 variants:
   - axis: size
     default: default
@@ -20,28 +18,16 @@ states: []
 guarantees:
   - id: fixed-size
     claim: The tile is 32, 44 or 52 px square at compact, default and large, and the icon box inside it is 16, 20 or 24 px.
-    evidence:
-      - pixel icon-tile/all-variants
   - id: centred-icon
     claim: The icon box is centred in the tile within 0.01 px on both axes, at every size, shape and status.
-    evidence:
-      - play interaction-controls-icon-tile--all-variants > icon box is centred in every tile
   - id: shape
     claim: A square tile has 4 px rounded corners and a circle tile is fully round.
-    evidence:
-      - pixel icon-tile/all-variants
   - id: status-colour
     claim: Status sets the colour an icon drawn in currentColor paints with, and the tile background is the same for every status.
-    evidence:
-      - pixel icon-tile/all-variants
   - id: no-shrink
     claim: The tile keeps its size beside long text in a flex row.
-    evidence:
-      - play interaction-controls-icon-tile--inline-content-pressure
   - id: custom-size
     claim: Setting the two size custom properties on the tile resizes the tile and the icon box, and the icon stays centred.
-    evidence:
-      - play interaction-controls-icon-tile--custom-sizing
 ---
 
 # IconTile
@@ -90,7 +76,7 @@ With the `@pathableai/styles` stylesheet loaded; no JavaScript is needed:
 ## Variants
 
 Add at most one modifier class from each axis to `pathable-icon-tile`. The
-three axes combine freely; every combination is in the canonical story.
+three axes combine freely.
 
 | Axis   | Value     | Class                         | What it is for                                  |
 | ------ | --------- | ----------------------------- | ----------------------------------------------- |
@@ -137,7 +123,8 @@ state, and nothing about it changes after it renders.
 
 ## Guarantees
 
-What the package guarantees, each checked by its evidence in the front matter:
+What the package guarantees. Each line matches a guarantee in the front matter,
+and the package's tests cite those by id:
 
 - Size: 32, 44 or 52 px square tiles with 16, 20 or 24 px icon boxes.
 - Centring: the icon box is centred in the tile within 0.01 px, at every size,

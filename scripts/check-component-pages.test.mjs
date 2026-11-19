@@ -3,10 +3,13 @@ import test from 'node:test'
 
 import {
   REQUIRED_SECTIONS,
+  checkCitations,
   checkPage,
   hasClass,
   modifiersOf,
-  readStories,
+  pixelCitations,
+  readStoryFile,
+  renderTrace,
   storyId,
   wrapperComponents,
 } from './check-component-pages.mjs'
@@ -20,8 +23,6 @@ slug: widget
 kind: static
 summary: A test widget.
 styles-class: pathable-widget
-canonical-story: ${STORY}
-baseline: widget/all-variants
 variants:
   - axis: tone
     default: plain
@@ -30,9 +31,8 @@ states: []
 guarantees:
   - id: looks-right
     claim: It looks right.
-    evidence:
-      - pixel widget/all-variants
-      - play ${STORY} > is centred
+  - id: is-centred
+    claim: It is centred.
 ---
 `
 
@@ -55,17 +55,26 @@ const page = (markdown = frontMatter + body) => ({
   ...parsePage(markdown),
 })
 
-const story = (steps = ['is centred']) => ({
-  play: true,
-  steps,
-  fileSource: 'pathable-widget--loud',
+const pixel = (id = 'widget/looks-right') => ({
+  id,
+  kind: 'pixel',
+  story: STORY,
+  source: `baseline widget/all-variants of ${STORY}`,
+  problems: [],
+})
+
+const play = (id = 'widget/is-centred') => ({
+  id,
+  kind: 'play',
+  story: STORY,
+  source: `${STORY} (Widget.stories.ts)`,
+  problems: [],
 })
 
 const facts = (overrides = {}) => ({
   scss: '.pathable-widget { } .pathable-widget--loud { }',
-  stories: new Map([[STORY, story()]]),
-  canonicalStories: new Set([STORY]),
-  baselines: new Map([['widget/all-variants', STORY]]),
+  stories: new Map([[STORY, 'pathable-widget--loud']]),
+  citations: [pixel(), play()],
   ...overrides,
 })
 
@@ -78,9 +87,9 @@ test('parses the front matter subset, CRLF included', () => {
   assert.deepEqual(data.variants, [
     { axis: 'tone', default: 'plain', values: ['plain', 'loud'] },
   ])
-  assert.deepEqual(data.guarantees[0].evidence, [
-    'pixel widget/all-variants',
-    `play ${STORY} > is centred`,
+  assert.deepEqual(data.guarantees, [
+    { id: 'looks-right', claim: 'It looks right.' },
+    { id: 'is-centred', claim: 'It is centred.' },
   ])
 })
 
@@ -97,8 +106,49 @@ test('rejects front matter outside the subset', () => {
   assert.throws(() => parsePage('---\nlist:\n---\n'), /no value/u)
 })
 
-test('a page that agrees with the code passes', () => {
+test('a page that agrees with the code and is cited by tests passes', () => {
   assert.deepEqual(checkPage(page(), facts()), [])
+  assert.deepEqual(checkCitations([page()], facts().citations), [])
+})
+
+test('fails when no test cites a guarantee', () => {
+  assert.deepEqual(checkPage(page(), facts({ citations: [pixel()] })), [
+    'guarantee "is-centred" is cited by no test: cite "widget/is-centred" from a play step (guarantee) or a pixel entry (covers)',
+  ])
+})
+
+test('fails when a test cites a page or guarantee that does not exist', () => {
+  const errors = checkCitations(
+    [page()],
+    [
+      play('widget/is-centered'),
+      pixel('gadget/looks-right'),
+      play('widget'),
+      { ...pixel(), problems: ['the baseline x/desktop.png is not committed'] },
+    ],
+  )
+  assert.deepEqual(errors, [
+    `${STORY} (Widget.stories.ts) cites "widget/is-centered", but widget.md has no guarantee "is-centered"`,
+    `baseline widget/all-variants of ${STORY} cites "gadget/looks-right", but there is no component page "gadget.md"`,
+    `${STORY} (Widget.stories.ts) cites "widget", which is not "<page>/<guarantee-id>"`,
+    `baseline widget/all-variants of ${STORY} cites "widget/looks-right": the baseline x/desktop.png is not committed`,
+  ])
+})
+
+test('a static component needs a pixel citation', () => {
+  const citations = [play('widget/looks-right'), play()]
+  assert.deepEqual(checkPage(page(), facts({ citations })), [
+    'a static component needs a pixel baseline: no pixel entry covers a guarantee of this page',
+  ])
+})
+
+test('evidence does not belong on the page', () => {
+  const markdown = frontMatter.replace(
+    '    claim: It looks right.\n',
+    '    claim: It looks right.\n    evidence: [pixel widget/all-variants]\n',
+  )
+  const errors = checkPage(page(markdown + body), facts())
+  assert.ok(includes(errors, 'only "id" and "claim" belong on the page'))
 })
 
 test('reports a class or variant the styles source does not have', () => {
@@ -122,63 +172,32 @@ test('reports a default that has a modifier rule', () => {
   assert.ok(includes(errors, 'the default has a .pathable-widget--plain rule'))
 })
 
-test('reports a variant the page body or the story leaves out', () => {
+test('reports a variant the page body or the pixel story leaves out', () => {
   const quiet = page(
     frontMatter + body.replace('Add `pathable-widget--loud` to shout.', ''),
   )
   assert.ok(includes(checkPage(quiet, facts()), 'the page body never names'))
 
-  const unrendered = new Map([[STORY, { ...story(), fileSource: '' }]])
-  assert.ok(
-    includes(
-      checkPage(page(), facts({ stories: unrendered })),
-      "the canonical story's file never renders .pathable-widget--loud",
-    ),
+  assert.deepEqual(
+    checkPage(page(), facts({ stories: new Map([[STORY, '']]) })),
+    [
+      'variant "tone=loud": no story with a pixel baseline covering this page renders .pathable-widget--loud',
+    ],
   )
 })
 
-test('reports a canonical story or baseline that does not line up', () => {
-  const errors = checkPage(
-    page(),
-    facts({
-      canonicalStories: new Set(),
-      baselines: new Map([['widget/all-variants', 'widgets-widget--other']]),
-    }),
-  )
-  assert.ok(includes(errors, "is not in the quality gates' CANONICAL_STORIES"))
-  assert.ok(includes(errors, 'captures "widgets-widget--other"'))
-})
-
-test('reports guarantees without evidence', () => {
-  const errors = checkPage(
-    page(),
-    facts({
-      baselines: new Map(),
-      stories: new Map([[STORY, story([])]]),
-    }),
-  )
-  assert.ok(
-    includes(errors, 'no committed pixel baseline "widget/all-variants"'),
-  )
-  assert.ok(includes(errors, 'has no step "is centred"'))
-
-  const prefixed = page(
-    frontMatter.replace(`play ${STORY} >`, `play styles/${STORY} >`) + body,
-  )
-  assert.ok(
-    includes(checkPage(prefixed, facts()), `no story "styles/${STORY}"`),
-  )
-})
-
-test('a static component may not list states', () => {
-  const markdown = frontMatter.replace(
-    'states: []',
-    `states:\n  - name: hover\n    story: ${STORY}`,
-  )
-  const errors = checkPage(page(markdown + body), facts())
-  assert.deepEqual(errors, [
+test('a static component may not list states, and a state needs a story', () => {
+  const withState = (story) =>
+    page(
+      frontMatter.replace(
+        'states: []',
+        `states:\n  - name: hover\n    story: ${story}`,
+      ) + body,
+    )
+  assert.deepEqual(checkPage(withState(STORY), facts()), [
     'a static component has no states; mark it behavioural instead',
   ])
+  assert.ok(includes(checkPage(withState('nope'), facts()), 'no story "nope"'))
 })
 
 test('consumer pages must not mention usa-* classes', () => {
@@ -199,25 +218,87 @@ test('reports missing fields before anything else', () => {
   assert.deepEqual(errors, ['missing front matter field "kind"'])
 })
 
-test('derives Storybook ids and steps from CSF source', () => {
+test('reads story ids and guarantee calls from the syntax tree', () => {
   assert.equal(
     storyId('Interaction Controls/Icon Tile', 'AllVariants'),
     'interaction-controls-icon-tile--all-variants',
   )
-  const stories = readStories(`export default { title: 'A/B' }
+  const { stories, citations } = readStoryFile(
+    `import { guarantee } from '../shared/guarantee'
+const meta = { title: 'A/B' } satisfies Meta
+export default meta
+// guarantee(step, 'a/in-a-comment', async () => {})
+const text = "guarantee(step, 'a/in-a-string', async () => {})"
 export const AllVariants = {
-  play: async ({ step }) => { await step('is centred', async () => {}) },
+  play: async ({ step }) => {
+    await guarantee(step, 'a/centred', async () => {})
+  },
 }
 export const Default = AllVariants
-export const Plain = {}
-`)
+export const Dynamic = {
+  play: async ({ step }) => { await guarantee(step, id, async () => {}) },
+}
+const helper = (step) => guarantee(step, 'a/hidden', async () => {})
+`,
+    'B.stories.ts',
+  )
+  assert.deepEqual(stories, [
+    'a-b--all-variants',
+    'a-b--default',
+    'a-b--dynamic',
+  ])
   assert.deepEqual(
-    stories.map(({ id, play, steps }) => ({ id, play, steps })),
+    citations.map(({ id, story, problems }) => ({ id, story, problems })),
     [
-      { id: 'a-b--all-variants', play: true, steps: ['is centred'] },
-      { id: 'a-b--default', play: true, steps: ['is centred'] },
-      { id: 'a-b--plain', play: false, steps: [] },
+      { id: 'a/centred', story: 'a-b--all-variants', problems: [] },
+      {
+        id: '?',
+        story: 'a-b--dynamic',
+        problems: ['the id must be a string literal'],
+      },
+      {
+        id: 'a/hidden',
+        story: undefined,
+        problems: [
+          "call guarantee() directly in a story's play function, so the story is known",
+        ],
+      },
     ],
+  )
+})
+
+test('reads pixel citations from covers and requires the images', () => {
+  const entries = [
+    { id: STORY, key: 'widget/all-variants', covers: ['widget/looks-right'] },
+    { id: 'other--story', key: 'other/story' },
+  ]
+  const citations = pixelCitations(entries, {
+    viewportsOf: () => ['desktop', 'mobile'],
+    hasBaseline: (key, viewport) => viewport === 'desktop',
+  })
+  assert.deepEqual(citations, [
+    {
+      id: 'widget/looks-right',
+      kind: 'pixel',
+      story: STORY,
+      source: `baseline widget/all-variants of ${STORY}`,
+      problems: [
+        'the baseline widget/all-variants/mobile.png is not committed',
+      ],
+    },
+  ])
+})
+
+test('prints which test cites each guarantee', () => {
+  assert.equal(
+    renderTrace([page()], [pixel()]),
+    [
+      'Widget (widget.md)',
+      '  looks-right: It looks right.',
+      `    pixel baseline widget/all-variants of ${STORY}`,
+      '  is-centred: It is centred.',
+      '    (no test cites this)',
+    ].join('\n'),
   )
 })
 
