@@ -45,6 +45,16 @@ Use this checklist when creating or updating Storybook stories for
       unnamed controls, and touch-target checks.
 - [ ] Run `pnpm quality-gates` locally after building Storybook.
 
+## Component Page Guarantees
+
+- [ ] When a component has a page under `packages/styles/components/`, wrap the
+      assertions that prove one of its guarantees in
+      `guarantee(step, '<page>/<guarantee-id>', async () => { … })` from
+      `src/stories/shared/guarantee.ts`. A guarantee proved by a pixel baseline
+      is listed in that story's `covers` in `scripts/pixel-stories.mjs` instead.
+- [ ] Run `pnpm check:component-pages`. `pnpm trace:component-pages` prints
+      which test cites each guarantee.
+
 ## PR Checklist
 
 Copy this section into your PR description:

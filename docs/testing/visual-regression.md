@@ -181,7 +181,8 @@ own pull request, which changes nothing else. For each component:
    [Which stories get a baseline](#which-stories-get-a-baseline). If the
    component needs an aggregate story, or a chosen story does not render
    deterministically, add or fix the stories in a separate pull request first.
-2. Add an entry to `STORIES` for each chosen story, with its key,
+2. Add an entry to `STORIES` in `packages/styles/scripts/pixel-stories.mjs`
+   for each chosen story, with its key,
    and add the component to `ROLLOUT`. In the pull request, say
    which of the component's canonical stories have no baseline and why the
    chosen ones cover their CSS.

@@ -1,5 +1,7 @@
 import { expect, within } from 'storybook/test'
 
+import { guarantee } from '../shared/guarantee'
+
 export default {
   title: 'Interaction Controls/Icon Tile',
   tags: ['autodocs', 'contract-icon-tile'],
@@ -78,6 +80,11 @@ const statuses = [
     token: '--pathable-color-link',
   },
 ] as const
+
+type PlayContext = {
+  canvasElement: HTMLElement
+  step: Parameters<typeof guarantee>[0]
+}
 
 /** Largest offset, in CSS pixels, between the icon box and tile centres. */
 const CENTRING_TOLERANCE_PX = 0.01
@@ -458,7 +465,7 @@ export const InlineContentPressure = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  play: async ({ canvasElement, step }: PlayContext) => {
     const canvas = within(canvasElement)
     const fixture = canvas.getByTestId('icon-tile-content-pressure')
     const tile = canvas.getByTestId('pressure-icon-tile')
@@ -474,11 +481,13 @@ export const InlineContentPressure = {
       'pathable-icon-tile',
       'pathable-icon-tile--warning',
     )
-    await expect(bounds.width).toBeCloseTo(44, 3)
-    await expect(bounds.height).toBeCloseTo(44, 3)
-    await expect(view.getComputedStyle(tile).flexShrink).toBe('0')
-    await expect(text).toBeVisible()
-    await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+    await guarantee(step, 'icon-tile/no-shrink', async () => {
+      await expect(bounds.width).toBeCloseTo(44, 3)
+      await expect(bounds.height).toBeCloseTo(44, 3)
+      await expect(view.getComputedStyle(tile).flexShrink).toBe('0')
+      await expect(text).toBeVisible()
+      await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+    })
   },
 }
 
@@ -523,7 +532,7 @@ export const CustomSizing = {
       </svg>
     </span>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  play: async ({ canvasElement, step }: PlayContext) => {
     const canvas = within(canvasElement)
     const tile = canvas.getByTestId('custom-sized-icon-tile')
     const icon = canvas.getByTestId(
@@ -532,11 +541,13 @@ export const CustomSizing = {
     const tileBounds = tile.getBoundingClientRect()
     const iconBounds = icon.getBoundingClientRect()
 
-    await expect(tileBounds.width).toBeCloseTo(48, 3)
-    await expect(tileBounds.height).toBeCloseTo(48, 3)
-    await expect(iconBounds.width).toBeCloseTo(28, 3)
-    await expect(iconBounds.height).toBeCloseTo(28, 3)
-    await expectCentered(tile, icon)
+    await guarantee(step, 'icon-tile/custom-size', async () => {
+      await expect(tileBounds.width).toBeCloseTo(48, 3)
+      await expect(tileBounds.height).toBeCloseTo(48, 3)
+      await expect(iconBounds.width).toBeCloseTo(28, 3)
+      await expect(iconBounds.height).toBeCloseTo(28, 3)
+      await expectCentered(tile, icon)
+    })
   },
 }
 
@@ -580,13 +591,7 @@ export const AllVariants = {
       </div>
     </div>
   `,
-  play: async ({
-    canvasElement,
-    step,
-  }: {
-    canvasElement: HTMLElement
-    step: (label: string, play: () => Promise<void>) => Promise<void>
-  }) => {
+  play: async ({ canvasElement, step }: PlayContext) => {
     const canvas = within(canvasElement)
     let count = 0
 
@@ -615,9 +620,7 @@ export const AllVariants = {
     await expect(count).toBe(30)
     await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
 
-    // Named so the IconTile component page can cite it as the evidence for
-    // its centring guarantee (packages/styles/components/icon-tile.md).
-    await step('icon box is centred in every tile', async () => {
+    await guarantee(step, 'icon-tile/centred-icon', async () => {
       const tiles = canvas.getAllByTestId(/-variant$/u)
 
       await expect(tiles).toHaveLength(30)
