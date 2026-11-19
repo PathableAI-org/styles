@@ -21,14 +21,19 @@
   border-top: 1px solid color('gray-20');
 
   .pathable-button {
-    // The region's gap spaces buttons; drop usa-button's own right margin.
-    margin-right: 0;
     min-height: 44px;
     min-width: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
+}
+
+// usa-button keeps `margin-right: units(1)`; the region's gap already spaces
+// buttons. `:where()` keeps one-class specificity so the rule still follows
+// the button wrapper and a margin utility loaded later still wins.
+.pathable-wizard__actions :where(.pathable-button) {
+  margin-right: 0;
 }
 
 // Push Continue and Submit to the right
