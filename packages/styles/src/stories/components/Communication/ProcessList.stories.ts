@@ -1,3 +1,5 @@
+import { expect } from 'storybook/test'
+
 export default {
   title: 'Components/Communication/Process List',
   tags: ['autodocs'],
@@ -12,6 +14,29 @@ export default {
 }
 
 export const Default = {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const list = canvasElement.querySelector('.pathable-process-list')
+    const item = canvasElement.querySelector('.pathable-process-list__item')
+
+    await expect(list).not.toBeNull()
+    await expect(item).not.toBeNull()
+    if (!list || !item) return
+
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+    const marker = getComputedStyle(item, '::before')
+    const line = getComputedStyle(item)
+    const listStyle = getComputedStyle(list)
+
+    // The marker is 2.5rem across including its border.
+    await expect(marker.boxSizing).toBe('border-box')
+    await expect(parseFloat(marker.width)).toBeCloseTo(2.5 * rem, 1)
+
+    // The connector line is centred under the marker.
+    const markerCentre = 1.25 * rem
+    const lineCentre =
+      parseFloat(listStyle.paddingLeft) + parseFloat(line.borderLeftWidth) / 2
+    await expect(lineCentre).toBeCloseTo(markerCentre, 1)
+  },
   render: () => `
     <ol class="pathable-process-list">
       <li class="pathable-process-list__item">
