@@ -71,8 +71,10 @@ in other PathAble repositories.
 3. **Record the release.** A pull request that changes a published package's
    code carries a changeset ([`.changeset/README.md`](../../.changeset/README.md)).
 4. **Release it.** On `main`, [`publish.yml`](../../.github/workflows/publish.yml)
-   opens or updates the `ci: version packages` pull request. Merging that pull
-   request publishes the new versions to npm.
+   opens or updates the `ci: version packages` pull request. Once that pull
+   request merges, the workflow's publish job waits in the protected `npm`
+   environment, and publishes the new versions to npm when a person approves
+   it. Merges that release nothing never wait for approval.
 5. **Adopt it.** Renovate in the consuming repository opens the version bump.
    The consumer then uses the new contract, guided by the updated agent
    guidance.

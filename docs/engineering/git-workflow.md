@@ -327,8 +327,9 @@ grow.
   is the maintainer's standing exception for dependency updates. It never
   automerges major upgrades, or `react`, `react-dom`, `next` or `@uswds/uswds`,
   so High-tier dependency changes still wait for a person.
-- Merging the `ci: version packages` pull request publishes to npm. A person
-  decides when that happens, at every tier.
+- Merging the `ci: version packages` pull request starts publishing to npm,
+  which then waits for a person to approve the `npm` environment deployment.
+  A person decides both, at every tier.
 
 ## Agent merge
 

@@ -8,14 +8,92 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  release:
+  # Opens or updates the `ci: version packages` pull request while changesets
+  # are pending, and works out whether `main` holds versions npm does not have
+  # yet. It needs no approval, so ordinary merges to `main` never wait on the
+  # npm environment.
+  version:
+    name: Version packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      has_changesets: ${{ steps.pending.outputs.has_changesets }}
+      unpublished: ${{ steps.unpublished.outputs.unpublished }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Find pending changesets
+        id: pending
+        run: |
+          shopt -s nullglob
+          pending=()
+          for file in .changeset/*.md; do
+            [ "$(basename "$file")" = "README.md" ] || pending+=("$file")
+          done
+          echo "Pending changesets: ${#pending[@]}"
+          if [ "${#pending[@]}" -gt 0 ]; then
+            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open or update the version pull request
+        if: steps.pending.outputs.has_changesets == 'true'
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          commit-message: 'ci: version packages'
+          pr-title: 'ci: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Find versions not yet on npm
+        id: unpublished
+        if: steps.pending.outputs.has_changesets == 'false'
+        run: |
+          unpublished=false
+          for dir in packages/styles packages/react; do
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            if npm view "$name@$version" version > /dev/null 2>&1; then
+              echo "$name@$version is already on npm"
+            else
+              echo "$name@$version is not on npm yet"
+              unpublished=true
+            fi
+          done
+          echo "unpublished=$unpublished" >> "$GITHUB_OUTPUT"
+
+  # Publishes only when the version pull request has merged and npm lacks a
+  # version on `main`. The npm environment requires a person's approval.
+  publish:
+    name: Publish to npm
+    needs: version
+    if: needs.version.outputs.has_changesets == 'false' && needs.version.outputs.unpublished == 'true'
     runs-on: ubuntu-latest
     environment: npm
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
