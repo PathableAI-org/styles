@@ -224,7 +224,7 @@ void describe('the PreToolUse tripwire', () => {
     assert.equal(asks('if [ -f AGENTS.md ]; then cat AGENTS.md; fi'), false)
   })
 
-  void it('asks for other writes the self-review found', () => {
+  void it('asks for chmod, curl -o, >& to a file and write calls inside other words', () => {
     for (const command of [
       'chmod -x .husky/pre-commit',
       'echo x >& AGENTS.md',
@@ -414,6 +414,98 @@ void describe('the PostToolUse check', () => {
     )
   })
 
+  void it('lists every guardrail path a command may write in its ask', () => {
+    const reason = guardrailWrite(
+      'cp /tmp/a .github/a.yml && rm -f AGENTS.md',
+      root,
+      root,
+    )
+    assert.match(reason ?? '', /\.github\/a\.yml \(cp\), AGENTS\.md \(rm\)/)
+  })
+
+  void it('reports a guardrail file an asked command changed beyond what it named', () => {
+    const { post, pre } = run('echo x >> AGENTS.md && node build.mjs', () => {
+      write('AGENTS.md', '# Agents\nx\n')
+      write('.github/workflows/ci.yml', 'name: rewritten\n')
+    })
+    assert.equal(pre.kind, 'ask')
+    assert.match(
+      post.kind === 'block' ? post.reason : '',
+      /: \.github\/workflows\/ci\.yml\./,
+    )
+  })
+
+  void it('does not report Husky shims an install creates', () => {
+    const { post } = run('pnpm install', () => {
+      write('.gitignore', '.claude/settings.local.json\n.husky/_/\n')
+      write('.husky/_/pre-commit', '. "$(dirname "$0")/h"\n')
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('reports a change to an existing Husky shim', () => {
+    write('.gitignore', '.claude/settings.local.json\n.husky/_/\n')
+    write('.husky/_/pre-commit', '. "$(dirname "$0")/h"\n')
+    const { post } = run('node x.mjs', () => {
+      write('.husky/_/pre-commit', 'exit 0\n')
+    })
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('does not report whitespace-only reformatting of Markdown, committed or not', () => {
+    write('AGENTS.md', '# Agents\n\n| a | b |\n|---|---|\n')
+    assert.deepEqual(
+      run('pnpm exec prettier --write AGENTS.md', () => {
+        write('AGENTS.md', '# Agents\n\n| a   | b   |\n| --- | --- |\n')
+      }).post,
+      { kind: 'allow' },
+    )
+    write('AGENTS.md', '# Agents,  edited\n')
+    assert.deepEqual(
+      run('git commit -am docs', () => {
+        write('AGENTS.md', '# Agents, edited\n')
+        repo.git('commit', '--quiet', '--all', '--message', 'docs')
+      }).post,
+      { kind: 'allow' },
+    )
+  })
+
+  void it('reports a Markdown change beyond whitespace', () => {
+    const { post } = run('pnpm format', () => {
+      write('AGENTS.md', '# Agents who merge\n')
+    })
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('does not report an untracked guardrail file git stash -u put away', () => {
+    write('.github/workflows/new.yml', 'name: new\n')
+    const { post } = run('git stash -u', () => {
+      repo.git('stash', '--quiet', '--include-untracked')
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('does not report a guardrail file both sides of a conflicted merge changed', () => {
+    repo.git('checkout', '--quiet', '-b', 'other')
+    repo.commit('docs: other', {
+      'AGENTS.md': '# Agents\n\nother\n',
+      'src/app.ts': 'export const app = 10\n',
+    })
+    repo.git('checkout', '--quiet', '-')
+    repo.commit('docs: ours', {
+      'AGENTS.md': 'ours\n\n# Agents\n',
+      'src/app.ts': 'export const app = 20\n',
+    })
+    const { post } = run('git merge other', () => {
+      try {
+        repo.git('merge', '--quiet', 'other')
+      } catch {
+        // The merge stops on the conflict in src/app.ts, as intended.
+      }
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
   void it('reports a change to an ignored guardrail file', () => {
     const { post } = run('node setup.mjs', () => {
       write('.claude/settings.local.json', '{"permissions":{"allow":["Bash"]}}')
@@ -523,6 +615,34 @@ void describe('hook output', () => {
       )
       const post = hook('PostToolUse')
       assert.deepEqual([post.status, post.stdout, post.stderr], [0, '', ''])
+    } finally {
+      repo.remove()
+    }
+  })
+
+  void it('blocks through the script after a failed command', () => {
+    const repo = sampleRepo()
+    try {
+      const script = fileURLToPath(
+        new URL('../claude/guardrail-write-hook.mjs', import.meta.url),
+      )
+      const hook = (event) =>
+        spawnSync(process.execPath, [script], {
+          encoding: 'utf8',
+          input: JSON.stringify({
+            cwd: repo.dir,
+            hook_event_name: event,
+            session_id: 'session-failure',
+            tool_input: { command: 'node codemod.mjs && false' },
+            tool_name: 'Bash',
+            tool_use_id: 'toolu_failure',
+          }),
+        })
+      assert.deepEqual(hook('PreToolUse').stdout, '')
+      writeFileSync(join(repo.dir, 'AGENTS.md'), '# Rewritten\n')
+      const post = hook('PostToolUseFailure')
+      assert.equal(post.status, 2)
+      assert.match(post.stderr, /^Stop: .*AGENTS\.md/)
     } finally {
       repo.remove()
     }

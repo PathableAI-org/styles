@@ -102,16 +102,20 @@ Some of these rules are enforced for Claude Code by
   compares the guardrail files Git reports as changed, ignored ones included,
   and the commits the command made, with a record taken just before it ran. If
   the command changed one it was not asked about, the hook tells the agent to
-  stop and ask the person to review the change. Changes made before the
-  command, by an approved edit, a person or a background command, are not
-  reported, nor is content already seen in the session, such as changes brought
-  back by `git stash pop`, unchanged files in an amended commit, or content a
-  conflicted merge brought in. Known limits: a guardrail file changed by
-  another process while a command runs is reported as that command's change,
-  including `.claude/settings.local.json` when a person chooses not to be asked
-  again for a command (the message says so), and the after-check does not see
-  what a background command writes once it has started. If the hook stops you, leave the files as they are and ask a human.
-  Its tests run with `pnpm test:tooling`.
+  stop and ask the person to review the change. Not reported: changes made
+  before the command (by an approved edit, a person or a background command);
+  paths the person approved in the ask; content already seen in the session,
+  such as changes brought back by `git stash pop`; files `git stash` put away;
+  unchanged files in an amended commit; files the other side of a conflicted
+  merge changed; Husky shims an install creates; and whitespace-only
+  reformatting of Markdown, including lint-staged's inside `git commit`. Known
+  limits: a guardrail file changed by another process while a command runs is
+  reported as that command's change, including `.claude/settings.local.json`
+  when a person chooses not to be asked again for a command (the message says
+  so); a rebase, cherry-pick or revert that changes a guardrail file is
+  reported; and the after-check does not see what a background command writes
+  once it has started. If the hook stops you, leave the files as they are and
+  ask a human. Its tests run with `pnpm test:tooling`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
 - A `PreToolUse` hook, `scripts/claude/pr-merge-hook.mjs`, runs the

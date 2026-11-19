@@ -467,16 +467,17 @@ const writeLikeCode =
 const editsInPlace = (args) =>
   args.some((arg) => /^-[a-zA-Z]*i|^--in-place/.test(arg))
 
-const askReason = (path, how) =>
-  `This shell command ${how} the guardrail path ${path}. Guardrail files change the rules agents work under, so a ` +
-  'person approves every change to them (docs/engineering/git-workflow.md#guardrail-changes). Approve it only if ' +
-  'you intend this change.'
-
 /**
- * Whether a Bash command may write to a guardrail file, as the PreToolUse tripwire reads it: the reason to ask a
- * person, or undefined. `cwd` is the directory the command starts in and `root` the repository's top level.
+ * The guardrail paths a Bash command may write to, as the PreToolUse tripwire reads it, each with how the command
+ * reaches it, in command order. `cwd` is the directory the command starts in and `root` the repository's top level.
+ * @returns {{ path: string, how: string }[]}
  */
-export const guardrailWrite = (command, cwd, root, depth = 0) => {
+export const guardrailWrites = (command, cwd, root, depth = 0) => {
+  /** @type {{ path: string, how: string }[]} */
+  const found = []
+  const add = (path, how) => {
+    if (!found.some((match) => match.path === path)) found.push({ how, path })
+  }
   let directory = cwd
   let movedInto = undefined
   for (const segment of segments(command)) {
@@ -485,8 +486,7 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
       (target) => target !== '/dev/null',
     )
     const redirected = firstGuardrail(redirects, directory, root)
-    if (redirected !== undefined)
-      return askReason(redirected, 'redirects output into')
+    if (redirected !== undefined) add(redirected, 'output redirection')
 
     const inPlace = /^(?:g?sed|perl|ruby)$/.test(name) && editsInPlace(args)
     const git = name === 'git' ? gitSubcommand(args) : undefined
@@ -499,7 +499,7 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
       (git !== undefined && gitWriteSubcommands.has(git.name)) ||
       inline
     if (writes && movedInto !== undefined)
-      return askReason(movedInto, 'changes into, and then may write inside,')
+      add(movedInto, 'cd into it, then a write')
 
     if (name === 'cd' || name === 'pushd') {
       const target = args.find((arg) => !arg.startsWith('-'))
@@ -520,12 +520,11 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
         (copyCommands.has(name)
           ? firstGuardrail(operands.slice(-1), directory, root, true)
           : undefined)
-      if (path !== undefined) return askReason(path, `runs ${name} on`)
+      if (path !== undefined) add(path, name)
     }
     if (inPlace) {
       const path = firstGuardrail(args, directory, root)
-      if (path !== undefined)
-        return askReason(path, `edits in place, with ${name} -i,`)
+      if (path !== undefined) add(path, `${name} -i`)
     }
     if (git !== undefined && gitWriteSubcommands.has(git.name)) {
       const patch = git.name === 'apply' || git.name === 'am'
@@ -547,15 +546,13 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
               root,
             )
           : firstGuardrail(paths, directory, root, true))
-      if (path !== undefined)
-        return askReason(path, `may rewrite, with git ${git.name},`)
+      if (path !== undefined) add(path, `git ${git.name}`)
     }
     if (inline && isShell(name)) {
       if (depth < 3)
-        for (const code of inlineShellCode(args, segment)) {
-          const reason = guardrailWrite(code, directory, root, depth + 1)
-          if (reason !== undefined) return reason
-        }
+        for (const code of inlineShellCode(args, segment))
+          for (const match of guardrailWrites(code, directory, root, depth + 1))
+            add(match.path, match.how)
     } else if (inline) {
       const code = [...args, ...segment.heredocs, ...segment.herestrings].join(
         '\n',
@@ -563,11 +560,25 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
       const path = guardrailInText(code, directory, root)
       const writesFile =
         writeLikeCode.test(code) || (/awk$/.test(name) && code.includes('>'))
-      if (path !== undefined && writesFile)
-        return askReason(path, `runs inline ${name} code that may write to`)
+      if (path !== undefined && writesFile) add(path, `inline ${name} code`)
     }
   }
-  return undefined
+  return found
+}
+
+/**
+ * Whether a Bash command may write to a guardrail file, as the PreToolUse tripwire reads it: the reason to ask a
+ * person, naming every guardrail path it found, or undefined.
+ */
+export const guardrailWrite = (command, cwd, root) => {
+  const found = guardrailWrites(command, cwd, root)
+  if (found.length === 0) return undefined
+  const list = found.map(({ how, path }) => `${path} (${how})`).join(', ')
+  return (
+    `This shell command may write to guardrail paths: ${list}. Guardrail files change the rules agents work ` +
+    'under, so a person approves every change to them (docs/engineering/git-workflow.md#guardrail-changes). ' +
+    'Approve it only if you intend these changes.'
+  )
 }
 
 // Working-tree record
@@ -626,7 +637,17 @@ export const changedGuardrailFiles = (root) => {
   for (const entry of String(status).split('\0')) {
     const path = entry.slice(3)
     if (entry.length < 4 || !isGuardrailPath(path)) continue
-    files[path] = contentHash(join(root, path))
+    // Git lists an ignored directory as one entry; hash the files in it, so a change inside it shows.
+    const inside = path.endsWith('/')
+      ? readdirSync(join(root, path), { recursive: true, withFileTypes: true })
+          .filter((item) => !item.isDirectory())
+          .map((item) =>
+            relative(root, join(item.parentPath, item.name))
+              .split(sep)
+              .join('/'),
+          )
+      : [path]
+    for (const file of inside) files[file] = contentHash(join(root, file))
   }
   return files
 }
@@ -656,17 +677,18 @@ const pendingSides = (root) =>
 /**
  * The guardrail paths whose content in `after` differs from `before` and from every content `known` holds for them,
  * plus paths in `before` that no longer exist and left `git status` with it: an untracked or ignored file a command
- * deleted. Content a pending merge, cherry-pick or revert brought in (`sides`) is not a change. A file that became
- * clean is not a change here; `committedChanges` covers files a command committed.
+ * deleted (`exists` says whether a path is on disk). A file that became clean is not a change here;
+ * `committedChanges` covers files a command committed.
  */
-export const changedSince = (before, after, known = {}, options = {}) => {
-  const { exists = () => true, sideHash = () => [] } = options
+export const changedSince = (
+  before,
+  after,
+  known = {},
+  exists = () => true,
+) => {
   const isKnown = (path, content) => (known[path] ?? []).includes(content)
   const changed = Object.keys(after).filter(
-    (path) =>
-      before[path] !== after[path] &&
-      !isKnown(path, after[path]) &&
-      !sideHash(path).includes(after[path]),
+    (path) => before[path] !== after[path] && !isKnown(path, after[path]),
   )
   const deleted = Object.keys(before).filter(
     (path) =>
@@ -678,16 +700,71 @@ export const changedSince = (before, after, known = {}, options = {}) => {
   return [...new Set([...changed, ...deleted])].sort()
 }
 
+const revision = (root, name) =>
+  gitOrUndefined(root, ['rev-parse', '--verify', '--quiet', name])?.trim() ||
+  null
+
 /** HEAD's commit, so the after-check can find the commits a command made. */
-const headState = (root) => ({
-  head:
-    gitOrUndefined(root, [
-      'rev-parse',
-      '--verify',
-      '--quiet',
-      'HEAD',
-    ])?.trim() ?? null,
-})
+const headState = (root) => ({ head: revision(root, 'HEAD') })
+
+/** A hash of text with all whitespace removed, so a formatter's reflow of a Markdown file keeps it. */
+const looseHash = (content) => hash(String(content).replace(/\s+/g, ''))
+
+/** The loose hash of every Markdown file in a record, read from the working tree. */
+const looseHashes = (root, files) =>
+  Object.fromEntries(
+    Object.keys(files)
+      .filter((path) => path.endsWith('.md') && files[path] !== 'missing')
+      .flatMap((path) => {
+        const file = join(root, path)
+        return lstatSync(file, { throwIfNoEntry: false })?.isFile()
+          ? [[path, looseHash(readFileSync(file))]]
+          : []
+      }),
+  )
+
+/**
+ * Whether a reported path has an explanation that does not need a person: a path at or under one the PreToolUse ask
+ * named, a Husky shim created from nothing (without shims Git runs no hooks, so creating them weakens nothing), a
+ * Markdown file whose change is only whitespace (a formatter, or lint-staged inside `git commit`), a file `git stash`
+ * moved into a new stash, or a file the other side of a pending merge, cherry-pick or revert changed.
+ */
+const explained = (root, record, path) => {
+  const asked = record.askedPaths ?? []
+  if (
+    asked.some(
+      (prefix) =>
+        prefix === '.' || path === prefix || path.startsWith(`${prefix}/`),
+    )
+  )
+    return true
+  if (path.startsWith('.husky/_/') && !(path in record.before)) return true
+  const file = join(root, path)
+  const onDisk = lstatSync(file, { throwIfNoEntry: false })?.isFile() === true
+  if (path.endsWith('.md') && onDisk) {
+    const now = looseHash(readFileSync(file))
+    const atHead =
+      record.head === null
+        ? undefined
+        : gitOrUndefined(root, ['cat-file', 'blob', `${record.head}:${path}`])
+    if (
+      now === record.loose?.[path] ||
+      (atHead !== undefined && now === looseHash(atHead))
+    )
+      return true
+  }
+  const stash = revision(root, 'refs/stash')
+  if (!onDisk && stash !== null && stash !== record.stash) {
+    const stashed = [stash, `${stash}^3`].map((commit) =>
+      committedHash(root, commit, path),
+    )
+    if (stashed.includes(record.before[path])) return true
+  }
+  const ours = committedHash(root, record.head, path)
+  return pendingSides(root).some(
+    (side) => committedHash(root, side, path) !== ours,
+  )
+}
 
 /**
  * The guardrail paths a command changed and committed in the same call, on whatever branch it ends on. It reads the
@@ -849,9 +926,13 @@ export const preToolUse = (input) => {
     writeFileSync(
       recordFile(root, input),
       JSON.stringify({
-        asked: reason !== undefined,
+        askedPaths: guardrailWrites(command, cwd, root).map(
+          (match) => match.path,
+        ),
         before,
         ...headState(root),
+        loose: looseHashes(root, before),
+        stash: revision(root, 'refs/stash'),
         time: Math.floor(Date.now() / 1000),
       }),
     )
@@ -866,8 +947,8 @@ export const preToolUse = (input) => {
 
 /**
  * The PostToolUse and PostToolUseFailure decision for a tool call: block, which feeds the reason back to the agent,
- * when a Bash command changed or committed a guardrail file that the PreToolUse check did not ask a person about,
- * and otherwise allow it.
+ * when a Bash command changed or committed a guardrail file that the PreToolUse check did not ask a person about
+ * and that `explained` does not account for, and otherwise allow it.
  * @returns {Decision}
  */
 export const postToolUse = (input) => {
@@ -877,21 +958,20 @@ export const postToolUse = (input) => {
   const file = recordFile(root, input)
   const record = readJson(file, undefined)
   rmSync(file, { force: true })
-  if (record === undefined || field(record, 'asked') === true)
-    return { kind: 'allow' }
+  if (record === undefined) return { kind: 'allow' }
   const knownPath = knownFile(root, input)
   const known = readJson(knownPath, {})
   const after = changedGuardrailFiles(root)
-  const sides = pendingSides(root)
   const changed = [
     ...new Set([
-      ...changedSince(record.before, after, known, {
-        exists: (path) => existsSync(join(root, path)),
-        sideHash: (path) => sides.map((sha) => committedHash(root, sha, path)),
-      }),
+      ...changedSince(record.before, after, known, (path) =>
+        existsSync(join(root, path)),
+      ),
       ...committedChanges(root, record, after, known),
     ]),
-  ].sort()
+  ]
+    .filter((path) => !explained(root, record, path))
+    .sort()
   if (changed.length === 0) return { kind: 'allow' }
   // Report each change once: the agent is told to stop, and the next command is not blamed for it.
   const deletions = Object.fromEntries(
