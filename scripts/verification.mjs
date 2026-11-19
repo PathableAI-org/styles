@@ -242,7 +242,7 @@ const highFixLabel = 'risk:high'
  * `{number}-{slug}-plan`, that exists in the tree at its head. Such a pull request carries the feature's tier label,
  * risk:high included, but has no slice to verify or review. A head missing from the clone shows no directory.
  */
-const isPhaseBranch = (cwd, target) =>
+export const isPhaseBranch = (cwd, target) =>
   target.branch !== undefined &&
   phaseFeatureDirs(target.branch).some((featureDir) =>
     isDirectoryAt(cwd, target.head, featureDir),
