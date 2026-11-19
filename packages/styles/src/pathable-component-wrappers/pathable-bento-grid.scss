@@ -19,8 +19,9 @@
 
   // Default 3-column layout with featured spanning 2 columns
   // The second image tile must use .pathable-bento-tile--image2 modifier.
-  // Every named area must be one rectangle, so each name appears once and the
-  // unused cell in the last row is `.`.
+  // The cells that share a name must form one rectangle, or the browser drops
+  // the whole declaration. Only `featured` repeats; the unused cell in the last
+  // row is `.`.
   grid-template-areas:
     'featured featured standard'
     'featured featured metric'
