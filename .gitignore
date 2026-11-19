@@ -115,6 +115,8 @@ dist/
 packages/styles/dist/
 packages/styles/fonts/
 packages/styles/img/
+# Copied from packages/styles/components/ by the React build
+packages/react/agent-guidance/pathable-react/components/
 storybook-static/
 storybook-static-modal-css/
 

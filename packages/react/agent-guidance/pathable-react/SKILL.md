@@ -18,6 +18,10 @@ raw HTML and `usa-*` or `pathable-*` classes.
   detailed prop documentation.
 - Do not infer an exhaustive component catalog from this guide. The installed
   declarations are the version-aligned source of truth.
+- Before using a component, check the [component pages](components/index.md).
+  A component's page gives its purpose, a correct example, its variants, what
+  it guarantees, what you own and its known defects. Few components have a
+  page yet.
 - If documentation and runtime types disagree, follow the installed runtime
   and types, then report the documentation drift.
 

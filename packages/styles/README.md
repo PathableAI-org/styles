@@ -177,6 +177,7 @@ See BRAND_RULES.md for the full PathAble ↔ USWDS Modal catalogue.
 
 See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
+See [components/index.md](components/index.md) for the component pages: one page per component with its markup, React API, variants, guarantees and known defects. Few components have a page yet.
 See the [story authoring guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/STORY_AUTHORING.md) for its checklist and PR requirements.
 Applications SHOULD consume semantic tokens like --pathable-color-text instead of directly using brand colors like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
