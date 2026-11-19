@@ -17,7 +17,7 @@ guarantees:
     claim: The intro is at most 88ex wide and is narrower when its container is.
   - id: no-box
     status: unverified
-    claim: The class sets no margin, padding or colour, so the element keeps the margins other rules give it and the colour of its parent.
+    claim: The class sets no margin, padding or colour, so the element keeps the margins other rules give it and, outside `pathable-section--dark` and `pathable-dark-background`, the colour of its parent.
 ---
 
 # Intro
@@ -75,6 +75,8 @@ heading typeface.
   margins. Remove them, for example with `pathable-margin-0`, before you space
   the intro from the heading and the body text with the layout, such as
   `pathable-stack` with a gap modifier; otherwise the margins add to the gap.
+- Inside `pathable-section--dark` or `pathable-dark-background`, an intro on a
+  `<p>` is white, whatever colour you set on the container.
 - The 88ex limit is wider than the 68ex of `pathable-paragraph`, so the intro
   can run wider than the body text below it.
 

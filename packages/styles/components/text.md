@@ -20,16 +20,16 @@ guarantees:
     claim: The text is set in the body typeface at every role and tone.
   - id: plain-is-body
     status: unverified
-    claim: With no modifier and no ancestor setting the text custom properties, the text renders exactly as the body role in the default tone.
+    claim: Outside `pathable-section--dark` and `pathable-dark-background`, a `pathable-text` with no modifier and no ancestor setting the text custom properties renders exactly as the body role in the default tone.
   - id: tone-colour-only
     status: unverified
-    claim: A tone modifier changes the text colour and nothing else, so size, line height and weight are the same at every tone.
+    claim: The size, line height and weight are the same at every tone.
   - id: tone-contrast
     status: unverified
     claim: Every tone has a contrast of at least 4.5:1 on the white surface colour.
   - id: inherits-role-and-tone
     status: unverified
-    claim: A `pathable-text` with no modifier inside a `pathable-text` with a role or tone modifier takes that role and tone, and a modifier on the inner element replaces it.
+    claim: A `pathable-text` with no modifier inside a `pathable-text` with a role or tone modifier inherits the custom properties of that role and tone, and a modifier on the inner element replaces them.
   - id: no-box
     status: unverified
     claim: The class sets no margin, padding, display or width, so the element keeps the box other rules give it.
@@ -53,7 +53,9 @@ Use something else when:
   level modifier;
 - the text is a lead paragraph under a page title: use `pathable-intro`;
 - the paragraphs also need a readable line length and space between them: add
-  `pathable-paragraph` to each, or wrap them in `pathable-content`;
+  `pathable-paragraph` to each. To limit only the line length of every
+  paragraph and list in a block, wrap the block in `pathable-content`, which
+  adds no space between them;
 - a phrase inside the text needs a marker, underline or fill: use
   `pathable-text-highlight` on a `<span>`;
 - the text is a form hint or an error under a field: use `pathable-hint` or
@@ -127,6 +129,10 @@ changes these tokens changes them.
 - The class sets no margin. On a `<p>`, add `pathable-paragraph` for space
   between paragraphs and a readable line length. When both are on one element,
   the text role's line height wins over the paragraph's.
+- Inside `pathable-section--dark`, every `<p>` is white, and inside
+  `pathable-dark-background` every `<p>` and `<span>` is white, whatever the
+  role or tone. The tone modifiers do not change the colour there; put toned
+  text on a light surface.
 - The danger and success tones fall below 4.5:1 on the page background colour
   (3.48:1 and 4.05:1 in the default theme); keep danger and success text on a
   white surface, such as `pathable-card`.

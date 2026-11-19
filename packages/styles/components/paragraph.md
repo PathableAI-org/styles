@@ -14,10 +14,10 @@ guarantees:
     claim: The line height is 1.6 times the font size when no other class on the element sets one.
   - id: spacing
     status: unverified
-    claim: The paragraph has no bottom margin, no top margin when it is the first child, a 1em top margin after a preceding sibling, and gives the element after it a 1em top margin.
+    claim: The paragraph has no bottom margin, and no top margin when it is the first child.
   - id: font-inherited
     status: unverified
-    claim: The class sets no typeface, size, weight or colour, so the text takes them from its parent or from another class on the element.
+    claim: The class sets no typeface, size, weight or colour.
 ---
 
 # Paragraph
@@ -79,9 +79,10 @@ theme does not change them.
 - When `pathable-text` is on the same element, its line height (1.5 for body
   in the default theme) wins over this class's 1.6. The measure and spacing
   still apply.
-- The 1em top margin given to the element after a paragraph applies to any
-  element, such as a heading or a list. A rule of equal weight on that element
-  can replace it.
+- The paragraph takes a 1em top margin when something precedes it, and gives
+  the element after it, such as a heading or a list, a 1em top margin. A later
+  rule of equal weight can replace either, such as the spacing a parent
+  component sets between its children.
 
 ## Guarantees
 

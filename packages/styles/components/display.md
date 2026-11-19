@@ -14,13 +14,13 @@ guarantees:
     claim: The text is set in Fredoka with a line height of 1.4 times the font size at every viewport width.
   - id: spacing
     status: unverified
-    claim: The display has no bottom margin, no top margin when it is the first child, a 1.5em top margin after a preceding sibling, and gives the element after it a 1em top margin.
+    claim: The display has no bottom margin, and no top margin when it is the first child.
   - id: clears-floats
     status: unverified
     claim: The display clears floats on both sides.
   - id: inherits-colour
     status: unverified
-    claim: The display sets no colour, so its text is the colour of its parent.
+    claim: The display sets no colour, so outside `pathable-section--dark` and `pathable-dark-background` its text is the colour of its parent.
   - id: regular-weight
     status: unmet
     claim: The display is set in Fredoka at its regular weight, 400.
@@ -82,9 +82,14 @@ on its container.
 - Use one display per page or hero.
 - The display adds 1.5em of space above itself when something precedes it,
   and 1em of space above the element that follows it. A rule of equal weight
-  on the following element, such as its own margin, can replace that 1em.
+  can replace either: after a `pathable-paragraph` the space above the display
+  is 1em, and the zero margin of a following `pathable-heading` removes the
+  1em on it.
 - On a dark hero background, set a light text colour on the display or its
-  container.
+  container. Inside `pathable-section--dark`, the section colours a display on
+  an `<h1>` to `<h6>` `#4899e8`, and a colour on the container or a single
+  class on the display, such as `pathable-text-white`, does not change it.
+  Inside `pathable-dark-background`, a display on a `<p>` or `<span>` is white.
 
 ## Guarantees
 

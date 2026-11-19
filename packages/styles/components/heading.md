@@ -26,7 +26,10 @@ guarantees:
     claim: The level modifier alone sets the size, so an `<h2>` with `pathable-heading--level-4` renders at the same 18 px as an `<h4>` with it.
   - id: text-colour
     status: unverified
-    claim: The heading text is the theme text colour at every level, with a contrast of 12.48:1 on the white surface colour.
+    claim: Outside `pathable-section--dark` and `pathable-dark-background`, the heading text is the theme text colour at every level, with a contrast of 12.48:1 on the white surface colour.
+  - id: dark-background-contrast
+    status: unmet
+    claim: Inside `pathable-dark-background`, the heading text has a contrast of at least 4.5:1 on the container background, or 3:1 for large text.
   - id: no-level
     status: unverified
     claim: Without a level modifier the class sets only the colour and the zero margin, and the typeface, size, weight and line height come from other rules.
@@ -85,7 +88,8 @@ Add one level modifier to `pathable-heading`.
 ## Tokens
 
 Every value comes from a theme token. The text colour at every level is
-`--pathable-color-text`.
+`--pathable-color-text`, except inside `pathable-section--dark`, which colours
+heading elements itself.
 
 | Level | Typeface                     | Font size                         | Weight                          | Line height                           |
 | ----- | ---------------------------- | --------------------------------- | ------------------------------- | ------------------------------------- |
@@ -123,6 +127,11 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
+The dark-background-contrast guarantee is unmet: today the heading is drawn in
+the theme text colour inside `pathable-dark-background`, which in the default
+theme is the same colour as the container background. Do not put a
+`pathable-heading` in that container yet.
+
 ## The consumer owns
 
 - Accessibility. Keep the heading elements in a logical order without skipped
@@ -131,4 +140,6 @@ from the package source and no test checks it yet.
   text, such as `pathable-text`.
 - Spacing above and below the heading, and wrapping in narrow containers.
 - The background: the contrast figure holds on the surface colour, not on a
-  coloured or dark panel.
+  coloured or dark panel. Inside `pathable-section--dark`, the section colours
+  every `<h1>` to `<h6>` `#4899e8`, so the heading is drawn in that colour, not
+  the theme text colour.
