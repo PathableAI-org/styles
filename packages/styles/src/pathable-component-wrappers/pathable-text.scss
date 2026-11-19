@@ -8,7 +8,10 @@
 //   --pathable-text-font-size   (default: var(--pathable-font-size-body-md))
 //   --pathable-text-line-height (default: var(--pathable-font-line-height-body))
 //   --pathable-text-font-weight  (default: var(--pathable-font-weight-normal))
-//   --pathable-text-color       (default: var(--pathable-color-text))
+//   --pathable-text-color       (default: var(--pathable-color-text); inside
+//                                pathable-section--dark and
+//                                pathable-dark-background, the colour inherited
+//                                from the container)
 //
 // Variant modifier classes:
 //   .pathable-text--body    — body-md scale (16px/24px, weight 400)

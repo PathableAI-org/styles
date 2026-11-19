@@ -212,8 +212,10 @@
   }
 }
 
-// A light surface inside a dark container sets the theme text colour so its
-// content does not inherit the container's white. Outside a dark container
+// A light surface inside a dark container sets the theme text colour so
+// content that sets no colour of its own, such as pathable-text on a <div>, does
+// not inherit the container's white. A <p>, heading or link inside it is still
+// recoloured by the container's own rules. Outside a dark container
 // these surfaces set no colour. :where() keeps the specificity of the variant.
 :where(.pathable-section--dark, .pathable-dark-background)
   :is(
