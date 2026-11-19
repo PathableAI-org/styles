@@ -35,6 +35,7 @@ const sampleVisual = (
         conditions: ['default', 'focus'],
         reason: 'The pull request changes the button focus ring.',
         story: 'components-button--primary',
+        theme: 'default',
         viewports: ['mobile', 'desktop'],
       },
     ],
@@ -107,6 +108,60 @@ void describe('visual review schema', () => {
     ])
   })
 
+  void it('holds section-508 findings to a criterion and blocking, and brand findings to the default theme', () => {
+    assert.deepEqual(
+      problems((review) => {
+        Object.assign(review.findings[0], { category: 'section-508' })
+        Object.assign(review.findings[1], {
+          category: 'section-508',
+          criterion: '1.4.3',
+        })
+      }),
+      [
+        '$.findings: VR-001 is a section-508 finding without a criterion',
+        '$.findings: VR-002 is a section-508 finding, which always blocks',
+      ],
+    )
+    assert.deepEqual(
+      problems((review) => {
+        review.captures[0].theme = 'other'
+      }),
+      [
+        '$.findings: VR-002 is a brand finding on components-button--primary, which was not captured in the default theme',
+      ],
+    )
+    assert.deepEqual(
+      problems((review) => {
+        review.findings[0].criterion = 'contrast'
+      }),
+      [
+        '$.findings[0].criterion: expected a WCAG success criterion number such as 1.4.3',
+      ],
+    )
+  })
+
+  void it('accepts a section 508 conflict escalation only when it names a finding', () => {
+    const conflict = (findingIds) =>
+      sampleVisual(undefined, undefined, (review) => {
+        Object.assign(review.findings[0], {
+          category: 'section-508',
+          criterion: '1.4.3',
+        })
+        review.escalations = [
+          {
+            detail:
+              'BRAND_RULES.md asks for white labels on Intelligent Jade, which fails 1.4.3.',
+            findingIds,
+            kind: 'section 508 conflict',
+          },
+        ]
+      })
+    assert.ok(validateVisualReview(conflict(['VR-001'])).ok)
+    assert.deepEqual(validateVisualReview(conflict([])).problems, [
+      '$.escalations[0].findingIds: a section 508 conflict names the section-508 finding it concerns',
+    ])
+  })
+
   void it('rejects bad enums, IDs, story IDs and an empty capture list', () => {
     assert.deepEqual(
       problems((review) => {
@@ -125,7 +180,7 @@ void describe('visual review schema', () => {
         })
       }),
       [
-        '$.findings[0].category: expected one of regression, unexplained, defect, brand, baseline, missing, tier',
+        '$.findings[0].category: expected one of section-508, regression, unexplained, defect, brand, baseline, missing, tier',
         '$.findings[0].condition: expected one of default, focus, forced-colors, text-200, reduced-motion',
         '$.findings[0].id: expected a finding ID such as VR-001',
         '$.findings[0].story: expected a Storybook story ID such as components-button--primary',

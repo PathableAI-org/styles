@@ -27,9 +27,12 @@ export const conditions = [
   'text-200',
   'reduced-motion',
 ]
+/** The theme a story renders in: the default theme, which the brand book governs, or any other theme. */
+export const themes = ['default', 'other']
 const severities = ['blocking', 'advisory']
 /** The categories in docs/engineering/visual-review.md#findings. */
 const categories = [
+  'section-508',
   'regression',
   'unexplained',
   'defect',
@@ -40,7 +43,12 @@ const categories = [
 ]
 const confidences = ['high', 'medium']
 const closures = ['fixed', 'justified', 'withdrawn']
-const escalationKinds = ['disagreement', 'third round', 'design']
+const escalationKinds = [
+  'section 508 conflict',
+  'disagreement',
+  'third round',
+  'design',
+]
 
 /** The most findings one visual review may report. */
 const findingLimit = 10
@@ -53,6 +61,7 @@ const escalationRound = 3
  * @property {readonly (typeof conditions)[number][]} conditions
  * @property {string} reason Why the reviewer chose this story.
  * @property {string} story The Storybook story ID.
+ * @property {(typeof themes)[number]} theme The theme the story renders in; only `default` is held to the brand book.
  * @property {readonly (typeof viewports)[number][]} viewports
  */
 
@@ -61,6 +70,7 @@ const escalationRound = 3
  * @property {(typeof categories)[number]} category
  * @property {(typeof conditions)[number] | undefined} [condition]
  * @property {(typeof confidences)[number]} confidence
+ * @property {string | undefined} [criterion] The WCAG success criterion a section-508 finding fails, such as 1.4.3.
  * @property {string} id A stable ID such as VR-001, kept across rounds until closed.
  * @property {string} observed What the head capture shows, and for a difference what the base showed.
  * @property {(typeof severities)[number]} severity
@@ -98,11 +108,16 @@ const nonEmpty = (check) => (value, path) =>
     : check(value, path)
 
 const findingId = matching(/^VR-\d{3,}$/, 'a finding ID such as VR-001')
+const criterion = matching(
+  /^\d\.\d{1,2}\.\d{1,2}$/,
+  'a WCAG success criterion number such as 1.4.3',
+)
 
 const capture = object({
   conditions: nonEmpty(list(oneOf(conditions))),
   reason: text,
   story: storyId,
+  theme: oneOf(themes),
   viewports: nonEmpty(list(oneOf(viewports))),
 })
 
@@ -110,6 +125,7 @@ const finding = object({
   category: oneOf(categories),
   condition: optional(oneOf(conditions)),
   confidence: oneOf(confidences),
+  criterion: optional(criterion),
   id: findingId,
   observed: text,
   severity: oneOf(severities),
@@ -143,6 +159,27 @@ const shape = object({
 
 const duplicates = (ids) => ids.filter((id, index) => ids.indexOf(id) !== index)
 
+/**
+ * Rules for one finding: a Section 508 finding names its WCAG criterion and always blocks; a brand finding is only on
+ * a story captured in the default theme, because only the default theme must follow the brand book.
+ */
+const findingRules = (review, entry) => [
+  ...(entry.category === 'section-508' && entry.criterion === undefined
+    ? [`$.findings: ${entry.id} is a section-508 finding without a criterion`]
+    : []),
+  ...(entry.category === 'section-508' && entry.severity !== 'blocking'
+    ? [`$.findings: ${entry.id} is a section-508 finding, which always blocks`]
+    : []),
+  ...(entry.category === 'brand' &&
+  !review.captures.some(
+    (item) => item.story === entry.story && item.theme === 'default',
+  )
+    ? [
+        `$.findings: ${entry.id} is a brand finding on ${entry.story}, which was not captured in the default theme`,
+      ]
+    : []),
+]
+
 /** Rules across fields, checked once the shape is valid. */
 const consistency = (review) => {
   const open = review.findings.map((entry) => entry.id)
@@ -170,6 +207,14 @@ const consistency = (review) => {
           `$.escalations: round ${String(review.round)} with open blocking findings needs a third round escalation`,
         ]
       : []),
+    ...review.findings.flatMap((entry) => findingRules(review, entry)),
+    ...review.escalations.flatMap((entry, index) =>
+      entry.kind === 'section 508 conflict' && entry.findingIds.length === 0
+        ? [
+            `$.escalations[${String(index)}].findingIds: a section 508 conflict names the section-508 finding it concerns`,
+          ]
+        : [],
+    ),
     ...(review.baseSha === review.reviewedSha
       ? ['$.baseSha: must differ from reviewedSha']
       : []),

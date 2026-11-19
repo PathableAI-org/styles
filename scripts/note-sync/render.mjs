@@ -275,9 +275,9 @@ const visualSupersedes = (review, earlier) => {
 
 const visualFindingLines = (findings) =>
   findings.flatMap((finding) => [
-    `- **${finding.severity}** ${finding.id} \`${visualPlace(finding)}\` (${finding.category}): ${inline(
-      finding.summary,
-    )}`,
+    `- **${finding.severity}** ${finding.id} \`${visualPlace(finding)}\` (${finding.category}${
+      finding.criterion === undefined ? '' : `, WCAG ${finding.criterion}`
+    }): ${inline(finding.summary)}`,
     `  - Observed: ${inline(finding.observed)}`,
   ])
 
@@ -307,9 +307,10 @@ export const renderVisualReview = (review, context) => {
       : visualFindingLines([...blocking, ...advisory])),
     ...section('Captures', [
       table(
-        ['Story', 'Viewports', 'Conditions', 'Reason'],
+        ['Story', 'Theme', 'Viewports', 'Conditions', 'Reason'],
         review.captures.map((capture) => [
           `\`${capture.story}\``,
+          capture.theme,
           capture.viewports.join(', '),
           capture.conditions.join(', '),
           cell(inline(capture.reason)),

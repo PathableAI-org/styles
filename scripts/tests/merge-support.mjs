@@ -123,6 +123,7 @@ export const recordCleanVisual = (dir, base, sha, edit = () => undefined) => {
         conditions: ['default'],
         reason: 'The pull request changes the button styles.',
         story: 'components-button--primary',
+        theme: 'default',
         viewports: ['desktop'],
       },
     ],
