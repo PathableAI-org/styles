@@ -73,15 +73,15 @@
 // Dark background utilities reset the surface focus ring
 // (pathable-component-wrappers/pathable-surface.scss), so a control in a dark
 // container nested in a light surface that sets a dark ring falls back to
-// --pathable-color-focus-ring instead of inheriting it. Their hover and focus
-// variants paint the same backgrounds, so they reset it too. On Tech Teal the
-// fallback is 2.6:1 (#382); a light ring there would inherit into light
+// --pathable-color-focus-ring instead of inheriting it. The hover variants
+// reset it too, for a container that turns dark under the pointer while a
+// control in it has focus. The focus variants do not: :focus matches only the
+// focused control, whose ring is drawn on the surface behind it. On Tech Teal
+// the fallback is 2.6:1 (#382); a light ring there would inherit into light
 // containers nested in it.
 .pathable-bg-primary,
 .hover\:pathable-bg-primary:hover,
-.focus\:pathable-bg-primary:focus,
 .pathable-bg-link,
-.hover\:pathable-bg-link:hover,
-.focus\:pathable-bg-link:focus {
+.hover\:pathable-bg-link:hover {
   --pathable-surface-focus-ring: initial;
 }
