@@ -54,6 +54,11 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
 
+      - name: Component pages agree with the compiled CSS and pixel entries
+        run: |
+          pnpm --filter @pathableai/styles test:component-pages
+          pnpm --filter @pathableai/styles check:component-pages
+
       - name: Build React
         run: pnpm --filter @pathableai/react build
 
@@ -114,6 +119,9 @@ jobs:
           TEST_EXIT=$?
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
+
+      - name: Component page guarantees are covered by tests that ran
+        run: pnpm --filter @pathableai/styles check:component-pages:executed
 
   # The React Storybook accessibility run is its own job so it runs in
   # parallel with the HTML one instead of after it.

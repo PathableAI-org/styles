@@ -167,12 +167,6 @@ jobs:
               - 'packages/**/*.mjs'
               - 'packages/**/tsconfig*.json'
               - 'packages/**/.stylelintrc*'
-              - 'packages/styles/components/**'
-              - 'scripts/component-pages.mjs'
-              - 'scripts/check-component-pages.mjs'
-              - 'scripts/check-component-pages.test.mjs'
-              - 'scripts/markdown.mjs'
-              - 'visual-baselines/styles/**'
               - '.stylelintrc.json'
               - 'package.json'
               - 'pnpm-lock.yaml'
@@ -322,8 +316,6 @@ jobs:
         run: pnpm lint:styles
       - name: Token custom property lint
         run: pnpm lint:tokens
-      - name: Validate component pages against the styles source
-        run: pnpm check:component-pages
 
   format:
     needs: changes
