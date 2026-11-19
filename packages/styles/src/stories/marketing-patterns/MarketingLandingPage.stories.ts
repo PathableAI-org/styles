@@ -132,7 +132,7 @@ const statsHtml = `
     <div class="pathable-stack pathable-stack--gap-lg" style="align-items: center; text-align: center;">
       <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700;">Trusted across the country</h2>
       <p style="margin: 0; font-size: 1rem; color: var(--pathable-color-text-muted); max-width: 480px;">Organizations of all sizes rely on PathAble to deliver better outcomes.</p>
-      <div class="pathable-kpi-grid" style="--pathable-kpi-grid-min-width: 144px; max-width: 800px;">
+      <div class="pathable-kpi-grid" style="--pathable-kpi-grid-min-width: 10rem; max-width: 50rem;">
         <div class="pathable-kpi-card">
           <p class="pathable-kpi-card__value">500+</p>
           <p class="pathable-kpi-card__label">Organizations</p>
