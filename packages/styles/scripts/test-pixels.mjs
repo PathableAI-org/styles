@@ -126,6 +126,19 @@ const STORIES = [
     id: 'application-shell-mobile-shell--default',
     key: 'app-shell/mobile',
   },
+  // The shared-navigation modifier has mobile rules the default shell does not
+  // use: the sidebar navigation moved into the bottom grid row with its top
+  // border and padding, and the destination row that overflows and scrolls
+  // horizontally, with nowrap items of at least 44 px. The play function
+  // leaves the content region scrolled to its end, so the heading and the
+  // first rows are out of view; the capture's Tab focuses the skip link
+  // (`.pathable-skipnav`), which covers the top bar title. Not compared: the
+  // modifier's nav-item focus outline offset, and the safe-area insets, which
+  // are zero in the pinned browser.
+  {
+    id: 'application-shell-mobile-shell--shared-navigation',
+    key: 'app-shell/mobile-shared-navigation',
+  },
   // The workflow card's status text has rules of its own (colour, weight and
   // font size) that no other Card story shows; its meta text, also shown by
   // `workflow-card`, is captured here alongside it. The
