@@ -32,7 +32,7 @@ guarantees:
     claim: With the centered modifier, media, body and actions stack in a column and the text, metadata, tags and actions are centred.
   - id: narrow
     status: unverified
-    claim: At a viewport of 640 px or less the panel stacks in a column with items stretched, and the actions region is full width with each child growing to share it.
+    claim: At a viewport of 640 px or less the panel stacks in a column with items stretched, and the actions region is full width with each child growing to fill the space left on its line.
   - id: custom-size
     status: unverified
     claim: Setting the avatar-size custom property resizes the media circle, and setting the gap custom property changes the space between media, body and actions.
@@ -133,13 +133,15 @@ default theme, where the spacing tokens 1, 2 and 4 are 0.5, 1 and 2rem and
   muted colour. The dots between items are drawn by the stylesheet; do not
   type them.
 - `pathable-record-header__badges` is a wrapping row of `pathable-tag`
-  elements, 0.5rem apart. Its own 0.5rem top margin adds to the body's 0.5rem
+  elements with a 0.5rem gap. Each tag keeps its own 0.25rem right margin, so
+  tags appear 0.75rem apart. Its own 0.5rem top margin adds to the body's 0.5rem
   gap, so there is 1rem above it.
 - `pathable-record-header__actions` is a wrapping row of buttons with a 1rem
   gap. It does not resize the buttons on a wide screen. Each `pathable-button`
   keeps its own 0.5rem right margin, so buttons appear 1.5rem apart and the
-  last one stops 0.5rem short of the panel's inline end; on a narrow screen
-  the buttons fill the row less that 0.5rem.
+  last one stops 0.5rem short of the panel's inline end. At 640 px or less
+  each child grows to fill the space left on its line; below 30em every
+  `pathable-button` is full width, so the buttons take one row each.
 - `pathable-record-header__overflow` is a positioning wrapper for a "more
   actions" control inside the actions region. It only sets
   `position: relative` and a flex row; the menu itself is yours.

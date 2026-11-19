@@ -23,7 +23,7 @@ guarantees:
     claim: With the stacked modifier, or at a viewport of 640 px or less, the title, context and actions stack vertically in source order.
   - id: narrow
     status: unverified
-    claim: At a viewport of 640 px or less the title is 24 px instead of 32 px, the padding is 2rem, and the actions region is full width with each child growing to share it.
+    claim: At a viewport of 640 px or less the title is 24 px instead of 32 px, the padding is 2rem, and the actions region is full width with each child growing to fill the space left on its line.
   - id: action-target
     status: unverified
     claim: Every pathable-button in the actions region is at least 44 by 44 px.
@@ -69,9 +69,13 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 ```html
 <div class="pathable-dashboard-header">
-  <nav class="pathable-dashboard-header__breadcrumb" aria-label="Breadcrumb">
+  <nav
+    class="pathable-dashboard-header__breadcrumb pathable-padding-1"
+    aria-label="Breadcrumb"
+  >
     <a class="pathable-link" href="/">Home</a>
-    <span>Programs</span>
+    <a class="pathable-link" href="/programs">Programs</a>
+    <span aria-current="page">Employment Pathways</span>
   </nav>
   <div class="pathable-dashboard-header__row">
     <h1 class="pathable-dashboard-header__title">Employment Pathways</h1>
@@ -126,8 +130,12 @@ own.
 - `pathable-dashboard-header__breadcrumb` is the optional trail, first in the
   header. Each direct child after the first gets a "/" separator before it, in
   the muted colour at half opacity. Long trails wrap. At a viewport of 640 px
-  or less the trail clips anything that overflows it, and that also clips the
-  focus outline of its links; give the links padding or an inset focus style.
+  or less the trail clips anything that overflows it. The focus outline of its
+  links should stay visible, but today that clipping cuts off every side of the
+  outline that touches the trail's edge. Give the trail itself padding of at
+  least 0.25rem on every side, as the example does with `pathable-padding-1`,
+  or give the links an inset focus style. Padding on the links does not help:
+  their outline is still drawn outside the trail's edge.
 - `pathable-dashboard-header__row` holds the title, the context and the
   actions, spread across the row with a 1.5rem gap and aligned to the top.
 - `pathable-dashboard-header__title` is the page title; use the page's `<h1>`.
@@ -140,7 +148,9 @@ own.
   with a 1rem gap. Each `pathable-button` keeps its own 0.5rem right margin, so
   buttons appear 1.5rem apart and the last one stops 0.5rem short of the
   header's end. The region makes each `pathable-button` an inline flex box of
-  at least 44 by 44 px; it does not size links or other controls.
+  at least 44 by 44 px; it does not size links or other controls. At 640 px
+  or less each child grows to fill the space left on its line; below 30em
+  every `pathable-button` is full width, so the buttons take one row each.
 - `pathable-dashboard-header__description` is an optional paragraph after the
   row.
 - In forced-colours mode the header gets a 1 px bottom border and 2rem bottom

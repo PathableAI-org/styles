@@ -11,19 +11,19 @@ guarantees:
     claim: Segments share the row's width equally, each at most 15rem wide, with a 1 px margin on either side.
   - id: segment-bar
     status: unverified
-    claim: Each segment draws a 0.5rem-tall bar along its top edge, #919191 for an upcoming step, #001e33 for a complete step and #00365c for the current step.
+    claim: 'Each segment draws a 0.5rem-tall bar along its top edge, #919191 for an upcoming step, #001e33 for a complete step and #00365c for the current step.'
   - id: labels-by-width
     status: unverified
     claim: Below a 40em viewport segment labels are not displayed, and from 40em each label shows left-aligned under its bar with 0.5rem between the bar and the label.
   - id: label-state
     status: unverified
-    claim: From 40em an upcoming step's label is #565c65, a complete step's label is #001e33, and the current step's label is bold #00365c.
+    claim: "From 40em an upcoming step's label is #565c65, a complete step's label is #001e33, and the current step's label is bold #00365c."
   - id: counter
-    status: unverified
-    claim: 'The current-step counter is a circle at least 2.5rem across, about 3rem at the default heading size, with a #00365c background and white text.'
+    status: unmet
+    claim: 'The current-step counter is a 2.5rem circle with its number centred, a #00365c background and white text.'
   - id: heading-size
     status: unverified
-    claim: The heading is bold #00365c at 1.12rem with a 1rem top margin below a 40em viewport, and 1.49rem with a 2rem top margin from 40em.
+    claim: 'The heading is bold #00365c at 1.12rem with a 1rem top margin below a 40em viewport, and 1.49rem with a 2rem top margin from 40em.'
 ---
 
 # StepIndicator
@@ -122,9 +122,8 @@ not follow a theme.
   displayed.
 - `pathable-step-indicator__header` is a flex row, aligned on the text
   baseline, under the segments. Put the `pathable-step-indicator__heading`
-  inside it, with `pathable-step-indicator__current-step` (the circled number,
-  about 3rem across at the default heading size)
-  and `pathable-step-indicator__total-steps` (for example "of 3", followed by
+  inside it, with `pathable-step-indicator__current-step` (the circled number;
+  see Guarantees for its size today) and `pathable-step-indicator__total-steps` (for example "of 3", followed by
   a 0.5rem gap) before the step name.
 - `pathable-step-indicator__step`, `pathable-step-indicator__step--current`,
   `pathable-step-indicator__step--complete` and
@@ -140,6 +139,10 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+The counter guarantee is unmet. Today the counter is content-box, so its
+padding is added to the 2.5rem: it is about 3.7rem across below 40em and 3.3rem
+from 40em, with the number sitting above the centre.
 
 Because segments stop at 15rem, a short process in a wide container leaves the
 row's right-hand part empty.
