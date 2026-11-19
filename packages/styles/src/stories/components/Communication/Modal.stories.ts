@@ -193,6 +193,9 @@ export const Narrow = {
 export const IncreasedText = {
   parameters: {
     docs: {
+      // The story sets the root font size, so the docs page renders it in its
+      // own frame rather than applying 200 % to the other stories on the page.
+      story: { inline: false, iframeHeight: 600 },
       description: {
         story:
           'Open Modal with the root font size at 200 % on a 375px viewport. The heading breaks inside the dialog and the footer button row wraps and stays inside it.',
@@ -217,14 +220,17 @@ export const IncreasedText = {
     const heading = within(dialog).getByRole('heading', {
       name: DIALOG_NAME,
     })
-    const dialogBox = dialog.getBoundingClientRect()
+    const footer = dialog.querySelector(
+      '.pathable-modal__footer',
+    ) as HTMLElement
+    const footerBox = footer.getBoundingClientRect()
     expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
     for (const name of ['Cancel', 'Add Activity']) {
       const box = within(dialog)
         .getByRole('button', { name })
         .getBoundingClientRect()
-      expect(box.left).toBeGreaterThanOrEqual(dialogBox.left)
-      expect(box.right).toBeLessThanOrEqual(dialogBox.right)
+      expect(box.left).toBeGreaterThanOrEqual(footerBox.left)
+      expect(box.right).toBeLessThanOrEqual(footerBox.right)
     }
   },
 }
