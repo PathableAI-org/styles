@@ -31,6 +31,9 @@ guarantees:
   - id: text-contrast
     status: unmet
     claim: The current-activity text and the saved, completed and offline status messages each have a contrast of at least 4.5:1 against their background.
+  - id: offline-continue
+    status: unmet
+    claim: The offline modifier does not change the continue button's opacity or pointer behaviour; a continue button the application disables with disabled or aria-disabled="true" looks disabled through pathable-button's own disabled styles.
 ---
 
 # WorkflowPanel
@@ -111,7 +114,7 @@ changes only what the status region shows, except where the table says more.
 | state | `loading`          | `pathable-workflow-panel--loading`          | Task data is being fetched: "Loading…"                |
 | state | `saving`           | `pathable-workflow-panel--saving`           | Notes are being saved: "Saving…"                      |
 | state | `saved`            | `pathable-workflow-panel--saved`            | Save succeeded: "✓ Saved" in green                    |
-| state | `offline`          | `pathable-workflow-panel--offline`          | Connection lost: amber warning box; continue dimmed   |
+| state | `offline`          | `pathable-workflow-panel--offline`          | Connection lost: amber warning box                    |
 | state | `validation-error` | `pathable-workflow-panel--validation-error` | Errors to fix: red warning box                        |
 | state | `completed`        | `pathable-workflow-panel--completed`        | Task done: "✓ Completed"; prompt and input hidden     |
 
@@ -153,9 +156,9 @@ Regions stack in source order; each is optional:
   elements with an 8 px gap. Each button keeps its own 0.5rem right margin, so
   from a 480 px viewport up buttons appear 16 px apart and the last one stops
   0.5rem short of the panel's end; below 480 px each `pathable-button` is full
-  width and on its own line. Mark the primary one `pathable-button--continue`: the offline
-  state dims it to 60% opacity and ignores pointer clicks on it, but it can
-  still be reached and pressed with the keyboard.
+  width and on its own line. Mark the primary one `pathable-button--continue`.
+  The offline state does not disable it; the application does, as described
+  under The consumer owns.
 
 The panel sets no working font size for the context header, objective,
 current activity, prompt or status regions, or for the status messages, so
@@ -175,6 +178,11 @@ with generated content at the start of the status region: "Loading…",
 current-activity text is about 2.2:1 on white, the saved and completed
 messages about 2.8:1 on white, and the offline message about 4.3:1 on its
 amber box.
+
+Today the offline state also dims the continue button to 60% opacity and
+ignores pointer clicks on it, but it stays in the tab order and can still be
+pressed with the keyboard, and no disabled state reaches assistive technology.
+So `offline-continue` is unmet.
 
 ## The consumer owns
 
