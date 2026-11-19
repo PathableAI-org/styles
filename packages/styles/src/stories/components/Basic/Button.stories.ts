@@ -301,6 +301,7 @@ const focusIndicatorMarkup = `
         <button type="button" class="pathable-button pathable-button--outline pathable-button--inverse">Close Resources</button>
       </div>
       <div class="pathable-cluster pathable-cluster--gap-sm">
+        <button type="button" class="pathable-button--destructive">Delete Draft</button>
         <button type="button" class="pathable-button pathable-button--unstyled">View Coaching History</button>
       </div>
     </div>
@@ -323,6 +324,8 @@ const filledButtonNames = [
   'Start Session',
   'Open Resources',
   'Close Resources',
+  // --destructive renders a whole button without .pathable-button.
+  'Delete Draft',
 ]
 
 // Tabs through every button in order. Filled variants show the shared 2px

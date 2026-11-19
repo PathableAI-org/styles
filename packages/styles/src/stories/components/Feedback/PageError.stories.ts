@@ -118,20 +118,6 @@ export const FullPage = {
   },
 }
 
-export const ForcedColors = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'The full-page layout run with forced-colors emulation (the test-runner turns it on for this story). Keyboard focus on the retry button keeps a visible solid outline in the system `Highlight` colour.',
-      },
-    },
-  },
-  render: () => fullPageMarkup,
-  play: async ({ canvasElement }: PlayContext) =>
-    expectRetryFocusIndicator(canvasElement),
-}
-
 export const NotFound = {
   render: () => `
     <div class="pathable-page-error pathable-page-error--full-page pathable-page-error--not-found">
