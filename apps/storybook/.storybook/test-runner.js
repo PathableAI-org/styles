@@ -64,6 +64,11 @@ const config = {
     const isFilterableOptionList = context.id.startsWith(
       'components-form-controls-filterable-option-list--',
     )
+    // The workflow card's status text once failed contrast (#314); keep the
+    // rule on for the story that shows it.
+    const checksColorContrast =
+      isFilterableOptionList ||
+      context.id === 'components-card--workflow-card-with-status'
     await checkA11y(page, 'body', {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -80,7 +85,7 @@ const config = {
           // stories are pre-existing. Utility stories showcase color swatches; USWDS
           // components follow their own design system conventions (e.g., links use
           // underline as the visual indicator).
-          'color-contrast': { enabled: isFilterableOptionList },
+          'color-contrast': { enabled: checksColorContrast },
           // USWDS pagination uses a standard <ul> inside <nav aria-label="Pagination">.
           // The "list" rule is over-strict here as the nav label provides adequate
           // context. This is a pre-existing USWDS pattern.
