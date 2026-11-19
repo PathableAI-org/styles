@@ -28,7 +28,7 @@
 // --- Breadcrumb region ---
 
 .pathable-dashboard-header__breadcrumb {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
 
@@ -60,7 +60,7 @@
 
 .pathable-dashboard-header__title {
   font-family: var(--pathable-font-heading);
-  font-size: var(--pathable-font-size-heading-xl);
+  font-size: var(--pathable-font-size-display-lg);
   font-weight: var(--pathable-font-weight-bold);
   color: var(--pathable-color-text);
   margin: 0;
