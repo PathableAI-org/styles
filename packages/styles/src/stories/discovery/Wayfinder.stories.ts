@@ -80,6 +80,7 @@ export const SingleQuestion = {
 // A checked choice must keep 3:1 against the panel (WCAG 1.4.11).
 export const CheckedChoices = {
   render: () => `
+    <div style="display: grid; gap: 1.5rem;">
     <div class="pathable-wayfinder" role="region" aria-label="Find the right resource" style="max-width: 30rem;">
       <h2 class="pathable-wayfinder__heading">What do you need?</h2>
       <div class="pathable-wayfinder__questions">
@@ -117,6 +118,7 @@ export const CheckedChoices = {
           </div>
         </fieldset>
       </div>
+    </div>
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
