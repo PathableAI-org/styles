@@ -21,7 +21,9 @@
 .pathable-link {
   color: var(--pathable-color-link);
 
-  &:visited {
+  // Not while hovered or pressed, so USWDS's hover and active colours, which
+  // follow its visited rule, still apply to a visited link.
+  &:visited:not(:hover, :active) {
     color: var(--pathable-color-link);
   }
 

@@ -46,3 +46,22 @@ export const ThemeOverride = {
     await expect(getComputedStyle(link).outlineColor).toBe('rgb(200, 0, 0)')
   },
 }
+
+// On a surface that sets --pathable-surface-focus-ring, the focus outline
+// uses it in place of the global focus-ring colour.
+export const SurfaceFocusRing = {
+  render: () =>
+    '<div style="--pathable-surface-focus-ring: rgb(0, 100, 0)"><a href="#" class="pathable-link">Surface Link</a></div>',
+  play: async ({
+    canvasElement,
+  }: {
+    canvasElement: HTMLElement
+  }): Promise<void> => {
+    const link = within(canvasElement).getByRole('link', {
+      name: 'Surface Link',
+    })
+    await userEvent.tab()
+    await expect(link).toHaveFocus()
+    await expect(getComputedStyle(link).outlineColor).toBe('rgb(0, 100, 0)')
+  },
+}
