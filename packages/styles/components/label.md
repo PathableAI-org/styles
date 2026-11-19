@@ -23,7 +23,7 @@ guarantees:
     claim: A label that is the first direct child of a `pathable-form-group` has no top margin, so its top edge is the top edge of the group.
   - id: text-colour
     status: unmet
-    claim: 'In the default theme the label text colour is #00365c, PathAble Blue, the brand text colour.'
+    claim: 'In the default theme, where no container sets a text colour of its own, the label text is #00365c, PathAble Blue, the brand text colour; inside a container that sets its own text colour, such as a dark surface, it takes that colour.'
 ---
 
 # Label
