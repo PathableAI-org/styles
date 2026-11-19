@@ -48,6 +48,8 @@ The USWDS theme in `src/_uswds-theme.scss` is configured with the exact brand he
 
 USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Bright Blue Brooks, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
 
+The PathAble focus outline on buttons, form fields and icon buttons is drawn on the surface behind the control, so it follows that surface. It is Bright Blue Brooks on white and on PathAble Blue. On Intelligent Jade and Shilling Silver it is PathAble Blue, because Bright Blue Brooks is only 1.1:1 and 2.3:1 there and a focus outline needs 3:1. Each `.pathable-surface` variant sets this through `--pathable-surface-focus-ring`.
+
 The brand book defines no red or amber. Danger (`#dc3545`) and warning (`#f5a623`) are functional status colors added by the design system; use them only for status, never as decoration.
 
 ## Color Hierarchy

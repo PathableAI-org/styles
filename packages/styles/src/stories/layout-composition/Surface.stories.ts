@@ -1,3 +1,8 @@
+import { expect, within } from 'storybook/test'
+
+import { contrastRatio, findOpaqueBackground } from '../shared/contrast'
+import { expectKeyboardFocusIndicator } from '../shared/focus-indicator'
+
 export default {
   title: 'Layout Composition/Surface',
   tags: ['autodocs'],
@@ -76,6 +81,126 @@ export const NestedSurfaces = {
       </div>
     </div>
   `,
+}
+
+// Each surface with a background of its own sets the focus ring that the
+// shared state-focus mixin draws around controls on it. Bright Blue Brooks
+// would be 1.1:1 on Intelligent Jade and 2.3:1 on Shilling Silver, so those
+// surfaces use the text colour instead.
+const focusSurfaces = [
+  {
+    variant: 'pathable-surface--raised',
+    label: 'Raised',
+    ring: '--pathable-color-focus-ring',
+  },
+  {
+    variant: 'pathable-surface--inset',
+    label: 'Inset',
+    ring: '--pathable-color-text',
+  },
+  {
+    variant: 'pathable-surface--brand',
+    label: 'Brand',
+    ring: '--pathable-color-text',
+  },
+  {
+    variant: 'pathable-surface--inverse',
+    label: 'Inverse',
+    ring: '--pathable-color-focus-ring',
+    buttonClass: 'pathable-button pathable-button--inverse',
+  },
+  {
+    variant: 'pathable-surface--tone-default',
+    label: 'Tone default',
+    ring: '--pathable-color-focus-ring',
+  },
+  {
+    variant: 'pathable-surface--tone-subtle',
+    label: 'Tone subtle',
+    ring: '--pathable-color-text',
+  },
+  {
+    variant: 'pathable-surface--tone-primary',
+    label: 'Tone primary',
+    ring: '--pathable-color-text',
+  },
+]
+
+const focusSurfaceBlock = ({
+  variant,
+  label,
+  buttonClass = 'pathable-button',
+}: (typeof focusSurfaces)[number]) => {
+  const id = `focus-${label.toLowerCase().replaceAll(' ', '-')}`
+  return `
+    <div class="pathable-surface ${variant} pathable-stack pathable-stack--gap-sm" style="padding: 1.5rem; flex: 1 1 14rem; min-width: 0;">
+      <div style="font-size: 0.875rem; font-weight: 600;">${label}</div>
+      <button type="button" class="${buttonClass}">Save on ${label}</button>
+      <label class="pathable-label" for="${id}">Note on ${label}</label>
+      <input id="${id}" class="pathable-input" type="text" />
+    </div>
+  `
+}
+
+export const KeyboardFocusOnSurfaces = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A `.pathable-button` and a `.pathable-input` on each surface variant, and on a raised surface nested in a brand one. The focus outline is drawn on the surface behind the control, so each surface sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-focus-ring` (Bright Blue Brooks) on white and PathAble Blue, and `--pathable-color-text` on Intelligent Jade and Shilling Silver. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the surface.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: stretch;">
+      ${focusSurfaces.map(focusSurfaceBlock).join('')}
+      <div class="pathable-surface pathable-surface--brand" style="padding: 1.5rem; flex: 1 1 14rem; min-width: 0;">
+        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Brand (outer)</div>
+        ${focusSurfaceBlock({
+          variant: 'pathable-surface--raised',
+          label: 'Raised in brand',
+          ring: '--pathable-color-focus-ring',
+        })}
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('Surface story window is unavailable')
+
+    const cases = [
+      ...focusSurfaces,
+      { label: 'Raised in brand', ring: '--pathable-color-focus-ring' },
+    ].flatMap(({ label, ring }) => [
+      {
+        control: canvas.getByRole('button', { name: `Save on ${label}` }),
+        ring,
+      },
+      {
+        control: canvas.getByRole('textbox', { name: `Note on ${label}` }),
+        ring,
+      },
+    ])
+
+    for (const [index, { control, ring }] of cases.entries()) {
+      await expectKeyboardFocusIndicator(canvasElement, control, {
+        width: 2,
+        color: `var(${ring})`,
+        fromCurrentFocus: index > 0,
+      })
+
+      const surface = control.parentElement
+      if (!surface) throw new Error('Focus story control has no parent')
+      await expect(
+        contrastRatio(
+          view.getComputedStyle(control).outlineColor,
+          findOpaqueBackground(surface, view),
+        ),
+      ).toBeGreaterThanOrEqual(3)
+    }
+  },
 }
 
 export const Default = AllVariants

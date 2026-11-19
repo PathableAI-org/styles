@@ -8,6 +8,15 @@
 // CSS custom properties:
 //   --pathable-surface-border-radius      (default: var(--radius-md)) — border radius
 //   --pathable-surface-transition-duration (default: 0.2s) — transition duration
+//   --pathable-surface-focus-ring         — focus outline color for controls on
+//     this surface, read by the shared state-focus mixin. Each variant with
+//     its own background sets it, so the nearest surface wins when surfaces
+//     nest; --base is transparent and inherits it. Bright Blue Brooks
+//     (--pathable-color-focus-ring) is 3.0:1 on white and 4.2:1 on PathAble
+//     Blue, but 1.1:1 on Intelligent Jade and 2.3:1 on Shilling Silver, so
+//     --brand, --tone-primary, --inset and --tone-subtle use
+//     --pathable-color-text (4.5:1 on Jade, 9.6:1 on Silver) instead (WCAG
+//     1.4.11 needs 3:1).
 //
 // Variant classes:
 //   .pathable-surface--base        — transparent bg, border, no elevation
@@ -36,6 +45,7 @@
 
 // Variant: raised — elevated card/panel
 .pathable-surface--raised {
+  --pathable-surface-focus-ring: var(--pathable-color-focus-ring);
   background: var(--pathable-color-surface);
   border: none;
   box-shadow: var(--elevation-md);
@@ -43,6 +53,7 @@
 
 // Variant: inset — recessed area
 .pathable-surface--inset {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
   background: var(--pathable-color-bg);
   border: none;
   box-shadow: inset var(--elevation-sm);
@@ -50,6 +61,7 @@
 
 // Variant: interactive — clickable with hover/focus states
 .pathable-surface--interactive {
+  --pathable-surface-focus-ring: var(--pathable-color-focus-ring);
   background: var(--pathable-color-surface);
   border: 2px solid transparent;
   box-shadow: var(--elevation-sm);
@@ -87,6 +99,7 @@
 
 // Variant: brand — promotional accent
 .pathable-surface--brand {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
   background: var(--pathable-color-accent);
   border: none;
   box-shadow: var(--elevation-md);
@@ -94,6 +107,7 @@
 
 // Variant: inverse — dark contrasting section
 .pathable-surface--inverse {
+  --pathable-surface-focus-ring: var(--pathable-color-focus-ring);
   background: var(--pathable-color-text);
   color: var(--pathable-color-surface);
   border: none;
@@ -104,18 +118,21 @@
 // `variant` selects a coordinated foreground/background/border treatment from
 // the shared SurfaceTone vocabulary (default | subtle | primary).
 .pathable-surface--tone-default {
+  --pathable-surface-focus-ring: var(--pathable-color-focus-ring);
   background: var(--pathable-color-surface);
   color: var(--pathable-color-text);
   border: 1px solid var(--pathable-color-border);
 }
 
 .pathable-surface--tone-subtle {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
   background: var(--pathable-color-bg);
   color: var(--pathable-color-text);
   border: 1px solid var(--pathable-color-border);
 }
 
 .pathable-surface--tone-primary {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
   background: var(--pathable-color-accent);
   color: var(--pathable-color-on-accent);
   border: 1px solid var(--pathable-color-accent);

@@ -1,5 +1,11 @@
 import { expect, userEvent, within } from 'storybook/test'
 
+import {
+  contrastRatio,
+  findOpaqueBackground,
+  parseComputedColor,
+} from '../shared/contrast'
+
 export default {
   title: 'Interaction Controls/IconButton',
   tags: ['autodocs', 'contract-icon-button'],
@@ -96,51 +102,6 @@ const loadingExample = ({
       )}
     </div>
   `
-}
-
-const parseComputedColor = (color: string) => {
-  const channels = color.match(/[\d.]+/g)?.map(Number)
-
-  if (!channels || channels.length < 3) {
-    throw new Error(`Unable to parse computed color: ${color}`)
-  }
-
-  return {
-    channels: channels.slice(0, 3),
-    alpha: channels[3] ?? 1,
-  }
-}
-
-const findOpaqueBackground = (element: HTMLElement, view: Window) => {
-  let current: HTMLElement | null = element
-
-  while (current) {
-    const background = view.getComputedStyle(current).backgroundColor
-
-    if (parseComputedColor(background).alpha === 1) return background
-    current = current.parentElement
-  }
-
-  throw new Error('IconButton has no opaque background')
-}
-
-const contrastRatio = (foreground: string, background: string) => {
-  const luminance = (color: string) => {
-    const { channels } = parseComputedColor(color)
-
-    const [red, green, blue] = channels.map((channel) => {
-      const value = channel / 255
-      return value <= 0.04045
-        ? value / 12.92
-        : Math.pow((value + 0.055) / 1.055, 2.4)
-    })
-
-    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
-  }
-
-  const lighter = Math.max(luminance(foreground), luminance(background))
-  const darker = Math.min(luminance(foreground), luminance(background))
-  return (lighter + 0.05) / (darker + 0.05)
 }
 
 const getButtonIcon = (button: HTMLElement) => {
