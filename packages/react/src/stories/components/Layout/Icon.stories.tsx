@@ -4,35 +4,64 @@ import { expect, within } from 'storybook/test'
 import { Icon } from '../../../components/Icon/Icon'
 import { IconButton } from '../../../components/IconButton/IconButton'
 
+/*
+ * Filled artwork from the USWDS icon set (`@uswds/uswds/dist/img/usa-icons`),
+ * which `.pathable-icon` wraps through `.usa-icon`. `.pathable-icon` paints
+ * with `fill: currentColor`, so stroke-only artwork would render as solid
+ * shapes.
+ */
+
 function ClockGlyph() {
   return (
     <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 2" />
+      <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+      <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
     </>
   )
 }
 
 function BellGlyph() {
   return (
-    <>
-      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M14 21h-4" />
-    </>
+    <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
   )
 }
 
 function CheckGlyph() {
   return (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="m8 12 3 3 5-6" />
-    </>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
   )
 }
 
 function CloseGlyph() {
-  return <path d="M6 6l12 12M18 6 6 18" />
+  return (
+    <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+  )
+}
+
+/**
+ * `.pathable-icon` is `1em` square and paints every shape with
+ * `fill: currentColor`. The stories set no `width`, `height` or `fill`
+ * attributes, so without the class each icon would render at the SVG default
+ * size (300 by 150 px) and the size check would fail. `size` defaults to the
+ * icon's own font size, which is what `1em` resolves to.
+ */
+async function expectIconContract(icon: Element | null, size?: string) {
+  await expect(icon).not.toBeNull()
+  if (!icon) return
+
+  const style = getComputedStyle(icon)
+
+  await expect(icon).toHaveClass('pathable-icon')
+  await expect(style.width).toBe(size ?? style.fontSize)
+  await expect(style.height).toBe(size ?? style.fontSize)
+  await expect(style.fill).toBe(style.color)
+  await expect(style.stroke).toBe('none')
+
+  const shapes = icon.querySelectorAll('path')
+  await expect(shapes.length).toBeGreaterThan(0)
+  for (const shape of shapes) {
+    await expect(getComputedStyle(shape).fill).toBe(style.color)
+  }
 }
 
 const meta = {
@@ -52,7 +81,9 @@ const meta = {
 
 **Accessibility**: Icons are decorative by default with \`aria-hidden="true"\` and \`focusable="false"\`. For a meaningful standalone icon, explicitly set \`aria-hidden={false}\`, \`role="img"\`, and an accessible name through \`aria-label\` or \`aria-labelledby\`.
 
-**Known constraints**: Icon does not ship artwork, a named icon registry, interactions, tooltips, or size variants. Consumers provide SVG children and presentation attributes such as fill, stroke, width, and height.`,
+**Sizing and fill**: Icon always applies \`.pathable-icon\`, which is \`1em\` square and paints with \`fill: currentColor\`. Those rules override the native \`width\`, \`height\` and \`fill\` attributes, so passing them has no visible effect. Size an icon through \`font-size\` on the icon or a parent (\`1.5rem\` renders 24 px), and set its colour through \`color\`. Use filled artwork, such as the USWDS icon set these stories draw from: stroke-only artwork (\`fill="none"\` with a stroke) renders as solid shapes. IconButton and IconTile size the icon inside them through their own rules.
+
+**Known constraints**: Icon does not ship artwork, a named icon registry, interactions, tooltips, or size variants. Consumers provide filled SVG children.`,
       },
     },
   },
@@ -72,23 +103,10 @@ const meta = {
       description:
         'Native SVG coordinate system. Defaults to the common 24 by 24 icon canvas.',
     },
-    width: {
-      control: { type: 'text' },
-      description: 'Consumer-owned native SVG width.',
-    },
-    height: {
-      control: { type: 'text' },
-      description: 'Consumer-owned native SVG height.',
-    },
-    fill: {
-      control: { type: 'text' },
+    style: {
+      control: { type: 'object' },
       description:
-        'Native SVG fill paint, commonly currentColor or none depending on the artwork.',
-    },
-    stroke: {
-      control: { type: 'text' },
-      description:
-        'Native SVG stroke paint, commonly currentColor for outline artwork.',
+        'Inline styles. Set fontSize to size the icon, because .pathable-icon is 1em square and overrides the width and height attributes; set color to change its fill.',
     },
     role: {
       control: { type: 'text' },
@@ -114,13 +132,6 @@ const meta = {
   },
   args: {
     children: <ClockGlyph />,
-    width: 24,
-    height: 24,
-    fill: 'none',
-    stroke: 'currentColor',
-    strokeWidth: 2,
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
   },
 } satisfies Meta<typeof Icon>
 
@@ -137,6 +148,7 @@ export const Default: Story = {
     await expect(icon).toHaveAttribute('viewBox', '0 0 24 24')
     await expect(icon).toHaveAttribute('aria-hidden', 'true')
     await expect(icon).toHaveAttribute('focusable', 'false')
+    await expectIconContract(icon)
   },
 }
 
@@ -170,8 +182,10 @@ export const Meaningful: Story = {
 
 export const CustomSize: Story = {
   args: {
-    width: 48,
-    height: 48,
+    style: { fontSize: '3rem' },
+  },
+  play: async ({ canvasElement }) => {
+    await expectIconContract(canvasElement.querySelector('svg'), '48px')
   },
 }
 
@@ -183,6 +197,16 @@ export const CurrentColor: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    const icon = canvasElement.querySelector('svg')
+
+    await expect(icon).not.toBeNull()
+    if (!icon) return
+    // Black is the SVG initial fill, so a fill matching the non-black link
+    // colour shows that fill: currentColor applied.
+    await expect(getComputedStyle(icon).color).not.toBe('rgb(0, 0, 0)')
+    await expectIconContract(icon)
+  },
 }
 
 export const CustomAttributes: Story = {
@@ -229,69 +253,48 @@ export const Narrow: Story = {
 
 export const IconSet: Story = {
   render: () => (
-    <div className="pathable-cluster pathable-cluster--gap-lg">
+    <div
+      className="pathable-cluster pathable-cluster--gap-lg"
+      style={{ fontSize: '2rem' }}
+    >
       <div className="pathable-stack pathable-stack--gap-sm">
-        <Icon
-          width="32"
-          height="32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
+        <Icon>
           <ClockGlyph />
         </Icon>
-        <span>Clock</span>
+        <span style={{ fontSize: '1rem' }}>Clock</span>
       </div>
       <div className="pathable-stack pathable-stack--gap-sm">
-        <Icon
-          width="32"
-          height="32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
+        <Icon>
           <BellGlyph />
         </Icon>
-        <span>Bell</span>
+        <span style={{ fontSize: '1rem' }}>Bell</span>
       </div>
       <div className="pathable-stack pathable-stack--gap-sm">
-        <Icon
-          width="32"
-          height="32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
+        <Icon>
           <CheckGlyph />
         </Icon>
-        <span>Check</span>
+        <span style={{ fontSize: '1rem' }}>Check</span>
       </div>
     </div>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const icons = canvasElement.querySelectorAll('svg')
 
     await expect(canvas.getByText('Clock')).toBeVisible()
     await expect(canvas.getByText('Bell')).toBeVisible()
     await expect(canvas.getByText('Check')).toBeVisible()
-    await expect(canvasElement.querySelectorAll('svg')).toHaveLength(3)
+    await expect(icons).toHaveLength(3)
+    for (const icon of icons) {
+      await expectIconContract(icon, '32px')
+    }
   },
 }
 
 export const IconButtonComposition: Story = {
   render: () => (
     <IconButton appearance="subtle" aria-label="Close appointment details">
-      <Icon
-        width="24"
-        height="24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      >
+      <Icon>
         <CloseGlyph />
       </Icon>
     </IconButton>

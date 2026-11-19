@@ -331,8 +331,8 @@ function App() {
       </ButtonGroup>
 
       <IconButton appearance="subtle" aria-label="Close participant panel">
-        <Icon fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M6 6l12 12M18 6L6 18" />
+        <Icon>
+          <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
         </Icon>
       </IconButton>
 
@@ -785,7 +785,7 @@ Use concise `text` that identifies what is loading. The root defaults to `aria-l
 
 ### Icon Props
 
-`Icon` is a thin native SVG wrapper that applies `pathable-icon` while leaving artwork, dimensions, and visual presentation consumer-owned. It does not provide a named icon registry, interactions, tooltips, or application-specific meaning.
+`Icon` is a thin native SVG wrapper that applies `pathable-icon` to consumer-provided artwork. It does not provide artwork, a named icon registry, size variants, interactions, tooltips, or application-specific meaning.
 
 | Prop        | Type                          | Default       | Description                                                                                         |
 | ----------- | ----------------------------- | ------------- | --------------------------------------------------------------------------------------------------- |
@@ -795,7 +795,23 @@ Use concise `text` that identifies what is loading. The root defaults to `aria-l
 | focusable   | `'auto' \| 'true' \| 'false'` | `'false'`     | Prevents a non-interactive icon from becoming an extra keyboard stop.                               |
 | className   | `string`                      | —             | Additional class names appended after `pathable-icon`.                                              |
 
-All other native SVG attributes, including `width`, `height`, `fill`, `stroke`, `role`, `aria-*`, `data-*`, and event handlers, are forwarded to the `<svg>` element.
+All other native SVG attributes, including `style`, `role`, `aria-*`, `data-*`, and event handlers, are forwarded to the `<svg>` element. `width`, `height`, and `fill` are forwarded too, but `pathable-icon` overrides them; see [Icon Sizing and Fill](#icon-sizing-and-fill).
+
+#### Icon Sizing and Fill
+
+`pathable-icon` is `1em` square and paints with `fill: currentColor`. These CSS rules override the SVG `width`, `height`, and `fill` attributes, so passing those attributes has no visible effect.
+
+- Size an icon through `font-size`, on the icon or a parent. `1.5rem` renders a 24px icon.
+- Set its color through `color`.
+- Use filled artwork, such as the USWDS icon set. Stroke-only artwork (`fill="none"` with a stroke) renders as solid shapes.
+
+```tsx
+<Icon style={{ fontSize: '1.5rem' }}>
+  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+</Icon>
+```
+
+`IconButton` and `IconTile` size the icon inside them through their own rules.
 
 #### Icon Accessibility
 
