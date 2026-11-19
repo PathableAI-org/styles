@@ -41,8 +41,9 @@ export const Default = {
     )
     const spaced = parseFloat(window.getComputedStyle(blocks[0]).marginBottom)
 
-    // 2rem below the tablet breakpoint, 4rem from it.
-    await expect([2 * rootFontSize, 4 * rootFontSize]).toContain(spaced)
+    // 2rem below the 40em tablet breakpoint, 4rem from it.
+    const fromTablet = window.matchMedia('(min-width: 40em)').matches
+    await expect(spaced).toBe((fromTablet ? 4 : 2) * rootFontSize)
     await expect(window.getComputedStyle(blocks[1]).marginBottom).toBe('0px')
 
     const image = blocks[0].querySelector('.pathable-media-block__img')
@@ -55,6 +56,36 @@ export const Default = {
     )
     await expect(window.getComputedStyle(firstChild as Element).marginTop).toBe(
       '0px',
+    )
+  },
+}
+
+export const BlocksInGrid = {
+  render: () => `
+    <section class="pathable-graphic-list">
+      <h2 class="pathable-graphic-list__heading">What we offer</h2>
+      <div class="pathable-grid pathable-grid--cols-2">
+        ${renderBlock('One-to-one coaching', 'Sessions with a coordinator who knows your workplace.')}
+        ${renderBlock('Workplace adjustments', 'Help agreeing changes with your employer.')}
+        ${renderBlock('Job search support', 'Practical help with applications and interviews.')}
+        ${renderBlock('Ongoing check-ins', 'Regular contact once you start work.')}
+      </div>
+    </section>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const blocks = canvas.getAllByTestId('graphic-list-block')
+    const rootFontSize = parseFloat(
+      window.getComputedStyle(document.documentElement).fontSize,
+    )
+
+    // Blocks in a grid are spaced by the grid gap alone.
+    for (const block of blocks) {
+      await expect(window.getComputedStyle(block).marginBottom).toBe('0px')
+    }
+    const image = blocks[0].querySelector('.pathable-media-block__img')
+    await expect(window.getComputedStyle(image as Element).marginRight).toBe(
+      `${1.5 * rootFontSize}px`,
     )
   },
 }
