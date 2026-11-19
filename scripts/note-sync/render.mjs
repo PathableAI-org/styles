@@ -11,6 +11,8 @@
 
 /** @typedef {import('../verification.mjs').VerificationReport} VerificationReport */
 
+/** @typedef {import('../visual-review/schema.mjs').VisualReview} VisualReview */
+
 import { cell, table } from '../markdown.mjs'
 
 /**
@@ -227,6 +229,110 @@ export const renderReport = (report, context) => {
               ]),
             ),
           ],
+    ),
+  ].join('\n')
+}
+
+/** The screenshots page as a link when it is a web URL, otherwise as inline text. */
+const pageLink = (page) =>
+  /^https?:\/\/\S+$/.test(page)
+    ? `[Screenshots](${page.replace(/[()]/g, encodeURIComponent)})`
+    : `Screenshots: ${inline(page)}`
+
+/** Where a visual finding shows: its story, then its viewport and condition when it names them. */
+const visualPlace = (finding) =>
+  [finding.story, finding.viewport, finding.condition]
+    .filter((part) => part !== undefined)
+    .join(', ')
+
+/**
+ * The visual review this one supersedes: the one it names, else for a later round the latest visual review of the
+ * same pull request in the round before.
+ */
+const supersededVisualReview = (review, earlier) => {
+  if (review.supersedesVisualReviewId !== undefined) {
+    return earlier.find(
+      ({ entry }) => entry.visualReviewId === review.supersedesVisualReviewId,
+    )
+  }
+  return earlier
+    .filter(
+      ({ entry }) =>
+        entry.pullRequest === review.pullRequest &&
+        entry.round === review.round - 1,
+    )
+    .at(-1)
+}
+
+const visualSupersedes = (review, earlier) => {
+  const superseded = supersededVisualReview(review, earlier)
+  if (superseded === undefined) return undefined
+  const { reviewedSha, round, visualReviewId } = superseded.entry
+  return `Round ${String(review.round)} supersedes round ${String(round)} ([visual review ${short(
+    visualReviewId,
+  )} at ${reviewedSha.slice(0, 7)}](${superseded.url})).`
+}
+
+const visualFindingLines = (findings) =>
+  findings.flatMap((finding) => [
+    `- **${finding.severity}** ${finding.id} \`${visualPlace(finding)}\` (${finding.category}): ${inline(
+      finding.summary,
+    )}`,
+    `  - Observed: ${inline(finding.observed)}`,
+  ])
+
+/** The visual review's headline, screenshots link, open findings, captures, closures, and escalations. */
+export const renderVisualReview = (review, context) => {
+  const blocking = review.findings.filter(
+    (finding) => finding.severity === 'blocking',
+  )
+  const advisory = review.findings.filter(
+    (finding) => finding.severity === 'advisory',
+  )
+  return [
+    `**Visual review** \`${review.visualReviewId}\` (round ${String(review.round)}) of pull request #${String(
+      review.pullRequest,
+    )} at \`${review.reviewedSha}\`: ${count(blocking, 'blocking')}, ${count(advisory, 'advisory')}, ${count(
+      review.closed,
+      'closed',
+    )}, ${count(review.escalations, 'escalations')}.`,
+    ...supersedesLine(visualSupersedes(review, context.earlier)),
+    '',
+    pageLink(review.page),
+    '',
+    '#### Findings',
+    '',
+    ...(review.findings.length === 0
+      ? ['No open findings.']
+      : visualFindingLines([...blocking, ...advisory])),
+    ...section('Captures', [
+      table(
+        ['Story', 'Viewports', 'Conditions', 'Reason'],
+        review.captures.map((capture) => [
+          `\`${capture.story}\``,
+          capture.viewports.join(', '),
+          capture.conditions.join(', '),
+          cell(inline(capture.reason)),
+        ]),
+      ),
+    ]),
+    ...section(
+      'Closures',
+      review.closed.map(
+        (closed) =>
+          `- ${closed.id} **${closed.closure}**: ${inline(closed.note)}`,
+      ),
+    ),
+    ...section(
+      'Escalations',
+      review.escalations.map(
+        (escalation) =>
+          `- **${escalation.kind}**${
+            escalation.findingIds.length === 0
+              ? ''
+              : ` (${escalation.findingIds.join(', ')})`
+          }: ${inline(escalation.detail)}`,
+      ),
     ),
   ].join('\n')
 }

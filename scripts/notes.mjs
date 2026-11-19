@@ -6,11 +6,11 @@
  *                                                        notes; the checked-out branch's pull request by default.
  *                                                        Exits 1 when a marked comment is rejected; a comment
  *                                                        whose commit cannot be fetched is listed as unavailable
- *   pnpm notes:publish verification|review [<rev>]       post the latest local entry on a commit as a comment, for a
- *     [--pr <n>] [--review-ref <ref>]                    record whose posting failed
+ *   pnpm notes:publish verification|review|visual        post the latest local entry on a commit as a comment, for a
+ *     [<rev>] [--pr <n>] [--review-ref <ref>]            record whose posting failed
  *
- * `--review-ref` defaults to refs/notes/review; verification reports always use refs/notes/verification. See
- * docs/engineering/code-review.md#storage.
+ * `--review-ref` defaults to refs/notes/review; verification reports always use refs/notes/verification, and visual
+ * reviews refs/notes/visual. See docs/engineering/code-review.md#storage and docs/engineering/visual-review.md#storage.
  */
 import { parseArgs } from 'node:util'
 
