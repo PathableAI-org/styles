@@ -53,6 +53,9 @@ export const ForcedColors = {
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    if (!matchMedia('(forced-colors: active)').matches) {
+      throw new Error('Forced colours emulation is not active for this story')
+    }
     const spinner = canvasElement.querySelector('.pathable-loading__spinner')
     if (!spinner) throw new Error('Spinner not found')
     const style = getComputedStyle(spinner)

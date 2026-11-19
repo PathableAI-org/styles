@@ -123,6 +123,7 @@ const EXPECTED_COVERAGE = {
   Feedback: [
     'components-feedback-emptystate--no-data',
     'components-feedback-loading--default',
+    'components-feedback-loading--forced-colors',
     'components-feedback-pageerror--full-page',
     'components-feedback-skeleton--card',
     'components-feedback-toast--stacked',
