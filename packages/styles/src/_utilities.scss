@@ -102,17 +102,21 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 }
 
 // Base (Shilling Silver) and Accent (Intelligent Jade) set no ring of their
-// own, so one in a surface that sets a dark ring keeps it. Only inside the
-// teal container do they reset, because the light ring would be 1.2:1 on Base
-// and 2.5:1 on Accent there.
+// own, so one in a surface that sets a dark ring keeps it. Inside the teal
+// container the light ring would be 1.3:1 on Base and 2.8:1 on Accent, so
+// they set the dark ring the Silver and Jade surfaces use (9.6:1 and 6.3:1).
 :where(.pathable-bg-link)
-  :where(
-    .pathable-bg-base,
-    .hover\:pathable-bg-base:hover,
-    .pathable-bg-accent,
-    .hover\:pathable-bg-accent:hover
-  ):not(:where(#{$-surface-focus-ring-controls})) {
-  --pathable-surface-focus-ring: initial;
+  :where(.pathable-bg-base, .hover\:pathable-bg-base:hover):not(
+    :where(#{$-surface-focus-ring-controls})
+  ) {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
+}
+
+:where(.pathable-bg-link)
+  :where(.pathable-bg-accent, .hover\:pathable-bg-accent:hover):not(
+    :where(#{$-surface-focus-ring-controls})
+  ) {
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }
 
 .pathable-bg-link:not(:where(#{$-surface-focus-ring-controls})),

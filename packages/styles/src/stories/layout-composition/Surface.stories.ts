@@ -223,8 +223,27 @@ const nestedCases: (FocusCase & { outer: string; inner: string })[] = [
   {
     label: 'Surface background in link',
     outer: 'pathable-bg-link pathable-text-white',
-    inner: 'pathable-bg-surface',
+    inner: 'pathable-bg-surface pathable-text-primary',
     ring: '--pathable-color-focus-ring',
+  },
+  {
+    label: 'Base background in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-bg-base pathable-text-primary',
+    ring: '--pathable-color-text',
+  },
+  {
+    label: 'Accent background in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-bg-accent pathable-text-primary',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Base background in subtle in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner:
+      'pathable-surface pathable-surface--tone-subtle pathable-bg-base pathable-text-primary',
+    ring: '--pathable-color-text',
   },
   {
     label: 'Card container in link',
@@ -282,7 +301,7 @@ export const KeyboardFocusOnSurfaces = {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in fifteen nested cases. Fourteen put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers, except Tech Teal (`pathable-bg-link`), where it is `--pathable-color-surface` (white) because Bright Blue Brooks is 2.6:1 there. The light containers nested in Tech Teal, a `pathable-bg-surface` and a `pathable-card__container`, reset the ring to Bright Blue Brooks. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background. In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; #362 tracks that component-owned outline.",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in eighteen nested cases. Seventeen put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers, except Tech Teal (`pathable-bg-link`), where it is `--pathable-color-surface` (white) because Bright Blue Brooks is 2.6:1 there. The light containers nested in Tech Teal reset the ring: a `pathable-bg-surface` and a `pathable-card__container` to Bright Blue Brooks, a `pathable-bg-base` to `--pathable-color-text` and a `pathable-bg-accent` to `--pathable-color-on-accent`. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background. In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; #362 tracks that component-owned outline.",
       },
     },
   },
