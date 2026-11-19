@@ -10,7 +10,7 @@
 //
 // Modifier classes:
 //   .pathable-resource-card--grid          — media above content (default)
-//   .pathable-resource-card--list          — media beside content
+//   .pathable-resource-card--list          — media beside content (stacks above content at 480px and narrower)
 //   .pathable-resource-card--interactive   — hover/focus-within emphasis
 //   .pathable-resource-card--has-action    — secondary action present
 //   .pathable-resource-card--no-image      — fallback icon-only media
@@ -77,7 +77,7 @@
   }
 }
 
-// List: media beside content
+// List: media beside content (stacks above content at 480px and narrower)
 .pathable-resource-card--list {
   flex-direction: row;
   gap: var(--pathable-space-4);
@@ -94,6 +94,18 @@
   .pathable-resource-card__body {
     flex: 1;
     min-width: 0;
+  }
+
+  // Narrow viewports: stack the media above the body so the text column keeps
+  // the card's full width (WCAG 1.4.10 Reflow at 320px).
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: var(--pathable-space-2);
+
+    .pathable-resource-card__media {
+      width: 100%;
+      height: var(--pathable-resource-card-media-height, 120px);
+    }
   }
 }
 
