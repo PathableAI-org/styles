@@ -16,8 +16,8 @@ const resolveColor = (canvasElement: HTMLElement, value: string) => {
 }
 
 /**
- * Moves keyboard focus from the document start to `field` with Tab and asserts
- * it shows a solid outline at least 2px wide: in `--pathable-color-focus-ring`
+ * Moves keyboard focus from the document start to `element` with Tab and
+ * asserts it shows a solid outline at least 2px wide: in `--pathable-color-focus-ring`
  * normally, and in the system `Highlight` colour when forced colors are active.
  *
  * The expected colour follows the current forced-colors state, so the story
@@ -29,16 +29,16 @@ const resolveColor = (canvasElement: HTMLElement, value: string) => {
  */
 export const expectKeyboardFocusIndicator = async (
   canvasElement: HTMLElement,
-  field: HTMLElement,
+  element: HTMLElement,
 ) => {
   const forcedColors = matchMedia('(forced-colors: active)').matches
 
-  const active = field.ownerDocument.activeElement
+  const active = element.ownerDocument.activeElement
   if (active instanceof HTMLElement) active.blur()
   await userEvent.tab()
-  await expect(field).toHaveFocus()
+  await expect(element).toHaveFocus()
 
-  const style = getComputedStyle(field)
+  const style = getComputedStyle(element)
   await expect(style.outlineStyle).toBe('solid')
   await expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThanOrEqual(2)
   await expect(style.outlineColor).toBe(
