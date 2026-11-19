@@ -84,7 +84,9 @@
 // The :where() keeps the reset at the utility's own specificity, so a
 // container's own --pathable-surface-focus-ring, or a surface variant on the
 // same element, still wins. Keep the list in step with the selectors that
-// include state-focus (pathable-button.scss explains the button modifiers).
+// include state-focus (pathable-button.scss explains the button modifiers) and
+// with the other controls whose own outline reads the ring: the unstyled
+// button, the link and the interactive surface.
 $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive, .pathable-button--unstyled, .pathable-icon-button, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-surface--interactive';
 
 .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),

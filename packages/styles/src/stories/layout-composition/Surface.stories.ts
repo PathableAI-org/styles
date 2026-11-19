@@ -304,6 +304,21 @@ const componentRingCases = [
     ring: '--pathable-color-on-accent',
   },
   {
+    label: 'Success alert',
+    outer: 'pathable-alert pathable-alert--success',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Warning alert',
+    outer: 'pathable-alert pathable-alert--warning',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Error alert',
+    outer: 'pathable-alert pathable-alert--error',
+    ring: '--pathable-color-on-accent',
+  },
+  {
     label: 'Emergency alert',
     outer: 'pathable-alert pathable-alert--emergency',
     ring: '--pathable-color-status-danger-text',
@@ -315,7 +330,7 @@ export const ComponentFocusOnBackgrounds = {
     docs: {
       description: {
         story:
-          'A focusable `.pathable-surface--interactive`, a `.pathable-link`, a `.pathable-button--unstyled` and a `.pathable-filter-pill__dismiss` on each background where Bright Blue Brooks is under 3:1: Shilling Silver (`--inset`, `pathable-bg-base`), Intelligent Jade (`--brand`, `pathable-bg-accent`, `pathable-bg-success`), the danger red and the emergency alert. Each outline is drawn on the background behind it, so it takes `--pathable-surface-focus-ring` (#362). The play function tabs to every one and checks the outline colour and its contrast of at least 3:1 with the background.',
+          'A focusable `.pathable-surface--interactive`, a `.pathable-link`, a `.pathable-button--unstyled` and a `.pathable-filter-pill__dismiss` on each background where Bright Blue Brooks is under 3:1: Shilling Silver (`--inset`, `pathable-bg-base`), Intelligent Jade (`--brand`, `pathable-bg-accent`, `pathable-bg-success`), the danger red and the success, warning, error and emergency alerts. Each outline is drawn on the background behind it, so it takes `--pathable-surface-focus-ring` (#362). The play function tabs to every one and checks the outline colour and its contrast of at least 3:1 with the background.',
       },
     },
   },

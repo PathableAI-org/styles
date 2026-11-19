@@ -167,7 +167,8 @@
 // :focus-visible only, so focus on a control inside the region does not
 // outline the whole region.
 .pathable-app-shell__content:focus-visible {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: -2px;
 }
 
