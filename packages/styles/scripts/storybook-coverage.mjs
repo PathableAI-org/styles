@@ -84,6 +84,7 @@ const EXPECTED_COVERAGE = {
     'components-form-controls-optional-form-section--increased-text',
     'components-form-controls-optional-form-section--forced-colors',
     'components-form-controls-radio--default',
+    'components-form-controls-radio--with-hint-and-error',
     'components-form-controls-select--default',
     'components-form-controls-select--keyboard-focus',
     'components-form-controls-select--forced-colors',
