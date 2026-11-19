@@ -9,6 +9,7 @@
 //   --pathable-wizard-gap        (default: units(2)) — gap between wizard regions
 
 @use 'uswds-core' as *;
+@use '../type-scale' as *;
 
 .pathable-wizard {
   max-width: var(--pathable-wizard-max-width);
@@ -22,7 +23,7 @@
 // Semantic page heading for the current step
 .pathable-wizard__heading {
   margin: 0;
-  font-size: type-scale('lg');
+  font-size: type-scale-rem('lg');
   font-weight: var(--pathable-font-weight-bold);
 }
 
@@ -43,7 +44,7 @@
 // Mobile compact step summary — hidden on desktop, visible <768px
 .pathable-wizard__mobile-summary {
   display: none;
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
   font-weight: var(--pathable-font-weight-semibold);
   color: color('ink');
 }
@@ -58,7 +59,7 @@
 .pathable-wizard__section {
   margin: 0;
   padding-top: var(--pathable-wizard-gap);
-  font-size: type-scale('md');
+  font-size: type-scale-rem('md');
   font-weight: var(--pathable-font-weight-bold);
   border-bottom: 1px solid color('gray-20');
   padding-bottom: units(1);
