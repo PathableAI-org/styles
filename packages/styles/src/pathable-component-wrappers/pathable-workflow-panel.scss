@@ -115,6 +115,12 @@
     background-color: color('warning-lighter');
     border-radius: radius('sm');
     color: color('warning-darker');
+
+    // Keep the live region in the DOM when empty, but draw no box for it
+    &:empty {
+      padding: 0;
+      background-color: transparent;
+    }
   }
 
   .pathable-workflow-panel__actions .pathable-button--continue {
@@ -130,6 +136,11 @@
     background-color: color('error-lighter');
     border-radius: radius('sm');
     color: color('error-darker');
+
+    &:empty {
+      padding: 0;
+      background-color: transparent;
+    }
   }
 }
 
@@ -148,11 +159,6 @@
 }
 
 // --- Empty region handling ---
-// An empty status region draws nothing, so a state box never shows without text
-.pathable-workflow-panel__status:empty {
-  display: none;
-}
-
 // Hide objective and current-activity regions when they have no content
 .pathable-workflow-panel__objective:empty,
 .pathable-workflow-panel__current-activity:empty {
