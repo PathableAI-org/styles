@@ -2,8 +2,11 @@ import { Surface } from '../../../components/Surface/Surface'
 import { Button } from '../../../components/Button/Button'
 import { Input } from '../../../components/Input/Input'
 import { Label } from '../../../components/Label/Label'
+import { ThemeProvider } from '../../../theme/ThemeProvider'
+import { createTheme } from '../../../theme/createTheme'
 import type { Meta, StoryObj } from '@storybook/react'
 import { expect, userEvent, within } from 'storybook/test'
+import { resolveColorToken } from '../../shared/resolve-color-token'
 
 const meta = {
   title: 'Components/Surface',
@@ -137,52 +140,58 @@ export const CenteredConstrained: Story = {
 
 // ── Keyboard focus story ─────────────────────────────────────────
 
-/** Resolves a colour custom property to the computed `rgb()` string. */
-function resolveColorToken(token: string): string {
-  if (
-    !getComputedStyle(document.documentElement).getPropertyValue(token).trim()
-  ) {
-    throw new Error(`Surface story token ${token} is undefined`)
-  }
-  const probe = document.createElement('span')
-  probe.style.color = `var(${token})`
-  document.body.append(probe)
-  const value = getComputedStyle(probe).color
-  probe.remove()
-  return value
-}
-
 const focusVariants = [
   { variant: 'default', label: 'Default', ring: '--pathable-color-focus-ring' },
   { variant: 'subtle', label: 'Subtle', ring: '--pathable-color-text' },
-  { variant: 'primary', label: 'Primary', ring: '--pathable-color-text' },
+  { variant: 'primary', label: 'Primary', ring: '--pathable-color-on-accent' },
 ] as const
+
+/** Synthetic scoped theme: the focus ring must follow it on a default surface. */
+const scopedFocusTheme = createTheme({ colors: { focusRing: '#7c3aed' } })
+
+const FocusControls = ({ label, id }: { label: string; id: string }) => (
+  <div
+    className="pathable-stack pathable-stack--gap-sm"
+    style={{ padding: '1rem 1.25rem' }}
+  >
+    <Button>Save on {label}</Button>
+    <Label htmlFor={id}>Note on {label}</Label>
+    <Input id={id} type="text" />
+  </div>
+)
 
 /** A Button and an Input on each surface variant. The focus outline is drawn
  *  on the surface, so each variant sets the ring colour the shared focus style
- *  uses: Bright Blue Brooks on the default surface, and the text colour on the
- *  subtle and primary surfaces, where Bright Blue Brooks is under 3:1. */
+ *  uses: Bright Blue Brooks on the default surface, the text colour on the
+ *  subtle surface and the on-accent colour on the primary surface, where
+ *  Bright Blue Brooks is under 3:1. A scoped `ThemeProvider` inside a default
+ *  surface still sets the ring. */
 export const KeyboardFocusOnSurfaces: Story = {
   render: () => (
     <div className="pathable-cluster pathable-cluster--gap-lg">
       {focusVariants.map(({ variant, label }) => (
         <Surface key={variant} variant={variant}>
-          <div
-            className="pathable-stack pathable-stack--gap-sm"
-            style={{ padding: '1rem 1.25rem' }}
-          >
-            <Button>Save on {label}</Button>
-            <Label htmlFor={`surface-focus-${variant}`}>Note on {label}</Label>
-            <Input id={`surface-focus-${variant}`} type="text" />
-          </div>
+          <FocusControls label={label} id={`surface-focus-${variant}`} />
         </Surface>
       ))}
+      <Surface>
+        <ThemeProvider theme={scopedFocusTheme}>
+          <FocusControls label="Scoped theme" id="surface-focus-scoped" />
+        </ThemeProvider>
+      </Surface>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    const cases = [
+      ...focusVariants.map(({ label, ring }) => ({
+        label,
+        color: resolveColorToken(ring),
+      })),
+      { label: 'Scoped theme', color: 'rgb(124, 58, 237)' },
+    ]
 
-    for (const { label, ring } of focusVariants) {
+    for (const { label, color } of cases) {
       await step(`${label} surface shows its focus ring`, async () => {
         for (const control of [
           canvas.getByRole('button', { name: `Save on ${label}` }),
@@ -193,7 +202,7 @@ export const KeyboardFocusOnSurfaces: Story = {
           const style = getComputedStyle(control)
           await expect(style.outlineStyle).toBe('solid')
           await expect(style.outlineWidth).toBe('2px')
-          await expect(style.outlineColor).toBe(resolveColorToken(ring))
+          await expect(style.outlineColor).toBe(color)
         }
       })
     }

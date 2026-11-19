@@ -2,6 +2,7 @@ import { Modal } from '../../../components/Modal/Modal'
 import type { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test'
 import { LONG_CONTENT } from './fixtures'
+import { resolveColorToken } from '../../shared/resolve-color-token'
 
 const meta = {
   title: 'Components/Communication/Modal',
@@ -84,21 +85,6 @@ type Story = StoryObj<typeof meta>
 
 /** Close control must sit within this distance of the dialog's top and right edges. */
 const CLOSE_CORNER_TOLERANCE_PX = 16
-
-/** Resolves a colour custom property to the computed `rgb()` string. */
-function resolveColorToken(token: string): string {
-  if (
-    !getComputedStyle(document.documentElement).getPropertyValue(token).trim()
-  ) {
-    throw new Error(`Modal story token ${token} is undefined`)
-  }
-  const probe = document.createElement('span')
-  probe.style.color = `var(${token})`
-  document.body.append(probe)
-  const value = getComputedStyle(probe).color
-  probe.remove()
-  return value
-}
 
 // ---------------------------------------------------------------------------
 // Playground

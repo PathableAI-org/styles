@@ -1,6 +1,7 @@
 import { Button } from '../../../components/Button/Button'
 import type { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within, expect, fn } from 'storybook/test'
+import { resolveColorToken } from '../../shared/resolve-color-token'
 
 const meta = {
   title: 'Components/Button',
@@ -278,21 +279,6 @@ export const ClickActivation: Story = {
       await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
   },
-}
-
-/** Resolves a colour custom property to the computed `rgb()` string. */
-function resolveColorToken(token: string): string {
-  if (
-    !getComputedStyle(document.documentElement).getPropertyValue(token).trim()
-  ) {
-    throw new Error(`Button story token ${token} is undefined`)
-  }
-  const probe = document.createElement('span')
-  probe.style.color = `var(${token})`
-  document.body.append(probe)
-  const value = getComputedStyle(probe).color
-  probe.remove()
-  return value
 }
 
 /** Verifies keyboard activation with Enter and Space keys, and confirms
