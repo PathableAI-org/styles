@@ -1,3 +1,5 @@
+import { expect } from 'storybook/test'
+
 export default {
   title: 'Components/Communication/Process List',
   tags: ['autodocs'],
@@ -36,4 +38,42 @@ export const Default = {
       </li>
     </ol>
   `,
+}
+
+const processList = `
+    <ol class="pathable-process-list" data-testid="process-list">
+      <li class="pathable-process-list__item">
+        <h4 class="pathable-process-list__heading">Research</h4>
+        <p>Conduct initial research.</p>
+      </li>
+      <li class="pathable-process-list__item">
+        <h4 class="pathable-process-list__heading">Design</h4>
+        <p>Create wireframes and prototypes.</p>
+      </li>
+    </ol>
+  `
+
+export const InsideProse = {
+  render: () => `
+    <p style="margin: 0 0 0.5rem; font-weight: 700;">Inside pathable-prose</p>
+    <div class="pathable-prose" data-testid="in-prose">${processList}</div>
+    <p style="margin: 2rem 0 0.5rem; font-weight: 700;">Outside pathable-prose</p>
+    <div data-testid="outside-prose">${processList}</div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const view = canvasElement.ownerDocument.defaultView as Window
+    const measure = (scope: string) => {
+      const root = canvasElement.querySelector(`[data-testid="${scope}"]`)
+      const list = root?.querySelector('.pathable-process-list') as HTMLElement
+      const item = root?.querySelector(
+        '.pathable-process-list__item',
+      ) as HTMLElement
+      return {
+        listPaddingLeft: view.getComputedStyle(list).paddingLeft,
+        itemPaddingLeft: view.getComputedStyle(item).paddingLeft,
+        itemMarginBottom: view.getComputedStyle(item).marginBottom,
+      }
+    }
+    await expect(measure('in-prose')).toEqual(measure('outside-prose'))
+  },
 }
