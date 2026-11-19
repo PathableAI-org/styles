@@ -249,10 +249,14 @@ export const WorkflowCardButtonActions = {
           <h3 class="pathable-card__heading">Quarterly report</h3>
         </div>
         <div class="pathable-card__body">
-          <p class="pathable-card__meta" data-testid="workflow-button-meta">Generated: Jul 8, 2026</p>
+          <div class="pathable-card__meta" data-testid="workflow-button-meta">Generated: Jul 8, 2026</div>
           <div class="pathable-card__action" data-testid="workflow-button-actions">
             <button type="button" class="pathable-button">Download Report</button>
             <button type="button" class="pathable-button pathable-button--outline">Share</button>
+          </div>
+          <div class="pathable-card__action pathable-cluster pathable-cluster--gap-sm" data-testid="workflow-button-cluster">
+            <button type="button" class="pathable-button">Save</button>
+            <button type="button" class="pathable-button">Cancel</button>
           </div>
         </div>
       </div>
@@ -261,6 +265,7 @@ export const WorkflowCardButtonActions = {
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
     const container = canvas.getByTestId('workflow-button-actions')
+    const cluster = canvas.getByTestId('workflow-button-cluster')
     const meta = canvas.getByTestId('workflow-button-meta')
     const first = canvas.getByRole('button', { name: 'Download Report' })
     const second = canvas.getByRole('button', { name: 'Share' })
@@ -271,14 +276,15 @@ export const WorkflowCardButtonActions = {
       container.getBoundingClientRect().top -
       meta.getBoundingClientRect().bottom
     await expect(gapAbove).toBeGreaterThanOrEqual(8)
-    const firstBox = first.getBoundingClientRect()
-    const secondBox = second.getBoundingClientRect()
-    const stacked = secondBox.top >= firstBox.bottom
+    const styles = getComputedStyle(container)
+    await expect(styles.display).toBe('flex')
+    await expect(Number.parseFloat(styles.rowGap)).toBeGreaterThanOrEqual(8)
+    await expect(Number.parseFloat(styles.columnGap)).toBeGreaterThanOrEqual(8)
+    await expect(second).toBeVisible()
+    // A utility on the container still sets its own gap.
     await expect(
-      stacked
-        ? secondBox.top - firstBox.bottom
-        : secondBox.left - firstBox.right,
-    ).toBeGreaterThanOrEqual(8)
+      Number.parseFloat(getComputedStyle(cluster).columnGap),
+    ).toBeLessThan(Number.parseFloat(styles.columnGap))
     await expectKeyboardFocusIndicator(canvasElement, first)
   },
 }
