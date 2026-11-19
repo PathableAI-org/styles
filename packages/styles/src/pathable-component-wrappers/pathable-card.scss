@@ -85,8 +85,14 @@
   font-weight: var(--usa-font-weight-bold);
 }
 
-// Action link styling
-.pathable-card--workflow .pathable-card__action {
+// Action link styling. .pathable-card__action goes on the link itself, or on
+// a container around the action links (as the React Card renders it); a link
+// inside the container gets the same colour, underline and focus ring. The
+// descendant selector also outranks .pathable-link (.usa-link) colour, hover
+// and focus rules, so a Link component inside the container matches a plain
+// action link.
+.pathable-card--workflow .pathable-card__action,
+.pathable-card--workflow .pathable-card__action a {
   color: var(--pathable-color-link);
   text-decoration: underline;
 }
@@ -96,7 +102,8 @@
 // .usa-link / .pathable-link), so the action link gets the brand focus ring
 // itself. :focus-visible only, so a mouse click shows no ring; the card's
 // :focus-within outline below marks the card as a whole.
-.pathable-card--workflow .pathable-card__action:focus-visible {
+.pathable-card--workflow .pathable-card__action:focus-visible,
+.pathable-card--workflow .pathable-card__action a:focus-visible {
   outline: 2px solid var(--pathable-color-focus-ring);
   outline-offset: 2px;
 }
@@ -114,7 +121,8 @@
 }
 
 @media (forced-colors: active) {
-  .pathable-card--workflow .pathable-card__action:focus-visible {
+  .pathable-card--workflow .pathable-card__action:focus-visible,
+  .pathable-card--workflow .pathable-card__action a:focus-visible {
     outline-color: Highlight;
   }
 }

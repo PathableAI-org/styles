@@ -9,7 +9,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. No JavaScript is required.',
+          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. In a workflow card, put `.pathable-card__action` on the action link, or on a container around the action links; a link inside the container gets the same colour, underline and focus indicator. No JavaScript is required.',
       },
     },
   },
@@ -177,6 +177,46 @@ export const WorkflowCardWithStatus = {
     await expect(status).toBeVisible()
     await expect(action).toHaveClass('pathable-card__action')
     await expectKeyboardFocusIndicator(canvasElement, action)
+  },
+}
+
+// `.pathable-card__action` on a container around the action link, as the
+// React Card renders it, instead of on the link itself. The link also carries
+// `.pathable-link`, whose own focus ring (4px, no offset) and hover colour the
+// card action rules replace.
+export const WorkflowCardActionContainer = {
+  render: () => `
+    <div class="pathable-card pathable-card--workflow" data-testid="workflow-action-container-card">
+      <div class="pathable-card__container">
+        <div class="pathable-card__header">
+          <h3 class="pathable-card__heading">Today's Coaching Session: J. Doe</h3>
+        </div>
+        <div class="pathable-card__body">
+          <p>Session 12 of 24 — Focus: Workplace communication skills and job readiness practice.</p>
+          <p class="pathable-card__meta">Last updated: Today, 2:30 PM | Duration: 45 min</p>
+          <div class="pathable-card__action" data-testid="workflow-action-container">
+            <a href="#session-notes" class="pathable-link">View session notes →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('workflow-action-container')
+    const action = canvas.getByRole('link', { name: 'View session notes →' })
+    const probe = canvasElement.ownerDocument.createElement('span')
+    probe.hidden = true
+    probe.style.color = 'var(--pathable-color-link)'
+    canvasElement.append(probe)
+    const expectedColor = getComputedStyle(probe).color
+    probe.remove()
+
+    await expect(container).toContainElement(action)
+    await expect(getComputedStyle(action).color).toBe(expectedColor)
+    await expect(getComputedStyle(action).textDecorationLine).toBe('underline')
+    await expectKeyboardFocusIndicator(canvasElement, action, { width: 2 })
+    await expect(getComputedStyle(action).outlineOffset).toBe('2px')
   },
 }
 
