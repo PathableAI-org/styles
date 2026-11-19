@@ -2,6 +2,7 @@
 '@pathableai/styles': patch
 ---
 
-Fix a long single word in a `pathable-card__heading` overflowing the card at
-increased text size on a narrow viewport. The heading now breaks the word
-(`overflow-wrap: break-word`) so it stays inside the card.
+Fix a long single word in a card heading (`pathable-card__heading`) or header
+(`pathable-card__header`) overflowing the card at increased text size on a
+narrow viewport. The word now breaks (`overflow-wrap: anywhere`) so it stays
+inside the card, including when the card is a flex item.

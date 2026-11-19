@@ -275,3 +275,32 @@ export const ContentPressure = {
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
 }
+
+export const LongWordHeading = {
+  render: () => `
+    <div data-testid="card-long-word" style="display: flex; flex-wrap: wrap; width: 12rem; max-width: 100%; font-size: 200%;">
+      <div class="pathable-card">
+        <div class="pathable-card__container">
+          <div class="pathable-card__header">
+            <h3 class="pathable-card__heading">Comprehensive</h3>
+          </div>
+          <div class="pathable-card__body">
+            <p>Employment</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const fixture = canvas.getByTestId('card-long-word')
+    const heading = canvas.getByRole('heading', {
+      level: 3,
+      name: 'Comprehensive',
+    })
+
+    await expect(heading).toBeVisible()
+    await expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
+    await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+  },
+}

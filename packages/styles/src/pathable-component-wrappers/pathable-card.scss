@@ -31,10 +31,16 @@
 
 .pathable-card__heading {
   @extend .usa-card__heading;
+}
 
-  // A long single word breaks inside the card instead of running past it at
-  // increased text size on a narrow viewport.
-  overflow-wrap: break-word;
+// A long single word breaks inside the card instead of running past it at
+// increased text size on a narrow viewport. `anywhere`, unlike `break-word`,
+// also lowers the min-content width, so a card that is a flex item (as in a
+// cluster) can shrink. The React Card renders its title in the header for the
+// presentations that have no heading class.
+.pathable-card__heading,
+.pathable-card__header {
+  overflow-wrap: anywhere;
 }
 
 .pathable-card__media {
