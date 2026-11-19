@@ -75,8 +75,12 @@ None. The ratio is fixed in the stylesheet.
   `width` and `height` attributes are overridden.
 - The box takes its width from its parent. Constrain the width on the parent,
   such as a grid column, not on the box.
-- Do not set a height on the parent. The box copies its parent's height and
-  padding, so a parent with a fixed height or padding changes the box's shape.
+- Do not set a height on the parent. The box inherits that height and then
+  narrows to keep 16:9, so it no longer fills the width. The parent's padding
+  is copied into the box too, but does not change its size.
+- The `<iframe>` keeps the browser's default border, which is clipped at the
+  right and bottom edges. Set `border: 0` on it to fill the box edge to edge.
+- The class also works on an `<img>` itself, which is then cropped to 16:9.
 - Put any caption or transcript link outside the box, after it. Anything inside
   is laid over the embed.
 

@@ -17,7 +17,7 @@ guarantees:
     claim: The image has a right margin of 0.5rem and no other margin.
   - id: body-fills
     status: unverified
-    claim: The body grows to fill the width the image leaves, and its text wraps inside that width without overflowing the block.
+    claim: The body grows to fill the width the image leaves, and text that can wrap wraps inside that width.
 ---
 
 # MediaBlock
@@ -83,8 +83,9 @@ None. The 0.5rem gap is fixed in the stylesheet.
 - Use exactly one of each, image first. Content placed directly in the block
   without either class becomes another flex item, with no gap and no growth.
 - The block is aligned to the top, so a short body sits level with the top of
-  the image. To centre the body against the image, add
-  `pathable-flex-align-center` to the block.
+  the image. The package has no class that centres the body against the image:
+  `pathable-flex-align-center` on the block has no effect, because the block's
+  own alignment wins.
 - The body's first heading keeps its own top margin. Remove it if the heading
   should line up with the top of the image.
 
@@ -95,8 +96,9 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The body only wraps cleanly when its content can wrap. A long unbroken string,
-such as a URL, can still push past the block unless the consumer lets it break.
+The body only wraps cleanly when its content can wrap. Content that cannot,
+such as a long URL or a wide table, can push past the block unless the consumer
+lets it break or scroll.
 
 ## The consumer owns
 

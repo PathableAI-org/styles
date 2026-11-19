@@ -8,10 +8,10 @@ variants: []
 guarantees:
   - id: numbered-marker
     status: unverified
-    claim: Each item shows its position in the list, starting at 1, as a bold number centred in a 2.5rem circle with a 0.25rem PathAble Blue border on white.
+    claim: Each item shows its position in the list, starting at 1, as a bold number centred in a circle 3rem across overall, a 2.5rem white circle inside a 0.25rem PathAble Blue border.
   - id: connector
     status: unverified
-    claim: Every item but the last has a 0.5rem left border in light PathAble Blue that joins its marker to the next, and the last item's border is transparent.
+    claim: Every item but the last has a 0.5rem left border in lighter PathAble Blue that runs from its marker to the next, 4px left of the markers' centre, and the last item's border is transparent.
   - id: item-spacing
     status: unverified
     claim: Each item has 2rem of space below it and 2rem of left padding inside its border, and is at most 72ex wide.
@@ -78,7 +78,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
 ## Tokens
 
 None. The marker, line and heading colours are fixed PathAble Blue (`#00365c`)
-and its light grade (`#e6ebef`) in the stylesheet, not theme tokens, so a theme
+and its lighter grade (`#e6ebef`) in the stylesheet, not theme tokens, so a theme
 does not change them.
 
 ## Composition
@@ -92,7 +92,8 @@ does not change them.
   `<p>` or a `<ul>`. A `<ul>` inside an item gets disc bullets and 0.25rem
   between its items. The first and last child of an item have no outer margin.
 - The markers are placed against the list's left edge. Do not add left padding
-  to the list, or the markers and the line come apart.
+  to the list, or the markers and the line come apart. Even without it, the
+  line runs 4px left of the circles' centre.
 - The list's text is Nunito at 0.99rem with a line height of 1.6; the marker
   numbers are 1.49rem.
 

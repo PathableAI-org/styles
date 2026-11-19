@@ -11,7 +11,7 @@ guarantees:
     claim: Text in the list is Nunito at 0.99rem with a line height of 1.6.
   - id: heading-type
     status: unverified
-    claim: The heading is Fredoka at 1.12rem with a line height of 1.4.
+    claim: The heading is Fredoka at 1.12rem with a line height of 1.4, at weight 700, which the browser synthesises because the stylesheet loads only Fredoka Regular.
   - id: heading-spacing
     status: unverified
     claim: The heading has no top margin when it is the first child, a 1.5em top margin when it follows another element and no bottom margin, and the element after it has a 1em top margin.
@@ -118,7 +118,10 @@ from the package source and no test checks it yet.
 
 The three unmet guarantees are spacing the stylesheet has for this list but
 does not apply to `pathable-media-block` children, although the package says
-the wrapper needs no other classes in the markup.
+the wrapper needs no other classes in the markup. The stylesheet writes the
+block spacing per row, against the framework's row element, which has no
+`pathable-` class; the guarantee states the spacing for a single column of
+blocks with no row element, which is how this list is built today.
 
 ## The consumer owns
 

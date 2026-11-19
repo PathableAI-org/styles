@@ -8,7 +8,7 @@ variants: []
 guarantees:
   - id: item-rule
     status: unverified
-    claim: Every item, the first included, has a 1px solid top border in the current text colour, a top and bottom margin of 1rem and 1rem of padding between the border and the content.
+    claim: Every item, the first included, has a 1px solid top border in the current text colour, a top margin of 1rem and 1rem of padding between the border and the content, and every item but the last has a bottom margin of 1rem.
   - id: no-markers
     status: unverified
     claim: The list and its items show no bullets or numbers and have no left padding.
@@ -23,7 +23,7 @@ guarantees:
     claim: Each item is at most 68ex wide.
   - id: heading-style
     status: unverified
-    claim: The heading is 1.12rem with a line height of 1.4 and no margin, and the metadata list below it has a 0.25rem top margin.
+    claim: The heading is 1.12rem with a line height of 1.4 and no margin, and the metadata list below it has a 0.25em top margin.
   - id: heading-typeface
     status: unmet
     claim: The heading is set in the brand heading typeface, Fredoka.
@@ -61,13 +61,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
 ```html
 <ul class="pathable-collection">
   <li class="pathable-collection__item">
-    <img
-      class="pathable-collection__img"
-      src="guide-cover.jpg"
-      alt=""
-      width="80"
-      height="80"
-    />
+    <img class="pathable-collection__img" src="guide-cover.jpg" alt="" />
     <div class="pathable-collection__body">
       <h3 class="pathable-collection__heading">
         <a class="pathable-link" href="/guides/adjustments"
@@ -99,8 +93,9 @@ colour of its own: it takes the item's text colour.
 - `pathable-collection__item` goes on each `<li>`. It is a flex row, aligned to
   the top.
 - `pathable-collection__img` goes on an optional thumbnail `<img>`, first in
-  the item. Its width is set by the class; set its height, or let the image's
-  own ratio decide it.
+  the item. Its width is set by the class; set no height and let the image's
+  own ratio decide it. A fixed height, including a `height` attribute,
+  distorts the image below 40em, where the width is 4rem.
 - `pathable-collection__body` goes on the element after the thumbnail that
   holds the text. Use it even without a thumbnail.
 - `pathable-collection__heading` goes on a heading element at the top of the

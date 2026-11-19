@@ -74,8 +74,9 @@ font size (`em`, `ch`, `ex`), so the spacing scales with the text it inherits.
 
 - Use only `<li>` children. There are no element classes; the rules reach the
   `<li>` elements directly.
-- A list nested inside an item does not need the class to get the 0.25em top
-  margin, but it does need the class for its own indent and item spacing.
+- A list nested inside an item gets the 0.25em top margin, 0.25em between its
+  items and the 68ex item width without the class. Its indent is then the
+  browser's default, not 3ch.
 - The list can sit anywhere text does, including inside `pathable-prose`,
   `pathable-card` and `pathable-media-block`.
 
@@ -96,5 +97,5 @@ as wide as its container.
 - Keeping each item short, and writing items in parallel form.
 - Removing the bullets, if a design needs no markers: the package has no class
   for an unmarked list.
-- Layout around the list: width of the container and spacing from content that
-  is not its parent's last child.
+- Layout around the list: the width of its container and the spacing between
+  the list and the content around it.
