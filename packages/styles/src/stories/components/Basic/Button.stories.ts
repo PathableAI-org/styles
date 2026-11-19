@@ -27,9 +27,57 @@ export const AccentCool = {
     '<button class="pathable-button pathable-button--accent-cool">Accent Cool</button>',
 }
 
+/**
+ * The computed color a token resolves to, read from a temporary probe in the
+ * story canvas so the assertion follows the active theme. Fails when the token
+ * is undefined, so an equality check cannot pass by inheritance.
+ */
+const resolveColorToken = (canvasElement: HTMLElement, token: string) => {
+  const tokenValue = getComputedStyle(canvasElement)
+    .getPropertyValue(token)
+    .trim()
+  if (!tokenValue) throw new Error(`${token} is not defined`)
+  const probe = canvasElement.ownerDocument.createElement('span')
+  probe.style.color = `var(${token})`
+  canvasElement.appendChild(probe)
+  const { color } = getComputedStyle(probe)
+  probe.remove()
+  return color
+}
+
 export const AccentWarm = {
-  render: () =>
-    '<button class="pathable-button pathable-button--accent-warm">Accent Warm</button>',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The accent-warm modifier fills the button with Lived-In Lime and sets its text in PathAble Blue, so it reads as a highlighted action beside the primary button.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-cluster pathable-cluster--gap-sm">
+      <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
+      <button type="button" class="pathable-button pathable-button--accent-warm">Share Progress</button>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const primary = getComputedStyle(
+      canvas.getByRole('button', { name: 'Save Coaching Note' }),
+    )
+    const accentWarm = getComputedStyle(
+      canvas.getByRole('button', { name: 'Share Progress' }),
+    )
+
+    await expect(accentWarm.backgroundColor).toBe(
+      resolveColorToken(canvasElement, '--pathable-brand-lived-in-lime'),
+    )
+    await expect(accentWarm.color).toBe(
+      resolveColorToken(canvasElement, '--pathable-brand-pathable-blue'),
+    )
+    await expect(accentWarm.backgroundColor).not.toBe(primary.backgroundColor)
+    await expect(accentWarm.color).not.toBe(primary.color)
+  },
 }
 
 export const Outline = {
@@ -134,24 +182,6 @@ export const Secondary = {
 export const Big = {
   render: () =>
     '<button class="pathable-button pathable-button--big">Big Button</button>',
-}
-
-/**
- * The computed color a token resolves to, read from a temporary probe in the
- * story canvas so the assertion follows the active theme. Fails when the token
- * is undefined, so an equality check cannot pass by inheritance.
- */
-const resolveColorToken = (canvasElement: HTMLElement, token: string) => {
-  const tokenValue = getComputedStyle(canvasElement)
-    .getPropertyValue(token)
-    .trim()
-  if (!tokenValue) throw new Error(`${token} is not defined`)
-  const probe = canvasElement.ownerDocument.createElement('span')
-  probe.style.color = `var(${token})`
-  canvasElement.appendChild(probe)
-  const { color } = getComputedStyle(probe)
-  probe.remove()
-  return color
 }
 
 export const Unstyled = {
