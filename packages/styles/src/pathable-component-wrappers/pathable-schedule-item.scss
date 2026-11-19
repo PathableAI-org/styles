@@ -115,7 +115,6 @@
   font-size: var(--pathable-font-size-label-sm);
   font-weight: var(--pathable-font-weight-semibold);
   padding: var(--pathable-space-0) var(--pathable-space-1);
-  border: 1px solid var(--pathable-color-border);
   border-radius: var(--radius-sm);
   white-space: nowrap;
 
@@ -151,6 +150,7 @@
 .pathable-schedule-item--completed {
   .pathable-schedule-item__status {
     background: var(--pathable-color-surface);
+    border: 1px solid var(--pathable-color-border);
     color: var(--pathable-color-text-success);
   }
 }
@@ -173,7 +173,8 @@
 .pathable-schedule-item--upcoming {
   .pathable-schedule-item__status {
     background: var(--pathable-color-surface);
-    color: var(--pathable-color-text-success);
+    border: 1px solid var(--pathable-color-border);
+    color: var(--pathable-color-link);
   }
 }
 
