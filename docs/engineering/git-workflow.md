@@ -32,8 +32,7 @@ Do not put the GitHub issue number in the branch name; issue numbers and Spec
 Kit numbers are different sequences. Name the issue in the pull request title
 and body. Before planning, tasks or implementation, set
 `SPECIFY_FEATURE_DIRECTORY` to `specs/{number}-{slug}`, so a missing or stale
-`.specify/feature.json` cannot point at a different specification. In a cloud
-session, the orchestrator sets the branch when it starts the session.
+`.specify/feature.json` cannot point at a different specification.
 
 ## Commits
 
@@ -150,8 +149,8 @@ with a breaking-change label (constitution principle XIII).
 | High, new behaviour | A specification pull request (`spec.md`, `verification.md`), then a plan pull request (`plan.md` with its slice table, `quickstart.md`), then one pull request per [implementation slice](#implementation-slices) |
 | High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table                                                                                                                             |
 | Standard, specified | One combined specification-and-plan pull request, then one pull request per implementation slice                                                                                                                  |
-| Standard, otherwise | One pull request with normal CI, a code review session and, when it touches a rendering path, a visual review session; it merges under [agent merge](#agent-merge)                                                |
-| Light               | One pull request with normal CI, a code review session and, when it touches a rendering path, a visual review session; it merges under [agent merge](#agent-merge)                                                |
+| Standard, otherwise | One pull request with normal CI, a code review subagent and, when it touches a rendering path, a visual review subagent; it merges under [agent merge](#agent-merge)                                              |
+| Light               | One pull request with normal CI, a code review subagent and, when it touches a rendering path, a visual review subagent; it merges under [agent merge](#agent-merge)                                              |
 
 Each specification, plan or combined phase merges on a person's approval
 before the next starts (see [Spec Kit](spec-kit.md) for the artifacts).
@@ -221,9 +220,9 @@ Evidence each tier needs, in addition to the checks in
 
 ### Verification and review
 
-High new behaviour, specified Standard work, and High fixes, run as separate
-agent sessions that an orchestrator starts and briefs. [Orchestration](orchestration.md)
-owns which sessions each tier gets, the stop points and the models.
+Every delivery issue runs in one lead session, which runs the independent
+checks as clean-context subagents. [Orchestration](orchestration.md) owns
+which subagents each tier gets, the stop points and the models.
 
 - **Claims.** The specification's `verification.md` numbers the claims a
   feature makes (`V-001`, `V-002`, …), each with the observation that tells it
@@ -231,12 +230,12 @@ owns which sessions each tier gets, the stop points and the models.
   fix numbers its claims in the pull request's Evidence table instead.
   [The verification harness](verification-harness.md) owns the channels and
   what each tier's `verification.md` holds.
-- **Verification.** A verification session checks each pushed slice in its
+- **Verification.** A verifier subagent checks each pushed slice in its
   own detached worktree, through the Storybooks and the packed packages, and
   records a schema-checked report in a Git note on the exact pushed SHA.
-- **Review.** A review session reviews the same SHA with a clean context
+- **Review.** A code review subagent reviews the same SHA with a clean context
   against the constitution's lenses and records its findings the same way
-  ([Code review session](code-review.md)).
+  ([Code review](code-review.md)).
 - **Gate.** `pnpm verify:gate` passes only when the slice's latest report
   establishes its claims and its latest review has no open blocking finding.
   A Claude Code hook runs the gate on every attempt to mark a pull request
@@ -247,10 +246,10 @@ owns which sessions each tier gets, the stop points and the models.
   slices also get a [visual review](visual-review.md), and merge under
   [agent merge](#agent-merge).
 
-Other Standard work and Light work get no verification session and no
+Other Standard work and Light work get no verifier subagent and no
 `verification.md`. They get normal CI, the checks the pull request names, a
-[code review session](code-review.md) and, when they touch a rendering path,
-a [visual review session](visual-review.md), and then merge under
+[code review subagent](code-review.md) and, when they touch a rendering path,
+a [visual review subagent](visual-review.md), and then merge under
 [agent merge](#agent-merge). Every tier runs the advisory
 [pre-push self-review](code-review.md#pre-push-self-review).
 
@@ -289,7 +288,7 @@ grow.
 - The repository squash-merges, with the pull request title as the commit
   subject.
 - Standard and Light pull requests merge under [agent merge](#agent-merge):
-  the implementation session merges its own pull request, without a person's
+  the lead session merges its own pull request, without a person's
   approval, once the merge gate passes.
 - Every other pull request merges only after a person has approved it, and an
   agent merges one only when a person has approved it and explicitly asked
@@ -311,9 +310,9 @@ without a person in the loop. A person can still read, comment on, label
 `hold` or revert anything an agent merges. What replaces their approval is two
 independent reviews with clean contexts, recorded and checked by a gate:
 
-- a [code review session](code-review.md), on a different model from the
+- a [code review subagent](code-review.md), on a different model from the
   implementation, for every agent-merged pull request
-- a [visual review session](visual-review.md), for every agent-merged pull
+- a [visual review subagent](visual-review.md), for every agent-merged pull
   request that can change what the Storybooks render
 
 ### Which pull requests
@@ -360,34 +359,33 @@ together.
 
 ### The flow
 
-The [orchestrator](orchestration.md#lifecycle-by-tier) starts the sessions.
-For single-pull-request work:
+One [lead session](orchestration.md#the-loop-by-tier) does the work and runs
+the reviews as subagents. For single-pull-request work:
 
-1. The implementation session branches from `origin/main`, implements, runs
+1. The lead session branches from `origin/main`, implements, runs
    the [Before committing](../../AGENTS.md#before-committing) checks and the
    [pre-push self-review](code-review.md#pre-push-self-review), and pushes a
    draft pull request with its `risk:` label.
-2. At the first push the orchestrator starts the code review session and,
-   when the pull request touches a [rendering path](visual-review.md#when-a-visual-review-runs),
-   the visual review session. The implementation session sends both every
-   later request, on the same SHA, with slice ID `fix` for the code review.
-3. The implementation session answers every finding with a fix or a written
+2. On each push it runs the code review subagent and, when the pull request
+   touches a [rendering path](visual-review.md#when-a-visual-review-runs),
+   the visual review subagent, both on the same SHA, with slice ID `fix` for
+   the code review.
+3. The lead session answers every finding with a fix or a written
    justification, and pushes a new round until neither review has an open
    blocking finding or escalation.
 4. It marks the pull request ready, keeps it [up to date](#keeping-up-to-date)
    with `main`, and waits for CI on the head.
 5. When `pnpm merge:gate` passes, it merges with the GitHub MCP tool
-   `merge_pull_request` and `merge_method: squash`, then reports `merged` to
-   the orchestrator.
+   `merge_pull_request` and `merge_method: squash`, and notifies the person.
 
 Implementation slices of specified Standard work follow the same steps, with
-the verification session as well: the slice is reviewed, visually reviewed
+the verifier subagent as well: the slice is reviewed, visually reviewed
 and verified, and the [verification gate](verification-harness.md#gate-and-escalation)
 must pass at the head.
 
 ### Keeping up to date
 
-The implementation session keeps its pull request current with `main` until
+The lead session keeps its pull request current with `main` until
 it merges. When `main` moves, it merges `origin/main` into the branch, or uses
 the GitHub MCP tool `update_pull_request_branch`, and pushes. It never rebases
 or force-pushes. The ruleset on `main` requires branches to be up to date, and
@@ -399,7 +397,7 @@ the base branch in and the pull request's own diff is unchanged: the patch ID
 of `git diff --binary <merge-base>..<sha>` is the same at the reviewed SHA and
 at the head, with the merge base taken against `origin/main` each time. A
 conflict resolution, or `main` changing a line the pull request's diff carries
-as context, changes the patch ID, and the implementation session requests a
+as context, changes the patch ID, and the lead session requests a
 new round. A verification report is an observation of one SHA and does not
 carry over this way: a slice that merges `main` in needs a new verification
 round.

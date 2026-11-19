@@ -1,151 +1,195 @@
 ---
 name: orchestrate-stack
-description: Act as the orchestrator for one PathAble design-system delivery issue. Start and brief the specification, plan, implementation, verification, review and visual review sessions its risk tier needs, with each role's model and effort; relay approvals, escalations, agent merges and the release stop point; print feature status from pull request and notes state. Never edits branches, reads code, merges, approves or marks ready.
+description: Act as the lead session for one PathAble design-system delivery issue. Specify, plan and implement it as its risk tier requires, run the pre-push self-review, code review, verification and visual review as clean-context subagents on each pushed SHA, answer their findings, merge Standard and Light pull requests under agent merge, stop for a person at High work and the other stop points, and print status from pull request and notes state.
 ---
 
-# Orchestrate a feature
-
-<!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/SKILL.md @ f2ee390. -->
+# Lead a delivery issue
 
 Read [Orchestration](../../../docs/engineering/orchestration.md) first. It
-owns the lifecycle by tier, the stop points, the concurrency cap, what you may
-read, notifications, the models-and-effort table and the recorded decisions. This
-skill supplies the procedure and the brief templates under `references/`. Also
-read [Risk tiers](../../../docs/engineering/git-workflow.md#risk-tiers) and
-[Sessions and roles](../../../docs/engineering/verification-harness.md#sessions-and-roles)
-and [Agent merge](../../../docs/engineering/git-workflow.md#agent-merge).
+owns the loop by tier, the stop points, how subagents stay independent,
+notifications and the models table. Also read
+[Git workflow](../../../docs/engineering/git-workflow.md), including
+[Risk tiers](../../../docs/engineering/git-workflow.md#risk-tiers) and
+[Agent merge](../../../docs/engineering/git-workflow.md#agent-merge). This
+skill supplies the procedure.
 
 ## Boundaries
 
-- Never edit, commit, push, merge, approve or mark a pull request ready. The
-  owning session does Git work, as
-  [Git workflow](../../../docs/engineering/git-workflow.md) describes.
-- Read state only: REST reads through `gh api` (issues, pulls, check runs,
-  reviews, changed files) or the GitHub tools, `pnpm notes:sync <pr>` (it
-  writes only local notes), `pnpm verify:show`, `pnpm review:show`,
-  `git notes --ref=<ref> list`, `git rev-list`, the slice table in `plan.md`
-  through `git show <sha>:<path>`, and session status. Never read diffs,
-  source files or transcripts; that rules out opening source files and running
-  `git diff` in any form. Send a question about code to the session that owns
-  it.
-- Never poll or loop on CI. Act on a session's report message, a person's
-  message, a status request, or the one fallback check-in under
-  [Starting a role session](#starting-a-role-session).
-- Respect the cap: at most four working sessions, one feature.
-- Use `gh api` with REST paths, never `gh pr` or `gh issue` subcommands; they
-  use GraphQL, which cloud sessions block.
+- You are the only writer of the issue's branches. Subagents never edit them.
+- Start every independent role from its `.claude/agents/` definition with the
+  Agent tool, never as a fork and never as a general-purpose agent. Pass only
+  the request fields under [Requests](#requests). Never describe the change,
+  its intent, what to check, or another subagent's findings.
+- Keep pre-push self-review findings out of every request and the pull
+  request body. Keep Copilot's comments out of every request.
+- Read results from the notes (`pnpm review:show`, `pnpm verify:show`,
+  `pnpm visual:show`), not from subagents' replies.
+- Merge only under agent merge, only with the GitHub MCP tool
+  `merge_pull_request` and `merge_method: squash`, and only after
+  `pnpm merge:gate <pr>` passes. Never enable GitHub auto-merge. Never merge,
+  mark ready or touch the `ci: version packages` pull request.
+- Never poll. Run long commands and subagents in the background and end your
+  turn; you are woken when they finish. While waiting on CI or a person,
+  schedule at most one check-in about two hours out (`send_later` in cloud
+  sessions), and do not reschedule it as a loop.
+- Use `gh api` REST paths or the GitHub MCP tools, never `gh pr` or
+  `gh issue` subcommands; see
+  [Working without GraphQL](../../../docs/engineering/git-workflow.md#working-without-graphql).
 
 ## Start
 
-From the person: the delivery issue number. Then:
+From the person: the delivery issue number.
 
 1. `gh api repos/{owner}/{repo}/issues/<N> --jq .body` and read its **Risk
-   tier** section: the tier, its triggers, and whether the work is new
-   behaviour or a fix inside an existing contract. If the tier is missing or a
-   trigger obviously matches a higher tier, stop and ask. Never lower it.
-2. Look up the feature directory if one exists (`specs/{number}-{slug}/`
-   naming the issue) and any open pull requests for it:
+   tier** section: the tier, its triggers, whether the work is new behaviour
+   or a fix inside an existing contract, and whether the maintainer asked for
+   a specification. If the tier is missing or a trigger obviously matches a
+   higher tier, stop and ask. Never lower it.
+2. Look for an existing feature directory (`specs/{number}-{slug}/` naming
+   the issue) and pull requests for the issue, and resume from the phase they
+   show:
 
    ```sh
    gh api "repos/{owner}/{repo}/pulls?state=all&per_page=100" \
      | jq --arg n '#<N>' '[.[] | select((.body // "") | contains($n)) | {number, head: .head.ref, state, draft}]'
    ```
 
-   Resume from the phase the state shows instead of restarting.
-
-3. Pick the row in the doc's lifecycle table. Tell the person, in a few lines,
-   the sessions you will start, their models and efforts, when each starts
-   (verification, review and visual review at the first push), whether its
-   pull requests merge under agent merge, and the stop points. Then start the
-   first phase.
-
-## Starting a role session
-
-For each session:
-
-1. Render its brief: `references/common.md` followed by the role's template,
-   with every `{{slot}}` filled. Never write a brief freehand or shorten the
-   templates. `{{orchestrator_id}}` is mandatory in every brief; take it from
-   your own session status. Take `{{model}}` and `{{effort}}` from the doc's
-   models-and-effort table for the role and tier. A slot you cannot fill means
-   a missing identifier: get it from state or ask, never guess.
-2. Start it on the branch the brief names (in a cloud session, pass that
-   branch as the session's outcome branch). When the role's model or effort is
-   above yours, start it with the holding prompt
-   `Reply "ready" and wait for your brief.`, raise its model and effort with
-   the session tools, then send the brief with the session messaging tool.
-   Otherwise pass `model` and `effort` at start with the brief as the prompt.
-3. Record its name and session ID. Peers get each other's IDs in their briefs.
-4. Schedule one fallback check-in, about two hours out (`send_later` in cloud
-   sessions), whenever you start or brief a session that owes you a report.
-   Record the returned ID next to that session. When its report arrives first,
-   cancel the check-in before acting on the report. When the check-in fires,
-   read pull request and session status once and act on what they show. Do
-   not reschedule it as a loop.
+3. Tell the person in a few lines: the row of the loop table you will follow,
+   the subagents each round runs, whether the pull requests merge under agent
+   merge, and the stop points. Then start.
 
 ## Phases
 
-| Phase                         | Session and template                                                                                                        | Identifiers to pass                                                                             | Next trigger                                                             |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Specification (High)          | `spec`, `references/spec.md`                                                                                                | Issue, tier and triggers, base `origin/main`                                                    | Its report names the draft pull request and the feature directory. Stop. |
-| Combined (specified Standard) | `spec`, `references/spec.md` with `{{combined}}` = yes                                                                      | Same                                                                                            | Same. Stop.                                                              |
-| Plan (High)                   | `plan`, `references/plan.md`                                                                                                | Issue, tier, feature directory, specification branch and whether it is merged                   | Its report names the draft plan pull request. Stop.                      |
-| Implementation                | `impl`, `references/implementer.md`                                                                                         | Issue, tier, feature directory, slice IDs, first slice and its base branch, merged or not       | Each slice's push, results and readiness, below                          |
-| Verification (orchestrated)   | `verify`, `references/verifier.md`, at the first `pushed`                                                                   | Feature directory, tier, implementation session ID, orchestrator ID, first request              | Its pointer to the implementation session; later requests come from it   |
-| Review (orchestrated)         | `review`, `references/reviewer.md`, at the first `pushed`                                                                   | Same                                                                                            | Same                                                                     |
-| Visual review (agent merge)   | `visual`, `references/visual-reviewer.md`, at the first `pushed`, when the pull request touches a rendering path            | Pull request number and branch, tier, implementation session ID, orchestrator ID, first request | Same                                                                     |
-| High fix                      | All three with `{{fix}}` = yes; peers at the first `pushed`                                                                 | Issue, tier, triggers, base `origin/main`; no slices; `{{feature_dir}}` if any                  | One pull request through the same loop. Stop at ready.                   |
-| Other Standard, Light         | `impl` with `{{fix}}` = yes and `{{agent_merge}}` = yes; `review` and, for a rendering path, `visual` at the first `pushed` | Issue, tier                                                                                     | Its `merged` report. Notify; no stop.                                    |
+| Work                  | Phases                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| High, new behaviour   | [Specification](#specification), stop; [Plan](#plan), stop; one [round](#rounds) per slice |
+| High, fix             | One [round](#rounds) loop on one pull request, slice ID `fix`                              |
+| Standard, specified   | [Specification](#specification) combined with the plan, stop; one round loop per slice     |
+| Other Standard, Light | One round loop on one pull request, slice ID `fix`                                         |
 
-Approval of a stop is the trigger for the next phase: start it without asking
-again. When the approved predecessor has not merged, the brief says the new
-branch is cut from it and targets it as its base.
+A person's approval of a stop starts the next phase without asking again.
+When the approved predecessor has not merged, cut the next branch from it and
+target it as the base.
 
-## Per slice
+### Specification
 
-The implementation session sends the verification and review requests itself,
-on the same pushed SHA. Your part:
+1. Run `speckit-specify` for exactly this issue, then `speckit-clarify`. Ask
+   the person your clarification questions and end your turn while you wait.
+2. Write `spec.md` with the tier and triggers in its header, and
+   `verification.md` with numbered claims (`V-001`, …), each with its
+   meaningful violation, its observation and its evidence channel, as
+   [Claims follow verification](../../../docs/engineering/verification-harness.md#claims-follow-verification)
+   describes.
+3. For combined specification and plan, continue with [Plan](#plan) on the
+   same branch.
+4. Push, open the pull request with the
+   [template](../../../.github/pull_request_template.md), a Conventional
+   Commit title, `Contributes to #<N>`, the `risk:` label and Decisions for
+   the reviewer first, mark it ready when its checks pass, notify the person,
+   and stop.
 
-1. **Pushed.** On the report `pushed <slice> @ <sha>`, check that the draft
-   pull request's head is that SHA.
-   - **First push:** start the peer sessions now, each brief ending with the
-     first request: branch, SHA, base SHA, slice ID (`fix` for single-pull-request
-     work), feature directory, pull request number and round 1, all from the
-     pull request's metadata. The peers are verification for slices and a
-     High fix, review for every pull request, and visual review for
-     Standard and Light work whose changed files
+Do not plan classes, props or slices unless the work is combined. A scope
+conflict with the delivery issue is a stop point.
+
+### Plan
+
+1. `export SPECIFY_FEATURE_DIRECTORY=specs/<number>-<slug>`, then run
+   `speckit-plan` on the `{number}-{slug}-plan` branch, skipping its "Agent
+   context update" step: `plan.md` with the slice table, `quickstart.md`,
+   `research.md` and any `contracts/`. Order slices source first.
+2. After committing, check every slice with
+   `pnpm verify:request --feature <dir> --slice <ID> --sha HEAD`: it must give
+   no warnings.
+3. Push, open the plan pull request with Decisions for the reviewer first,
+   mark it ready when checks pass, notify the person, and stop.
+
+Do not change acceptance criteria or claims here: that is a specification
+correction and a stop point.
+
+## Rounds
+
+For each slice or single pull request, on its
+[feature branch](../../../docs/engineering/git-workflow.md#feature-branches)
+or a `<type>/<slug>` branch:
+
+1. **Build.** On the first implementation branch, run `speckit-tasks`. Implement
+   only the current scope, source first. Commit Conventional Commits, add the
+   changeset, and run the
+   [Before committing](../../../AGENTS.md#before-committing) checks.
+2. **Self-review.** `git fetch origin <base>`, then run the
+   `pre-push-reviewer` subagent with only the base branch. Fix what you
+   accept, re-run the checks, and note a reason for each finding you reject.
+3. **Push.** Push and open or update the draft pull request (`draft: true`)
+   with its `risk:` label. For agent-merge work, write the body now, with
+   Decisions for the reviewer first and every intended visible change in
+   **Change**, and keep it current each round.
+4. **Check.** Start the round's subagents in the background on the pushed
+   SHA, each with its [request](#requests):
+   - `code-reviewer`, always
+   - `verifier`, for a slice or a High fix
+   - `visual-reviewer`, for agent-merge work whose changed files
      (`gh api --paginate repos/{owner}/{repo}/pulls/<n>/files --jq '.[].filename'`)
-     include a [rendering path](../../../docs/engineering/visual-review.md#when-a-visual-review-runs).
-     Then send the implementation session their session IDs.
-   - **Later pushes:** if the report says it did not send every request, send
-     the missing ones yourself. Keep every peer's SHA the same.
-   - The report lists the pre-push self-review findings for measurement. Keep
-     them out of every verification, review and visual review brief and
-     request.
-2. **Results.** The verifier, reviewer and visual reviewer reply to the implementation session
-   with pointers, and message you only to escalate or report `blocked` or
-   `failed`. Read the notes with the status step, not their messages.
-3. **Green.** When the verification gate passes and the review shows no open
-   blocking finding at the same SHA (or only evidence-only commits after it),
-   notify the person that the slice is green, and tell the implementation
-   session it may start the next slice from this one.
-4. **Ready.** The implementation session marks the pull request ready. The
-   hook runs the gate and blocks a failing attempt; no person confirms the
-   ready step itself. For High work, notify that the slice waits on review.
-   For agent-merge work, nothing waits on the person yet.
-5. **Merged (agent merge).** On the report `merged`, check that the pull
-   request shows `merged: true`, then notify the person with its number, tier
-   and changeset, and continue with the next slice or [Release](#release).
-   On `waiting-on-person` because the merge gate found the pull request not
-   eligible, treat it as an escalation.
-6. **Fix rounds.** A failing result goes back to the implementation session
-   through its own loop. Count rounds from the notes. Step in only for an
-   escalation.
+     include a
+     [rendering path](../../../docs/engineering/visual-review.md#when-a-visual-review-runs)
+
+   End your turn.
+5. **Read.** As each finishes, read its record from the notes. Answer every
+   finding, advisory ones included: fix it, or write a justification you will
+   pass in the next request. A visual `tier` finding means the work is
+   Standard: raise the label and the Tier section first. A blocking finding
+   closed as `justified` goes in Decisions for the reviewer. Start a new round
+   from step 1 until no record has an open blocking finding, claim or
+   escalation. An escalation is a stop point: stop at a clean, pushed state
+   and notify the person with the record pointer.
+6. **Evidence.** For a slice, when `pnpm verify:gate` passes, run
+   `pnpm verify:render --write`, commit the evidence-only result and push. The
+   body names the verified SHA and run.
+7. **Ready.** Mark the pull request ready with the GitHub MCP tool
+   `update_pull_request` and `draft: false`. The hook runs the gate.
+8. **Merge or stop.** For High work, notify the person that it waits on their
+   review, and stop. For agent-merge work:
+   - Keep it [up to date](../../../docs/engineering/git-workflow.md#keeping-up-to-date):
+     when it falls behind `main`, merge `origin/main` in (or
+     `update_pull_request_branch`) and push. If that changed the pull
+     request's own diff, run a new round. A slice needs a new verification
+     round after any merge from `main`.
+   - Wait for CI on the head by ending your turn with one check-in scheduled.
+   - When `pnpm merge:gate <pr>` passes, merge with `merge_pull_request` and
+     `merge_method: squash`. The hook reruns the gate.
+   - If the gate reports the pull request not eligible, notify the person
+     with its reason and stop.
+   - After merging, notify the person with the number, tier and changeset,
+     then go on to the next slice or [Release](#release).
+
+Slice N+1 may start once slice N's verification gate passes: cut its branch
+from N's branch and target N's branch. Fix later findings on N and merge N
+upward; never rebase a pushed branch. After N merges, merge `origin/main`
+into N+1.
+
+### Requests
+
+Pass exactly these fields, one per line, and nothing else:
+
+```text
+branch: <branch>
+sha: <pushed 40-char SHA>
+base: <40-char base SHA>
+slice: <slice ID, or fix>
+feature: <specs/{number}-{slug}, or none>
+pr: <number>
+round: <n>
+previous: <previous record ID, or none>
+answers: <for each open finding ID, the fixing commit or the justification, or none>
+```
+
+The `pre-push-reviewer` gets only `base: <branch>`. The verifier also gets
+`run instructions changed: <what, or none>`. Keep every subagent of a round on
+the same SHA.
 
 ## Release
 
-After a feature pull request with a changeset merges, check for the release
-pull request:
+After a pull request with a changeset merges, check for the release pull
+request:
 
 ```sh
 gh api "repos/{owner}/{repo}/pulls?state=open&per_page=100" \
@@ -153,86 +197,47 @@ gh api "repos/{owner}/{repo}/pulls?state=open&per_page=100" \
 ```
 
 When one is open, notify the person that it is waiting on them, with its
-number. Merging it publishes to npm. Never merge it, mark it ready, or ask a
-session to; it is a stop point in
-[Orchestration](../../../docs/engineering/orchestration.md#autonomy-and-stop-points).
-
-## Escalation
-
-On any stop point that is not a phase approval:
-
-1. Pause the affected sessions by telling them to stop at a clean, pushed
-   state.
-2. Notify the person with one line naming the slice, the kind and the note
-   pointer.
-3. Wait for the person's decision and relay it verbatim, in quotes, to the
-   sessions it concerns. A correction to an earlier phase is a new session on
-   that phase's branch, or a corrective pull request, under the
-   [corrections](../../../docs/engineering/git-workflow.md#corrections) path.
-   Never route it through the implementation branch.
+number, packages and bumps. Merging it publishes to npm. Never merge it or
+mark it ready.
 
 ## Status
 
-On request, after any session report, and before each notification, print one
-table for the feature. Fetch first (`git fetch origin --quiet`). For each pull
-request whose head branch starts with `{number}-{slug}`, or for single-pull-request
-work the pull request itself:
+On request, and before each notification that waits on the person, print one
+table. Fetch first (`git fetch origin --quiet`). For each pull request of the
+issue, run `pnpm notes:sync <pr>`, then:
 
 ```sh
-gh api "repos/{owner}/{repo}/pulls?state=all&per_page=100" | jq --arg p '<number>-<slug>' \
-  '[.[] | select(.head.ref | startswith($p)) | {number, head: .head.ref, base: .base.ref, sha: .head.sha, draft, state, merged: (.merged_at != null)}]'
 checks() { gh api "repos/{owner}/{repo}/commits/$1/check-runs" --jq '[.check_runs[] | .conclusion // .status] | group_by(.) | map("\(length) \(.[0])") | join(", ")'; }
-decision() { gh api "repos/{owner}/{repo}/pulls/$1/reviews" --jq '[.[] | select(.state != "COMMENTED")] | last | .state // "none"'; }
-```
-
-For each open slice or single pull request, import its note comments with `pnpm notes:sync <pr>`,
-because the verifier and reviewer record in their own clones. Then find the
-newest commit between its base and head that carries a note, and summarize it:
-
-```sh
 newest() { git rev-list "origin/$2..$3" | grep -m1 -F -f <(git notes --ref="$1" list | cut -d' ' -f2); }
+summary='"round \(.round); blocking \([.findings[] | select(.severity == "blocking")] | length); advisory \([.findings[] | select(.severity == "advisory")] | length); escalations \(.escalations | length)"'
+r=$(newest review <base-branch> <head-sha>);  [ -n "$r" ] && pnpm -s review:show "$r" 2>/dev/null | jq -r "$summary"
+w=$(newest visual <base-branch> <head-sha>);  [ -n "$w" ] && pnpm -s visual:show "$w" 2>/dev/null | jq -r "$summary"
 v=$(newest verification <base-branch> <head-sha>)
 [ -n "$v" ] && pnpm -s verify:show "$v" | jq -r '[.runId[0:8], (.claims | group_by(.result) | map("\(length) \(.[0].result)") | join(", ")), "stories not passing \([.stories[] | select(.status != "passing")] | length)", "escalations \(.escalations | length)"] | join("; ")'
-r=$(newest review <base-branch> <head-sha>)
-[ -n "$r" ] && pnpm -s review:show "$r" 2>/dev/null | jq -r '"round \(.round); blocking \([.findings[] | select(.severity == "blocking")] | length); advisory \([.findings[] | select(.severity == "advisory")] | length); escalations \(.escalations | length)"'
-w=$(newest visual <base-branch> <head-sha>)
-[ -n "$w" ] && pnpm -s visual:show "$w" 2>/dev/null | jq -r '"round \(.round); blocking \([.findings[] | select(.severity == "blocking")] | length); advisory \([.findings[] | select(.severity == "advisory")] | length); escalations \(.escalations | length)"'
 ```
 
 Print:
 
 ```text
-Feature <number>-<slug> (#<issue>, <tier>)
-| Slice | PR | Head SHA | Verify (SHA: result) | Review (SHA: result) | Visual (SHA: result) | PR state | Blockers |
+Issue #<N> (<tier>)
+| Slice | PR | Head SHA | Review | Visual | Verify | PR state | Merge gate | Blockers |
 ```
 
-PR state is draft, ready or merged, plus `checks <head-sha>` and
-`decision <number>`, and for agent-merge work the result of
-`pnpm -s merge:gate <number>`. Blockers name the stop point or session the slice waits
-on. A verified or reviewed SHA that is not the head is fine only when the diff
-from it to the head is evidence-only; the implementation session's gate run
-decides that, not you. A merged slice shows `merged` and needs no note lookup.
-
-End every status you print, and every notification that waits on the person,
-with an **Open decisions** list: each question you have put to the person,
-with the slice or phase and the pointer or message it came from. Carry each
-into every later status until the person answers it or you withdraw it. An
-empty list prints as `Open decisions: none`.
-
-A bare approval such as "proceed" that arrives while a question is open
-approves only the phase or stop it plainly answers. Act on the approval, then
-ask each open question again, by name, in the same reply.
+PR state is draft, ready or merged, plus `checks <head-sha>`. Merge gate is
+the first line of `pnpm -s merge:gate <number>` for agent-merge work. End with
+**Open decisions**: each question put to the person and not yet answered, or
+`Open decisions: none`. A bare approval such as "proceed" approves only the
+stop it plainly answers; ask each other open question again by name.
 
 ## Wrap-up
 
-When the last phase has merged, by a person or under agent merge:
+When the last phase has merged:
 
 1. Print the final status, including any open `ci: version packages` pull
    request.
-2. Ask once whether to archive the feature's sessions. Archive only on yes.
-   List any worktree left over.
-3. Match the merged pull requests' changed paths
-   (`gh api --paginate repos/{owner}/{repo}/pulls/<n>/files --jq '.[].filename'`)
-   against the area pathspecs in
+2. Remove leftover worktrees under your scratchpad
+   (`git worktree list`, then `git worktree remove`), and list any you could
+   not remove.
+3. Match the merged pull requests' changed paths against the area pathspecs in
    [Drift review](../../../docs/engineering/drift-review.md#areas) and report
    the touched area IDs. File nothing.

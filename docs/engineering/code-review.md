@@ -1,4 +1,4 @@
-# Code review session
+# Code review
 
 This document describes the reviewer session: an agent that reviews each
 pushed implementation slice for correctness reasoning, the constitution's
@@ -27,7 +27,7 @@ other Standard and Light pull request, as
 [process by tier](git-workflow.md#process-by-tier) defines them. Single
 pull requests use slice ID `fix` and may omit the feature directory. The
 advisory [pre-push self-review](#pre-push-self-review) runs at every tier and
-is not a review session.
+is not a code review subagent.
 
 The reviewer works independently of Copilot's pull request review. It does not
 read Copilot's comments as input or answer them, and Copilot does not read its
@@ -53,7 +53,7 @@ The reviewer starts with a clean context. It reads only:
   [`STORYBOOK_STANDARD.md`](../../packages/react/STORYBOOK_STANDARD.md) for
   stories, and [Component testing](../testing/README.md) for tests
 
-It never reads the implementation session's transcript, worktree or
+It never reads the lead session's transcript, worktree or
 uncommitted work. It reviews pushed commits only, from its own detached
 worktree or with `git show` and `git diff` on the SHAs.
 
@@ -117,9 +117,11 @@ same Git, schema-check and sync modules. The note keeps every entry recorded on
 that SHA in order, and the latest is the last one. The gate reads the local
 notes, so it works with no network.
 
-Sessions do not share a clone: each cloud session has its own container. An
-entry reaches the other clones as a comment on the pull request. Never push or
-fetch the notes refs themselves.
+The reviewing subagents work in worktrees of the lead session's clone, so their
+notes are local to it at once. An entry also reaches every other clone, such
+as a person's or a later lead session's, as a comment on the pull request,
+which is also where a person reads it. Never push or fetch the notes refs
+themselves.
 
 - **Publish.** `pnpm review:record` validates the review, appends it to the
   local note, then posts it as a comment on the open pull request whose head
@@ -165,7 +167,7 @@ trial ref is not posted.
 
 ### Request
 
-The implementation session sends the reviewer a request when it sends the
+The lead session sends the reviewer a request when it sends the
 verifier one: when a slice is pushed as a draft pull request. A repeat request
 after a fix names the new SHA, the previous review ID, and for each open
 finding either the fixing commit or a written justification.
@@ -185,7 +187,7 @@ carries forward, with the same ID, any finding it still holds.
 
 ### Responses
 
-The implementation session answers every finding, advisory ones included,
+The lead session answers every finding, advisory ones included,
 with a fix or a written justification. It does not mark a slice ready while
 the latest review at the pushed tip has an open blocking finding. A blocking
 finding closed as `justified` goes in the pull request's **Decisions for the
@@ -209,7 +211,7 @@ fail with a `code review:` reason for an open blocking finding, an open
 escalation, a review for another feature or slice (a fix review must have
 slice ID `fix`), or a change after the reviewed SHA that is not evidence-only.
 
-Escalate to the orchestrator, and through it to a person, instead of
+Escalate to a person, through the lead session, instead of
 continuing the loop when:
 
 - a finding belongs to the specification or plan under the
@@ -229,41 +231,41 @@ makes is the note comment `pnpm review:record` posts on the pull request.
 
 ## Pre-push self-review
 
-The pre-push self-review is an advisory check the implementation session runs
+The pre-push self-review is an advisory check the lead session runs
 on its own work before an independent round. It removes local findings first,
 such as a story title that names a state the story does not show, a hard-coded
 color, a duplicated helper or a leftover probe, so the gating rounds spend
 their effort on what only an independent session finds. It does not replace or
-weaken the review or verification session, which stay the only gates.
+weaken the review or verifier subagent, which stay the only gates.
 
-- **When.** Once the implementation session believes a slice or fix is
+- **When.** Once the lead session believes a slice or fix is
   complete, before each push that starts or answers a round. It runs at that
   milestone only, never from a Git hook. It also runs on unspecified Standard
-  work and Light work, which get no verification session.
+  work and Light work, which get no verifier subagent.
 - **Who.** A subagent from the
   [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) definition,
   which holds its fixed brief, its read-only tools and its model. It starts
-  with a fresh context, never as a fork of the implementation session, on a
+  with a fresh context, never as a fork of the lead session, on a
   different model, as [Models and effort](orchestration.md#models-and-effort)
   sets.
 - **Input.** Only the base branch. It reviews `origin/<base>...HEAD` plus
   uncommitted changes, so an untracked or temporary file the push would leave
-  behind or sweep in is a finding. The implementation session never describes
+  behind or sweep in is a finding. The lead session never describes
   the change or what to check, because a reviewer handed the author's
   hypothesis tends to confirm it.
-- **Scope.** The [scope](#scope) and finding fields of the review session,
+- **Scope.** The [scope](#scope) and finding fields of the code review subagent,
   plus a `leftover` category for files and code that should not be pushed.
 - **Unrecorded.** It writes no note, comment or message, and never counts
-  toward `pnpm verify:gate`. The implementation session fixes what it accepts
-  and lists every finding, accepted or rejected, in its `pushed` report to the
-  orchestrator, for measurement.
+  toward `pnpm verify:gate`. The lead session fixes what it accepts
+  and keeps every finding, accepted or rejected, with its reason, for the
+  [measures](orchestration.md#revisiting-the-table).
 - **No leakage.** Its findings never go to the review, visual review or
-  verification session and never appear in a pull request body, so the
+  verifier subagent and never appear in a pull request body, so the
   independent reviews are not anchored on them.
 
 ## Model choice
 
-Run the reviewer on a different model from the implementation session where
+Run the reviewer on a different model from the lead session where
 one is available. A clean context removes anchoring on the implementer's
 reasoning, but the same model tends to share the implementer's blind spots. A
 different model makes those errors less correlated. Give High work the highest

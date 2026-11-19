@@ -1,13 +1,13 @@
-# Visual review session
+# Visual review
 
-This document describes the visual review session: an agent with a clean
+This document describes the visual review subagent: an agent with a clean
 context that looks at screenshots of what a pull request renders, before and
 after the change, and judges whether every visible difference is intended,
 described and free of defects. It owns when a visual review runs, what it
 captures, how it judges, its findings and where they are stored. The
 `visual-reviewer` skill supplies the procedure.
 
-[Code review session](code-review.md) owns the review of the code itself.
+[Code review](code-review.md) owns the review of the code itself.
 [The verification harness](verification-harness.md) owns claims and their
 evidence. [Git workflow](git-workflow.md#agent-merge) owns when an agent may
 merge, which reads this review.
@@ -38,7 +38,7 @@ The list lives in code, in `renderingPaths` in
 together. A pull request that touches none of them, such as documentation or
 repository tooling, needs no visual review.
 
-High work keeps its person's review and gets no visual review session. The
+High work keeps its person's review and gets no visual review subagent. The
 verifier's [screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims)
 still apply to it.
 
@@ -59,7 +59,7 @@ The visual reviewer starts with a clean context and reads only:
   constitution's Visual Regression Protection section, principle XV, and
   [Pixel visual regression](../testing/visual-regression.md)
 
-It never reads the implementation session's transcript, worktree or messages,
+It never reads the lead session's transcript, worktree or messages,
 the code review, or the pre-push self-review. It does not read the diff's
 content beyond what it needs to pick stories and confirm a finding's cause.
 
@@ -118,7 +118,7 @@ anchor what the reviewer sees.
 
 A Light pull request states that nothing visible changes. Any visible
 difference on one is a blocking `tier` finding: the work is Standard, and
-the implementation session raises the tier before anything else.
+the lead session raises the tier before anything else.
 
 ## Findings
 
@@ -184,7 +184,7 @@ and reviewed SHAs.
 
 ## The visual review loop
 
-The implementation session sends the visual reviewer a request at the same
+The lead session sends the visual reviewer a request at the same
 time as the code review request, on the same pushed SHA (see
 [Agent merge](git-workflow.md#agent-merge)). A repeat request after a fix names the new SHA, the previous visual review
 ID, and for each open finding either the fixing commit or a written
@@ -207,10 +207,10 @@ needs a new request.
 
 ### Escalation
 
-Escalate to the orchestrator, and through it to a person, instead of
+Escalate to a person, through the lead session, instead of
 continuing when:
 
-- the reviewer and the implementation session disagree whether a visible
+- the reviewer and the lead session disagree whether a visible
   change is intended or acceptable
 - a blocking finding is still open in round three
 - a finding needs a design decision, such as a brand rule that does not cover
@@ -238,5 +238,5 @@ private screenshots page.
   pixel suite in CI runs at the head and catches that for the stories it
   covers.
 - Every session posts as the same GitHub login, so the gate trusts that a
-  visual review note was written by a visual review session, as it does for
+  visual review note was written by a visual review subagent, as it does for
   code reviews.

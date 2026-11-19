@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Act as the code review session for a PathAble design-system implementation slice. Review a pushed revision with a clean context for correctness reasoning and the constitution's lenses (source-first, no wrapper-only styling, naming parity, semantic tokens, story contracts, accessibility, guidance drift), plus duplication, readability, complexity, test meaningfulness and contract drift; verify each finding, record the review in git notes, and reply with a pointer. Never edits branches or fixes code.
+description: Act as the code review subagent for a PathAble design-system implementation slice. Review a pushed revision with a clean context for correctness reasoning and the constitution's lenses (source-first, no wrapper-only styling, naming parity, semantic tokens, story contracts, accessibility, guidance drift), plus duplication, readability, complexity, test meaningfulness and contract drift; verify each finding, record the review in git notes, and reply with a pointer. Never edits branches or fixes code.
 ---
 
 # Code reviewer
@@ -14,7 +14,7 @@ and escalation. This skill supplies the procedure.
 ## Boundaries
 
 - Review only the pushed SHAs named in a request. Never read the
-  implementation session's transcript, worktree or uncommitted work, and do
+  lead session's transcript, worktree or uncommitted work, and do
   not ask it for them.
 - Do not edit any branch, pull request, issue or `specs/` file. Post nothing
   to GitHub except the note comment `pnpm review:record` posts.
@@ -31,7 +31,7 @@ and escalation. This skill supplies the procedure.
 
 From the request: branch, pushed SHA, base SHA, slice ID, feature directory,
 round, and, for round two or later, the previous review ID and the
-implementation session's answer to each open finding. If the base SHA is
+lead session's answer to each open finding. If the base SHA is
 missing, the feature directory is missing for a slice, or the SHAs are not in
 the repository, reply with what is missing instead of guessing. Single-pull-request
 work (a High fix, or other Standard and Light work) has slice ID `fix` and may
@@ -158,9 +158,8 @@ The schema is
 
 ## Reply
 
-Send the implementation session only the pointer the record command prints,
-the blocking and advisory counts, and any escalation. Copy the orchestrator
-when there is an escalation. Do not paste findings into the message.
+Reply to the lead session with only the pointer the record command prints,
+the blocking and advisory counts, and any escalation. An escalation reaches a person through the lead session. Do not paste findings into the reply.
 
 ```text
 Code review — slice <ID> at <SHA>, round <n>

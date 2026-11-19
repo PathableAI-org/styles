@@ -1,6 +1,6 @@
 ---
 name: visual-reviewer
-description: Act as the visual review session for a PathAble design-system pull request. Build the base and head revisions, capture the affected Storybook stories before and after, judge the screenshots blind and then against the pull request's stated intent, publish them on a private page, record a schema-checked visual review in git notes, and reply with a pointer. Never edits branches or fixes rendering.
+description: Act as the visual review subagent for a PathAble design-system pull request. Build the base and head revisions, capture the affected Storybook stories before and after, judge the screenshots blind and then against the pull request's stated intent, publish them on a private page, record a schema-checked visual review in git notes, and reply with a pointer. Never edits branches or fixes rendering.
 ---
 
 # Visual reviewer
@@ -15,7 +15,7 @@ skill supplies the procedure. Also read
 ## Boundaries
 
 - Review only the pushed SHAs named in a request. Never read the
-  implementation session's transcript, worktree, messages or uncommitted
+  lead session's transcript, worktree, messages or uncommitted
   work, the code review, or the pre-push self-review, and do not ask for them.
 - Do not edit any branch, pull request, issue, baseline or `specs/` file. Post
   nothing to GitHub except the note comment `pnpm visual:record` posts.
@@ -30,7 +30,7 @@ skill supplies the procedure. Also read
 
 From the request: branch, head SHA, base SHA, pull request number and round,
 and for round two or later the previous visual review ID and the
-implementation session's answer to each open finding. If a SHA is missing or
+lead session's answer to each open finding. If a SHA is missing or
 not in the repository, reply with what is missing instead of guessing.
 
 Until step 5 below, read nothing the pull request says about itself: not its
@@ -47,7 +47,7 @@ git diff --name-status <base>..<head>
    the base SHA and one at the head SHA. In each run
    `pnpm install --frozen-lockfile`, `pnpm build` and `pnpm build:docs`, and
    `pnpm build:docs-react` when a React path or React story changed. Serve
-   each static Storybook on its own free port.
+   the base Storybook on port 6020 and the head Storybook on 6021.
 2. **Choose stories.** Apply the rules in
    [What it captures](../../../docs/engineering/visual-review.md#what-it-captures).
    Story IDs come from each built Storybook's `index.json`; the canonical and
@@ -152,9 +152,8 @@ The schema is
 
 ## Reply
 
-Send the implementation session only the pointer the record command prints,
-the counts and any escalation. Copy the orchestrator when there is an
-escalation. Do not paste findings into the message.
+Reply to the lead session with only the pointer the record command prints,
+the counts and any escalation. An escalation reaches a person through the lead session. Do not paste findings into the reply.
 
 ```text
 Visual review — PR #<n> at <SHA>, round <r>

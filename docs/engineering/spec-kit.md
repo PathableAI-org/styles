@@ -42,7 +42,8 @@ upgrade or a `specify` command:
 
 The project's own skills also live in `.agents/skills/`, in folders without
 the `speckit-` prefix: `orchestrate-stack`, `verification-harness`,
-`code-reviewer` and `drift-review` (see [Orchestration](orchestration.md)).
+`code-reviewer`, `visual-reviewer` and `drift-review` (see
+[Orchestration](orchestration.md)).
 The upgrade does not touch them. `specify integration upgrade` writes only the
 `speckit-*` skills, and its stale-file cleanup removes only paths recorded in
 an integration manifest; `.specify/integrations/codex.manifest.json` records
