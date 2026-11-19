@@ -280,14 +280,15 @@ export const ContentPressure = {
 export const InDarkSection = {
   render: () => `
     <section class="pathable-section pathable-section--dark">
-      <div class="pathable-card" data-testid="dark-section-card">
+      <div class="pathable-card">
         <div class="pathable-card__container" data-testid="dark-section-card-container">
           <div class="pathable-card__header">
             <h3 class="pathable-card__heading">Card in a dark section</h3>
           </div>
           <div class="pathable-card__body">
-            <p data-testid="dark-section-card-text">The card is a light surface, so its text stays readable.</p>
-            <a href="#" data-testid="dark-section-card-link">Read the guide</a>
+            <p>The card is a light surface, so its text stays readable.</p>
+            <a href="#">Read the guide</a>
+            <a href="#" class="pathable-button">Start session</a>
           </div>
         </div>
       </div>
@@ -299,15 +300,26 @@ export const InDarkSection = {
     const surface = view.getComputedStyle(
       canvas.getByTestId('dark-section-card-container'),
     ).backgroundColor
+    const elements = [
+      canvas.getByRole('heading', { level: 3, name: 'Card in a dark section' }),
+      canvas.getByText(
+        'The card is a light surface, so its text stays readable.',
+      ),
+      canvas.getByRole('link', { name: 'Read the guide' }),
+      canvas.getByRole('link', { name: 'Start session' }),
+    ]
 
-    for (const id of ['dark-section-card-text', 'dark-section-card-link']) {
-      const element = canvas.getByTestId(id)
+    for (const element of elements) {
+      const background = findOpaqueBackground(element, view)
       const ratio = contrastRatio(
         view.getComputedStyle(element).color,
-        findOpaqueBackground(element, view),
+        background,
       )
 
-      await expect(findOpaqueBackground(element, view)).toBe(surface)
+      // The button's own fill is its surface; the rest sit on the card.
+      if (!element.classList.contains('pathable-button')) {
+        await expect(background).toBe(surface)
+      }
       await expect(ratio).toBeGreaterThanOrEqual(4.5)
     }
   },
