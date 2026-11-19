@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Show/hide the loading indicator in application code. Use `aria-live="polite"` on the container.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Keep a live region, such as an element with `role="status"`, on the page before loading starts, and add and remove the indicator inside it so its text is announced. Do not put `aria-live` on the indicator itself when you add and remove it. Show and remove the indicator in application code.',
       },
     },
   },
@@ -13,26 +13,33 @@ export default {
 
 export const Default = {
   render: () => `
-    <div class="pathable-loading" aria-live="polite">
-      <span class="pathable-loading__spinner" aria-hidden="true"></span>
-      <span class="pathable-loading__text">Loading messages...</span>
+    <div role="status">
+      <div class="pathable-loading">
+        <span class="pathable-loading__spinner" aria-hidden="true"></span>
+        <span class="pathable-loading__text">Loading messages...</span>
+      </div>
     </div>
   `,
 }
 
 export const SpinnerOnly = {
   render: () => `
-    <div class="pathable-loading" role="status" aria-label="Loading">
-      <span class="pathable-loading__spinner" aria-hidden="true"></span>
+    <div role="status">
+      <div class="pathable-loading">
+        <span class="pathable-loading__spinner" aria-hidden="true"></span>
+        <span class="pathable-sr-only">Loading messages</span>
+      </div>
     </div>
   `,
 }
 
 export const Large = {
   render: () => `
-    <div class="pathable-loading pathable-loading--large" aria-live="polite">
-      <span class="pathable-loading__spinner" aria-hidden="true"></span>
-      <span class="pathable-loading__text">Loading your dashboard...</span>
+    <div role="status">
+      <div class="pathable-loading pathable-loading--large">
+        <span class="pathable-loading__spinner" aria-hidden="true"></span>
+        <span class="pathable-loading__text">Loading your dashboard...</span>
+      </div>
     </div>
   `,
 }
