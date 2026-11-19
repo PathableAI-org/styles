@@ -83,6 +83,17 @@ export const ListLayout = {
   `,
 }
 
+export const ListLayoutMobile = {
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
+  render: () => `
+    <div class="pathable-card-grid" style="max-width: 320px">
+      <div class="pathable-resource-card pathable-resource-card--list pathable-resource-card--interactive">
+        ${defaultContent}
+      </div>
+    </div>
+  `,
+}
+
 export const NoImage = {
   render: () => `
     <div class="pathable-card-grid" style="max-width: 400px">

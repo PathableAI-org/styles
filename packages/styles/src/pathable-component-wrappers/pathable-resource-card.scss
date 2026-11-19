@@ -5,8 +5,8 @@
 //
 // CSS custom properties:
 //   --pathable-resource-card-summary-lines  (default: 3) — max lines for description
-//   --pathable-resource-card-media-width    (default: 160px) — media width in list layout
-//   --pathable-resource-card-media-height   (default: 120px) — media height in grid layout
+//   --pathable-resource-card-media-width    (default: 160px) — media width in list layout (not applied at 480px and narrower, where the media stacks)
+//   --pathable-resource-card-media-height   (default: 120px) — media height in grid layout, and in list layout at 480px and narrower
 //
 // Modifier classes:
 //   .pathable-resource-card--grid          — media above content (default)
