@@ -1,7 +1,7 @@
 /**
- * The pixel visual-regression story entries for the styles Storybook, kept
- * apart from test-pixels.mjs so other scripts can read them without running
- * the suite (scripts/check-component-pages.mjs reads `covers`).
+ * The pixel visual-regression story entries and rollout list for the styles
+ * Storybook, kept apart from test-pixels.mjs so other scripts can read them
+ * without running the suite (check-component-pages.mjs reads `covers`).
  */
 
 /**
@@ -267,4 +267,29 @@ export const STORIES = [
   // and progress variants, `--has-action` with its action link, and the
   // max-width 480px rules; covering them needs an aggregate story first.
   { id: 'components-feedback-toast--stacked', key: 'toast/stacked' },
+]
+
+/** Components whose baselines are enforced. Only these are compared. */
+export const ROLLOUT = [
+  'app-shell',
+  'button',
+  'card',
+  'checkbox',
+  'filterable-option-list',
+  'form-row',
+  'form-stack',
+  'icon',
+  'icon-button',
+  'icon-tile',
+  'integration',
+  'input',
+  'interaction-states',
+  'modal',
+  'optional-form-section',
+  'page-error',
+  'radio',
+  'segmented-control',
+  'select',
+  'textarea',
+  'toast',
 ]

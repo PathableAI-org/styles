@@ -59,8 +59,10 @@ it changes, and a set too large to look at gets approved unseen.
 
 ## How a capture is made
 
+[`packages/styles/scripts/pixel-stories.mjs`](../../packages/styles/scripts/pixel-stories.mjs)
+holds the story entries and the rollout list.
 [`packages/styles/scripts/test-pixels.mjs`](../../packages/styles/scripts/test-pixels.mjs)
-holds the story entries, the rollout list and the threshold. It serves the
+holds the threshold and runs the suite. It serves the
 built styles Storybook and runs the Storybook test-runner on the planned
 stories' files. The test-runner renders each story and runs its play
 function; then the `postVisit` hook in

@@ -1,6 +1,41 @@
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+
 import { injectAxe, checkA11y } from 'axe-playwright'
 
 import { capturePixels, pixelMode, setupPixels } from './pixels.js'
+
+// The test-runner runs with this workspace (apps/storybook) as its working
+// directory, from the root scripts, the pixel suite and CI alike.
+const EXECUTED_DIR = join(process.cwd(), 'test-results/component-pages')
+
+/**
+ * Writes what one story did for the component pages check
+ * (packages/styles/scripts/check-component-pages.mjs --executed): the
+ * guarantee ids whose assertions ran, which the `guarantee` story helper
+ * collects on the page, and the `pathable-*` classes the story rendered. The
+ * page is reused across stories, so the list is cleared once read.
+ */
+async function recordExecuted(page, context) {
+  const executed = await page.evaluate(() => {
+    const guarantees = globalThis.__componentPageGuarantees ?? []
+    globalThis.__componentPageGuarantees = []
+    const classes = new Set()
+    for (const element of document.querySelectorAll(
+      '#storybook-root [class]',
+    )) {
+      for (const name of element.classList) {
+        if (name.startsWith('pathable-')) classes.add(name)
+      }
+    }
+    return { guarantees, classes: [...classes].sort() }
+  })
+  mkdirSync(EXECUTED_DIR, { recursive: true })
+  writeFileSync(
+    join(EXECUTED_DIR, `${context.id}.json`),
+    `${JSON.stringify({ story: context.id, ...executed }, null, 2)}\n`,
+  )
+}
 
 /** @type { import('@storybook/test-runner').TestRunnerConfig } */
 const config = {
@@ -59,6 +94,7 @@ const config = {
     await injectAxe(page)
   },
   async postVisit(page, context) {
+    await recordExecuted(page, context)
     if (pixelMode) return capturePixels(page, context)
     await assertInteractionStatesPointerFeedback(page, context)
     const isFilterableOptionList = context.id.startsWith(

@@ -26,7 +26,7 @@ import {
   startServer,
   visualViewportNames,
 } from './quality-gates.mjs'
-import { STORIES } from './pixel-stories.mjs'
+import { ROLLOUT, STORIES } from './pixel-stories.mjs'
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -45,31 +45,6 @@ const PORT = 6014
  * differing pixel is allowed; anti-aliased edge pixels are not counted.
  */
 const THRESHOLD = 0.01
-
-/** Components whose baselines are enforced. Only these are compared. */
-const ROLLOUT = [
-  'app-shell',
-  'button',
-  'card',
-  'checkbox',
-  'filterable-option-list',
-  'form-row',
-  'form-stack',
-  'icon',
-  'icon-button',
-  'icon-tile',
-  'integration',
-  'input',
-  'interaction-states',
-  'modal',
-  'optional-form-section',
-  'page-error',
-  'radio',
-  'segmented-control',
-  'select',
-  'textarea',
-  'toast',
-]
 
 // ---------------------------------------------------------------------------
 
