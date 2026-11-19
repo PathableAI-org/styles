@@ -20,7 +20,7 @@ guarantees:
     claim: The inline adds no space before its first child, after its last child or around itself.
   - id: stretch-height
     status: unverified
-    claim: Children stretch to the height of the tallest child, and pathable-flex-align-center on the inline centres them vertically instead.
+    claim: Children that set neither their own height nor their own alignment stretch to the height of the tallest child, and pathable-flex-align-center on the inline centres them vertically instead.
   - id: custom-gap
     status: unverified
     claim: Setting --pathable-inline-gap on the inline sets the space between its children to that value.

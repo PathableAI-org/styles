@@ -22,7 +22,7 @@ variants:
 guarantees:
   - id: wraps
     status: unverified
-    claim: Items that do not fit the cluster's width move onto a new line instead of overflowing, in source order.
+    claim: An item that does not fit in the space left on the current line starts a new line, and items keep source order.
   - id: gap-sizes
     status: unverified
     claim: The space between items is 8 px by default and with gap-md, and 4, 16 or 24 px with gap-sm, gap-lg or gap-xl.
@@ -31,7 +31,7 @@ guarantees:
     claim: The space between wrapped lines is the same as the space between items on a line.
   - id: centred-default
     status: unverified
-    claim: Items on a line are centred vertically by default and with align-center, and align-start, align-end, align-stretch and align-baseline align them to the top, the bottom, the full line height or the text baseline.
+    claim: Items that do not set their own alignment are centred vertically on their line by default and with align-center, and align-start, align-end, align-stretch and align-baseline align them to the top, the bottom, the full line height or the text baseline.
   - id: gap-between-only
     status: unverified
     claim: The cluster adds no space before its first item, after its last item or around itself.
@@ -127,8 +127,14 @@ The pixel figures are those of the default theme's spacing scale.
 - Items keep their own width and start at the left edge. Add
   `pathable-flex-justify-between` or another justify utility to distribute
   them; with wrapping, a justify utility applies to each line separately.
-- An item wider than the cluster does not wrap further: it overflows unless
-  its own content can wrap.
+- Wrapping does not stop overflow: an item wider than the cluster, such as
+  one with a long unbroken string or a fixed minimum width, takes a line of
+  its own and overflows unless its own content can wrap.
+- Set vertical alignment with the align modifiers or
+  `--pathable-cluster-align`, not a utility such as
+  `pathable-flex-align-start`: whether the utility overrides the cluster's
+  own alignment currently depends on how the stylesheet is loaded, which is
+  a known defect.
 - Children keep their own margins, which add to the gap. `pathable-button`
   has an 8 px right margin, so buttons in a cluster sit 8 px further apart
   than the gap, and below a 480 px viewport each button is full width and

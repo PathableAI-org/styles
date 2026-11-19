@@ -11,13 +11,13 @@ variants:
 guarantees:
   - id: vertical-column
     status: unverified
-    claim: Children of a stack sit in one column in source order, and each child without its own width stretches to the full width of the stack.
+    claim: Children of a stack sit in one column in source order, and each child that sets neither its own width nor its own alignment stretches across the stack's width, less its own left and right margins.
   - id: gap-sizes
     status: unverified
     claim: The space between adjacent children is 16 px by default and with gap-md, and 8, 24 or 32 px with gap-sm, gap-lg or gap-xl.
   - id: gap-between-only
     status: unverified
-    claim: The stack adds no space before its first child, after its last child or around itself, so a stack with one child is exactly that child's height.
+    claim: The stack adds no space before its first child, after its last child or around itself, so a stack holding one child with no vertical margins is exactly that child's height.
   - id: margins-add
     status: unverified
     claim: A child's own vertical margins are added to the gap, not collapsed into it.
@@ -110,8 +110,10 @@ The pixel figures are those of the default theme's spacing scale.
   children at their own width, add `pathable-flex-align-start` to the stack,
   or put the items in a `pathable-cluster` inside it.
 - Children's margins do not collapse into the gap: a paragraph's default
-  margins are added to it. Remove them, for example with `pathable-margin-0`, when the
-  gap alone should space the children.
+  margins are added to it. Nor do they collapse through the stack, so the
+  first child's top margin and the last child's bottom margin stay inside
+  the stack, as space above and below its content. Remove them, for example
+  with `pathable-margin-0`, when the gap alone should space the children.
 - The stack has no element classes and no padding. Put it inside a surface,
   card or `pathable-container` for padding and a width limit.
 - Stacks nest freely, and so do `pathable-inline` and `pathable-cluster`

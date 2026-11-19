@@ -20,7 +20,7 @@ guarantees:
     claim: With the static modifier, the panel scrolls with the page at every viewport height.
   - id: own-height
     status: unverified
-    claim: As a grid or flex item, such as a direct child of pathable-sidebar-layout, the panel keeps its content's height instead of stretching to the row.
+    claim: As a grid item or an item in a flex row, such as a direct child of pathable-sidebar-layout or pathable-inline, the panel keeps its content's height instead of stretching to the row.
   - id: custom-offset
     status: unverified
     claim: Setting --pathable-sticky-panel-top on the panel sets the distance it stops below the top of the scroll area.
@@ -100,6 +100,10 @@ is fixed in the stylesheet and is not a token.
 - Any ancestor with `overflow` set to `hidden`, `auto` or `scroll` becomes
   the scroll area the panel sticks to, which usually stops it sticking to the
   page.
+- In a flex column, such as `pathable-stack`, the same alignment acts on
+  the width: the panel shrinks to its content's width instead of filling
+  the column. Give it a width there, for example with
+  `pathable-width-full`, so a surface inside it spans the column.
 - Below 1024 px wide, `pathable-sidebar-layout` stacks the panel under the
   main content, where its row is only as tall as the panel, so it does not
   move.

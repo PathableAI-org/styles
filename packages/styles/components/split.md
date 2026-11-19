@@ -14,7 +14,7 @@ variants:
 guarantees:
   - id: two-columns
     status: unverified
-    claim: At a viewport width of 1024 px or more, the first two children sit side by side in columns sized 1:1 by default and with ratio-1-1, and 1:2, 2:1 or 1:3 with ratio-1-2, ratio-2-1 or ratio-1-3.
+    claim: At a viewport width of 1024 px or more, the first two children sit side by side and, while each child's content can shrink to its column, share the width left after the gap at 1:1 by default and with ratio-1-1, and 1:2, 2:1 or 1:3 with ratio-1-2, ratio-2-1 or ratio-1-3.
   - id: collapse
     status: unverified
     claim: At a viewport width of 1023 px or less, every ratio collapses to one full-width column with the children in source order.
@@ -23,7 +23,7 @@ guarantees:
     claim: The space between the columns, and between the regions once they stack, is 24 px.
   - id: centred-default
     status: unverified
-    claim: Regions of different heights are centred vertically against each other by default and with align-center, and align-start, align-end and align-stretch align them to the top, the bottom or the full row height.
+    claim: Regions that do not set their own alignment are centred vertically against each other by default and with align-center, and align-start, align-end and align-stretch align them to the top, the bottom or the full row height.
   - id: no-reorder
     status: unverified
     claim: The split never reorders its children, so the first child is at the start of the row (the left in left-to-right text) on wide viewports and on top on narrow ones.
@@ -119,8 +119,15 @@ in the stylesheet and is not a token.
 - The breakpoint follows the viewport, not the split's own width. A split
   inside a narrow panel on a wide screen still has two columns; use
   `pathable-stack` there instead.
-- Columns are `fr` tracks, so content that cannot shrink, such as a wide
-  table or a long unbroken string, can widen its column beyond the ratio.
+- Columns are `fr` tracks that share the width left after the gap, so
+  content that cannot shrink, such as a wide table or a long unbroken
+  string, can widen its column beyond the ratio.
+- Set vertical alignment with the align modifiers or
+  `--pathable-split-align`, not a utility such as
+  `pathable-flex-align-start`: whether the utility overrides the split's own
+  alignment currently depends on how the stylesheet is loaded, which is a
+  known defect. A `pathable-sticky-panel` region keeps its own height at the
+  top of the row whatever the alignment.
 - The split has no element classes and no padding. Put it inside
   `pathable-container` for a width limit, and give each region its own
   padding or surface.

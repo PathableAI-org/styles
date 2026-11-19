@@ -14,7 +14,7 @@ guarantees:
     claim: The container is at most 1024 px wide by default and with standard, at most 1280 px with wide, and as wide as its parent with full, gutters included.
   - id: centred
     status: unverified
-    claim: When its parent is wider than its maximum width, the container is centred, with equal space on its left and right.
+    claim: When its parent is wider than its maximum width and nothing else sets its left or right margin, the container is centred, with equal space on its left and right.
   - id: gutters
     status: unverified
     claim: The container has 24 px of padding on its left and right at every width and viewport, and none on its top and bottom.
@@ -103,10 +103,13 @@ widths are fixed values in the stylesheet, not theme tokens.
 - It needs a parent that is a normal block or full-width flex or grid item.
   Inside a flex row the container's `width: 100%` is a basis that the row
   can shrink.
-- It sets its own left and right margins to `auto` to centre itself, and
-  those rules come after the margin utilities in the stylesheet: a left or
-  right margin utility on the container has no effect, while top and bottom
-  margin utilities, such as `pathable-margin-top-2`, work.
+- It sets its own left and right margins to `auto` to centre itself. Do
+  not put a left or right margin utility on the container: whether the
+  utility replaces the centring currently depends on how the stylesheet is
+  loaded (the full stylesheet ignores it; the separate components and
+  utilities imports, and the React package, apply it), which is a known
+  defect. Top and bottom margin utilities, such as `pathable-margin-top-2`,
+  work either way.
 - The gutter does not change with the viewport. For a full-bleed band, put
   the background on an outer element and the container inside it; the band
   then spans the page and the content lines up with other containers.

@@ -14,10 +14,10 @@ variants:
 guarantees:
   - id: columns
     status: unverified
-    claim: At a viewport width of 1024 px or more, the first child gets three quarters of the width and the second one quarter by default and with ratio-3-1, and two thirds or four fifths with ratio-2-1 or ratio-4-1.
+    claim: At a viewport width of 1024 px or more, while each child's content can shrink to its column, the first and second children share the width left after the gap at 3:1 by default and with ratio-3-1, and at 2:1 or 4:1 with ratio-2-1 or ratio-4-1.
   - id: sidebar-first
     status: unverified
-    claim: With sidebar-first, the narrow column is the first one, at 1:3 by default or with ratio-3-1, 1:2 with ratio-2-1 and 1:4 with ratio-4-1.
+    claim: With sidebar-first, the narrow column is the first one, and the columns share the width left after the gap at 1:3 by default or with ratio-3-1, 1:2 with ratio-2-1 and 1:4 with ratio-4-1.
   - id: collapse
     status: unverified
     claim: At a viewport width of 1023 px or less, every ratio and order collapses to one full-width column with the children in source order.
@@ -26,7 +26,7 @@ guarantees:
     claim: The space between the columns, and between the regions once they stack, is 24 px.
   - id: equal-height
     status: unverified
-    claim: Both regions stretch to the height of the taller one, except a child with pathable-sticky-panel, which keeps its own height.
+    claim: Both regions stretch to the height of the taller one, except a region that sets its own height or alignment, such as one with pathable-sticky-panel, which keeps its own height.
   - id: custom-properties
     status: unverified
     claim: Setting --pathable-sidebar-ratio or --pathable-sidebar-gap on the layout sets its wide-viewport columns or its gap to that value.
@@ -120,8 +120,10 @@ in the stylesheet and is not a token.
 - Put exactly two children in the layout. A third child starts a new row at
   the same column widths.
 - The breakpoint follows the viewport, not the layout's own width.
-- Columns are `fr` tracks, so content that cannot shrink, such as a wide
-  table, can widen its column beyond the ratio.
+- Columns are `fr` tracks that share the width left after the gap: a
+  default layout 1024 px wide has columns of 750 px and 250 px. Content that
+  cannot shrink, such as a wide table, can widen its column beyond the
+  ratio.
 - Both regions are as tall as the taller one, which lets a
   `pathable-sticky-panel` inside the sidebar stick while the main column
   scrolls past.
