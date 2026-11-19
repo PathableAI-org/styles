@@ -288,6 +288,7 @@ export const InDarkSection = {
           <div class="pathable-card__body">
             <p>The card is a light surface, so its text stays readable.</p>
             <a href="#">Read the guide</a>
+            <a href="#" class="pathable-link">Open the checklist</a>
             <a href="#" class="pathable-button">Start session</a>
           </div>
         </div>
@@ -306,6 +307,7 @@ export const InDarkSection = {
         'The card is a light surface, so its text stays readable.',
       ),
       canvas.getByRole('link', { name: 'Read the guide' }),
+      canvas.getByRole('link', { name: 'Open the checklist' }),
       canvas.getByRole('link', { name: 'Start session' }),
     ]
 

@@ -25,21 +25,24 @@
 // A card's container is a light surface. The dark section colours every <p>,
 // heading and link white or light blue, which would draw them on the card's
 // white background (1.00:1 for a paragraph), so text inside the container takes
-// the container's own text colour again, and plain links the link colour.
+// the container's own text colour again, and plain links and .pathable-link
+// the link colour.
 // :where() keeps the element rules at (0,2,0): above the section's (0,1,1), but
-// tied with or below component rules such as .pathable-card__meta, which come
-// later in the stylesheet and so keep their colour. Links with a class, such as
+// tied with component rules of two classes such as .pathable-card__meta, which
+// come later in the stylesheet and so keep their colour. A single-class colour
+// on a <p> or heading, such as a .pathable-text tone, loses to the reset, as it
+// lost to the section before. Other links with a class, such as
 // .pathable-button, keep their own colours, as the workflow card's action rule
-// does; the plain-link states are listed because the section sets one for each.
+// does; the link states are listed because the section sets one for each.
 .pathable-section--dark .pathable-card__container {
   :where(p, h1, h2, h3, h4, h5, h6) {
     color: inherit;
   }
 
-  :where(a:not([class]), a[class='']),
-  :where(a:not([class]), a[class='']):visited,
-  :where(a:not([class]), a[class='']):hover,
-  :where(a:not([class]), a[class='']):active {
+  :where(a:not([class]), a[class=''], a.pathable-link, a.usa-link),
+  :where(a:not([class]), a[class=''], a.pathable-link, a.usa-link):visited,
+  :where(a:not([class]), a[class=''], a.pathable-link, a.usa-link):hover,
+  :where(a:not([class]), a[class=''], a.pathable-link, a.usa-link):active {
     color: var(--pathable-color-link);
   }
 }
