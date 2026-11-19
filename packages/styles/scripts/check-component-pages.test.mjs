@@ -270,7 +270,7 @@ test('a pixel citation must resolve, be enforced and have its images', () => {
 test('a static page needs an enforced pixel citation', () => {
   for (const pixels of [[], [pixel({ enforced: false })]]) {
     assert.deepEqual(checkPage(page(), facts({ pixels })), [
-      'a static component needs a pixel baseline: no enforced pixel entry covers a guarantee of this page',
+      'a static component needs a pixel baseline: no enforced pixel entry covers a guarantee of this page. While tests are still being written, mark the guarantees no test cites "status: unverified"',
     ])
   }
 })
@@ -305,7 +305,7 @@ test('fails when no test that ran covers a met guarantee', () => {
   // only the record of what ran counts.
   const idle = record({ guarantees: [] })
   assert.deepEqual(checkExecuted([page()], [idle], [pixel()]), [
-    'widget.md: guarantee "is-centred" is met but no test covers it: no play function executed guarantee(step, \'widget/is-centred\', …) and no enforced pixel entry lists it in covers. Mark it "status: unmet" if the component does not do this yet',
+    'widget.md: guarantee "is-centred" is met but no test covers it: no play function executed guarantee(step, \'widget/is-centred\', …) and no enforced pixel entry lists it in covers. Mark it "status: unverified" if it holds but no test exists yet, or "status: unmet" if the component does not do this yet',
   ])
 })
 
@@ -388,6 +388,47 @@ test('prints which test cites each guarantee, unmet ones marked', () => {
       '  [UNMET] glows: It glows.',
       `    play   ${STORY} (expected to fail)`,
     ].join('\n'),
+  )
+})
+
+const unverifiedPage = () =>
+  page(
+    (frontMatter + body).replace(
+      '    claim: It is centred.',
+      '    status: unverified\n    claim: It is centred.',
+    ),
+  )
+
+test('a page with an unverified guarantee owes no baseline and no test yet', () => {
+  assert.deepEqual(checkPage(unverifiedPage(), facts({ pixels: [] })), [])
+  const ran = record({
+    guarantees: [
+      { id: 'widget/looks-right', mode: 'met' },
+      { id: 'widget/glows', mode: 'unmet' },
+    ],
+  })
+  assert.deepEqual(checkExecuted([unverifiedPage()], [ran], []), [])
+})
+
+test('a test that cites an unverified guarantee makes the page say so', () => {
+  const ran = record({
+    guarantees: [
+      { id: 'widget/looks-right', mode: 'met' },
+      { id: 'widget/is-centred', mode: 'met' },
+      { id: 'widget/glows', mode: 'unmet' },
+    ],
+  })
+  assert.deepEqual(checkExecuted([unverifiedPage()], [ran], []), [
+    `story ${STORY} executed "widget/is-centred", which the page marks unverified: a test now cites it, so set its status to met`,
+  ])
+  assert.deepEqual(
+    checkPixelCitations(
+      [unverifiedPage()],
+      [pixel({ covers: ['widget/is-centred'] })],
+    ),
+    [
+      'pixel entry widget/all-variants cites "widget/is-centred", which the page marks unverified: a test now cites it, so set its status to met',
+    ],
   )
 })
 

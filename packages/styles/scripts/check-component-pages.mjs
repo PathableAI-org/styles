@@ -3,9 +3,10 @@
  * package it describes. The page is written by hand and is the specification;
  * this check fails when the page and the package disagree.
  *
- * A page states guarantees: expected behaviour, each `met` (the default) or
- * `unmet` (not implemented yet). It does not say how they are tested. Tests
- * cite guarantees, as `<page>/<guarantee-id>`:
+ * A page states guarantees: expected behaviour, each `met` (the default),
+ * `unmet` (not implemented yet) or `unverified` (read from the source and
+ * believed true, but no test cites it yet). It does not say how they are
+ * tested. Tests cite guarantees, as `<page>/<guarantee-id>`:
  *   - a story play function, with `guarantee(step, id, …)` or, for an unmet
  *     guarantee, `guarantee.unmet(step, id, …)` (src/stories/shared/guarantee.ts);
  *   - a pixel baseline entry, with `covers: [id]` (scripts/pixel-stories.mjs).
@@ -92,10 +93,16 @@ export const REQUIRED_SECTIONS = [
 
 /** Only static components have pages for now. */
 const KINDS = ['static']
-const STATUSES = ['met', 'unmet']
+const STATUSES = ['met', 'unmet', 'unverified']
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const statusOf = (guarantee) => guarantee.status ?? 'met'
+
+/** Whether no guarantee of the page is still waiting for its first test. */
+export const isVerified = (page) =>
+  list(page.data.guarantees).every(
+    (guarantee) => statusOf(guarantee) !== 'unverified',
+  )
 
 // ---------------------------------------------------------------------------
 // Compiled CSS
@@ -378,9 +385,11 @@ export function checkPage(page, facts) {
   const covered = page.data.guarantees.some(
     ({ id }) => pixelCitations(page, id, facts.pixels).length > 0,
   )
-  if (page.data.kind === 'static' && !covered) {
+  // A page with an unverified guarantee is still being brought under test; it
+  // owes its baseline once every guarantee is met or unmet.
+  if (page.data.kind === 'static' && !covered && isVerified(page)) {
     errors.push(
-      'a static component needs a pixel baseline: no enforced pixel entry covers a guarantee of this page',
+      'a static component needs a pixel baseline: no enforced pixel entry covers a guarantee of this page. While tests are still being written, mark the guarantees no test cites "status: unverified"',
     )
   }
   return errors
@@ -419,6 +428,11 @@ export function checkPixelCitations(pages, pixels) {
           `${where}, which is unmet: a baseline cannot be expected to fail; cite it with guarantee.unmet() in a play function`,
         )
       }
+      if (statusOf(guarantee) === 'unverified') {
+        errors.push(
+          `${where}, which the page marks unverified: a test now cites it, so set its status to met`,
+        )
+      }
       if (!entry.enforced) {
         errors.push(
           `${where}, but "${entry.key.split('/')[0]}" is not on ROLLOUT, so the suite never compares this baseline`,
@@ -452,6 +466,10 @@ export function checkExecuted(pages, records, pixels) {
       errors.push(
         `${where} with guarantee(), but the page marks it unmet: use guarantee.unmet(), or set its status to met`,
       )
+    } else if (statusOf(guarantee) === 'unverified') {
+      errors.push(
+        `${where}, which the page marks unverified: a test now cites it, so set its status to ${mode === 'unmet' ? 'unmet' : 'met'}`,
+      )
     } else if (statusOf(guarantee) === 'met' && mode === 'unmet') {
       errors.push(
         `${where} with guarantee.unmet(), but the page does not mark it unmet`,
@@ -467,7 +485,7 @@ export function checkExecuted(pages, records, pixels) {
       const pictured = pixelCitations(page, guarantee.id, pixels).length > 0
       if (statusOf(guarantee) === 'met' && !ran && !pictured) {
         errors.push(
-          `${page.file}: guarantee "${guarantee.id}" is met but no test covers it: no play function executed guarantee(step, '${id}', …) and no enforced pixel entry lists it in covers. Mark it "status: unmet" if the component does not do this yet`,
+          `${page.file}: guarantee "${guarantee.id}" is met but no test covers it: no play function executed guarantee(step, '${id}', …) and no enforced pixel entry lists it in covers. Mark it "status: unverified" if it holds but no test exists yet, or "status: unmet" if the component does not do this yet`,
         )
       }
     }
@@ -524,9 +542,10 @@ export function renderTrace(pages, pixels, records) {
     for (const guarantee of list(page.data.guarantees)) {
       const id = `${page.slug}/${guarantee.id}`
       const unmet = statusOf(guarantee) === 'unmet'
-      lines.push(
-        `  ${unmet ? '[UNMET] ' : ''}${guarantee.id}: ${guarantee.claim}`,
-      )
+      const label = { unmet: '[UNMET] ', unverified: '[UNVERIFIED] ', met: '' }[
+        statusOf(guarantee)
+      ]
+      lines.push(`  ${label}${guarantee.id}: ${guarantee.claim}`)
       const cited = [
         ...pixelCitations(page, guarantee.id, pixels).map(
           (entry) => `pixel  baseline ${entry.key} of ${entry.id}`,
@@ -667,7 +686,16 @@ function readRecords() {
 
 async function main() {
   const flags = new Set(process.argv.slice(2))
-  const pages = await readPages()
+  // `--page=<slug>` checks one page at stage 1, for work on a single page.
+  const only = process.argv
+    .slice(2)
+    .find((flag) => flag.startsWith('--page='))
+    ?.slice('--page='.length)
+  const allPages = await readPages()
+  const pages = only ? allPages.filter((page) => page.slug === only) : allPages
+  if (only && pages.length === 0) {
+    throw new Error(`no component page "${only}.md"`)
+  }
   const pixels = await readPixelEntries()
   const errors = []
   let records
@@ -687,14 +715,15 @@ async function main() {
         ),
       )
     }
-    errors.push(...checkPixelCitations(pages, pixels))
+    if (!only) errors.push(...checkPixelCitations(pages, pixels))
     const components = wrapperComponents(
       readdirSync(join(packageRoot, 'src/pathable-component-wrappers')),
       css,
     )
     const withPage = new Set(pages.map((page) => page.data['styles-class']))
     const covered = components.filter((name) => withPage.has(name)).length
-    summary = `stage 1 (page against compiled CSS and pixel entries): ${pages.length} page(s) checked; ${covered} of ${components.length} component wrapper stylesheets have a page`
+    const verified = pages.filter(isVerified).length
+    summary = `stage 1 (page against compiled CSS and pixel entries): ${pages.length} page(s) checked, ${verified} with every guarantee under test; ${covered} of ${components.length} component wrapper stylesheets have a page`
   }
 
   for (const error of errors) console.error(`[component-pages] ${error}`)

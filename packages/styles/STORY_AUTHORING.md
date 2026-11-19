@@ -54,6 +54,9 @@ Use this checklist when creating or updating Storybook stories for
 - [ ] For a guarantee the page marks `status: unmet`, use
       `guarantee.unmet(step, id, …)`: it passes while the assertions fail and
       fails once they pass, until the page and the call are changed to met.
+- [ ] A guarantee marked `status: unverified` has no test yet. Citing it from
+      a play function or a pixel entry fails the check until the page marks it
+      met (or unmet, for `guarantee.unmet`).
 - [ ] A guarantee the pixel baseline shows is also listed in that story's
       `covers` in `scripts/pixel-stories.mjs`.
 - [ ] After `pnpm build`, run
