@@ -63,6 +63,10 @@ const config = {
         { width: 320, height: 700 },
       ],
       [
+        'discovery-resource-card--list-layout-mobile',
+        { width: 320, height: 700 },
+      ],
+      [
         'components-feedback-pageerror--mobile-full-page',
         { width: 375, height: 812 },
       ],

@@ -1,3 +1,4 @@
+import { expect } from 'storybook/test'
 import { expectBodyFont } from '../shared/body-font'
 
 export default {
@@ -86,12 +87,34 @@ export const ListLayout = {
 export const ListLayoutMobile = {
   globals: { viewport: { value: 'mobile320', isRotated: false } },
   render: () => `
-    <div class="pathable-card-grid" style="max-width: 320px">
+    <div class="pathable-card-grid">
       <div class="pathable-resource-card pathable-resource-card--list pathable-resource-card--interactive">
         ${defaultContent}
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const card = canvasElement.querySelector<HTMLElement>(
+      '.pathable-resource-card',
+    )
+    const media = canvasElement.querySelector<HTMLElement>(
+      '.pathable-resource-card__media',
+    )
+    const body = canvasElement.querySelector<HTMLElement>(
+      '.pathable-resource-card__body',
+    )
+    if (!card || !media || !body) throw new Error('Resource card missing')
+
+    await expect(window.innerWidth).toBe(320)
+    await expect(getComputedStyle(card).flexDirection).toBe('column')
+    await expect(media.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      body.getBoundingClientRect().top,
+    )
+    await expect(body.getBoundingClientRect().width).toBeGreaterThan(160)
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth,
+    )
+  },
 }
 
 export const NoImage = {
