@@ -15,7 +15,7 @@
  *
  * The guardrail paths are `guardrailPaths` in scripts/merge-gate.mjs, the one shared list.
  */
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import {
   existsSync,
@@ -111,6 +111,13 @@ const firstGuardrail = (words, cwd, root, wide = false) => {
   }
   return undefined
 }
+
+/** Every guardrail path among `words`, as `guardrailIn` reads each one. */
+const allGuardrails = (words, cwd, root, wide = false) =>
+  words.flatMap((word) => {
+    const path = guardrailIn(word, cwd, root, wide)
+    return path === undefined ? [] : [path]
+  })
 
 /**
  * The first guardrail path named anywhere in free text, such as inline code or a patch: the text is cut at characters
@@ -461,7 +468,10 @@ const inlineShellCode = (args, segment) => {
  * with a writing mode, and shell commands run from the code.
  */
 const writeLikeCode =
-  /write|appendFile|unlink|rename|copyfile|copy2|copytree|copyFile|cpSync|shutil\.move|os\.remove|rmtree|rmdir|rmSync|truncate|symlink|chmod|put_contents|fopen|\bopen\s*\([^)]*['"][wax+>]|\b(?:rm|cp|mv|sed|tee)\b/i
+  /write|appendFile|unlink|rename|copyfile|copy2|copytree|copyFile|cpSync|shutil\.move|os\.remove|rmtree|rmdir|rmSync|truncate|symlink|chmod|put_contents|fopen|\bopen(?:Sync)?\s*\([^,)]*,\s*['"](?:[^'"]*[wax+]|>)|\b(?:rm|cp|mv|sed|tee)\b/i
+
+/** An awk `print` or `printf` that sends its output to a file. */
+const awkWritesFile = /\bprintf?\b[^;}]*>/
 
 /** Whether the arguments switch on in-place editing, for `sed`, `perl` or `ruby`. */
 const editsInPlace = (args) =>
@@ -485,8 +495,8 @@ export const guardrailWrites = (command, cwd, root, depth = 0) => {
     const redirects = segment.redirects.filter(
       (target) => target !== '/dev/null',
     )
-    const redirected = firstGuardrail(redirects, directory, root)
-    if (redirected !== undefined) add(redirected, 'output redirection')
+    for (const path of allGuardrails(redirects, directory, root))
+      add(path, 'output redirection')
 
     const inPlace = /^(?:g?sed|perl|ruby)$/.test(name) && editsInPlace(args)
     const git = name === 'git' ? gitSubcommand(args) : undefined
@@ -512,20 +522,20 @@ export const guardrailWrites = (command, cwd, root, depth = 0) => {
 
     if (writeCommands.has(name) || findWrites(name, args)) {
       const operands = args.filter((arg) => !arg.startsWith('-'))
-      const path =
-        firstGuardrail(args, directory, root) ??
-        (treeCommands.has(name)
-          ? firstGuardrail(operands, directory, root, true)
-          : undefined) ??
-        (copyCommands.has(name)
-          ? firstGuardrail(operands.slice(-1), directory, root, true)
-          : undefined)
-      if (path !== undefined) add(path, name)
+      for (const path of [
+        ...allGuardrails(args, directory, root),
+        ...(treeCommands.has(name)
+          ? allGuardrails(operands, directory, root, true)
+          : []),
+        ...(copyCommands.has(name)
+          ? allGuardrails(operands.slice(-1), directory, root, true)
+          : []),
+      ])
+        add(path, name)
     }
-    if (inPlace) {
-      const path = firstGuardrail(args, directory, root)
-      if (path !== undefined) add(path, `${name} -i`)
-    }
+    if (inPlace)
+      for (const path of allGuardrails(args, directory, root))
+        add(path, `${name} -i`)
     if (git !== undefined && gitWriteSubcommands.has(git.name)) {
       const patch = git.name === 'apply' || git.name === 'am'
       // A checkout's first operand is a ref unless `--` says where the paths start; `git checkout .` is a path.
@@ -537,16 +547,19 @@ export const guardrailWrites = (command, cwd, root, depth = 0) => {
           : git.name === 'checkout' && operands[0] !== '.'
             ? operands.slice(1)
             : operands
-      const path =
-        firstGuardrail(git.args, directory, root) ??
-        (patch
-          ? guardrailInText(
-              [...segment.heredocs, ...segment.herestrings].join('\n'),
-              directory,
-              root,
-            )
-          : firstGuardrail(paths, directory, root, true))
-      if (path !== undefined) add(path, `git ${git.name}`)
+      const patched = patch
+        ? guardrailInText(
+            [...segment.heredocs, ...segment.herestrings].join('\n'),
+            directory,
+            root,
+          )
+        : undefined
+      for (const path of [
+        ...allGuardrails(git.args, directory, root),
+        ...(patch ? [] : allGuardrails(paths, directory, root, true)),
+        ...(patched === undefined ? [] : [patched]),
+      ])
+        add(path, `git ${git.name}`)
     }
     if (inline && isShell(name)) {
       if (depth < 3)
@@ -559,7 +572,8 @@ export const guardrailWrites = (command, cwd, root, depth = 0) => {
       )
       const path = guardrailInText(code, directory, root)
       const writesFile =
-        writeLikeCode.test(code) || (/awk$/.test(name) && code.includes('>'))
+        writeLikeCode.test(code) ||
+        (/awk$/.test(name) && awkWritesFile.test(code))
       if (path !== undefined && writesFile) add(path, `inline ${name} code`)
     }
   }
@@ -710,6 +724,25 @@ const revision = (root, name) =>
 /** HEAD's commit, so the after-check can find the commits a command made. */
 const headState = (root) => ({ head: revision(root, 'HEAD') })
 
+/** The commit every ref and HEAD points at, so the after-check can leave out commits that existed before. */
+const refTips = (root) => [
+  ...new Set(
+    [
+      ...String(
+        gitOrUndefined(root, [
+          'for-each-ref',
+          '--format=%(objectname)',
+          'refs/heads',
+          'refs/remotes',
+          'refs/tags',
+          'refs/stash',
+        ]) ?? '',
+      ).split('\n'),
+      revision(root, 'HEAD') ?? '',
+    ].filter(Boolean),
+  ),
+]
+
 /** A hash of text with all whitespace removed, so a formatter's reflow of a Markdown file keeps it. */
 const looseHash = (content) => hash(String(content).replace(/\s+/g, ''))
 
@@ -752,37 +785,47 @@ const explainedByMerge = (root, record, path) =>
       return conflicted || (staged !== null && staged === written)
     })
 
+/** Whether a path is at or under one the PreToolUse ask named, or matches a glob it named. */
+const askedFor = (record, path) =>
+  (record.askedPaths ?? []).some(
+    (asked) =>
+      asked === '.' ||
+      path === asked ||
+      path.startsWith(`${asked}/`) ||
+      (asked.includes('*') && matchesPattern(path, asked)),
+  )
+
+/** Whether Markdown content differs only in whitespace from the record's working-tree content or its HEAD's. */
+const onlyWhitespace = (root, record, path, content) => {
+  if (!path.endsWith('.md') || content === undefined) return false
+  const now = looseHash(content)
+  const atHead =
+    record.head === null
+      ? undefined
+      : gitOrUndefined(root, ['cat-file', 'blob', `${record.head}:${path}`])
+  return (
+    now === record.loose?.[path] ||
+    (atHead !== undefined && now === looseHash(atHead))
+  )
+}
+
 /**
- * Whether a reported path has an explanation that does not need a person: a path at or under one the PreToolUse ask
- * named, a Husky shim created from nothing (without shims Git runs no hooks, so creating them weakens nothing), a
- * Markdown file whose change is only whitespace (a formatter, or lint-staged inside `git commit`), an untracked file
- * `git stash` moved into a new stash (ignored files are in force, so stashing them away is reported), or a file a
- * merge the command started brought in (`explainedByMerge`).
+ * Whether a working-tree change to a guardrail file has an explanation that does not need a person: a path the ask
+ * named; a Husky shim created from nothing (without shims Git runs no hooks, so creating them weakens nothing);
+ * content equal to the record's HEAD, as after `git reset`; a Markdown change that is only whitespace (a formatter);
+ * an untracked file `git stash` moved into a new stash (ignored files are in force, so stashing them away is
+ * reported); a file a merge the command started brought in (`explainedByMerge`); or a file `git merge --abort`
+ * removed after an earlier merge added it.
  */
 const explained = (root, record, path) => {
-  const asked = record.askedPaths ?? []
-  if (
-    asked.some(
-      (prefix) =>
-        prefix === '.' || path === prefix || path.startsWith(`${prefix}/`),
-    )
-  )
-    return true
+  if (askedFor(record, path)) return true
   if (path.startsWith('.husky/_/') && !(path in record.before)) return true
   const file = join(root, path)
   const onDisk = lstatSync(file, { throwIfNoEntry: false })?.isFile() === true
-  if (path.endsWith('.md') && onDisk) {
-    const now = looseHash(readFileSync(file))
-    const atHead =
-      record.head === null
-        ? undefined
-        : gitOrUndefined(root, ['cat-file', 'blob', `${record.head}:${path}`])
-    if (
-      now === record.loose?.[path] ||
-      (atHead !== undefined && now === looseHash(atHead))
-    )
-      return true
-  }
+  const content = onDisk ? readFileSync(file) : undefined
+  const atHead = committedHash(root, record.head, path)
+  if (content !== undefined && hash(content) === atHead) return true
+  if (onlyWhitespace(root, record, path, content)) return true
   const stash = revision(root, 'refs/stash')
   const ignored =
     gitOrUndefined(root, ['check-ignore', '--quiet', '--no-index', path]) !==
@@ -793,28 +836,81 @@ const explained = (root, record, path) => {
     )
     if (stashed.includes(record.before[path])) return true
   }
-  return explainedByMerge(root, record, path)
+  const aborted =
+    !onDisk &&
+    pendingSides(root).length === 0 &&
+    (record.sides ?? []).some(
+      (sha) => committedHash(root, sha, path) === record.before[path],
+    )
+  return aborted || explainedByMerge(root, record, path)
+}
+
+/** The tree Git's own merge of two commits produces, conflicts included, or undefined. */
+const mergeTree = (root, ours, theirs) => {
+  const result = spawnSync(
+    'git',
+    [
+      '--no-optional-locks',
+      'merge-tree',
+      '--write-tree',
+      '--no-messages',
+      ours,
+      theirs,
+    ],
+    { cwd: root, encoding: 'utf8', timeout: 5000 },
+  )
+  const tree = result.stdout?.split('\n')[0]?.trim()
+  return tree === undefined || tree === '' ? undefined : tree
 }
 
 /**
- * The guardrail paths a command changed and committed in the same call, on any branch, including one it switched
- * away from again. It reads every commit reachable from a ref or the reflog whose committer time is after the record,
- * and leaves out merge commits and commits fetched from elsewhere, whose committer time is earlier. A committed
- * guardrail file passes when its content in that commit is unchanged from the record's HEAD (an amend that kept it),
- * is the record's working-tree content, or is one `known` holds for it.
+ * The guardrail files a command changed and committed in the same call, on any branch, including one it switched
+ * away from again, each with its committed content. It reads every commit reachable from a ref or the reflog whose
+ * committer time is after the record, which leaves out commits fetched from elsewhere. A committed guardrail file
+ * passes when its content in that commit is unchanged from the record's HEAD (an amend that kept it), is the record's
+ * working-tree content, is one `known` holds for it, differs from either only in Markdown whitespace (lint-staged
+ * inside `git commit`), or, in a merge commit, is the other parent's or Git's own merge result.
+ * @returns {{ path: string, content: string }[]}
  */
 export const committedChanges = (root, record, known = {}) => {
   if (record.head === null) return []
-  const made = gitOrUndefined(root, [
-    'rev-list',
-    '--all',
-    '--reflog',
-    '--no-merges',
-    `--since=@${record.time - 5}`,
-  ])
-  if (made === undefined) return []
-  const paths = new Set()
+  let made
+  try {
+    made = execFileSync(
+      'git',
+      [
+        '--no-optional-locks',
+        'rev-list',
+        '--all',
+        '--reflog',
+        `--since=@${record.time - 2}`,
+        '--stdin',
+      ],
+      {
+        cwd: root,
+        encoding: 'utf8',
+        input: (record.tips ?? []).map((tip) => `^${tip}\n`).join(''),
+        maxBuffer: 64 * 1024 * 1024,
+        stdio: ['pipe', 'pipe', 'ignore'],
+        timeout: 5000,
+      },
+    )
+  } catch {
+    return []
+  }
+  /** @type {Map<string, string>} */
+  const found = new Map()
   for (const sha of String(made).split('\n').filter(Boolean)) {
+    const parents = String(
+      gitOrUndefined(root, ['rev-list', '--parents', '-n', '1', sha]) ?? '',
+    )
+      .trim()
+      .split(' ')
+      .slice(1)
+    const merged =
+      parents.length === 2
+        ? mergeTree(root, parents[0] ?? '', parents[1] ?? '')
+        : undefined
     const files = gitOrUndefined(root, [
       'diff-tree',
       '--root',
@@ -823,20 +919,28 @@ export const committedChanges = (root, record, known = {}) => {
       '--no-renames',
       '-r',
       '-z',
-      sha,
+      ...(parents.length > 1 ? [parents[0] ?? '', sha] : [sha]),
     ])
     for (const path of String(files ?? '').split('\0')) {
       if (path === '' || !isGuardrailPath(path)) continue
       const content = committedHash(root, sha, path)
-      if (
-        content !== committedHash(root, record.head, path) &&
-        content !== record.before[path] &&
-        !(known[path] ?? []).includes(content)
-      )
-        paths.add(path)
+      const accepted = [
+        committedHash(root, record.head, path),
+        record.before[path],
+        ...(known[path] ?? []),
+        ...parents.slice(1).map((parent) => committedHash(root, parent, path)),
+        committedHash(root, merged, path),
+      ]
+      if (accepted.includes(content)) continue
+      const blob = gitOrUndefined(root, ['cat-file', 'blob', `${sha}:${path}`])
+      if (onlyWhitespace(root, record, path, blob)) continue
+      found.set(path, content ?? 'missing')
     }
   }
-  return [...paths].sort()
+  return [...found]
+    .map(([path, content]) => ({ content, path }))
+    .filter(({ path }) => !askedFor(record, path))
+    .sort((a, b) => a.path.localeCompare(b.path))
 }
 
 const recordDirectory = () => join(tmpdir(), 'pathable-guardrail-writes')
@@ -852,9 +956,10 @@ export const recordFile = (root, input) =>
   )
 
 /**
- * Where the session's known contents live: every guardrail file content a before-record has seen in this session
- * and working tree. A command that moves known content back, such as `git stash pop` after `git stash`, is then not
- * reported.
+ * Where the session's state lives: `known`, every guardrail file content a before-record has seen in this session and
+ * working tree, so a command that moves known content back, such as `git stash pop` after `git stash`, is not
+ * reported; and `reported`, content the after-check has reported, which never becomes known, so a command that writes
+ * it again is reported again.
  */
 const knownFile = (root, input) =>
   join(
@@ -871,13 +976,24 @@ const readJson = (file, fallback) => {
   }
 }
 
-/** Adds each path's content in `files` to `known`. */
-const remember = (known, files) => {
-  const result = { ...known }
+/** Adds each path's content in `files` to `contents`, except what `unless` holds for that path. */
+const remember = (contents, files, unless = {}) => {
+  const result = { ...contents }
   for (const [path, content] of Object.entries(files))
-    if (!(result[path] ?? []).includes(content))
+    if (
+      !(result[path] ?? []).includes(content) &&
+      !(unless[path] ?? []).includes(content)
+    )
       result[path] = [...(result[path] ?? []), content]
   return result
+}
+
+const readSession = (file) => {
+  const session = readJson(file, {})
+  return {
+    known: field(session, 'known') ?? {},
+    reported: field(session, 'reported') ?? {},
+  }
 }
 
 /** Removes records older than a day, left by commands a person refused, and session files older than a week. */
@@ -943,8 +1059,15 @@ export const preToolUse = (input) => {
     const before = changedGuardrailFiles(root)
     mkdirSync(join(recordDirectory(), 'sessions'), { recursive: true })
     prune()
-    const known = knownFile(root, input)
-    writeFileSync(known, JSON.stringify(remember(readJson(known, {}), before)))
+    const sessionFile = knownFile(root, input)
+    const session = readSession(sessionFile)
+    writeFileSync(
+      sessionFile,
+      JSON.stringify({
+        known: remember(session.known, before, session.reported),
+        reported: session.reported,
+      }),
+    )
     writeFileSync(
       recordFile(root, input),
       JSON.stringify({
@@ -956,6 +1079,7 @@ export const preToolUse = (input) => {
         loose: looseHashes(root, before),
         sides: pendingSides(root).map(({ sha }) => sha),
         stash: revision(root, 'refs/stash'),
+        tips: refTips(root),
         time: Math.floor(Date.now() / 1000),
       }),
     )
@@ -982,23 +1106,25 @@ export const postToolUse = (input) => {
   const record = readJson(file, undefined)
   rmSync(file, { force: true })
   if (record === undefined) return { kind: 'allow' }
-  const knownPath = knownFile(root, input)
-  const known = readJson(knownPath, {})
+  const sessionFile = knownFile(root, input)
+  const session = readSession(sessionFile)
   const after = changedGuardrailFiles(root)
-  const changed = [
-    ...new Set([
-      ...changedSince(record.before, after, known, (path) =>
-        existsSync(join(root, path)),
-      ),
-      ...committedChanges(root, record, known),
-    ]),
-  ]
+  const working = changedSince(record.before, after, session.known, (path) =>
+    existsSync(join(root, path)),
+  )
     .filter((path) => !explained(root, record, path))
-    .sort()
+    .map((path) => ({ content: after[path] ?? 'missing', path }))
+  const committed = committedChanges(root, record, session.known)
+  const changed = [...working, ...committed]
   if (changed.length === 0) return { kind: 'allow' }
-  // Report each change once: the agent is told to stop, and the next command is not blamed for it.
-  writeFileSync(knownPath, JSON.stringify(remember(known, after)))
-  return { kind: 'block', reason: blockReason(changed) }
+  // The next record holds a working-tree change, so it is reported once; its content is never treated as known.
+  const reported = remember(
+    session.reported,
+    Object.fromEntries(changed.map(({ content, path }) => [path, content])),
+  )
+  writeFileSync(sessionFile, JSON.stringify({ known: session.known, reported }))
+  const paths = [...new Set(changed.map(({ path }) => path))].sort()
+  return { kind: 'block', reason: blockReason(paths) }
 }
 
 /** The hook's exit code, stdout, and stderr for a decision, as Claude Code reads them. */

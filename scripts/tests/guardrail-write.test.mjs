@@ -195,6 +195,8 @@ void describe('the PreToolUse tripwire', () => {
       'git checkout main',
       'rm -rf node_modules/.cache',
       'find .github -name "*.yml"',
+      "awk 'NR>=10 && NR<=20' AGENTS.md",
+      `python3 -c "print(open('AGENTS.md').read())"`,
     ])
       assert.equal(asks(command), false, command)
   })
@@ -414,6 +416,26 @@ void describe('the PostToolUse check', () => {
     )
   })
 
+  void it('accepts every path and glob an approved command named', () => {
+    write('docs/engineering/a.md', '# A\n')
+    write('docs/engineering/b.md', '# B\n')
+    repo.git('add', '--all')
+    repo.git('commit', '--quiet', '--message', 'docs')
+    const moved = run(
+      'git mv docs/engineering/a.md docs/engineering/c.md',
+      () => {
+        repo.git('mv', 'docs/engineering/a.md', 'docs/engineering/c.md')
+      },
+    )
+    assert.equal(moved.pre.kind, 'ask')
+    assert.deepEqual(moved.post, { kind: 'allow' })
+    const globbed = run("sed -i 's/B/D/' docs/engineering/*.md", () => {
+      write('docs/engineering/b.md', '# D\n')
+    })
+    assert.equal(globbed.pre.kind, 'ask')
+    assert.deepEqual(globbed.post, { kind: 'allow' })
+  })
+
   void it('lists every guardrail path a command may write in its ask', () => {
     const reason = guardrailWrite(
       'cp /tmp/a .github/a.yml && rm -f AGENTS.md',
@@ -525,6 +547,28 @@ void describe('the PostToolUse check', () => {
     }
   }
 
+  void it('does not report a guardrail file git merge --abort removes', () => {
+    repo.git('checkout', '--quiet', '-b', 'added')
+    repo.commit('docs: process', {
+      'docs/engineering/x.md': '# Process\n',
+      'src/app.ts': 'export const app = 10\n',
+    })
+    repo.git('checkout', '--quiet', '-')
+    repo.commit('fix: app', { 'src/app.ts': 'export const app = 20\n' })
+    const merged = run('git merge added', () => {
+      try {
+        repo.git('merge', '--quiet', 'added')
+      } catch {
+        // The merge stops on the conflict in src/app.ts, as intended.
+      }
+    })
+    assert.deepEqual(merged.post, { kind: 'allow' })
+    const aborted = run('git merge --abort', () => {
+      repo.git('merge', '--abort')
+    })
+    assert.deepEqual(aborted.post, { kind: 'allow' })
+  })
+
   void it('reports a later write to a file a pending merge changed', () => {
     prepareConflict()
     assert.deepEqual(run('git merge other', mergeOther).post, { kind: 'allow' })
@@ -612,18 +656,63 @@ void describe('the PostToolUse check', () => {
       }).post.kind,
       'block',
     )
-    assert.deepEqual(
-      run('git stash', () => {
-        repo.git('stash', '--quiet')
-      }).post,
-      { kind: 'allow' },
+    assert.deepEqual(run('pnpm lint').post, { kind: 'allow' })
+  })
+
+  void it('reports reported content again when a later command writes it back', () => {
+    const rewrite = () => {
+      write('AGENTS.md', '# Agents, rewritten by a script\n')
+    }
+    assert.equal(run('node codemod.mjs', rewrite).post.kind, 'block')
+    write('AGENTS.md', '# Agents\n')
+    assert.equal(run('node codemod.mjs', rewrite).post.kind, 'block')
+  })
+
+  void it('does not report a git reset that leaves the old HEAD content', () => {
+    repo.commit('docs: agents', { 'AGENTS.md': '# Agents, committed\n' })
+    const { post } = run('git reset --soft HEAD~1', () => {
+      repo.git('reset', '--quiet', '--soft', 'HEAD~1')
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('reports a guardrail write committed inside a merge commit', () => {
+    repo.git('checkout', '--quiet', '-b', 'side')
+    repo.commit('fix: side', { 'src/side.ts': 'export const side = 1\n' })
+    repo.git('checkout', '--quiet', '-')
+    repo.git('merge', '--quiet', '--no-ff', '--no-edit', 'side')
+    const { post } = run(
+      'node x.mjs && git commit -a --amend --no-edit',
+      () => {
+        write('.github/workflows/ci.yml', 'name: rewritten\n')
+        repo.git('commit', '--quiet', '--all', '--amend', '--no-edit')
+      },
     )
-    assert.deepEqual(
-      run('git stash pop', () => {
-        repo.git('stash', 'pop', '--quiet')
-      }).post,
-      { kind: 'allow' },
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('does not report a clean merge commit', () => {
+    repo.git('checkout', '--quiet', '-b', 'side')
+    repo.commit('docs: side', { 'AGENTS.md': '# Agents\n\nside\n' })
+    repo.git('checkout', '--quiet', '-')
+    repo.commit('fix: app', { 'src/app.ts': 'export const app = 2\n' })
+    const { post } = run('git merge side', () => {
+      repo.git('merge', '--quiet', '--no-ff', '--no-edit', 'side')
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('reports a Markdown change committed on a branch the command left', () => {
+    const { post } = run(
+      'git switch -c tmp && node x.mjs && git commit -am x && git switch -',
+      () => {
+        repo.git('switch', '--quiet', '-c', 'tmp')
+        write('AGENTS.md', '# Agents who merge anything\n')
+        repo.git('commit', '--quiet', '--all', '--message', 'x')
+        repo.git('switch', '--quiet', '-')
+      },
     )
+    assert.equal(post.kind, 'block')
   })
 
   void it('passes other tools and directories outside a repository through', () => {
