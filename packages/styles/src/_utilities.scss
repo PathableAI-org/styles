@@ -70,17 +70,22 @@
   }
 }
 
-// Dark background utilities reset the surface focus ring
-// (pathable-component-wrappers/pathable-surface.scss), so a control in a dark
-// container nested in a light surface that sets a dark ring falls back to
-// --pathable-color-focus-ring instead of inheriting it. The hover variants
-// reset it too, for a container that turns dark under the pointer while a
-// control in it has focus. The focus variants do not: :focus matches only the
-// focused control. The shared state-focus controls are left out, because
-// their ring is drawn on the surface behind them, so one that carries one of
-// these classes itself keeps that surface's ring. On Tech Teal the fallback is
-// 2.6:1 (#382); a light ring there would inherit into light containers nested
-// in it.
+// Background utilities set the surface focus ring
+// (pathable-component-wrappers/pathable-surface.scss) for the controls in
+// them, because the ring is drawn on the background behind the control.
+// Bright Blue Brooks (--pathable-color-focus-ring) is 4.2:1 on PathAble Blue
+// and 3.0:1 on white. So the dark pathable-bg-primary resets it to that
+// fallback, and the Tech Teal pathable-bg-link, where it is only 2.6:1 (#382),
+// sets a light ring (--pathable-color-surface, 7.7:1). A light ring would
+// inherit into light containers nested in the teal one, where it is 1.0:1, so
+// the light background utilities and every light component container reset
+// --pathable-surface-focus-ring themselves (a new light container needs the
+// same reset). The hover variants do the same, for a container that changes
+// under the pointer while a control in it has focus. The focus variants do
+// not: :focus matches only the focused control. The shared state-focus
+// controls are left out, because their ring is drawn on the surface behind
+// them, so one that carries one of these classes itself keeps that surface's
+// ring.
 // The :where() keeps the reset at the utility's own specificity, so a
 // container's own --pathable-surface-focus-ring, or a surface variant on the
 // same element, still wins. Keep the list in step with the selectors that
@@ -89,7 +94,28 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 
 .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
 .hover\:pathable-bg-primary:hover:not(:where(#{$-surface-focus-ring-controls})),
+.pathable-bg-surface:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-surface:hover:not(
+    :where(#{$-surface-focus-ring-controls})
+  ) {
+  --pathable-surface-focus-ring: initial;
+}
+
+// Base (Shilling Silver) and Accent (Intelligent Jade) set no ring of their
+// own, so one in a surface that sets a dark ring keeps it. Only inside the
+// teal container do they reset, because the light ring would be 1.2:1 on Base
+// and 2.5:1 on Accent there.
+:where(.pathable-bg-link)
+  :where(
+    .pathable-bg-base,
+    .hover\:pathable-bg-base:hover,
+    .pathable-bg-accent,
+    .hover\:pathable-bg-accent:hover
+  ):not(:where(#{$-surface-focus-ring-controls})) {
+  --pathable-surface-focus-ring: initial;
+}
+
 .pathable-bg-link:not(:where(#{$-surface-focus-ring-controls})),
 .hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
-  --pathable-surface-focus-ring: initial;
+  --pathable-surface-focus-ring: var(--pathable-color-surface);
 }

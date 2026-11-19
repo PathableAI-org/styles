@@ -66,6 +66,9 @@
 }
 
 .pathable-app-shell__sidebar {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   grid-area: sidebar;
   position: sticky;
   top: 0;
@@ -132,6 +135,9 @@
 
 // Mobile top bar
 .pathable-app-shell__topbar {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   grid-area: topbar;
   display: none; // hidden on desktop
   height: var(--pathable-app-shell-topbar-height, 48px);

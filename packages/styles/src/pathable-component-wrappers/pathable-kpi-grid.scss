@@ -55,6 +55,9 @@
 // --- KPI card ---
 
 .pathable-kpi-card {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;

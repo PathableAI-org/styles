@@ -37,6 +37,9 @@
 
 // Bento tile base
 .pathable-bento-tile {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   padding: var(
     --pathable-bento-tile-padding,
     var(--usa-bento-tile-padding, #{units(3)})
