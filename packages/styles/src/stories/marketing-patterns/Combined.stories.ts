@@ -1,3 +1,4 @@
+import { placeholderImage } from '../shared/placeholder-image'
 export default {
   title: 'Marketing Patterns/Combined',
   tags: ['autodocs'],
@@ -48,7 +49,7 @@ export const HeroSection = {
               </div>
               <div class="pathable-screenshot-frame__browser-url">app.pathable.com/dashboard</div>
             </div>
-            <img class="pathable-screenshot-frame__image" src="https://placehold.co/800x500/e0e0e0/666666?text=Dashboard+Preview" alt="Pathable dashboard preview" loading="lazy" />
+            <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Dashboard Preview', '#e0e0e0', '#666666')}" alt="Pathable dashboard preview" loading="lazy" />
           </figure>
         </div>
       </div>
@@ -87,10 +88,10 @@ export const FeatureShowcase = {
           <span class="pathable-bento-tile__label">Active users</span>
         </div>
         <div class="pathable-bento-tile pathable-bento-tile--image" style="min-height: 180px;">
-          <img src="https://placehold.co/400x300/primary/white?text=Analytics" alt="Analytics dashboard screenshot" />
+          <img src="${placeholderImage(400, 300, 'Analytics', '#00365c', '#ffffff')}" alt="Analytics dashboard screenshot" />
         </div>
         <div class="pathable-bento-tile pathable-bento-tile--image2" style="min-height: 180px;">
-          <img src="https://placehold.co/400x300/primary-lighter/333?text=Reports" alt="Reports dashboard screenshot" />
+          <img src="${placeholderImage(400, 300, 'Reports', '#4899e8', '#333333')}" alt="Reports dashboard screenshot" />
         </div>
       </div>
     </div>

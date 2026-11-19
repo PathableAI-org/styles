@@ -1,3 +1,4 @@
+import { placeholderImage } from '../shared/placeholder-image'
 export default {
   title: 'Marketing Patterns/Resource Directory',
   tags: ['autodocs'],
@@ -106,7 +107,7 @@ const resourceCards = [
     provider: 'National Workforce Association',
     summary:
       'A comprehensive guide to conducting effective participant intake sessions.',
-    image: 'https://placehold.co/400x250/e0e0e0/666666?text=Intake+Guide',
+    image: placeholderImage(400, 250, 'Intake Guide', '#e0e0e0', '#666666'),
     tags: ['Guide', 'Beginner'],
     updated: '2 days ago',
     rating: '★★★★★',
@@ -116,7 +117,7 @@ const resourceCards = [
     provider: 'Dept. of Labor',
     summary:
       'Interactive checklist for ensuring compliance with federal reporting requirements.',
-    image: 'https://placehold.co/400x250/e0e0e0/666666?text=Compliance+Tool',
+    image: placeholderImage(400, 250, 'Compliance Tool', '#e0e0e0', '#666666'),
     tags: ['Tool', 'Advanced'],
     updated: '1 week ago',
     rating: '★★★★☆',
@@ -126,7 +127,13 @@ const resourceCards = [
     provider: 'PathAble Learning Center',
     summary:
       'Learn how to set up and customize outcome tracking for your programs.',
-    image: 'https://placehold.co/400x250/e0e0e0/666666?text=Outcomes+Dashboard',
+    image: placeholderImage(
+      400,
+      250,
+      'Outcomes Dashboard',
+      '#e0e0e0',
+      '#666666',
+    ),
     tags: ['Training', 'Intermediate'],
     updated: '3 days ago',
     rating: '★★★★★',
@@ -136,8 +143,13 @@ const resourceCards = [
     provider: 'Workforce Innovation Network',
     summary:
       'Evidence-based strategies for improving participant engagement and retention.',
-    image:
-      'https://placehold.co/400x250/e0e0e0/666666?text=Engagement+Strategies',
+    image: placeholderImage(
+      400,
+      250,
+      'Engagement Strategies',
+      '#e0e0e0',
+      '#666666',
+    ),
     tags: ['Guide', 'Intermediate'],
     updated: '1 month ago',
     rating: '★★★★☆',
@@ -147,7 +159,13 @@ const resourceCards = [
     provider: 'Federal Programs Office',
     summary:
       'Pre-formatted template for quarterly program performance reports.',
-    image: 'https://placehold.co/400x250/e0e0e0/666666?text=Reporting+Template',
+    image: placeholderImage(
+      400,
+      250,
+      'Reporting Template',
+      '#e0e0e0',
+      '#666666',
+    ),
     tags: ['Tool', 'All Levels'],
     updated: '2 weeks ago',
     rating: '★★★★☆',
@@ -157,8 +175,13 @@ const resourceCards = [
     provider: 'PathAble Learning Center',
     summary:
       'Self-paced training course covering the fundamentals of case management.',
-    image:
-      'https://placehold.co/400x250/e0e0e0/666666?text=Onboarding+Training',
+    image: placeholderImage(
+      400,
+      250,
+      'Onboarding Training',
+      '#e0e0e0',
+      '#666666',
+    ),
     tags: ['Training', 'Beginner'],
     updated: 'Just now',
     rating: '★★★★★',
