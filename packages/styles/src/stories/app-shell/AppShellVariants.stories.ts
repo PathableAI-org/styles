@@ -94,10 +94,10 @@ export const WideContent = {
 
 export const FixedSidebar = {
   render: () => `
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
+    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem var(--pathable-app-shell-sidebar-width, 280px);">
       Desktop shell with fixed sidebar positioning. The sidebar stays in place while content scrolls.
     </p>
-    <div class="pathable-app-shell" style="contain: layout;">
+    <div class="pathable-app-shell">
       ${sidebar(longNavItems).replace('pathable-app-shell__sidebar', 'pathable-app-shell__sidebar pathable-app-shell__sidebar--fixed')}
       ${topbar()}
       ${mainContent()}
