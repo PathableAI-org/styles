@@ -12,7 +12,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. In a workflow card, put `.pathable-card__action` on the action link, or on a container around the actions. Inside the container, a plain link gets the action colour and underline, a `.pathable-link` keeps its own, both get the action focus indicator, and other anchors such as a `.pathable-button` keep their own styling. No JavaScript is required.',
+          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. In a base card, use `.pathable-link` on a footer link for the link colour and focus ring. In a workflow card, put `.pathable-card__action` on the action link, or on a container around the actions. Inside the container, a plain link gets the action colour and underline, a `.pathable-link` keeps its own, both get the action focus indicator, and other anchors such as a `.pathable-button` keep their own styling. No JavaScript is required.',
       },
     },
   },
@@ -317,7 +317,7 @@ export const ContentPressure = {
             <p>Review transportation access, workplace accommodations, documentation deadlines, and follow-up responsibilities with the participant and regional support team.</p>
           </div>
           <div class="pathable-card__footer">
-            <a href="#review-plan" class="pathable-card__action">Review coordinated support plan</a>
+            <a href="#review-plan" class="pathable-link">Review coordinated support plan</a>
           </div>
         </div>
       </div>
@@ -338,6 +338,10 @@ export const ContentPressure = {
     await expect(heading).toHaveClass('pathable-card__heading')
     await expect(action).toBeVisible()
     await expect(action.parentElement).toHaveClass('pathable-card__footer')
+    await expect(getComputedStyle(action).color).toBe(
+      resolveColor(canvasElement, 'var(--pathable-color-link)'),
+    )
+    await expectKeyboardFocusIndicator(canvasElement, action)
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
 }

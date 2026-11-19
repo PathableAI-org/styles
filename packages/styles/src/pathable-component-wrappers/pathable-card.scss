@@ -31,6 +31,9 @@
 
 .pathable-card__heading {
   @extend .usa-card__heading;
+  // Heading typeface (Fredoka) ships only Regular (400); the browser's default
+  // heading weight is bold, which it would synthesise. Brand rules: Regular.
+  font-weight: var(--pathable-font-weight-normal);
 }
 
 .pathable-card__media {
