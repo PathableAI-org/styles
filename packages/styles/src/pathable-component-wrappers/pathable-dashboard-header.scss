@@ -44,6 +44,11 @@
   @media (max-width: 640px) {
     overflow: hidden;
     text-overflow: ellipsis;
+    // The clip is the padding box, so padding keeps the outline of a link
+    // at the trail's edge inside it. The matching negative margin leaves the
+    // trail's text and height where they were.
+    padding: var(--pathable-space-1);
+    margin: calc(-1 * var(--pathable-space-1));
   }
 }
 
