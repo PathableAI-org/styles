@@ -383,7 +383,8 @@ tier, because it changes the rules agents work under:
 
 The list lives in code, in `guardrailPaths` in
 [`scripts/merge-gate.mjs`](../../scripts/merge-gate.mjs); change both
-together.
+together. [`.github/CODEOWNERS`](../../.github/CODEOWNERS) lists the same paths
+and must change with them.
 
 ### The flow
 
@@ -463,9 +464,11 @@ merge a pull request:
 
 Known limits: the hook covers Claude Code sessions only. It cannot see a
 person's merge in the web interface, another HTTP client or another GitHub MCP
-server name. The ruleset on `main` currently requires no status checks, so
-GitHub itself would merge a pull request with failing checks; the gate is
-what stops an agent from doing so.
+server name. The workflows expose two aggregate checks, `CI result` and
+`Storybook result`, meant to be the ruleset's required checks. Until a
+maintainer requires them in the ruleset on `main`, GitHub itself would merge a
+pull request with failing checks, and the gate is what stops an agent from
+doing so.
 
 ## Corrections
 

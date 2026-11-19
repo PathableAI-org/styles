@@ -4,17 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - 'packages/**'
-      - 'apps/storybook/**'
-      - 'apps/storybook-react/**'
-      - 'visual-baselines/**'
-      - '.storybook/**'
-      - '**/*.stories.*'
-      - '**/*.mdx'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
   workflow_dispatch:
 
 concurrency:
@@ -25,8 +14,38 @@ permissions:
   contents: read
 
 jobs:
+  # The workflow runs on every pull request so its aggregate check always
+  # reports. This job decides whether the Storybook jobs need to run.
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.storybook == 'true' }}
+    steps:
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
+        if: github.event_name == 'pull_request'
+        id: filter
+        with:
+          filters: |
+            storybook:
+              - 'packages/**'
+              - 'apps/storybook/**'
+              - 'apps/storybook-react/**'
+              - 'visual-baselines/**'
+              - '.storybook/**'
+              - '**/*.stories.*'
+              - '**/*.mdx'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+
   build:
     name: Shared build (styles + React + Storybooks)
+    needs: changes
+    if: needs.changes.outputs.storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -258,3 +277,32 @@ jobs:
 
       - name: Quality Gates
         run: pnpm quality-gates
+
+  # One aggregate check for the branch ruleset to require. It passes when
+  # every needed job succeeded or was skipped because no Storybook path
+  # changed.
+  storybook-result:
+    name: Storybook result
+    if: always()
+    needs:
+      - changes
+      - build
+      - accessibility-tests
+      - accessibility-tests-react
+      - visual-smoke
+      - pixels-styles
+      - modal-backdrop-gates
+      - coverage
+      - quality-gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check job results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+          FAILED: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          if [ "$FAILED" = "true" ]; then
+            echo "One or more needed jobs failed or were cancelled."
+            exit 1
+          fi
