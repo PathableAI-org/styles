@@ -135,7 +135,10 @@ own.
   outline that touches the trail's edge. Give the trail itself padding of at
   least 0.25rem on every side, as the example does with `pathable-padding-1`,
   or give the links an inset focus style. Padding on the links does not help:
-  their outline is still drawn outside the trail's edge.
+  their outline is still drawn outside the trail's edge. The padding applies at
+  every width: `pathable-padding-1` is 0.5rem, so the example's trail text
+  starts 0.5rem in from the title and the trail is 1rem taller. An inset focus
+  style avoids both.
 - `pathable-dashboard-header__row` holds the title, the context and the
   actions, spread across the row with a 1.5rem gap and aligned to the top.
 - `pathable-dashboard-header__title` is the page title; use the page's `<h1>`.
