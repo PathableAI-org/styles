@@ -14,6 +14,42 @@ export default {
 }
 
 export const Default = {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const list = canvasElement.querySelector('.pathable-process-list')
+    const item = canvasElement.querySelector('.pathable-process-list__item')
+
+    await expect(list).not.toBeNull()
+    await expect(item).not.toBeNull()
+    if (!list || !item) return
+
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+    const marker = getComputedStyle(item, '::before')
+    const itemStyle = getComputedStyle(item)
+
+    // Computed `width` is the declared width whatever the box-sizing, so add
+    // the border back when the box is content-box to get the rendered width.
+    const borders =
+      parseFloat(marker.borderLeftWidth) + parseFloat(marker.borderRightWidth)
+    const renderedWidth =
+      parseFloat(marker.width) +
+      (marker.boxSizing === 'border-box' ? 0 : borders)
+
+    // The marker is 2.5rem across including its border.
+    await expect(marker.boxSizing).toBe('border-box')
+    await expect(renderedWidth).toBeCloseTo(2.5 * rem, 1)
+
+    // The marker is absolutely positioned against the list, so its centre is
+    // measured from the list's edge; the connector line is the item's left
+    // border, measured from the item's edge. Both centres must coincide.
+    const markerCentre =
+      list.getBoundingClientRect().left +
+      parseFloat(marker.left) +
+      renderedWidth / 2
+    const lineCentre =
+      item.getBoundingClientRect().left +
+      parseFloat(itemStyle.borderLeftWidth) / 2
+    await expect(lineCentre).toBeCloseTo(markerCentre, 1)
+  },
   render: () => `
     <ol class="pathable-process-list">
       <li class="pathable-process-list__item">
