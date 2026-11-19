@@ -136,9 +136,116 @@ export const Big = {
     '<button class="pathable-button pathable-button--big">Big Button</button>',
 }
 
+/**
+ * The computed color a token resolves to, read from a temporary probe in the
+ * story canvas so the assertion follows the active theme. Fails when the token
+ * is undefined, so an equality check cannot pass by inheritance.
+ */
+const resolveColorToken = (canvasElement: HTMLElement, token: string) => {
+  const tokenValue = getComputedStyle(canvasElement)
+    .getPropertyValue(token)
+    .trim()
+  if (!tokenValue) throw new Error(`${token} is not defined`)
+  const probe = canvasElement.ownerDocument.createElement('span')
+  probe.style.color = `var(${token})`
+  canvasElement.appendChild(probe)
+  const { color } = getComputedStyle(probe)
+  probe.remove()
+  return color
+}
+
 export const Unstyled = {
-  render: () =>
-    '<button class="pathable-button pathable-button--unstyled">Unstyled</button>',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The unstyled modifier removes the button fill and padding and renders the label as underlined link text, beside the primary button. Disabled unstyled buttons, native and `aria-disabled`, keep the transparent background and the lighter disabled text, also under focus and hover.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-cluster pathable-cluster--gap-sm">
+      <button type="button" class="pathable-button pathable-button--primary">Save Coaching Note</button>
+      <button type="button" class="pathable-button pathable-button--unstyled">View Coaching History</button>
+      <button type="button" class="pathable-button pathable-button--unstyled" disabled>Export Coaching Notes</button>
+      <button type="button" class="pathable-button pathable-button--unstyled" aria-disabled="true">Share Coaching Notes</button>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const primary = getComputedStyle(
+      canvas.getByRole('button', { name: 'Save Coaching Note' }),
+    )
+    const unstyled = getComputedStyle(
+      canvas.getByRole('button', { name: 'View Coaching History' }),
+    )
+    const disabled = getComputedStyle(
+      canvas.getByRole('button', { name: 'Export Coaching Notes' }),
+    )
+    const ariaDisabledButton = canvas.getByRole('button', {
+      name: 'Share Coaching Notes',
+    })
+    const ariaDisabled = getComputedStyle(ariaDisabledButton)
+
+    await expect(unstyled.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(unstyled.backgroundColor).not.toBe(primary.backgroundColor)
+    await expect(unstyled.color).toBe(
+      resolveColorToken(canvasElement, '--pathable-color-link'),
+    )
+    await expect(unstyled.color).not.toBe(primary.color)
+    await expect(unstyled.textDecorationLine).toBe('underline')
+    await expect(unstyled.paddingLeft).toBe('0px')
+
+    // Disabled text is lighter than the link text; the filled button's
+    // disabled text, which the cascade could fall back to, is darker.
+    await expect(disabled.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(luminance(disabled.color)).toBeGreaterThan(
+      luminance(unstyled.color),
+    )
+    await expect(disabled.textDecorationLine).toBe('underline')
+
+    // An aria-disabled button stays focusable. Focused, it keeps the
+    // transparent background and disabled text instead of the filled
+    // disabled button style.
+    const ariaDisabledRestColor = ariaDisabled.color
+    await expect(ariaDisabledRestColor).toBe(disabled.color)
+    ariaDisabledButton.focus()
+    await expect(ariaDisabledButton).toHaveFocus()
+    await expect(ariaDisabled.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(ariaDisabled.color).toBe(ariaDisabledRestColor)
+    ariaDisabledButton.blur()
+  },
+}
+
+export const UnstyledInverse = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The unstyled modifier with the outline and inverse modifiers, the USWDS combination for link-styled buttons on a dark surface. The background stays transparent and the light link text keeps its contrast.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-bg-primary pathable-padding-3">
+      <button type="button" class="pathable-button pathable-button--outline pathable-button--inverse pathable-button--unstyled">View Coaching History</button>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button', {
+      name: 'View Coaching History',
+    })
+    const inverse = getComputedStyle(button)
+    const surface = getComputedStyle(button.parentElement as HTMLElement)
+
+    await expect(inverse.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(inverse.boxShadow).toBe('none')
+    await expect(inverse.textDecorationLine).toBe('underline')
+    await expect(
+      contrastRatio(inverse.color, surface.backgroundColor),
+    ).toBeGreaterThanOrEqual(4.5)
+  },
 }
 
 // Workflow-specific button stories
