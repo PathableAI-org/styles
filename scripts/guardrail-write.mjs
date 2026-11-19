@@ -7,10 +7,11 @@
  * Two checks close that gap. Before a Bash command runs, `preToolUse` reads the command and asks a person when it
  * names a guardrail path together with a write-like operation, or runs inline interpreter code that names one and
  * calls something write-like. That is a tripwire, not a sandbox: an obfuscated command can evade it. So `preToolUse`
- * also records the content of every changed guardrail file, and after the command `postToolUse` compares that record
- * with the working tree and tells the agent to stop and ask the person when the command changed a guardrail file
- * without approval. Changes made before the command, by the file-editing tools, by a person or by a background
- * command, are in the record and are not reported.
+ * also records the content of every changed guardrail file, and after the command, whether it succeeded or failed,
+ * `postToolUse` compares that record with the working tree and the commits the command made, and tells the agent to
+ * stop and ask the person when the command changed a guardrail file it was not asked about. Changes made before the
+ * command, by the file-editing tools, a person or a background command, are in the record and are not reported;
+ * changes another process makes while the command runs are reported as the command's.
  *
  * The guardrail paths are `guardrailPaths` in scripts/merge-gate.mjs, the one shared list.
  */
@@ -20,8 +21,10 @@ import {
   existsSync,
   lstatSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -62,35 +65,48 @@ export const isGuardrailPath = (path) =>
       matchesPattern(path, pattern) || matchesPattern(`${path}/`, pattern),
   )
 
-/** The repository-relative path a word names, or undefined when it names nothing inside the repository. */
+/**
+ * Whether a repository-relative directory holds guardrail paths: the repository root (`''`), or a parent of a
+ * guardrail path written without a leading wildcard, such as `scripts` for `scripts/claude/`.
+ */
+export const holdsGuardrails = (path) =>
+  path === '' ||
+  guardrailPaths.some(
+    (pattern) => !pattern.startsWith('**/') && pattern.startsWith(`${path}/`),
+  )
+
+/** The repository-relative path a word names (`''` for the root), or undefined when it names nothing inside it. */
 const repositoryPath = (word, cwd, root) => {
   if (word === '' || word.startsWith('~') || word.startsWith('-'))
     return undefined
   const path = relative(root, isAbsolute(word) ? word : resolve(cwd, word))
-  if (path === '' || path.startsWith('..') || isAbsolute(path)) return undefined
+  if (path.startsWith('..') || isAbsolute(path)) return undefined
   return path.split(sep).join('/')
 }
 
 /**
  * The guardrail path a word names, if any. A word may carry its path after an option's `=` (`of=.husky/pre-commit`)
- * or behind a diff's `a/` or `b/` prefix.
+ * or behind a diff's `a/` or `b/` prefix. With `wide`, for commands that delete or overwrite whole trees, a directory
+ * that holds guardrail paths counts too.
  */
-const guardrailIn = (word, cwd, root) => {
+const guardrailIn = (word, cwd, root, wide = false) => {
   const candidates = [word]
   const equals = word.indexOf('=')
   if (equals !== -1) candidates.push(word.slice(equals + 1))
   if (/^[ab]\//.test(word)) candidates.push(word.slice(2))
   for (const candidate of candidates) {
     const path = repositoryPath(candidate, cwd, root)
-    if (path !== undefined && isGuardrailPath(path)) return path
+    if (path === undefined) continue
+    if (isGuardrailPath(path) || (wide && holdsGuardrails(path)))
+      return path === '' ? '.' : path
   }
   return undefined
 }
 
-/** The first guardrail path among `words`. */
-const firstGuardrail = (words, cwd, root) => {
+/** The first guardrail path among `words`, as `guardrailIn` reads each one. */
+const firstGuardrail = (words, cwd, root, wide = false) => {
   for (const word of words) {
-    const path = guardrailIn(word, cwd, root)
+    const path = guardrailIn(word, cwd, root, wide)
     if (path !== undefined) return path
   }
   return undefined
@@ -250,8 +266,12 @@ export const segments = (command) => {
       current = empty()
       continue
     }
-    if (/^(?:<&|>&)/.test(token.text)) continue
     const next = list[index + 1]
+    // `>&2` duplicates a file descriptor, but `>& file` writes to a file.
+    const duplicates =
+      /^<&|^>&./.test(token.text) ||
+      (token.text === '>&' && /^(?:\d+-?|-)?$/.test(next?.text ?? ''))
+    if (duplicates) continue
     if (next?.kind !== 'word') continue
     index += 1
     if (token.text === '<<<') current.herestrings.push(next.text)
@@ -319,21 +339,37 @@ const commandOf = (words) => {
   }
 }
 
-/** Commands that create, overwrite, move or delete the files their arguments name. */
+/** Commands that create, overwrite, move, delete or change the mode of the files their arguments name. */
 const writeCommands = new Set([
+  'chmod',
+  'chown',
   'cp',
+  'curl',
   'dd',
   'install',
   'ln',
   'mv',
   'patch',
   'rm',
+  'rmdir',
   'rsync',
   'tee',
   'touch',
   'truncate',
   'unlink',
+  'wget',
 ])
+
+/** Write commands that delete or overwrite whole trees, so every argument counts as a destination. */
+const treeCommands = new Set(['mv', 'rm', 'rmdir'])
+
+/** Write commands that copy into their last argument, so only it counts as a destination for a whole tree. */
+const copyCommands = new Set(['cp', 'install', 'ln', 'rsync'])
+
+/** Whether a `find` command deletes or runs commands on what it finds. */
+const findWrites = (name, args) =>
+  name === 'find' &&
+  args.some((arg) => /^-(?:delete|exec|execdir|ok|okdir|fprint)/.test(arg))
 
 /** Git subcommands that rewrite working-tree files named by their arguments. */
 const gitWriteSubcommands = new Set([
@@ -401,9 +437,13 @@ const inlineShellCode = (args, segment) => {
   return [...segment.heredocs, ...segment.herestrings]
 }
 
-/** Calls in inline code that may write a file, in the interpreters `isInterpreter` names. */
+/**
+ * Calls in inline code that may write a file, in the interpreters `isInterpreter` names: write and file-system calls
+ * (`writeFileSync`, `createWriteStream`, `write_text`, `os.rename`, `shutil.copyfile`, `file_put_contents`), `open`
+ * with a writing mode, and shell commands run from the code.
+ */
 const writeLikeCode =
-  /\b(?:write|append|unlink|rename|replace|copy|move|remove|rmtree|rmdir|rm|cp|mv|truncate|symlink|dump|save|output|chmod|open|sed|tee)\w*/i
+  /write|appendFile|unlink|rename|copyfile|copy2|copytree|copyFile|cpSync|shutil\.move|os\.remove|rmtree|rmdir|rmSync|truncate|symlink|chmod|put_contents|fopen|\bopen\s*\([^)]*['"][wax+>]|\b(?:rm|cp|mv|sed|tee)\b/i
 
 /** Whether the arguments switch on in-place editing, for `sed`, `perl` or `ruby`. */
 const editsInPlace = (args) =>
@@ -412,7 +452,7 @@ const editsInPlace = (args) =>
 const askReason = (path, how) =>
   `This shell command ${how} the guardrail path ${path}. Guardrail files change the rules agents work under, so a ` +
   'person approves every change to them (docs/engineering/git-workflow.md#guardrail-changes). Approve it only if ' +
-  'the change is intended; an agent should change these files with the Edit tool.'
+  'you intend this change.'
 
 /**
  * Whether a Bash command may write to a guardrail file, as the PreToolUse tripwire reads it: the reason to ask a
@@ -436,6 +476,7 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
     const writes =
       redirects.length > 0 ||
       writeCommands.has(name) ||
+      findWrites(name, args) ||
       inPlace ||
       (git !== undefined && gitWriteSubcommands.has(git.name)) ||
       inline
@@ -451,8 +492,16 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
       continue
     }
 
-    if (writeCommands.has(name)) {
-      const path = firstGuardrail(args, directory, root)
+    if (writeCommands.has(name) || findWrites(name, args)) {
+      const operands = args.filter((arg) => !arg.startsWith('-'))
+      const path =
+        firstGuardrail(args, directory, root) ??
+        (treeCommands.has(name)
+          ? firstGuardrail(operands, directory, root, true)
+          : undefined) ??
+        (copyCommands.has(name)
+          ? firstGuardrail(operands.slice(-1), directory, root, true)
+          : undefined)
       if (path !== undefined) return askReason(path, `runs ${name} on`)
     }
     if (inPlace) {
@@ -462,9 +511,24 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
     }
     if (git !== undefined && gitWriteSubcommands.has(git.name)) {
       const patch = git.name === 'apply' || git.name === 'am'
+      // A checkout's first operand is a ref unless `--` says where the paths start; `git checkout .` is a path.
+      const separator = git.args.indexOf('--')
+      const operands = git.args.filter((arg) => !arg.startsWith('-'))
+      const paths =
+        separator !== -1
+          ? git.args.slice(separator + 1)
+          : git.name === 'checkout' && operands[0] !== '.'
+            ? operands.slice(1)
+            : operands
       const path =
         firstGuardrail(git.args, directory, root) ??
-        (patch ? guardrailInText(command, directory, root) : undefined)
+        (patch
+          ? guardrailInText(
+              [...segment.heredocs, ...segment.herestrings].join('\n'),
+              directory,
+              root,
+            )
+          : firstGuardrail(paths, directory, root, true))
       if (path !== undefined)
         return askReason(path, `may rewrite, with git ${git.name},`)
     }
@@ -475,10 +539,12 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
           if (reason !== undefined) return reason
         }
     } else if (inline) {
-      const path = guardrailInText(command, directory, root)
+      const code = [...args, ...segment.heredocs, ...segment.herestrings].join(
+        '\n',
+      )
+      const path = guardrailInText(code, directory, root)
       const writesFile =
-        writeLikeCode.test(command) ||
-        (/awk$/.test(name) && command.includes('>'))
+        writeLikeCode.test(code) || (/awk$/.test(name) && code.includes('>'))
       if (path !== undefined && writesFile)
         return askReason(path, `runs inline ${name} code that may write to`)
     }
@@ -488,34 +554,41 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
 
 // Working-tree record
 
-const git = (cwd, args) =>
+const git = (cwd, args, encoding = 'utf8') =>
   execFileSync('git', args, {
     cwd,
-    encoding: 'utf8',
+    encoding,
     maxBuffer: 64 * 1024 * 1024,
     stdio: ['ignore', 'pipe', 'ignore'],
   })
 
-/** The repository's top level for `cwd`, or undefined outside a Git working tree. */
-export const repositoryRoot = (cwd) => {
+const gitOrUndefined = (cwd, args, encoding = 'utf8') => {
   try {
-    return git(cwd, ['rev-parse', '--show-toplevel']).trim()
+    return git(cwd, args, encoding)
   } catch {
     return undefined
   }
 }
+
+/** The repository's top level for `cwd`, or undefined outside a Git working tree. */
+export const repositoryRoot = (cwd) =>
+  gitOrUndefined(cwd, ['rev-parse', '--show-toplevel'])?.trim()
+
+const hash = (content) => createHash('sha256').update(content).digest('hex')
 
 const contentHash = (file) => {
   if (!existsSync(file)) return 'missing'
   const stat = lstatSync(file)
   if (stat.isSymbolicLink()) return `link:${file}`
   if (!stat.isFile()) return 'not-a-file'
-  return createHash('sha256').update(readFileSync(file)).digest('hex')
+  return hash(readFileSync(file))
 }
 
 /**
- * The content hash of every guardrail file Git reports as changed, added, deleted or untracked in the working tree,
- * by repository-relative path. Files that match `HEAD` and the index are left out, so the record stays small.
+ * The content hash of every guardrail file Git reports as changed, added, deleted, untracked or ignored in the
+ * working tree, by repository-relative path. Ignored files count because some guardrail files are ignored, such as
+ * `.claude/settings.local.json` and the Husky shims in `.husky/_/`. Files that match `HEAD` and the index are left
+ * out, so the record stays small.
  * @returns {Record<string, string>}
  */
 export const changedGuardrailFiles = (root) => {
@@ -524,11 +597,12 @@ export const changedGuardrailFiles = (root) => {
     '--porcelain=v1',
     '-z',
     '--untracked-files=all',
+    '--ignored=matching',
     '--no-renames',
   ])
   /** @type {Record<string, string>} */
   const files = {}
-  for (const entry of status.split('\0')) {
+  for (const entry of String(status).split('\0')) {
     const path = entry.slice(3)
     if (entry.length < 4 || !isGuardrailPath(path)) continue
     files[path] = contentHash(join(root, path))
@@ -536,31 +610,155 @@ export const changedGuardrailFiles = (root) => {
   return files
 }
 
-/** The guardrail paths whose content in `after` differs from `before`. A file that became clean is not a change. */
-export const changedSince = (before, after) =>
+/**
+ * The guardrail paths whose content in `after` differs from `before` and from every content `known` holds for them.
+ * A file that became clean is not a change here; `committedChanges` covers files a command committed.
+ */
+export const changedSince = (before, after, known = {}) =>
   Object.keys(after)
-    .filter((path) => before[path] !== after[path])
+    .filter(
+      (path) =>
+        before[path] !== after[path] &&
+        !(known[path] ?? []).includes(after[path]),
+    )
     .sort()
+
+/** HEAD's commit and branch, so the after-check can find the commits a command made. */
+const headState = (root) => ({
+  branch:
+    gitOrUndefined(root, ['symbolic-ref', '--quiet', 'HEAD'])?.trim() ?? null,
+  head:
+    gitOrUndefined(root, [
+      'rev-parse',
+      '--verify',
+      '--quiet',
+      'HEAD',
+    ])?.trim() ?? null,
+})
+
+/**
+ * The guardrail paths a command changed and committed in the same call. It reads the commits made on the same branch
+ * since the before-record, by their commit time, and leaves out merge commits and commits fetched from elsewhere,
+ * whose committer time is earlier. A committed guardrail file passes when its content is the record's or one `known`
+ * holds for it.
+ */
+export const committedChanges = (root, record, after, known = {}) => {
+  const now = headState(root)
+  if (
+    record.head === null ||
+    now.head === null ||
+    now.head === record.head ||
+    now.branch !== record.branch
+  )
+    return []
+  const log = gitOrUndefined(root, [
+    'log',
+    '--no-merges',
+    '--format=%H %ct',
+    `${record.head}..${now.head}`,
+  ])
+  if (log === undefined) return []
+  const made = String(log)
+    .split('\n')
+    .map((line) => line.split(' '))
+    .filter(([, time]) => Number(time) >= record.time - 5)
+    .map(([sha]) => sha ?? '')
+  const paths = new Set()
+  for (const sha of made) {
+    const files = gitOrUndefined(root, [
+      'diff-tree',
+      '--root',
+      '--no-commit-id',
+      '--name-only',
+      '--no-renames',
+      '-r',
+      '-z',
+      sha,
+    ])
+    for (const path of String(files ?? '').split('\0'))
+      if (path !== '' && isGuardrailPath(path) && !(path in after))
+        paths.add(path)
+  }
+  return [...paths]
+    .filter((path) => {
+      const blob = gitOrUndefined(
+        root,
+        ['cat-file', 'blob', `${now.head}:${path}`],
+        'buffer',
+      )
+      const content = blob === undefined ? 'missing' : hash(blob)
+      return (
+        record.before[path] !== content &&
+        !(known[path] ?? []).includes(content)
+      )
+    })
+    .sort()
+}
 
 const recordDirectory = () => join(tmpdir(), 'pathable-guardrail-writes')
 
+const recordName = (...parts) =>
+  `${hash(parts.map((part) => String(part ?? '')).join('\0')).slice(0, 32)}.json`
+
 /** Where the record for one tool call lives, outside the repository so it never shows in `git status`. */
-export const recordFile = (root, input) => {
-  const key = [
-    root,
-    field(input, 'session_id') ?? '',
-    field(input, 'tool_use_id') ?? '',
-  ].join('\0')
-  const name = createHash('sha256').update(key).digest('hex').slice(0, 32)
-  return join(recordDirectory(), `${name}.json`)
+export const recordFile = (root, input) =>
+  join(
+    recordDirectory(),
+    recordName(root, field(input, 'session_id'), field(input, 'tool_use_id')),
+  )
+
+/**
+ * Where the session's known contents live: every guardrail file content a before-record has seen in this session
+ * and working tree. A command that moves known content back, such as `git stash pop` after `git stash`, is then not
+ * reported.
+ */
+const knownFile = (root, input) =>
+  join(
+    recordDirectory(),
+    'sessions',
+    recordName(root, field(input, 'session_id')),
+  )
+
+const readJson = (file, fallback) => {
+  try {
+    return JSON.parse(readFileSync(file, 'utf8'))
+  } catch {
+    return fallback
+  }
+}
+
+/** Adds each path's content in `files` to `known`. */
+const remember = (known, files) => {
+  const result = { ...known }
+  for (const [path, content] of Object.entries(files))
+    if (!(result[path] ?? []).includes(content))
+      result[path] = [...(result[path] ?? []), content]
+  return result
+}
+
+/** Removes records older than a day, left by commands a person refused, and session files older than a week. */
+const prune = () => {
+  const now = Date.now()
+  for (const [directory, age] of [
+    [recordDirectory(), 24 * 60 * 60 * 1000],
+    [join(recordDirectory(), 'sessions'), 7 * 24 * 60 * 60 * 1000],
+  ]) {
+    if (!existsSync(directory)) continue
+    for (const name of readdirSync(directory)) {
+      const file = join(directory, name)
+      const stat = statSync(file, { throwIfNoEntry: false })
+      if (stat?.isFile() && now - stat.mtimeMs > age)
+        rmSync(file, { force: true })
+    }
+  }
 }
 
 const blockReason = (paths) =>
-  `Stop: this shell command changed guardrail files without a person's approval: ${paths.join(', ')}. Guardrail ` +
-  'files change the rules agents work under, so a person approves every change to them ' +
+  `Stop: this shell command changed guardrail files that the hook did not ask a person about: ${paths.join(', ')}. ` +
+  'Guardrail files change the rules agents work under, so a person approves every change to them ' +
   '(docs/engineering/git-workflow.md#guardrail-changes). Do not build on, commit or push this change, and do not ' +
-  'try to undo it with another shell command. Tell the person which files changed and why, and ask them to review ' +
-  'the change before you go on. Change guardrail files with the Edit tool, which asks the person first.'
+  'try to undo it with another shell command. Tell the person which guardrail files changed and why, and ask them ' +
+  'to review the change before you go on.'
 
 // Hooks
 
@@ -588,20 +786,27 @@ export const preToolUse = (input) => {
   const root = repositoryRoot(cwd)
   if (root === undefined) return { kind: 'allow' }
   const reason = guardrailWrite(command, cwd, root)
-  mkdirSync(recordDirectory(), { recursive: true })
+  const before = changedGuardrailFiles(root)
+  mkdirSync(join(recordDirectory(), 'sessions'), { recursive: true })
+  prune()
+  const known = knownFile(root, input)
+  writeFileSync(known, JSON.stringify(remember(readJson(known, {}), before)))
   writeFileSync(
     recordFile(root, input),
     JSON.stringify({
       asked: reason !== undefined,
-      before: changedGuardrailFiles(root),
+      before,
+      ...headState(root),
+      time: Math.floor(Date.now() / 1000),
     }),
   )
   return reason === undefined ? { kind: 'allow' } : { kind: 'ask', reason }
 }
 
 /**
- * The PostToolUse decision for a tool call: block, which feeds the reason back to the agent, when a Bash command
- * changed a guardrail file that the PreToolUse check did not ask a person about, and otherwise allow it.
+ * The PostToolUse and PostToolUseFailure decision for a tool call: block, which feeds the reason back to the agent,
+ * when a Bash command changed or committed a guardrail file that the PreToolUse check did not ask a person about,
+ * and otherwise allow it.
  * @returns {Decision}
  */
 export const postToolUse = (input) => {
@@ -609,15 +814,23 @@ export const postToolUse = (input) => {
   const root = repositoryRoot(inputCwd(input))
   if (root === undefined) return { kind: 'allow' }
   const file = recordFile(root, input)
-  if (!existsSync(file)) return { kind: 'allow' }
-  const record = JSON.parse(readFileSync(file, 'utf8'))
+  const record = readJson(file, undefined)
   rmSync(file, { force: true })
-  if (field(record, 'asked') === true) return { kind: 'allow' }
-  const before = field(record, 'before') ?? {}
-  const changed = changedSince(before, changedGuardrailFiles(root))
-  return changed.length === 0
-    ? { kind: 'allow' }
-    : { kind: 'block', reason: blockReason(changed) }
+  if (record === undefined || field(record, 'asked') === true)
+    return { kind: 'allow' }
+  const knownPath = knownFile(root, input)
+  const known = readJson(knownPath, {})
+  const after = changedGuardrailFiles(root)
+  const changed = [
+    ...new Set([
+      ...changedSince(record.before, after, known),
+      ...committedChanges(root, record, after, known),
+    ]),
+  ].sort()
+  if (changed.length === 0) return { kind: 'allow' }
+  // Report each change once: the agent is told to stop, and the next command is not blamed for it.
+  writeFileSync(knownPath, JSON.stringify(remember(known, after)))
+  return { kind: 'block', reason: blockReason(changed) }
 }
 
 /** The hook's exit code, stdout, and stderr for a decision, as Claude Code reads them. */
@@ -636,12 +849,14 @@ export const hookOutput = (decision) => {
 }
 
 /**
- * The hook's entry point, for the thin script Claude Code runs: it takes the parsed PreToolUse or PostToolUse input,
- * writes the decision's stdout and stderr, sets the exit code, and returns the output.
+ * The hook's entry point, for the thin script Claude Code runs: it takes the parsed PreToolUse, PostToolUse or
+ * PostToolUseFailure input (a command that exits non-zero ends in PostToolUseFailure), writes the decision's stdout
+ * and stderr, sets the exit code, and returns the output.
  */
 export const runGuardrailWriteHook = (input) => {
+  const event = field(input, 'hook_event_name')
   const decision =
-    field(input, 'hook_event_name') === 'PostToolUse'
+    event === 'PostToolUse' || event === 'PostToolUseFailure'
       ? postToolUse(input)
       : preToolUse(input)
   const output = hookOutput(decision)

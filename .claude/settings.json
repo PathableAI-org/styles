@@ -70,6 +70,7 @@
       "Edit(**/tsconfig*.json)",
       "Edit(**/.claude/settings.json)",
       "Edit(**/scripts/claude/**)",
+      "Edit(**/scripts/guardrail-write.mjs)",
       "Edit(**/.github/workflows/**)"
     ],
     "deny": [
@@ -151,6 +152,18 @@
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/guardrail-write-hook.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
       {
         "matcher": "Bash",
         "hooks": [

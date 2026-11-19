@@ -188,8 +188,38 @@ void describe('the PreToolUse tripwire', () => {
       'pnpm test:tooling',
       'echo "> AGENTS.md"',
       '# echo x > AGENTS.md',
+      `python3 -c "import json; print(json.load(open('package.json'))['version'])"`,
+      'cat AGENTS.md | python3 -c "import sys; print(sys.stdin.read().replace(chr(10), chr(32)))"',
+      'pnpm build 2>&1 >&2',
+      'cp -r scripts /tmp/backup',
+      'git checkout main',
+      'rm -rf node_modules/.cache',
+      'find .github -name "*.yml"',
     ])
       assert.equal(asks(command), false, command)
+  })
+
+  void it('asks for commands that delete or overwrite a tree holding guardrail files', () => {
+    for (const command of [
+      'rm -rf scripts',
+      'git checkout origin/main -- .',
+      'git checkout .',
+      'git checkout origin/main -- scripts',
+      'cp -r /tmp/x/. .',
+      'find .github -name "*.yml" -delete',
+    ])
+      assert.equal(asks(command), true, command)
+  })
+
+  void it('asks for other writes the self-review found', () => {
+    for (const command of [
+      'chmod -x .husky/pre-commit',
+      'echo x >& AGENTS.md',
+      'curl -o .github/workflows/x.yml https://example.test/x.yml',
+      `node -e "require('fs').createWriteStream('AGENTS.md').end('x')"`,
+      `php -r "file_put_contents('.github/x', 'y');"`,
+    ])
+      assert.equal(asks(command), true, command)
   })
 })
 
@@ -200,6 +230,7 @@ void describe('the PostToolUse check', () => {
     repo = sampleRepo()
     repo.commit('chore: guardrails', {
       '.github/workflows/ci.yml': 'name: ci\n',
+      '.gitignore': '.claude/settings.local.json\n',
       'AGENTS.md': '# Agents\n',
     })
   })
@@ -219,11 +250,11 @@ void describe('the PostToolUse check', () => {
   })
 
   /** Runs one Bash tool call through both hooks, with `act` standing in for what the command does. */
-  const run = (command, act = () => undefined) => {
+  const run = (command, act = () => undefined, event = 'PostToolUse') => {
     calls += 1
     const pre = preToolUse(bash(command, 'PreToolUse'))
     act()
-    return { post: postToolUse(bash(command, 'PostToolUse')), pre }
+    return { post: postToolUse(bash(command, event)), pre }
   }
 
   const write = (path, content) => {
@@ -281,6 +312,75 @@ void describe('the PostToolUse check', () => {
     assert.deepEqual(post, { kind: 'allow' })
   })
 
+  void it('runs after a command that failed', () => {
+    const { post } = run(
+      'node codemod.mjs && pnpm lint',
+      () => {
+        write('.github/workflows/ci.yml', 'name: rewritten\n')
+      },
+      'PostToolUseFailure',
+    )
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('reports a guardrail file the command changed and committed', () => {
+    write('AGENTS.md', '# Agents, edited with approval\n')
+    const { post } = run('node build.mjs && git commit -am build', () => {
+      write('AGENTS.md', '# Agents, rewritten by a script\n')
+      write('.github/workflows/ci.yml', 'name: rewritten\n')
+      repo.git('commit', '--quiet', '--all', '--message', 'build')
+    })
+    assert.equal(post.kind, 'block')
+    assert.match(
+      post.kind === 'block' ? post.reason : '',
+      /: \.github\/workflows\/ci\.yml, AGENTS\.md\./,
+    )
+  })
+
+  void it('reports a change to an ignored guardrail file', () => {
+    const { post } = run('node setup.mjs', () => {
+      write('.claude/settings.local.json', '{"permissions":{"allow":["Bash"]}}')
+    })
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('does not report content it saw earlier in the session', () => {
+    write('AGENTS.md', '# Agents, edited with approval\n')
+    assert.deepEqual(
+      run('git stash', () => {
+        repo.git('stash', '--quiet')
+      }).post,
+      { kind: 'allow' },
+    )
+    assert.deepEqual(
+      run('git stash pop', () => {
+        repo.git('stash', 'pop', '--quiet')
+      }).post,
+      { kind: 'allow' },
+    )
+  })
+
+  void it('reports a change once, not again on the next command', () => {
+    assert.equal(
+      run('node build.mjs', () => {
+        write('AGENTS.md', '# Agents, rewritten by a script\n')
+      }).post.kind,
+      'block',
+    )
+    assert.deepEqual(
+      run('git stash', () => {
+        repo.git('stash', '--quiet')
+      }).post,
+      { kind: 'allow' },
+    )
+    assert.deepEqual(
+      run('git stash pop', () => {
+        repo.git('stash', 'pop', '--quiet')
+      }).post,
+      { kind: 'allow' },
+    )
+  })
+
   void it('passes other tools and directories outside a repository through', () => {
     assert.deepEqual(
       preToolUse({ hook_event_name: 'PreToolUse', tool_name: 'Edit' }),
@@ -326,22 +426,26 @@ void describe('hook output', () => {
       const script = fileURLToPath(
         new URL('../claude/guardrail-write-hook.mjs', import.meta.url),
       )
-      const result = spawnSync(process.execPath, [script], {
-        encoding: 'utf8',
-        input: JSON.stringify({
-          cwd: repo.dir,
-          hook_event_name: 'PreToolUse',
-          session_id: 'session-script',
-          tool_input: { command: 'echo x > AGENTS.md' },
-          tool_name: 'Bash',
-          tool_use_id: 'toolu_script',
-        }),
-      })
-      assert.equal(result.status, 0)
+      const hook = (event) =>
+        spawnSync(process.execPath, [script], {
+          encoding: 'utf8',
+          input: JSON.stringify({
+            cwd: repo.dir,
+            hook_event_name: event,
+            session_id: 'session-script',
+            tool_input: { command: 'echo x > AGENTS.md' },
+            tool_name: 'Bash',
+            tool_use_id: 'toolu_script',
+          }),
+        })
+      const pre = hook('PreToolUse')
+      assert.equal(pre.status, 0)
       assert.equal(
-        JSON.parse(result.stdout).hookSpecificOutput.permissionDecision,
+        JSON.parse(pre.stdout).hookSpecificOutput.permissionDecision,
         'ask',
       )
+      const post = hook('PostToolUse')
+      assert.deepEqual([post.status, post.stdout, post.stderr], [0, '', ''])
     } finally {
       repo.remove()
     }

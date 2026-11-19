@@ -86,24 +86,30 @@ Some of these rules are enforced for Claude Code by
   `scripts/accessibility-exceptions.mjs`, any `tsconfig*.json`, GitHub
   workflows, the hook itself and `.claude/settings.json`. The `Edit(...)`
   rules cover the `Write` and `MultiEdit` tools too.
-- A `PreToolUse` and `PostToolUse` hook on `Bash`,
-  [`scripts/claude/guardrail-write-hook.mjs`](scripts/claude/guardrail-write-hook.mjs),
-  catches shell writes to the
-  [guardrail paths](docs/engineering/git-workflow.md#guardrail-changes). Before
-  a command runs, it asks a person when the command names a guardrail path
-  together with a redirection, `tee`, `sed -i`, `perl -i`, `cp`, `mv`, `rm`,
-  `install`, `git apply`, `git checkout … --` or `git restore`, or runs inline
-  interpreter code (`python -c`, `node -e`, a heredoc to an interpreter) that
-  names one and calls something write-like. That check reads the command text,
-  so an obfuscated command can evade it. After the command, the hook compares
-  the guardrail files Git reports as changed with a record taken just before it
-  ran. If the command changed one without being asked about, the hook tells the
-  agent to stop and ask the person to review the change. Changes made before
-  the command, by an approved edit, a person or a background command, are not
-  reported, and the after-check does not see writes a background command makes
-  once it has started. If the
-  hook stops you, leave the files as they are and ask a human. Its tests run
-  with `pnpm test:tooling`.
+- A hook on `Bash`,
+  [`scripts/claude/guardrail-write-hook.mjs`](scripts/claude/guardrail-write-hook.mjs)
+  (logic in `scripts/guardrail-write.mjs`), catches shell writes to the
+  [guardrail paths](docs/engineering/git-workflow.md#guardrail-changes), which
+  are wider than the `Edit(...)` rules above. Before a command runs
+  (`PreToolUse`), it asks a person when the command names a guardrail path, or
+  for deletes and copies a directory holding one, together with a redirection,
+  `tee`, `sed -i`, `perl -i`, `cp`, `mv`, `rm`, `install`, `chmod`, `curl -o`,
+  `find -delete`, `git apply`, `git checkout … --` or `git restore`, or runs
+  inline interpreter code (`python -c`, `node -e`, a heredoc to an interpreter)
+  that names one and calls something write-like. That check reads the command
+  text, so an obfuscated command can evade it. After the command, whether it
+  succeeded or failed (`PostToolUse` and `PostToolUseFailure`), the hook
+  compares the guardrail files Git reports as changed, ignored ones included,
+  and the commits the command made, with a record taken just before it ran. If
+  the command changed one it was not asked about, the hook tells the agent to
+  stop and ask the person to review the change. Changes made before the
+  command, by an approved edit, a person or a background command, are not
+  reported, nor is content already seen in the session, such as changes brought
+  back by `git stash pop`. Known limits: a guardrail file changed by another
+  process while a command runs is reported as that command's change, and the
+  after-check does not see what a background command writes once it has
+  started. If the hook stops you, leave the files as they are and ask a human.
+  Its tests run with `pnpm test:tooling`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
 - A `PreToolUse` hook, `scripts/claude/pr-merge-hook.mjs`, runs the
