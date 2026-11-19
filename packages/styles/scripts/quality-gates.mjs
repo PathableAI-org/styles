@@ -203,6 +203,8 @@ const CANONICAL_STORIES = [
   { id: 'components-button--outline', mode: 'both' },
   // The unstyled modifier beside the primary button (#304).
   { id: 'components-button--unstyled', mode: 'both' },
+  // The accent-warm modifier beside the primary button (#303).
+  { id: 'components-button--accent-warm', mode: 'desktop' },
   { id: 'components-card--workflow-card-with-status', mode: 'desktop' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },
