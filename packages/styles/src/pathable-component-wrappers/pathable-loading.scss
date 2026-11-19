@@ -63,8 +63,12 @@
 // --- Accessibility: forced-colors ---
 
 @media (forced-colors: active) {
+  // Forced colours replaces author border colours, which would turn the
+  // transparent top of the ring into a solid colour and hide the rotation.
+  // Opt the spinner out so the gap is kept, using system colours only.
   .pathable-loading__spinner {
+    forced-color-adjust: none;
     border-color: ButtonText;
-    border-top-color: transparent;
+    border-top-color: Canvas;
   }
 }
