@@ -14,7 +14,7 @@ guarantees:
     claim: From a viewport width of 480 px the children sit in a single row in DOM order that never wraps, and every child is stretched to the height of the tallest.
   - id: list-reset
     status: unverified
-    claim: The group has no top or bottom margin, no list markers and no inline-start padding, so a `<ul>` with the class shows no bullets or indent.
+    claim: The group has no top or bottom margin, no list markers and no left padding, so a `<ul>` with the class in left-to-right text shows no bullets or indent.
   - id: button-spacing
     status: unverified
     claim: In the row, `pathable-button` children are 8 px apart, from each button's own right margin; the group adds no gap of its own.
@@ -85,7 +85,11 @@ are not custom properties and do not change with the theme.
   use `pathable-cluster`, which has no negative margin.
 - The row never wraps. With long labels or more than three buttons it can
   overflow a narrow container; keep labels short or use `pathable-cluster`.
-- The 480 px breakpoint follows the viewport, not the group's container.
+- The 480 px breakpoint follows the viewport, not the group's container. It
+  is set as 30em, which is 480 px at the browser's default 16 px font size;
+  a larger default font size moves it.
+- On a `<ul>` in right-to-left text, remove the list's right padding
+  yourself: the group only clears the left padding.
 
 ## Guarantees
 

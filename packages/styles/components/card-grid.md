@@ -63,9 +63,15 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 ```html
 <div class="pathable-card-grid">
-  <section class="pathable-card">Job coaching</section>
-  <section class="pathable-card">Benefits counselling</section>
-  <section class="pathable-card">Supported housing</section>
+  <section class="pathable-surface pathable-surface--raised pathable-padding-3">
+    Job coaching
+  </section>
+  <section class="pathable-surface pathable-surface--raised pathable-padding-3">
+    Benefits counselling
+  </section>
+  <section class="pathable-surface pathable-surface--raised pathable-padding-3">
+    Supported housing
+  </section>
 </div>
 ```
 
@@ -99,9 +105,13 @@ changes them.
 
 ## Composition
 
-- The grid lays out its direct children only; each child is one cell. Put a
-  `pathable-card` or another surface in each cell, or make the cell itself the
-  card, as in the example.
+- The grid lays out its direct children only; each child is one cell. Make
+  each cell a card by giving it a surface, as in the example, or put a
+  surface inside it.
+- The `pathable-card` class on its own draws no background, border or
+  padding; its visible card is the `pathable-card__container` inside it. A
+  `pathable-card` cell also adds a bottom margin of 32 px (40 px below a
+  640 px viewport), which adds to the row gap.
 - Cards in one row stretch to the height of the tallest card in that row.
   Cards in different rows can differ in height.
 - Columns are all the same width, including when the last row is not full;

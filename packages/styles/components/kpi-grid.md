@@ -26,7 +26,10 @@ guarantees:
     claim: The grid is as wide as its container, and in a container narrower than 200 px its single column is the container's width.
   - id: trend-shape
     status: unverified
-    claim: A trend marked up, down or neutral starts with an upward triangle, a downward triangle or a small square, so the direction is shown by shape as well as colour.
+    claim: A trend marked up, down or neutral starts with an upward triangle, a downward triangle or two small triangles point to point (an hourglass), so the direction is shown by shape as well as colour.
+  - id: up-trend-contrast
+    status: unmet
+    claim: The text of a trend marked up has a contrast ratio of at least 4.5 to 1 against the card's background.
   - id: loading
     status: unverified
     claim: In a loading card the value and label become placeholder bars, the icon and trend are hidden, and the shimmer animation is off when reduced motion is requested.
@@ -56,7 +59,7 @@ Use something else when:
 - you need an exact column count for content that is not metrics: use
   `pathable-grid`;
 - the number needs a chart or a table to make sense: put that content in a
-  `pathable-card` instead.
+  surface such as `pathable-surface--raised` instead.
 
 ## Example
 
@@ -120,14 +123,19 @@ tokens, so a theme that changes those tokens changes the cards.
   stretch to the same height.
 - Inside a card, in this order:
   - `pathable-kpi-card__icon`, optional: a 32 px square that sizes the
-    `<svg>` or `<img>` inside it and colours it in muted text.
+    `<svg>` or `<img>` inside it and sets muted text as its current colour.
+    An `<svg>` takes that colour only when it paints with `currentColor`,
+    for example with the `pathable-icon` class; an `<img>` keeps its own
+    colours.
   - `pathable-kpi-card__value`, required: the number, in the heading font at
     display size and bold. Long values wrap rather than overflow.
   - `pathable-kpi-card__label`, required: what the number counts, in muted
     caption text.
   - `pathable-kpi-card__trend`, optional: the comparison. Set `data-trend` to
     `up`, `down` or `neutral` for the success, danger or muted colour and its
-    shape. Put the words in a `pathable-kpi-card__trend-label` inside it.
+    shape: an upward triangle, a downward triangle, or two small triangles
+    point to point. Put the words in a `pathable-kpi-card__trend-label`
+    inside it.
 - Add `pathable-kpi-card--loading` to a card while its data loads. Keep empty
   value and label elements in it: they become the placeholder bars.
 - Add `pathable-kpi-card--unavailable` when there is no figure. Anything
@@ -144,6 +152,13 @@ does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
 The 480 px breakpoint follows the viewport, not the grid's container.
+
+The up-trend contrast guarantee is unmet. In the default theme an up trend's
+text is Intelligent Jade, 12 px and semibold, on the card's white background,
+which measures 2.78 to 1. The brand rules say Intelligent Jade on white fails
+for all text. A down trend measures 4.53 to 1 and a neutral one 7.71 to 1.
+Until this is fixed, do not let the up-trend label be the only place the
+direction is written: say it in nearby text too.
 
 ## The consumer owns
 

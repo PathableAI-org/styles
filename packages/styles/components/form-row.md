@@ -26,7 +26,7 @@ guarantees:
     claim: From 1024 px a direct input, select or textarea fills its column with no maximum width, unless it carries a max-width utility, which then keeps its own limit.
   - id: gap-scale
     status: unverified
-    claim: The gap between fields is 8 px by default, and 4, 8, 16 or 24 px with gap-sm, gap-md, gap-lg or gap-xl; from 1024 px it is the column gap and there is no gap between a field's label, hint, control and error.
+    claim: The gap between fields is 8 px by default, and 4, 8, 16 or 24 px with gap-sm, gap-md, gap-lg or gap-xl; from 1024 px it is the column gap and the row adds no gap between a field's label, hint, control and error, though the control keeps its own 8 px top margin.
 ---
 
 # FormRow
@@ -123,6 +123,9 @@ spacing tokens changes them.
   or a combo box, sit in the group but are not lined up with the others.
 - When controls differ in height, such as a textarea beside an input, every
   error message starts below the tallest control.
+- From 1024 px the row puts no gap between a field's label, hint, control
+  and error, but each control keeps its own 8 px top margin, and a label
+  that is not the first child of its group keeps its own top margin.
 - To keep a control narrower than its column, add a max-width utility such
   as `pathable-maxw-mobile` to it.
 - The breakpoint follows the viewport, not the row's container. A row in a

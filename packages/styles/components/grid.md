@@ -87,9 +87,15 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 ```html
 <div class="pathable-grid pathable-grid--cols-3 pathable-grid--gap-lg">
-  <section class="pathable-card">Referrals this week</section>
-  <section class="pathable-card">Open cases</section>
-  <section class="pathable-card">Upcoming sessions</section>
+  <section class="pathable-surface pathable-surface--raised pathable-padding-3">
+    Referrals this week
+  </section>
+  <section class="pathable-surface pathable-surface--raised pathable-padding-3">
+    Open cases
+  </section>
+  <section class="pathable-surface pathable-surface--raised pathable-padding-3">
+    Upcoming sessions
+  </section>
 </div>
 ```
 
@@ -157,7 +163,13 @@ changes the spacing tokens changes them.
   your own breakpoints, or use `pathable-card-grid`, which adds and removes
   columns by width.
 - The grid sets no width, padding or margin. Put it inside a page container
-  such as `pathable-container`, or a surface such as `pathable-card`.
+  such as `pathable-container`, or on a surface such as
+  `pathable-surface--raised`.
+- To make each cell a card, give it a surface, as in the example. The
+  `pathable-card` class on its own draws no background, border or padding;
+  its visible card is the `pathable-card__container` inside it. It also adds
+  a bottom margin of 32 px (40 px below a 640 px viewport), which adds to the
+  row gap.
 
 ## Guarantees
 
