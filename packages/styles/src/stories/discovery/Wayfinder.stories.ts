@@ -1,5 +1,6 @@
 import { expectBodyFont } from '../shared/body-font'
 import { expect } from 'storybook/test'
+import { contrastRatio } from '../shared/contrast'
 
 export default {
   title: 'Discovery/Wayfinder',
@@ -76,22 +77,6 @@ export const SingleQuestion = {
   `,
 }
 
-const channels = (color: string) =>
-  (color.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number)
-
-const luminance = (color: string) => {
-  const [r, g, b] = channels(color).map((value) => {
-    const unit = value / 255
-    return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4
-  })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
-const contrast = (a: string, b: string) => {
-  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x)
-  return (light + 0.05) / (dark + 0.05)
-}
-
 // A checked choice must keep 3:1 against the panel (WCAG 1.4.11).
 export const CheckedChoices = {
   render: () => `
@@ -114,23 +99,47 @@ export const CheckedChoices = {
         </fieldset>
       </div>
     </div>
+    <div class="pathable-wayfinder pathable-wayfinder--raised" role="region" aria-label="Find a raised resource" style="max-width: 30rem;">
+      <h2 class="pathable-wayfinder__heading">What do you need?</h2>
+      <div class="pathable-wayfinder__questions">
+        <fieldset class="pathable-wayfinder__question">
+          <legend class="pathable-wayfinder__question-label">Pick one</legend>
+          <div class="pathable-wayfinder__question-controls">
+            <label><input type="radio" name="raised-need" value="learn" checked> Training</label>
+            <label><input type="radio" name="raised-need" value="assess"> Assessment</label>
+          </div>
+        </fieldset>
+        <fieldset class="pathable-wayfinder__question">
+          <legend class="pathable-wayfinder__question-label">Pick any</legend>
+          <div class="pathable-wayfinder__question-controls">
+            <label><input type="checkbox" name="raised-topic" value="jobs" checked> Jobs</label>
+            <label><input type="checkbox" name="raised-topic" value="housing"> Housing</label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const panel = canvasElement.querySelector<HTMLElement>(
-      '.pathable-wayfinder',
-    )
-    const checked = [
-      ...canvasElement.querySelectorAll<HTMLInputElement>('input:checked'),
+    const panels = [
+      ...canvasElement.querySelectorAll<HTMLElement>('.pathable-wayfinder'),
     ]
-    await expect(panel).not.toBeNull()
-    await expect(checked).toHaveLength(2)
+    await expect(panels).toHaveLength(2)
+    await expect(
+      canvasElement.querySelectorAll('.pathable-wayfinder--raised'),
+    ).toHaveLength(1)
 
-    const background = getComputedStyle(panel as HTMLElement).backgroundColor
-    for (const input of checked) {
-      await expect(
-        contrast(getComputedStyle(input).accentColor, background),
-        input.type,
-      ).toBeGreaterThanOrEqual(3)
+    for (const panel of panels) {
+      const checked = [
+        ...panel.querySelectorAll<HTMLInputElement>('input:checked'),
+      ]
+      await expect(checked).toHaveLength(2)
+      const background = getComputedStyle(panel).backgroundColor
+      for (const input of checked) {
+        await expect(
+          contrastRatio(getComputedStyle(input).accentColor, background),
+          input.type,
+        ).toBeGreaterThanOrEqual(3)
+      }
     }
   },
 }
