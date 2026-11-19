@@ -1,4 +1,5 @@
 import { expect, within } from 'storybook/test'
+import { expectKeyboardFocusIndicator } from '../focus-indicator'
 
 type PlayContext = { canvasElement: HTMLElement }
 
@@ -89,8 +90,7 @@ export const Compact = {
   },
 }
 
-export const FullPage = {
-  render: () => `
+const fullPageMarkup = `
     <div class="pathable-page-error pathable-page-error--full-page">
       <svg class="pathable-page-error__icon" aria-hidden="true" viewBox="0 0 24 24" width="72" height="72" fill="currentColor">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
@@ -100,10 +100,36 @@ export const FullPage = {
       <button class="pathable-page-error__retry pathable-button">Try again</button>
       <a href="#" class="pathable-page-error__nav">Go to home</a>
     </div>
-  `,
+  `
+
+// Tab reaches the retry button first; it shows the brand focus outline.
+const expectRetryFocusIndicator = async (canvasElement: HTMLElement) =>
+  expectKeyboardFocusIndicator(
+    canvasElement,
+    within(canvasElement).getByRole('button', { name: 'Try again' }),
+    { width: 2 },
+  )
+
+export const FullPage = {
+  render: () => fullPageMarkup,
   play: async ({ canvasElement }: PlayContext) => {
     await expectCentredActions(canvasElement, 'Go to home')
+    await expectRetryFocusIndicator(canvasElement)
   },
+}
+
+export const ForcedColors = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The full-page layout run with forced-colors emulation (the test-runner turns it on for this story). Keyboard focus on the retry button keeps a visible solid outline in the system `Highlight` colour.',
+      },
+    },
+  },
+  render: () => fullPageMarkup,
+  play: async ({ canvasElement }: PlayContext) =>
+    expectRetryFocusIndicator(canvasElement),
 }
 
 export const NotFound = {

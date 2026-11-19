@@ -1,4 +1,5 @@
 import { expect, within } from 'storybook/test'
+import { expectKeyboardFocusIndicator } from '../focus-indicator'
 
 export default {
   title: 'Components/Button',
@@ -276,6 +277,105 @@ export const UnstyledInverse = {
       contrastRatio(inverse.color, surface.backgroundColor),
     ).toBeGreaterThanOrEqual(4.5)
   },
+}
+
+const focusIndicatorMarkup = `
+    <div class="pathable-stack pathable-stack--gap-sm">
+      <div class="pathable-cluster pathable-cluster--gap-sm">
+        <button type="button" class="pathable-button">Save Coaching Note</button>
+        <button type="button" class="pathable-button pathable-button--primary">Submit Plan</button>
+        <button type="button" class="pathable-button pathable-button--continue">Continue to Goals</button>
+        <button type="button" class="pathable-button pathable-button--destructive">Remove Activity</button>
+        <button type="button" class="pathable-button pathable-button--secondary">Add Support Activity</button>
+        <button type="button" class="pathable-button pathable-button--save">Save Draft</button>
+        <button type="button" class="pathable-button pathable-button--accent-cool">View Details</button>
+        <button type="button" class="pathable-button pathable-button--review">Review Plan</button>
+        <button type="button" class="pathable-button pathable-button--accent-warm">Share Progress</button>
+        <button type="button" class="pathable-button pathable-button--base">Skip Step</button>
+        <button type="button" class="pathable-button pathable-button--low-emphasis">Dismiss Reminder</button>
+        <button type="button" class="pathable-button pathable-button--outline">Cancel</button>
+        <button type="button" class="pathable-button pathable-button--big">Start Session</button>
+      </div>
+      <div class="pathable-cluster pathable-cluster--gap-sm pathable-bg-primary pathable-padding-3">
+        <button type="button" class="pathable-button pathable-button--inverse">Open Resources</button>
+        <button type="button" class="pathable-button pathable-button--outline pathable-button--inverse">Close Resources</button>
+      </div>
+      <div class="pathable-cluster pathable-cluster--gap-sm">
+        <button type="button" class="pathable-button pathable-button--unstyled">View Coaching History</button>
+      </div>
+    </div>
+  `
+
+/** Every filled variant shows the 2px focus-ring token outline. */
+const filledButtonNames = [
+  'Save Coaching Note',
+  'Submit Plan',
+  'Continue to Goals',
+  'Remove Activity',
+  'Add Support Activity',
+  'Save Draft',
+  'View Details',
+  'Review Plan',
+  'Share Progress',
+  'Skip Step',
+  'Dismiss Reminder',
+  'Cancel',
+  'Start Session',
+  'Open Resources',
+  'Close Resources',
+]
+
+// Tabs through every button in order. Filled variants show the shared 2px
+// focus-ring outline; the unstyled modifier keeps the USWDS 4px Bright Blue
+// Brooks ring. Under forced colors the helper expects `Highlight` instead.
+const expectButtonFocusIndicators = async ({
+  canvasElement,
+}: {
+  canvasElement: HTMLElement
+}) => {
+  const canvas = within(canvasElement)
+  for (const [index, name] of filledButtonNames.entries()) {
+    await expectKeyboardFocusIndicator(
+      canvasElement,
+      canvas.getByRole('button', { name }),
+      { width: 2, fromCurrentFocus: index > 0 },
+    )
+  }
+  await expectKeyboardFocusIndicator(
+    canvasElement,
+    canvas.getByRole('button', { name: 'View Coaching History' }),
+    {
+      width: 4,
+      color: 'var(--pathable-brand-bright-blue-brooks)',
+      fromCurrentFocus: true,
+    },
+  )
+}
+
+export const KeyboardFocus = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Keyboard focus on `.pathable-button` and every filled modifier shows the brand focus outline: 2px of `--pathable-color-focus-ring` (Bright Blue Brooks). The unstyled modifier keeps the USWDS 4px Bright Blue Brooks ring. The play function tabs through every button and checks its outline.',
+      },
+    },
+  },
+  render: () => focusIndicatorMarkup,
+  play: expectButtonFocusIndicators,
+}
+
+export const ForcedColors = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Run with forced-colors emulation (the test-runner turns it on for this story). Keyboard focus on every button keeps a visible solid outline in the system `Highlight` colour. The play function tabs through every button and checks its outline.',
+      },
+    },
+  },
+  render: () => focusIndicatorMarkup,
+  play: expectButtonFocusIndicators,
 }
 
 // Workflow-specific button stories
