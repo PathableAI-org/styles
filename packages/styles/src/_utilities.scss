@@ -85,7 +85,7 @@
 // container's own --pathable-surface-focus-ring, or a surface variant on the
 // same element, still wins. Keep the list in step with the selectors that
 // include state-focus (pathable-button.scss explains the button modifiers).
-$-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive, .pathable-icon-button, .pathable-input, .pathable-select, .pathable-textarea';
+$-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive, .pathable-button--unstyled, .pathable-icon-button, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-surface--interactive';
 
 .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
 .hover\:pathable-bg-primary:hover:not(:where(#{$-surface-focus-ring-controls})),
@@ -97,8 +97,9 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 // Jade, Silver and danger backgrounds set the ring for the controls and
 // components on them. Bright Blue Brooks is 1.1:1 on Intelligent Jade, 2.3:1 on
 // Shilling Silver and 1.5:1 on the danger red (WCAG 1.4.11 needs 3:1), so the
-// on-accent dark blue (6.3:1), the text blue (9.6:1) and white (4.5:1) take
-// its place. The shared state-focus controls are left out for the same reason
+// on-accent dark blue (6.3:1 on Jade, 3.9:1 on the red) and the text blue
+// (9.6:1 on Silver) take its place. A dark ring also stays visible on the light
+// containers that sit inside these backgrounds. The shared state-focus controls are left out for the same reason
 // as above: a control that carries the class itself sits on the surface
 // behind it.
 .pathable-bg-accent:not(:where(#{$-surface-focus-ring-controls})),
@@ -117,5 +118,5 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 
 .pathable-bg-danger:not(:where(#{$-surface-focus-ring-controls})),
 .hover\:pathable-bg-danger:hover:not(:where(#{$-surface-focus-ring-controls})) {
-  --pathable-surface-focus-ring: var(--pathable-color-surface);
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }

@@ -301,12 +301,12 @@ const componentRingCases = [
   {
     label: 'Danger utility',
     outer: 'pathable-bg-danger',
-    ring: '--pathable-color-surface',
+    ring: '--pathable-color-on-accent',
   },
   {
     label: 'Emergency alert',
     outer: 'pathable-alert pathable-alert--emergency',
-    ring: '--pathable-color-surface',
+    ring: '--pathable-color-status-danger-text',
   },
 ]
 
@@ -346,23 +346,36 @@ export const ComponentFocusOnBackgrounds = {
 
     let first = true
     for (const { label, ring } of componentRingCases) {
+      // The pill is a Silver container, so its dismiss outline uses the text
+      // ring whatever background the pill sits on.
       const components = [
-        canvas.getByLabelText(`Card on ${label}`),
-        canvas.getByRole('link', { name: `Link on ${label}` }),
-        canvas.getByRole('button', { name: `Unstyled on ${label}` }),
-        canvas.getByRole('button', { name: `Remove pill on ${label}` }),
+        { component: canvas.getByLabelText(`Card on ${label}`), ring },
+        {
+          component: canvas.getByRole('link', { name: `Link on ${label}` }),
+          ring,
+        },
+        {
+          component: canvas.getByRole('button', {
+            name: `Unstyled on ${label}`,
+          }),
+          ring,
+        },
+        {
+          component: canvas.getByRole('button', {
+            name: `Remove pill on ${label}`,
+          }),
+          ring: '--pathable-color-text',
+        },
       ]
-      for (const component of components) {
+      for (const { component, ring: expectedRing } of components) {
         await expectKeyboardFocusIndicator(canvasElement, component, {
-          color: `var(${ring})`,
+          color: `var(${expectedRing})`,
           fromCurrentFocus: !first,
         })
         first = false
 
-        const container = component.closest(
-          '.pathable-stack',
-        ) as HTMLElement | null
-        if (!container) throw new Error('Focus story component has no panel')
+        const container = component.parentElement
+        if (!container) throw new Error('Focus story component has no parent')
         await expect(
           contrastRatio(
             view.getComputedStyle(component).outlineColor,
@@ -379,7 +392,7 @@ export const KeyboardFocusOnSurfaces = {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; the next story covers component-owned outlines.",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline on the Silver around it, in that surface's ring, `--pathable-color-text`. ",
       },
     },
   },

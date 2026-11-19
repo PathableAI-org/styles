@@ -19,6 +19,12 @@
 
 // --- Base card container ---
 
+// The card's own outline is drawn on the surface around it, so the reset for
+// what sits on its white background goes on its children, not on the card.
+:where(.pathable-resource-card) > * {
+  --pathable-surface-focus-ring: initial;
+}
+
 .pathable-resource-card {
   font-family: var(--pathable-font-body);
   display: flex;

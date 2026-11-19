@@ -57,6 +57,12 @@
 // Brand opinion: Shilling Silver or white surface, PathAble Blue heading,
 // optional status in the text-safe deep jade (AA on white, not on Shilling
 // Silver), Tech Teal links, generous spacing
+// The card's own outline is drawn on the surface around it, so the reset for
+// what sits on its white background goes on its children, not on the card.
+:where(.pathable-card--workflow) > * {
+  --pathable-surface-focus-ring: initial;
+}
+
 .pathable-card--workflow {
   background-color: var(--pathable-color-surface);
   border: 1px solid var(--pathable-color-border);
