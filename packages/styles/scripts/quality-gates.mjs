@@ -101,6 +101,7 @@ const CANONICAL_STORIES = [
     id: 'components-form-controls-checkbox--with-hint-and-error',
     mode: 'both',
   },
+  { id: 'components-form-controls-radio--with-hint-and-error', mode: 'both' },
   // Keyboard focus ring of the single-field controls (pixel baselines, #282)
   { id: 'components-form-controls-input--keyboard-focus', mode: 'desktop' },
   { id: 'components-form-controls-select--keyboard-focus', mode: 'desktop' },
@@ -377,6 +378,13 @@ const SMALL_TOUCH_TARGETS_ALLOWLIST = {
       selector: 'input[type="checkbox"]',
       reason:
         'Native checkbox inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
+    },
+  ],
+  'components-form-controls-radio--with-hint-and-error': [
+    {
+      selector: 'input[type="radio"]',
+      reason:
+        'Native radio inputs at natural size are exempt from WCAG 2.2 2.5.8 Target Size (Minimum) per G206.',
     },
   ],
   'components-form-controls-optional-form-section--form-composition': [
