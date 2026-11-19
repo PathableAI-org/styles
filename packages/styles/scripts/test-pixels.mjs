@@ -197,6 +197,20 @@ const STORIES = [
     id: 'components-form-controls-form-stack--with-form-row',
     key: 'form-stack/with-form-row',
   },
+  // Checkbox has no aggregate story. With hint and error shows the root's
+  // block layout (the control on its own line between the hint and the error
+  // message, #281), the unchecked box, its label and its focus ring at every
+  // viewport.
+  {
+    id: 'components-form-controls-checkbox--with-hint-and-error',
+    key: 'checkbox/with-hint-and-error',
+  },
+  // The disabled box and label colours, which no other baseline shows. The
+  // checked box is compared through FilterableOptionList `selected`.
+  {
+    id: 'components-form-controls-checkbox--disabled',
+    key: 'checkbox/disabled',
+  },
   // FilterableOptionList main story: the filter input (focused), the bounded
   // option region and the status line.
   {
@@ -258,6 +272,7 @@ const ROLLOUT = [
   'app-shell',
   'button',
   'card',
+  'checkbox',
   'filterable-option-list',
   'form-row',
   'form-stack',
