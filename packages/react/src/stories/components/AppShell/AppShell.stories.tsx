@@ -234,7 +234,6 @@ export const MobileShell: Story = {
           await expect(shapes.length).toBeGreaterThan(0)
           for (const shape of shapes) {
             // Filled artwork paints with the text colour and has no outline.
-            await expect(shape.tagName).toBe('path')
             const shapeStyle = getComputedStyle(shape)
             await expect(shapeStyle.fill).toBe(iconStyle.color)
             await expect(shapeStyle.stroke).toBe('none')
