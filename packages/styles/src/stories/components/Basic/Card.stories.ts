@@ -254,6 +254,12 @@ export const WorkflowCardButtonActions = {
             <button type="button" class="pathable-button">Download Report</button>
             <button type="button" class="pathable-button pathable-button--outline">Share</button>
           </div>
+          <div class="pathable-card__action" data-testid="workflow-button-group-actions">
+            <div class="pathable-button-group" data-testid="workflow-button-group">
+              <button type="button" class="pathable-button">Download</button>
+              <button type="button" class="pathable-button">Schedule</button>
+            </div>
+          </div>
           <div class="pathable-card__action pathable-cluster pathable-cluster--gap-sm" data-testid="workflow-button-cluster">
             <button type="button" class="pathable-button">Save</button>
             <button type="button" class="pathable-button">Cancel</button>
@@ -266,6 +272,8 @@ export const WorkflowCardButtonActions = {
     const canvas = within(canvasElement)
     const container = canvas.getByTestId('workflow-button-actions')
     const cluster = canvas.getByTestId('workflow-button-cluster')
+    const group = canvas.getByTestId('workflow-button-group')
+    const groupContainer = canvas.getByTestId('workflow-button-group-actions')
     const meta = canvas.getByTestId('workflow-button-meta')
     const first = canvas.getByRole('button', { name: 'Download Report' })
     const second = canvas.getByRole('button', { name: 'Share' })
@@ -281,6 +289,13 @@ export const WorkflowCardButtonActions = {
     await expect(Number.parseFloat(styles.rowGap)).toBeGreaterThanOrEqual(8)
     await expect(Number.parseFloat(styles.columnGap)).toBeGreaterThanOrEqual(8)
     await expect(second).toBeVisible()
+    await expect(getComputedStyle(first).marginRight).toBe('0px')
+    await expect(group.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+      groupContainer.getBoundingClientRect().width,
+    )
+    await expect(
+      Number.parseFloat(getComputedStyle(group).rowGap),
+    ).toBeGreaterThanOrEqual(8)
     // A utility on the container still sets its own gap.
     await expect(
       Number.parseFloat(getComputedStyle(cluster).columnGap),
