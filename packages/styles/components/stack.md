@@ -104,7 +104,9 @@ The pixel figures are those of the default theme's spacing scale.
 - Any elements can be children. The gap sits between direct children only;
   wrapping children in another element makes that element the one child.
 - A stack is a flex column, so children stretch across its width. A button,
-  tag or image placed straight into a stack becomes full width. To keep
+  tag or image placed straight into a stack becomes full width; a
+  `pathable-button` stops 8 px short of the right edge because of its own
+  right margin, which `pathable-form-stack` removes. To keep
   children at their own width, add `pathable-flex-align-start` to the stack,
   or put the items in a `pathable-cluster` inside it.
 - Children's margins do not collapse into the gap: a paragraph's default

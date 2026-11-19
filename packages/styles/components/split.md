@@ -17,7 +17,7 @@ guarantees:
     claim: At a viewport width of 1024 px or more, the first two children sit side by side in columns sized 1:1 by default and with ratio-1-1, and 1:2, 2:1 or 1:3 with ratio-1-2, ratio-2-1 or ratio-1-3.
   - id: collapse
     status: unverified
-    claim: Below a viewport width of 1024 px, every ratio collapses to one full-width column with the children in source order.
+    claim: At a viewport width of 1023 px or less, every ratio collapses to one full-width column with the children in source order.
   - id: gap
     status: unverified
     claim: The space between the columns, and between the regions once they stack, is 24 px.

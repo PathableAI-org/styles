@@ -20,7 +20,7 @@ guarantees:
     claim: The container has 24 px of padding on its left and right at every width and viewport, and none on its top and bottom.
   - id: fills-parent
     status: unverified
-    claim: Below its maximum width the container fills its parent's width exactly, with its gutters inside that width, so the container itself is never wider than its parent.
+    claim: Below its maximum width the container fills its parent's width exactly, with its gutters inside that width, so the container itself is never wider than a parent at least 48 px wide (twice the gutter).
   - id: custom-properties
     status: unverified
     claim: Setting --pathable-container-max-width or --pathable-container-gutter-x on the container sets its maximum width or its left and right padding to that value.

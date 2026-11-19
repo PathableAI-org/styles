@@ -20,7 +20,7 @@ guarantees:
     claim: With sidebar-first, the narrow column is the first one, at 1:3 by default or with ratio-3-1, 1:2 with ratio-2-1 and 1:4 with ratio-4-1.
   - id: collapse
     status: unverified
-    claim: Below a viewport width of 1024 px, every ratio and order collapses to one full-width column with the children in source order.
+    claim: At a viewport width of 1023 px or less, every ratio and order collapses to one full-width column with the children in source order.
   - id: gap
     status: unverified
     claim: The space between the columns, and between the regions once they stack, is 24 px.
@@ -98,7 +98,9 @@ The two axes combine freely. Columns apply only at 1024 px and wider.
 sidebar on the left when the sidebar is the first child in the source.
 
 For another ratio, set `--pathable-sidebar-ratio` to a `grid-template-columns`
-value, such as `5fr 2fr`, in the wide-first order you want. Both custom
+value in column order, such as `5fr 2fr`, or `2fr 5fr` for a sidebar that
+comes first; a value set on the element itself overrides the
+`sidebar-first` modifier. Both custom
 properties inherit, so a nested layout without its own modifiers takes the
 outer layout's values.
 

@@ -112,6 +112,10 @@ The pixel figures are those of the default theme's spacing scale.
   row never wraps and does not clip. Text inside a child wraps within it.
   Keep the content short enough for the narrowest screen, or use
   `pathable-cluster`.
+- Children keep their own margins, which add to the gap. `pathable-button`
+  has an 8 px right margin, so buttons in an inline sit 24 px apart with the
+  default gap. Below a 480 px viewport each button is set to full width, so
+  the buttons share the row equally.
 - The inline has no element classes and no padding. It nests inside
   `pathable-stack`, cards and surfaces.
 
