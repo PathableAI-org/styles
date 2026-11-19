@@ -18,9 +18,6 @@ guarantees:
   - id: no-box
     status: unverified
     claim: The class sets no margin, padding or colour, so the element keeps the margins other rules give it and the colour of its parent.
-  - id: body-typeface
-    status: unmet
-    claim: The intro is set in the body typeface, because it is a paragraph style that can hold more than one sentence.
 ---
 
 # Intro
@@ -74,8 +71,10 @@ heading typeface.
 - Put one sentence of plain text inside. Inline links and one
   `pathable-text-highlight` span are fine. There are no element classes.
 - Use one intro per page, directly after the main heading.
-- The class sets no margin. Space the intro from the heading and the body text
-  with the layout, such as `pathable-stack` with a gap modifier.
+- The class sets no margin, so a `<p>` keeps the browser's 1em top and bottom
+  margins. Remove them, for example with `pathable-margin-0`, before you space
+  the intro from the heading and the body text with the layout, such as
+  `pathable-stack` with a gap modifier; otherwise the margins add to the gap.
 - The 88ex limit is wider than the 68ex of `pathable-paragraph`, so the intro
   can run wider than the body text below it.
 
@@ -86,15 +85,13 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The body-typeface guarantee is unmet: the intro uses the heading typeface,
-which the brand reserves for short statements. Until it changes, keep the
-intro to one sentence.
-
 ## The consumer owns
 
 - Accessibility. Use a `<p>`, not a heading element: the intro is not a
   heading.
 - The text colour and its contrast against the background behind it.
-- Keeping the intro short and in sentence case.
+- Keeping the intro to one sentence, in sentence case. The intro is set in
+  Fredoka, the heading typeface, and the brand rules ask for body text styling
+  for anything longer than one sentence.
 - Spacing and alignment around it; do not centre an intro that wraps to more
   than three lines.

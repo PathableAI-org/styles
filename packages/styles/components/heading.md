@@ -49,8 +49,9 @@ Use something else when:
 
 - the text is a large marketing headline in a hero: use `pathable-display`;
 - the text is a lead paragraph under a page title: use `pathable-intro`;
-- the text is body copy, a hint or a caption: use `pathable-text` with
+- the text is body copy or a caption: use `pathable-text` with
   `pathable-text--body`, `pathable-text--small` or `pathable-text--caption`;
+- the text is a hint under a form field: use `pathable-hint`;
 - the text is a short phrase inside a sentence that needs emphasis: use
   `pathable-text-highlight`.
 
@@ -99,6 +100,10 @@ In the default theme the typefaces are Fredoka (heading), Poppins
 (subheading) and Nunito (body), and the text colour is `#00365c`. The sizes,
 line heights, colour and contrast figure in the guarantees are those of the
 default theme. A theme that changes these tokens changes them.
+
+The package ships Nunito at weights 400 and 600 only. Levels 5 and 6 ask for
+weight 700, so they render in Nunito SemiBold (600) unless your application
+loads a 700 face of Nunito.
 
 ## Composition
 

@@ -8,7 +8,7 @@ variants: []
 guarantees:
   - id: measure
     status: unverified
-    claim: Every `<p>`, `<ul>` and `<ol>` inside the container, at any depth, is at most 68ex wide.
+    claim: Every `<p>`, `<ul>` and `<ol>` inside the container, at any depth, is at most 68ex wide unless a more specific rule sets its width.
   - id: container-unstyled
     status: unverified
     claim: The container itself gets no width, margin, padding, typeface, size or colour.
@@ -70,6 +70,8 @@ None. The measure is fixed in the stylesheet, and a theme does not change it.
 - Put any block content inside. Only `<p>`, `<ul>` and `<ol>` are limited;
   everything else, and the container itself, keeps its full width.
 - The limit is in `ex`, so it follows each element's own font size.
+- The limit wins over the 88ex of `pathable-intro`, so an intro paragraph
+  inside the container is limited to 68ex too.
 - Lists inside accordions are limited too; put the accordion outside the
   container if it must run full width.
 - The container sets no spacing between its children and no font. Add

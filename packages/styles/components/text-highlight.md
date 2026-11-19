@@ -39,8 +39,7 @@ guarantees:
 
 An inline mark that draws attention to a phrase inside running text with a
 marker band, an accent underline or a soft background fill. Put the class and
-one style modifier on a `<span>`, `<mark>`, `<em>` or `<strong>` inside a
-paragraph. It is not interactive and adds no role.
+one style modifier on a `<span>`, `<em>` or `<strong>` inside a paragraph. It is not interactive and adds no role.
 
 ## When to use
 
@@ -106,8 +105,12 @@ highlight, or on a container, to change them.
 - Put plain text inside, and place the highlight inside a block of text such
   as a `<p>` with `pathable-text`. It inherits the font and colour of that
   text.
-- The soft-background padding extends the fill 0.15em past the text on each
-  side, so keep a space between the highlight and the words beside it.
+- The soft-background fill reaches 0.3em past the text on each side, 0.15em
+  of it over the neighbouring space, so keep a space between the highlight and
+  the words beside it.
+- Do not use a `<mark>`. The class does not reset the browser's styling of
+  `<mark>`: its black text stays with every style, and its yellow background
+  stays with the underline style.
 - The underline style adds 0.1em of padding below the text. In a tight line
   height the rule can touch the line below; keep a line height of 1.5 or more.
 - Do not put links or other interactive content inside a highlight.

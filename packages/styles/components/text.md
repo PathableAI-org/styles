@@ -127,8 +127,9 @@ changes these tokens changes them.
 - The class sets no margin. On a `<p>`, add `pathable-paragraph` for space
   between paragraphs and a readable line length. When both are on one element,
   the text role's line height wins over the paragraph's.
-- The danger tone falls below 4.5:1 on the page background colour; keep danger
-  text on a white surface, such as `pathable-card`.
+- The danger and success tones fall below 4.5:1 on the page background colour
+  (3.48:1 and 4.05:1 in the default theme); keep danger and success text on a
+  white surface, such as `pathable-card`.
 
 ## Guarantees
 
