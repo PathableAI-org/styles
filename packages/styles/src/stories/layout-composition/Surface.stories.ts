@@ -128,8 +128,8 @@ const focusControls = (
           ? `
       <label class="pathable-label" for="${id}-goal">Goal on ${label}</label>
       <select id="${id}-goal" class="pathable-select">
-        <option>Find a job coach</option>
-        <option>Request an accommodation</option>
+        <option>Coach</option>
+        <option>Support</option>
       </select>
       <label class="pathable-label" for="${id}-details">Details on ${label}</label>
       <textarea id="${id}-details" class="pathable-textarea" rows="2"></textarea>`
