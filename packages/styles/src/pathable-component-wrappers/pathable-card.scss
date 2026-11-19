@@ -55,7 +55,8 @@
 
 // Pathable Workflow Card Modifier
 // Brand opinion: Shilling Silver or white surface, PathAble Blue heading,
-// Intelligent Jade optional status, Bright Blue Brooks links, generous spacing
+// optional status in the text-safe deep jade (AA on white, not on Shilling
+// Silver), Tech Teal links, generous spacing
 .pathable-card--workflow {
   background-color: var(--pathable-color-surface);
   border: 1px solid var(--pathable-color-border);
@@ -75,9 +76,11 @@
   color: var(--pathable-color-text);
 }
 
-// Optional status signal (add class to card heading or a sibling element)
+// Optional status signal (add class to card heading or a sibling element).
+// The text uses the text-safe deep jade (5.3:1 on the white surface), not the
+// Intelligent Jade accent (2.8:1), which fails WCAG contrast for all text.
 .pathable-card--workflow .pathable-card__status {
-  color: var(--pathable-color-accent);
+  color: var(--pathable-color-text-success);
   font-size: var(--pathable-font-size-body-sm);
   font-weight: var(--usa-font-weight-bold);
 }

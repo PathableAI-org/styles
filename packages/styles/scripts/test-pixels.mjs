@@ -143,9 +143,8 @@ const STORIES = [
   // font size) that no other Card story shows; its meta text, also shown by
   // `workflow-card`, is captured here alongside it. The
   // capture's Tab focuses the action link, so the image shows its brand focus
-  // ring inside the card's focus-within outline (#312). The status text is
-  // Intelligent Jade on white, about 2.8:1, which fails text contrast (#314),
-  // accepted by the maintainer for #277; its fix updates the image.
+  // ring inside the card's focus-within outline (#312), and the status text in
+  // the text-safe deep jade (#314).
   {
     id: 'components-card--workflow-card-with-status',
     key: 'card/workflow-with-status',
