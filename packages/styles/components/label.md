@@ -14,16 +14,16 @@ guarantees:
     claim: The label text is 0.99rem (15.84 px at a 16 px root), font weight 400 and line-height 1.4, in Nunito.
   - id: top-margin
     status: unverified
-    claim: The label has a 1.5rem (24 px at a 16 px root) top margin and no bottom margin.
+    claim: The label has no bottom margin, and a 1.5rem (24 px at a 16 px root) top margin except as the first child of a `pathable-form-group` or of a `pathable-filterable-option-list__filter`.
   - id: max-width
     status: unverified
-    claim: The label is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
+    claim: Except as the first child of a `pathable-filterable-option-list__filter`, the label is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
   - id: first-in-group
     status: unverified
     claim: A label that is the first direct child of a `pathable-form-group` has no top margin, so its top edge is the top edge of the group.
-  - id: inherited-colour
-    status: unverified
-    claim: The label sets no colour, so its text colour is the colour of the element it sits in.
+  - id: text-colour
+    status: unmet
+    claim: 'In the default theme the label text colour is #00365c, PathAble Blue, the brand text colour.'
 ---
 
 # Label
@@ -64,13 +64,14 @@ Load the stylesheet once in the application; no JavaScript is needed:
 ## Variants
 
 The label has no modifier classes. It looks the same in every context; only
-its top margin changes, as the Composition section describes.
+its top margin and, in one placement, its width rules change, as the
+Composition section describes.
 
 ## Tokens
 
 None. The font family, size, line-height and margin are fixed values in the
 compiled stylesheet, not custom properties, so a theme does not change them.
-The label takes its colour from its container.
+Today the label sets no colour; see the Guarantees section.
 
 ## Composition
 
@@ -83,7 +84,9 @@ The label takes its colour from its container.
   child the label drops its top margin and the group's own margin spaces the
   field. Anywhere else, including directly inside `pathable-form-stack`, the
   label keeps its 24 px top margin, except as the first child of
-  `pathable-filterable-option-list__filter`, which also removes it.
+  `pathable-filterable-option-list__filter`. There the label also has no top
+  margin, is at most the width of the filter instead of 30rem, can shrink
+  below its content's width, and breaks long words at any point to fit.
 - Inside `pathable-form-row`, at viewport widths of 1024 px and wider, a label
   that is a direct child of a direct `pathable-form-group` sits in the group's
   first row, so the controls of neighbouring fields line up.
@@ -97,6 +100,10 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+Today the label sets no colour, so its text takes the colour of the element it
+sits in. On a page that sets no text colour it renders in the browser's
+default black.
 
 The pixel figures assume a 16 px root font size. The label scales with the
 root size, because every length is in `rem`.

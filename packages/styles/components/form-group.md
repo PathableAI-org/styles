@@ -8,13 +8,13 @@ variants: []
 guarantees:
   - id: top-margin
     status: unverified
-    claim: The group has a 1.5rem (24 px at a 16 px root) top margin and no other margin, padding, border or background.
+    claim: The group has no margin other than its top margin, and no padding, border or background. The top margin is 1.5rem (24 px at a 16 px root), except as a direct child of `pathable-form-stack` or `pathable-form-row`.
   - id: first-label
     status: unverified
     claim: A `pathable-label` that is the group's first direct child has no top margin, so its top edge is the top edge of the group.
   - id: other-labels
     status: unverified
-    claim: A `pathable-label` that is not the group's first direct child, including one nested deeper, keeps its 24 px top margin.
+    claim: A `pathable-label` that is a direct child of the group but not its first child keeps its 24 px top margin.
   - id: in-stack
     status: unverified
     claim: A group that is a direct child of `pathable-form-stack` or `pathable-form-row` has no top margin, so only the gap of `pathable-stack` (used with `pathable-form-stack`) or of `pathable-form-row` separates it from its neighbours.
@@ -96,9 +96,10 @@ property.
   aligned.
 - In `pathable-form-stack` and `pathable-form-row`, the group's top margin is
   removed. `pathable-form-row` has its own gap; `pathable-form-stack` does not,
-  so use it together with `pathable-stack` and a gap modifier, or the groups
-  touch. Anywhere else, the group's 24 px top margin spaces the groups,
-  including above the first group.
+  so use it together with `pathable-stack`, whose gap (16 px by default, or
+  the size a gap modifier sets) then spaces the groups. With
+  `pathable-form-stack` alone the groups touch. Anywhere else, the group's
+  24 px top margin spaces the groups, including above the first group.
 - The group has no element classes.
 
 ## Guarantees

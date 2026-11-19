@@ -11,7 +11,7 @@ guarantees:
     claim: The error message is display block, so it takes its own line even when it is a `<span>`.
   - id: bold
     status: unverified
-    claim: The error message text has font weight 700. In Nunito it renders in SemiBold (600), the heaviest Nunito face the package ships.
+    claim: The error message sets font weight 700.
   - id: padding
     status: unverified
     claim: The error message has 0.25rem (4 px at a 16 px root) of padding above and below its text, no horizontal padding and no margin.
@@ -24,9 +24,9 @@ guarantees:
   - id: plain-box
     status: unverified
     claim: The error message draws no background, border or icon.
-  - id: inherited-size
-    status: unverified
-    claim: The error message sets no font family or font size, so it takes them from the element it sits in.
+  - id: body-font
+    status: unmet
+    claim: The error message text is set in Nunito, the body font, even on a page that sets no font of its own.
 ---
 
 # ErrorMessage
@@ -111,6 +111,15 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+Today the error message sets no font family and no font size, so it takes both
+from the element it sits in. On a page that sets no font it renders in the
+browser's default font and size, unlike the `pathable-label` and
+`pathable-hint` beside it.
+
+The package ships Nunito in weights 400 and 600 only. Where the message is set
+in Nunito, the browser draws the 700 weight from the 600 face or synthesises a
+bolder one, depending on the browser.
 
 ## The consumer owns
 

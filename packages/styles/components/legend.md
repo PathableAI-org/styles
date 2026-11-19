@@ -20,10 +20,10 @@ guarantees:
     claim: The class sets a 1.5rem (24 px at a 16 px root) top margin and no bottom margin.
   - id: max-width
     status: unverified
-    claim: The legend is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
-  - id: inherited-colour
-    status: unverified
-    claim: The legend sets no colour, so its text colour is the colour of the element it sits in.
+    claim: Except as a direct child of `pathable-filterable-option-list`, the legend's content box is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
+  - id: text-colour
+    status: unmet
+    claim: 'In the default theme the legend text colour is #00365c, PathAble Blue, the brand text colour.'
 ---
 
 # Legend
@@ -88,7 +88,7 @@ that is the page's main heading.
 
 None. The font family, size, line-height and margin are fixed values in the
 compiled stylesheet, not custom properties, so a theme does not change them.
-The legend takes its colour from its container.
+Today the legend sets no colour; see the Guarantees section.
 
 ## Composition
 
@@ -113,6 +113,14 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+Today the legend sets no colour, so its text takes the colour of the element it
+sits in. On a page that sets no text colour it renders in the browser's
+default black, while the hint and control labels beside it render in brand
+colours.
+
+The maximum width applies to the legend's content box: the legend is
+content-box, so the browser's small inline padding on `<legend>` adds to it.
 
 The pixel figures assume a 16 px root font size. The legend scales with the
 root size, because every length is in `rem`.
