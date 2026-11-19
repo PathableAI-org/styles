@@ -2,4 +2,6 @@
 '@pathableai/styles': patch
 ---
 
-The `pathable-resource-card__rating` row now uses `--pathable-color-text-success` (deep jade, at least 4.5:1 on white) instead of `--pathable-color-accent`, which measured 2.78:1 and fell below the 3:1 that WCAG 1.4.11 asks of meaningful graphics.
+The resource card rating (`.pathable-resource-card__rating`) now uses `--pathable-color-text-success`, the text-safe deep jade `#0d7a63` (5.3:1 on the white card), instead of `--pathable-color-accent`, Intelligent Jade `#1cae96` (2.78:1), which was below the 3:1 WCAG 1.4.11 asks of meaningful graphics. The stars are visibly darker. On the Shilling Silver background of a hovered interactive card the rating measures 4.05:1. A theme that overrides `accent` no longer recolours the rating; override `textSuccess` (`--pathable-color-text-success`) to change it.
+
+No token or class is added, renamed or removed.

@@ -1,4 +1,6 @@
+import { expect } from 'storybook/test'
 import { expectBodyFont } from '../shared/body-font'
+import { resolveColor } from '../shared/focus-indicator'
 
 export default {
   title: 'Discovery/Resource Card',
@@ -41,14 +43,22 @@ export const Default = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
-    expectBodyFont(canvasElement, [
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await expectBodyFont(canvasElement, [
       '.pathable-resource-card__provider',
       '.pathable-resource-card__summary',
       '.pathable-resource-card__metadata',
       '.pathable-resource-card__rating',
       '.pathable-resource-card__source',
-    ]),
+    ])
+    // The rating uses the text-safe jade, not the 2.78:1 brand accent.
+    const rating = canvasElement.querySelector(
+      '.pathable-resource-card__rating',
+    )
+    await expect(getComputedStyle(rating as Element).color).toBe(
+      resolveColor(canvasElement, 'var(--pathable-color-text-success)'),
+    )
+  },
 }
 
 export const Interactive = {
