@@ -290,6 +290,7 @@ export const InDarkSection = {
             <a href="#" class="pathable-button">Start session</a>
             <a href="#">Read the guide</a>
             <a href="#" class="pathable-link">Open the checklist</a>
+            <a href="#" class="pathable-card__action">Review the plan</a>
           </div>
         </div>
       </div>
@@ -308,6 +309,7 @@ export const InDarkSection = {
       ),
       canvas.getByRole('link', { name: 'Read the guide' }),
       canvas.getByRole('link', { name: 'Open the checklist' }),
+      canvas.getByRole('link', { name: 'Review the plan' }),
       canvas.getByRole('link', { name: 'Start session' }),
     ]
 
