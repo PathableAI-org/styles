@@ -8,7 +8,7 @@ variants: []
 guarantees:
   - id: ratio
     status: unverified
-    claim: In a parent with no set height that is not a flex row, the box is as wide as its parent and its height is 9/16 of its width.
+    claim: In a parent with no set height that gives the box its full width, such as a block or a grid cell, the box is as wide as its parent and its height is 9/16 of its width.
   - id: fills
     status: unverified
     claim: An iframe, object, embed or other direct child is positioned over the whole box at 100% of its width and height, whatever width and height attributes it has.
@@ -76,9 +76,12 @@ None. The ratio is fixed in the stylesheet.
 - The box takes its width from its parent. Constrain the width on the parent,
   such as a grid column, not on the box.
 - Do not make the box a direct child of a flex row, such as `pathable-inline`,
-  `pathable-media-block` or `pathable-collection__item`. The box has no width
-  of its own and nothing in flow, so there it shrinks to nothing and the embed
-  disappears. Wrap it in an element that has a width.
+  `pathable-media-block` or `pathable-collection__item`, or of a flex column
+  that does not stretch its children, such as a `pathable-stack` with
+  `pathable-flex-align-center`. The box has no width of its own and nothing in
+  flow, so there it shrinks to nothing and the embed disappears. A plain
+  `pathable-stack` stretches it and is fine. Otherwise wrap the box in an
+  element that has a width.
 - Do not set a height on the parent. The box inherits that height. A parent
   shorter than 9/16 of its width makes the box narrow to keep 16:9, so it no
   longer fills the width; a taller parent makes the box fill the width at the
