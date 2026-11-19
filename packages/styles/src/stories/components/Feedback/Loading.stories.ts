@@ -36,3 +36,30 @@ export const Large = {
     </div>
   `,
 }
+
+export const ForcedColors = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Run with forced-colors emulation (the test-runner turns it on for this story). The spinner ring keeps a gap: its top border is drawn in a different system colour from its other sides, so its turning can be seen. The play function checks the border colours.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-loading" aria-live="polite">
+      <span class="pathable-loading__spinner" aria-hidden="true"></span>
+      <span class="pathable-loading__text">Loading messages...</span>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const spinner = canvasElement.querySelector('.pathable-loading__spinner')
+    if (!spinner) throw new Error('Spinner not found')
+    const style = getComputedStyle(spinner)
+    if (style.borderTopColor === style.borderRightColor) {
+      throw new Error(
+        `Spinner ring is closed in forced colours: top ${style.borderTopColor}, right ${style.borderRightColor}`,
+      )
+    }
+  },
+}
