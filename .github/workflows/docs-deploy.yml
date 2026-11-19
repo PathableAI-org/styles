@@ -58,6 +58,22 @@ jobs:
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
 
+      # Pull requests that change only component pages restore these records
+      # instead of building and testing the HTML Storybook (Storybook
+      # Quality's component-pages job). Saved before the Pages rebuild below
+      # rewrites index.json, so the records stay newer than the index.
+      - name: Component page records cache key
+        id: records-key
+        run: echo "key=$(node scripts/component-pages-records-key.mjs)" >> "$GITHUB_OUTPUT"
+
+      - name: Save component page records
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: |
+            apps/storybook/test-results/component-pages
+            apps/storybook/storybook-static/index.json
+          key: ${{ steps.records-key.outputs.key }}
+
       - name: Visual smoke tests
         run: pnpm test:visual
 

@@ -18,8 +18,9 @@ jobs:
   # reports. This job decides which Storybook jobs need to run:
   #   html_storybook   the HTML (styles) Storybook jobs
   #   react_storybook  the React Storybook jobs
-  #   component_pages  only the jobs that check component pages
-  #                    (packages/styles/components/*.md) against the tests
+  #   component_pages  the component-pages job, which checks component
+  #                    pages (packages/styles/components/*.md) against the
+  #                    tests when the HTML Storybook jobs do not run
   # Markdown outside the component pages changes no Storybook, so it runs
   # nothing here. Patterns use picomatch with dot: true; `!(…)` excludes.
   changes:
@@ -77,8 +78,7 @@ jobs:
     needs: changes
     if: >-
       needs.changes.outputs.html_storybook == 'true' ||
-      needs.changes.outputs.react_storybook == 'true' ||
-      needs.changes.outputs.component_pages == 'true'
+      needs.changes.outputs.react_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -115,10 +115,60 @@ jobs:
           path: apps/storybook-react/storybook-static/
           retention-days: 1
 
+  # Checks component pages when they changed but nothing the HTML Storybook
+  # is built or tested from did, so the HTML Storybook jobs, which check them
+  # too, do not run. The test runner's records then match those of the last
+  # Docs Deploy run on main with the same inputs, which saves them under the
+  # key scripts/component-pages-records-key.mjs prints. On a hit the job
+  # checks the pages against those records; on a miss (the pull request is
+  # behind main on those inputs, or that run has not finished) it builds and
+  # tests the HTML Storybook itself.
+  component-pages:
+    name: Component pages
+    needs: changes
+    if: >-
+      needs.changes.outputs.component_pages == 'true' &&
+      needs.changes.outputs.html_storybook != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Component page records cache key
+        id: records-key
+        run: echo "key=$(node scripts/component-pages-records-key.mjs)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore component page records from main
+        id: records
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: |
+            apps/storybook/test-results/component-pages
+            apps/storybook/storybook-static/index.json
+          key: ${{ steps.records-key.outputs.key }}
+
+      - uses: ./.github/actions/setup
+        with:
+          install_playwright: ${{ steps.records.outputs.cache-hit != 'true' }}
+
+      - name: Build styles
+        run: pnpm --filter @pathableai/styles build
+
+      - name: Component pages agree with the compiled CSS and pixel entries
+        run: |
+          pnpm --filter @pathableai/styles test:component-pages
+          pnpm --filter @pathableai/styles check:component-pages
+
+      - name: Build and test the HTML Storybook (no records from main)
+        if: steps.records.outputs.cache-hit != 'true'
+        run: pnpm test:storybook-styles
+
+      - name: Component page guarantees are covered by tests that ran
+        run: pnpm --filter @pathableai/styles check:component-pages:executed
+
   accessibility-tests:
     name: Storybook accessibility tests
     needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true' || needs.changes.outputs.component_pages == 'true'
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -335,6 +385,7 @@ jobs:
     needs:
       - changes
       - build
+      - component-pages
       - accessibility-tests
       - accessibility-tests-react
       - visual-smoke
