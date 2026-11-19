@@ -6,6 +6,7 @@ import {
   checkExecuted,
   checkPage,
   checkPixelCitations,
+  currentRecords,
   modifiersOf,
   readCss,
   readPixels,
@@ -388,6 +389,34 @@ test('prints which test cites each guarantee, unmet ones marked', () => {
       `    play   ${STORY} (expected to fail)`,
     ].join('\n'),
   )
+})
+
+test('drops the record of a story the built Storybook no longer has', () => {
+  const build = { storyIds: new Set([STORY]), builtAt: 100 }
+  const kept = { story: STORY, guarantees: [], classes: [] }
+  const removed = { story: 'widgets-widget--deleted', guarantees: [] }
+  assert.deepEqual(
+    currentRecords(
+      [
+        { record: kept, writtenAt: 200 },
+        { record: removed, writtenAt: 200 },
+      ],
+      build,
+    ),
+    { records: [kept], errors: [] },
+  )
+})
+
+test('rejects a record written before the Storybook was built', () => {
+  const build = { storyIds: new Set([STORY]), builtAt: 100 }
+  const stale = { story: STORY, guarantees: [], classes: [] }
+  const { records, errors } = currentRecords(
+    [{ record: stale, writtenAt: 50 }],
+    build,
+  )
+  assert.deepEqual(records, [])
+  assert.equal(errors.length, 1)
+  assert.match(errors[0], /is older than the Storybook build/u)
 })
 
 test('counts only wrapper files named after a class the CSS defines', () => {

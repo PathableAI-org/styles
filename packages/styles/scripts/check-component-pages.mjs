@@ -36,7 +36,9 @@
  *   - a story whose pixel baseline covers a static page rendered the class
  *     and every non-default variant modifier.
  * It reads what ran, not the story source, so a `guarantee()` call that never
- * executes counts for nothing. The records are only as fresh as the last run.
+ * executes counts for nothing. A record left by an earlier run is not trusted:
+ * one of a story the built Storybook no longer has is ignored, and one older
+ * than the build is an error (see `currentRecords`).
  *
  * Neither stage proves that a citing test's assertions are sufficient for the
  * claim. Components without a page are counted, not failed.
@@ -47,7 +49,7 @@
  *               play functions included)
  */
 
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { basename, join, relative, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -63,6 +65,10 @@ const compiledCss = join(packageRoot, 'dist/styles.css')
 const executedDir = join(
   repoRoot,
   'apps/storybook/test-results/component-pages',
+)
+const storybookIndex = join(
+  repoRoot,
+  'apps/storybook/storybook-static/index.json',
 )
 
 export const REQUIRED_FIELDS = [
@@ -601,15 +607,58 @@ async function readCompiledCss() {
   return readCss(await readFile(compiledCss, 'utf8'))
 }
 
+/**
+ * Keeps the records that describe the built Storybook. The test-runner only
+ * overwrites the record of a story it runs, so the directory can hold records
+ * left by an earlier run: of a story since deleted or renamed, or written
+ * before the Storybook was last built (for example when only a filtered run
+ * followed the build). A record of a story the build no longer has is dropped.
+ * A record older than the build is an error, because it may claim coverage
+ * the current code does not have.
+ */
+export function currentRecords(records, build) {
+  const errors = []
+  const current = []
+  for (const { record, writtenAt } of records) {
+    if (!build.storyIds.has(record.story)) continue
+    if (writtenAt < build.builtAt) {
+      errors.push(
+        `the record of story ${record.story} is older than the Storybook build: delete ${relative(repoRoot, executedDir)} and run pnpm test:storybook-styles again`,
+      )
+      continue
+    }
+    current.push(record)
+  }
+  return { records: current, errors }
+}
+
 function readRecords() {
   if (!existsSync(executedDir)) {
     throw new Error(
       `${relative(repoRoot, executedDir)} is missing; run pnpm test:storybook-styles first`,
     )
   }
-  return readdirSync(executedDir)
-    .filter((file) => file.endsWith('.json'))
-    .map((file) => JSON.parse(readFileSync(join(executedDir, file), 'utf8')))
+  if (!existsSync(storybookIndex)) {
+    throw new Error(
+      `${relative(repoRoot, storybookIndex)} is missing; run pnpm build:docs first`,
+    )
+  }
+  const index = JSON.parse(readFileSync(storybookIndex, 'utf8'))
+  return currentRecords(
+    readdirSync(executedDir)
+      .filter((file) => file.endsWith('.json'))
+      .map((file) => {
+        const path = join(executedDir, file)
+        return {
+          record: JSON.parse(readFileSync(path, 'utf8')),
+          writtenAt: statSync(path).mtimeMs,
+        }
+      }),
+    {
+      storyIds: new Set(Object.keys(index.entries)),
+      builtAt: statSync(storybookIndex).mtimeMs,
+    },
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -625,8 +674,9 @@ async function main() {
   let summary
 
   if (flags.has('--executed')) {
-    records = readRecords()
-    errors.push(...checkExecuted(pages, records, pixels))
+    const read = readRecords()
+    records = read.records
+    errors.push(...read.errors, ...checkExecuted(pages, records, pixels))
     summary = `stage 2 (what ran): ${pages.length} page(s) checked against ${records.length} story records`
   } else {
     const css = await readCompiledCss()
