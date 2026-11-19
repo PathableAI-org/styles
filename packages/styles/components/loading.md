@@ -23,7 +23,10 @@ guarantees:
     claim: The spinner and the text are centred on each other vertically, with a gap of 1rem by default and 1.5rem at large, which is 16 px and 24 px at a 16 px root font size.
   - id: text-size
     status: unverified
-    claim: The status text is 14 px with a line height of 1.5 by default and 16 px at large.
+    claim: The status text is 0.875rem with a line height of 1.5 by default and 1rem at large, which is 14 px and 16 px at a 16 px root font size.
+  - id: scales-with-root
+    status: unmet
+    claim: The status text size follows the root font size, so at a 200% root font size it doubles at both sizes.
   - id: no-shrink
     status: unverified
     claim: The spinner keeps its size when the status text wraps onto several lines in a narrow container.
@@ -79,10 +82,10 @@ read out in full.
 
 Add at most one modifier class to `pathable-loading`.
 
-| Axis | Value     | Class                     | What it is for                                    |
-| ---- | --------- | ------------------------- | ------------------------------------------------- |
-| size | `default` | none                      | Small ring and 14 px text, inside a list or panel |
-| size | `large`   | `pathable-loading--large` | Larger ring and 16 px text, for a whole view      |
+| Axis | Value     | Class                     | What it is for                                               |
+| ---- | --------- | ------------------------- | ------------------------------------------------------------ |
+| size | `default` | none                      | Small ring and 0.875rem (14 px) text, inside a list or panel |
+| size | `large`   | `pathable-loading--large` | Larger ring and 1rem (16 px) text, for a whole view          |
 
 The ring's content box is 1.5rem by default and 2.5rem at large; the border is
 drawn outside it.
@@ -133,6 +136,10 @@ and 46 px at a 16 px root font size, unless the application applies
 The forced colours guarantee is unmet: in Chromium the browser replaces the
 transparent top of the ring with the system colour, so the ring shows as a
 closed circle and its turning cannot be seen.
+
+The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
+px values, so the status text size does not follow the user's default font
+size.
 
 ## The consumer owns
 

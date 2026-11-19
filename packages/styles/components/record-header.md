@@ -127,11 +127,11 @@ default theme, where the spacing tokens 1, 2 and 4 are 0.5, 1 and 2rem and
   icon.
 - `pathable-record-header__body` holds the name, metadata and tags in a column
   with a 0.5rem gap.
-- `pathable-record-header__identity` is the name, at 20 px bold in the heading
-  font. Use a heading at the right level for the page.
-- `pathable-record-header__metadata` is a `<ul>` of short facts at 12 px in the
-  muted colour. The dots between items are drawn by the stylesheet; do not
-  type them.
+- `pathable-record-header__identity` is the name, at 1.25rem (20 px) bold in the
+  heading font. Use a heading at the right level for the page.
+- `pathable-record-header__metadata` is a `<ul>` of short facts at 0.75rem
+  (12 px) in the muted colour. The dots between items are drawn by the
+  stylesheet; do not type them.
 - `pathable-record-header__badges` is a wrapping row of `pathable-tag`
   elements with a 0.5rem gap. Each tag keeps its own 0.25rem right margin, so
   tags appear 0.75rem apart. Its own 0.5rem top margin adds to the body's 0.5rem

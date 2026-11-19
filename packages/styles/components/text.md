@@ -14,7 +14,7 @@ variants:
 guarantees:
   - id: role-scale
     status: unverified
-    claim: The body, small and caption roles set 16, 14 and 12 px text with line heights of 1.5, 1.43 and 1.33, all at weight 400.
+    claim: The body, small and caption roles set 1, 0.875 and 0.75rem text, which is 16, 14 and 12 px at a 16 px root font size, with line heights of 1.5, 1.43 and 1.33, all at weight 400.
   - id: body-typeface
     status: unverified
     claim: The text is set in the body typeface at every role and tone.
@@ -33,6 +33,9 @@ guarantees:
   - id: no-box
     status: unverified
     claim: The class sets no margin, padding, display or width, so the element keeps the box other rules give it.
+  - id: scales-with-root
+    status: unmet
+    claim: The body, small and caption sizes follow the root font size, so at a 200% root font size every role's size doubles.
 ---
 
 # Text
@@ -86,9 +89,9 @@ combine freely.
 | Axis | Value          | Class                         | What it is for                                        |
 | ---- | -------------- | ----------------------------- | ----------------------------------------------------- |
 | role | `inherit`      | none                          | The nearest ancestor's role, or body if there is none |
-| role | `body`         | `pathable-text--body`         | 16 px body copy; also resets an inherited role        |
-| role | `small`        | `pathable-text--small`        | 14 px secondary copy and metadata                     |
-| role | `caption`      | `pathable-text--caption`      | 12 px captions and fine print                         |
+| role | `body`         | `pathable-text--body`         | 1rem (16 px) body copy; also resets an inherited role |
+| role | `small`        | `pathable-text--small`        | 0.875rem (14 px) secondary copy and metadata          |
+| role | `caption`      | `pathable-text--caption`      | 0.75rem (12 px) captions and fine print               |
 | tone | `inherit`      | none                          | The nearest ancestor's tone, or the text colour       |
 | tone | `tone-default` | `pathable-text--tone-default` | Normal text colour; also resets an inherited tone     |
 | tone | `tone-muted`   | `pathable-text--tone-muted`   | Less prominent text, such as metadata                 |
@@ -119,8 +122,9 @@ yourself overrides its value.
 In the default theme the typeface is Nunito and the tone colours are
 `#00365c`, `#015a76`, `#dc3545` and `#0d7a63`, with contrasts on white of
 12.48:1, 7.71:1, 4.53:1 and 5.27:1. The sizes, line heights and contrast
-figures in the guarantees are those of the default theme. A theme that
-changes these tokens changes them.
+figures in the guarantees are those of the default theme. The sizes are in
+rem and follow the root font size; the pixel figures are those at a 16 px
+root. A theme that changes these tokens changes them.
 
 ## Composition
 
@@ -148,6 +152,9 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
+px values, so the role sizes do not follow the user's default font size.
 
 ## The consumer owns
 

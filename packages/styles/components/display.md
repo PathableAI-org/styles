@@ -40,8 +40,9 @@ the heading of a hero section. It adds no role and no semantics of its own.
 Use something else when:
 
 - the heading is a page title or section heading in application UI: use
-  `pathable-heading` with `pathable-heading--level-1`, which stays 32 px at
-  every width and takes its typeface and colour from the theme;
+  `pathable-heading` with `pathable-heading--level-1`, which stays 2rem (32 px
+  at a 16 px root) at every width and takes its typeface and colour from the
+  theme;
 - the text is the lead paragraph under the headline: use `pathable-intro`;
 - the text is longer than one sentence: use body text, such as
   `pathable-text`;

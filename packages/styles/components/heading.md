@@ -11,7 +11,7 @@ variants:
 guarantees:
   - id: level-size
     status: unverified
-    claim: Levels 1 to 6 set the font size to 32, 24, 20, 18, 16 and 14 px.
+    claim: Levels 1 to 6 set the font size to 2, 1.5, 1.25, 1.125, 1 and 0.875rem, which is 32, 24, 20, 18, 16 and 14 px at a 16 px root font size.
   - id: level-typeface
     status: unverified
     claim: Level 1 uses the heading typeface at weight 400, levels 2 to 4 the subheading typeface at weight 700, and levels 5 and 6 the body typeface at weight 700.
@@ -23,7 +23,10 @@ guarantees:
     claim: The heading has zero margin on every side, at every level and with no level.
   - id: level-not-element
     status: unverified
-    claim: The level modifier alone sets the size, so an `<h2>` with `pathable-heading--level-4` renders at the same 18 px as an `<h4>` with it.
+    claim: The level modifier alone sets the size, so an `<h2>` with `pathable-heading--level-4` renders at the same 1.125rem (18 px) as an `<h4>` with it.
+  - id: scales-with-root
+    status: unmet
+    claim: Every level's font size follows the root font size, so at a 200% root font size every level's size doubles.
   - id: text-colour
     status: unverified
     claim: Outside `pathable-section--dark` and `pathable-dark-background`, the heading text is the theme text colour at every level, with a contrast of 12.48:1 on the white surface colour.
@@ -75,15 +78,15 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 Add one level modifier to `pathable-heading`.
 
-| Axis  | Value     | Class                       | What it is for                                       |
-| ----- | --------- | --------------------------- | ---------------------------------------------------- |
-| level | `none`    | none                        | Colour and zero margin only; the font is not set     |
-| level | `level-1` | `pathable-heading--level-1` | 32 px heading typeface, regular, for the page title  |
-| level | `level-2` | `pathable-heading--level-2` | 24 px subheading typeface, bold, for major sections  |
-| level | `level-3` | `pathable-heading--level-3` | 20 px subheading typeface, bold, for sections        |
-| level | `level-4` | `pathable-heading--level-4` | 18 px subheading typeface, bold, for subsections     |
-| level | `level-5` | `pathable-heading--level-5` | 16 px body typeface, bold, for small group headings  |
-| level | `level-6` | `pathable-heading--level-6` | 14 px body typeface, bold, for the smallest headings |
+| Axis  | Value     | Class                       | What it is for                                                  |
+| ----- | --------- | --------------------------- | --------------------------------------------------------------- |
+| level | `none`    | none                        | Colour and zero margin only; the font is not set                |
+| level | `level-1` | `pathable-heading--level-1` | 2rem (32 px) heading typeface, regular, for the page title      |
+| level | `level-2` | `pathable-heading--level-2` | 1.5rem (24 px) subheading typeface, bold, for major sections    |
+| level | `level-3` | `pathable-heading--level-3` | 1.25rem (20 px) subheading typeface, bold, for sections         |
+| level | `level-4` | `pathable-heading--level-4` | 1.125rem (18 px) subheading typeface, bold, for subsections     |
+| level | `level-5` | `pathable-heading--level-5` | 1rem (16 px) body typeface, bold, for small group headings      |
+| level | `level-6` | `pathable-heading--level-6` | 0.875rem (14 px) body typeface, bold, for the smallest headings |
 
 ## Tokens
 
@@ -103,7 +106,9 @@ heading elements itself.
 In the default theme the typefaces are Fredoka (heading), Poppins
 (subheading) and Nunito (body), and the text colour is `#00365c`. The sizes,
 line heights, colour and contrast figure in the guarantees are those of the
-default theme. A theme that changes these tokens changes them.
+default theme. The sizes are in rem and follow the root font size; the pixel
+figures are those at a 16 px root. A theme that changes these tokens changes
+them.
 
 The package ships Nunito at weights 400 and 600 only. Levels 5 and 6 ask for
 weight 700, so they render in Nunito SemiBold (600) unless your application
@@ -126,6 +131,9 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
+px values, so the level sizes do not follow the user's default font size.
 
 The dark-background-contrast guarantee is unmet: today the heading is drawn in
 the theme text colour inside `pathable-dark-background`, which in the default

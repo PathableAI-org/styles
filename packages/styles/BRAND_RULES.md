@@ -159,28 +159,33 @@ The design system also uses Nunito SemiBold (600) for UI labels. This weight is 
 
 ### Type Scale Mapping
 
-| PathAble Token        | Size | USWDS System Token | USWDS Theme Token | Notes                                        |
-| --------------------- | ---- | ------------------ | ----------------- | -------------------------------------------- |
-| display-lg            | 32px | 12                 | xl                | Default — unchanged                          |
-| heading-lg            | 24px | 10                 | lg                | Customized from default 9 (22px)             |
-| heading-md            | 20px | 8                  | (none)            | No theme token — use system token 8 directly |
-| heading-sm / body-lg  | 18px | 7                  | md                | Customized from default 6 (17px)             |
-| body-md               | 16px | 5                  | sm                | Default — unchanged                          |
-| body-sm / label-md    | 14px | 3                  | 2xs               | Default — unchanged                          |
-| label-sm / caption-md | 12px | 1                  | 3xs               | Customized from default 2 (13px)             |
+Type sizes are in `rem`, so they follow the user's default font size; the
+pixel figures are those at a 16 px root font size. Today the published
+font-size tokens are still fixed px values, so they do not yet follow it (see
+issue #373).
+
+| PathAble Token        | Size             | USWDS System Token | USWDS Theme Token | Notes                                        |
+| --------------------- | ---------------- | ------------------ | ----------------- | -------------------------------------------- |
+| display-lg            | 2rem (32 px)     | 12                 | xl                | Default — unchanged                          |
+| heading-lg            | 1.5rem (24 px)   | 10                 | lg                | Customized from default 9 (1.375rem, 22 px)  |
+| heading-md            | 1.25rem (20 px)  | 8                  | (none)            | No theme token — use system token 8 directly |
+| heading-sm / body-lg  | 1.125rem (18 px) | 7                  | md                | Customized from default 6 (1.0625rem, 17 px) |
+| body-md               | 1rem (16 px)     | 5                  | sm                | Default — unchanged                          |
+| body-sm / label-md    | 0.875rem (14 px) | 3                  | 2xs               | Default — unchanged                          |
+| label-sm / caption-md | 0.75rem (12 px)  | 1                  | 3xs               | Customized from default 2 (0.8125rem, 13 px) |
 
 ### Heading Size Assignments
 
-| Element | USWDS Theme Token | Size |
-| ------- | ----------------- | ---- |
-| Display | xl                | 32px |
-| h1      | lg                | 24px |
-| h2      | md                | 18px |
-| h3      | md                | 18px |
-| h4      | sm                | 16px |
-| h5      | 2xs               | 14px |
-| h6      | 3xs               | 12px |
-| Body    | sm                | 16px |
+| Element | USWDS Theme Token | Size             |
+| ------- | ----------------- | ---------------- |
+| Display | xl                | 2rem (32 px)     |
+| h1      | lg                | 1.5rem (24 px)   |
+| h2      | md                | 1.125rem (18 px) |
+| h3      | md                | 1.125rem (18 px) |
+| h4      | sm                | 1rem (16 px)     |
+| h5      | 2xs               | 0.875rem (14 px) |
+| h6      | 3xs               | 0.75rem (12 px)  |
+| Body    | sm                | 1rem (16 px)     |
 
 ### Line-Height Settings
 

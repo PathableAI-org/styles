@@ -23,13 +23,16 @@ guarantees:
     claim: With the stacked modifier, or at a viewport of 640 px or less, the title, context and actions stack vertically in source order.
   - id: narrow
     status: unverified
-    claim: At a viewport of 640 px or less the title is 24 px instead of 32 px, the padding is 2rem, and the actions region is full width with each child growing to fill the space left on its line.
+    claim: At a viewport of 640 px or less the title is 1.5rem instead of 2rem, which is 24 px instead of 32 px at a 16 px root font size, the padding is 2rem, and the actions region is full width with each child growing to fill the space left on its line.
   - id: action-target
     status: unverified
     claim: Every pathable-button in the actions region is at least 44 by 44 px.
   - id: description-measure
     status: unverified
-    claim: The description is at most 40rem wide, at 14 px with a line height of 1.5, in the muted text colour.
+    claim: The description is at most 40rem wide, at 0.875rem (14 px at a 16 px root) with a line height of 1.5, in the muted text colour.
+  - id: scales-with-root
+    status: unmet
+    claim: The breadcrumb, title, context and description font sizes follow the root font size, so at a 200% root font size each size doubles.
   - id: context-nowrap
     status: unverified
     claim: The context line never wraps and never shrinks.
@@ -168,9 +171,13 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The unmet guarantee is the two custom properties the component's source
-describes; the compiled stylesheet does not read either, so setting them does
-nothing.
+The custom-properties guarantee is unmet: it is the two custom properties the
+component's source describes; the compiled stylesheet does not read either, so
+setting them does nothing.
+
+The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
+px values, so the header's text sizes do not follow the user's default font
+size.
 
 ## The consumer owns
 
