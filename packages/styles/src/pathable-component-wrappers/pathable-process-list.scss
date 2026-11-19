@@ -21,6 +21,25 @@
 
 .pathable-process-list__item {
   @extend .usa-process-list__item;
+
+  // The marker's 2.5rem size includes its border, so the connector line,
+  // which is offset for a 2.5rem marker, runs through its centre. The built
+  // CSS has no global border-box rule, so the marker sets it itself.
+  &::before {
+    box-sizing: border-box;
+
+    // In forced colours the browser paints a backplate behind the numeral
+    // that overruns the smaller border-box marker and cuts into the top of
+    // its ring. Opt the marker out of the adjustment and give it the system
+    // colours itself, so it stays a complete ring in the user's palette.
+    @media (forced-colors: active) {
+      background-color: Canvas;
+      border-color: CanvasText;
+      box-shadow: none;
+      color: CanvasText;
+      forced-color-adjust: none;
+    }
+  }
 }
 
 .pathable-process-list__heading {
