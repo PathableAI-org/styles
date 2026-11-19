@@ -16,3 +16,25 @@
 .pathable-graphic-list__heading {
   @extend .usa-graphic-list__heading;
 }
+
+// Spacing for pathable-media-block children, so the markup needs no .usa-*
+// classes or row wrapper.
+.pathable-graphic-list .pathable-media-block {
+  margin-bottom: units(4);
+
+  @include at-media('tablet') {
+    margin-bottom: units(8);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.pathable-graphic-list .pathable-media-block__img {
+  margin-right: units(3);
+}
+
+.pathable-graphic-list .pathable-media-block__body > :first-child {
+  margin-top: 0;
+}
