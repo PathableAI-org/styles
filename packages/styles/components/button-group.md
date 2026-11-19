@@ -9,6 +9,9 @@ guarantees:
   - id: stacks-narrow
     status: unverified
     claim: Below a viewport width of 480 px the children stack in one column in DOM order, each stretched to the width of the group.
+  - id: stacked-gap
+    status: unmet
+    claim: Below a viewport width of 480 px the stacked children are at least 8 px apart, so the focus ring of a focused button is visible on all four sides.
   - id: row-from-480
     status: unmet
     claim: From a viewport width of 480 px the children sit side by side in DOM order, each stretched to the height of the tallest beside it, and they wrap or stack when they do not fit the group's container, so none runs past it.
@@ -78,9 +81,8 @@ are not custom properties and do not change with the theme.
   elements when the group is a `<ul>`. The group lays out its direct
   children only and has no element classes.
 - Below 480 px each `pathable-button` is full width and the stacked buttons
-  touch, with no vertical space between them, so the next button covers the
-  bottom edge of the focused button's focus ring. Add your own space, such as
-  a margin on the buttons, when they need it.
+  are expected to sit at least 8 px apart, so the focused button's focus ring
+  shows on all four sides.
 - The group has a negative inline margin of 4 px on each side, so it extends
   4 px beyond its container at the start and the end. Leave room for it, or
   use `pathable-cluster`, which has no negative margin.
@@ -105,6 +107,10 @@ that never wraps, each stretched to the height of the tallest, so in a narrow
 container or at a large text size the last button can run past the
 container's edge.
 
+The `stacked-gap` guarantee is unmet. Today, below 480 px, the stacked buttons
+touch, with no vertical space between them, so the next button covers the
+bottom edge of the focused button's focus ring.
+
 ## The consumer owns
 
 - Accessibility. The class adds no semantics. When the buttons form a named
@@ -113,5 +119,4 @@ container's edge.
 - Button order: put the primary action where your product's forms put it,
   and keep DOM order and visual order the same.
 - Each button's type, label and behaviour.
-- Space above and below the group, and between stacked buttons on narrow
-  screens.
+- Space above and below the group.
