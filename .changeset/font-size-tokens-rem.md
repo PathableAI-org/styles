@@ -2,7 +2,7 @@
 '@pathableai/styles': minor
 ---
 
-Express the font-size tokens in `rem` so text follows the browser's default
+**Breaking change**: express the font-size tokens in `rem` so text follows the browser's default
 font size. `--pathable-font-size-*` and `--usa-font-size-*` (and the
 `--ui-*` aliases) keep their current sizes at a 16px root: display-lg 2rem,
 heading-lg 1.5rem, heading-md 1.25rem, heading-sm and body-lg 1.125rem,

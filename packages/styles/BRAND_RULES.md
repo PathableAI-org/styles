@@ -160,9 +160,8 @@ The design system also uses Nunito SemiBold (600) for UI labels. This weight is 
 ### Type Scale Mapping
 
 Type sizes are in `rem`, so they follow the user's default font size; the
-pixel figures are those at a 16 px root font size. Today the published
-font-size tokens are still fixed px values, so they do not yet follow it (see
-issue #373).
+pixel figures are those at a 16 px root font size. The published font-size
+tokens are `rem` values, so they follow it.
 
 | PathAble Token        | Size             | USWDS System Token | USWDS Theme Token | Notes                                        |
 | --------------------- | ---------------- | ------------------ | ----------------- | -------------------------------------------- |
