@@ -46,6 +46,9 @@
 // Back on the left, Continue/Submit on the right (full-height)
 @include at-media-max('tablet') {
   .pathable-wizard__actions {
+    // Light container: reset the surface focus ring (see pathable-bg-link in
+    // _utilities.scss).
+    --pathable-surface-focus-ring: initial;
     position: sticky;
     bottom: 0;
     background: color('white');

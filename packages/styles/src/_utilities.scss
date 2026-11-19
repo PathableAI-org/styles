@@ -105,6 +105,9 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 // own, so one in a surface that sets a dark ring keeps it. Inside the teal
 // container the light ring would be 1.3:1 on Base and 2.8:1 on Accent, so
 // they set the dark ring the Silver and Jade surfaces use (9.6:1 and 6.3:1).
+// The Jade pathable-bg-success is the same case. The alerts paint light tints,
+// where the white ring is about 1:1 and Bright Blue Brooks about 2.7:1, so
+// they take the dark ring too.
 :where(.pathable-bg-link)
   :where(.pathable-bg-base, .hover\:pathable-bg-base:hover):not(
     :where(#{$-surface-focus-ring-controls})
@@ -113,9 +116,13 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 }
 
 :where(.pathable-bg-link)
-  :where(.pathable-bg-accent, .hover\:pathable-bg-accent:hover):not(
-    :where(#{$-surface-focus-ring-controls})
-  ) {
+  :where(
+    .pathable-bg-accent,
+    .hover\:pathable-bg-accent:hover,
+    .pathable-bg-success,
+    .hover\:pathable-bg-success:hover,
+    .pathable-alert
+  ):not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }
 

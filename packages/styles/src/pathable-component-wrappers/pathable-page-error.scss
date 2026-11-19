@@ -71,6 +71,9 @@
 // --- Full Page Layout ---
 
 .pathable-page-error--full-page {
+  // Transparent: the controls sit on the background behind the page error, so
+  // they keep the ring that background sets.
+  --pathable-surface-focus-ring: inherit;
   display: flex;
   flex-direction: column;
   align-items: center;

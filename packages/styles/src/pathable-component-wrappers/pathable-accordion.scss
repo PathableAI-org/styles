@@ -24,4 +24,8 @@
 
 .pathable-accordion__content {
   @extend .usa-accordion__content;
+
+  // Light container: reset the surface focus ring (see pathable-bg-link in
+  // _utilities.scss).
+  --pathable-surface-focus-ring: initial;
 }
