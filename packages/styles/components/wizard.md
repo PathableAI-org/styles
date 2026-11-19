@@ -19,17 +19,11 @@ guarantees:
     status: unverified
     claim: Every pathable-button in the action footer is at least 44 by 44 px at every viewport width.
   - id: action-order
-    status: unverified
-    claim: At a viewport 640 px wide or wider, footer buttons sit in a wrapping row 16 px apart (an 8 px gap plus each button's 0.5rem right margin), and the continue button, the submit button and the last button are pushed to the inline end, stopping 0.5rem short of it.
+    status: unmet
+    claim: At every viewport width, no two footer buttons are closer than the footer's 8 px gap and the last button reaches the footer's end; at a viewport 640 px wide or wider they sit in a wrapping row with only that gap between neighbours on a line, except that the continue button, the submit button and the last button are pushed to the inline end.
   - id: mobile-footer
     status: unverified
-    claim: Below a 640 px viewport, the action footer sticks to the bottom of the viewport as two equal columns, with a save button alone and centred on the first row.
-  - id: region-gap
-    status: unmet
-    claim: Every direct child after the first, the heading included, sits --pathable-wizard-gap (16 px by default) below the one before it.
-  - id: tablet-breakpoint
-    status: unmet
-    claim: The mobile summary and the two-column sticky footer apply at every viewport narrower than 768 px.
+    claim: Below a 640 px viewport, the action footer sticks to the bottom of the viewport as two equal columns, with a save button alone on the first row.
 ---
 
 # Wizard
@@ -80,7 +74,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
     </li>
   </ol>
   <p class="pathable-wizard__mobile-summary">Step 2 of 2: Participant intake</p>
-  <h2 class="pathable-wizard__heading">Participant intake</h2>
+  <h2 class="pathable-wizard__heading" tabindex="-1">Participant intake</h2>
   <div class="pathable-wizard__validation" tabindex="-1"></div>
   <div class="pathable-form">
     <div class="pathable-form-group">
@@ -89,9 +83,15 @@ Load the stylesheet once in the application; no JavaScript is needed:
     </div>
   </div>
   <div class="pathable-wizard__actions">
-    <button class="pathable-button pathable-button--save">Save and exit</button>
-    <button class="pathable-button pathable-button--back">Back</button>
-    <button class="pathable-button pathable-button--submit">Submit</button>
+    <button type="button" class="pathable-button pathable-button--save">
+      Save and exit
+    </button>
+    <button type="button" class="pathable-button pathable-button--back">
+      Back
+    </button>
+    <button type="submit" class="pathable-button pathable-button--submit">
+      Submit
+    </button>
   </div>
 </div>
 ```
@@ -117,7 +117,9 @@ not theme tokens.
 
 ## Composition
 
-Direct children stack in source order, each separated by the wizard gap:
+Direct children stack in source order, each separated by the wizard gap,
+except the heading, which has no top margin and sits directly against the
+element before it:
 
 - Step context: a `pathable-step-indicator`. The wizard does not hide it on
   narrow screens; leave it out or hide it there if the mobile summary replaces
@@ -137,9 +139,9 @@ Direct children stack in source order, each separated by the wizard gap:
   (`pathable-button--save`), back (`pathable-button--back`), then continue
   (`pathable-button--continue`) or, on the final step, submit
   (`pathable-button--submit`). Leave out the back button on the first step.
-  The footer puts an 8 px gap between buttons, and each `pathable-button`
-  keeps its own 0.5rem right margin, so buttons appear 16 px apart and the
-  last one stops 0.5rem short of the footer's end.
+  The footer puts an 8 px gap between buttons. Apart from the primary button
+  the narrow layout stretches, a `pathable-button` fills its space below a
+  480 px viewport and keeps its own width from 480 px up.
 
 The wizard sets no working font size for `pathable-wizard__heading`,
 `pathable-wizard__section` or `pathable-wizard__mobile-summary`, so they render
@@ -152,20 +154,25 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source, and no test checks it yet.
 
-Today the heading sits directly against the element before it, and the narrow
-layout starts below 640 px, not 768 px.
+Today each `pathable-button` in the footer keeps its own 0.5rem right margin.
+From 640 px up, buttons appear 16 px apart and the last one stops 0.5rem short
+of the footer's end; below 640 px the save button sits 4 px left of centre,
+and below 480 px the back button touches the button beside it.
 
 ## The consumer owns
 
 - Rendering one step at a time, moving between steps and deciding which
   buttons to show.
-- Focus. After a step change, move focus to the heading; after a failed
-  submit, add `pathable-wizard__validation--visible`, fill the summary and move
-  focus to it. Announcing errors, for example with `role="alert"`, is yours.
+- Focus. After a step change, move focus to the heading, which needs
+  `tabindex="-1"` as in the example; after a failed submit, add
+  `pathable-wizard__validation--visible`, fill the summary and move focus to
+  it. Announcing errors, for example with `role="alert"`, is yours.
 - The step indicator's states and `aria-current="step"` on the current step.
 - The buttons. They keep their `pathable-button` styling; the footer only
   orders them, sets their minimum size and, below 640 px, stretches the
-  primary one. Use real `<button>` elements with `type` set.
+  primary one. Use real `<button>` elements with `type` set: `type="button"`
+  for save and exit and back, and `type="submit"` only for the action that
+  submits the step.
 - Room for the sticky footer on narrow screens, so it does not cover the last
   field.
 - Form fields, labels, hints and per-field error messages.

@@ -32,7 +32,7 @@ guarantees:
     claim: At a viewport 640 px wide or narrower a row wraps, and the date moves to its own full-width line above the rest of the row.
   - id: group-heading-spacing
     status: unverified
-    claim: A group heading has a 32 px top margin and a 16 px bottom margin, except a heading that is the first child of its list, which has no top margin; inside a list these add to the list's gap, giving 48 px above and 32 px below by default.
+    claim: A group heading has a 32 px top margin and a 16 px bottom margin, except a heading that is the first child of its parent, which has no top margin; inside a pathable-activity-list these add to its gap, giving 48 px above and 32 px below by default.
   - id: empty-message
     status: unverified
     claim: With the empty modifier, the empty message is centred with 64 px of padding above and below and 32 px at the sides.
@@ -85,7 +85,9 @@ Load the stylesheet once in the application; no JavaScript is needed:
       <span class="pathable-activity-row__owner-text">You</span>
     </span>
     <div class="pathable-activity-row__actions">
-      <button class="pathable-button pathable-button--outline">View</button>
+      <button type="button" class="pathable-button pathable-button--outline">
+        View
+      </button>
     </div>
   </div>
 </div>
@@ -126,10 +128,11 @@ corners; on hover the row background changes to the page background colour.
 
 - `pathable-activity-list__group-heading`: a heading (such as an `<h3>`) that
   names a group. To group rows, put headings and nested
-  `pathable-activity-list` containers inside an outer list, and label each
-  nested list with its heading through `aria-labelledby`. The heading's
-  margins add to the outer list's gap, so by default a heading has 48 px
-  above it and 32 px below it.
+  `pathable-activity-list` containers inside an outer `pathable-activity-list`
+  used only for layout: give the outer container no list role, give each
+  nested list `role="list"`, and label it with its heading through
+  `aria-labelledby`. The heading's margins add to the outer container's gap,
+  so by default a heading has 48 px above it and 32 px below it.
 - `pathable-activity-row`: one item, a flex row with its parts centred
   vertically. Its parts, in order:
   - `pathable-activity-row__status`: an empty `<span>` with a `data-status`
@@ -145,11 +148,14 @@ corners; on hover the row background changes to the page background colour.
     can sit beside it with an 8 px gap.
   - `pathable-activity-row__actions`: optional trailing controls, kept at
     their own width with an 8 px gap. Each `pathable-button` keeps its own
-    0.5rem right margin, so buttons appear 16 px apart and the last one stops
-    0.5rem short of the row's padding edge.
+    0.5rem right margin, so from a 480 px viewport up buttons appear 16 px
+    apart and the last one stops 0.5rem short of the row's padding edge;
+    below 480 px a `pathable-button` is styled to fill its container's
+    width.
 - `pathable-activity-list__empty`: the empty message, inside a list with
   `pathable-activity-list--empty`.
-- The list fills its container's width; it has no padding of its own.
+- The list fills its container's width and adds no padding or margin of its
+  own. It does not remove a `<ul>` element's default padding and margin.
 
 ## Guarantees
 
@@ -163,8 +169,11 @@ document.
 
 ## The consumer owns
 
-- List semantics: `role="list"` on the list and `role="listitem"` on each row,
-  or real `<ul>` and `<li>` elements, and a label for each list.
+- List semantics: `role="list"` on each list that holds rows and
+  `role="listitem"` on each row, and a label for each list. An outer container
+  that groups headings and nested lists takes no list role. If you use real
+  `<ul>` and `<li>` elements instead, remove the `<ul>` element's padding and
+  margin yourself.
 - The status in words. The status mark is decorative and colour is never the
   only cue; an unrecognised `data-status` value shows a neutral mark.
 - The actions: the buttons or links inside `pathable-activity-row__actions`

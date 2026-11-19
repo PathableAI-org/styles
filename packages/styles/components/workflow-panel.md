@@ -15,13 +15,13 @@ guarantees:
     claim: The panel is a single column at most --pathable-workflow-panel-max-width wide (320 px by default) with --pathable-workflow-panel-gap (12 px by default) between its regions.
   - id: prompt-scroll
     status: unverified
-    claim: The prompt has 12 px padding and its content is at most 320 px tall (344 px with the padding), scrolling vertically inside itself when its content is longer.
+    claim: The prompt has 12 px padding and, being content-box, its content area is at most 320 px tall (344 px with the padding), scrolling vertically inside itself when its content is longer.
   - id: status-text
-    status: unverified
-    claim: Each state modifier writes a fixed English message before the status region's content (Loading…, Saving…, ✓ Saved, the offline warning, the validation warning or ✓ Completed), and the default state writes none.
+    status: unmet
+    claim: No state modifier writes a message of its own; each only styles, with colour, a box or an icon, the status text the application puts in the status region.
   - id: completed-hides
     status: unverified
-    claim: In the completed state the prompt and input regions are not displayed and every other region still is.
+    claim: In the completed state the prompt and input regions are not displayed, and the state hides no other region.
   - id: empty-regions
     status: unverified
     claim: An objective or current-activity region with no child nodes at all, not even whitespace, is not displayed and leaves no gap.
@@ -86,10 +86,16 @@ Load the stylesheet once in the application; no JavaScript is needed:
     <label class="pathable-label" for="notes">Assessment notes</label>
     <textarea class="pathable-textarea" id="notes" rows="4"></textarea>
   </div>
-  <div class="pathable-workflow-panel__status" role="status"></div>
+  <div class="pathable-workflow-panel__status" role="status">
+    <span class="pathable-sr-only">Saved</span>
+  </div>
   <div class="pathable-workflow-panel__actions">
-    <button class="pathable-button pathable-button--save">Save draft</button>
-    <button class="pathable-button pathable-button--continue">Continue</button>
+    <button type="button" class="pathable-button pathable-button--save">
+      Save draft
+    </button>
+    <button type="button" class="pathable-button pathable-button--continue">
+      Continue
+    </button>
   </div>
 </section>
 ```
@@ -145,8 +151,9 @@ Regions stack in source order; each is optional:
   modifiers put their message at its start.
 - `pathable-workflow-panel__actions`: a wrapping row of `pathable-button`
   elements with an 8 px gap. Each button keeps its own 0.5rem right margin, so
-  buttons appear 16 px apart and the last one stops 0.5rem short of the
-  panel's end. Mark the primary one `pathable-button--continue`: the offline
+  from a 480 px viewport up buttons appear 16 px apart and the last one stops
+  0.5rem short of the panel's end; below 480 px each `pathable-button` is full
+  width and on its own line. Mark the primary one `pathable-button--continue`: the offline
   state dims it to 60% opacity and ignores pointer clicks on it, but it can
   still be reached and pressed with the keyboard.
 
@@ -161,9 +168,13 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source, and no test checks it yet.
 
-Today all four fall short: the current-activity text is about 2.2:1 on white,
-the saved and completed messages about 2.8:1 on white, and the offline message
-about 4.3:1 on its amber box.
+Today each state modifier except the default writes a fixed English message
+with generated content at the start of the status region: "Loading…",
+"Saving…", "✓ Saved", an offline warning, a validation warning or
+"✓ Completed". The contrast guarantee falls short in all four cases: the
+current-activity text is about 2.2:1 on white, the saved and completed
+messages about 2.8:1 on white, and the offline message about 4.3:1 on its
+amber box.
 
 ## The consumer owns
 
@@ -173,12 +184,13 @@ about 4.3:1 on its amber box.
   text: they cannot be translated through markup, and assistive technology may
   not read or announce them. Put the same status in words in the status
   region, for example in a `pathable-sr-only` element inside a `role="status"`
-  region.
+  region, as in the example, and change that text with each state.
 - Disabling the continue button yourself when offline, with `disabled` or
   `aria-disabled="true"` and a guard in the handler.
 - The controls. Buttons keep their `pathable-button` styling and the note
   field its own component class; the panel only sizes and lays out the
-  buttons. Label the note field visibly.
+  buttons. Give each button a `type`, as in the example, so none submits a
+  surrounding form by accident. Label the note field visibly.
 - Room for the sticky actions on narrow screens, and placing the panel beside
   the content it supports.
 - Minimising sensitive participant data shown in the panel.

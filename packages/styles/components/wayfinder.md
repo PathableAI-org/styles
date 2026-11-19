@@ -23,7 +23,7 @@ guarantees:
     claim: At a viewport 1024 px wide or narrower, question groups stack in one column and the action is full width and at least 44 px tall.
   - id: choice-target
     status: unverified
-    claim: Every label inside a question's controls is at least 44 px tall, with the input and its text centred vertically and an 8 px gap between them.
+    claim: Every label inside a question's controls is at least 60 px tall, a 44 px minimum content height (the label is content-box) plus 8 px padding above and below, and lays out its input and text as a row whose items are centred vertically.
   - id: text-measure
     status: unverified
     claim: The explanatory text is at most 640 px wide whatever the panel's width.
@@ -149,8 +149,9 @@ Children stack in a column in source order:
   - `pathable-wayfinder__question-controls`: a column of `<label>` elements,
     each wrapping one radio button or checkbox and its text. Each label is
     60 px tall at least: a 44 px minimum height plus 8 px padding above and
-    below. The browser's own input margins add about 3 px to the 8 px gap
-    and indent the input about 5 px. Radio buttons and checkboxes take the
+    below, since the label is content-box. The label sets an 8 px gap between
+    the input and its text; the browser's own input margins add about 3 px to
+    it, indent the input about 5 px and can set it slightly off centre. Radio buttons and checkboxes take the
     accent colour.
 - `pathable-wayfinder__action`: the result action, usually a
   `pathable-button`, placed last.
