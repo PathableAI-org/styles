@@ -31,6 +31,10 @@
 
 .pathable-card__heading {
   @extend .usa-card__heading;
+
+  // A long single word breaks inside the card instead of running past it at
+  // increased text size on a narrow viewport.
+  overflow-wrap: break-word;
 }
 
 .pathable-card__media {
