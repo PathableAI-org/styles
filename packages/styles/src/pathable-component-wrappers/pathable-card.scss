@@ -34,13 +34,14 @@
 }
 
 // A long single word breaks inside the card instead of running past it at
-// increased text size on a narrow viewport. `anywhere`, unlike `break-word`,
-// also lowers the min-content width, so a card that is a flex item (as in a
-// cluster) can shrink. The React Card renders its title in the header for the
-// presentations that have no heading class.
+// increased text size on a narrow viewport. `break-word`, unlike `anywhere`,
+// leaves the min-content width alone, so a flex card such as the flag card
+// does not squeeze its heading into fragments. A card that is a flex item
+// still grows to fit an unbroken word. The React Card renders its title in
+// the header for the presentations that have no heading class.
 .pathable-card__heading,
 .pathable-card__header {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .pathable-card__media {

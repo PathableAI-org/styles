@@ -278,7 +278,7 @@ export const ContentPressure = {
 
 export const LongWordHeading = {
   render: () => `
-    <div data-testid="card-long-word" style="display: flex; flex-wrap: wrap; width: 300px; max-width: 100%;">
+    <div data-testid="card-long-word" style="width: 300px; max-width: 100%;">
       <div class="pathable-card" data-testid="card-with-heading">
         <div class="pathable-card__container">
           <div class="pathable-card__header">
