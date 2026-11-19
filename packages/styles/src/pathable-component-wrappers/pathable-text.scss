@@ -21,8 +21,6 @@
 //   .pathable-text--tone-danger   — var(--pathable-color-danger)
 //   .pathable-text--tone-success  — var(--pathable-color-text-success)
 
-@use 'uswds-core' as *;
-
 .pathable-text {
   font-family: var(--pathable-font-body);
   font-size: var(--pathable-text-font-size, var(--pathable-font-size-body-md));
@@ -39,11 +37,12 @@
 
 // Dark containers recolour only some descendants (headings, p, a, and span in
 // the dark background), so text on any other element would keep the theme text
-// colour on a dark surface. Use white, as a <p> does there. Tones do not apply
-// on a dark surface; this matches a <p>.
-.pathable-section--dark .pathable-text,
-.pathable-dark-background .pathable-text {
-  color: color('white');
+// colour on a dark surface. With no tone or custom colour set, take the colour
+// the container gives its content. :where() keeps the specificity of
+// .pathable-text, so the containers' own heading and link colours still win and
+// a tone modifier or --pathable-text-color still sets the colour.
+:where(.pathable-section--dark, .pathable-dark-background) .pathable-text {
+  color: var(--pathable-text-color, inherit);
 }
 
 // Variant modifiers

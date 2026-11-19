@@ -22,7 +22,11 @@ const RESULTS_DIR = resolve('apps/storybook/test-results')
 // ---------------------------------------------------------------------------
 
 const EXPECTED_COVERAGE = {
-  Brand: ['brand-color-usage--default', 'brand-typography--default'],
+  Brand: [
+    'brand-color-usage--default',
+    'brand-typography--default',
+    'brand-typography--text-in-dark-containers',
+  ],
   'Basic components': [
     'components-button--primary',
     'components-button--outline',

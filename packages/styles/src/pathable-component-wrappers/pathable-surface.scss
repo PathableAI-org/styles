@@ -47,6 +47,7 @@
 
 // Variant: raised — elevated card/panel
 .pathable-surface--raised {
+  color: var(--pathable-color-text);
   --pathable-surface-focus-ring: initial;
   background: var(--pathable-color-surface);
   border: none;
@@ -55,6 +56,7 @@
 
 // Variant: inset — recessed area
 .pathable-surface--inset {
+  color: var(--pathable-color-text);
   --pathable-surface-focus-ring: var(--pathable-color-text);
   background: var(--pathable-color-bg);
   border: none;
@@ -63,6 +65,7 @@
 
 // Variant: interactive — clickable with hover/focus states
 .pathable-surface--interactive {
+  color: var(--pathable-color-text);
   --pathable-surface-focus-ring: initial;
   background: var(--pathable-color-surface);
   border: 2px solid transparent;
