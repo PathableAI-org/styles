@@ -146,15 +146,14 @@ corners; on hover the row background changes to the page background colour.
   - `pathable-activity-row__owner`: holds the owner or participant name in
     `pathable-activity-row__owner-text`, which truncates; an avatar or icon
     can sit beside it with an 8 px gap.
-  - `pathable-activity-row__actions`: optional trailing controls, kept at
-    their own width with an 8 px gap. Each `pathable-button` keeps its own
-    0.5rem right margin, so from a 480 px viewport up buttons appear 16 px
-    apart and the last one stops 0.5rem short of the row's padding edge. A
-    single button lays out the same way at every width. With two or more
-    buttons the region does not lay out reliably below 480 px today: the
-    buttons take equal widths, long labels wrap, and the region can drop to
-    its own line or run past the row. Keep to one action per row on narrow
-    screens.
+  - `pathable-activity-row__actions`: optional trailing controls, with an
+    8 px gap between them. Each `pathable-button` keeps its own 0.5rem right
+    margin, which adds to that gap and leaves the last button 0.5rem short of
+    the end of the region. At a viewport of 640 px or narrower the row wraps,
+    and the actions can move to a line of their own, at the start of the
+    row. How several buttons share that line is not reliable today, so
+    check the row at the widths you support and prefer one action per row on
+    narrow screens.
 - `pathable-activity-list__empty`: the empty message, inside a list with
   `pathable-activity-list--empty`.
 - The list fills its container's width and adds no padding or margin of its
