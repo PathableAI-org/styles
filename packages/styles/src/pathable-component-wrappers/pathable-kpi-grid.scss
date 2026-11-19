@@ -19,6 +19,7 @@
 // --- Grid container ---
 
 .pathable-kpi-grid {
+  font-family: var(--pathable-font-body);
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
@@ -54,6 +55,7 @@
 // --- KPI card ---
 
 .pathable-kpi-card {
+  font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;
   gap: var(--pathable-space-1);

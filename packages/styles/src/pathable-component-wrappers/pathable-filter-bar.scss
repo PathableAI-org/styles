@@ -11,6 +11,7 @@
 @use 'uswds-core' as *;
 
 .pathable-filter-bar {
+  font-family: var(--pathable-font-body);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -92,6 +93,7 @@
 
 // Clear-all action
 .pathable-filter-bar__clear {
+  font-family: inherit;
   padding: var(--pathable-space-1) var(--pathable-space-2);
   border: none;
   background: transparent;

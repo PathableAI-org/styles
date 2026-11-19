@@ -15,6 +15,7 @@
 // --- Base item ---
 
 .pathable-schedule-item {
+  font-family: var(--pathable-font-body);
   display: flex;
   gap: var(--pathable-space-3);
   padding: var(--pathable-space-3);
@@ -201,6 +202,7 @@
 // --- List container ---
 
 .pathable-schedule-list {
+  font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;
   gap: var(--pathable-space-2);
