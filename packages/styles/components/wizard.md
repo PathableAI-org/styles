@@ -12,6 +12,9 @@ guarantees:
   - id: validation-hidden
     status: unverified
     claim: The validation region is not displayed unless it also has pathable-wizard__validation--visible.
+  - id: heading-gap
+    status: unmet
+    claim: The heading sits one wizard gap, --pathable-wizard-gap or 16 px by default, below the region before it, like every other region after the first.
   - id: mobile-summary
     status: unverified
     claim: The mobile summary is not displayed at a viewport 640 px wide or wider and is displayed below that.
@@ -120,16 +123,15 @@ not theme tokens.
 
 ## Composition
 
-Direct children stack in source order, each separated by the wizard gap,
-except the heading, which has no top margin and sits directly against the
-element before it:
+Direct children stack in source order, each separated by the wizard gap:
 
 - Step context: a `pathable-step-indicator`. The wizard does not hide it on
   narrow screens; leave it out or hide it there if the mobile summary replaces
   it.
 - `pathable-wizard__mobile-summary`: a one-line step summary such as "Step 2 of
   4: Participant intake", shown only below 640 px.
-- `pathable-wizard__heading`: the step's heading, bold, with no margin.
+- `pathable-wizard__heading`: the step's heading, bold, with no margin of its
+  own apart from the wizard gap above it.
 - `pathable-wizard__validation`: the error summary region, hidden until you add
   `pathable-wizard__validation--visible`. Put a `pathable-alert` with
   `pathable-alert--error` inside it.
@@ -157,6 +159,9 @@ Today each `pathable-button` in the footer keeps its own 0.5rem right margin.
 From 640 px up, buttons appear 16 px apart and the last one stops 0.5rem short
 of the footer's end; below 640 px the save button sits 4 px left of centre,
 and below 480 px the back button touches the button beside it.
+
+Today the heading has no top margin and sits directly against the element
+before it, because its margin reset also removes the wizard gap.
 
 Today the heading, section and mobile summary sizes compile to invalid
 declarations, so the text renders at the inherited or element default size
