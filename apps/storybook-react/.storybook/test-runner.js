@@ -35,19 +35,9 @@ const config = {
   },
   async postVisit(page, context) {
     // Stories with a documented source contrast exception.
-    // – WorkflowWithStatus, LongContent, AsStatusIndicators:
-    //   The .pathable-card__status element has insufficient color contrast
-    //   against the card background — a pre-existing design token issue in
-    //   @pathableai/styles. Tracked for future fix.
     // – Alert/Error: color contrast violation from pre-existing design
     //   tokens in the error alert background color.
-    const skipA11yStoryIds = new Set([
-      'components-card--workflow-with-status',
-      'components-card--long-content',
-      'components-card--narrow-workflow',
-      'components-tag--as-status-indicators',
-      'components-communication-alert--error',
-    ])
+    const skipA11yStoryIds = new Set(['components-communication-alert--error'])
     if (skipA11yStoryIds.has(context.id)) {
       return
     }
