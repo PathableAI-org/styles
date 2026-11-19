@@ -84,7 +84,42 @@ Some of these rules are enforced for Claude Code by
 - Editing check configuration asks a human first: ESLint, stylelint,
   markdownlint, Prettier, lint-staged, Husky and commitlint configuration,
   `scripts/accessibility-exceptions.mjs`, any `tsconfig*.json`, GitHub
-  workflows, the hook itself and `.claude/settings.json`.
+  workflows, the hook itself and `.claude/settings.json`. The `Edit(...)`
+  rules cover the `Write` and `MultiEdit` tools too.
+- A hook on `Bash`,
+  [`scripts/claude/guardrail-write-hook.mjs`](scripts/claude/guardrail-write-hook.mjs)
+  (logic in `scripts/guardrail-write.mjs`), catches shell writes to the
+  [guardrail paths](docs/engineering/git-workflow.md#guardrail-changes), which
+  are wider than the `Edit(...)` rules above. Before a command runs
+  (`PreToolUse`), it asks a person when the command names a guardrail path, or
+  for deletes and copies a directory holding one, together with a redirection,
+  `tee`, `sed -i`, `perl -i`, `cp`, `mv`, `rm`, `install`, `chmod`, `curl -o`,
+  `find -delete`, `git apply`, `git checkout … --` or `git restore`, or runs
+  inline interpreter code (`python -c`, `node -e`, a heredoc to an interpreter)
+  that names one and calls something write-like. That check reads the command
+  text, so an obfuscated command can evade it. After the command, whether it
+  succeeded or failed (`PostToolUse` and `PostToolUseFailure`), the hook
+  compares the guardrail files Git reports as changed, ignored ones included,
+  and the commits the command made, with a record taken just before it ran. If
+  the command changed one it was not asked about, the hook tells the agent to
+  stop and ask the person to review the change. Not reported: changes made
+  before the command (by an approved edit, a person or a background command);
+  paths and globs the person approved in the ask; content already seen in the
+  session and not reported before, such as changes brought back by
+  `git stash pop`; untracked files `git stash` put away; content restored to
+  the old HEAD's, as by `git reset`; unchanged files in an amended commit;
+  files a merge the command started left conflicted or auto-merged while they
+  still hold what Git wrote, a merge commit's Git-made result, and files
+  `git merge --abort` removes; Husky shims an install creates; and
+  whitespace-only reformatting of Markdown, including lint-staged's inside
+  `git commit`. Known
+  limits: a guardrail file changed by another process while a command runs is
+  reported as that command's change, including `.claude/settings.local.json`
+  when a person chooses not to be asked again for a command (the message says
+  so); a rebase, cherry-pick or revert that changes a guardrail file is
+  reported; and the after-check does not see what a background command writes
+  once it has started. If the hook stops you, leave the files as they are and
+  ask a human. Its tests run with `pnpm test:tooling`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
 - A `PreToolUse` hook, `scripts/claude/pr-merge-hook.mjs`, runs the

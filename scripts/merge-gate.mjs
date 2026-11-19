@@ -57,6 +57,7 @@ export const guardrailPaths = [
   'scripts/merge-gate.mjs',
   'scripts/merge-hook.mjs',
   'scripts/ready-hook.mjs',
+  'scripts/guardrail-write.mjs',
   'scripts/verification.mjs',
   'scripts/verification/',
   'scripts/review-findings/',

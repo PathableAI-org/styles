@@ -375,7 +375,8 @@ tier, because it changes the rules agents work under:
   `.changeset/config.json`
 - the gates, their commands and their notes tooling: `scripts/merge-gate.mjs`,
   `scripts/merge-hook.mjs`, `scripts/ready-hook.mjs`,
-  `scripts/verification.mjs`, `scripts/verification/`,
+  `scripts/guardrail-write.mjs`, `scripts/verification.mjs`,
+  `scripts/verification/`,
   `scripts/review-findings.mjs`, `scripts/review-findings/`,
   `scripts/visual-review.mjs`, `scripts/visual-review/`,
   `scripts/note-sync.mjs`, `scripts/note-sync/`, `scripts/note-store.mjs`,
