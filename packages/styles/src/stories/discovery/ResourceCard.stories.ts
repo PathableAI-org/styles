@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Discovery/Resource Card',
   tags: ['autodocs'],
@@ -39,6 +41,14 @@ export const Default = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-resource-card__provider',
+      '.pathable-resource-card__summary',
+      '.pathable-resource-card__metadata',
+      '.pathable-resource-card__rating',
+      '.pathable-resource-card__source',
+    ]),
 }
 
 export const Interactive = {

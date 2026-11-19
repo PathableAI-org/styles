@@ -234,6 +234,11 @@ Evidence each tier needs, in addition to the checks in
   `risk:high`, `risk:standard` or `risk:light`. The label is the filterable
   copy of the tier; the body records the triggers and reasons. When a tier
   changes, change the label in the same step.
+- Each issue labelled `bug` also carries exactly one package label,
+  `package:styles` or `package:react`, for the package the defect is in. A bug
+  that affects both packages is filed as two issues, one per package, each
+  linking the other. A bug in neither package, such as repository tooling,
+  carries neither label.
 - Anyone, including an agent, may raise a tier at any point by recording the
   trigger that matched. Work already approved stays approved; add the evidence
   the higher tier needs.
@@ -322,8 +327,9 @@ grow.
   is the maintainer's standing exception for dependency updates. It never
   automerges major upgrades, or `react`, `react-dom`, `next` or `@uswds/uswds`,
   so High-tier dependency changes still wait for a person.
-- Merging the `ci: version packages` pull request publishes to npm. A person
-  decides when that happens, at every tier.
+- Merging the `ci: version packages` pull request starts publishing to npm,
+  which then waits for a person to approve the `npm` environment deployment.
+  A person decides both, at every tier.
 
 ## Agent merge
 
@@ -369,7 +375,8 @@ tier, because it changes the rules agents work under:
   `.changeset/config.json`
 - the gates, their commands and their notes tooling: `scripts/merge-gate.mjs`,
   `scripts/merge-hook.mjs`, `scripts/ready-hook.mjs`,
-  `scripts/verification.mjs`, `scripts/verification/`,
+  `scripts/guardrail-write.mjs`, `scripts/verification.mjs`,
+  `scripts/verification/`,
   `scripts/review-findings.mjs`, `scripts/review-findings/`,
   `scripts/visual-review.mjs`, `scripts/visual-review/`,
   `scripts/note-sync.mjs`, `scripts/note-sync/`, `scripts/note-store.mjs`,

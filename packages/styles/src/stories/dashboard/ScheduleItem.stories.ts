@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Dashboard/Schedule Item',
   tags: ['autodocs'],
@@ -68,6 +70,14 @@ export const Default = {
       ${scheduleItem('MAR', '12', '9:00 AM', 'Workshop: Resume Building', 'Canceled due to presenter conflict', 'Training Room B', 'cancelled', 'Cancelled')}
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-schedule-item__date-month',
+      '.pathable-schedule-item__date-time',
+      '.pathable-schedule-item__title',
+      '.pathable-schedule-item__context',
+      '.pathable-schedule-item__meta',
+    ]),
 }
 
 export const Upcoming = {

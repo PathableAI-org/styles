@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Discovery/Filter Pill',
   tags: ['autodocs'],
@@ -18,6 +20,11 @@ export const Default = {
       <button class="pathable-filter-pill__dismiss" aria-label="Remove filter: Category: Training">&times;</button>
     </span>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-filter-pill__label',
+      '.pathable-filter-pill__dismiss',
+    ]),
 }
 
 export const Multiple = {

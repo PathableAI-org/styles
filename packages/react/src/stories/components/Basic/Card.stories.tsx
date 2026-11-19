@@ -2,6 +2,7 @@ import { Card } from '../../../components/Card/Card'
 import { Button } from '../../../components/Button/Button'
 import { Link } from '../../../components/Link/Link'
 import type { Meta, StoryObj } from '@storybook/react'
+import { userEvent, within, expect } from 'storybook/test'
 
 const PLACEHOLDER_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23c8c8c8'/%3E%3C/svg%3E"
@@ -152,6 +153,23 @@ export const HeaderFirstPresentation: Story = {
   ),
 }
 
+function resolveColorToken(token: string): string {
+  if (
+    !getComputedStyle(document.documentElement).getPropertyValue(token).trim()
+  ) {
+    throw new Error(`Card story token ${token} is undefined`)
+  }
+  const probe = document.createElement('span')
+  probe.style.color = `var(${token})`
+  document.body.append(probe)
+  const value = getComputedStyle(probe).color
+  probe.remove()
+  return value
+}
+
+/** Verifies that the action link has the link colour and underline, and
+ *  shows the workflow action's brand focus outline on keyboard focus, as the
+ *  styles workflow card's action link does. */
 export const WorkflowPresentation: Story = {
   render: () => (
     <Card
@@ -167,6 +185,38 @@ export const WorkflowPresentation: Story = {
       </p>
     </Card>
   ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const action = canvas.getByRole('link', { name: 'View session notes' })
+
+    await step('action link has the link colour and underline', async () => {
+      const style = getComputedStyle(action)
+      await expect(style.color).toBe(resolveColorToken('--pathable-color-link'))
+      await expect(style.textDecorationLine).toBe('underline')
+    })
+
+    await step(
+      'action link receives keyboard focus after the card',
+      async () => {
+        await userEvent.tab()
+        await userEvent.tab()
+        await expect(action).toHaveFocus()
+      },
+    )
+
+    await step(
+      'focused action link shows the brand focus outline',
+      async () => {
+        const style = getComputedStyle(action)
+        await expect(style.outlineStyle).toBe('solid')
+        await expect(style.outlineWidth).toBe('2px')
+        await expect(style.outlineOffset).toBe('2px')
+        await expect(style.outlineColor).toBe(
+          resolveColorToken('--pathable-color-focus-ring'),
+        )
+      },
+    )
+  },
 }
 
 export const WorkflowWithStatus: Story = {

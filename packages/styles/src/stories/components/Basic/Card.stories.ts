@@ -1,6 +1,9 @@
 import { expect, within } from 'storybook/test'
 
-import { expectKeyboardFocusIndicator } from '../../shared/focus-indicator'
+import {
+  expectKeyboardFocusIndicator,
+  resolveColor,
+} from '../../shared/focus-indicator'
 
 export default {
   title: 'Components/Card',
@@ -9,7 +12,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. No JavaScript is required.',
+          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. In a workflow card, put `.pathable-card__action` on the action link, or on a container around the actions. Inside the container, a plain link gets the action colour and underline, a `.pathable-link` keeps its own, both get the action focus indicator, and other anchors such as a `.pathable-button` keep their own styling. No JavaScript is required.',
       },
     },
   },
@@ -177,6 +180,62 @@ export const WorkflowCardWithStatus = {
     await expect(status).toBeVisible()
     await expect(action).toHaveClass('pathable-card__action')
     await expectKeyboardFocusIndicator(canvasElement, action)
+  },
+}
+
+// `.pathable-card__action` on a container around the actions, as the React
+// Card renders it, instead of on the link itself. The plain link gets the
+// action link styling, the `.pathable-link` keeps its own link colour and
+// underline, and both get the action focus ring. The anchor styled as a
+// button keeps its own styling, and the container itself is not drawn as a
+// link. `.pathable-cluster` spaces the actions so their focus rings do not
+// overlap; the container has no spacing of its own (#368).
+export const WorkflowCardActionContainer = {
+  render: () => `
+    <div class="pathable-card pathable-card--workflow" data-testid="workflow-action-container-card">
+      <div class="pathable-card__container">
+        <div class="pathable-card__header">
+          <h3 class="pathable-card__heading">Today's Coaching Session: J. Doe</h3>
+        </div>
+        <div class="pathable-card__body">
+          <p>Session 12 of 24 — Focus: Workplace communication skills and job readiness practice.</p>
+          <p class="pathable-card__meta">Last updated: Today, 2:30 PM | Duration: 45 min</p>
+          <div class="pathable-card__action pathable-cluster pathable-cluster--gap-lg" data-testid="workflow-action-container">
+            <a href="#session-notes">View session notes →</a>
+            <a href="#message-coach" class="pathable-link">Message coach</a>
+            <a href="#start-session" class="pathable-button">Start session</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('workflow-action-container')
+    const action = canvas.getByRole('link', { name: 'View session notes →' })
+    const linkAction = canvas.getByRole('link', { name: 'Message coach' })
+    const buttonLink = canvas.getByRole('link', { name: 'Start session' })
+    const linkColor = resolveColor(canvasElement, 'var(--pathable-color-link)')
+
+    await expect(container).toContainElement(action)
+    await expect(getComputedStyle(container).color).toBe(
+      resolveColor(canvasElement, 'var(--pathable-color-text)'),
+    )
+    await expect(getComputedStyle(container).textDecorationLine).toBe('none')
+    for (const link of [action, linkAction]) {
+      await expect(getComputedStyle(link).color).toBe(linkColor)
+      await expect(getComputedStyle(link).textDecorationLine).toBe('underline')
+    }
+    await expect(getComputedStyle(buttonLink).color).not.toBe(linkColor)
+    await expect(getComputedStyle(buttonLink).textDecorationLine).toBe('none')
+
+    await expectKeyboardFocusIndicator(canvasElement, action, { width: 2 })
+    await expect(getComputedStyle(action).outlineOffset).toBe('2px')
+    await expectKeyboardFocusIndicator(canvasElement, linkAction, {
+      width: 2,
+      fromCurrentFocus: true,
+    })
+    await expect(getComputedStyle(linkAction).outlineOffset).toBe('2px')
   },
 }
 

@@ -12,6 +12,16 @@
 // No base .usa-radio class exists in USWDS source.
 // Only .usa-radio__input, .usa-radio__label, and .usa-radio__label-description are defined.
 
+// The root wraps the input and its label (a <label> in the stories and the
+// React Radio). Block layout puts the control on its own line, so it does
+// not continue the line of an inline sibling such as a .pathable-hint or the
+// previous radio. Some recipes put the class on a bare native <input>; that
+// markup keeps its inline layout. A root with the `hidden` attribute stays
+// hidden. :where() keeps the selector at one class's specificity.
+.pathable-radio:where(:not(input, [hidden])) {
+  display: block;
+}
+
 .pathable-radio__list {
   // No .usa-radio__list in USWDS source — this is a semantic container
 }

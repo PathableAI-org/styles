@@ -355,7 +355,7 @@ This package provides `.pathable-{component}` CSS class wrappers for all USWDS c
 | paragraph           | `.pathable-paragraph`           | `.usa-paragraph`       |                                                                        |
 | process-list        | `.pathable-process-list`        | `.usa-process-list`    |                                                                        |
 | prose               | `.pathable-prose`               | `.usa-prose`           |                                                                        |
-| radio               | `.pathable-radio__*`            | `.usa-radio__*`        | USWDS has no base `.usa-radio` class; only element selectors           |
+| radio               | `.pathable-radio__*`            | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level        |
 | range               | `.pathable-range`               | `.usa-range`           |                                                                        |
 | search              | `.pathable-search`              | `.usa-search`          |                                                                        |
 | section             | `.pathable-section`             | `.usa-section`         |                                                                        |

@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Dashboard/KPI Grid',
   tags: ['autodocs'],
@@ -35,6 +37,11 @@ export const Default = {
       ${kpiCard('28', 'Partner Organizations', 'neutral')}
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-kpi-card__label',
+      '.pathable-kpi-card__trend-label',
+    ]),
 }
 
 export const TwoColumns = {
