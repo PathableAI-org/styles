@@ -5,7 +5,7 @@ export default {
     docs: {
       description: {
         component:
-          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Keep a live region, such as an element with `role="status"`, on the page before loading starts, and add and remove the indicator inside it so its text is announced. Do not put `aria-live` on the indicator itself when you add and remove it. Show and remove the indicator in application code.',
+          '**Interaction Model**: CSS-only\n\n**Consumers must**: Import `@pathableai/styles` CSS. Keep a live region, such as an element with `role="status"`, on the page before loading starts, and add and remove the indicator inside it so its text is announced. Do not put `aria-live` on the indicator itself when you add and remove it. For a ring with no visible text, put a `pathable-sr-only` span that says what is loading inside the region, so it has text to announce. Show and remove the indicator in application code.',
       },
     },
   },
