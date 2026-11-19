@@ -20,8 +20,10 @@
   // larger text sizes on narrow screens a long selected value is cut off
   // behind the arrow area (WCAG 1.4.4). Let the value wrap and the control
   // grow, keeping the USWDS height as the minimum.
+  // align-self keeps it from stretching to a taller neighbour in a grid or flex row.
+  align-self: start;
   height: auto;
-  min-height: 2.5rem;
+  min-height: units(5);
   white-space: normal;
 }
 
