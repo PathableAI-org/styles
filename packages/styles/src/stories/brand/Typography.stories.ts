@@ -374,16 +374,16 @@ export const Default = {
 // (issue #423): the text takes the container's colour and stays readable.
 export const TextInDarkContainers = {
   render: () => `
-    <section class="pathable-section pathable-section--dark" data-testid="dark-section">
+    <section class="pathable-section pathable-section--dark" data-testid="dark-section" style="padding: 1.5rem;">
       <div class="pathable-text pathable-text--body">Body text on a div in pathable-section--dark</div>
       <span class="pathable-text pathable-text--small">Small text on a span in pathable-section--dark</span>
     </section>
-    <div class="pathable-dark-background" data-testid="dark-background">
+    <div class="pathable-dark-background" data-testid="dark-background" style="padding: 1.5rem;">
       <div class="pathable-text pathable-text--body">Body text on a div in pathable-dark-background</div>
       <ul>
         <li class="pathable-text">Text on a list item in pathable-dark-background</li>
       </ul>
-      <div class="pathable-surface pathable-surface--raised">
+      <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
         <div class="pathable-text">Text on a raised surface inside it stays dark</div>
       </div>
     </div>
