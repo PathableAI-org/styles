@@ -15,6 +15,13 @@
 
 .pathable-process-list__item {
   @extend .usa-process-list__item;
+
+  // The marker's 2.5rem size includes its border, so the connector line,
+  // which is offset for a 2.5rem marker, runs through its centre. The built
+  // CSS has no global border-box rule, so the marker sets it itself.
+  &::before {
+    box-sizing: border-box;
+  }
 }
 
 .pathable-process-list__heading {
