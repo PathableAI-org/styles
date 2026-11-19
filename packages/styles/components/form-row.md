@@ -26,7 +26,7 @@ guarantees:
     claim: From 1024 px a direct input, select or textarea fills its column with no maximum width, unless it carries a max-width utility, which then keeps its own limit.
   - id: gap-scale
     status: unverified
-    claim: The gap between fields is 8 px by default, and 4, 8, 16 or 24 px with gap-sm, gap-md, gap-lg or gap-xl; from 1024 px it is the column gap and the row adds no gap between a field's label, hint, control and error, though the control keeps its own 8 px top margin.
+    claim: On a row with no ancestor that sets the gap custom property, the gap between fields is 8 px by default, and 4, 8, 16 or 24 px with gap-sm, gap-md, gap-lg or gap-xl; from 1024 px it is the column gap and the row adds no gap between a field's label, hint, control and error, though the control keeps its own 8 px top margin.
 ---
 
 # FormRow
@@ -109,6 +109,8 @@ Add at most one gap modifier class to `pathable-form-row`.
 | Extra-large gap        | `--space-24`              |
 
 Set `--pathable-form-row-gap` on the row for a gap outside the scale. The
+custom property inherits, so setting it on a container also changes every
+row inside it that has no gap modifier of its own. The
 pixel figures are those of the default theme. A theme that changes the
 spacing tokens changes them.
 

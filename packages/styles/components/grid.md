@@ -32,19 +32,19 @@ variants:
 guarantees:
   - id: column-count
     status: unverified
-    claim: Without a columns modifier every child takes a full-width row, and with cols-2, cols-3 or cols-4 the children fill that many equal-width columns in DOM order, row by row.
+    claim: Without a columns modifier every child takes a full-width row, and with cols-2, cols-3 or cols-4 the children fill that many columns in DOM order, row by row; the columns are equal in width while no child's content is wider than an equal share.
   - id: fixed-count
     status: unverified
     claim: The number of columns is the same at every viewport and container width; the grid has no breakpoint of its own.
   - id: gap-scale
     status: unverified
-    claim: The gap between rows and between columns is 16 px by default, and 8, 16, 24 or 32 px with gap-sm, gap-md, gap-lg or gap-xl.
+    claim: On a grid with no ancestor that sets a grid gap custom property, the gap between rows and between columns is 16 px by default, and 8, 16, 24 or 32 px with gap-sm, gap-md, gap-lg or gap-xl.
   - id: axis-gap
     status: unverified
-    claim: A column-gap or row-gap modifier sets only that direction, on the same 8, 16, 24 and 32 px scale, and wins over a gap modifier on the same grid whatever the class order.
+    claim: A column-gap or row-gap modifier sets only that direction, on the same 8, 16, 24 and 32 px scale, and wins over a gap modifier on the same grid or an ancestor whatever the class order.
   - id: align
     status: unverified
-    claim: By default each child stretches to the height of its row, and an align modifier sets the vertical alignment of every child in its row to start, centre, end, stretch or baseline.
+    claim: On a grid with no ancestor that sets the alignment custom property, each child stretches to the height of its row by default; an align modifier sets the vertical alignment of every child in its row to start, centre, end, stretch or baseline.
   - id: custom-gap
     status: unverified
     claim: Setting the gap custom properties on the grid changes the gaps without a modifier class.
@@ -112,7 +112,7 @@ combine freely.
 | columns    | `cols-4`         | `pathable-grid--cols-4`         | Four equal columns                            |
 | gap        | `default`        | none                            | 16 px between rows and columns                |
 | gap        | `gap-sm`         | `pathable-grid--gap-sm`         | 8 px both ways, for dense content             |
-| gap        | `gap-md`         | `pathable-grid--gap-md`         | 16 px both ways, the same as the default      |
+| gap        | `gap-md`         | `pathable-grid--gap-md`         | 16 px both ways; resets an inherited gap      |
 | gap        | `gap-lg`         | `pathable-grid--gap-lg`         | 24 px both ways, for cards and panels         |
 | gap        | `gap-xl`         | `pathable-grid--gap-xl`         | 32 px both ways, for page sections            |
 | column-gap | `default`        | none                            | Follows the gap axis                          |
@@ -129,13 +129,15 @@ combine freely.
 | align      | `align-start`    | `pathable-grid--align-start`    | Children sit at the top of their row          |
 | align      | `align-center`   | `pathable-grid--align-center`   | Children are centred vertically in their row  |
 | align      | `align-end`      | `pathable-grid--align-end`      | Children sit at the bottom of their row       |
-| align      | `align-stretch`  | `pathable-grid--align-stretch`  | Children stretch, the same as the default     |
+| align      | `align-stretch`  | `pathable-grid--align-stretch`  | Children stretch; resets inherited alignment  |
 | align      | `align-baseline` | `pathable-grid--align-baseline` | Children line up on their first text baseline |
 
 ## Tokens
 
 The gaps come from spacing tokens, and the modifiers work by setting the
-grid's own custom properties, which you can also set directly:
+grid's own custom properties, which you can also set directly. These custom
+properties inherit, so setting them on a container, or a modifier on an outer
+grid, also changes every grid inside it that does not set its own:
 
 | What                   | Token                        |
 | ---------------------- | ---------------------------- |
@@ -159,6 +161,14 @@ changes the spacing tokens changes them.
   shrink, such as a long unbroken word, a wide table or a fixed-width image,
   widens its own column and squeezes the others. Let such content wrap, or
   give it `min-width: 0` and its own overflow handling.
+- A grid nested in another grid takes the outer grid's gap and align
+  modifiers unless it sets its own. A plain inner grid inside a
+  `pathable-grid--gap-xl pathable-grid--align-center` grid has 32 px gaps and
+  centred children; give it `pathable-grid--gap-md` and
+  `pathable-grid--align-stretch` to get the defaults back. An outer
+  column-gap or row-gap modifier also beats the inner grid's gap modifier in
+  that direction, so set the inner grid's column-gap and row-gap modifiers
+  too when the outer grid has them.
 - Four columns stay four columns on a phone. Change the column modifier at
   your own breakpoints, or use `pathable-card-grid`, which adds and removes
   columns by width.

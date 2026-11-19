@@ -2,7 +2,7 @@
 name: ButtonGroup
 slug: button-group
 kind: static
-summary: A flex container that stacks related buttons on narrow screens and puts them in one non-wrapping row from 480 px wide.
+summary: A flex container that stacks related buttons on narrow screens and puts them in a row from 480 px wide.
 styles-class: pathable-button-group
 variants: []
 guarantees:
@@ -10,8 +10,8 @@ guarantees:
     status: unverified
     claim: Below a viewport width of 480 px the children stack in one column in DOM order, each stretched to the width of the group.
   - id: row-from-480
-    status: unverified
-    claim: From a viewport width of 480 px the children sit in a single row in DOM order that never wraps, and every child is stretched to the height of the tallest.
+    status: unmet
+    claim: From a viewport width of 480 px the children sit side by side in DOM order, each stretched to the height of the tallest beside it, and they wrap or stack when they do not fit the group's container, so none runs past it.
   - id: list-reset
     status: unverified
     claim: The group has no top or bottom margin, no list markers and no left padding, so a `<ul>` with the class in left-to-right text shows no bullets or indent.
@@ -23,7 +23,7 @@ guarantees:
 # ButtonGroup
 
 A flex container that stacks related buttons on narrow screens and puts them
-in one non-wrapping row from 480 px wide. Put the class on a `<div>` or a
+in a row from 480 px wide. Put the class on a `<div>` or a
 `<ul>` around two or three `pathable-button` elements. It adds no role, no
 grouping semantics and no selection state.
 
@@ -78,13 +78,15 @@ are not custom properties and do not change with the theme.
   elements when the group is a `<ul>`. The group lays out its direct
   children only and has no element classes.
 - Below 480 px each `pathable-button` is full width and the stacked buttons
-  touch, with no vertical space between them. Add your own space, such as a
-  margin on the buttons, when they need it.
+  touch, with no vertical space between them, so the next button covers the
+  bottom edge of the focused button's focus ring. Add your own space, such as
+  a margin on the buttons, when they need it.
 - The group has a negative inline margin of 4 px on each side, so it extends
   4 px beyond its container at the start and the end. Leave room for it, or
   use `pathable-cluster`, which has no negative margin.
-- The row never wraps. With long labels or more than three buttons it can
-  overflow a narrow container; keep labels short or use `pathable-cluster`.
+- The row does not wrap yet. With long labels, more than three buttons or
+  enlarged text it can overflow a narrow container; keep labels short or use
+  `pathable-cluster`.
 - The 480 px breakpoint follows the viewport, not the group's container. It
   is set as 30em, which is 480 px at the browser's default 16 px font size;
   a larger default font size moves it.
@@ -97,6 +99,11 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
+
+The row guarantee is unmet. Today, from 480 px, the children stay in one row
+that never wraps, each stretched to the height of the tallest, so in a narrow
+container or at a large text size the last button can run past the
+container's edge.
 
 ## The consumer owns
 

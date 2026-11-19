@@ -11,7 +11,7 @@ variants:
 guarantees:
   - id: auto-columns
     status: unverified
-    claim: The grid shows as many equal-width columns of at least 300 px as fit its container, and those columns share the full container width; a 1000 px container with the default gap has three 317 px columns.
+    claim: With no minimum-width custom property set on the grid or an ancestor, the grid shows as many equal-width columns of at least 300 px as fit its container, and those columns share the full container width; a 1000 px container with the default gap has three 317 px columns.
   - id: container-driven
     status: unverified
     claim: The column count depends only on the grid's own width, not on the viewport, so the same grid shows fewer columns in a narrower container.
@@ -23,7 +23,7 @@ guarantees:
     claim: With fewer children than fit in a row, empty column tracks are kept, so each child keeps the width of one column and the row starts at the inline start edge.
   - id: gap-scale
     status: unverified
-    claim: The gap between rows and between columns is 24 px by default, and 16, 24 or 32 px with gap-sm, gap-md or gap-lg.
+    claim: On a grid with no ancestor that sets the gap custom property, the gap between rows and between columns is 24 px by default, and 16, 24 or 32 px with gap-sm, gap-md or gap-lg.
   - id: custom-properties
     status: unverified
     claim: Setting the minimum-width custom property on the grid changes the minimum column width, and setting the gap custom property changes both gaps.
@@ -83,7 +83,7 @@ Add at most one gap modifier class to `pathable-card-grid`.
 | ---- | --------- | ---------------------------- | ----------------------------------- |
 | gap  | `default` | none                         | 24 px between rows and columns      |
 | gap  | `gap-sm`  | `pathable-card-grid--gap-sm` | 16 px, for compact tiles            |
-| gap  | `gap-md`  | `pathable-card-grid--gap-md` | 24 px, the same as the default      |
+| gap  | `gap-md`  | `pathable-card-grid--gap-md` | 24 px; resets an inherited gap      |
 | gap  | `gap-lg`  | `pathable-card-grid--gap-lg` | 32 px, for large cards with imagery |
 
 ## Tokens
@@ -97,6 +97,11 @@ The grid reads two custom properties of its own, which you can set on it:
 | Small gap              | `--space-16`                     |
 | Default and medium gap | `--space-24`                     |
 | Large gap              | `--space-32`                     |
+
+Both custom properties inherit, so setting them on a container, or a gap
+modifier on an outer card grid, also changes every card grid inside it that
+does not set its own. A plain card grid inside a `pathable-card-grid--gap-sm`
+grid has a 16 px gap; give it `pathable-card-grid--gap-md` to get 24 px back.
 
 The minimum column width is 300 px unless you set
 `--pathable-card-grid-min-width`; it is not a theme token. The gap figures

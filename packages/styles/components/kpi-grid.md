@@ -11,7 +11,7 @@ variants:
 guarantees:
   - id: auto-columns
     status: unverified
-    claim: Without a columns modifier the grid fits as many equal-width columns of at least 200 px as its width allows; a 1000 px grid has four 226 px columns.
+    claim: Without a columns modifier, and with no minimum-width custom property set on the grid or an ancestor, the grid fits as many equal-width columns of at least 200 px as its width allows; a 1000 px grid has four 226 px columns.
   - id: fixed-columns
     status: unverified
     claim: With columns-2, columns-3 or columns-4 the grid has exactly that many equal-width columns at viewport widths above 480 px, whatever its own width.
@@ -20,7 +20,7 @@ guarantees:
     claim: At a viewport width of 480 px or less the grid has one column, with or without a columns modifier.
   - id: gap
     status: unverified
-    claim: The gap between cards is 32 px in both directions.
+    claim: With no gap custom property set on the grid or an ancestor, the gap between cards is 32 px in both directions.
   - id: full-width
     status: unverified
     claim: The grid is as wide as its container, and in a container narrower than 200 px its single column is the container's width.
@@ -74,9 +74,11 @@ Load the stylesheet once in the application; no JavaScript is needed:
   <div class="pathable-kpi-card">
     <p class="pathable-kpi-card__value">1,247</p>
     <p class="pathable-kpi-card__label">Active participants</p>
-    <p class="pathable-kpi-card__trend" data-trend="up">
-      <span class="pathable-kpi-card__trend-label">Up 12% from last month</span>
-    </p>
+    <div class="pathable-kpi-card__trend" data-trend="neutral">
+      <span class="pathable-kpi-card__trend-label">
+        No change from last month
+      </span>
+    </div>
   </div>
   <div class="pathable-kpi-card">
     <p class="pathable-kpi-card__value">86%</p>
@@ -110,8 +112,10 @@ The grid reads two custom properties of its own, which you can set on it:
 | Default gap          | `--pathable-space-4`            |
 | Font family          | `--pathable-font-body`          |
 
-The minimum column width is 200 px unless you set
-`--pathable-kpi-grid-min-width`; it is not a theme token. The 32 px gap is
+Both custom properties inherit, so setting them on a container also changes
+every grid inside it that does not set its own. The minimum column width is
+200 px unless you set `--pathable-kpi-grid-min-width`; it is not a theme
+token. The 32 px gap is
 that of the default theme. The cards take their surface, border, text, muted
 text and trend colours, their corner radius and their type sizes from theme
 tokens, so a theme that changes those tokens changes the cards.
@@ -135,7 +139,9 @@ tokens, so a theme that changes those tokens changes the cards.
     `up`, `down` or `neutral` for the success, danger or muted colour and its
     shape: an upward triangle, a downward triangle, or two small triangles
     point to point. Put the words in a `pathable-kpi-card__trend-label`
-    inside it.
+    inside it. Use a `<div>` or `<span>` for the trend, not a `<p>`: the
+    trend resets only its top margin, so a paragraph keeps the browser's
+    bottom margin and makes the card taller.
 - Add `pathable-kpi-card--loading` to a card while its data loads. Keep empty
   value and label elements in it: they become the placeholder bars.
 - Add `pathable-kpi-card--unavailable` when there is no figure. Anything
@@ -158,7 +164,8 @@ text is Intelligent Jade, 12 px and semibold, on the card's white background,
 which measures 2.78 to 1. The brand rules say Intelligent Jade on white fails
 for all text. A down trend measures 4.53 to 1 and a neutral one 7.71 to 1.
 Until this is fixed, do not let the up-trend label be the only place the
-direction is written: say it in nearby text too.
+direction is written: say it in nearby text too. The example above uses a
+neutral trend for this reason.
 
 ## The consumer owns
 
