@@ -1,4 +1,5 @@
 import { expect, within } from 'storybook/test'
+import { contrastRatio, relativeLuminance } from '../../shared/contrast'
 import { expectKeyboardFocusIndicator } from '../../shared/focus-indicator'
 
 export default {
@@ -114,25 +115,6 @@ export const Outline = {
   },
 }
 
-/** WCAG relative luminance of a computed `rgb()`/`rgba()` color. */
-const luminance = (color: string) => {
-  const [r, g, b] = (color.match(/\d+(\.\d+)?/g) ?? [])
-    .slice(0, 3)
-    .map((value) => {
-      const channel = Number(value) / 255
-      return channel <= 0.03928
-        ? channel / 12.92
-        : ((channel + 0.055) / 1.055) ** 2.4
-    })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
-/** WCAG contrast ratio between two computed colors. */
-const contrastRatio = (a: string, b: string) => {
-  const [lighter, darker] = [luminance(a), luminance(b)].sort((x, y) => y - x)
-  return (lighter + 0.05) / (darker + 0.05)
-}
-
 export const OutlineInverse = {
   parameters: {
     docs: {
@@ -230,8 +212,8 @@ export const Unstyled = {
     // Disabled text is lighter than the link text; the filled button's
     // disabled text, which the cascade could fall back to, is darker.
     await expect(disabled.backgroundColor).toBe('rgba(0, 0, 0, 0)')
-    await expect(luminance(disabled.color)).toBeGreaterThan(
-      luminance(unstyled.color),
+    await expect(relativeLuminance(disabled.color)).toBeGreaterThan(
+      relativeLuminance(unstyled.color),
     )
     await expect(disabled.textDecorationLine).toBe('underline')
 

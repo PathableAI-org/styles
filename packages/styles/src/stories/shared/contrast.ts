@@ -30,22 +30,29 @@ export const findOpaqueBackground = (element: HTMLElement, view: Window) => {
   throw new Error('No ancestor has an opaque background')
 }
 
+/** WCAG 2 relative luminance of a computed colour. */
+export const relativeLuminance = (color: string) => {
+  const { channels } = parseComputedColor(color)
+
+  const [red, green, blue] = channels.map((channel) => {
+    const value = channel / 255
+    return value <= 0.04045
+      ? value / 12.92
+      : Math.pow((value + 0.055) / 1.055, 2.4)
+  })
+
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+}
+
 /** WCAG 2 contrast ratio between two computed colours. */
 export const contrastRatio = (foreground: string, background: string) => {
-  const luminance = (color: string) => {
-    const { channels } = parseComputedColor(color)
-
-    const [red, green, blue] = channels.map((channel) => {
-      const value = channel / 255
-      return value <= 0.04045
-        ? value / 12.92
-        : Math.pow((value + 0.055) / 1.055, 2.4)
-    })
-
-    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
-  }
-
-  const lighter = Math.max(luminance(foreground), luminance(background))
-  const darker = Math.min(luminance(foreground), luminance(background))
+  const lighter = Math.max(
+    relativeLuminance(foreground),
+    relativeLuminance(background),
+  )
+  const darker = Math.min(
+    relativeLuminance(foreground),
+    relativeLuminance(background),
+  )
   return (lighter + 0.05) / (darker + 0.05)
 }
