@@ -1,0 +1,55 @@
+# Code owners for the agent guardrail paths.
+#
+# These paths change the rules agents work under, so a person must review
+# them. See docs/engineering/git-workflow.md#guardrail-changes.
+#
+# Keep this list in step with `guardrailPaths` in scripts/merge-gate.mjs.
+# There is deliberately no catch-all owner.
+
+/.claude/ @j-shilling
+/scripts/claude/ @j-shilling
+/.agents/skills/ @j-shilling
+**/eslint.config.* @j-shilling
+**/.eslintrc* @j-shilling
+**/stylelint.config.* @j-shilling
+**/.stylelintrc* @j-shilling
+**/.markdownlint* @j-shilling
+**/prettier.config.* @j-shilling
+**/.prettierrc* @j-shilling
+**/.prettierignore @j-shilling
+**/lint-staged.config.* @j-shilling
+**/.lintstagedrc* @j-shilling
+/.husky/ @j-shilling
+**/commitlint.config.* @j-shilling
+**/.commitlintrc* @j-shilling
+/scripts/accessibility-exceptions.mjs @j-shilling
+**/tsconfig*.json @j-shilling
+/.github/ @j-shilling
+/renovate.json5 @j-shilling
+/.changeset/config.json @j-shilling
+/scripts/merge-gate.mjs @j-shilling
+/scripts/merge-hook.mjs @j-shilling
+/scripts/ready-hook.mjs @j-shilling
+/scripts/verification.mjs @j-shilling
+/scripts/verification/ @j-shilling
+/scripts/review-findings/ @j-shilling
+/scripts/visual-review/ @j-shilling
+/scripts/note-sync.mjs @j-shilling
+/scripts/note-sync/ @j-shilling
+/scripts/note-store.mjs @j-shilling
+/scripts/merge.mjs @j-shilling
+/scripts/verify.mjs @j-shilling
+/scripts/review.mjs @j-shilling
+/scripts/visual.mjs @j-shilling
+/scripts/notes.mjs @j-shilling
+/scripts/review-findings.mjs @j-shilling
+/scripts/visual-review.mjs @j-shilling
+/scripts/schema-checks.mjs @j-shilling
+/scripts/git-access.mjs @j-shilling
+/scripts/github-access.mjs @j-shilling
+/scripts/cli.mjs @j-shilling
+/package.json @j-shilling
+/.specify/memory/constitution.md @j-shilling
+**/AGENTS.md @j-shilling
+/CLAUDE.md @j-shilling
+/docs/engineering/ @j-shilling
