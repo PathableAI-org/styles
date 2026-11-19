@@ -137,15 +137,14 @@
 // container's width, as it does outside it, and keeps its stacked buttons
 // apart so a focused button's ring is not covered by the next one.
 .pathable-card--workflow
-  .pathable-card__action:has(
-    :is(button, input, select, textarea, .pathable-button, .usa-button)
-  )
+  .pathable-card__action
   > :is(button, .pathable-button, .usa-button) {
   margin-right: 0;
 }
 
 .pathable-card--workflow .pathable-card__action > .pathable-button-group {
   flex: 1 1 100%;
+  min-width: 0;
   row-gap: var(--pathable-space-2);
 }
 

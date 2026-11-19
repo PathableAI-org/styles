@@ -260,7 +260,7 @@ export const WorkflowCardButtonActions = {
               <button type="button" class="pathable-button">Schedule</button>
             </div>
           </div>
-          <div class="pathable-card__action pathable-cluster pathable-cluster--gap-sm" data-testid="workflow-button-cluster">
+          <div class="pathable-card__action pathable-cluster pathable-cluster--gap-xl" data-testid="workflow-button-cluster">
             <button type="button" class="pathable-button">Save</button>
             <button type="button" class="pathable-button">Cancel</button>
           </div>
@@ -293,13 +293,14 @@ export const WorkflowCardButtonActions = {
     await expect(group.getBoundingClientRect().width).toBeGreaterThanOrEqual(
       groupContainer.getBoundingClientRect().width,
     )
+    await expect(getComputedStyle(group).minWidth).toBe('0px')
     await expect(
       Number.parseFloat(getComputedStyle(group).rowGap),
     ).toBeGreaterThanOrEqual(8)
     // A utility on the container still sets its own gap.
     await expect(
       Number.parseFloat(getComputedStyle(cluster).columnGap),
-    ).toBeLessThan(Number.parseFloat(styles.columnGap))
+    ).toBeGreaterThan(Number.parseFloat(styles.columnGap))
     await expectKeyboardFocusIndicator(canvasElement, first)
   },
 }
