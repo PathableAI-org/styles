@@ -41,6 +41,7 @@
     "verify:show": "node scripts/verify.mjs show",
     "visual:record": "node scripts/visual.mjs record",
     "visual:show": "node scripts/visual.mjs show",
+    "merge:gate": "node scripts/merge.mjs gate",
     "check:agent-guidance-impact": "node scripts/check-agent-guidance-impact.mjs",
     "test:visual": "node packages/styles/scripts/test-visual.mjs",
     "test:pixels-styles": "node packages/styles/scripts/test-pixels.mjs",
