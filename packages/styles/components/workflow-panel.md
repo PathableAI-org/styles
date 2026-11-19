@@ -184,7 +184,10 @@ amber box.
   text: they cannot be translated through markup, and assistive technology may
   not read or announce them. Put the same status in words in the status
   region, for example in a `pathable-sr-only` element inside a `role="status"`
-  region, as in the example, and change that text with each state.
+  region, as in the example, and change that text with each state. Some
+  browsers also expose the generated message, so a screen reader can read the
+  status twice, such as "Saved Saved"; this lasts until the component stops
+  generating its own message.
 - Disabling the continue button yourself when offline, with `disabled` or
   `aria-disabled="true"` and a guard in the handler.
 - The controls. Buttons keep their `pathable-button` styling and the note

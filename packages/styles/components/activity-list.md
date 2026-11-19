@@ -148,10 +148,10 @@ corners; on hover the row background changes to the page background colour.
     can sit beside it with an 8 px gap.
   - `pathable-activity-row__actions`: optional trailing controls, kept at
     their own width with an 8 px gap. Each `pathable-button` keeps its own
-    0.5rem right margin, so from a 480 px viewport up buttons appear 16 px
-    apart and the last one stops 0.5rem short of the row's padding edge;
-    below 480 px a `pathable-button` is styled to fill its container's
-    width.
+    0.5rem right margin, so at every viewport width buttons appear 16 px
+    apart and the last one stops 0.5rem short of the row's padding edge. The
+    region is sized by its content and does not shrink, so the buttons keep
+    their own widths on narrow screens too.
 - `pathable-activity-list__empty`: the empty message, inside a list with
   `pathable-activity-list--empty`.
 - The list fills its container's width and adds no padding or margin of its
