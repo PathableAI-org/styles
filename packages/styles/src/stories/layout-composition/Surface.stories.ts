@@ -351,10 +351,10 @@ export const ComponentFocusOnBackgrounds = {
           ({ label, outer, text }) => `
         <div class="${outer} pathable-stack pathable-stack--gap-sm pathable-padding-3" style="${blockStyle} margin: 0; color: var(${text});">
           <div style="font-size: 0.875rem; font-weight: 600;">${label}</div>
-          <div class="pathable-surface pathable-surface--interactive pathable-padding-2" tabindex="0" aria-label="Card on ${label}">Card</div>
+          <div class="pathable-surface pathable-surface--interactive pathable-padding-2" tabindex="0" style="color: var(--pathable-color-text);" aria-label="Card on ${label}">Card</div>
           <a class="pathable-link" style="color: inherit;" href="#focus-${label.replaceAll(' ', '-')}">Link on ${label}</a>
-          <button type="button" class="pathable-button pathable-button--unstyled" style="color: inherit;">Unstyled on ${label}</button>
-          <span class="pathable-filter-pill">
+          <button type="button" class="pathable-button pathable-button--unstyled" style="color: inherit; align-self: flex-start;">Unstyled on ${label}</button>
+          <span class="pathable-filter-pill" style="border: 1px solid var(--pathable-color-text);">
             <span class="pathable-filter-pill__label">Pill</span>
             <button type="button" class="pathable-filter-pill__dismiss" aria-label="Remove pill on ${label}">&times;</button>
           </span>

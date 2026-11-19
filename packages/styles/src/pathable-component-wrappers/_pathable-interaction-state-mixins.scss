@@ -22,9 +22,10 @@
 // --pathable-surface-focus-ring, which each pathable-surface variant sets for
 // its own background (pathable-surface.scss). Outside any surface it is
 // --pathable-color-focus-ring.
-// A component that includes this mixin, or whose own outline reads
-// --pathable-surface-focus-ring, also belongs in
-// $-surface-focus-ring-controls in _utilities.scss, so a dark background
+// A control that includes this mixin also belongs in
+// $-surface-focus-ring-controls in _utilities.scss (so does the link, the
+// unstyled button and the interactive surface, whose outlines read the ring on
+// the element itself), so a dark background
 // utility on the control itself does not reset its ring.
 @mixin state-focus {
   &:focus-visible {
