@@ -64,7 +64,7 @@ export const BlocksInGrid = {
   render: () => `
     <section class="pathable-graphic-list">
       <h2 class="pathable-graphic-list__heading">What we offer</h2>
-      <div class="pathable-grid pathable-grid--cols-2">
+      <div class="pathable-grid">
         ${renderBlock('One-to-one coaching', 'Sessions with a coordinator who knows your workplace.')}
         ${renderBlock('Workplace adjustments', 'Help agreeing changes with your employer.')}
         ${renderBlock('Job search support', 'Practical help with applications and interviews.')}
