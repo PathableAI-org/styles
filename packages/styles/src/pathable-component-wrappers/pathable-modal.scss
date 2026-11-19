@@ -94,6 +94,12 @@
     flex-wrap: wrap;
     max-width: 100%;
   }
+
+  // A button wider than the footer breaks its label rather than overflowing.
+  .pathable-button {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
 }
 
 // USWDS places the close button as the last child of a column-reverse

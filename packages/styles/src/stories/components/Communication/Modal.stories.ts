@@ -180,6 +180,47 @@ export const Narrow = {
 }
 
 /**
+ * Increased-text fixture (WCAG 1.4.4): at 200 % root text on a narrow viewport
+ * a long heading word and a footer button row stay inside the dialog.
+ */
+export const IncreasedText = {
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Open Modal with the root font size at 200 % on a 320px viewport. The heading breaks inside the dialog and the footer buttons wrap and stay inside it.',
+      },
+    },
+  },
+  render: () => openShellMarkup({ headingId: 'modal-heading-increased-text' }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await assertOpenShell(canvasElement)
+    const doc = canvasElement.ownerDocument
+    const root = doc.documentElement
+    const previous = root.style.fontSize
+    root.style.fontSize = '200%'
+    try {
+      const dialog = doc.querySelector('.pathable-modal') as HTMLElement
+      const heading = doc.getElementById(
+        'modal-heading-increased-text',
+      ) as HTMLElement
+      const dialogBox = dialog.getBoundingClientRect()
+      expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
+      doc
+        .querySelectorAll('.pathable-modal__footer .pathable-button')
+        .forEach((button) => {
+          const box = button.getBoundingClientRect()
+          expect(box.left).toBeGreaterThanOrEqual(dialogBox.left)
+          expect(box.right).toBeLessThanOrEqual(dialogBox.right)
+        })
+    } finally {
+      root.style.fontSize = previous
+    }
+  },
+}
+
+/**
  * Long-content open fixture (FR-013): open shell with scrollable body content.
  */
 export const LongContent = {
