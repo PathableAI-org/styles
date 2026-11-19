@@ -43,7 +43,7 @@
 }
 
 .pathable-schedule-item__date-month {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-label-sm);
   font-weight: var(--pathable-font-weight-bold);
   color: var(--pathable-color-text-muted);
   text-transform: uppercase;
@@ -59,7 +59,7 @@
 }
 
 .pathable-schedule-item__date-time {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   line-height: 1;
   margin-block-start: var(--pathable-space-1);
@@ -83,7 +83,7 @@
 }
 
 .pathable-schedule-item__context {
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
 }
@@ -92,7 +92,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--pathable-space-2);
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
   padding: 0;
@@ -111,7 +111,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--pathable-space-1);
-  font-size: var(--pathable-font-size-body-xs);
+  font-size: var(--pathable-font-size-label-sm);
   font-weight: var(--pathable-font-weight-semibold);
   padding: var(--pathable-space-0) var(--pathable-space-1);
   border-radius: var(--radius-sm);
