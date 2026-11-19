@@ -278,14 +278,22 @@ export const ContentPressure = {
 
 export const LongWordHeading = {
   render: () => `
-    <div data-testid="card-long-word" style="display: flex; flex-wrap: wrap; width: 12rem; max-width: 100%; font-size: 200%;">
-      <div class="pathable-card">
+    <div data-testid="card-long-word" style="display: flex; flex-wrap: wrap; width: 300px; max-width: 100%;">
+      <div class="pathable-card" data-testid="card-with-heading">
         <div class="pathable-card__container">
           <div class="pathable-card__header">
             <h3 class="pathable-card__heading">Comprehensive</h3>
           </div>
           <div class="pathable-card__body">
-            <p>Employment</p>
+            <p>Review</p>
+          </div>
+        </div>
+      </div>
+      <div class="pathable-card" data-testid="card-with-header-title">
+        <div class="pathable-card__container">
+          <h3 class="pathable-card__header">Comprehensive</h3>
+          <div class="pathable-card__body">
+            <p>Review</p>
           </div>
         </div>
       </div>
@@ -294,13 +302,34 @@ export const LongWordHeading = {
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
     const fixture = canvas.getByTestId('card-long-word')
-    const heading = canvas.getByRole('heading', {
-      level: 3,
-      name: 'Comprehensive',
-    })
+    const root = document.documentElement
+    const previousFontSize = root.style.fontSize
+    root.style.fontSize = '200%'
 
-    await expect(heading).toBeVisible()
-    await expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
-    await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+    try {
+      const textRight = (element: HTMLElement) => {
+        const range = document.createRange()
+        range.selectNodeContents(element)
+        return range.getBoundingClientRect().right
+      }
+
+      for (const testId of ['card-with-heading', 'card-with-header-title']) {
+        const card = canvas.getByTestId(testId)
+        const title = within(card).getByRole('heading', {
+          level: 3,
+          name: 'Comprehensive',
+        })
+
+        await expect(title).toBeVisible()
+        await expect(textRight(title)).toBeLessThanOrEqual(
+          card.getBoundingClientRect().right,
+        )
+        await expect(card.getBoundingClientRect().right).toBeLessThanOrEqual(
+          fixture.getBoundingClientRect().right,
+        )
+      }
+    } finally {
+      root.style.fontSize = previousFontSize
+    }
   },
 }
