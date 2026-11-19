@@ -803,7 +803,7 @@ All other native SVG attributes, including `style`, `role`, `aria-*`, `data-*`, 
 
 - Size an icon through `font-size`, on the icon or a parent. `1.5rem` renders a 24px icon.
 - Set its color through `color`.
-- Use filled artwork, such as the USWDS icon set. Stroke-only artwork (`fill="none"` with a stroke) renders as solid shapes.
+- Use filled artwork, such as the USWDS icon set. `fill="none"` on the `Icon` itself is overridden, so stroke-only artwork that relies on it renders as solid shapes.
 
 ```tsx
 <Icon style={{ fontSize: '1.5rem' }}>

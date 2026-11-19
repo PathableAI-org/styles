@@ -41,9 +41,11 @@ function CloseGlyph() {
 /**
  * `.pathable-icon` is `1em` square and paints every shape with
  * `fill: currentColor`. The stories set no `width`, `height` or `fill`
- * attributes, so without the class each icon would render at the SVG default
- * size (300 by 150 px) and the size check would fail. `size` defaults to the
- * icon's own font size, which is what `1em` resolves to.
+ * attributes, so without the class each icon would stretch to its container's
+ * width and the size check would fail. `size` defaults to the icon's own font
+ * size, which is what `1em` resolves to. Black is the SVG initial fill, so the
+ * stories render in a non-black text colour for the fill check to mean
+ * anything.
  */
 async function expectIconContract(icon: Element | null, size?: string) {
   await expect(icon).not.toBeNull()
@@ -52,6 +54,7 @@ async function expectIconContract(icon: Element | null, size?: string) {
   const style = getComputedStyle(icon)
 
   await expect(icon).toHaveClass('pathable-icon')
+  await expect(style.color).not.toBe('rgb(0, 0, 0)')
   await expect(style.width).toBe(size ?? style.fontSize)
   await expect(style.height).toBe(size ?? style.fontSize)
   await expect(style.fill).toBe(style.color)
@@ -60,7 +63,9 @@ async function expectIconContract(icon: Element | null, size?: string) {
   const shapes = icon.querySelectorAll('path')
   await expect(shapes.length).toBeGreaterThan(0)
   for (const shape of shapes) {
-    await expect(getComputedStyle(shape).fill).toBe(style.color)
+    const shapeStyle = getComputedStyle(shape)
+    await expect(shapeStyle.fill).toBe(style.color)
+    await expect(shapeStyle.stroke).toBe('none')
   }
 }
 
@@ -68,6 +73,13 @@ const meta = {
   title: 'Components/Layout/Icon',
   component: Icon,
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div style={{ color: 'var(--pathable-color-text)' }}>
+        <Story />
+      </div>
+    ),
+  ],
   parameters: {
     docs: {
       description: {
@@ -81,7 +93,7 @@ const meta = {
 
 **Accessibility**: Icons are decorative by default with \`aria-hidden="true"\` and \`focusable="false"\`. For a meaningful standalone icon, explicitly set \`aria-hidden={false}\`, \`role="img"\`, and an accessible name through \`aria-label\` or \`aria-labelledby\`.
 
-**Sizing and fill**: Icon always applies \`.pathable-icon\`, which is \`1em\` square and paints with \`fill: currentColor\`. Those rules override the native \`width\`, \`height\` and \`fill\` attributes, so passing them has no visible effect. Size an icon through \`font-size\` on the icon or a parent (\`1.5rem\` renders 24 px), and set its colour through \`color\`. Use filled artwork, such as the USWDS icon set these stories draw from: stroke-only artwork (\`fill="none"\` with a stroke) renders as solid shapes. IconButton and IconTile size the icon inside them through their own rules.
+**Sizing and fill**: Icon always applies \`.pathable-icon\`, which is \`1em\` square and paints with \`fill: currentColor\`. Those rules override the native \`width\`, \`height\` and \`fill\` attributes, so passing them has no visible effect. Size an icon through \`font-size\` on the icon or a parent (\`1.5rem\` renders 24 px), and set its colour through \`color\`. Use filled artwork, such as the USWDS icon set these stories draw from. \`fill="none"\` on the Icon itself is overridden, so stroke-only artwork that relies on it renders as solid shapes. IconButton and IconTile size the icon inside them through their own rules.
 
 **Known constraints**: Icon does not ship artwork, a named icon registry, interactions, tooltips, or size variants. Consumers provide filled SVG children.`,
       },
@@ -199,12 +211,16 @@ export const CurrentColor: Story = {
   ],
   play: async ({ canvasElement }) => {
     const icon = canvasElement.querySelector('svg')
+    const textWrapper = canvasElement.firstElementChild
 
     await expect(icon).not.toBeNull()
-    if (!icon) return
-    // Black is the SVG initial fill, so a fill matching the non-black link
-    // colour shows that fill: currentColor applied.
-    await expect(getComputedStyle(icon).color).not.toBe('rgb(0, 0, 0)')
+    await expect(textWrapper).not.toBeNull()
+    if (!icon || !textWrapper) return
+    // The link colour replaces the text colour the meta decorator sets, and
+    // the fill follows it.
+    await expect(getComputedStyle(icon).color).not.toBe(
+      getComputedStyle(textWrapper).color,
+    )
     await expectIconContract(icon)
   },
 }
