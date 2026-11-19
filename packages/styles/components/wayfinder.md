@@ -24,6 +24,9 @@ guarantees:
   - id: choice-target
     status: unverified
     claim: Every label inside a question's controls is at least 60 px tall, a 44 px minimum content height (the label is content-box) plus 8 px padding above and below, and lays out its input and text as a row whose items are centred vertically.
+  - id: choice-contrast
+    status: unmet
+    claim: A checked radio button or checkbox in a question's controls has a contrast of at least 3:1 against the panel's background, on both surfaces.
   - id: text-measure
     status: unverified
     claim: The explanatory text is at most 640 px wide whatever the panel's width.
@@ -166,6 +169,11 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source, and no test checks it yet.
 
+The choice-contrast guarantee is unmet. Today a checked radio button or
+checkbox takes the accent colour, which in the default theme is Intelligent
+Jade (`#1cae96`). On the panel's white background, under either surface, it
+measures 2.8:1, below the 3:1 a control's state needs.
+
 ## The consumer owns
 
 - Accessibility. Name the panel (a landmark with `aria-labelledby` pointing at
@@ -173,9 +181,7 @@ from the package source, and no test checks it yet.
   `<fieldset>` with a `<legend>`, and hide the icon with `aria-hidden="true"`.
 - The controls. The wayfinder styles only the `<label>` elements in a
   question's controls and the accent colour of radio buttons and checkboxes.
-  In the default theme that accent is 2.8:1 on white, below the 3:1 a
-  control's state needs, so check the selected state is clear. It does not
-  style other inputs, such as selects or text fields; give those
+  It does not style other inputs, such as selects or text fields; give those
   their own component classes. The action keeps its `pathable-button` look;
   the wayfinder only places and, on narrow screens, widens it.
 - What the answers do: reading them, validating them and showing results.
