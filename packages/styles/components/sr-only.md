@@ -98,5 +98,5 @@ horizontal scroll by about 999em. On such a page, hide text another way.
 - Accessibility. Hidden text must agree with what the page shows, and must not
   hide information sighted users need.
 - The wording, in the user's language, and keeping it short.
-- Not using the class on focusable elements or on content inside a right-to-
-  left page.
+- Not using the class on focusable elements or on content inside a
+  right-to-left page.
