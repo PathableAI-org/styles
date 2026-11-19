@@ -5,61 +5,38 @@ import { AppShell, BottomNavItem } from '../../../components/AppShell/AppShell'
 import { AppShellNavItem } from '../../../components/AppShell/AppShellNavItem'
 import { Icon } from '../../../components/Icon/Icon'
 
-function DashboardGlyph() {
-  return (
-    <>
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
-    </>
-  )
+/*
+ * Filled artwork from the USWDS icon set (`@uswds/uswds/dist/img/usa-icons`):
+ * `home`, `people`, `calendar_today` and `assessment`. `Icon` always applies
+ * `.pathable-icon`, which paints with `fill: currentColor`, so stroke-only
+ * artwork would render as solid shapes. The bottom navigation sizes each icon
+ * through its own rules, so the stories pass no size or paint attributes.
+ */
+
+function HomeGlyph() {
+  return <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
 }
 
 function PeopleGlyph() {
   return (
-    <>
-      <circle cx="9" cy="8" r="3" />
-      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-      <path d="M16 5.5a3 3 0 0 1 0 5.5" />
-      <path d="M18 14c2.5.6 4 2.4 4 5" />
-    </>
+    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
   )
 }
 
 function CalendarGlyph() {
   return (
-    <>
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M3 9h18M8 3v4M16 3v4" />
-    </>
+    <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z" />
   )
 }
 
-function ChartGlyph() {
+function ReportsGlyph() {
   return (
-    <>
-      <path d="M4 20V10M10 20V4M16 20v-7M21 20H3" />
-    </>
+    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
   )
 }
 
-function iconNode(glyph: React.ReactNode, size = 20) {
-  return (
-    <Icon
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {glyph}
-    </Icon>
-  )
+function iconNode(glyph: React.ReactNode) {
+  return <Icon>{glyph}</Icon>
 }
 
 const NAV_ITEMS = [
@@ -75,7 +52,7 @@ const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
     label: 'Home',
     href: '#home',
     active: true,
-    icon: iconNode(<DashboardGlyph />),
+    icon: iconNode(<HomeGlyph />),
   },
   {
     label: 'People',
@@ -90,7 +67,7 @@ const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
   {
     label: 'Reports',
     href: '#reports',
-    icon: iconNode(<ChartGlyph />),
+    icon: iconNode(<ReportsGlyph />),
   },
 ]
 
@@ -230,6 +207,30 @@ export const MobileShell: Story = {
       value: 'mobile320',
       isRotated: false,
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('bottom navigation icons render filled artwork', async () => {
+      const icons = canvasElement.querySelectorAll(
+        '.pathable-bottom-navigation .pathable-icon',
+      )
+      await expect(icons).toHaveLength(BOTTOM_NAV_ITEMS.length)
+
+      for (const icon of icons) {
+        const iconStyle = getComputedStyle(icon)
+        await expect(iconStyle.width).toBe('20px')
+        await expect(iconStyle.height).toBe('20px')
+
+        const shapes = icon.querySelectorAll('*')
+        await expect(shapes.length).toBeGreaterThan(0)
+        for (const shape of shapes) {
+          // Filled artwork paints with the text colour and has no outline.
+          await expect(shape.tagName).toBe('path')
+          const shapeStyle = getComputedStyle(shape)
+          await expect(shapeStyle.fill).toBe(iconStyle.color)
+          await expect(shapeStyle.stroke).toBe('none')
+        }
+      }
+    })
   },
 }
 
