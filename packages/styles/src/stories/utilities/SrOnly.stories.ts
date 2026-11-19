@@ -38,15 +38,20 @@ const inPageDirection = async (
   }
 }
 
-// The text is hidden (off screen, above the page) and adds no scrollable area.
+// The text is hidden (off screen to the side) and the page cannot scroll
+// horizontally in either direction. Reading scrollWidth is not enough: in a
+// right-to-left page the area to the left of the viewport is scrollable but
+// is not counted in scrollWidth, so try to scroll both ways instead.
 const expectHiddenWithoutScroll = async (canvasElement: HTMLElement) => {
   const hidden = canvasElement.querySelector('.pathable-sr-only')
   await expect(hidden).not.toBeNull()
   await expect(getComputedStyle(hidden as Element).position).toBe('absolute')
-  await expect(
-    (hidden as Element).getBoundingClientRect().bottom,
-  ).toBeLessThanOrEqual(0)
-  await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth)
+  const box = (hidden as Element).getBoundingClientRect()
+  await expect(box.right <= 0 || box.left >= root.clientWidth).toBe(true)
+  for (const target of [-100000, 100000]) {
+    root.scrollLeft = target
+    await expect(root.scrollLeft).toBe(0)
+  }
 }
 
 type Play = { canvasElement: HTMLElement }

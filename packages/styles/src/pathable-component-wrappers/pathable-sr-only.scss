@@ -12,12 +12,14 @@
   @extend .usa-sr-only;
 
   // usa-sr-only offsets the element with `left: -999em`. In a right-to-left
-  // page the area to the left of the viewport is scrollable, so every hidden
-  // element added about 999em of horizontal scroll. Offset it above its
-  // containing block instead: overflow above the top edge never scrolls, in
-  // any page or element direction (a logical inline-start offset would follow
-  // the element's own direction, not the page's, and add scroll in mixed
-  // content such as a right-to-left phrase in a left-to-right page).
-  top: -999em;
-  left: auto;
+  // page the viewport scrolls toward the left, so every hidden element added
+  // about 999em of horizontal scroll. The side that never scrolls is the
+  // page's inline-start side, and the page's direction is the root's `dir`, not
+  // the element's: a logical `inset-inline-start` would follow the element's
+  // own direction and add scroll for a right-to-left phrase in a
+  // left-to-right page.
+  :root[dir='rtl'] & {
+    left: auto;
+    right: -999em;
+  }
 }
