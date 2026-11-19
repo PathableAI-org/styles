@@ -1,18 +1,16 @@
 /**
  * Component pages: one hand-written Markdown page per component, under
  * packages/styles/components/, is the product specification for that
- * component and ships as agent documentation in both packages.
+ * component and ships as agent documentation in @pathableai/styles.
  *
  * This module reads the pages and derives the one generated file, the catalog
  * index, from their front matter. The checks that tie a page to the code are
  * in check-component-pages.mjs.
  *
- *   node scripts/component-pages.mjs index           rewrite components/index.md
- *   node scripts/component-pages.mjs copy-to-react   copy the pages into the
- *                                                    React agent guidance
+ *   node scripts/component-pages.mjs index   rewrite components/index.md
  */
 
-import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -23,12 +21,6 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 /** Where the pages live: the styles package owns the component contract. */
 export const pagesDir = join(repoRoot, 'packages/styles/components')
 export const indexFile = 'index.md'
-
-/** Where the React package carries its version-pinned copy (gitignored). */
-export const reactCopyDir = join(
-  repoRoot,
-  'packages/react/agent-guidance/pathable-react/components',
-)
 
 // ---------------------------------------------------------------------------
 // Front matter
@@ -159,7 +151,6 @@ export function renderIndex(pages) {
       data.kind,
       data.summary,
       code(data['styles-class']),
-      data['react-export'] ? code(data['react-export']) : '',
     ])
 
   return [
@@ -173,9 +164,9 @@ export function renderIndex(pages) {
     'behavioural one does.',
     '',
     'Components not listed here have no page yet. For those, use the package',
-    'README and the installed type declarations.',
+    'README and the stylesheet source under `src/`.',
     '',
-    table(['Component', 'Kind', 'Purpose', 'Class', 'React export'], rows),
+    table(['Component', 'Kind', 'Purpose', 'Class'], rows),
     '',
   ].join('\n')
 }
@@ -190,19 +181,7 @@ async function writeIndex() {
   console.log(`[component-pages] Wrote ${indexFile} with ${pages.length} pages`)
 }
 
-async function copyToReact() {
-  await rm(reactCopyDir, { recursive: true, force: true })
-  await mkdir(reactCopyDir, { recursive: true })
-  const files = (await readdir(pagesDir)).filter((file) => file.endsWith('.md'))
-  for (const file of files) {
-    await cp(join(pagesDir, file), join(reactCopyDir, file))
-  }
-  console.log(
-    `[component-pages] Copied ${files.length} files to the React guidance`,
-  )
-}
-
-const commands = { index: writeIndex, 'copy-to-react': copyToReact }
+const commands = { index: writeIndex }
 
 if (
   process.argv[1] &&

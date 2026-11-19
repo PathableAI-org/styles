@@ -5,10 +5,14 @@ import {
   REQUIRED_SECTIONS,
   checkPage,
   hasClass,
+  modifiersOf,
   readStories,
   storyId,
+  wrapperComponents,
 } from './check-component-pages.mjs'
 import { parsePage, renderIndex } from './component-pages.mjs'
+
+const STORY = 'widgets-widget--all-variants'
 
 const frontMatter = `---
 name: Widget
@@ -16,8 +20,7 @@ slug: widget
 kind: static
 summary: A test widget.
 styles-class: pathable-widget
-react-export: Widget
-canonical-story: widgets-widget--all-variants
+canonical-story: ${STORY}
 baseline: widget/all-variants
 variants:
   - axis: tone
@@ -29,7 +32,7 @@ guarantees:
     claim: It looks right.
     evidence:
       - pixel widget/all-variants
-      - play styles/widgets-widget--all-variants > is centred
+      - play ${STORY} > is centred
 ---
 `
 
@@ -38,9 +41,7 @@ const body = `
 
 ${REQUIRED_SECTIONS.map((section) => `## ${section}\n\nText.\n`).join('\n')}
 
-\`\`\`tsx
-export const x = 1
-\`\`\`
+Add \`pathable-widget--loud\` to shout.
 
 \`\`\`html
 <span class="pathable-widget pathable-widget--loud"></span>
@@ -57,30 +58,18 @@ const page = (markdown = frontMatter + body) => ({
 const story = (steps = ['is centred']) => ({
   play: true,
   steps,
-  fileSource: "'plain' 'loud' pathable-widget--loud",
+  fileSource: 'pathable-widget--loud',
 })
 
 const facts = (overrides = {}) => ({
   scss: '.pathable-widget { } .pathable-widget--loud { }',
-  stories: {
-    styles: new Map([['widgets-widget--all-variants', story()]]),
-    react: new Map([['widgets-widget--all-variants', story()]]),
-  },
-  canonicalStories: new Set(['widgets-widget--all-variants']),
-  baselines: new Map([['widget/all-variants', 'widgets-widget--all-variants']]),
-  reactExports: new Map([
-    [
-      'Widget',
-      {
-        props: new Map([
-          ['tone', { values: ['plain', 'loud'], default: 'plain' }],
-        ]),
-      },
-    ],
-  ]),
-  compileExample: () => [],
+  stories: new Map([[STORY, story()]]),
+  canonicalStories: new Set([STORY]),
+  baselines: new Map([['widget/all-variants', STORY]]),
   ...overrides,
 })
+
+const includes = (errors, text) => errors.some((error) => error.includes(text))
 
 test('parses the front matter subset, CRLF included', () => {
   const { data } = parsePage((frontMatter + body).replace(/\n/gu, '\r\n'))
@@ -91,7 +80,7 @@ test('parses the front matter subset, CRLF included', () => {
   ])
   assert.deepEqual(data.guarantees[0].evidence, [
     'pixel widget/all-variants',
-    'play styles/widgets-widget--all-variants > is centred',
+    `play ${STORY} > is centred`,
   ])
 })
 
@@ -112,40 +101,52 @@ test('a page that agrees with the code passes', () => {
   assert.deepEqual(checkPage(page(), facts()), [])
 })
 
-test('reports variants the code does not have', () => {
-  const errors = checkPage(
-    page(),
-    facts({
-      scss: '.pathable-widget { }',
-      reactExports: new Map([
-        [
-          'Widget',
-          {
-            props: new Map([['tone', { values: ['plain'], default: 'loud' }]]),
-          },
-        ],
-      ]),
-    }),
+test('reports a class or variant the styles source does not have', () => {
+  const errors = checkPage(page(), facts({ scss: '.pathable-other { }' }))
+  assert.ok(includes(errors, 'styles-class "pathable-widget" has no rule'))
+  assert.ok(includes(errors, 'no .pathable-widget--loud rule'))
+  assert.ok(includes(errors, 'the html example uses .pathable-widget--loud'))
+  assert.ok(includes(errors, 'the page names `pathable-widget--loud`'))
+})
+
+test('reports a modifier the page leaves out', () => {
+  const scss = `${facts().scss} .pathable-widget--quiet { }`
+  assert.deepEqual(checkPage(page(), facts({ scss })), [
+    'the styles source defines .pathable-widget--quiet, which is not a variant on the page',
+  ])
+})
+
+test('reports a default that has a modifier rule', () => {
+  const scss = `${facts().scss} .pathable-widget--plain { }`
+  const errors = checkPage(page(), facts({ scss }))
+  assert.ok(includes(errors, 'the default has a .pathable-widget--plain rule'))
+})
+
+test('reports a variant the page body or the story leaves out', () => {
+  const quiet = page(
+    frontMatter + body.replace('Add `pathable-widget--loud` to shout.', ''),
   )
+  assert.ok(includes(checkPage(quiet, facts()), 'the page body never names'))
+
+  const unrendered = new Map([[STORY, { ...story(), fileSource: '' }]])
   assert.ok(
-    errors.some((error) => error.includes('no .pathable-widget--loud rule')),
-  )
-  assert.ok(
-    errors.some((error) => error.includes('React does not accept loud')),
-  )
-  assert.ok(errors.some((error) => error.includes('React defaults to "loud"')))
-  assert.ok(
-    errors.some((error) => error.includes('uses .pathable-widget--loud')),
+    includes(
+      checkPage(page(), facts({ stories: unrendered })),
+      "the canonical story's file never renders .pathable-widget--loud",
+    ),
   )
 })
 
-test('reports a react export that does not exist', () => {
-  const errors = checkPage(page(), facts({ reactExports: new Map() }))
-  assert.ok(
-    errors.some((error) =>
-      error.includes('react-export "Widget" is not exported'),
-    ),
+test('reports a canonical story or baseline that does not line up', () => {
+  const errors = checkPage(
+    page(),
+    facts({
+      canonicalStories: new Set(),
+      baselines: new Map([['widget/all-variants', 'widgets-widget--other']]),
+    }),
   )
+  assert.ok(includes(errors, "is not in the quality gates' CANONICAL_STORIES"))
+  assert.ok(includes(errors, 'captures "widgets-widget--other"'))
 })
 
 test('reports guarantees without evidence', () => {
@@ -153,39 +154,31 @@ test('reports guarantees without evidence', () => {
     page(),
     facts({
       baselines: new Map(),
-      stories: {
-        styles: new Map([['widgets-widget--all-variants', story([])]]),
-        react: new Map([['widgets-widget--all-variants', story()]]),
-      },
+      stories: new Map([[STORY, story([])]]),
     }),
   )
   assert.ok(
-    errors.some((error) =>
-      error.includes('no committed pixel baseline "widget/all-variants"'),
-    ),
+    includes(errors, 'no committed pixel baseline "widget/all-variants"'),
   )
-  assert.ok(errors.some((error) => error.includes('has no step "is centred"')))
-})
+  assert.ok(includes(errors, 'has no step "is centred"'))
 
-test('reports an example that does not compile', () => {
-  const errors = checkPage(
-    page(),
-    facts({ compileExample: () => ['Bad prop'] }),
+  const prefixed = page(
+    frontMatter.replace(`play ${STORY} >`, `play styles/${STORY} >`) + body,
   )
-  assert.deepEqual(errors, ['the tsx example does not compile: Bad prop'])
+  assert.ok(
+    includes(checkPage(prefixed, facts()), `no story "styles/${STORY}"`),
+  )
 })
 
 test('a static component may not list states', () => {
   const markdown = frontMatter.replace(
     'states: []',
-    'states:\n  - name: hover\n    story: styles/widgets-widget--all-variants',
+    `states:\n  - name: hover\n    story: ${STORY}`,
   )
   const errors = checkPage(page(markdown + body), facts())
-  assert.ok(
-    errors.includes(
-      'a static component has no states; mark it behavioural instead',
-    ),
-  )
+  assert.deepEqual(errors, [
+    'a static component has no states; mark it behavioural instead',
+  ])
 })
 
 test('consumer pages must not mention usa-* classes', () => {
@@ -193,9 +186,9 @@ test('consumer pages must not mention usa-* classes', () => {
     page(`${frontMatter + body}\nAlso usa-button.\n`),
     facts(),
   )
-  assert.ok(
-    errors.includes('consumer-facing pages must not mention usa-* classes'),
-  )
+  assert.deepEqual(errors, [
+    'consumer-facing pages must not mention usa-* classes',
+  ])
 })
 
 test('reports missing fields before anything else', () => {
@@ -228,15 +221,27 @@ export const Plain = {}
   )
 })
 
-test('matches whole class names only', () => {
-  assert.ok(hasClass('.pathable-widget--loud {}', 'pathable-widget--loud'))
+test('reads classes and modifiers from stylesheet source', () => {
+  const scss = '.pathable-widget--loud {} .pathable-widget--loud:hover {}'
+  assert.ok(hasClass(scss, 'pathable-widget--loud'))
   assert.ok(!hasClass('.pathable-widget--loudest {}', 'pathable-widget--loud'))
+  assert.deepEqual(modifiersOf(scss, 'pathable-widget'), ['loud'])
+})
+
+test('counts only wrapper files named after the class they define', () => {
+  assert.deepEqual(
+    wrapperComponents([
+      { name: 'pathable-widget', source: '.pathable-widget { }' },
+      { name: 'pathable-all', source: "@forward 'pathable-widget';" },
+      { name: '_index', source: '' },
+    ]),
+    ['pathable-widget'],
+  )
 })
 
 test('renders the index from front matter', () => {
-  const index = renderIndex([page()])
   assert.match(
-    index,
-    /\| \[Widget\]\(widget\.md\) \| static \| A test widget\. \| `pathable-widget` \| `Widget` +\|/u,
+    renderIndex([page()]),
+    /\| \[Widget\]\(widget\.md\) \| static \| A test widget\. \| `pathable-widget` \|/u,
   )
 })

@@ -1,21 +1,21 @@
 /**
- * Ties each component page to the code it describes. It does not generate
- * the page: the page is written by hand and is the specification; this check
- * fails when the page and the code disagree.
+ * Ties each component page to the styles code it describes. It does not
+ * generate the page: the page is written by hand and is the specification;
+ * this check fails when the page and the code disagree. It reads source files
+ * only, so it needs no build.
  *
  * For every component that has a page under packages/styles/components/:
  *   - the front matter has the required fields and the body the required
  *     sections, and the page does not mention the underlying framework classes;
- *   - the styles class and the React export exist;
- *   - every variant value exists in both: a React prop union member (with the
- *     stated default) and, unless it is the default, a modifier class;
- *   - every variant value appears in the component's story files, and every
- *     state names a story that exists;
- *   - the canonical story exists in each Storybook and is a canonical story of
- *     the quality gates, and the baseline key is a committed pixel baseline of
- *     that story;
- *   - the React example compiles against the package source, and the markup
- *     example uses only classes that exist;
+ *   - the styles class has a rule in the SCSS;
+ *   - every variant value that is not a default has a modifier rule, the page
+ *     names that modifier class, and the canonical story's file renders it;
+ *   - every modifier the SCSS defines for the class is a variant on the page;
+ *   - every state names a story that exists;
+ *   - the canonical story exists and is a canonical story of the quality
+ *     gates, and the baseline key is a committed pixel baseline of that story;
+ *   - the markup example, and every class the body names in a code span, uses
+ *     only classes the SCSS defines;
  *   - every guarantee cites evidence that exists: a pixel baseline, or a story
  *     play function, optionally a named `step` in it;
  *   - the derived index is current.
@@ -28,10 +28,8 @@
 
 import { existsSync, readdirSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
-import { dirname, join, relative, resolve } from 'node:path'
+import { basename, dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-
-import ts from 'typescript'
 
 import {
   indexFile,
@@ -48,7 +46,6 @@ export const REQUIRED_FIELDS = [
   'kind',
   'summary',
   'styles-class',
-  'react-export',
   'canonical-story',
   'variants',
   'states',
@@ -73,6 +70,17 @@ const KINDS = ['static', 'behavioural']
 // ---------------------------------------------------------------------------
 
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
+
+/** The modifiers (`.class--modifier`) stylesheet source defines for a class. */
+export const modifiersOf = (scss, className) => [
+  ...new Set(
+    [
+      ...scss.matchAll(
+        new RegExp(`\\.${escapeRegExp(className)}--([a-z0-9-]+)`, 'gu'),
+      ),
+    ].map((match) => match[1]),
+  ),
+]
 
 /** Whether stylesheet source defines a rule for the class. */
 export const hasClass = (scss, className) =>
@@ -129,21 +137,17 @@ function checkBody(page, errors) {
   }
 }
 
-function checkStory(storybook, id, facts, errors, context) {
-  const story = facts.stories[storybook]?.get(id)
-  if (!story) errors.push(`${context}: no ${storybook} story "${id}"`)
+function checkStory(id, facts, errors, context) {
+  const story = facts.stories.get(id)
+  if (!story) errors.push(`${context}: no story "${id}"`)
   return story
 }
 
 function checkVariants(page, facts, errors) {
   const { data } = page
   const cls = data['styles-class']
-  const component = facts.reactExports.get(data['react-export'])
-  const storyFiles = ['styles', 'react'].map((storybook) => ({
-    storybook,
-    source:
-      facts.stories[storybook]?.get(data['canonical-story'])?.fileSource ?? '',
-  }))
+  const storySource = facts.stories.get(data['canonical-story'])?.fileSource
+  const listed = new Set()
 
   for (const variant of Array.isArray(data.variants) ? data.variants : []) {
     const { axis, values } = variant
@@ -159,47 +163,34 @@ function checkVariants(page, facts, errors) {
 
     for (const value of values) {
       const modifier = `${cls}--${value}`
-      if (value !== variant.default && !hasClass(facts.scss, modifier)) {
-        errors.push(
-          `variant "${axis}=${value}": no .${modifier} rule in the styles source`,
-        )
+      const label = `variant "${axis}=${value}"`
+      listed.add(value)
+      if (value === variant.default) {
+        if (hasClass(facts.scss, modifier)) {
+          errors.push(
+            `${label}: the default has a .${modifier} rule, so it is not the default`,
+          )
+        }
+        continue
       }
-      if (
-        value !== variant.default &&
-        !storyFiles[0].source.includes(modifier)
-      ) {
-        errors.push(
-          `variant "${axis}=${value}": the styles story file never renders .${modifier}`,
-        )
+      if (!hasClass(facts.scss, modifier)) {
+        errors.push(`${label}: no .${modifier} rule in the styles source`)
       }
-      if (component && !storyFiles[1].source.includes(`'${value}'`)) {
+      if (!page.body.includes(`\`${modifier}\``)) {
+        errors.push(`${label}: the page body never names \`${modifier}\``)
+      }
+      if (storySource !== undefined && !storySource.includes(modifier)) {
         errors.push(
-          `variant "${axis}=${value}": the React story file never uses '${value}'`,
+          `${label}: the canonical story's file never renders .${modifier}`,
         )
       }
     }
+  }
 
-    if (!component) continue
-    const prop = component.props.get(axis)
-    if (!prop) {
+  for (const modifier of modifiersOf(facts.scss, cls)) {
+    if (!listed.has(modifier)) {
       errors.push(
-        `variant "${axis}": ${data['react-export']} has no "${axis}" prop`,
-      )
-      continue
-    }
-    const missing = values.filter((value) => !prop.values.includes(value))
-    const extra = prop.values.filter((value) => !values.includes(value))
-    if (missing.length)
-      errors.push(
-        `variant "${axis}": React does not accept ${missing.join(', ')}`,
-      )
-    if (extra.length)
-      errors.push(
-        `variant "${axis}": React also accepts ${extra.join(', ')}, which the page omits`,
-      )
-    if (prop.default !== variant.default) {
-      errors.push(
-        `variant "${axis}": React defaults to "${prop.default}", the page says "${variant.default}"`,
+        `the styles source defines .${cls}--${modifier}, which is not a variant on the page`,
       )
     }
   }
@@ -209,11 +200,10 @@ function checkStates(page, facts, errors) {
   const { data } = page
   for (const state of Array.isArray(data.states) ? data.states : []) {
     if (!state?.name || !state?.story) {
-      errors.push('each state needs "name" and "story" (storybook/story-id)')
+      errors.push('each state needs "name" and "story" (a story id)')
       continue
     }
-    const [storybook, id] = state.story.split('/')
-    checkStory(storybook, id, facts, errors, `state "${state.name}"`)
+    checkStory(state.story, facts, errors, `state "${state.name}"`)
   }
   if (
     data.kind === 'static' &&
@@ -227,10 +217,7 @@ function checkStates(page, facts, errors) {
 function checkStoriesAndBaseline(page, facts, errors) {
   const { data } = page
   const id = data['canonical-story']
-  checkStory('styles', id, facts, errors, 'canonical-story')
-  if (facts.reactExports.has(data['react-export'])) {
-    checkStory('react', id, facts, errors, 'canonical-story')
-  }
+  checkStory(id, facts, errors, 'canonical-story')
   if (id && !facts.canonicalStories.has(id)) {
     errors.push(
       `canonical-story "${id}" is not in the quality gates' CANONICAL_STORIES`,
@@ -250,19 +237,11 @@ function checkStoriesAndBaseline(page, facts, errors) {
   }
 }
 
-function checkExamples(page, facts, errors) {
-  const tsx = fencedBlocks(page.body, 'tsx')
+function checkClasses(page, facts, errors) {
   const html = fencedBlocks(page.body, 'html')
-  if (tsx.length !== 1)
-    errors.push(`expected one tsx example; found ${tsx.length}`)
   if (html.length !== 1)
     errors.push(`expected one html example; found ${html.length}`)
 
-  for (const diagnostic of tsx.length === 1
-    ? facts.compileExample(page.slug, tsx[0])
-    : []) {
-    errors.push(`the tsx example does not compile: ${diagnostic}`)
-  }
   for (const markup of html) {
     for (const [, classes] of markup.matchAll(/class="([^"]*)"/gu)) {
       for (const className of classes.split(/\s+/u).filter(Boolean)) {
@@ -274,10 +253,22 @@ function checkExamples(page, facts, errors) {
       }
     }
   }
+
+  const prose = page.body.replace(/^```[\s\S]*?^```$/gmu, '')
+  const named = new Set(
+    [...prose.matchAll(/`(pathable-[a-z0-9-]+)`/gu)].map((match) => match[1]),
+  )
+  for (const className of named) {
+    if (!hasClass(facts.scss, className)) {
+      errors.push(
+        `the page names \`${className}\`, which the styles source does not define`,
+      )
+    }
+  }
 }
 
 const EVIDENCE =
-  /^(?:pixel (?<baseline>\S+)|play (?<storybook>styles|react)\/(?<story>\S+?)(?: > (?<step>.+))?)$/u
+  /^(?:pixel (?<baseline>\S+)|play (?<story>\S+?)(?: > (?<step>.+))?)$/u
 
 function checkGuarantees(page, facts, errors) {
   const ids = new Set()
@@ -298,33 +289,23 @@ function checkGuarantees(page, facts, errors) {
       const match = String(item).match(EVIDENCE)
       if (!match) {
         errors.push(
-          `guarantee "${id}": evidence "${item}" is neither "pixel <key>" nor "play <storybook>/<story-id>[ > <step>]"`,
+          `guarantee "${id}": evidence "${item}" is neither "pixel <key>" nor "play <story-id>[ > <step>]"`,
         )
         continue
       }
-      const { baseline, storybook, story, step } = match.groups
+      const { baseline, story, step } = match.groups
       if (baseline && !facts.baselines.has(baseline)) {
         errors.push(
           `guarantee "${id}": no committed pixel baseline "${baseline}"`,
         )
       }
       if (story) {
-        const found = checkStory(
-          storybook,
-          story,
-          facts,
-          errors,
-          `guarantee "${id}"`,
-        )
+        const found = checkStory(story, facts, errors, `guarantee "${id}"`)
         if (found && !found.play) {
-          errors.push(
-            `guarantee "${id}": ${storybook}/${story} has no play function`,
-          )
+          errors.push(`guarantee "${id}": ${story} has no play function`)
         }
         if (found && step && !found.steps.includes(step)) {
-          errors.push(
-            `guarantee "${id}": ${storybook}/${story} has no step "${step}"`,
-          )
+          errors.push(`guarantee "${id}": ${story} has no step "${step}"`)
         }
       }
     }
@@ -343,16 +324,11 @@ export function checkPage(page, facts) {
       `styles-class "${data['styles-class']}" has no rule in the styles source`,
     )
   }
-  if (!facts.reactExports.has(data['react-export'])) {
-    errors.push(
-      `react-export "${data['react-export']}" is not exported by @pathableai/react`,
-    )
-  }
   checkBody(page, errors)
   checkVariants(page, facts, errors)
   checkStates(page, facts, errors)
   checkStoriesAndBaseline(page, facts, errors)
-  checkExamples(page, facts, errors)
+  checkClasses(page, facts, errors)
   checkGuarantees(page, facts, errors)
   return errors
 }
@@ -440,128 +416,28 @@ async function readBaselines() {
   return baselines
 }
 
-const exampleFile = (slug) =>
-  join(repoRoot, `packages/react/src/__component-page-${slug}__.tsx`)
-
 /**
- * Builds one TypeScript program over the React entry point, so the component
- * pages' examples compile against the package source the way a consumer's code
- * compiles against `@pathableai/react`.
+ * The denominator for coverage: wrapper files named after the class they
+ * define (`pathable-card.scss` defines `.pathable-card`). That leaves out
+ * partials and the bundle files that only forward other wrappers.
  */
-function reactProgram(examples) {
-  const packageDir = join(repoRoot, 'packages/react')
-  const configFile = ts.readConfigFile(
-    join(packageDir, 'tsconfig.json'),
-    ts.sys.readFile,
-  )
-  const { options } = ts.parseJsonConfigFileContent(
-    configFile.config,
-    ts.sys,
-    packageDir,
-  )
-  Object.assign(options, {
-    noEmit: true,
-    baseUrl: packageDir,
-    paths: { '@pathableai/react': ['./src/index.ts'] },
-  })
-
-  const entry = join(packageDir, 'src/index.ts')
-  const host = ts.createCompilerHost(options)
-  const virtual = new Map(
-    [...examples].map(([slug, source]) => [exampleFile(slug), source]),
-  )
-  const { getSourceFile, fileExists, readFile: hostReadFile } = host
-  host.fileExists = (file) => virtual.has(file) || fileExists.call(host, file)
-  host.readFile = (file) => virtual.get(file) ?? hostReadFile.call(host, file)
-  host.getSourceFile = (file, language, ...rest) =>
-    virtual.has(file)
-      ? ts.createSourceFile(
-          file,
-          virtual.get(file),
-          language,
-          true,
-          ts.ScriptKind.TSX,
-        )
-      : getSourceFile.call(host, file, language, ...rest)
-
-  return ts.createProgram([entry, ...virtual.keys()], options, host)
-}
-
-/** The React package's component exports, with each prop's literal values and default. */
-function readReactExports(program) {
-  const checker = program.getTypeChecker()
-  const entry = program.getSourceFile(
-    join(repoRoot, 'packages/react/src/index.ts'),
-  )
-  const components = new Map()
-
-  for (const exported of checker.getExportsOfModule(
-    checker.getSymbolAtLocation(entry),
-  )) {
-    const symbol =
-      exported.flags & ts.SymbolFlags.Alias
-        ? checker.getAliasedSymbol(exported)
-        : exported
-    if (
-      !(symbol.flags & ts.SymbolFlags.Value) ||
-      !/^[A-Z]/u.test(exported.name)
-    )
-      continue
-
-    const declaration = symbol.valueDeclaration
-    const parameter =
-      declaration && ts.isFunctionDeclaration(declaration)
-        ? declaration.parameters[0]
-        : undefined
-    const props = new Map()
-    if (parameter) {
-      const defaults = new Map()
-      if (ts.isObjectBindingPattern(parameter.name)) {
-        for (const element of parameter.name.elements) {
-          const name = (element.propertyName ?? element.name).getText()
-          if (element.initializer && ts.isStringLiteral(element.initializer)) {
-            defaults.set(name, element.initializer.text)
-          }
-        }
-      }
-      for (const property of checker
-        .getTypeAtLocation(parameter)
-        .getProperties()) {
-        const type = checker.getNonNullableType(
-          checker.getTypeOfSymbolAtLocation(property, parameter),
-        )
-        const members = type.isUnion() ? type.types : [type]
-        const values = members
-          .filter((member) => member.isStringLiteral())
-          .map((member) => member.value)
-        if (values.length) {
-          props.set(property.name, {
-            values,
-            default: defaults.get(property.name),
-          })
-        }
-      }
-    }
-    components.set(exported.name, { props })
-  }
-  return components
+export function wrapperComponents(files) {
+  return files
+    .filter(({ name, source }) => hasClass(source, name))
+    .map(({ name }) => name)
 }
 
 /** Gathers everything the checks compare a page with. */
-export async function gatherFacts(pages) {
-  const wrappers = join(repoRoot, 'packages/styles/src')
-  const scss = (
-    await Promise.all(
-      listFiles(wrappers, /\.scss$/u).map((file) => readFile(file, 'utf8')),
-    )
-  ).join('\n')
-
-  const examples = new Map()
-  for (const page of pages) {
-    const [example] = fencedBlocks(page.body, 'tsx')
-    if (example) examples.set(page.slug, example)
-  }
-  const program = reactProgram(examples)
+export async function gatherFacts() {
+  const sources = join(repoRoot, 'packages/styles/src')
+  const files = await Promise.all(
+    listFiles(sources, /\.scss$/u).map(async (file) => ({
+      file,
+      name: basename(file, '.scss'),
+      source: await readFile(file, 'utf8'),
+    })),
+  )
+  const wrappers = join(sources, 'pathable-component-wrappers')
 
   const { CANONICAL_STORIES } = await import(
     pathToFileURL(join(repoRoot, 'packages/styles/scripts/quality-gates.mjs'))
@@ -569,29 +445,13 @@ export async function gatherFacts(pages) {
   )
 
   return {
-    scss,
-    stories: {
-      styles: await readStorybook(
-        join(repoRoot, 'packages/styles/src/stories'),
-        /\.stories\.ts$/u,
-      ),
-      react: await readStorybook(
-        join(repoRoot, 'packages/react/src/stories'),
-        /\.stories\.tsx$/u,
-      ),
-    },
+    scss: files.map(({ source }) => source).join('\n'),
+    components: wrapperComponents(
+      files.filter(({ file }) => dirname(file) === wrappers),
+    ),
+    stories: await readStorybook(join(sources, 'stories'), /\.stories\.ts$/u),
     canonicalStories: new Set(CANONICAL_STORIES.map((story) => story.id)),
     baselines: await readBaselines(),
-    reactExports: readReactExports(program),
-    compileExample: (slug) =>
-      ts
-        .getPreEmitDiagnostics(
-          program,
-          program.getSourceFile(exampleFile(slug)),
-        )
-        .map((diagnostic) =>
-          ts.flattenDiagnosticMessageText(diagnostic.messageText, ' '),
-        ),
   }
 }
 
@@ -601,7 +461,7 @@ export async function gatherFacts(pages) {
 
 async function main() {
   const pages = await readPages()
-  const facts = await gatherFacts(pages)
+  const facts = await gatherFacts()
   let failed = false
 
   for (const page of pages) {
@@ -622,11 +482,10 @@ async function main() {
     failed = true
   }
 
-  const withPage = new Set(pages.map((page) => page.data['react-export']))
-  const components = [...facts.reactExports.keys()]
-  const covered = components.filter((name) => withPage.has(name)).length
+  const withPage = new Set(pages.map((page) => page.data['styles-class']))
+  const covered = facts.components.filter((name) => withPage.has(name)).length
   console.log(
-    `[component-pages] ${pages.length} page(s) checked; ${covered} of ${components.length} React component exports have a page`,
+    `[component-pages] ${pages.length} page(s) checked; ${covered} of ${facts.components.length} component wrapper stylesheets have a page`,
   )
   if (failed) process.exitCode = 1
 }
