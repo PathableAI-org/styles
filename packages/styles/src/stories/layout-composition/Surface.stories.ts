@@ -136,7 +136,7 @@ const focusControls = (
   `
 }
 
-const blockStyle = 'padding: 1.5rem; flex: 1 1 14rem; min-width: 0;'
+const blockStyle = 'flex: 1 1 14rem; min-width: 0;'
 
 const focusSurfaces: (FocusCase & { variant: string })[] = [
   { variant: 'raised', label: 'Raised', ring: '--pathable-color-focus-ring' },
@@ -258,7 +258,7 @@ export const KeyboardFocusOnSurfaces = {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in twelve nested cases. Each nested case puts a surface, a dark utility or a dark component container inside a surface that sets a different ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382).",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in twelve nested cases. Each nested case puts a surface, a dark utility or a dark component container inside a surface that sets a different ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; #362 tracks that component-owned outline.",
       },
     },
   },
@@ -267,7 +267,7 @@ export const KeyboardFocusOnSurfaces = {
       ${focusSurfaces
         .map(
           (focusCase) => `
-        <div class="pathable-surface pathable-surface--${focusCase.variant} pathable-stack pathable-stack--gap-sm" style="${blockStyle}">
+        <div class="pathable-surface pathable-surface--${focusCase.variant} pathable-stack pathable-stack--gap-sm pathable-padding-3" style="${blockStyle}">
           ${focusControls(focusCase, { withFields: true })}
         </div>`,
         )
@@ -275,8 +275,8 @@ export const KeyboardFocusOnSurfaces = {
       ${nestedCases
         .map(
           (focusCase) => `
-        <div class="${focusCase.outer}" style="${blockStyle}">
-          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm" style="padding: 1rem;">
+        <div class="${focusCase.outer} pathable-padding-3" style="${blockStyle}">
+          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm pathable-padding-2">
             ${focusControls(focusCase)}
           </div>
         </div>`,

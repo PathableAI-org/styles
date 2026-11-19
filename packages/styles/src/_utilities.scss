@@ -76,7 +76,9 @@
 // --pathable-color-focus-ring instead of inheriting it. The hover variants
 // reset it too, for a container that turns dark under the pointer while a
 // control in it has focus. The focus variants do not: :focus matches only the
-// focused control, whose ring is drawn on the surface behind it. On Tech Teal
+// focused control, whose ring is drawn on the surface behind it. A control
+// that carries one of these classes itself also resets its own ring, as on
+// main, because the rule cannot tell it from a container. On Tech Teal
 // the fallback is 2.6:1 (#382); a light ring there would inherit into light
 // containers nested in it.
 .pathable-bg-primary,
