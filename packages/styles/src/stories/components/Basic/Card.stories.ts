@@ -1,6 +1,9 @@
 import { expect, within } from 'storybook/test'
 
-import { expectKeyboardFocusIndicator } from '../../shared/focus-indicator'
+import {
+  expectKeyboardFocusIndicator,
+  resolveColor,
+} from '../../shared/focus-indicator'
 
 export default {
   title: 'Components/Card',
@@ -180,10 +183,9 @@ export const WorkflowCardWithStatus = {
   },
 }
 
-// `.pathable-card__action` on a container around the action link, as the
-// React Card renders it, instead of on the link itself. The link also carries
-// `.pathable-link`, whose own focus ring (4px, no offset) and hover colour the
-// card action rules replace.
+// `.pathable-card__action` on a container around the actions, as the React
+// Card renders it, instead of on the link itself. The plain link inside gets
+// the action link styling; the anchor styled as a button keeps its own.
 export const WorkflowCardActionContainer = {
   render: () => `
     <div class="pathable-card pathable-card--workflow" data-testid="workflow-action-container-card">
@@ -195,7 +197,8 @@ export const WorkflowCardActionContainer = {
           <p>Session 12 of 24 — Focus: Workplace communication skills and job readiness practice.</p>
           <p class="pathable-card__meta">Last updated: Today, 2:30 PM | Duration: 45 min</p>
           <div class="pathable-card__action" data-testid="workflow-action-container">
-            <a href="#session-notes" class="pathable-link">View session notes →</a>
+            <a href="#session-notes">View session notes →</a>
+            <a href="#start-session" class="pathable-button">Start session</a>
           </div>
         </div>
       </div>
@@ -205,16 +208,14 @@ export const WorkflowCardActionContainer = {
     const canvas = within(canvasElement)
     const container = canvas.getByTestId('workflow-action-container')
     const action = canvas.getByRole('link', { name: 'View session notes →' })
-    const probe = canvasElement.ownerDocument.createElement('span')
-    probe.hidden = true
-    probe.style.color = 'var(--pathable-color-link)'
-    canvasElement.append(probe)
-    const expectedColor = getComputedStyle(probe).color
-    probe.remove()
+    const buttonLink = canvas.getByRole('link', { name: 'Start session' })
+    const linkColor = resolveColor(canvasElement, 'var(--pathable-color-link)')
 
     await expect(container).toContainElement(action)
-    await expect(getComputedStyle(action).color).toBe(expectedColor)
+    await expect(getComputedStyle(action).color).toBe(linkColor)
     await expect(getComputedStyle(action).textDecorationLine).toBe('underline')
+    await expect(getComputedStyle(buttonLink).color).not.toBe(linkColor)
+    await expect(getComputedStyle(buttonLink).textDecorationLine).toBe('none')
     await expectKeyboardFocusIndicator(canvasElement, action, { width: 2 })
     await expect(getComputedStyle(action).outlineOffset).toBe('2px')
   },
