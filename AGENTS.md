@@ -105,9 +105,10 @@ Some of these rules are enforced for Claude Code by
   stop and ask the person to review the change. Not reported: changes made
   before the command (by an approved edit, a person or a background command);
   paths the person approved in the ask; content already seen in the session,
-  such as changes brought back by `git stash pop`; files `git stash` put away;
-  unchanged files in an amended commit; files the other side of a conflicted
-  merge changed; Husky shims an install creates; and whitespace-only
+  such as changes brought back by `git stash pop`; untracked files `git stash`
+  put away; unchanged files in an amended commit; files a merge the command
+  started left conflicted or auto-merged, while they still hold what Git wrote;
+  Husky shims an install creates; and whitespace-only
   reformatting of Markdown, including lint-staged's inside `git commit`. Known
   limits: a guardrail file changed by another process while a command runs is
   reported as that command's change, including `.claude/settings.local.json`

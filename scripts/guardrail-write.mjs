@@ -637,7 +637,13 @@ export const changedGuardrailFiles = (root) => {
   for (const entry of String(status).split('\0')) {
     const path = entry.slice(3)
     if (entry.length < 4 || !isGuardrailPath(path)) continue
-    // Git lists an ignored directory as one entry; hash the files in it, so a change inside it shows.
+    // Git lists an ignored directory as one entry; hash the files in it, so a change inside it shows. A nested
+    // checkout, such as a worktree under `.claude/worktrees/`, is another repository: record it as one entry.
+    const nested = path.endsWith('/') && existsSync(join(root, path, '.git'))
+    if (nested) {
+      files[path] = 'nested-repository'
+      continue
+    }
     const inside = path.endsWith('/')
       ? readdirSync(join(root, path), { recursive: true, withFileTypes: true })
           .filter((item) => !item.isDirectory())
@@ -646,6 +652,7 @@ export const changedGuardrailFiles = (root) => {
               .split(sep)
               .join('/'),
           )
+          .filter((file) => !/(?:^|\/)(?:node_modules|\.git)\//.test(file))
       : [path]
     for (const file of inside) files[file] = contentHash(join(root, file))
   }
@@ -668,11 +675,10 @@ const committedHash = (root, revision, path) => {
  * after `--no-commit`. Content from them was brought in from elsewhere, not written by the command.
  */
 const pendingSides = (root) =>
-  ['MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD']
-    .map((ref) =>
-      gitOrUndefined(root, ['rev-parse', '--verify', '--quiet', ref])?.trim(),
-    )
-    .filter((sha) => sha !== undefined && sha !== '')
+  ['MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD'].flatMap((ref) => {
+    const sha = revision(root, ref)
+    return sha === null ? [] : [{ ref, sha }]
+  })
 
 /**
  * The guardrail paths whose content in `after` differs from `before` and from every content `known` holds for them,
@@ -690,12 +696,9 @@ export const changedSince = (
   const changed = Object.keys(after).filter(
     (path) => before[path] !== after[path] && !isKnown(path, after[path]),
   )
+  // A deleted file was on disk when the record was taken, so each deletion is new: the next record no longer has it.
   const deleted = Object.keys(before).filter(
-    (path) =>
-      !(path in after) &&
-      before[path] !== 'missing' &&
-      !exists(path) &&
-      !isKnown(path, 'missing'),
+    (path) => !(path in after) && before[path] !== 'missing' && !exists(path),
   )
   return [...new Set([...changed, ...deleted])].sort()
 }
@@ -724,10 +727,37 @@ const looseHashes = (root, files) =>
   )
 
 /**
+ * Whether a merge, cherry-pick or revert that this command started, and that stopped on a conflict or with
+ * `--no-commit`, explains a guardrail file: its side changed the file, and the file still holds what Git wrote,
+ * either its merge result (the working tree matches the index) or a conflict waiting to be resolved.
+ */
+const explainedByMerge = (root, record, path) =>
+  pendingSides(root)
+    .filter(({ sha }) => !(record.sides ?? []).includes(sha))
+    .some(({ ref, sha }) => {
+      const base =
+        ref === 'MERGE_HEAD'
+          ? gitOrUndefined(root, ['merge-base', record.head ?? '', sha])?.trim()
+          : `${sha}^`
+      if (
+        base === undefined ||
+        committedHash(root, base, path) === committedHash(root, sha, path)
+      )
+        return false
+      const conflicted =
+        String(gitOrUndefined(root, ['ls-files', '-u', '--', path]) ?? '') !==
+        ''
+      const staged = revision(root, `:${path}`)
+      const written = gitOrUndefined(root, ['hash-object', '--', path])?.trim()
+      return conflicted || (staged !== null && staged === written)
+    })
+
+/**
  * Whether a reported path has an explanation that does not need a person: a path at or under one the PreToolUse ask
  * named, a Husky shim created from nothing (without shims Git runs no hooks, so creating them weakens nothing), a
- * Markdown file whose change is only whitespace (a formatter, or lint-staged inside `git commit`), a file `git stash`
- * moved into a new stash, or a file the other side of a pending merge, cherry-pick or revert changed.
+ * Markdown file whose change is only whitespace (a formatter, or lint-staged inside `git commit`), an untracked file
+ * `git stash` moved into a new stash (ignored files are in force, so stashing them away is reported), or a file a
+ * merge the command started brought in (`explainedByMerge`).
  */
 const explained = (root, record, path) => {
   const asked = record.askedPaths ?? []
@@ -754,43 +784,37 @@ const explained = (root, record, path) => {
       return true
   }
   const stash = revision(root, 'refs/stash')
-  if (!onDisk && stash !== null && stash !== record.stash) {
+  const ignored =
+    gitOrUndefined(root, ['check-ignore', '--quiet', '--no-index', path]) !==
+    undefined
+  if (!onDisk && !ignored && stash !== null && stash !== record.stash) {
     const stashed = [stash, `${stash}^3`].map((commit) =>
       committedHash(root, commit, path),
     )
     if (stashed.includes(record.before[path])) return true
   }
-  const ours = committedHash(root, record.head, path)
-  return pendingSides(root).some(
-    (side) => committedHash(root, side, path) !== ours,
-  )
+  return explainedByMerge(root, record, path)
 }
 
 /**
- * The guardrail paths a command changed and committed in the same call, on whatever branch it ends on. It reads the
- * commits between the record's HEAD and the current one by their commit time, and leaves out merge commits and
- * commits fetched from elsewhere, whose committer time is earlier. A committed guardrail file passes when its content
- * is unchanged from the record's HEAD (an amend or a rebase that kept it), is the record's working-tree content, or is
- * one `known` holds for it.
+ * The guardrail paths a command changed and committed in the same call, on any branch, including one it switched
+ * away from again. It reads every commit reachable from a ref or the reflog whose committer time is after the record,
+ * and leaves out merge commits and commits fetched from elsewhere, whose committer time is earlier. A committed
+ * guardrail file passes when its content in that commit is unchanged from the record's HEAD (an amend that kept it),
+ * is the record's working-tree content, or is one `known` holds for it.
  */
-export const committedChanges = (root, record, after, known = {}) => {
-  const now = headState(root)
-  if (record.head === null || now.head === null || now.head === record.head)
-    return []
-  const log = gitOrUndefined(root, [
-    'log',
+export const committedChanges = (root, record, known = {}) => {
+  if (record.head === null) return []
+  const made = gitOrUndefined(root, [
+    'rev-list',
+    '--all',
+    '--reflog',
     '--no-merges',
-    '--format=%H %ct',
-    `${record.head}..${now.head}`,
+    `--since=@${record.time - 5}`,
   ])
-  if (log === undefined) return []
-  const made = String(log)
-    .split('\n')
-    .map((line) => line.split(' '))
-    .filter(([, time]) => Number(time) >= record.time - 5)
-    .map(([sha]) => sha ?? '')
+  if (made === undefined) return []
   const paths = new Set()
-  for (const sha of made) {
+  for (const sha of String(made).split('\n').filter(Boolean)) {
     const files = gitOrUndefined(root, [
       'diff-tree',
       '--root',
@@ -801,20 +825,18 @@ export const committedChanges = (root, record, after, known = {}) => {
       '-z',
       sha,
     ])
-    for (const path of String(files ?? '').split('\0'))
-      if (path !== '' && isGuardrailPath(path) && !(path in after))
-        paths.add(path)
-  }
-  return [...paths]
-    .filter((path) => {
-      const content = committedHash(root, now.head, path)
-      return (
+    for (const path of String(files ?? '').split('\0')) {
+      if (path === '' || !isGuardrailPath(path)) continue
+      const content = committedHash(root, sha, path)
+      if (
         content !== committedHash(root, record.head, path) &&
         content !== record.before[path] &&
         !(known[path] ?? []).includes(content)
       )
-    })
-    .sort()
+        paths.add(path)
+    }
+  }
+  return [...paths].sort()
 }
 
 const recordDirectory = () => join(tmpdir(), 'pathable-guardrail-writes')
@@ -932,6 +954,7 @@ export const preToolUse = (input) => {
         before,
         ...headState(root),
         loose: looseHashes(root, before),
+        sides: pendingSides(root).map(({ sha }) => sha),
         stash: revision(root, 'refs/stash'),
         time: Math.floor(Date.now() / 1000),
       }),
@@ -967,20 +990,14 @@ export const postToolUse = (input) => {
       ...changedSince(record.before, after, known, (path) =>
         existsSync(join(root, path)),
       ),
-      ...committedChanges(root, record, after, known),
+      ...committedChanges(root, record, known),
     ]),
   ]
     .filter((path) => !explained(root, record, path))
     .sort()
   if (changed.length === 0) return { kind: 'allow' }
   // Report each change once: the agent is told to stop, and the next command is not blamed for it.
-  const deletions = Object.fromEntries(
-    changed.filter((path) => !(path in after)).map((path) => [path, 'missing']),
-  )
-  writeFileSync(
-    knownPath,
-    JSON.stringify(remember(known, { ...after, ...deletions })),
-  )
+  writeFileSync(knownPath, JSON.stringify(remember(known, after)))
   return { kind: 'block', reason: blockReason(changed) }
 }
 

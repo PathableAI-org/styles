@@ -506,6 +506,82 @@ void describe('the PostToolUse check', () => {
     assert.deepEqual(post, { kind: 'allow' })
   })
 
+  /** Makes a branch `other` whose merge auto-merges AGENTS.md and stops on a conflict in src/app.ts. */
+  const prepareConflict = () => {
+    repo.git('checkout', '--quiet', '-b', 'other')
+    repo.commit('docs: other', {
+      'AGENTS.md': '# Agents\n\nother\n',
+      'src/app.ts': 'export const app = 10\n',
+    })
+    repo.git('checkout', '--quiet', '-')
+    repo.commit('fix: app', { 'src/app.ts': 'export const app = 20\n' })
+  }
+
+  const mergeOther = () => {
+    try {
+      repo.git('merge', '--quiet', 'other')
+    } catch {
+      // The merge stops on the conflict in src/app.ts, as intended.
+    }
+  }
+
+  void it('reports a later write to a file a pending merge changed', () => {
+    prepareConflict()
+    assert.deepEqual(run('git merge other', mergeOther).post, { kind: 'allow' })
+    const { post } = run('node fix.mjs', () => {
+      write('AGENTS.md', '# Agents\n\nother\n\nexit 0\n')
+    })
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('reports a write after the merge in the same command', () => {
+    prepareConflict()
+    const { post } = run('git merge other || node fix.mjs', () => {
+      mergeOther()
+      write('AGENTS.md', '# Agents\n\nother\n\nexit 0\n')
+    })
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('reports a guardrail change committed on a branch the command left', () => {
+    const { post } = run(
+      'git switch -c tmp && node x.mjs && git commit -am x && git switch -',
+      () => {
+        repo.git('switch', '--quiet', '-c', 'tmp')
+        write('.github/workflows/ci.yml', 'name: rewritten\n')
+        repo.git('commit', '--quiet', '--all', '--message', 'x')
+        repo.git('switch', '--quiet', '-')
+      },
+    )
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('records a nested worktree as one entry and ignores changes inside it', () => {
+    repo.git('worktree', 'add', '--quiet', '--detach', '.claude/worktrees/a')
+    const { post } = run('pnpm lint', () => {
+      write('.claude/worktrees/a/src/app.ts', 'export const app = 30\n')
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('reports ignored guardrail files git stash --all put away', () => {
+    write('.claude/settings.local.json', '{}')
+    const { post } = run('git stash --all', () => {
+      repo.git('stash', '--quiet', '--all')
+    })
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('reports every deletion of the same file', () => {
+    for (let round = 0; round < 2; round += 1) {
+      write('.claude/settings.local.json', '{}')
+      const { post } = run('node clean.mjs', () => {
+        rmSync(join(repo.dir, '.claude/settings.local.json'))
+      })
+      assert.equal(post.kind, 'block', `deletion ${round + 1}`)
+    }
+  })
+
   void it('reports a change to an ignored guardrail file', () => {
     const { post } = run('node setup.mjs', () => {
       write('.claude/settings.local.json', '{"permissions":{"allow":["Bash"]}}')
