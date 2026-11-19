@@ -145,34 +145,99 @@ const focusSurfaces: (FocusCase & { variant: string })[] = [
   },
 ]
 
-// Nested cases: the nearest background decides the ring.
-const raisedInBrand: FocusCase = {
-  label: 'Raised in brand',
-  ring: '--pathable-color-focus-ring',
-}
-const tonePrimaryInInverse: FocusCase = {
-  label: 'Tone primary in inverse',
-  ring: '--pathable-color-on-accent',
-}
-const darkInSubtle: FocusCase = {
-  label: 'Dark in subtle',
-  ring: '--pathable-color-focus-ring',
-  dark: true,
-}
-
-const focusCases = [
-  ...focusSurfaces,
-  raisedInBrand,
-  tonePrimaryInInverse,
-  darkInSubtle,
+// Nested cases: the nearest background decides the ring. Each container that
+// sets or resets --pathable-surface-focus-ring sits inside a surface that sets
+// a different one, so removing its declaration changes the ring.
+const nestedCases: (FocusCase & { outer: string; inner: string })[] = [
+  {
+    label: 'Raised in brand',
+    outer: 'pathable-surface pathable-surface--brand',
+    inner: 'pathable-surface pathable-surface--raised',
+    ring: '--pathable-color-focus-ring',
+  },
+  {
+    label: 'Interactive in subtle',
+    outer: 'pathable-surface pathable-surface--tone-subtle',
+    inner: 'pathable-surface pathable-surface--interactive',
+    ring: '--pathable-color-focus-ring',
+  },
+  {
+    label: 'Tone default in brand',
+    outer: 'pathable-surface pathable-surface--brand',
+    inner: 'pathable-surface pathable-surface--tone-default',
+    ring: '--pathable-color-focus-ring',
+  },
+  {
+    label: 'Base in brand',
+    outer: 'pathable-surface pathable-surface--brand',
+    inner: 'pathable-surface pathable-surface--base',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Tone primary in inverse',
+    outer: 'pathable-surface pathable-surface--inverse',
+    inner: 'pathable-surface pathable-surface--tone-primary',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Inverse in inset',
+    outer: 'pathable-surface pathable-surface--inset',
+    inner: 'pathable-surface pathable-surface--inverse',
+    ring: '--pathable-color-focus-ring',
+    dark: true,
+  },
+  {
+    label: 'Primary background in subtle',
+    outer: 'pathable-surface pathable-surface--tone-subtle',
+    inner: 'pathable-bg-primary pathable-text-white',
+    ring: '--pathable-color-focus-ring',
+    dark: true,
+  },
+  {
+    label: 'Link background in subtle',
+    outer: 'pathable-surface pathable-surface--tone-subtle',
+    inner: 'pathable-bg-link pathable-text-white',
+    ring: '--pathable-color-surface',
+    dark: true,
+  },
+  {
+    label: 'Dark section in inset',
+    outer: 'pathable-surface pathable-surface--inset',
+    inner: 'pathable-section pathable-section--dark',
+    ring: '--pathable-color-focus-ring',
+    dark: true,
+  },
+  {
+    label: 'Dark background in subtle',
+    outer: 'pathable-surface pathable-surface--tone-subtle',
+    inner: 'pathable-dark-background',
+    ring: '--pathable-color-focus-ring',
+    dark: true,
+  },
+  {
+    label: 'Hero callout in primary',
+    outer: 'pathable-surface pathable-surface--tone-primary',
+    inner: 'pathable-hero__callout',
+    ring: '--pathable-color-focus-ring',
+    dark: true,
+  },
+  {
+    label: 'Identifier in inset',
+    outer: 'pathable-surface pathable-surface--inset',
+    inner: 'pathable-identifier',
+    ring: '--pathable-color-focus-ring',
+    dark: true,
+  },
 ]
+
+const focusCases = [...focusSurfaces, ...nestedCases]
 
 export const KeyboardFocusOnSurfaces = {
   parameters: {
     docs: {
       description: {
         story:
-          'A `.pathable-button`, a `.pathable-icon-button` and a `.pathable-input` on each surface variant, and in three nested cases: a raised surface in a brand one, a tone-primary surface in an inverse one, and a `pathable-bg-primary` container in a tone-subtle surface. The focus outline is drawn on the background behind the control, so each surface sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and PathAble Blue. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.',
+          "A `.pathable-button`, a `.pathable-icon-button` and a `.pathable-input` on each surface variant with a background of its own, and in twelve nested cases. Each nested case puts a surface, a dark utility or a dark component container inside a surface that sets a different ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, white on Tech Teal, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark blues. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.",
       },
     },
   },
@@ -186,21 +251,16 @@ export const KeyboardFocusOnSurfaces = {
         </div>`,
         )
         .join('')}
-      <div class="pathable-surface pathable-surface--brand" style="${blockStyle}">
-        <div class="pathable-surface pathable-surface--raised pathable-stack pathable-stack--gap-sm" style="padding: 1rem;">
-          ${focusControls(raisedInBrand)}
-        </div>
-      </div>
-      <div class="pathable-surface pathable-surface--inverse" style="${blockStyle}">
-        <div class="pathable-surface pathable-surface--tone-primary pathable-stack pathable-stack--gap-sm" style="padding: 1rem;">
-          ${focusControls(tonePrimaryInInverse)}
-        </div>
-      </div>
-      <div class="pathable-surface pathable-surface--tone-subtle" style="${blockStyle}">
-        <div class="pathable-bg-primary pathable-text-white pathable-stack pathable-stack--gap-sm" style="padding: 1rem;">
-          ${focusControls(darkInSubtle)}
-        </div>
-      </div>
+      ${nestedCases
+        .map(
+          (focusCase) => `
+        <div class="${focusCase.outer}" style="${blockStyle}">
+          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm" style="padding: 1rem;">
+            ${focusControls(focusCase)}
+          </div>
+        </div>`,
+        )
+        .join('')}
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {

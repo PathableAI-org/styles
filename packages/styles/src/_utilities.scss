@@ -70,11 +70,16 @@
   }
 }
 
-// Dark background utilities reset the surface focus ring
-// (pathable-component-wrappers/pathable-surface.scss), so a control in a dark
-// container nested in a light surface that sets a dark ring falls back to
-// --pathable-color-focus-ring instead of inheriting it.
-.pathable-bg-primary,
-.pathable-bg-link {
+// Dark background utilities set the surface focus ring
+// (pathable-component-wrappers/pathable-surface.scss) for their own
+// background, so a control in a dark container nested in a light surface does
+// not inherit that surface's dark ring. PathAble Blue resets it to
+// --pathable-color-focus-ring (4.2:1). On Tech Teal Bright Blue Brooks is only
+// 2.6:1, so the link background uses the surface white (7.7:1).
+.pathable-bg-primary {
   --pathable-surface-focus-ring: initial;
+}
+
+.pathable-bg-link {
+  --pathable-surface-focus-ring: var(--pathable-color-surface);
 }
