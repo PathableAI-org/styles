@@ -34,6 +34,7 @@ const EXPECTED_COVERAGE = {
     'components-button--forced-colors',
     'components-button-group--default',
     'components-card--default',
+    'components-card--workflow-card-action-container',
     'components-link--default',
     'components-list--default',
     'components-table--default',
