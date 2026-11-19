@@ -17,13 +17,13 @@ guarantees:
     claim: The tag has 1 px of padding above and below, 0.5rem of padding left and right, and 2 px rounded corners, at both sizes.
   - id: colour
     status: unverified
-    claim: The text is white on a #565c65 background, a contrast of 6.74:1, at both sizes and in every theme.
+    claim: 'The text is white on a #565c65 background, a contrast of 6.74:1, at both sizes and in every theme.'
   - id: trailing-margin
     status: unverified
     claim: A tag has a 0.25rem right margin, which is 0 when the tag is the only element of its element type among its siblings.
   - id: inline-wrap
     status: unverified
-    claim: The tag stays inline, so long text wraps onto further lines inside a narrow container instead of overflowing it.
+    claim: Outside a flex or grid container the tag is inline, so long text wraps onto further lines with the text around it inside a narrow container instead of overflowing it.
 ---
 
 # Tag
@@ -86,9 +86,10 @@ its height follows the line height of the text around it.
   icons inside a tag.
 - The text is set in capitals by `text-transform`; write it in normal case in
   the markup so assistive technology reads it as words, not letters.
-- The tag is an inline element: it flows with text and wraps with it. A tag
-  in a flex row becomes a flex item and stops wrapping inside the line it is
-  given; give the row a gap instead of relying on the tag's margin.
+- The tag is an inline element: it flows with text and wraps with it. In a
+  flex row it becomes a block-level flex item: a long label wraps onto several
+  lines inside the tag's own box instead of breaking across lines with the
+  text around it. Give the row a gap instead of relying on the tag's margin.
 - The trailing margin spaces tags that sit side by side. It is removed by the
   `:only-of-type` rule, which looks at the element type, not the class: a tag
   that is the only `<span>` among its siblings has no margin, and a tag next

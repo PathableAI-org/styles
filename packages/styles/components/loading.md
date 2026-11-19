@@ -11,16 +11,16 @@ variants:
 guarantees:
   - id: spinner-size
     status: unmet
-    claim: The spinner's outer size, border included, is 24 px across by default and 40 px across at large.
+    claim: The spinner's outer size, border included, is 1.5rem across by default and 2.5rem across at large, which is 24 px and 40 px at a 16 px root font size.
   - id: ring
     status: unverified
-    claim: The spinner is a circle with a 2 px border, or 3 px at large, in the indicator's text colour, with the top quarter of the ring transparent.
+    claim: Outside forced colours mode, the spinner is a circle with a 2 px border, or 3 px at large, in the indicator's text colour, with the top quarter of the ring transparent.
   - id: spin
     status: unverified
     claim: The spinner turns once every 0.6 s at a constant speed without stopping, and under prefers-reduced-motion it does not turn and is drawn at 50% opacity.
   - id: layout
     status: unverified
-    claim: The spinner and the text are centred on each other vertically, with a gap of 16 px by default and 24 px at large.
+    claim: The spinner and the text are centred on each other vertically, with a gap of 1rem by default and 1.5rem at large, which is 16 px and 24 px at a 16 px root font size.
   - id: text-size
     status: unverified
     claim: The status text is 14 px with a line height of 1.5 by default and 16 px at large.
@@ -28,17 +28,17 @@ guarantees:
     status: unverified
     claim: The spinner keeps its size when the status text wraps onto several lines in a narrow container.
   - id: forced-colours
-    status: unverified
-    claim: In forced colours mode the ring is drawn in a system colour; in Chromium its top quarter is not kept transparent, so the ring shows as a closed circle and its turning is not visible.
+    status: unmet
+    claim: In forced colours mode the ring is drawn in a system colour and keeps a visible gap, or another visible sign of motion, so its turning can be seen.
 ---
 
 # Loading
 
 An inline loading indicator that shows a spinning ring beside visible status
 text and takes up space in the layout while it shows. Put the class on a
-`<div>` in the place the content will appear. The application adds the
-indicator while it waits and removes it when the content arrives; the class
-needs no JavaScript of its own.
+`<div>` inside a live region that stays in the place the content will appear.
+The application adds the indicator to that region while it waits and removes
+it when the content arrives; the class needs no JavaScript of its own.
 
 ## When to use
 
@@ -61,10 +61,17 @@ Load the stylesheet once in the application:
 @import '@pathableai/styles';
 ```
 
+The `role="status"` element is on the page before loading starts. The
+application adds the indicator inside it and removes it again when the content
+arrives; put the content beside the live region, not inside it, so it is not
+read out in full.
+
 ```html
-<div class="pathable-loading" aria-live="polite">
-  <span class="pathable-loading__spinner" aria-hidden="true"></span>
-  <span class="pathable-loading__text">Loading messages…</span>
+<div role="status">
+  <div class="pathable-loading">
+    <span class="pathable-loading__spinner" aria-hidden="true"></span>
+    <span class="pathable-loading__text">Loading messages…</span>
+  </div>
 </div>
 ```
 
@@ -91,8 +98,10 @@ drawn outside it.
 | Text size, large     | `--pathable-font-size-body-md`     |
 | Text line height     | `--pathable-font-line-height-body` |
 
-The gaps, text sizes and line height in the guarantees are those of the default
-theme. A theme that changes these tokens changes them.
+The gaps and the spinner size are in rem, so they scale with the root font
+size; the text sizes are pixel tokens and do not. The gaps, text sizes and line
+height in the guarantees are those of the default theme. A theme that changes
+these tokens changes them.
 
 ## Composition
 
@@ -102,8 +111,9 @@ theme. A theme that changes these tokens changes them.
   what is loading.
 - The indicator is a block-level flex row as wide as its container. It adds
   no padding or margin; put it where the content will appear.
-- For a ring with no visible text, leave out the text element and give the
-  container `role="status"` and an `aria-label`, such as "Loading".
+- For a ring with no visible text, replace the text element with a
+  `pathable-sr-only` span that says what is loading, such as "Loading
+  messages", so the live region has text to announce.
 - Do not put the indicator inside a `pathable-button`: it sets its own muted
   text colour, which is not readable on a filled button. Place it on the page
   or a `pathable-card`, where that colour has enough contrast.
@@ -115,15 +125,22 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The spinner is unmet because its width and height exclude the border: it is 28
-px across by default and 46 px at large, unless the application applies
+The spinner is unmet because its width and height exclude the border: it is
+1.5rem plus 2 px on each side by default and 2.5rem plus 3 px at large, 28 px
+and 46 px at a 16 px root font size, unless the application applies
 `box-sizing: border-box` to every element.
+
+The forced colours guarantee is unmet: in Chromium the browser replaces the
+transparent top of the ring with the system colour, so the ring shows as a
+closed circle and its turning cannot be seen.
 
 ## The consumer owns
 
-- Accessibility. Put `aria-live="polite"` on the container, or `role="status"`
-  on a ring without text, and make the container exist before its text
-  changes so the change is announced. Hide the ring with `aria-hidden="true"`.
+- Accessibility. Keep a live region, such as an element with
+  `role="status"`, on the page before loading starts, and add and remove the
+  indicator inside it so its text is announced. Do not put `aria-live` on the
+  indicator itself when you add and remove it. Hide the ring with
+  `aria-hidden="true"`.
 - Showing and removing the indicator, and moving focus to the content once it
   arrives when the user started the load.
 - The status text, in the user's language.

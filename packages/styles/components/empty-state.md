@@ -11,13 +11,13 @@ variants:
 guarantees:
   - id: centred-column
     status: unverified
-    claim: The children stack in a column, centred horizontally with centred text, 24 px apart, inside 64 px of padding above and below and 32 px left and right.
+    claim: The children stack in a column, centred horizontally with centred text, 1.5rem apart, inside 4rem of padding above and below and 2rem left and right.
   - id: narrow-padding
     status: unverified
-    claim: At a viewport 480 px wide or narrower, the padding is 48 px above and below and 16 px left and right.
+    claim: At a viewport 480 px wide or narrower, the padding is 3rem above and below and 1rem left and right.
   - id: icon-size
     status: unverified
-    claim: The icon element is 48 px square whatever width and height attributes it carries.
+    claim: The icon element is 3rem square whatever width and height attributes it carries.
   - id: kind-colour
     status: unverified
     claim: Kind changes only the icon's colour and opacity, 0.5 by default and 0.6 for every other kind, and leaves the heading, body and action unchanged.
@@ -26,7 +26,7 @@ guarantees:
     claim: The heading is 20 px bold in the heading typeface and the text colour, and the body is 14 px with a line height of 1.5 in the muted text colour and no wider than 28rem.
   - id: action-space
     status: unverified
-    claim: The action element has 16 px of extra space above it, on top of the 24 px gap.
+    claim: The action element has 1rem of extra space above it, on top of the 1.5rem gap.
   - id: forced-colours
     status: unverified
     claim: In forced colours mode the block has a 1 px border in the system CanvasText colour.
@@ -114,8 +114,11 @@ only the icon colour; pick it by why the view is empty.
 | Setup-required icon colour     | `--pathable-color-accent`                                                                   |
 | Completed icon colour          | `--pathable-color-success`                                                                  |
 
-The pixel sizes in the guarantees are those of the default theme. A theme that
-changes these tokens changes them.
+The spacing and the icon size are in rem, so they scale with the root font
+size: at a 16 px root, 1rem is 16 px. The heading and body text sizes are pixel
+tokens and do not. The sizes in the guarantees are those of the default theme.
+A theme that changes these tokens changes them; the icon size is a fixed value
+in the stylesheet.
 
 ## Composition
 
@@ -126,7 +129,7 @@ changes these tokens changes them.
 - `pathable-empty-state__body` goes on a `<p>` of one or two sentences.
 - `pathable-empty-state__action` is optional. Put it on the one link or button
   that resolves the empty state, together with `pathable-button`. The button
-  brings a 0.5rem right margin, which sets the action 4px left of centre.
+  brings a 0.5rem right margin, which sets the action 0.25rem left of centre.
 - Keep the children in that order. The block adds no background; place it on
   the page or inside the `pathable-card` or panel that would hold the content.
 - The block is as wide as its container. Its padding shrinks on a narrow

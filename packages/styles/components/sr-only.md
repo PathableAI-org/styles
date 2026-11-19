@@ -15,9 +15,9 @@ guarantees:
   - id: natural-size
     status: unverified
     claim: The element keeps the width and height of its content off screen.
-  - id: no-ltr-scroll
-    status: unverified
-    claim: In a left-to-right page the element adds no horizontal scroll to the page.
+  - id: no-scroll
+    status: unmet
+    claim: The element adds no horizontal scroll to the page, in left-to-right and right-to-left pages alike.
   - id: stays-hidden-on-focus
     status: unverified
     claim: An element with the class stays off screen when it receives focus.
@@ -77,8 +77,6 @@ None.
   hidden and still read.
 - Start hidden text with a space, as in the example, when it continues a
   visible phrase, so screen readers do not run the words together.
-- In a right-to-left page the off-screen element extends the page's
-  horizontal scroll by about 999em. On such a page, hide text another way.
 - The element has no element classes.
 
 ## Guarantees
@@ -90,6 +88,10 @@ from the package source and no test checks it yet.
 
 The offset is in `em`, so it is measured from the element's own font size:
 999 times that size.
+
+The scroll guarantee is unmet: in a left-to-right page the element adds no
+horizontal scroll, but in a right-to-left page it extends the page's
+horizontal scroll by about 999em. On such a page, hide text another way.
 
 ## The consumer owns
 

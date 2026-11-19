@@ -17,10 +17,10 @@ guarantees:
     claim: The idle state is not displayed and takes up no space.
   - id: ring
     status: unverified
-    claim: Loading and saving show a ring 1em across plus a 2 px grey border and a PathAble Blue top that turns once every 0.6 s, and under prefers-reduced-motion the ring stops and is grey all round.
+    claim: Outside forced colours mode, loading and saving show a ring whose content box is the ring size, 1em by default, plus a 2 px grey border with a PathAble Blue top, which turns once every 0.6 s, and under prefers-reduced-motion the ring stops and is grey all round.
   - id: symbols
     status: unverified
-    claim: Saved shows a bold ✓ in #1cae96, offline shows ⚠ in #f5a623 and error shows a bold ✗ in #dc3545, and the label takes the same colour as its symbol.
+    claim: Saved shows a bold ✓, offline shows ⚠ and error shows a bold ✗.
   - id: layout
     status: unverified
     claim: The indicator and the label sit in an inline row, centred on each other vertically, 0.25rem apart.
@@ -107,6 +107,8 @@ theme does not change them.
 - Put it beside the form's title or its actions, in a row or on its own line.
   It adds no margin around itself.
 - The element has no element classes.
+- In forced colours mode the browser draws the ring's border in one system
+  colour, so its turning cannot be seen; the label still changes.
 
 ## Guarantees
 
@@ -119,12 +121,14 @@ The default text size is unmet because its default value does not resolve:
 the text inherits the size of the text around it. Set
 `--pathable-save-status-font-size` yourself, for example to `0.875rem`.
 
-The contrast is unmet: on white, saved is 2.78:1, offline 2.03:1 and error
-4.53:1; on the theme's background colour, Shilling Silver (`#dde2e8`), which
-an application may use as its page background, they are 2.14:1, 1.56:1 and
-3.48:1. The stylesheet does not paint the page itself.
-Until it is met, place the indicator on white and do not rely on the saved or
-offline colour being readable.
+The contrast is unmet. Today the symbol and the label are `#1cae96` for saved,
+`#f5a623` for offline and `#dc3545` for error. On white they are 2.78:1, 2.03:1
+and 4.53:1; on the theme's background colour, Shilling Silver (`#dde2e8`),
+which an application may use as its page background, they are 2.14:1, 1.56:1
+and 3.48:1. The stylesheet does not paint the page itself. Placing the
+indicator on white does not make the saved and offline labels readable: until
+this is met, show the state in visible text of your own, in a colour that meets
+4.5:1 against its background, in place of the `pathable-sr-only` text.
 
 ## The consumer owns
 

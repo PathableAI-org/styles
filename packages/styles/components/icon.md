@@ -8,7 +8,7 @@ variants: []
 guarantees:
   - id: em-size
     status: unverified
-    claim: The icon is 1em square, the font size of the icon element, whatever width and height attributes the SVG carries.
+    claim: Outside a pathable-icon-tile or a pathable-bottom-navigation__item, the icon is 1em square, the font size of the icon element, whatever width and height attributes the SVG carries.
   - id: current-colour
     status: unverified
     claim: The SVG's fill is the current text colour, so every shape without its own fill attribute paints in that colour, and a fill attribute on the svg element itself is overridden.
