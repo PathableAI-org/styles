@@ -121,6 +121,7 @@ export const Mobile = {
 // 640px-or-less clip applies. The focus outline of the first link must sit
 // inside the trail's clip, or the sides touching its edge are not painted.
 export const BreadcrumbFocusMobile = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   render: () => `
     <div class="pathable-dashboard-header">
       <nav class="pathable-dashboard-header__breadcrumb" aria-label="Breadcrumb">
