@@ -366,3 +366,20 @@ export const Default = {
     </div>
   `,
 }
+
+// pathable-text on elements other than <p> inside the dark containers
+// (issue #423): the text takes the container's colour and stays readable.
+export const TextOnDarkSurfaces = {
+  render: () => `
+    <section class="pathable-section pathable-section--dark">
+      <div class="pathable-text pathable-text--body">Body text on a div in pathable-section--dark</div>
+      <span class="pathable-text pathable-text--small">Small text on a span in pathable-section--dark</span>
+    </section>
+    <div class="pathable-dark-background">
+      <div class="pathable-text pathable-text--body">Body text on a div in pathable-dark-background</div>
+      <ul>
+        <li class="pathable-text">Text on a list item in pathable-dark-background</li>
+      </ul>
+    </div>
+  `,
+}

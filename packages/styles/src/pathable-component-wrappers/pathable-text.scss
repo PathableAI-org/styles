@@ -21,6 +21,8 @@
 //   .pathable-text--tone-danger   — var(--pathable-color-danger)
 //   .pathable-text--tone-success  — var(--pathable-color-text-success)
 
+@use 'uswds-core' as *;
+
 .pathable-text {
   font-family: var(--pathable-font-body);
   font-size: var(--pathable-text-font-size, var(--pathable-font-size-body-md));
@@ -33,6 +35,15 @@
     var(--pathable-font-weight-normal)
   );
   color: var(--pathable-text-color, var(--pathable-color-text));
+}
+
+// Dark containers recolour only some descendants (headings, p, a, and span in
+// the dark background), so text on any other element would keep the theme text
+// colour on a dark surface. Use white, as a <p> does there. Tones do not apply
+// on a dark surface; this matches a <p>.
+.pathable-section--dark .pathable-text,
+.pathable-dark-background .pathable-text {
+  color: color('white');
 }
 
 // Variant modifiers
