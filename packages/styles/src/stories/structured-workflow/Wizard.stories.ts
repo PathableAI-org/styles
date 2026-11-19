@@ -65,7 +65,7 @@ export const Mobile = {
     docs: {
       description: {
         story:
-          'On viewports smaller than 768px, the wizard shows a compact step summary line instead of the full horizontal step indicator. The action footer becomes a 2-column sticky bar at the bottom of the viewport.',
+          'On viewports smaller than 640px, the wizard shows a compact step summary line instead of the full horizontal step indicator. The action footer becomes a 2-column sticky bar at the bottom of the viewport.',
       },
     },
   },
