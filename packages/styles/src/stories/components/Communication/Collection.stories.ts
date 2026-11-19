@@ -38,13 +38,16 @@ export const InsideProse = {
     const measure = (scope: string) => {
       const root = canvasElement.querySelector(`[data-testid="${scope}"]`)
       const list = root?.querySelector('.pathable-collection') as HTMLElement
-      const item = root?.querySelectorAll(
+      const items = root?.querySelectorAll(
         '.pathable-collection__item',
-      )[1] as HTMLElement
+      ) as NodeListOf<HTMLElement>
+      const [first, last] = [items[0], items[items.length - 1]]
       return {
         listPaddingLeft: view.getComputedStyle(list).paddingLeft,
-        itemMarginTop: view.getComputedStyle(item).marginTop,
-        itemMarginBottom: view.getComputedStyle(item).marginBottom,
+        firstMarginTop: view.getComputedStyle(first).marginTop,
+        firstMarginBottom: view.getComputedStyle(first).marginBottom,
+        lastMarginTop: view.getComputedStyle(last).marginTop,
+        lastMarginBottom: view.getComputedStyle(last).marginBottom,
       }
     }
     await expect(measure('in-prose')).toEqual(measure('outside-prose'))
