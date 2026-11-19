@@ -13,10 +13,10 @@ export default {
   },
 }
 
-const markup = `
-  <p>
+const markup = (islandDirection?: 'ltr' | 'rtl') => `
+  <p${islandDirection ? ` dir="${islandDirection}"` : ''}>
     Edit
-    <span class="pathable-sr-only" data-testid="sr-only-text"> Jordan Lee's profile</span>
+    <span class="pathable-sr-only"> Jordan Lee's profile</span>
   </p>
 `
 
@@ -24,7 +24,7 @@ const root = document.documentElement
 
 // Sets the page's writing direction for one check and puts it back, so the
 // stories after it run in the direction the Storybook preview set.
-const inDirection = async (
+const inPageDirection = async (
   direction: 'ltr' | 'rtl',
   check: () => Promise<void>,
 ) => {
@@ -38,26 +38,41 @@ const inDirection = async (
   }
 }
 
-const expectNoHorizontalScroll = async () => {
+// The text is hidden (off screen, above the page) and adds no scrollable area.
+const expectHiddenWithoutScroll = async (canvasElement: HTMLElement) => {
+  const hidden = canvasElement.querySelector('.pathable-sr-only')
+  await expect(hidden).not.toBeNull()
+  await expect(getComputedStyle(hidden as Element).position).toBe('absolute')
+  await expect(
+    (hidden as Element).getBoundingClientRect().bottom,
+  ).toBeLessThanOrEqual(0)
   await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth)
 }
 
+type Play = { canvasElement: HTMLElement }
+
 export const NoScrollLeftToRight = {
-  render: () => markup,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const hidden = canvasElement.querySelector('.pathable-sr-only')
-    await expect(hidden).not.toBeNull()
-    await inDirection('ltr', expectNoHorizontalScroll)
-  },
+  render: () => markup(),
+  play: async ({ canvasElement }: Play) =>
+    inPageDirection('ltr', () => expectHiddenWithoutScroll(canvasElement)),
 }
 
 export const NoScrollRightToLeft = {
-  render: () => markup,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const hidden = canvasElement.querySelector('.pathable-sr-only')
-    await expect(hidden).not.toBeNull()
-    await inDirection('rtl', expectNoHorizontalScroll)
-  },
+  render: () => markup(),
+  play: async ({ canvasElement }: Play) =>
+    inPageDirection('rtl', () => expectHiddenWithoutScroll(canvasElement)),
+}
+
+export const NoScrollRightToLeftInLeftToRight = {
+  render: () => markup('rtl'),
+  play: async ({ canvasElement }: Play) =>
+    inPageDirection('ltr', () => expectHiddenWithoutScroll(canvasElement)),
+}
+
+export const NoScrollLeftToRightInRightToLeft = {
+  render: () => markup('ltr'),
+  play: async ({ canvasElement }: Play) =>
+    inPageDirection('rtl', () => expectHiddenWithoutScroll(canvasElement)),
 }
 
 export const Default = NoScrollLeftToRight

@@ -13,9 +13,11 @@
 
   // usa-sr-only offsets the element with `left: -999em`. In a right-to-left
   // page the area to the left of the viewport is scrollable, so every hidden
-  // element added about 999em of horizontal scroll. The inline-start edge is
-  // the side that does not scroll in either writing direction: the left in
-  // left-to-right, the right in right-to-left.
+  // element added about 999em of horizontal scroll. Offset it above its
+  // containing block instead: overflow above the top edge never scrolls, in
+  // any page or element direction (a logical inline-start offset would follow
+  // the element's own direction, not the page's, and add scroll in mixed
+  // content such as a right-to-left phrase in a left-to-right page).
+  top: -999em;
   left: auto;
-  inset-inline-start: -999em;
 }
