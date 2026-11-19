@@ -25,6 +25,8 @@
 
 .pathable-collection__heading {
   @extend .usa-collection__heading;
+  font-family: var(--pathable-font-heading);
+  font-weight: var(--pathable-font-weight-normal);
 }
 
 .pathable-collection__body {
