@@ -1,5 +1,7 @@
 import { expect, userEvent, within } from 'storybook/test'
 
+import { expectKeyboardFocusIndicator } from '../shared/focus-indicator'
+
 export default {
   title: 'Application Shell/Mobile Shell',
   tags: ['autodocs'],
@@ -115,6 +117,14 @@ export const Default = {
       ${bottomNav()}
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    // The content region is focusable (tabindex="0") so keyboard users can
+    // scroll it; it is the first focusable element, ahead of the bottom
+    // navigation.
+    const main = within(canvasElement).getByRole('main')
+    await expect(main).toHaveAttribute('tabindex', '0')
+    await expectKeyboardFocusIndicator(canvasElement, main)
+  },
 }
 
 export const SharedNavigation = {

@@ -1,5 +1,5 @@
 import { expect, within } from 'storybook/test'
-import { expectKeyboardFocusIndicator } from '../focus-indicator'
+import { expectKeyboardFocusIndicator } from '../../shared/focus-indicator'
 
 type PlayContext = { canvasElement: HTMLElement }
 

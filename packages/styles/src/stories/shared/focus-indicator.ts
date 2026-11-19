@@ -21,14 +21,14 @@ type FocusIndicatorOptions = {
   /** Outline colour outside forced colors. Defaults to the focus-ring token. */
   color?: string
   /**
-   * Press Tab from the control that has focus now, instead of from the
+   * Press Tab from the element that has focus now, instead of from the
    * document start, to check controls one after another in tab order.
    */
   fromCurrentFocus?: boolean
 }
 
 /**
- * Moves keyboard focus to `control` with Tab and asserts it shows a solid
+ * Moves keyboard focus to `element` with Tab and asserts it shows a solid
  * outline: by default at least 2px wide, in `--pathable-color-focus-ring`
  * normally, and in the system `Highlight` colour when forced colors are active.
  * Tab starts from the document start unless `fromCurrentFocus` is set.
@@ -42,7 +42,7 @@ type FocusIndicatorOptions = {
  */
 export const expectKeyboardFocusIndicator = async (
   canvasElement: HTMLElement,
-  control: HTMLElement,
+  element: HTMLElement,
   {
     width,
     color = 'var(--pathable-color-focus-ring)',
@@ -52,13 +52,13 @@ export const expectKeyboardFocusIndicator = async (
   const forcedColors = matchMedia('(forced-colors: active)').matches
 
   if (!fromCurrentFocus) {
-    const active = control.ownerDocument.activeElement
+    const active = element.ownerDocument.activeElement
     if (active instanceof HTMLElement) active.blur()
   }
   await userEvent.tab()
-  await expect(control).toHaveFocus()
+  await expect(element).toHaveFocus()
 
-  const style = getComputedStyle(control)
+  const style = getComputedStyle(element)
   const outlineWidth = Number.parseFloat(style.outlineWidth)
   await expect(style.outlineStyle).toBe('solid')
   if (width === undefined) {
