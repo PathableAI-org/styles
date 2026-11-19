@@ -79,6 +79,9 @@ const statuses = [
   },
 ] as const
 
+/** Largest offset, in CSS pixels, between the icon box and tile centres. */
+const CENTRING_TOLERANCE_PX = 0.01
+
 const getTileIcon = (tile: HTMLElement) => {
   const icon = tile.querySelector<SVGElement>('svg')
 
@@ -577,7 +580,13 @@ export const AllVariants = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  play: async ({
+    canvasElement,
+    step,
+  }: {
+    canvasElement: HTMLElement
+    step: (label: string, play: () => Promise<void>) => Promise<void>
+  }) => {
     const canvas = within(canvasElement)
     let count = 0
 
@@ -605,6 +614,33 @@ export const AllVariants = {
 
     await expect(count).toBe(30)
     await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
+
+    // Named so the IconTile component page can cite it as the evidence for
+    // its centring guarantee (packages/styles/components/icon-tile.md).
+    await step('icon box is centred in every tile', async () => {
+      const tiles = canvas.getAllByTestId(/-variant$/u)
+
+      await expect(tiles).toHaveLength(30)
+      for (const tile of tiles) {
+        const tileBounds = tile.getBoundingClientRect()
+        const iconBounds = getTileIcon(tile).getBoundingClientRect()
+        const offsetX =
+          iconBounds.left +
+          iconBounds.width / 2 -
+          (tileBounds.left + tileBounds.width / 2)
+        const offsetY =
+          iconBounds.top +
+          iconBounds.height / 2 -
+          (tileBounds.top + tileBounds.height / 2)
+
+        await expect(Math.abs(offsetX)).toBeLessThanOrEqual(
+          CENTRING_TOLERANCE_PX,
+        )
+        await expect(Math.abs(offsetY)).toBeLessThanOrEqual(
+          CENTRING_TOLERANCE_PX,
+        )
+      }
+    })
   },
 }
 
