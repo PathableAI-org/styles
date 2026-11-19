@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Discovery/Wayfinder',
   tags: ['autodocs'],
@@ -41,6 +43,11 @@ export const Default = {
       <button class="pathable-wayfinder__action pathable-button">Show results</button>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-wayfinder__text',
+      '.pathable-wayfinder__question-controls label',
+    ]),
 }
 
 export const SingleQuestion = {

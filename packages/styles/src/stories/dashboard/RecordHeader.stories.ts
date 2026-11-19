@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Dashboard/Record Header',
   tags: ['autodocs'],
@@ -35,6 +37,8 @@ export const Default = {
       </div>
     </div>
   `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-record-header__metadata']),
 }
 
 export const WithOverflow = {
