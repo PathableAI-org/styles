@@ -145,7 +145,7 @@ const completedHtml = `
     </svg>
     <h2 class="pathable-workflow-panel__objective" style="font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem;">Intake Complete</h2>
     <p style="margin: 0 0 0.25rem; font-size: 1rem;">Initial assessment for <strong>Jamie Rivera</strong> has been completed and submitted.</p>
-    <p style="margin: 0 0 2rem; color: var(--pathable-color-text-muted);">Reference #: ASMT-2026-0042</p>
+    <p style="margin: 0 0 2rem; font-size: 0.875rem; color: var(--pathable-color-text-muted);">Reference #: ASMT-2026-0042</p>
     <div class="pathable-cluster pathable-cluster--gap-sm" style="justify-content: center;">
       <a href="#" class="pathable-button">Start new assessment</a>
       <a href="#" class="pathable-button pathable-button--outline">View summary</a>
