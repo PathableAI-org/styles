@@ -188,8 +188,7 @@ export const WorkflowCardWithStatus = {
 // action link styling, the `.pathable-link` keeps its own link colour and
 // underline, and both get the action focus ring. The anchor styled as a
 // button keeps its own styling, and the container itself is not drawn as a
-// link. `.pathable-cluster` spaces the actions so their focus rings do not
-// overlap; the container has no spacing of its own (#368).
+// link. `.pathable-cluster` sets its own gap between the actions.
 export const WorkflowCardActionContainer = {
   render: () => `
     <div class="pathable-card pathable-card--workflow" data-testid="workflow-action-container-card">
@@ -236,6 +235,51 @@ export const WorkflowCardActionContainer = {
       fromCurrentFocus: true,
     })
     await expect(getComputedStyle(linkAction).outlineOffset).toBe('2px')
+  },
+}
+
+// Buttons in the action container, as the React Card renders them: the
+// container spaces them from the meta line and from each other and does not
+// draw the button labels as links (#368).
+export const WorkflowCardButtonActions = {
+  render: () => `
+    <div class="pathable-card pathable-card--workflow" data-testid="workflow-button-actions-card">
+      <div class="pathable-card__container">
+        <div class="pathable-card__header">
+          <h3 class="pathable-card__heading">Quarterly report</h3>
+        </div>
+        <div class="pathable-card__body">
+          <p class="pathable-card__meta" data-testid="workflow-button-meta">Generated: Jul 8, 2026</p>
+          <div class="pathable-card__action" data-testid="workflow-button-actions">
+            <button type="button" class="pathable-button">Download Report</button>
+            <button type="button" class="pathable-button pathable-button--outline">Share</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('workflow-button-actions')
+    const meta = canvas.getByTestId('workflow-button-meta')
+    const first = canvas.getByRole('button', { name: 'Download Report' })
+    const second = canvas.getByRole('button', { name: 'Share' })
+
+    await expect(getComputedStyle(container).textDecorationLine).toBe('none')
+    await expect(getComputedStyle(first).textDecorationLine).toBe('none')
+    const gapAbove =
+      container.getBoundingClientRect().top -
+      meta.getBoundingClientRect().bottom
+    await expect(gapAbove).toBeGreaterThanOrEqual(8)
+    const firstBox = first.getBoundingClientRect()
+    const secondBox = second.getBoundingClientRect()
+    const stacked = secondBox.top >= firstBox.bottom
+    await expect(
+      stacked
+        ? secondBox.top - firstBox.bottom
+        : secondBox.left - firstBox.right,
+    ).toBeGreaterThanOrEqual(8)
+    await expectKeyboardFocusIndicator(canvasElement, first)
   },
 }
 

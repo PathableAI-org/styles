@@ -102,9 +102,23 @@
 // In the container form the colour and underline belong to the links, not to
 // the container, so other inline content and the gaps between actions are
 // not drawn as a link.
-.pathable-card--workflow .pathable-card__action:has(a) {
+.pathable-card--workflow
+  .pathable-card__action:has(:is(a, button, input, select, textarea)) {
   color: inherit;
   text-decoration: none;
+}
+
+// The container also separates its actions from the content above and from
+// each other, so a focused action's 2px ring plus its offset shows on all four
+// sides and crosses no text or neighbouring action. :where() keeps the layout
+// at zero specificity, so a utility such as .pathable-cluster on the container
+// can still set its own gap.
+.pathable-card--workflow
+  :where(.pathable-card__action:has(:is(a, button, input, select, textarea))) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-2);
+  margin-top: var(--pathable-space-2);
 }
 
 // A plain link gets no focus outline from this package (USWDS styles one
