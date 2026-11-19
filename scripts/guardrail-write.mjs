@@ -315,12 +315,29 @@ const wrapperValueOptions = new Set([
   '-u',
 ])
 
-/** The command's basename and arguments, past variable assignments and wrappers such as `sudo` or `xargs`. */
+/** Shell keywords that can come before a command in the same simple command, such as `then rm x` or `{ chmod …`. */
+const keywords = new Set([
+  '!',
+  'do',
+  'elif',
+  'else',
+  'if',
+  'then',
+  'until',
+  'while',
+  '{',
+  '}',
+])
+
+/**
+ * The command's basename and arguments, past shell keywords, variable assignments and wrappers such as `sudo` or
+ * `xargs`.
+ */
 const commandOf = (words) => {
   let index = 0
   while (index < words.length) {
     const word = words[index] ?? ''
-    if (/^[A-Za-z_]\w*=/.test(word)) {
+    if (keywords.has(word) || /^[A-Za-z_]\w*=/.test(word)) {
       index += 1
       continue
     }
@@ -376,6 +393,7 @@ const gitWriteSubcommands = new Set([
   'am',
   'apply',
   'checkout',
+  'clean',
   'mv',
   'restore',
   'rm',
@@ -554,12 +572,15 @@ export const guardrailWrite = (command, cwd, root, depth = 0) => {
 
 // Working-tree record
 
+// `--no-optional-locks` keeps `git status` from taking the index lock, so the hook never makes another git command
+// in the same checkout fail on `index.lock`.
 const git = (cwd, args, encoding = 'utf8') =>
-  execFileSync('git', args, {
+  execFileSync('git', ['--no-optional-locks', ...args], {
     cwd,
     encoding,
     maxBuffer: 64 * 1024 * 1024,
     stdio: ['ignore', 'pipe', 'ignore'],
+    timeout: 5000,
   })
 
 const gitOrUndefined = (cwd, args, encoding = 'utf8') => {
@@ -610,23 +631,55 @@ export const changedGuardrailFiles = (root) => {
   return files
 }
 
-/**
- * The guardrail paths whose content in `after` differs from `before` and from every content `known` holds for them.
- * A file that became clean is not a change here; `committedChanges` covers files a command committed.
- */
-export const changedSince = (before, after, known = {}) =>
-  Object.keys(after)
-    .filter(
-      (path) =>
-        before[path] !== after[path] &&
-        !(known[path] ?? []).includes(after[path]),
-    )
-    .sort()
+/** The content hash of `path` in commit `revision`, `missing` when the commit lacks it, or undefined without a commit. */
+const committedHash = (root, revision, path) => {
+  if (revision === null || revision === undefined) return undefined
+  const blob = gitOrUndefined(
+    root,
+    ['cat-file', 'blob', `${revision}:${path}`],
+    'buffer',
+  )
+  return blob === undefined ? 'missing' : hash(blob)
+}
 
-/** HEAD's commit and branch, so the after-check can find the commits a command made. */
+/**
+ * The commits whose side of a merge, cherry-pick or revert Git has left staged after stopping on a conflict, or
+ * after `--no-commit`. Content from them was brought in from elsewhere, not written by the command.
+ */
+const pendingSides = (root) =>
+  ['MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD']
+    .map((ref) =>
+      gitOrUndefined(root, ['rev-parse', '--verify', '--quiet', ref])?.trim(),
+    )
+    .filter((sha) => sha !== undefined && sha !== '')
+
+/**
+ * The guardrail paths whose content in `after` differs from `before` and from every content `known` holds for them,
+ * plus paths in `before` that no longer exist and left `git status` with it: an untracked or ignored file a command
+ * deleted. Content a pending merge, cherry-pick or revert brought in (`sides`) is not a change. A file that became
+ * clean is not a change here; `committedChanges` covers files a command committed.
+ */
+export const changedSince = (before, after, known = {}, options = {}) => {
+  const { exists = () => true, sideHash = () => [] } = options
+  const isKnown = (path, content) => (known[path] ?? []).includes(content)
+  const changed = Object.keys(after).filter(
+    (path) =>
+      before[path] !== after[path] &&
+      !isKnown(path, after[path]) &&
+      !sideHash(path).includes(after[path]),
+  )
+  const deleted = Object.keys(before).filter(
+    (path) =>
+      !(path in after) &&
+      before[path] !== 'missing' &&
+      !exists(path) &&
+      !isKnown(path, 'missing'),
+  )
+  return [...new Set([...changed, ...deleted])].sort()
+}
+
+/** HEAD's commit, so the after-check can find the commits a command made. */
 const headState = (root) => ({
-  branch:
-    gitOrUndefined(root, ['symbolic-ref', '--quiet', 'HEAD'])?.trim() ?? null,
   head:
     gitOrUndefined(root, [
       'rev-parse',
@@ -637,19 +690,15 @@ const headState = (root) => ({
 })
 
 /**
- * The guardrail paths a command changed and committed in the same call. It reads the commits made on the same branch
- * since the before-record, by their commit time, and leaves out merge commits and commits fetched from elsewhere,
- * whose committer time is earlier. A committed guardrail file passes when its content is the record's or one `known`
- * holds for it.
+ * The guardrail paths a command changed and committed in the same call, on whatever branch it ends on. It reads the
+ * commits between the record's HEAD and the current one by their commit time, and leaves out merge commits and
+ * commits fetched from elsewhere, whose committer time is earlier. A committed guardrail file passes when its content
+ * is unchanged from the record's HEAD (an amend or a rebase that kept it), is the record's working-tree content, or is
+ * one `known` holds for it.
  */
 export const committedChanges = (root, record, after, known = {}) => {
   const now = headState(root)
-  if (
-    record.head === null ||
-    now.head === null ||
-    now.head === record.head ||
-    now.branch !== record.branch
-  )
+  if (record.head === null || now.head === null || now.head === record.head)
     return []
   const log = gitOrUndefined(root, [
     'log',
@@ -681,14 +730,10 @@ export const committedChanges = (root, record, after, known = {}) => {
   }
   return [...paths]
     .filter((path) => {
-      const blob = gitOrUndefined(
-        root,
-        ['cat-file', 'blob', `${now.head}:${path}`],
-        'buffer',
-      )
-      const content = blob === undefined ? 'missing' : hash(blob)
+      const content = committedHash(root, now.head, path)
       return (
-        record.before[path] !== content &&
+        content !== committedHash(root, record.head, path) &&
+        content !== record.before[path] &&
         !(known[path] ?? []).includes(content)
       )
     })
@@ -753,12 +798,18 @@ const prune = () => {
   }
 }
 
+const localSettings = '.claude/settings.local.json'
+
 const blockReason = (paths) =>
   `Stop: this shell command changed guardrail files that the hook did not ask a person about: ${paths.join(', ')}. ` +
   'Guardrail files change the rules agents work under, so a person approves every change to them ' +
   '(docs/engineering/git-workflow.md#guardrail-changes). Do not build on, commit or push this change, and do not ' +
   'try to undo it with another shell command. Tell the person which guardrail files changed and why, and ask them ' +
-  'to review the change before you go on.'
+  'to review the change before you go on.' +
+  (paths.includes(localSettings)
+    ? ` Claude Code also writes ${localSettings} when a person chooses not to be asked again for a command; if ` +
+      'that is what happened, say so and let the person confirm it.'
+    : '')
 
 // Hooks
 
@@ -786,21 +837,31 @@ export const preToolUse = (input) => {
   const root = repositoryRoot(cwd)
   if (root === undefined) return { kind: 'allow' }
   const reason = guardrailWrite(command, cwd, root)
-  const before = changedGuardrailFiles(root)
-  mkdirSync(join(recordDirectory(), 'sessions'), { recursive: true })
-  prune()
-  const known = knownFile(root, input)
-  writeFileSync(known, JSON.stringify(remember(readJson(known, {}), before)))
-  writeFileSync(
-    recordFile(root, input),
-    JSON.stringify({
-      asked: reason !== undefined,
-      before,
-      ...headState(root),
-      time: Math.floor(Date.now() / 1000),
-    }),
-  )
-  return reason === undefined ? { kind: 'allow' } : { kind: 'ask', reason }
+  /** @type {Decision} */
+  const decision =
+    reason === undefined ? { kind: 'allow' } : { kind: 'ask', reason }
+  try {
+    const before = changedGuardrailFiles(root)
+    mkdirSync(join(recordDirectory(), 'sessions'), { recursive: true })
+    prune()
+    const known = knownFile(root, input)
+    writeFileSync(known, JSON.stringify(remember(readJson(known, {}), before)))
+    writeFileSync(
+      recordFile(root, input),
+      JSON.stringify({
+        asked: reason !== undefined,
+        before,
+        ...headState(root),
+        time: Math.floor(Date.now() / 1000),
+      }),
+    )
+  } catch (error) {
+    // The ask must not depend on the record: without one the after-check allows, and the person sees why here.
+    process.stderr.write(
+      `guardrail-write hook: could not record guardrail files (${String(error)}); the after-check is skipped.\n`,
+    )
+  }
+  return decision
 }
 
 /**
@@ -821,15 +882,25 @@ export const postToolUse = (input) => {
   const knownPath = knownFile(root, input)
   const known = readJson(knownPath, {})
   const after = changedGuardrailFiles(root)
+  const sides = pendingSides(root)
   const changed = [
     ...new Set([
-      ...changedSince(record.before, after, known),
+      ...changedSince(record.before, after, known, {
+        exists: (path) => existsSync(join(root, path)),
+        sideHash: (path) => sides.map((sha) => committedHash(root, sha, path)),
+      }),
       ...committedChanges(root, record, after, known),
     ]),
   ].sort()
   if (changed.length === 0) return { kind: 'allow' }
   // Report each change once: the agent is told to stop, and the next command is not blamed for it.
-  writeFileSync(knownPath, JSON.stringify(remember(known, after)))
+  const deletions = Object.fromEntries(
+    changed.filter((path) => !(path in after)).map((path) => [path, 'missing']),
+  )
+  writeFileSync(
+    knownPath,
+    JSON.stringify(remember(known, { ...after, ...deletions })),
+  )
   return { kind: 'block', reason: blockReason(changed) }
 }
 

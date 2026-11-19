@@ -211,6 +211,19 @@ void describe('the PreToolUse tripwire', () => {
       assert.equal(asks(command), true, command)
   })
 
+  void it('reads commands after shell keywords and inside groups', () => {
+    for (const command of [
+      'if [ -f package.json ]; then rm package.json; fi',
+      'for f in ci release; do cp /tmp/$f.yml .github/workflows/; done',
+      'test -d .husky && { chmod -x .husky/pre-commit; }',
+      "while read -r f; do sed -i 's/a/b/' AGENTS.md; done < /tmp/list",
+      'if false; then :; else rm -f eslint.config.js; fi',
+      'git clean -dfX .husky .claude',
+    ])
+      assert.equal(asks(command), true, command)
+    assert.equal(asks('if [ -f AGENTS.md ]; then cat AGENTS.md; fi'), false)
+  })
+
   void it('asks for other writes the self-review found', () => {
     for (const command of [
       'chmod -x .husky/pre-commit',
@@ -337,6 +350,70 @@ void describe('the PostToolUse check', () => {
     )
   })
 
+  void it('reports a guardrail file changed and committed on a new branch', () => {
+    const { post } = run(
+      'git switch -c tmp && node x.mjs && git commit -am x',
+      () => {
+        repo.git('switch', '--quiet', '-c', 'tmp')
+        write('.github/workflows/ci.yml', 'name: rewritten\n')
+        repo.git('commit', '--quiet', '--all', '--message', 'x')
+      },
+    )
+    assert.equal(post.kind, 'block')
+  })
+
+  void it('does not report guardrail files an amend left unchanged', () => {
+    const { post } = run('git commit --amend -m better', () => {
+      repo.git('commit', '--quiet', '--amend', '--message', 'better')
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('does not report guardrail content a conflicted merge brought in', () => {
+    repo.git('checkout', '--quiet', '-b', 'other')
+    repo.commit('docs: process', {
+      'docs/engineering/x.md': '# Process\n',
+      'src/app.ts': 'export const app = 10\n',
+    })
+    repo.git('checkout', '--quiet', '-')
+    repo.commit('fix: app', { 'src/app.ts': 'export const app = 20\n' })
+    const { post } = run('git merge other', () => {
+      try {
+        repo.git('merge', '--quiet', 'other')
+      } catch {
+        // The merge stops on the conflict in src/app.ts, as intended.
+      }
+    })
+    assert.deepEqual(post, { kind: 'allow' })
+  })
+
+  void it('reports deleted untracked and ignored guardrail files', () => {
+    write('.claude/settings.local.json', '{}')
+    write('.github/workflows/new.yml', 'name: new\n')
+    const { post } = run('node clean.mjs', () => {
+      rmSync(join(repo.dir, '.claude/settings.local.json'))
+      rmSync(join(repo.dir, '.github/workflows/new.yml'))
+    })
+    assert.equal(post.kind, 'block')
+    assert.match(
+      post.kind === 'block' ? post.reason : '',
+      /\.claude\/settings\.local\.json, \.github\/workflows\/new\.yml/,
+    )
+  })
+
+  void it('explains a change to local settings Claude Code may have made', () => {
+    const { post } = run('pnpm test', () => {
+      write(
+        '.claude/settings.local.json',
+        '{"permissions":{"allow":["Bash(pnpm test)"]}}',
+      )
+    })
+    assert.match(
+      post.kind === 'block' ? post.reason : '',
+      /chooses not to be asked again/,
+    )
+  })
+
   void it('reports a change to an ignored guardrail file', () => {
     const { post } = run('node setup.mjs', () => {
       write('.claude/settings.local.json', '{"permissions":{"allow":["Bash"]}}')
@@ -448,6 +525,42 @@ void describe('hook output', () => {
       assert.deepEqual([post.status, post.stdout, post.stderr], [0, '', ''])
     } finally {
       repo.remove()
+    }
+  })
+
+  void it('still asks when the record cannot be written', () => {
+    const repo = sampleRepo()
+    const blocked = join(repo.dir, '..', `blocked-${Date.now()}`)
+    try {
+      mkdirSync(blocked)
+      writeFileSync(
+        join(blocked, 'pathable-guardrail-writes'),
+        'not a directory',
+      )
+      const script = fileURLToPath(
+        new URL('../claude/guardrail-write-hook.mjs', import.meta.url),
+      )
+      const result = spawnSync(process.execPath, [script], {
+        encoding: 'utf8',
+        env: { ...process.env, TMPDIR: blocked },
+        input: JSON.stringify({
+          cwd: repo.dir,
+          hook_event_name: 'PreToolUse',
+          session_id: 'session-blocked',
+          tool_input: { command: 'echo x > AGENTS.md' },
+          tool_name: 'Bash',
+          tool_use_id: 'toolu_blocked',
+        }),
+      })
+      assert.equal(result.status, 0)
+      assert.equal(
+        JSON.parse(result.stdout).hookSpecificOutput.permissionDecision,
+        'ask',
+      )
+      assert.match(result.stderr, /could not record guardrail files/)
+    } finally {
+      repo.remove()
+      rmSync(blocked, { force: true, recursive: true })
     }
   })
 

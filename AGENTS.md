@@ -105,10 +105,12 @@ Some of these rules are enforced for Claude Code by
   stop and ask the person to review the change. Changes made before the
   command, by an approved edit, a person or a background command, are not
   reported, nor is content already seen in the session, such as changes brought
-  back by `git stash pop`. Known limits: a guardrail file changed by another
-  process while a command runs is reported as that command's change, and the
-  after-check does not see what a background command writes once it has
-  started. If the hook stops you, leave the files as they are and ask a human.
+  back by `git stash pop`, unchanged files in an amended commit, or content a
+  conflicted merge brought in. Known limits: a guardrail file changed by
+  another process while a command runs is reported as that command's change,
+  including `.claude/settings.local.json` when a person chooses not to be asked
+  again for a command (the message says so), and the after-check does not see
+  what a background command writes once it has started. If the hook stops you, leave the files as they are and ask a human.
   Its tests run with `pnpm test:tooling`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
