@@ -209,28 +209,39 @@ export const MobileShell: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('bottom navigation icons render filled artwork', async () => {
-      const icons = canvasElement.querySelectorAll(
-        '.pathable-bottom-navigation .pathable-icon',
-      )
-      await expect(icons).toHaveLength(BOTTOM_NAV_ITEMS.length)
+    const canvas = within(canvasElement)
 
-      for (const icon of icons) {
-        const iconStyle = getComputedStyle(icon)
-        await expect(iconStyle.width).toBe('20px')
-        await expect(iconStyle.height).toBe('20px')
+    await step(
+      'each bottom navigation link renders filled artwork',
+      async () => {
+        const bottomNav = canvas.getByRole('navigation', { name: 'Primary' })
+        const links = within(bottomNav).getAllByRole('link')
+        await expect(links).toHaveLength(BOTTOM_NAV_ITEMS.length)
 
-        const shapes = icon.querySelectorAll('*')
-        await expect(shapes.length).toBeGreaterThan(0)
-        for (const shape of shapes) {
-          // Filled artwork paints with the text colour and has no outline.
-          await expect(shape.tagName).toBe('path')
-          const shapeStyle = getComputedStyle(shape)
-          await expect(shapeStyle.fill).toBe(iconStyle.color)
-          await expect(shapeStyle.stroke).toBe('none')
+        for (const link of links) {
+          // The icons are aria-hidden, so a selector is the only way to them.
+          const icons = link.querySelectorAll('.pathable-icon')
+          await expect(icons).toHaveLength(1)
+          const iconStyle = getComputedStyle(icons[0])
+
+          // Black is the SVG initial fill, so a black text colour would let the
+          // fill check pass even without fill: currentColor.
+          await expect(iconStyle.color).not.toBe('rgb(0, 0, 0)')
+          await expect(iconStyle.width).toBe('20px')
+          await expect(iconStyle.height).toBe('20px')
+
+          const shapes = icons[0].querySelectorAll('*')
+          await expect(shapes.length).toBeGreaterThan(0)
+          for (const shape of shapes) {
+            // Filled artwork paints with the text colour and has no outline.
+            await expect(shape.tagName).toBe('path')
+            const shapeStyle = getComputedStyle(shape)
+            await expect(shapeStyle.fill).toBe(iconStyle.color)
+            await expect(shapeStyle.stroke).toBe('none')
+          }
         }
-      }
-    })
+      },
+    )
   },
 }
 
