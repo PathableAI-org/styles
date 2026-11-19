@@ -153,6 +153,8 @@
   -webkit-line-clamp: var(--pathable-resource-card-summary-lines, 3);
   -webkit-box-orient: vertical;
   overflow: hidden;
+  // A word wider than a narrow column wraps instead of being clipped.
+  overflow-wrap: break-word;
 }
 
 .pathable-resource-card__badges {
