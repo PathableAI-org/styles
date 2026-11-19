@@ -33,8 +33,10 @@ From the request: branch, pushed SHA, base SHA, slice ID, feature directory,
 round, and, for round two or later, the previous review ID and the
 implementation session's answer to each open finding. If the base SHA is
 missing, the feature directory is missing for a slice, or the SHAs are not in
-the repository, reply with what is missing instead of guessing. A High fix has
-slice ID `fix` and may have no feature directory; omit `featureDir` then.
+the repository, reply with what is missing instead of guessing. Single-pull-request
+work (a High fix, or other Standard and Light work) has slice ID `fix` and may
+have no feature directory; omit `featureDir` then, and read the pull request's
+linked delivery issue, if any, in place of the plan and specification.
 
 Read at the pushed SHA, with `git show <sha>:<path>` or a detached worktree
 this session owns:

@@ -76,11 +76,14 @@ The [risk tier](git-workflow.md#risk-tiers) sets the minimum. A
 | Implementation | `tasks.md`, the code and stories for each slice, slice pull requests, changesets                       | Mark a slice ready without a passing verification report, or with an open blocking finding |
 | Verification   | Building pushed revisions, observing the Storybooks and packed packages, reports                       | Edit any branch or fix the implementation                                                  |
 | Review         | Reviewing pushed revisions for correctness reasoning, constitution lenses and maintainability, reviews | Edit any branch or fix the implementation                                                  |
+| Visual review  | Capturing and judging what a pushed revision renders against its base, visual reviews                  | Edit any branch, baseline or fix the rendering                                             |
 
 The orchestrator starts one verification session and one review session per
-feature when the implementation session first pushes. [Code review
+feature when the implementation session first pushes, and for Standard work
+one [visual review session](visual-review.md). [Code review
 session](code-review.md) owns the reviewer's scope, findings and loop. Only a
-person approves and merges a phase.
+person approves a specification or plan phase and merges High work; Standard
+slices merge under [agent merge](git-workflow.md#agent-merge).
 
 ## The verification loop
 
@@ -310,7 +313,9 @@ no new verification request.
   They do not establish behaviour in Windows High Contrast or other browsers.
 - `test:visual` measures render health and overflow; it does not compare
   pixels. The pixel suites compare pixels only for the stories listed for
-  rollout components. A claim about exact visual appearance outside that coverage is judged
+  rollout components. For Standard work the
+  [visual review](visual-review.md) judges appearance outside that coverage.
+  For High work a claim about exact visual appearance outside that coverage is judged
   by a person from the verifier's
   [screenshots](#screenshots-for-visual-claims) and the story links the pull
   request names.

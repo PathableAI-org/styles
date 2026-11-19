@@ -2,16 +2,20 @@
 
 <!-- Adapted from pathableai-org/pre-ets .agents/skills/orchestrate-stack/references/reviewer.md @ f2ee390. -->
 
-Role: `review`. High new behaviour, specified Standard work, and a High fix's single pull
-request. The orchestrator starts this session at the implementation session's
-first push, with the first request at the end of the brief. For a High fix
-(`{{fix}}` = yes), the slice ID in requests is `fix`.
+Role: `review`. Every implementation slice, a High fix's single pull request,
+and every other Standard and Light pull request. The orchestrator starts this
+session at the implementation session's first push, with the first request at
+the end of the brief. For single-pull-request work (`{{fix}}` = yes), the
+slice ID in requests is `fix` and there may be no feature directory.
 
 ---
 
-**Task.** Review each slice of `{{feature_dir}}`, or a High fix's single pull
-request (delivery issue #{{issue}}, tier {{tier}}), when the implementation
-session requests it. Use the `code-reviewer` skill.
+**Task.** Review each slice of `{{feature_dir}}`, or the single pull request
+(delivery issue #{{issue}}, tier {{tier}}), when the implementation session
+requests it. Use the `code-reviewer` skill. For Standard and Light work your
+review, with the visual review, replaces a person's approval under
+[agent merge](docs/engineering/git-workflow.md#agent-merge), so hold it to
+that standard.
 
 **Identifiers.**
 

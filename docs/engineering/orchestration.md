@@ -1,16 +1,20 @@
 # Orchestration
 
 A Spec Kit feature runs as separate agent sessions: specification, plan,
-implementation, verification and review. The orchestrator is the session that
+implementation, verification, review and visual review. Standard and Light
+single-pull-request work runs as implementation, review and visual review
+sessions. The orchestrator is the session that
 starts them, briefs them, and relays what needs a person. This document owns
 the orchestrator's lifecycle by risk tier, its stop points, its concurrency
 limits, what it may read, and the model and effort each role runs on. The
 `orchestrate-stack` skill supplies the procedure and the brief templates.
 
-[Git workflow](git-workflow.md) owns tiers, branches, merges and corrections.
+[Git workflow](git-workflow.md) owns tiers, branches, merges, corrections and
+[agent merge](git-workflow.md#agent-merge).
 [The verification harness](verification-harness.md) owns the roles table and
 the verification loop. [Code review session](code-review.md) owns the
-reviewer's loop. This document does not restate them.
+reviewer's loop, and [Visual review session](visual-review.md) the visual
+reviewer's. This document does not restate them.
 
 This workflow is adapted from the one the sister repository
 `pathableai-org/pre-ets` uses. The notes and gate tooling under `scripts/` is a
@@ -40,7 +44,8 @@ parent only when a child's turn fails or its worker restarts, and a session that
 finishes cleanly may not report back. So every brief carries the orchestrator's
 session ID, and each role sends its status line to the orchestrator with the
 session messaging tool whenever its state is `pushed`, `verified`, `pr-ready`,
-`waiting-on-person`, `escalated`, `blocked` or `failed`, before ending its turn.
+`merged`, `waiting-on-person`, `escalated`, `blocked` or `failed`, before
+ending its turn.
 The orchestrator acts when a session reports, when a person messages it, or
 when it is asked for status.
 
@@ -56,15 +61,15 @@ a loop; a new one follows only a new brief.
 The [risk tier](git-workflow.md#risk-tiers) on the delivery issue decides the
 phases, as [Process by tier](git-workflow.md#process-by-tier) sets them:
 
-| Work                  | Sessions the orchestrator starts                                                                                                          |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| High, new behaviour   | Specification; after approval, plan; after approval, one implementation, one verification and one review session for the feature's slices |
-| High, fix             | One implementation, one verification and one review session for the single pull request                                                   |
-| Standard, specified   | One combined specification-and-plan session; after approval, implementation, verification and review sessions for the slices              |
-| Other Standard, Light | One implementation session. No verifier or reviewer; normal CI and human review apply                                                     |
+| Work                  | Sessions the orchestrator starts                                                                                                                                                   |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| High, new behaviour   | Specification; after approval, plan; after approval, one implementation, one verification and one review session for the feature's slices                                          |
+| High, fix             | One implementation, one verification and one review session for the single pull request                                                                                            |
+| Standard, specified   | One combined specification-and-plan session; after approval, implementation, verification, review and visual review sessions for the slices, which then merge under agent merge    |
+| Other Standard, Light | One implementation session, then one review session and, when the pull request touches a rendering path, one visual review session; the pull request then merges under agent merge |
 
-The verification and review sessions start when the implementation session
-first reports `pushed`, not with it. Until then they would only wait, holding a
+The verification, review and visual review sessions start when the
+implementation session first reports `pushed`, not with it. Until then they would only wait, holding a
 full context whose prompt cache expires before the first request arrives, and
 the verifier would build Storybooks nobody needs yet. The orchestrator builds
 their first request from the draft pull request's metadata, puts it in their
@@ -93,17 +98,21 @@ The orchestrator always stops and waits for a person at these points:
 
 - A specification, plan or combined pull request is ready for review. Only a
   person approves it.
-- Any merge. Only a person asks for a merge, under
-  [Merge timing](git-workflow.md#merge-timing).
-- A slice or fix the implementation session marked ready. It does so once the
-  gates pass; the ready hook runs the gate and blocks a failing attempt, and no
-  person confirms the ready step itself. The person then reviews it.
+- A merge outside [agent merge](git-workflow.md#agent-merge): High work, and
+  any pull request the merge gate reports as not eligible. Only a person asks
+  for that merge, under [Merge timing](git-workflow.md#merge-timing). An
+  agent-merged pull request is not a stop point: the implementation session
+  merges it and reports `merged`, and the orchestrator notifies the person.
+- A High slice or fix the implementation session marked ready. It does so
+  once the gates pass; the ready hook runs the gate and blocks a failing
+  attempt, and no person confirms the ready step itself. The person then
+  reviews it.
 - The `ci: version packages` release pull request that
   [`publish.yml`](../../.github/workflows/publish.yml) opens or updates after a
   feature with changesets merges. Merging it publishes to npm, so only a person
   decides when. The orchestrator reports that it is open and which packages and
   bumps it carries; it never merges it or asks another session to.
-- An escalation from the verifier or reviewer: a specification or plan
+- An escalation from the verifier, reviewer or visual reviewer: a specification or plan
   correction under the [corrections table](git-workflow.md#corrections), a
   claim still failing after three verification rounds, a blocking finding open
   in round three, or a disagreement between the implementation session and the
@@ -121,9 +130,10 @@ then if it still fails.
 
 ## Concurrency
 
-- **Cap:** one feature at a time, with at most three working sessions
-  (implementation, verification, review). The orchestrator does not count.
-  Every session shares the person's usage limits.
+- **Cap:** one feature at a time, with at most four working sessions
+  (implementation, verification, review, visual review). The orchestrator
+  does not count. Every session shares the person's usage limits. Agent-merge
+  single-pull-request work counts as a feature.
 - **One writer per set of files.** One implementation session owns a feature's
   branches at a time. A fresh implementation session per slice is allowed once
   the previous one has finished.
@@ -161,6 +171,8 @@ The orchestrator sends a push notification when:
 - a session failed, stopped or hit a usage limit
 - a slice is green: its verification gate passes and its review has no open
   blocking finding
+- an agent merged a pull request, with its number, tier and whether it
+  carries a changeset
 
 A notification reaches a phone only while the orchestrator session has Remote
 Control connected. Each message is one line that leads with what to act on.
@@ -176,7 +188,8 @@ of Pre-ETS's; revisit them with the measures below.
 | Specification, plan          | `claude-opus-5-5`; `claude-fable-5-2` for High work                                   | `high`                        |
 | Implementation               | `claude-opus-5-5`                                                                     | `high`; `xhigh` for High work |
 | Verification                 | `claude-opus-5-5`                                                                     | `medium`                      |
-| Review                       | `claude-fable-5-2`, a different and stronger model than the implementation            | `high`                        |
+| Review                       | `claude-fable-5-2`, a different and stronger model than the implementation            | `high`; `medium` for Light    |
+| Visual review                | `claude-fable-5-2`, a different model from the implementation                         | `high`                        |
 | Pre-push self-review         | `fable` (`claude-fable-5-2`), a subagent on a different model from the implementation | `high`                        |
 | Orchestrator                 | `claude-sonnet-5-5`                                                                   | `medium`                      |
 | Drift review                 | `claude-opus-5-5`                                                                     | `high`                        |
@@ -215,7 +228,10 @@ Revisit a row when these measures move:
 - reviewer findings accepted versus dismissed (closures `fixed` against
   `justified` and `withdrawn` in review notes)
 - defects that escaped to `main` or were first found in human review, such as
-  a `test:visual` regression or an axe violation caught after merge
+  a `test:visual` regression or an axe violation caught after merge, and
+  agent-merged pull requests that a person later reverted or corrected
+- visual review findings accepted versus dismissed, and visible regressions
+  found after an agent merge that the visual review passed
 - usage-limit pressure: sessions stopped by limits, and time spent waiting for
   them to reset
 - the independent reviewer's round-1 findings per slice, before and after the
@@ -245,7 +261,8 @@ the documents it links in the same pull request.
 | Drift review                | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                    |
 | Screenshots                 | The verifier publishes screenshots for visual claims only, as a private page linked from one pull request comment ([Screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims))                           |
 | Evidence from consumers     | In-repository only. Consumer impact is an approved limitation plus a linked delivery issue in the consumer's repository ([Known limits](verification-harness.md#known-limits))                                                       |
-| Labels                      | `risk:high`, `risk:standard` and `risk:light` exist; the gate reads `risk:high`                                                                                                                                                      |
+| Labels                      | `risk:high`, `risk:standard` and `risk:light` exist; the gate reads `risk:high`. The merge gate also reads `hold`                                                                                                                    |
 | Ready without a prompt      | Allowed. `gh pr ready` and the REST ready route are in the project allow list, and the hook approves the MCP call; the gate decides every attempt                                                                                    |
 | Pull request comment marker | `<!-- pathable-note kind=… sha=… id=… -->`, renamed from Pre-ETS's marker                                                                                                                                                            |
 | Shared tooling package      | None. The JavaScript port is maintained separately from Pre-ETS's copy                                                                                                                                                               |
+| Agent merge                 | Decided 2026-11-19. Standard and Light pull requests merge without a person, once an independent code review and, for rendering changes, a visual review pass the merge gate ([Agent merge](git-workflow.md#agent-merge))            |

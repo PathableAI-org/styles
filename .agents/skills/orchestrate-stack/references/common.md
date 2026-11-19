@@ -15,19 +15,23 @@ and you see none of its; this brief is everything it knows that you need.
 The repository publishes `@pathableai/styles` (the authoritative CSS, tokens
 and component classes) and `@pathableai/react` (wrappers over that contract),
 each with a Storybook. Each feature runs as separate sessions with one role
-each: specification, plan, implementation, verification and review. The
-orchestrator only coordinates: it never edits branches, reads code, merges or
-approves. A person approves and merges every phase, and decides when a release
-publishes.
+each: specification, plan, implementation, verification, review and visual
+review. The orchestrator only coordinates: it never edits branches, reads
+code, merges or approves. A person approves every specification and plan
+phase and merges High work. Standard and Light implementation pull requests
+merge under [agent merge](docs/engineering/git-workflow.md#agent-merge): the
+implementation session merges them once the merge gate passes. A person
+decides when a release publishes.
 
 Rules for every role:
 
 - Read [AGENTS.md](AGENTS.md) and follow its routing table to the owning
   documents for your task. The constitution wins over every other document.
 - Use only synthetic content in stories, tests and fixtures.
-- Work only on branches this brief gives you. Never merge, force-push or
+- Work only on branches this brief gives you. Never force-push or
   hard-reset, never bypass Husky hooks, and never add a check suppression;
-  `.claude/settings.json` and its hooks enforce most of this.
+  `.claude/settings.json` and its hooks enforce most of this. Only the
+  implementation session merges, and only under agent merge.
 - One writing session owns a set of files. {{hot_spots}}
 - Do not poll or wait in a loop. Start a long command, such as a Storybook
   test run, in the background and end your turn; you are woken when it
@@ -41,10 +45,11 @@ Rules for every role:
 - Begin your final message of every turn with one status line:
   `<role> <slice or phase> <state> @ <short SHA or -> next=<what you wait for>`,
   where state is one of `pushed`, `verified`, `reviewed`, `pr-ready`,
-  `waiting`, `waiting-on-person`, `escalated`, `blocked` or `failed`.
+  `merged`, `waiting`, `waiting-on-person`, `escalated`, `blocked` or
+  `failed`.
 - The orchestrator does not see your turns end. Whenever the state is
-  `pushed`, `verified`, `pr-ready`, `waiting-on-person`, `escalated`,
-  `blocked` or `failed`, first send the same status line, plus the pull
+  `pushed`, `verified`, `pr-ready`, `merged`, `waiting-on-person`,
+  `escalated`, `blocked` or `failed`, first send the same status line, plus the pull
   request number and anything it must act on, to the orchestrator
   `{{orchestrator_id}}` with the session messaging tool, then end your turn.
   "Report" in this brief means that message. `waiting` and `reviewed` need no
