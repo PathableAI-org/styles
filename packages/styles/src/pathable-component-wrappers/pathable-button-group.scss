@@ -11,4 +11,13 @@
 
 .pathable-button-group {
   @extend .usa-button-group;
+
+  // Keep 8px between stacked buttons so the focus ring of the focused button
+  // shows on all four sides, and between rows when the row wraps.
+  row-gap: var(--space-8);
+
+  // The row wraps instead of running past the container.
+  @include at-media('mobile-lg') {
+    flex-wrap: wrap;
+  }
 }
