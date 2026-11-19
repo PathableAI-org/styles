@@ -206,8 +206,9 @@ const STORIES = [
     key: 'form-row/default',
   },
   // FormStack has no aggregate story. Default shows the stack gap between
-  // form groups and a trailing action, the first-label reset and the
-  // full-width input, select and textarea at every viewport.
+  // form groups and a trailing action, the first-label reset, the full-width
+  // input, select and textarea and the trailing button ending flush with the
+  // fields at every viewport.
   {
     id: 'components-form-controls-form-stack--default',
     key: 'form-stack/default',
