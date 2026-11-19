@@ -115,6 +115,7 @@
   font-size: var(--pathable-font-size-label-sm);
   font-weight: var(--pathable-font-weight-semibold);
   padding: var(--pathable-space-0) var(--pathable-space-1);
+  border: 1px solid var(--pathable-color-border);
   border-radius: var(--radius-sm);
   white-space: nowrap;
 
@@ -132,10 +133,9 @@
 
 // --- Status variants ---
 
-// Cancelled: struck-through text, muted
+// Cancelled: struck-through text, muted. The item is still content with a
+// working Details action, so it is not faded: muted text stays at 4.5:1 or more.
 .pathable-schedule-item--cancelled {
-  opacity: 0.6;
-
   .pathable-schedule-item__title {
     text-decoration: line-through;
     color: var(--pathable-color-text-muted);
@@ -150,8 +150,8 @@
 // Completed: subtle success treatment
 .pathable-schedule-item--completed {
   .pathable-schedule-item__status {
-    background: var(--pathable-color-bg);
-    color: var(--pathable-color-success);
+    background: var(--pathable-color-surface);
+    color: var(--pathable-color-text-success);
   }
 }
 
@@ -172,8 +172,8 @@
 // Upcoming: default (no extra changes)
 .pathable-schedule-item--upcoming {
   .pathable-schedule-item__status {
-    background: var(--pathable-color-bg);
-    color: var(--pathable-color-accent);
+    background: var(--pathable-color-surface);
+    color: var(--pathable-color-text-success);
   }
 }
 
@@ -235,10 +235,6 @@
 @media (forced-colors: active) {
   .pathable-schedule-item {
     border: 2px solid CanvasText;
-
-    &.pathable-schedule-item--cancelled {
-      opacity: 1;
-    }
 
     &.pathable-schedule-item--tentative {
       border-style: dashed;
