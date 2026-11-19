@@ -23,7 +23,7 @@ export const Default = {
 
 export const Wrapping = {
   render: () => `
-    <div style="max-width: 20rem">
+    <div style="max-width: 20rem; padding: 0 0.25rem">
       <div class="pathable-button-group">
         <button class="pathable-button pathable-button--outline">Option One</button>
         <button class="pathable-button pathable-button--outline">Option Two</button>
