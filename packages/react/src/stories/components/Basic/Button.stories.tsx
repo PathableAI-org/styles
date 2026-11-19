@@ -280,8 +280,23 @@ export const ClickActivation: Story = {
   },
 }
 
+/** Resolves a colour custom property to the computed `rgb()` string. */
+function resolveColorToken(token: string): string {
+  if (
+    !getComputedStyle(document.documentElement).getPropertyValue(token).trim()
+  ) {
+    throw new Error(`Button story token ${token} is undefined`)
+  }
+  const probe = document.createElement('span')
+  probe.style.color = `var(${token})`
+  document.body.append(probe)
+  const value = getComputedStyle(probe).color
+  probe.remove()
+  return value
+}
+
 /** Verifies keyboard activation with Enter and Space keys, and confirms
- *  the button receives focus with a visible focus indicator. */
+ *  the button receives focus with the brand focus outline. */
 export const KeyboardActivation: Story = {
   args: {
     children: 'Keyboard Button',
@@ -295,6 +310,17 @@ export const KeyboardActivation: Story = {
       const button = canvas.getByRole('button', { name: 'Keyboard Button' })
       await userEvent.tab()
       await expect(button).toHaveFocus()
+    })
+
+    await step('focused button shows the brand focus outline', async () => {
+      const style = getComputedStyle(
+        canvas.getByRole('button', { name: 'Keyboard Button' }),
+      )
+      await expect(style.outlineStyle).toBe('solid')
+      await expect(style.outlineWidth).toBe('2px')
+      await expect(style.outlineColor).toBe(
+        resolveColorToken('--pathable-color-focus-ring'),
+      )
     })
 
     await step('Enter key activates the button', async () => {
