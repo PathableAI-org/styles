@@ -106,6 +106,14 @@ const STORIES = [
     id: 'components-button--unstyled',
     key: 'button/unstyled',
   },
+  // Accent warm guards the accent-warm modifier against the same cascade
+  // regression (#303), beside the primary button. Its colors do not change
+  // with the viewport, and the outline images already show the narrow-screen
+  // button rules, so one desktop image is enough.
+  {
+    id: 'components-button--accent-warm',
+    key: 'button/accent-warm',
+  },
   // SegmentedControl has no aggregate story. Single select shows the option
   // icon-to-label gap, the selected option and the container padding; the gap
   // does not change with the viewport, so one desktop image is enough.

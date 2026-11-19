@@ -96,6 +96,15 @@ describe('lint-tokens undefined references', () => {
     )
   })
 
+  it('fails the formerly exempted legacy typography tokens', () => {
+    assert.deepEqual(
+      undefinedTokens(
+        '.fixture {\n  font-size: var(--pathable-font-size-body-xs);\n}\n.fixture__title {\n  font-size: var(--pathable-font-size-heading-xl);\n}\n',
+      ),
+      ['--pathable-font-size-body-xs', '--pathable-font-size-heading-xl'],
+    )
+  })
+
   it('fails the undefined token nested inside a fallback', () => {
     assert.deepEqual(
       undefinedTokens(
