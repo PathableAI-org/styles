@@ -35,13 +35,17 @@
 
 .pathable-card__media {
   @extend .usa-card__media;
+}
 
-  // Media scales to the card width at every viewport instead of keeping an
-  // intrinsic width attribute that overflows narrow cards.
+// Media scales to the card width at every viewport instead of keeping an
+// intrinsic width attribute that overflows narrow cards. Flag cards keep the
+// USWDS crop-to-column behaviour.
+.pathable-card:not(.pathable-card--flag) .pathable-card__media {
   > img,
   > svg,
+  > video,
   > picture,
-  > video {
+  > picture > img {
     display: block;
     width: 100%;
     max-width: 100%;
