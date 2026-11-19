@@ -19,7 +19,7 @@ const meta = {
 
 **Controlled/uncontrolled**: This is an uncontrolled component. All behavior (disabled, type, event handlers) is managed through standard HTML button attributes forwarded to the underlying element. Consuming applications manage click handlers, loading states, and form participation themselves.
 
-**Known constraints**: The \`inverse\` variant requires a dark background to be visible. The \`unstyled\` variant removes all visual button styling and should only be used when custom styling is applied.`,
+**Known constraints**: The \`inverse\` variant requires a dark background to be visible. The \`unstyled\` variant renders the label as link-styled text: no fill or padding, with underlined text in the link color (\`--pathable-color-link\`). It needs no custom styling; use it for link-style actions that must stay buttons.`,
       },
     },
   },
