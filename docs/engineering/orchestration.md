@@ -162,7 +162,9 @@ that shows it.
    `gh api -X GET search/issues -f q='repo:PathableAI-org/styles is:issue is:open <key words>'`.
    When one matches, add a comment with the new evidence instead of filing.
 3. **File it** with `gh api repos/{owner}/{repo}/issues -f title=… -f body=…`
-   and the `bug` label. The title is a plain sentence naming the component
+   and the `bug` label plus one package label, `package:styles` or
+   `package:react`, for the package the defect is in. A defect in both
+   packages is two issues, one per package, each linking the other. The title is a plain sentence naming the component
    and the defect. The body gives:
    - **Observed** and **expected**, with the story ID, viewport and condition,
      or the file and line
@@ -286,7 +288,7 @@ request.
 | Drift review                | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                    |
 | Screenshots                 | The verifier publishes screenshots for visual claims only, as a private page linked from one pull request comment ([Screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims))                           |
 | Evidence from consumers     | In-repository only. Consumer impact is an approved limitation plus a linked delivery issue in the consumer's repository ([Known limits](verification-harness.md#known-limits))                                                       |
-| Labels                      | `risk:high`, `risk:standard` and `risk:light` exist; the gate reads `risk:high`. The merge gate also reads `hold`                                                                                                                    |
+| Labels                      | `risk:high`, `risk:standard` and `risk:light` exist; the gate reads `risk:high`. The merge gate also reads `hold`. `package:styles` and `package:react` mark which package a bug affects; nothing reads them                         |
 | Ready without a prompt      | Allowed. `gh pr ready` and the REST ready route are in the project allow list, and the hook approves the MCP call; the gate decides every attempt                                                                                    |
 | Pull request comment marker | `<!-- pathable-note kind=… sha=… id=… -->`, renamed from Pre-ETS's marker                                                                                                                                                            |
 | Shared tooling package      | None. The JavaScript port is maintained separately from Pre-ETS's copy                                                                                                                                                               |
