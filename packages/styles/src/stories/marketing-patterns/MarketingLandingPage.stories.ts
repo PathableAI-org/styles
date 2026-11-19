@@ -101,7 +101,7 @@ const featureSectionsHtml = `
           <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
           <div class="pathable-screenshot-frame__browser-url">app.pathable.com/participants</div>
         </div>
-        <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Case Management Preview', '#e0e0e0', '#666666')}" alt="Case management dashboard preview" loading="lazy" />
+        <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Case Management Preview', '#dde2e8', '#00365c')}" alt="Case management dashboard preview" loading="lazy" />
       </figure>
     </div>
   </div>
@@ -114,7 +114,7 @@ const featureSectionsHtml = `
           <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
           <div class="pathable-screenshot-frame__browser-url">app.pathable.com/reports</div>
         </div>
-        <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#e0e0e0', '#666666')}" alt="Analytics dashboard preview" loading="lazy" />
+        <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#dde2e8', '#00365c')}" alt="Analytics dashboard preview" loading="lazy" />
       </figure>
       <div class="pathable-stack pathable-stack--gap-md">
         <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Reporting</p>
@@ -221,7 +221,7 @@ ${headerHtml}
             <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
             <div class="pathable-screenshot-frame__browser-url">app.pathable.com/participants</div>
           </div>
-          <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Case Management Preview', '#e0e0e0', '#666666')}" alt="Case management dashboard preview" loading="lazy" />
+          <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Case Management Preview', '#dde2e8', '#00365c')}" alt="Case management dashboard preview" loading="lazy" />
         </figure>
       </div>
     </div>
@@ -234,7 +234,7 @@ ${headerHtml}
             <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
             <div class="pathable-screenshot-frame__browser-url">app.pathable.com/reports</div>
           </div>
-          <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#e0e0e0', '#666666')}" alt="Analytics dashboard preview" loading="lazy" />
+          <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#dde2e8', '#00365c')}" alt="Analytics dashboard preview" loading="lazy" />
         </figure>
         <div class="pathable-stack pathable-stack--gap-md">
           <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Reporting</p>

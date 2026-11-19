@@ -41,7 +41,7 @@ export const MixedLayout = {
         <img src="${placeholderImage(400, 300, 'Image', '#00365c', '#ffffff')}" alt="Feature screenshot" />
       </div>
       <div class="pathable-bento-tile pathable-bento-tile--image2" style="min-height: 180px;" id="bento-image-2">
-        <img src="${placeholderImage(400, 300, 'Analytics', '#4899e8', '#333333')}" alt="Analytics screenshot" />
+        <img src="${placeholderImage(400, 300, 'Analytics', '#4899e8', '#001a33')}" alt="Analytics screenshot" />
       </div>
     </div>
   `,

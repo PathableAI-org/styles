@@ -17,7 +17,7 @@ export const Populated = {
     <div class="pathable-card-grid">
       <div class="pathable-resource-card pathable-resource-card--grid pathable-resource-card--interactive">
         <div class="pathable-resource-card__media">
-          <img src="${placeholderImage(300, 200, 'Guide', '#1cae96', '#ffffff')}" alt="" aria-hidden="true">
+          <img src="${placeholderImage(300, 200, 'Guide', '#1cae96', '#001a33')}" alt="" aria-hidden="true">
         </div>
         <div class="pathable-resource-card__body">
           <a href="#" class="pathable-resource-card__link">
@@ -47,7 +47,7 @@ export const Populated = {
       </div>
       <div class="pathable-resource-card pathable-resource-card--grid pathable-resource-card--interactive">
         <div class="pathable-resource-card__media">
-          <img src="${placeholderImage(300, 200, 'Video', '#4899e8', '#ffffff')}" alt="" aria-hidden="true">
+          <img src="${placeholderImage(300, 200, 'Video', '#4899e8', '#001a33')}" alt="" aria-hidden="true">
         </div>
         <div class="pathable-resource-card__body">
           <a href="#" class="pathable-resource-card__link">

@@ -107,7 +107,7 @@ const resourceCards = [
     provider: 'National Workforce Association',
     summary:
       'A comprehensive guide to conducting effective participant intake sessions.',
-    image: placeholderImage(400, 250, 'Intake Guide', '#e0e0e0', '#666666'),
+    image: placeholderImage(400, 250, 'Intake Guide', '#dde2e8', '#00365c'),
     tags: ['Guide', 'Beginner'],
     updated: '2 days ago',
     rating: '★★★★★',
@@ -117,7 +117,7 @@ const resourceCards = [
     provider: 'Dept. of Labor',
     summary:
       'Interactive checklist for ensuring compliance with federal reporting requirements.',
-    image: placeholderImage(400, 250, 'Compliance Tool', '#e0e0e0', '#666666'),
+    image: placeholderImage(400, 250, 'Compliance Tool', '#dde2e8', '#00365c'),
     tags: ['Tool', 'Advanced'],
     updated: '1 week ago',
     rating: '★★★★☆',

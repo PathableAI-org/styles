@@ -16,7 +16,7 @@ export default {
 
 const defaultContent = `
   <div class="pathable-resource-card__media">
-    <img src="${placeholderImage(300, 200, 'Thumbnail', '#1cae96', '#ffffff')}" alt="" aria-hidden="true">
+    <img src="${placeholderImage(300, 200, '', '#1cae96', '#001a33')}" alt="" aria-hidden="true">
   </div>
   <div class="pathable-resource-card__body">
     <a href="#" class="pathable-resource-card__link">

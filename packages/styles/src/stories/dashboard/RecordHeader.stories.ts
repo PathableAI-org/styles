@@ -97,7 +97,7 @@ export const Centered = {
   render: () => `
     <div class="pathable-record-header pathable-record-header--centered">
       <div class="pathable-record-header__media">
-        <img src="${placeholderImage(80, 80, 'SS', '#1cae96', '#ffffff')}" alt="Support Services icon">
+        <img src="${placeholderImage(80, 80, 'SS', '#1cae96', '#001a33')}" alt="Support Services icon">
       </div>
       <div class="pathable-record-header__body">
         <h2 class="pathable-record-header__identity">Support Services</h2>

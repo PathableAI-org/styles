@@ -49,7 +49,7 @@ export const HeroSection = {
               </div>
               <div class="pathable-screenshot-frame__browser-url">app.pathable.com/dashboard</div>
             </div>
-            <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Dashboard Preview', '#e0e0e0', '#666666')}" alt="Pathable dashboard preview" loading="lazy" />
+            <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Dashboard Preview', '#dde2e8', '#00365c')}" alt="Pathable dashboard preview" loading="lazy" />
           </figure>
         </div>
       </div>
@@ -91,7 +91,7 @@ export const FeatureShowcase = {
           <img src="${placeholderImage(400, 300, 'Analytics', '#00365c', '#ffffff')}" alt="Analytics dashboard screenshot" />
         </div>
         <div class="pathable-bento-tile pathable-bento-tile--image2" style="min-height: 180px;">
-          <img src="${placeholderImage(400, 300, 'Reports', '#4899e8', '#333333')}" alt="Reports dashboard screenshot" />
+          <img src="${placeholderImage(400, 300, 'Reports', '#4899e8', '#001a33')}" alt="Reports dashboard screenshot" />
         </div>
       </div>
     </div>
