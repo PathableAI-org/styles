@@ -26,6 +26,34 @@ export const Default = {
   `,
 }
 
+export const LongValueIncreasedText = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A long selected value in a narrow container at an enlarged text size (2rem, as at 200% text) wraps and the control grows, so the value stays readable (WCAG 1.4.4). Firefox keeps the value on one line.',
+      },
+    },
+  },
+  render: () => `
+<div style="max-width: 20rem;">
+  <label class="pathable-label" for="select-long-value">Service</label>
+  <select id="select-long-value" class="pathable-select" style="font-size: 2rem;">
+    <option>Employment support and job coaching</option>
+  </select>
+</div>
+  `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const select = within(canvasElement).getByRole('combobox', {
+      name: 'Service',
+    })
+    const lineHeight = parseFloat(getComputedStyle(select).lineHeight)
+    if (select.getBoundingClientRect().height < lineHeight * 2) {
+      throw new Error('Expected the long selected value to wrap onto 2+ lines')
+    }
+  },
+}
+
 export const Multiple = {
   render: () => `
 <label class="pathable-label" for="select-multiple">Select multiple options</label>

@@ -102,6 +102,7 @@ const EXPECTED_COVERAGE = {
     'components-form-controls-select--default',
     'components-form-controls-select--keyboard-focus',
     'components-form-controls-select--forced-colors',
+    'components-form-controls-select--long-value-increased-text',
     'components-form-controls-textarea--default',
     'components-form-controls-textarea--keyboard-focus',
     'components-form-controls-textarea--forced-colors',
