@@ -1,0 +1,11 @@
+{
+  "name": "@pathableai/component-docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Builds the component pages for @pathableai/styles, @pathableai/react and the styles Storybook from the source pages in components/, the HTML fixtures and the React example modules.",
+  "type": "module",
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.0.2",
+    "typescript": "^5.9.3"
+  }
+}

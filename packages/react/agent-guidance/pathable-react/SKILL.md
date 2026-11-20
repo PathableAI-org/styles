@@ -90,3 +90,6 @@ raw HTML and `usa-*` or `pathable-*` classes.
   JavaScript, read [server and client boundaries](references/server-and-client.md).
 - For stylesheet imports, theme tokens, semantic props, or custom classes, read
   [styling and theming](references/styling-and-theming.md).
+- For a component's purpose, examples, composition rules and guarantees, read
+  its page in the [component pages](references/components/index.md) when it
+  has one.

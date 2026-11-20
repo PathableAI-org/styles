@@ -15,7 +15,7 @@ labels: bug
 
 ## Guarantee
 
-<!-- Optional. When the component has a page under packages/styles/components/, the guarantee this defect breaks, as <page>/<guarantee-id> (for example icon-tile/icon-contrast). If the page does not state the expected behaviour yet, say so. -->
+<!-- Optional. When the component has a page under components/, the guarantee this defect breaks, as <page>/<guarantee-id> (for example icon-tile/icon-contrast). If the page does not state the expected behaviour yet, say so. -->
 
 ## How to reproduce
 

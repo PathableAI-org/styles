@@ -1,0 +1,378 @@
+import assert from 'node:assert/strict'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { describe, it } from 'node:test'
+
+import { readPages } from '../../packages/styles/scripts/component-pages.mjs'
+import {
+  fence,
+  render,
+  stateTitle,
+  storyName,
+} from '../component-docs/render.mjs'
+import {
+  ComponentDocsError,
+  findPlaceholders,
+  segment,
+} from '../component-docs/segments.mjs'
+import {
+  consumerSource,
+  publicExports,
+  reactSourceDir,
+} from '../component-docs/imports.mjs'
+import { parseFixture, readCoverage } from '../component-docs/sources.mjs'
+import { compareFiles, writeFiles } from '../component-docs/write.mjs'
+
+const frontMatter = '---\nname: Widget\nslug: widget\n---\n\n'
+const page = (body) => ({
+  slug: 'widget',
+  file: 'widget.md',
+  markdown: `${frontMatter}${body}`,
+  data: { name: 'Widget' },
+})
+
+const fixtures = new Map([
+  [
+    'loud',
+    { description: 'The loud one.', html: '<p class="w w--loud">Hi</p>\n' },
+  ],
+  ['quiet', { description: undefined, html: '<p class="w">Hi</p>\n' }],
+])
+const examples = new Map([
+  ['loud', "import { W } from 'w'\n\nexport default <W loud>Hi</W>\n"],
+  ['quiet', "import { W } from 'w'\n\nexport default <W>Hi</W>\n"],
+])
+const stylesOnly = { fixtures, examples: undefined, component: undefined }
+const covered = { fixtures, examples, component: 'Widget' }
+
+/** The problems a render reports, or [] when it succeeds. */
+function problems(fn) {
+  try {
+    fn()
+    return []
+  } catch (error) {
+    if (!(error instanceof ComponentDocsError)) throw error
+    return error.problems
+  }
+}
+
+describe('component docs: unconverted pages', () => {
+  it('renders a page with no placeholder to itself, byte for byte', () => {
+    const source = page('# Widget\n\n```html\n<p class="w">Hi</p>\n```\n\n\n')
+    assert.equal(render(source, 'styles', stylesOnly), source.markdown)
+  })
+
+  it('renders every source page without placeholders to itself', async () => {
+    for (const source of await readPages()) {
+      if (findPlaceholders(source.markdown).placeholders.length > 0) continue
+      assert.equal(
+        render(source, 'styles', stylesOnly),
+        source.markdown,
+        source.file,
+      )
+    }
+  })
+})
+
+describe('component docs: placeholders', () => {
+  const body =
+    '# Widget\n\nIntro.\n\n<!-- example: loud -->\n\n## States\n\n<!-- examples -->\n\n## End\n'
+
+  it('puts the fixture in an html block for the styles package', () => {
+    assert.equal(
+      render(page(body), 'styles', stylesOnly),
+      `${frontMatter}# Widget\n\nIntro.\n\n\`\`\`html\n<p class="w w--loud">Hi</p>\n\`\`\`\n\n## States\n\n### Loud\n\nThe loud one.\n\n\`\`\`html\n<p class="w w--loud">Hi</p>\n\`\`\`\n\n### Quiet\n\n\`\`\`html\n<p class="w">Hi</p>\n\`\`\`\n\n## End\n`,
+    )
+  })
+
+  it('puts the example module source in a tsx block for the React package', () => {
+    const output = render(page(body), 'react', covered)
+    assert.ok(
+      output.includes(
+        "```tsx\nimport { W } from 'w'\n\nexport default <W loud>Hi</W>\n```",
+      ),
+    )
+    assert.ok(!output.includes('```html'))
+  })
+
+  it('leaves a placeholder inside a code block untouched', () => {
+    const inCode =
+      '# Widget\n\n<!-- example: quiet -->\n\n```md\n<!-- example: missing -->\n<!-- examples -->\n```\n'
+    const output = render(page(inCode), 'styles', stylesOnly)
+    assert.ok(
+      output.includes(
+        '```md\n<!-- example: missing -->\n<!-- examples -->\n```',
+      ),
+    )
+  })
+
+  it('leaves other HTML comments alone', () => {
+    const source = page('# Widget\n\n<!-- a note for authors -->\n')
+    assert.equal(render(source, 'styles', stylesOnly), source.markdown)
+  })
+
+  it('fails on a placeholder naming a missing fixture', () => {
+    assert.deepEqual(
+      problems(() =>
+        render(
+          page('# Widget\n\n<!-- example: gone -->\n'),
+          'styles',
+          stylesOnly,
+        ),
+      ),
+      [
+        'line 8: "<!-- example: gone -->" names no fixture: fixtures/widget/gone.html does not exist',
+      ],
+    )
+  })
+
+  it('fails on a state with no React example', () => {
+    const partial = { ...covered, examples: new Map([['loud', 'x']]) }
+    assert.deepEqual(
+      problems(() =>
+        render(page('# Widget\n\n<!-- examples -->\n'), 'react', partial),
+      ),
+      [
+        'line 8: "quiet" has no React example: packages/react/src/components/Widget/examples/quiet.tsx does not exist',
+      ],
+    )
+  })
+
+  it('fails on <!-- examples --> with no fixtures', () => {
+    const none = { fixtures: new Map(), examples: undefined }
+    assert.equal(
+      problems(() => render(page('<!-- examples -->\n'), 'styles', none))
+        .length,
+      1,
+    )
+  })
+
+  it('fails on a placeholder that is not on its own top-level line', () => {
+    assert.match(
+      problems(() => segment('Text <!-- example: loud --> more.\n'))[0] ?? '',
+      /not inside a paragraph/u,
+    )
+    assert.match(
+      problems(() => segment('- item\n\n  <!-- examples -->\n'))[0] ?? '',
+      /not inside a listItem/u,
+    )
+  })
+
+  it('fails on a malformed placeholder', () => {
+    assert.equal(
+      problems(() => segment('<!-- example: Loud State -->\n')).length,
+      1,
+    )
+    assert.equal(problems(() => segment('<!-- examples all -->\n')).length, 1)
+    assert.equal(problems(() => segment('<!-- package: vue -->\n')).length, 1)
+  })
+})
+
+describe('component docs: package blocks', () => {
+  const body =
+    '# Widget\n\nShared.\n\n<!-- package: styles -->\n\nStyles only.\n\n<!-- /package -->\n\n<!-- package: react -->\n\nReact only.\n\n<!-- /package -->\n\nAfter.\n'
+
+  it('keeps a block for its own package and drops the other', () => {
+    assert.equal(
+      render(page(body), 'styles', stylesOnly),
+      `${frontMatter}# Widget\n\nShared.\n\nStyles only.\n\nAfter.\n`,
+    )
+    assert.equal(
+      render(page(body), 'react', covered),
+      `${frontMatter}# Widget\n\nShared.\n\nReact only.\n\nAfter.\n`,
+    )
+  })
+
+  it('fails on a block that is never closed', () => {
+    assert.deepEqual(
+      problems(() => segment('<!-- package: react -->\n\nA\n')),
+      [
+        'line 1: "<!-- package: react -->" is never closed with "<!-- /package -->"',
+      ],
+    )
+  })
+
+  it('fails on a close with no open block', () => {
+    assert.deepEqual(
+      problems(() => segment('A\n\n<!-- /package -->\n')),
+      ['line 3: "<!-- /package -->" closes no open package block'],
+    )
+  })
+
+  it('fails on nested blocks', () => {
+    const nested =
+      '<!-- package: react -->\n\n<!-- package: styles -->\n\n<!-- /package -->\n'
+    assert.match(problems(() => segment(nested))[0] ?? '', /opens inside/u)
+  })
+})
+
+describe('component docs: Storybook', () => {
+  const body =
+    '# Widget\n\n<!-- example: loud -->\n\n<!-- package: react -->\n\nR.\n\n<!-- /package -->\n'
+
+  it('writes one story per fixture with its verbatim sources', () => {
+    const { stories } = render(page(body), 'storybook', covered)
+    assert.ok(stories.includes('title: "Fixtures/widget"'))
+    assert.ok(stories.includes('export const Loud = {'))
+    assert.ok(stories.includes('export const Quiet = {'))
+    assert.ok(
+      stories.includes(`react: ${JSON.stringify(examples.get('loud'))},`),
+    )
+  })
+
+  it('has no React source when the React package does not cover the component', () => {
+    const { stories } = render(page(body), 'storybook', stylesOnly)
+    assert.ok(stories.includes('react: null,'))
+  })
+
+  it('turns an example into a preview and code tabs, and marks package blocks', () => {
+    const { mdx } = render(page(body), 'storybook', covered)
+    assert.ok(mdx.includes('<Meta title="Component pages/Widget" />'))
+    assert.ok(mdx.includes('<Canvas of={Stories.Loud} sourceState="none" />'))
+    assert.ok(mdx.includes('<CodeTabs of={Stories.Loud} />'))
+    assert.ok(mdx.includes('<PackageNote name="react">'))
+    assert.ok(!mdx.includes('slug: widget\n---'))
+  })
+})
+
+describe('component docs: helpers', () => {
+  it('reads a leading description comment from a fixture', () => {
+    assert.deepEqual(
+      parseFixture('<!-- description: Two\n  lines. -->\n<p>Hi</p>\n'),
+      { description: 'Two lines.', html: '<p>Hi</p>\n' },
+    )
+    assert.deepEqual(parseFixture('<p>Hi</p>\n'), {
+      description: undefined,
+      html: '<p>Hi</p>\n',
+    })
+  })
+
+  it('names states and stories from file names', () => {
+    assert.equal(stateTitle('no-actions'), 'No actions')
+    assert.equal(storyName('no-actions'), 'NoActions')
+  })
+
+  it('uses a fence longer than any backtick run in the code', () => {
+    assert.equal(fence('md', 'a ``` b\n'), '````md\na ``` b\n````')
+  })
+
+  it('writes files, removes stale ones and reports drift', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'component-docs-'))
+    try {
+      writeFileSync(join(dir, 'old.md'), 'old')
+      writeFileSync(join(dir, 'keep.txt'), 'not ours')
+      const files = new Map([['a.md', 'A\n']])
+      assert.deepEqual(compareFiles(dir, files, /\.md$/u).length, 2)
+      writeFiles(dir, files, /\.md$/u)
+      assert.deepEqual(compareFiles(dir, files, /\.md$/u), [])
+      assert.equal(readFileSync(join(dir, 'keep.txt'), 'utf8'), 'not ours')
+      writeFileSync(join(dir, 'a.md'), 'changed')
+      assert.match(compareFiles(dir, files, /\.md$/u)[0], /out of date/u)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('component docs: consumer imports in React examples', () => {
+  const file = join(reactSourceDir, 'components/Widget/examples/loud.tsx')
+  const exportsOf = () => new Set(['Widget', 'WidgetProps'])
+  const rewrite = (source) => consumerSource(file, source, exportsOf)
+
+  it('rewrites a relative component import to @pathableai/react', () => {
+    assert.equal(
+      rewrite(
+        "import { Widget } from '../Widget'\n\nexport default <Widget />\n",
+      ),
+      "import { Widget } from '@pathableai/react'\n\nexport default <Widget />\n",
+    )
+    assert.equal(
+      rewrite("import type { WidgetProps } from '../Widget/Widget.js'\n"),
+      "import type { WidgetProps } from '@pathableai/react'\n",
+    )
+  })
+
+  it('keeps react and @pathableai/react imports as they are', () => {
+    const source =
+      "import { useId } from 'react'\nimport { Widget } from '@pathableai/react'\n"
+    assert.equal(rewrite(source), source)
+  })
+
+  it('fails on a name the package does not export', () => {
+    assert.throws(
+      () => rewrite("import { Widget, internal } from '../Widget'\n"),
+      /internal from "\.\.\/Widget" is not exported by @pathableai\/react/u,
+    )
+  })
+
+  it('fails on default, namespace and side-effect relative imports', () => {
+    for (const source of [
+      "import Widget from '../Widget'\n",
+      "import * as W from '../Widget'\n",
+      "import '../Widget/styles.css'\n",
+    ]) {
+      assert.throws(() => rewrite(source), /named imports only/u, source)
+    }
+  })
+
+  it('fails on another package or a path outside the React source', () => {
+    assert.throws(() => rewrite("import x from 'lodash'\n"), /may import only/u)
+    assert.throws(
+      () => rewrite("import { a } from '../../../../../fixtures/a'\n"),
+      /outside packages\/react\/src/u,
+    )
+  })
+
+  it('reads the public exports of the entry point', () => {
+    const names = publicExports(
+      "export { A } from './a.js'\nexport type { B } from './b.js'\nexport { C as D } from './c.js'\n",
+    )
+    assert.deepEqual([...names].sort(), ['A', 'B', 'D'])
+  })
+})
+
+describe('component docs: states React does not offer', () => {
+  const notOffered = { quiet: 'React has no quiet prop' }
+  const partial = {
+    fixtures,
+    examples: new Map([['loud', examples.get('loud')]]),
+    component: 'Widget',
+    notOffered,
+  }
+
+  it('leaves them out of the React page and keeps them on the styles page', () => {
+    const body = '# Widget\n\n<!-- example: loud -->\n\n<!-- examples -->\n'
+    const react = render(page(body), 'react', partial)
+    assert.ok(react.includes('### Loud'))
+    assert.ok(!react.includes('### Quiet'))
+    const styles = render(page(body), 'styles', partial)
+    assert.ok(styles.includes('### Quiet'))
+  })
+
+  it('fails when the React page would show one', () => {
+    assert.match(
+      problems(() =>
+        render(page('# Widget\n\n<!-- example: quiet -->\n'), 'react', partial),
+      )[0] ?? '',
+      /"quiet" is not offered by the React package \(React has no quiet prop\)/u,
+    )
+  })
+
+  it('shows them in Storybook with only the HTML source', () => {
+    const { stories } = render(
+      page('# Widget\n\n<!-- examples -->\n'),
+      'storybook',
+      partial,
+    )
+    assert.match(stories, /export const Quiet = \{[\s\S]*?react: null,/u)
+  })
+})
+
+describe('component docs: the React fixture manifest', () => {
+  it('reads each folder with its component and states not offered', async () => {
+    const coverage = await readCoverage()
+    assert.equal(coverage.get('sr-only')?.component, 'SrOnly')
+    assert.deepEqual(coverage.get('sr-only')?.notOffered, {})
+  })
+})

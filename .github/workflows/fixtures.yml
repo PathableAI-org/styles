@@ -11,7 +11,7 @@ on:
     paths:
       - 'fixtures/**'
       - 'packages/styles/src/**/*.scss'
-      - 'packages/styles/components/*.md'
+      - 'components/*.md'
       - 'pnpm-lock.yaml'
       - 'packages/react/src/**'
       - 'packages/react/vitest.config.ts'

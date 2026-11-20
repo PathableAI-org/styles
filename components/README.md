@@ -1,0 +1,107 @@
+# Component pages
+
+One Markdown page per component, named after its slug (`activity-list.md`).
+A page is the product specification of the component: what it is for, an
+example, its variants, its tokens, how to compose it, what it guarantees and
+what the consumer owns. These are the source pages; every published copy is
+built from them:
+
+| Reader                      | Built output                                                                     | Examples        | Committed |
+| --------------------------- | -------------------------------------------------------------------------------- | --------------- | --------- |
+| `@pathableai/styles` on npm | `packages/styles/components/<slug>.md` and `index.md`                            | HTML (fixtures) | No        |
+| `@pathableai/react` on npm  | `packages/react/agent-guidance/pathable-react/references/components/<Name>.md`   | JSX (examples)  | Yes       |
+| People, on GitHub Pages     | The styles Storybook's **Component pages** section (`apps/storybook/generated/`) | Live, with tabs | No        |
+
+The generator is [`scripts/component-docs/`](../scripts/component-docs/). The
+styles `build` writes the styles pages, the Storybook `storybook` and
+`build-storybook` scripts write the Storybook pages, and
+`node scripts/component-docs/cli.mjs react` writes the React pages, which are
+committed because the React agent guidance checks and reviews read them from
+the repository. `pnpm check:agent-guidance` fails when they are out of date.
+
+Edit only the source pages here. Never edit built output.
+
+## What a page contains
+
+The front matter fields, the required sections and what each guarantee status
+means are checked by
+[`check-component-pages.mjs`](../packages/styles/scripts/check-component-pages.mjs),
+whose header lists every rule. Run it after building styles:
+
+```sh
+pnpm --filter @pathableai/styles build
+pnpm --filter @pathableai/styles check:component-pages
+```
+
+How tests cite a page's guarantees is in
+[`STORY_AUTHORING.md`](../packages/styles/STORY_AUTHORING.md#component-page-guarantees).
+
+## Examples from fixtures
+
+A page either writes its one minimal example as a literal `html` code block,
+or takes its examples from the component's HTML fixtures
+([`fixtures/<slug>/`](../fixtures/README.md)) through placeholders. A page
+with any placeholder is a converted page. Placeholders are HTML comments, so a
+source page still renders cleanly on GitHub:
+
+| Placeholder                 | Becomes                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| `<!-- example: <state> -->` | The fixture `fixtures/<slug>/<state>.html` (styles) or the example module `<state>.tsx` (React)  |
+| `<!-- examples -->`         | Every fixture in the folder, in file-name order, each under a `###` heading with its description |
+| `<!-- package: styles -->`  | Content up to `<!-- /package -->` that only the styles page shows                                |
+| `<!-- package: react -->`   | Content up to `<!-- /package -->` that only the React page shows                                 |
+
+For example:
+
+```md
+## Example
+
+<!-- package: styles -->
+
+Load the stylesheet once in the application:
+
+<!-- /package -->
+
+<!-- example: inline -->
+
+## States
+
+<!-- examples -->
+```
+
+Rules:
+
+- Put each placeholder on its own line at the top level of the page, with a
+  blank line before and after it: not inside a list, a quote or a paragraph.
+- A placeholder inside a code block is code, never expanded, as in the
+  example above.
+- A package block cannot hold another package block. Example placeholders
+  may sit inside one.
+- Each state's description comes from the fixture's optional leading
+  `<!-- description: … -->` comment. The example shows the rest of the fixture
+  verbatim.
+- The React page takes the example module
+  `packages/react/src/components/<Name>/examples/<state>.tsx` verbatim. The
+  React fixture tests prove it renders the same markup as the fixture.
+- Any other HTML comment is left in the page as it is.
+
+A converted page must show every fixture in its folder: use
+`<!-- examples -->` in a **States** section. A page whose component the React
+package covers (it has example modules for the folder) must be converted, and
+every state it shows needs an example module. The check above and the build
+fail on a placeholder that names a missing fixture or example, and on a
+malformed package block.
+
+A page with no placeholder is copied to the styles package unchanged, byte for
+byte, and gets no React page.
+
+## The Storybook page
+
+The styles Storybook shows each page that has a fixture folder under
+**Component pages**, with one live preview per example rendered with
+`styles.css`, and **HTML** and **React** tabs beneath it showing the fixture
+and the example module verbatim (only **HTML** when the React package does not
+cover the component). Package blocks are shown labelled with their package,
+and the front matter is shown as YAML at the end. Each fixture is also a story
+under **Fixtures**, which the Storybook test-runner checks with axe. The pages
+publish to GitHub Pages with the rest of the Storybook.

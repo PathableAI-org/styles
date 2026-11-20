@@ -76,31 +76,14 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
-```html
-<div class="pathable-activity-list" role="list" aria-label="Recent activity">
-  <div class="pathable-activity-row" role="listitem">
-    <span
-      class="pathable-activity-row__status"
-      data-status="completed"
-      aria-hidden="true"
-    ></span>
-    <span class="pathable-activity-row__status-text">Completed</span>
-    <div class="pathable-activity-row__body">
-      <p class="pathable-activity-row__title">Intake assessment</p>
-      <p class="pathable-activity-row__context">Participant: Maria Gonzalez</p>
-    </div>
-    <span class="pathable-activity-row__date">2:30 PM</span>
-    <span class="pathable-activity-row__owner">
-      <span class="pathable-activity-row__owner-text">You</span>
-    </span>
-    <div class="pathable-activity-row__actions">
-      <button type="button" class="pathable-button pathable-button--outline">
-        View
-      </button>
-    </div>
-  </div>
-</div>
-```
+<!-- example: flat -->
+
+## States
+
+Each state is complete markup for one use of the list. Copy the one closest to
+what you need.
+
+<!-- examples -->
 
 ## Variants
 
@@ -138,10 +121,11 @@ corners; on hover the row background changes to the page background colour.
 - `pathable-activity-list__group-heading`: a heading (such as an `<h3>`) that
   names a group. To group rows, put headings and nested
   `pathable-activity-list` containers inside an outer `pathable-activity-list`
-  used only for layout: give the outer container no list role, give each
-  nested list `role="list"`, and label it with its heading through
-  `aria-labelledby`. The heading's margins add to the outer container's gap,
-  so by default a heading has 48 px above it and 32 px below it.
+  used only for layout: give the outer container no list role, make each
+  nested list a `<ul role="list">`, as in the grouped state, and label it
+  with its heading through `aria-labelledby`. The heading's margins add to the
+  outer container's gap, so by default a heading has 48 px above it and 32 px
+  below it.
 - `pathable-activity-row`: one item, a flex row with its parts centred
   vertically. Its parts, in order:
   - `pathable-activity-row__status`: an empty `<span>` with a `data-status`
@@ -183,11 +167,12 @@ on screen; the full text stays in the document. The title and context wrap.
 
 ## The consumer owns
 
-- List semantics: `role="list"` on each list that holds rows and
-  `role="listitem"` on each row, and a label for each list. An outer container
-  that groups headings and nested lists takes no list role. If you use real
-  `<ul>` and `<li>` elements instead, remove the `<ul>` element's padding and
-  margin yourself.
+- List semantics: each list that holds rows is a `<ul role="list">` with an
+  `<li>` per row, as in the examples, and has a label. The `role="list"`
+  keeps the list announced in Safari, which drops list semantics from a list
+  without markers. An outer container that groups headings and nested lists
+  takes no list role. Remove the `<ul>` element's padding and margin yourself,
+  as the examples do with `pathable-margin-0` and `pathable-padding-0`.
 - The status in words. The status mark is decorative and colour is never the
   only cue; an unrecognised `data-status` value shows a neutral mark.
 - The actions: the buttons or links inside `pathable-activity-row__actions`

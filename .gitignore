@@ -135,5 +135,9 @@ __pycache__/
 # Claude Code personal settings
 .claude/settings.local.json
 
-# Component page index, written by the styles build
-packages/styles/components/index.md
+# Component pages and their index, written by the styles build from the
+# source pages in components/ (scripts/component-docs/)
+packages/styles/components/
+
+# Component docs stories and pages, written before the styles Storybook runs
+apps/storybook/generated/

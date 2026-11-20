@@ -19,7 +19,7 @@ const messageOf = (error: unknown) =>
 
 /**
  * Runs assertions that prove a component page guarantee the component meets.
- * The id is `<page>/<guarantee-id>`: a page under packages/styles/components/
+ * The id is `<page>/<guarantee-id>`: a page under components/ (the source pages)
  * and a guarantee in its front matter. The assertions run as a play-function
  * step named `guarantee <id>`, and a failure is rethrown with the id in its
  * message, so the test output names the guarantee that broke.

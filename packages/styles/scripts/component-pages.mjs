@@ -1,25 +1,32 @@
 /**
- * Component pages: one hand-written Markdown page per component, under
- * packages/styles/components/, is the product specification for that
- * component and ships as agent documentation in @pathableai/styles.
+ * Component pages: one hand-written Markdown page per component, under the
+ * repository's top-level components/ directory, is the product specification
+ * for that component. The styles `build` turns each source page into
+ * packages/styles/components/<slug>.md (scripts/component-docs/), which ships
+ * as agent documentation in @pathableai/styles; how to write a source page is
+ * in components/README.md.
  *
- * This module reads the pages and writes the one derived file, the catalog
- * index. The index is build output: the package's `build` script writes it,
- * it is not committed, and it ships through `files` like `dist/`. The checks
+ * This module reads the source pages and writes the catalog index beside the
+ * built pages. Everything in packages/styles/components/ is build output: it
+ * is not committed, and it ships through `files` like `dist/`. The checks
  * that tie a page to the code are in check-component-pages.mjs.
  *
- *   node scripts/component-pages.mjs index   write components/index.md
+ *   node scripts/component-pages.mjs index   write packages/styles/components/index.md
  */
 
-import { readdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 import { parse } from 'yaml'
 
-/** Where the pages live: the styles package owns the component contract. */
-export const pagesDir = resolve(import.meta.dirname, '../components')
+/** Where the source pages live, shared by every package's documentation. */
+export const pagesDir = resolve(import.meta.dirname, '../../../components')
+/** Where the styles build writes the pages and index it ships. */
+export const outputDir = resolve(import.meta.dirname, '../components')
 export const indexFile = 'index.md'
+/** Markdown in the source directory that is not a component page. */
+const NOT_PAGES = new Set([indexFile, 'README.md'])
 
 /** Splits a page into its front matter (parsed as YAML) and its Markdown body. */
 export function parsePage(markdown) {
@@ -34,10 +41,10 @@ export function parsePage(markdown) {
   return { data, body: normalized.slice(match[0].length) }
 }
 
-/** Reads every component page (every Markdown file except the index). */
+/** Reads every component page (every Markdown file but the index and README). */
 export async function readPages(dir = pagesDir) {
   const files = (await readdir(dir))
-    .filter((file) => file.endsWith('.md') && file !== indexFile)
+    .filter((file) => file.endsWith('.md') && !NOT_PAGES.has(file))
     .sort()
 
   return Promise.all(
@@ -82,7 +89,8 @@ export function renderIndex(pages) {
 
 async function writeIndex() {
   const pages = await readPages()
-  await writeFile(join(pagesDir, indexFile), renderIndex(pages))
+  await mkdir(outputDir, { recursive: true })
+  await writeFile(join(outputDir, indexFile), renderIndex(pages))
   console.log(`[component-pages] Wrote ${indexFile} with ${pages.length} pages`)
 }
 

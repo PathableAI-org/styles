@@ -16,14 +16,17 @@
  * part of the key: a new input can only cost a cache miss, never a stale
  * hit. Excluded are only files the HTML Storybook build and test run do not
  * read:
- *   - Markdown, including the component pages (the records do not depend on
- *     them), except under apps/storybook/ and packages/styles/src/, where a
- *     story could import it;
+ *   - Markdown, including the component pages in components/ (the records do
+ *     not depend on them: the stories generated beside each page take their
+ *     names and markup from the fixtures, and the page only becomes an
+ *     untested docs entry), except under apps/storybook/ and
+ *     packages/styles/src/, where a story could import it;
  *   - the React package and React Storybook;
  *   - pixel baselines, which only the pixel suite reads;
  *   - documentation, specifications, changesets, agent files and the
  *     repository scripts under scripts/, which neither build nor test run
- *     imports.
+ *     imports, except scripts/component-docs/, which writes the generated
+ *     fixture stories before every Storybook build.
  *
  * Usage: node scripts/component-pages-records-key.mjs
  */
@@ -50,9 +53,15 @@ const EXCLUDED_DIRECTORIES = [
   'scripts/',
 ]
 
+/** Directories inside the excluded ones that the Storybook build runs. */
+const KEPT_DIRECTORIES = ['scripts/component-docs/']
+
 /** Whether a tracked path can change the component page records. */
 export function isRecordInput(path) {
-  if (EXCLUDED_DIRECTORIES.some((directory) => path.startsWith(directory))) {
+  if (
+    EXCLUDED_DIRECTORIES.some((directory) => path.startsWith(directory)) &&
+    !KEPT_DIRECTORIES.some((directory) => path.startsWith(directory))
+  ) {
     return false
   }
   if (path.toLowerCase().endsWith('.md')) {

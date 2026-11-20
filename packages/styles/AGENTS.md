@@ -12,6 +12,11 @@ Agents MUST NOT introduce new brand colors unless explicitly instructed.
 
 Agents MUST NOT invent new typography rules unless explicitly instructed.
 
+Agents SHOULD read a component's page, listed in `components/index.md` in the
+installed package, before writing its markup. The page's examples are the
+reference markup. In this repository the pages are built from the source pages
+in the top-level `components/` directory; see `components/README.md` there.
+
 ## Color Tokens
 
 Agents MAY use these brand colors:

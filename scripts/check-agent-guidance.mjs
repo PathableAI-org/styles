@@ -1,16 +1,38 @@
 import assert from 'node:assert/strict'
-import { readFile, stat } from 'node:fs/promises'
+import { readdir, readFile, stat } from 'node:fs/promises'
 import { dirname, relative, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const scriptPath = fileURLToPath(import.meta.url)
 const repoRoot = resolve(dirname(scriptPath), '..')
 const skillRelativePath = 'agent-guidance/pathable-react/SKILL.md'
-const guidanceFiles = [
+const componentPagesRelativePath =
+  'agent-guidance/pathable-react/references/components'
+const handWrittenGuidanceFiles = [
   skillRelativePath,
   'agent-guidance/pathable-react/references/server-and-client.md',
   'agent-guidance/pathable-react/references/styling-and-theming.md',
 ]
+
+/**
+ * The guidance files: the hand-written ones, plus the component pages that
+ * scripts/component-docs generates from components/ (committed, and checked
+ * for drift in main()).
+ */
+async function guidanceFilesIn(packageRoot) {
+  let generated = []
+  try {
+    generated = (
+      await readdir(resolve(packageRoot, componentPagesRelativePath))
+    )
+      .filter((file) => file.endsWith('.md'))
+      .sort()
+      .map((file) => `${componentPagesRelativePath}/${file}`)
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error
+  }
+  return [...handWrittenGuidanceFiles, ...generated]
+}
 
 export function parseFrontmatter(markdown) {
   const normalizedMarkdown = markdown.replace(/\r\n?/gu, '\n')
@@ -91,6 +113,7 @@ export async function validateAgentGuidance(packageRoot) {
     `SKILL.md must stay below 8 KiB; received ${skillStats.size} bytes`,
   )
 
+  const guidanceFiles = await guidanceFilesIn(packageRoot)
   for (const guidanceFile of guidanceFiles) {
     const sourcePath = resolve(packageRoot, guidanceFile)
     const markdown = await readFile(sourcePath, 'utf8')
@@ -115,6 +138,10 @@ export async function validateAgentGuidance(packageRoot) {
 
 async function main() {
   const packageRoot = resolve(repoRoot, 'packages/react')
+  // The component pages are generated but committed, so a change to a source
+  // page, fixture or React example that is not regenerated fails here.
+  const { main: componentDocs } = await import('./component-docs/cli.mjs')
+  await componentDocs(['react', '--check'])
   const result = await validateAgentGuidance(packageRoot)
   console.log(
     `[agent-guidance] Validated ${result.files} files; SKILL.md is ${result.skillBytes} bytes`,

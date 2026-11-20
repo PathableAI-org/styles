@@ -47,7 +47,7 @@ Use this checklist when creating or updating Storybook stories for
 
 ## Component Page Guarantees
 
-- [ ] When a component has a page under `packages/styles/components/`, wrap the
+- [ ] When a component has a page under the repository's `components/`, wrap the
       assertions that prove one of its guarantees in
       `guarantee(step, '<page>/<guarantee-id>', async () => { … })` from
       `src/stories/shared/guarantee.ts`. A failure names the guarantee.

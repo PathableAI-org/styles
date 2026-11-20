@@ -10,6 +10,7 @@ import {
   modifiersOf,
   readCss,
   readPixels,
+  renderForCheck,
   renderTrace,
   wrapperComponents,
 } from './check-component-pages.mjs'
@@ -491,4 +492,92 @@ test('the index explains the unmet and unverified guarantee statuses', () => {
       'One marked `status: unverified` was read from the package source and no test checks it yet.',
     ),
   )
+})
+
+// --- Pages with placeholders ----------------------------------------------
+
+const loud = '<span class="pathable-widget pathable-widget--loud"></span>\n'
+const converted = (frontMatter + body).replace(
+  '```html\n' + loud + '```\n',
+  '<!-- example: loud -->\n\n## States\n\n<!-- examples -->\n',
+)
+const sources = (overrides = {}) => ({
+  fixtures: new Map([
+    ['loud', { description: 'Loud.', html: loud }],
+    [
+      'plain',
+      {
+        description: undefined,
+        html: '<span class="pathable-widget"></span>\n',
+      },
+    ],
+  ]),
+  examples: undefined,
+  component: undefined,
+  ...overrides,
+})
+
+test('checks a converted page with its fixtures in place', () => {
+  const { page: rendered, errors } = renderForCheck(page(converted), sources())
+  assert.deepEqual(errors, [])
+  assert.deepEqual(checkPage(rendered, facts()), [])
+})
+
+test('checks the classes of every fixture a page shows', () => {
+  const unknown = sources()
+  unknown.fixtures.set('odd', {
+    html: '<span class="pathable-widget--odd"></span>\n',
+  })
+  const { page: rendered } = renderForCheck(page(converted), unknown)
+  assert.ok(
+    includes(
+      checkPage(rendered, facts()),
+      'the html example uses .pathable-widget--odd',
+    ),
+  )
+})
+
+test('fails on a placeholder naming a missing fixture', () => {
+  const { page: rendered, errors } = renderForCheck(
+    page(converted.replace('example: loud', 'example: gone')),
+    sources(),
+  )
+  assert.equal(rendered, undefined)
+  assert.ok(includes(errors, 'fixtures/widget/gone.html does not exist'))
+})
+
+test('fails when a converted page does not show every fixture', () => {
+  const { errors } = renderForCheck(
+    page(converted.replace('<!-- examples -->\n', '')),
+    sources(),
+  )
+  assert.deepEqual(errors, [
+    'fixtures/widget/plain.html is not shown: add "<!-- examples -->" (or "<!-- example: plain -->")',
+  ])
+})
+
+test('fails when the React package covers an unconverted page', () => {
+  const covered = sources({ examples: new Map(), component: 'Widget' })
+  assert.ok(
+    includes(renderForCheck(page(), covered).errors, 'must take its examples'),
+  )
+})
+
+test('fails when a covered page has a state with no React example', () => {
+  const covered = sources({
+    examples: new Map([['loud', 'export default null\n']]),
+    component: 'Widget',
+  })
+  assert.ok(
+    includes(
+      renderForCheck(page(converted), covered).errors,
+      'Widget/examples/plain.tsx does not exist',
+    ),
+  )
+})
+
+test('counts an example placeholder as the one html example', () => {
+  const two = converted.replace('<!-- examples -->', '<!-- example: plain -->')
+  const { page: rendered } = renderForCheck(page(two), sources())
+  assert.ok(includes(checkPage(rendered, facts()), 'expected one html example'))
 })

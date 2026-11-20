@@ -51,7 +51,7 @@ function htmlStorybookPrefixes() {
 
 describe('component page records cache key', () => {
   it('leaves component pages and other Markdown out of the key', () => {
-    assert.equal(isRecordInput('packages/styles/components/wizard.md'), false)
+    assert.equal(isRecordInput('components/wizard.md'), false)
     assert.equal(isRecordInput('packages/styles/README.md'), false)
     assert.equal(isRecordInput('docs/testing/README.md'), false)
   })
@@ -74,6 +74,8 @@ describe('component page records cache key', () => {
       'packages/styles/src/stories/components/Layout/Icon.stories.ts',
       'packages/styles/scripts/check-component-pages.mjs',
       'packages/storybook-contracts/src/accordion/manifest.ts',
+      'fixtures/activity-list/flat.html',
+      'scripts/component-docs/render.mjs',
     ]) {
       assert.equal(isRecordInput(path), true, path)
     }
@@ -103,7 +105,7 @@ describe('component page records cache key', () => {
 
   it('changes when an input changes and not when a page changes', () => {
     const scss = 'packages/styles/src/a.scss'
-    const page = 'packages/styles/components/a.md'
+    const page = 'components/a.md'
     const base = recordsKey([
       entry('1'.repeat(40), scss),
       entry('3'.repeat(40), page),

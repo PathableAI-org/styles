@@ -4,7 +4,7 @@
  *   node harness/contract.mjs [folder …]    default: every component folder
  *
  * It fails when:
- *   - a folder's name is not the slug of a page in packages/styles/components/;
+ *   - a folder's name is not the slug of a source page in components/;
  *   - a folder holds no fixture;
  *   - a `pathable-*` class in a fixture is not a class selector in
  *     @pathableai/styles/dist/styles.css;
@@ -41,7 +41,7 @@ export function classesIn(html) {
 export function checkFolder(folder, fixtures, page, css) {
   if (!page) {
     return [
-      `${folder}/: no component page packages/styles/components/${folder}.md; a fixture folder must be named after a page slug`,
+      `${folder}/: no component page components/${folder}.md; a fixture folder must be named after a page slug`,
     ]
   }
   const errors = []

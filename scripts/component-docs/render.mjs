@@ -1,0 +1,259 @@
+/**
+ * Pure renderers: one source page and its sources in, one target's output
+ * out. Nothing here reads or writes files.
+ *
+ *   render(page, 'styles', sources)     the @pathableai/styles page (Markdown)
+ *   render(page, 'react', sources)      the @pathableai/react page (Markdown)
+ *   render(page, 'storybook', sources)  { mdx, stories } for the styles Storybook
+ *
+ * `page` is { slug, markdown, data }, as readPages() returns it. `sources` is
+ * { fixtures, examples, component, notOffered }:
+ * `fixtures` maps state to { description, html } (see sources.mjs);
+ * `examples` maps state to React example module source, or is undefined when
+ * the React package does not cover the component; `component` is the React
+ * component name when it does; `notOffered` maps the states React does not
+ * offer to the reason (the fixture manifest's `notOffered`). The React page
+ * leaves those states out of `<!-- examples -->`, and Storybook shows them
+ * with only the HTML tab.
+ *
+ * A page with no placeholder renders to itself, byte for byte, for the
+ * Markdown targets.
+ */
+
+import { ComponentDocsError, findPlaceholders, segment } from './segments.mjs'
+
+export const TARGETS = ['styles', 'react', 'storybook']
+
+/** `no-actions` to `No actions`, for a state's heading. */
+export const stateTitle = (state) =>
+  state.charAt(0).toUpperCase() + state.slice(1).replace(/-/gu, ' ')
+
+/** `no-actions` to `NoActions`, for a story export name. */
+export const storyName = (state) =>
+  state
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')
+
+/** A fenced code block whose fence is longer than any backtick run inside. */
+export function fence(language, code) {
+  const longest = Math.max(
+    2,
+    ...[...code.matchAll(/`+/gu)].map((match) => match[0].length),
+  )
+  const marks = '`'.repeat(longest + 1)
+  return `${marks}${language}\n${code.replace(/\n+$/u, '')}\n${marks}`
+}
+
+const FRONT_MATTER = /^---\n([\s\S]*?)\n---\n/u
+
+const stripFrontMatter = (markdown) => markdown.replace(FRONT_MATTER, '')
+
+/**
+ * The Storybook page has no front matter, which the page's Guarantees section
+ * refers to, so it ends with the front matter shown as YAML.
+ */
+const frontMatterSection = (markdown) => {
+  const yaml = markdown.match(FRONT_MATTER)?.[1]
+  return yaml
+    ? `## Front matter\n\nThe front matter of the source page, with the guarantees:\n\n${fence('yaml', yaml)}`
+    : ''
+}
+
+/**
+ * Resolves the states a placeholder names against the sources, collecting
+ * problems instead of stopping at the first.
+ */
+function resolveStates(item, slug, target, sources, problems) {
+  const notOffered = sources.notOffered ?? {}
+  const states =
+    item.type === 'example'
+      ? [item.state]
+      : [...sources.fixtures.keys()].filter(
+          // The React page lists only the states React offers.
+          (state) => target !== 'react' || !(state in notOffered),
+        )
+  if (item.type === 'examples' && sources.fixtures.size === 0) {
+    problems.push(
+      `line ${item.line}: "<!-- examples -->" but fixtures/${slug}/ holds no fixture`,
+    )
+  }
+  for (const state of states) {
+    if (!sources.fixtures.has(state)) {
+      problems.push(
+        `line ${item.line}: "<!-- example: ${state} -->" names no fixture: fixtures/${slug}/${state}.html does not exist`,
+      )
+    }
+    if (target === 'react' && state in notOffered) {
+      problems.push(
+        `line ${item.line}: "${state}" is not offered by the React package (${notOffered[state]}), so the React page cannot show it; put this example in a styles package block`,
+      )
+      continue
+    }
+    const needsExample =
+      target === 'react' || (target === 'storybook' && !(state in notOffered))
+    if (needsExample && sources.examples && !sources.examples.has(state)) {
+      problems.push(
+        `line ${item.line}: "${state}" has no React example: packages/react/src/components/${sources.component}/examples/${state}.tsx does not exist`,
+      )
+    }
+  }
+  return states.filter((state) => sources.fixtures.has(state))
+}
+
+/** Every placeholder resolves, or ComponentDocsError lists what does not. */
+function resolveAll(segments, slug, target, sources) {
+  const problems = []
+  const resolved = new Map()
+  const visit = (items) => {
+    for (const item of items) {
+      if (item.type === 'package') visit(item.segments)
+      if (item.type === 'example' || item.type === 'examples') {
+        resolved.set(item, resolveStates(item, slug, target, sources, problems))
+      }
+    }
+  }
+  visit(segments)
+  if (target === 'react' && !sources.examples) {
+    problems.push(
+      `the React package does not cover "${slug}", so it has no React page`,
+    )
+  }
+  if (problems.length > 0) throw new ComponentDocsError(problems)
+  return resolved
+}
+
+const trimNewlines = (text) => text.replace(/^\n+|\n+$/gu, '')
+
+/** The Markdown targets: styles (HTML examples) and react (JSX examples). */
+function renderMarkdown(page, target, sources) {
+  const segments = segment(page.markdown)
+  if (findPlaceholders(page.markdown).placeholders.length === 0) {
+    if (target === 'react') resolveAll(segments, page.slug, target, sources)
+    return page.markdown
+  }
+  const resolved = resolveAll(segments, page.slug, target, sources)
+
+  const code = (state) =>
+    target === 'react'
+      ? fence('tsx', sources.examples.get(state))
+      : fence('html', sources.fixtures.get(state).html)
+
+  const blocks = (items) =>
+    items.flatMap((item) => {
+      if (item.type === 'markdown') return [trimNewlines(item.text)]
+      if (item.type === 'package') {
+        return item.name === target ? blocks(item.segments) : []
+      }
+      if (item.type === 'example') return [code(item.state)]
+      return resolved.get(item).flatMap((state) => {
+        const { description } = sources.fixtures.get(state)
+        return [
+          `### ${stateTitle(state)}`,
+          ...(description ? [description] : []),
+          code(state),
+        ]
+      })
+    })
+
+  return `${blocks(segments).filter(Boolean).join('\n\n')}\n`
+}
+
+/** A JavaScript string literal for generated code. */
+const literal = (value) => JSON.stringify(value)
+
+/** The CSF file: one story per fixture, rendering its markup. */
+function renderStories(page, sources) {
+  const lines = [
+    `// Generated by scripts/component-docs from fixtures/${page.slug}/. Do not edit.`,
+    '',
+    'export default {',
+    `  title: ${literal(`Fixtures/${page.slug}`)},`,
+    "  tags: ['!autodocs'],",
+    '}',
+  ]
+  for (const [state, fixture] of sources.fixtures) {
+    const react = sources.examples?.get(state)
+    lines.push(
+      '',
+      `export const ${storyName(state)} = {`,
+      `  render: () => ${literal(fixture.html)},`,
+      '  parameters: {',
+      '    componentDocs: {',
+      `      html: ${literal(fixture.html)},`,
+      `      react: ${react === undefined ? 'null' : literal(react)},`,
+      '    },',
+      '  },',
+      '}',
+    )
+  }
+  return `${lines.join('\n')}\n`
+}
+
+/** The MDX page: the shared prose, with each example as a live preview. */
+function renderMdx(page, name, sources) {
+  const segments = segment(stripFrontMatter(page.markdown))
+  const resolved = resolveAll(segments, page.slug, 'storybook', sources)
+
+  const markdown = (text) =>
+    trimNewlines(text)
+      ? [`<Markdown>{${literal(trimNewlines(text))}}</Markdown>`]
+      : []
+  const example = (state) => [
+    `<Canvas of={Stories.${storyName(state)}} sourceState="none" />`,
+    `<CodeTabs of={Stories.${storyName(state)}} />`,
+  ]
+
+  const blocks = (items) =>
+    items.flatMap((item) => {
+      if (item.type === 'markdown') return markdown(item.text)
+      if (item.type === 'package') {
+        return [
+          `<PackageNote name=${literal(item.name)}>`,
+          ...blocks(item.segments),
+          '</PackageNote>',
+        ]
+      }
+      if (item.type === 'example') return example(item.state)
+      return resolved.get(item).flatMap((state) => {
+        const { description } = sources.fixtures.get(state)
+        return [
+          ...markdown(
+            [`### ${stateTitle(state)}`, description]
+              .filter(Boolean)
+              .join('\n\n'),
+          ),
+          ...example(state),
+        ]
+      })
+    })
+
+  return [
+    `{/* Generated by scripts/component-docs from components/${page.slug}.md. Do not edit. */}`,
+    '',
+    "import { Canvas, Markdown, Meta } from '@storybook/addon-docs/blocks'",
+    "import { CodeTabs, PackageNote } from '../.storybook/component-docs-blocks'",
+    `import * as Stories from './${page.slug}.stories'`,
+    '',
+    `<Meta title=${literal(`Component pages/${name}`)} />`,
+    '',
+    [...blocks(segments), ...markdown(frontMatterSection(page.markdown))].join(
+      '\n\n',
+    ),
+    '',
+  ].join('\n')
+}
+
+/** Renders one page for one target. Throws ComponentDocsError on problems. */
+export function render(page, target, sources) {
+  if (target === 'styles' || target === 'react') {
+    return renderMarkdown(page, target, sources)
+  }
+  if (target === 'storybook') {
+    return {
+      mdx: renderMdx(page, page.data?.name ?? page.slug, sources),
+      stories: renderStories(page, sources),
+    }
+  }
+  throw new Error(`unknown target "${target}"; expected ${TARGETS.join(', ')}`)
+}

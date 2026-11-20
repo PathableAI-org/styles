@@ -3,9 +3,10 @@
 Canonical HTML for each static `@pathableai/styles` component, one file per
 state. A fixture is the reference markup a consuming application copies, so it
 shows classes, structure and ARIA exactly as a well-built client application
-should write them. The fixtures are checked on their own here, and
-`@pathableai/react` components are held to them by React fixture tests; later
-work will render the styles Storybook stories from them.
+should write them. The fixtures are checked on their own here,
+`@pathableai/react` components are held to them by React fixture tests, the
+styles Storybook renders one story per fixture, and a converted component page
+takes its examples from them (see [`components/README.md`](../components/README.md)).
 
 How the checks run, locally and in CI, is in
 [docs/testing/fixtures.md](../docs/testing/fixtures.md).
@@ -28,7 +29,7 @@ fixtures/
 ```
 
 - A component folder's name is the slug of a page in
-  [`packages/styles/components/`](../packages/styles/components/), such as
+  [`components/`](../components/), such as
   `activity-list` for `activity-list.md`. `harness/` is the only other folder
   allowed.
 - Every non-default variant in the page's front matter has at least one
@@ -40,6 +41,10 @@ fixtures/
 
 - An HTML fragment, not a document: no `<html>`, `<head>` or `<body>`. The
   harness injects it into a `<main>` on a page that loads `styles.css`.
+- Optionally start with one `<!-- description: … -->` comment: a sentence or
+  two saying what the state shows. The component page prints it above the
+  state's example; it is not part of the markup shown. Nothing else comes
+  before the markup.
 - Formatted by Prettier (`pnpm format`).
 - Only markup the component page describes, plus what the page says the
   consumer owns. No demo-only wrappers, layout boxes or headings that are
@@ -97,7 +102,7 @@ to these rules:
    The accessible name, "View Intake assessment", begins with the visible text,
    as WCAG 2.5.3 (Label in Name) requires, and tells "View" in one row from
    "View" in the next. This is the pattern the
-   [SrOnly page](../packages/styles/components/sr-only.md) describes. Do not
+   [SrOnly page](../components/sr-only.md) describes. Do not
    use `aria-describedby` for this: a description does not make the name
    unique. Do not use `aria-label` on these buttons.
 

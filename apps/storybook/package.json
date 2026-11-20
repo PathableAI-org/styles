@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "pnpm --filter @pathable/storybook-contracts build && storybook build && node scripts/copy-icons.mjs",
-    "build": "pnpm --filter @pathable/storybook-contracts build && storybook build && node scripts/copy-icons.mjs",
+    "generate": "node ../../scripts/component-docs/cli.mjs storybook",
+    "storybook": "pnpm generate && storybook dev -p 6006",
+    "build-storybook": "pnpm --filter @pathable/storybook-contracts build && pnpm generate && storybook build && node scripts/copy-icons.mjs",
+    "build": "pnpm --filter @pathable/storybook-contracts build && pnpm generate && storybook build && node scripts/copy-icons.mjs",
     "test-storybook": "test-storybook"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@storybook/test-runner": "^0.26.0",
     "axe-playwright": "^2.2.2",
     "jest-image-snapshot": "^6.5.2",
+    "react": "19.3.1",
     "sass": "^1.108.2",
     "storybook": "^10.6.7"
   }

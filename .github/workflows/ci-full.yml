@@ -31,6 +31,7 @@ jobs:
       js_config: ${{ github.event_name != 'pull_request' || steps.filter.outputs.js_config == 'true' }}
       markdown: ${{ github.event_name != 'pull_request' || steps.filter.outputs.markdown == 'true' }}
       md_styles: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_styles == 'true' }}
+      md_components: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_components == 'true' }}
       md_react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_react == 'true' }}
       md_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_contracts == 'true' }}
       md_app_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_app_storybook == 'true' }}
@@ -118,12 +119,15 @@ jobs:
             markdown:
               - 'apps/**/*.md'
               - 'packages/**/*.md'
+              - 'components/**/*.md'
               - 'docs/**/*.md'
               - '*.md'
               - '.markdownlint.json'
               - '.markdownlintignore'
             md_styles:
               - 'packages/styles/**/*.md'
+            md_components:
+              - 'components/**/*.md'
             md_react:
               - 'packages/react/**/*.md'
             md_contracts:
@@ -171,10 +175,16 @@ jobs:
               - '.github/workflows/ci-full.yml'
               - 'package.json'
               - 'pnpm-lock.yaml'
+            # check:agent-guidance also fails when the committed React
+            # component pages differ from what scripts/component-docs
+            # generates from the source pages and fixtures.
             react_build:
               - *react_source
               - *styles_package
               - *agent_guidance
+              - 'components/**'
+              - 'fixtures/**/*.html'
+              - 'scripts/component-docs/**'
               - '.github/actions/setup/**'
               - '.github/workflows/ci-full.yml'
               - 'package.json'
@@ -317,6 +327,9 @@ jobs:
 
           if [ "${{ needs.changes.outputs.md_styles }}" = "true" ]; then
             SCOPE="$SCOPE packages/styles"
+          fi
+          if [ "${{ needs.changes.outputs.md_components }}" = "true" ]; then
+            SCOPE="$SCOPE components"
           fi
           if [ "${{ needs.changes.outputs.md_react }}" = "true" ]; then
             SCOPE="$SCOPE packages/react"

@@ -107,7 +107,7 @@ test('a fixtures change outside a component folder selects nothing, without cont
 
 test('a changed component page selects its folder', () => {
   const pages = pagesChanged(
-    ['packages/styles/components/activity-list.md', 'fixtures/README.md'],
+    ['components/activity-list.md', 'fixtures/README.md'],
     ['activity-list', 'button'],
   )
   assert.deepEqual(pages, ['activity-list'])

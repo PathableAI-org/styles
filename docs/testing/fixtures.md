@@ -36,7 +36,7 @@ Each check takes a list of component folders and defaults to every folder.
   fixture, but only when a file under `fixtures/` or `pnpm-lock.yaml`
   changed.
 - **Contract** fails when a folder is not named after a page in
-  `packages/styles/components/`, when a `pathable-*` class in a fixture is not
+  `components/`, when a `pathable-*` class in a fixture is not
   a class selector in `@pathableai/styles/dist/styles.css`, or when a
   non-default variant in the page's front matter has no fixture using its
   modifier class. It reads the page and the CSS with the same code as the
@@ -125,7 +125,7 @@ fixture HTML is read.
 ### The union
 
 `node fixtures/harness/select.mjs <base>` runs both and prints the union,
-plus every folder whose page `packages/styles/components/<slug>.md` changed
+plus every folder whose page `components/<slug>.md` changed
 (the contract check reads the page's slug and variants), one folder per line, with the reasons for each on standard error. `--all` selects
 every folder. In GitHub Actions it also writes the `folders` and
 `fixtures_changed` step outputs and a job summary.
@@ -134,7 +134,7 @@ every folder. In GitHub Actions it also writes the `folders` and
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
 on a pull request that changes `fixtures/**`, `packages/styles/src/**/*.scss`,
-`packages/styles/components/*.md`, `pnpm-lock.yaml`, the React paths listed
+`components/*.md`, `pnpm-lock.yaml`, the React paths listed
 under [React fixture tests in CI](#in-ci-1) or the workflow itself, and on
 every push to `main`. Its `fixtures` job:
 

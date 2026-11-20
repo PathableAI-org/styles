@@ -8,7 +8,13 @@ const reactUrl = isBuild ? '/styles/react/' : 'http://localhost:6007'
 
 export default {
   framework: '@storybook/html-vite',
-  stories: ['../../../packages/styles/src/stories/**/*.stories.ts'],
+  stories: [
+    '../../../packages/styles/src/stories/**/*.stories.ts',
+    // Component pages and one story per HTML fixture, written by
+    // scripts/component-docs before every run (the `generate` script).
+    '../generated/*.mdx',
+    '../generated/*.stories.ts',
+  ],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   docs: { autodocs: true },
   refs: {

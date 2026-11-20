@@ -2,6 +2,7 @@ packages:
   - 'packages/*'
   - 'apps/*'
   - 'fixtures'
+  - 'scripts/component-docs'
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true

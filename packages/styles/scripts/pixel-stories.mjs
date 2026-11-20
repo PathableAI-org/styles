@@ -11,7 +11,7 @@
  * it). One image per viewport; which stories get an entry is in the docs.
  *
  * An entry may list `covers`: the component page guarantees its images are
- * the test for, as `<page>/<guarantee-id>` (packages/styles/components/). The
+ * the test for, as `<page>/<guarantee-id>` (components/, the source pages). The
  * suite itself ignores the field; pnpm check:component-pages reads it.
  */
 export const STORIES = [

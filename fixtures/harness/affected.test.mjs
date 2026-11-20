@@ -385,8 +385,8 @@ describe('changedPathsSince', () => {
     git('config', 'user.email', 'test@example.com')
     git('config', 'user.name', 'Test')
     git('config', 'commit.gpgsign', 'false')
-    mkdirSync(join(dir, 'packages/styles/components'), { recursive: true })
-    const page = join(dir, 'packages/styles/components/activity-list.md')
+    mkdirSync(join(dir, 'components'), { recursive: true })
+    const page = join(dir, 'components/activity-list.md')
     writeFileSync(
       page,
       `---\nslug: activity-list\n---\n${'Body.\n'.repeat(20)}`,
@@ -394,13 +394,13 @@ describe('changedPathsSince', () => {
     git('add', '.')
     git('commit', '--quiet', '-m', 'base')
     const base = git('rev-parse', 'HEAD')
-    renameSync(page, join(dir, 'packages/styles/components/activity.md'))
+    renameSync(page, join(dir, 'components/activity.md'))
     git('add', '-A')
     git('commit', '--quiet', '-m', 'rename')
 
     assert.deepEqual(changedPathsSince(base, 'HEAD', dir).sort(), [
-      'packages/styles/components/activity-list.md',
-      'packages/styles/components/activity.md',
+      'components/activity-list.md',
+      'components/activity.md',
     ])
   })
 })
