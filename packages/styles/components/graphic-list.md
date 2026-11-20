@@ -17,7 +17,7 @@ guarantees:
     claim: The heading has no top margin when it is the first child, a 1.5em top margin when it follows another element and no bottom margin, and the element after it has a 1em top margin.
   - id: block-spacing
     status: met
-    claim: Each pathable-media-block in the list has a bottom margin of 2rem below a 40em viewport and 4rem from 40em, and the last one has none.
+    claim: Each pathable-media-block that is a direct child of the list has a bottom margin of 2rem below a 40em viewport and 4rem from 40em, and the last one has none.
   - id: image-gap
     status: met
     claim: The image of a pathable-media-block in the list has a right margin of 1.5rem.
