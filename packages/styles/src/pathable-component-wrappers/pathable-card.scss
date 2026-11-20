@@ -31,6 +31,15 @@
 
 .pathable-card__heading {
   @extend .usa-card__heading;
+
+  // A long single word breaks inside the card instead of running past it at
+  // increased text size on a narrow viewport. `break-word`, unlike `anywhere`,
+  // leaves the min-content width alone, so a flex card does not squeeze its
+  // heading into fragments. It is set on the heading only: the React Card's
+  // base, media, flag and header-first presentations render the title in
+  // `.pathable-card__header`, which this does not reach.
+  overflow-wrap: break-word;
+
   // Heading typeface (Fredoka) ships only Regular (400); the browser's default
   // heading weight is bold, which it would synthesise. Brand rules: Regular.
   font-weight: var(--pathable-font-weight-normal);

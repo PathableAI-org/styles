@@ -3,6 +3,7 @@ import {
   verifyDialogName,
   type StoryHarness,
 } from '@pathable/storybook-contracts'
+import { expectBodyFont } from '../../shared/body-font'
 
 export default {
   title: 'Components/Communication/Modal',
@@ -154,6 +155,7 @@ export const Open = {
     await assertOpenShell(canvasElement)
     await assertCloseButtonPlacement(canvasElement)
     await assertCloseButtonFocusRing(canvasElement)
+    await expectBodyFont(canvasElement, ['.pathable-modal__close'])
   },
 }
 
