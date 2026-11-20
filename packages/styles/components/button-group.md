@@ -13,14 +13,14 @@ guarantees:
     status: unmet
     claim: Below a viewport width of 480 px the stacked children are at least 8 px apart, so the focus ring of a focused button is visible on all four sides.
   - id: row-from-480
-    status: unmet
+    status: met
     claim: From a viewport width of 480 px the children sit side by side in DOM order, each stretched to the height of the tallest beside it, and they wrap or stack when they do not fit the group's container, so none runs past it.
   - id: list-reset
     status: unverified
     claim: The group has no top or bottom margin, no list markers and no left padding, so a `<ul>` with the class in left-to-right text shows no bullets or indent.
   - id: button-spacing
     status: unverified
-    claim: In the row, `pathable-button` children are 8 px apart, from each button's own right margin; the group adds no gap of its own.
+    claim: In the row, `pathable-button` children are 8 px apart, from each button's own right margin; the group adds no column gap of its own, and a wrapped line sits 8 px below the one above it.
 ---
 
 # ButtonGroup
@@ -39,8 +39,8 @@ grouping semantics and no selection state.
 
 Use something else when:
 
-- the buttons should wrap onto more lines when the row runs out of space: use
-  `pathable-cluster`;
+- the buttons should wrap onto more lines at every width, including below
+  480 px where the group stacks: use `pathable-cluster`;
 - the buttons should stay in a row at every width: use `pathable-inline`;
 - the items are form fields: use `pathable-form-row`;
 - the items are cards or tiles: use `pathable-card-grid` or `pathable-grid`.
@@ -86,9 +86,10 @@ are not custom properties and do not change with the theme.
 - The group has a negative inline margin of 4 px on each side, so it extends
   4 px beyond its container at the start and the end. Leave room for it, or
   use `pathable-cluster`, which has no negative margin.
-- The row does not wrap yet. With long labels, more than three buttons or
-  enlarged text it can overflow a narrow container; keep labels short or use
-  `pathable-cluster`.
+- From 480 px the row wraps: when the buttons do not fit the group's
+  container, such as with long labels, more than three buttons or enlarged
+  text, the last one moves to a new line 8 px below instead of running past
+  the container. Use `pathable-cluster` when you want wrapping at every width.
 - The 480 px breakpoint follows the viewport, not the group's container. It
   is set as 30em, which is 480 px at the browser's default 16 px font size;
   a larger default font size moves it.
@@ -101,11 +102,6 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
-
-The row guarantee is unmet. Today, from 480 px, the children stay in one row
-that never wraps, each stretched to the height of the tallest, so in a narrow
-container or at a large text size the last button can run past the
-container's edge.
 
 The `stacked-gap` guarantee is unmet. Today, below 480 px, the stacked buttons
 touch, with no vertical space between them, so the next button covers the
