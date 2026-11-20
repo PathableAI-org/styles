@@ -402,3 +402,35 @@ export const WorkflowLowEmphasis = {
   render: () =>
     '<button class="pathable-button pathable-button--low-emphasis">Cancel</button>',
 }
+
+export const FullWidth = {
+  render: () =>
+    '<div data-testid="full-width-container" style="width: 100%;"><button class="pathable-button pathable-width-full" data-testid="full-width-button">Full Width Button</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('full-width-container')
+    const button = canvas.getByTestId('full-width-button')
+    // USWDS sets `width: auto` on buttons from 30em up; the utility must win.
+    await expect(button.getBoundingClientRect().width).toBeCloseTo(
+      container.getBoundingClientRect().width,
+      0,
+    )
+  },
+}
+
+export const ResponsiveWidthOverride = {
+  render: () =>
+    '<div data-testid="responsive-container" style="width: 100%;"><button class="pathable-button pathable-width-full tablet:pathable-width-auto" data-testid="responsive-button">Auto From Tablet</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('responsive-container')
+    const button = canvas.getByTestId('responsive-button')
+    const containerWidth = container.getBoundingClientRect().width
+    const buttonWidth = button.getBoundingClientRect().width
+    if (window.matchMedia('(min-width: 640px)').matches) {
+      await expect(buttonWidth).toBeLessThan(containerWidth)
+    } else {
+      await expect(buttonWidth).toBeCloseTo(containerWidth, 0)
+    }
+  },
+}
