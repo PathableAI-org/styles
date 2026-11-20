@@ -42,11 +42,6 @@
 // media to a fixed column from the tablet breakpoint up, so flag cards keep
 // that behaviour there and are sized like any other card below it.
 @mixin pathable-card-media-fit {
-  // Full-width media must not square off the container's rounded top corners.
-  overflow: hidden;
-  border-start-start-radius: inherit;
-  border-start-end-radius: inherit;
-
   > img,
   > svg,
   > video,
@@ -61,6 +56,20 @@
 
 .pathable-card:not(.pathable-card--flag) .pathable-card__media {
   @include pathable-card-media-fit;
+}
+
+// Full-width media must not square off the container's rounded top corners.
+// Header-first cards put the media below the header, where USWDS keeps square
+// corners, and flag cards crop media to a column.
+.pathable-card:not(.pathable-card--flag):not(.pathable-card--header-first)
+  .pathable-card__media {
+  overflow: hidden;
+  border-start-start-radius: calc(
+    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+  );
+  border-start-end-radius: calc(
+    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+  );
 }
 
 @include at-media-max($theme-card-flag-min-width) {
