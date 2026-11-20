@@ -346,9 +346,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # A pull request checks out its merge commit; its first parent is
+          # the base, so two commits are enough to list the changed files.
+          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
       - uses: ./.github/actions/setup
+      # On a pull request, stylelint lints only the .scss files the pull
+      # request changed (in the scope of pnpm lint:styles). Elsewhere it lints
+      # the whole package.
       - name: Lint styles
-        run: pnpm lint:styles
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            pnpm lint:styles
+            exit 0
+          fi
+          mapfile -t files < <(git diff --name-only --diff-filter=d HEAD^1 HEAD | grep -E '^packages/styles/src/.*\.scss$' || true)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No .scss file under packages/styles/src changed; stylelint has nothing to lint."
+            exit 0
+          fi
+          echo "Linting ${#files[@]} changed .scss file(s):"
+          printf '  %s\n' "${files[@]}"
+          pnpm exec stylelint "${files[@]}"
+      # The token lint reads across files, so it always runs whole-package.
       - name: Token custom property lint
         run: pnpm lint:tokens
 
