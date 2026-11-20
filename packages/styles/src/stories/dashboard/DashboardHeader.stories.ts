@@ -1,3 +1,4 @@
+import { expect, userEvent } from 'storybook/test'
 import { expectBodyFont } from '../shared/body-font'
 
 export default {
@@ -114,6 +115,45 @@ export const Mobile = {
       </p>
     </div>
   `,
+}
+
+// The test runner sets a 375px viewport for this story, so the trail's
+// 640px-or-less clip applies. The focus outline of the first link must sit
+// inside the trail's clip, or the sides touching its edge are not painted.
+export const BreadcrumbFocusMobile = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  render: () => `
+    <div class="pathable-dashboard-header">
+      <nav class="pathable-dashboard-header__breadcrumb" aria-label="Breadcrumb">
+        <a class="pathable-link" href="#">Home</a>
+        <span>Programs</span>
+      </nav>
+      <div class="pathable-dashboard-header__row">
+        <h1 class="pathable-dashboard-header__title">Employment Pathways</h1>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const trail = canvasElement.querySelector<HTMLElement>(
+      '.pathable-dashboard-header__breadcrumb',
+    )
+    const link = canvasElement.querySelector<HTMLElement>(
+      '.pathable-dashboard-header__breadcrumb a',
+    )
+    if (!trail || !link) throw new Error('Breadcrumb story markup is missing')
+    await expect(matchMedia('(max-width: 640px)').matches).toBe(true)
+    await userEvent.tab()
+    await expect(link).toHaveFocus()
+    const { outlineWidth, outlineOffset } = getComputedStyle(link)
+    const extent = parseFloat(outlineWidth) + parseFloat(outlineOffset)
+    const clip = trail.getBoundingClientRect()
+    const box = link.getBoundingClientRect()
+    await expect(extent).toBeGreaterThan(0)
+    await expect(box.left - extent).toBeGreaterThanOrEqual(clip.left)
+    await expect(box.top - extent).toBeGreaterThanOrEqual(clip.top)
+    await expect(box.right + extent).toBeLessThanOrEqual(clip.right)
+    await expect(box.bottom + extent).toBeLessThanOrEqual(clip.bottom)
+  },
 }
 
 export const LongTitle = {

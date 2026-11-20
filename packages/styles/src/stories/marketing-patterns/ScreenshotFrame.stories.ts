@@ -1,4 +1,5 @@
 import { expectBodyFont } from '../shared/body-font'
+import { placeholderImage } from '../shared/placeholder-image'
 export default {
   title: 'Marketing Patterns/Screenshot Frame',
   tags: ['autodocs'],
@@ -22,7 +23,7 @@ export default {
 const placeholderImg = (text) => `
   <img
     class="pathable-screenshot-frame__image"
-    src="https://placehold.co/800x500/e0e0e0/666666?text=${encodeURIComponent(text)}"
+    src="${placeholderImage(800, 500, text)}"
     alt="Screenshot showing ${text}"
     loading="lazy"
   />
