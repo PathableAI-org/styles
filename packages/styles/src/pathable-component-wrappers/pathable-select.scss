@@ -17,19 +17,22 @@
   @include states.state-focus;
 
   // Single selects only: a multiple select is a list box that already sizes
-  // itself with `size`.
-  &:where(:not([multiple])) {
-    // USWDS fixes the control's height and keeps its value on one line, so at
-    // larger text sizes on narrow screens a long selected value is cut off
-    // behind the arrow area (WCAG 1.4.4). Let the value wrap and the control
-    // grow, keeping the USWDS height as the minimum.
-    height: auto;
-    min-height: units(5);
-    // Size the block padding so a one-line control is exactly units(5) tall
-    // (border 1px + padding + one line), which a bare `height: auto` misses by a
-    // fraction of a pixel. At larger text the floor keeps some breathing room.
-    padding-block: max(#{units(0.5)}, calc((#{units(5)} - 2px - 1lh) / 2));
-    white-space: normal;
+  // itself with `size`. Forced colors keep the USWDS height, because the
+  // control is drawn natively there and ignores wrapping and `1lh`.
+  @media not (forced-colors: active) {
+    &:where(:not([multiple])) {
+      // USWDS fixes the control's height and keeps its value on one line, so at
+      // larger text sizes on narrow screens a long selected value is cut off
+      // behind the arrow area (WCAG 1.4.4). Let the value wrap and the control
+      // grow, keeping the USWDS height as the minimum.
+      height: auto;
+      min-height: units(5);
+      // Size the block padding so a one-line control is exactly units(5) tall
+      // (border 1px + padding + one line), which a bare `height: auto` misses by a
+      // fraction of a pixel. At larger text the floor keeps some breathing room.
+      padding-block: max(#{units(0.5)}, calc((#{units(5)} - 2px - 1lh) / 2));
+      white-space: normal;
+    }
   }
 }
 
