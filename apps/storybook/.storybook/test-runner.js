@@ -70,6 +70,7 @@ const config = {
         'components-feedback-pageerror--mobile-full-page',
         { width: 375, height: 812 },
       ],
+      ['components-button--width-auto-mobile', { width: 375, height: 812 }],
       [
         'components-button--responsive-width-override-below-tablet',
         { width: 600, height: 900 },

@@ -35,6 +35,7 @@ const EXPECTED_COVERAGE = {
     'components-button--full-width',
     'components-button--responsive-width-override',
     'components-button--responsive-width-override-below-tablet',
+    'components-button--width-auto-mobile',
     'components-button-group--default',
     'components-button-group--wrapping',
     'components-card--default',

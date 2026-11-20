@@ -446,3 +446,18 @@ export const ResponsiveWidthOverrideBelowTablet = {
     )
   },
 }
+
+// Runs at 375 px, below mobile-lg. USWDS keeps buttons full width there, but
+// the width utility now wins, so `width="auto"` shrinks to the label.
+export const WidthAutoMobile = {
+  render: () =>
+    '<div data-testid="width-container"><button class="pathable-button pathable-width-auto">Auto Width</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('width-container')
+    const button = canvas.getByRole('button', { name: 'Auto Width' })
+    await expect(button.getBoundingClientRect().width).toBeLessThan(
+      container.getBoundingClientRect().width,
+    )
+  },
+}
