@@ -1,7 +1,9 @@
 /**
  * Chooses the fixture folders CI checks on a pull request: the union of the
- * folders whose files changed (changed.mjs) and the folders the compiled-CSS
- * diff affects (affected.mjs), each with the reasons it was selected.
+ * folders whose files changed (changed.mjs), the folders the compiled-CSS
+ * diff affects (affected.mjs) and the folders whose component page changed,
+ * each with the reasons it was selected. Renames count as a delete and an
+ * add, so a renamed page selects the folder named after its old path.
  *
  *   node harness/select.mjs <base>     a pull request against <base>
  *   node harness/select.mjs --all      every folder (push to main)

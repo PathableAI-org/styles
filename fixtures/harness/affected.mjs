@@ -521,8 +521,8 @@ export function affected({ base, head } = {}) {
   const mergeBase = git(['merge-base', base, head ?? 'HEAD'])
   const changedPaths = (
     head
-      ? git(['diff', '--name-only', mergeBase, head])
-      : git(['diff', '--name-only', mergeBase])
+      ? git(['diff', '--name-only', '--no-renames', mergeBase, head])
+      : git(['diff', '--name-only', '--no-renames', mergeBase])
   )
     .split('\n')
     .filter(Boolean)
