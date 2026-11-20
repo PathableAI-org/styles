@@ -44,6 +44,12 @@
   @media (max-width: 640px) {
     overflow: hidden;
     text-overflow: ellipsis;
+    // The clip is the padding box, so padding keeps the outline of a link
+    // at the trail's edge inside it. The negative block margin keeps the
+    // trail's height. There is no negative inline margin: it would make the
+    // trail wider than the header and scroll a page with no side padding.
+    padding: var(--pathable-space-1);
+    margin-block: calc(-1 * var(--pathable-space-1));
   }
 }
 
