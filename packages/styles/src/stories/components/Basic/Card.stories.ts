@@ -1,5 +1,6 @@
 import { expect, within } from 'storybook/test'
 
+import { contrastRatio, findOpaqueBackground } from '../../shared/contrast'
 import {
   expectKeyboardFocusIndicator,
   resolveColor,
@@ -372,5 +373,97 @@ export const ContentPressure = {
     )
     await expectKeyboardFocusIndicator(canvasElement, action)
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
+  },
+}
+
+export const InDarkSection = {
+  render: () => `
+    <section class="pathable-section pathable-section--dark">
+      <div class="pathable-card">
+        <div class="pathable-card__container" data-testid="dark-section-card-container">
+          <div class="pathable-card__header">
+            <h3 class="pathable-card__heading">Card in a dark section</h3>
+          </div>
+          <div class="pathable-card__body">
+            <p>The card is a light surface, so its text stays readable.</p>
+            <a href="#" class="pathable-button">Start session</a>
+            <a href="#">Read the guide</a>
+            <a href="#" class="pathable-link">Open the checklist</a>
+            <a href="#" class="pathable-card__action">Review the plan</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView as Window
+    const surface = view.getComputedStyle(
+      canvas.getByTestId('dark-section-card-container'),
+    ).backgroundColor
+    const elements = [
+      canvas.getByRole('heading', { level: 3, name: 'Card in a dark section' }),
+      canvas.getByText(
+        'The card is a light surface, so its text stays readable.',
+      ),
+      canvas.getByRole('link', { name: 'Read the guide' }),
+      canvas.getByRole('link', { name: 'Open the checklist' }),
+      canvas.getByRole('link', { name: 'Review the plan' }),
+      canvas.getByRole('link', { name: 'Start session' }),
+    ]
+
+    for (const element of elements) {
+      const background = findOpaqueBackground(element, view)
+      const ratio = contrastRatio(
+        view.getComputedStyle(element).color,
+        background,
+      )
+
+      // The button's own fill is its surface; the rest sit on the card.
+      if (!element.classList.contains('pathable-button')) {
+        await expect(background).toBe(surface)
+      }
+      await expect(ratio).toBeGreaterThanOrEqual(4.5)
+    }
+  },
+}
+
+export const LongWordHeading = {
+  render: () => `
+    <div data-testid="card-long-word" style="width: 300px; max-width: 100%;">
+      <div class="pathable-card" data-testid="card-with-heading">
+        <div class="pathable-card__container">
+          <div class="pathable-card__header">
+            <h3 class="pathable-card__heading">Comprehensive</h3>
+          </div>
+          <div class="pathable-card__body">
+            <p>Review</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const card = canvas.getByTestId('card-with-heading')
+    const title = within(card).getByRole('heading', {
+      level: 3,
+      name: 'Comprehensive',
+    })
+    const root = document.documentElement
+    const previousFontSize = root.style.fontSize
+    root.style.fontSize = '200%'
+
+    try {
+      const range = document.createRange()
+      range.selectNodeContents(title)
+
+      await expect(title).toBeVisible()
+      await expect(range.getBoundingClientRect().right).toBeLessThanOrEqual(
+        card.getBoundingClientRect().right,
+      )
+    } finally {
+      root.style.fontSize = previousFontSize
+    }
   },
 }
