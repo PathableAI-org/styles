@@ -167,6 +167,12 @@ jobs:
           pnpm --filter @pathableai/styles test:component-pages
           pnpm --filter @pathableai/styles check:component-pages
 
+      # Runs on a cache hit too: the cached records cover the fixture stories,
+      # not the docs pages, and generation resolves placeholders the styles
+      # check does not show, such as those in React-only blocks.
+      - name: Generate the Storybook component pages
+        run: pnpm --filter @pathable/storybook generate
+
       - name: Build and test the HTML Storybook (no records from main)
         if: steps.records.outputs.cache-hit != 'true'
         run: pnpm test:storybook-styles

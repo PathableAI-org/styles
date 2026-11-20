@@ -64,30 +64,41 @@ function isIgnored(path) {
 /**
  * Component pages that scripts/component-docs generates from the source pages,
  * fixtures and example modules. Regenerating one is mechanical, so it does
- * not count as a person reviewing the guidance; editing the source page it is
- * built from (components/<slug>.md) does.
+ * not count as a person reviewing the guidance. Editing the source page it is
+ * built from (components/<slug>.md) does, but only for a page the React
+ * fixture manifest lists: no other page produces React guidance.
  */
 const generatedGuidance =
   'packages/react/agent-guidance/pathable-react/references/components/'
-const sourcePage = /^components\/(?!README\.md$)[^/]+\.md$/u
+const sourcePage = /^components\/([^/]+)\.md$/u
+const fixtureManifest = resolve(
+  repoRoot,
+  'packages/react/src/test/fixture-manifest.ts',
+)
 
-function isGuidance(path) {
+function isGuidance(path, reactPages) {
   if (path.startsWith(generatedGuidance)) return false
-  if (sourcePage.test(path)) return true
+  const page = path.match(sourcePage)?.[1]
+  if (page !== undefined) return reactPages.has(page)
   return guidancePaths.some((candidate) =>
     candidate.endsWith('/') ? path.startsWith(candidate) : path === candidate,
   )
 }
 
-export function analyzeChangedPaths(paths) {
+/**
+ * `reactPages` holds the slugs of the component pages that build React
+ * guidance: the folders the React fixture manifest lists.
+ */
+export function analyzeChangedPaths(paths, { reactPages = new Set() } = {}) {
   const changedPaths = [...new Set(paths.filter(Boolean))].sort()
-  const guidanceChanged = changedPaths.some(isGuidance)
+  const isGuidanceHere = (path) => isGuidance(path, reactPages)
+  const guidanceChanged = changedPaths.some(isGuidanceHere)
   const impacts = categories
     .map((category) => ({
       category: category.name,
       paths: changedPaths.filter(
         (path) =>
-          !isIgnored(path) && !isGuidance(path) && category.matches(path),
+          !isIgnored(path) && !isGuidanceHere(path) && category.matches(path),
       ),
     }))
     .filter((impact) => impact.paths.length > 0)
@@ -141,10 +152,28 @@ export function formatReport(result) {
   return lines.join('\n')
 }
 
+/**
+ * The page slugs the React fixture manifest lists. The manifest is plain
+ * TypeScript with no imports, so Node reads it without installed packages.
+ */
+export async function readReactPages(manifest = fixtureManifest) {
+  try {
+    const { fixtureManifest: entries } = await import(
+      pathToFileURL(manifest).href
+    )
+    return new Set(Object.keys(entries))
+  } catch (error) {
+    if (error.code === 'ERR_MODULE_NOT_FOUND') return new Set()
+    throw error
+  }
+}
+
 async function main() {
   const base = argumentValue('--base') ?? 'origin/main'
   const head = argumentValue('--head') ?? 'HEAD'
-  const result = analyzeChangedPaths(changedPathsBetween(base, head))
+  const result = analyzeChangedPaths(changedPathsBetween(base, head), {
+    reactPages: await readReactPages(),
+  })
   const report = formatReport(result)
 
   console.log(`[agent-guidance-impact] ${report}`)

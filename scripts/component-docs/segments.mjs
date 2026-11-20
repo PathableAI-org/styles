@@ -197,3 +197,32 @@ export function exampleSegments(segments, target) {
     return item.type === 'example' || item.type === 'examples' ? [item] : []
   })
 }
+
+/**
+ * The contents of every fenced or indented code block in `language`, read by
+ * the Markdown parser, so a fence of any length (three or more backticks or
+ * tildes) is recognised as the generator writes it.
+ */
+export function codeBlocks(markdown, language) {
+  const blocks = []
+  for (const { node } of walk(fromMarkdown(markdown))) {
+    if (node.type === 'code' && node.lang === language) blocks.push(node.value)
+  }
+  return blocks
+}
+
+/**
+ * The source Markdown a target shows, before placeholders are expanded: the
+ * text outside package blocks and the text in the target's own blocks.
+ */
+export function visibleMarkdown(segments, target) {
+  return segments
+    .flatMap((item) => {
+      if (item.type === 'markdown') return [item.text]
+      if (item.type === 'package' && item.name === target) {
+        return [visibleMarkdown(item.segments, target)]
+      }
+      return []
+    })
+    .join('\n')
+}

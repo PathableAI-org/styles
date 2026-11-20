@@ -10,6 +10,7 @@ import {
   render,
   stateTitle,
   storyName,
+  storyNames,
 } from '../component-docs/render.mjs'
 import {
   ComponentDocsError,
@@ -21,7 +22,11 @@ import {
   publicExports,
   reactSourceDir,
 } from '../component-docs/imports.mjs'
-import { parseFixture, readCoverage } from '../component-docs/sources.mjs'
+import {
+  coverageFrom,
+  parseFixture,
+  readCoverage,
+} from '../component-docs/sources.mjs'
 import { compareFiles, writeFiles } from '../component-docs/write.mjs'
 
 const frontMatter = '---\nname: Widget\nslug: widget\n---\n\n'
@@ -427,5 +432,58 @@ describe('component docs: one live preview per story', () => {
     )
     assert.equal(mdx.match(/<Canvas of=\{Stories\.Loud\}/gu).length, 1)
     assert.equal(mdx.match(/<CodeTabs of=\{Stories\.Loud\} \/>/gu).length, 2)
+  })
+})
+
+describe('component docs: story export names', () => {
+  it('fails on two states that give the same story name, naming both', () => {
+    assert.deepEqual(
+      problems(() => storyNames('widget', ['foo-1', 'foo1'])),
+      [
+        'fixtures/widget/foo-1.html and foo1.html both give the story name "Foo1"; rename one',
+      ],
+    )
+    assert.equal(
+      problems(() => storyNames('widget', ['2-up', 'state-2-up'])).length,
+      1,
+    )
+  })
+
+  it('fails on a state that gives an invalid identifier', () => {
+    assert.match(
+      problems(() => storyNames('widget', ['two.up']))[0] ?? '',
+      /"Two\.up", which is not a valid identifier/u,
+    )
+  })
+
+  it('fails the Storybook render before writing anything', () => {
+    const clashing = {
+      ...stylesOnly,
+      fixtures: new Map([
+        ['foo-1', { html: '<p>A</p>\n' }],
+        ['foo1', { html: '<p>B</p>\n' }],
+      ]),
+    }
+    assert.match(
+      problems(() => render(page('# Widget\n'), 'storybook', clashing))[0] ??
+        '',
+      /both give the story name "Foo1"/u,
+    )
+  })
+})
+
+describe('component docs: one fixture folder per component', () => {
+  it('fails on two folders mapped to the same component, naming both', () => {
+    assert.deepEqual(
+      problems(() =>
+        coverageFrom({
+          'sr-only': { component: 'SrOnly' },
+          'visually-hidden': { component: 'SrOnly' },
+        }),
+      ),
+      [
+        'the React fixture manifest maps both "sr-only" and "visually-hidden" to SrOnly; each component may own one fixture folder',
+      ],
+    )
   })
 })

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import {
   analyzeChangedPaths,
   formatReport,
+  readReactPages,
 } from './check-agent-guidance-impact.mjs'
 
 test('suggests review for a public component change', () => {
@@ -87,16 +88,38 @@ test('does not count a regenerated component page as a guidance review', () => {
   )
 })
 
-test('counts an edited source component page as a guidance update', () => {
-  const result = analyzeChangedPaths([
-    'packages/react/src/components/SrOnly/SrOnly.tsx',
-    'components/sr-only.md',
-    'packages/react/agent-guidance/pathable-react/references/components/SrOnly.md',
-  ])
+test('counts an edited source page as a guidance update only when it builds React guidance', () => {
+  const reactPages = new Set(['sr-only'])
+  const covered = analyzeChangedPaths(
+    [
+      'packages/react/src/components/SrOnly/SrOnly.tsx',
+      'components/sr-only.md',
+      'packages/react/agent-guidance/pathable-react/references/components/SrOnly.md',
+    ],
+    { reactPages },
+  )
+  assert.equal(covered.guidanceChanged, true)
 
-  assert.equal(result.guidanceChanged, true)
+  const stylesOnly = analyzeChangedPaths(
+    [
+      'packages/react/src/components/ButtonGroup/ButtonGroup.tsx',
+      'components/button-group.md',
+    ],
+    { reactPages },
+  )
+  assert.equal(stylesOnly.guidanceChanged, false)
+  assert.deepEqual(
+    stylesOnly.impacts.map(({ category }) => category),
+    ['public React components or exports'],
+  )
+
   assert.equal(
-    analyzeChangedPaths(['components/README.md']).guidanceChanged,
+    analyzeChangedPaths(['components/README.md'], { reactPages })
+      .guidanceChanged,
     false,
   )
+})
+
+test('reads the React pages from the fixture manifest', async () => {
+  assert.ok((await readReactPages()).has('sr-only'))
 })

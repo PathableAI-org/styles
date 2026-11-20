@@ -590,3 +590,53 @@ test('does not count an example placeholder inside any kind of code block', () =
   const { page: rendered } = renderForCheck(page(fenced), sources())
   assert.deepEqual(checkPage(rendered, facts()), [])
 })
+
+test('does not count an html block in a React-only package block', () => {
+  const withReactSnippet = converted.replace(
+    '## States',
+    '<!-- package: react -->\n\n```html\n<span class="pathable-widget"></span>\n```\n\n<!-- /package -->\n\n## States',
+  )
+  const { page: rendered, errors } = renderForCheck(
+    page(withReactSnippet),
+    sources(),
+  )
+  assert.deepEqual(errors, [])
+  assert.deepEqual(checkPage(rendered, facts()), [])
+})
+
+test('reads a fixture shown in a fence longer than three backticks', () => {
+  const backticks = sources()
+  backticks.fixtures.set('code', {
+    description: undefined,
+    html: '<span class="pathable-widget--odd">```</span>\n',
+  })
+  const { page: rendered, errors } = renderForCheck(page(converted), backticks)
+  assert.deepEqual(errors, [])
+  assert.match(rendered.markdown, /^````html$/mu)
+  assert.ok(
+    includes(
+      checkPage(rendered, facts()),
+      'the html example uses .pathable-widget--odd',
+    ),
+  )
+})
+
+test('tracks coverage by state, not by markup two states share', () => {
+  const shared = sources()
+  shared.fixtures.set('loud-again', { description: undefined, html: loud })
+  const onlyLoud = converted.replace('<!-- examples -->\n', '')
+  const { errors } = renderForCheck(page(onlyLoud), shared)
+  assert.ok(includes(errors, 'fixtures/widget/loud-again.html is not shown'))
+  assert.ok(includes(errors, 'fixtures/widget/plain.html is not shown'))
+})
+
+test('fails on a placeholder only the Storybook page resolves', () => {
+  const reactOnly = converted.replace(
+    '## States',
+    '<!-- package: react -->\n\n<!-- example: missing-state -->\n\n<!-- /package -->\n\n## States',
+  )
+  const { errors } = renderForCheck(page(reactOnly), sources())
+  assert.ok(
+    includes(errors, 'fixtures/widget/missing-state.html does not exist'),
+  )
+})

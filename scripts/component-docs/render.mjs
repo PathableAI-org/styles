@@ -41,6 +41,35 @@ export const storyName = (state) => {
   return /^[0-9]/u.test(name) ? `State${name}` : name
 }
 
+const IDENTIFIER = /^[A-Za-z_$][\w$]*$/u
+
+/**
+ * The story export name of every state, checked up front: each must be a
+ * valid identifier, and no two states may turn into the same name (`foo-1`
+ * and `foo1` both become `Foo1`). Throws ComponentDocsError naming the
+ * states, before any file is written.
+ */
+export function storyNames(slug, states) {
+  const problems = []
+  const byName = new Map()
+  for (const state of states) {
+    const name = storyName(state)
+    if (!IDENTIFIER.test(name)) {
+      problems.push(
+        `fixtures/${slug}/${state}.html gives the story name "${name}", which is not a valid identifier; rename the fixture`,
+      )
+    } else if (byName.has(name)) {
+      problems.push(
+        `fixtures/${slug}/${byName.get(name)}.html and ${state}.html both give the story name "${name}"; rename one`,
+      )
+    } else {
+      byName.set(name, state)
+    }
+  }
+  if (problems.length > 0) throw new ComponentDocsError(problems)
+  return new Map([...byName].map(([name, state]) => [state, name]))
+}
+
 /** A fenced code block whose fence is longer than any backtick run inside. */
 export function fence(language, code) {
   const longest = Math.max(
@@ -280,12 +309,28 @@ function renderMdx(page, name, sources) {
   ].join('\n')
 }
 
+/**
+ * The fixture states a page's placeholders show on one target, by name, so
+ * coverage does not depend on which states happen to share markup. Throws
+ * ComponentDocsError when a placeholder does not resolve.
+ */
+export function shownStates(page, target, sources) {
+  const resolved = resolveAll(
+    segment(page.markdown),
+    page.slug,
+    target,
+    sources,
+  )
+  return new Set([...resolved.values()].flat())
+}
+
 /** Renders one page for one target. Throws ComponentDocsError on problems. */
 export function render(page, target, sources) {
   if (target === 'styles' || target === 'react') {
     return renderMarkdown(page, target, sources)
   }
   if (target === 'storybook') {
+    storyNames(page.slug, sources.fixtures.keys())
     return {
       mdx: renderMdx(page, page.data?.name ?? page.slug, sources),
       stories: renderStories(page, sources),

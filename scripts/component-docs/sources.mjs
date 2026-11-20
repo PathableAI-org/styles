@@ -85,6 +85,27 @@ export function readExamples(component, root = reactComponentsDir) {
  */
 export async function readCoverage(manifest = fixtureManifestPath) {
   const { fixtureManifest } = await import(pathToFileURL(manifest).href)
+  return coverageFrom(fixtureManifest)
+}
+
+/**
+ * The coverage map for a manifest object. Throws ComponentDocsError when two
+ * folders map to the same component: both would be written to
+ * `<Component>.md`, and the later page would silently replace the earlier.
+ */
+export function coverageFrom(fixtureManifest) {
+  const problems = []
+  const folderOf = new Map()
+  for (const [slug, { component }] of Object.entries(fixtureManifest)) {
+    if (folderOf.has(component)) {
+      problems.push(
+        `the React fixture manifest maps both "${folderOf.get(component)}" and "${slug}" to ${component}; each component may own one fixture folder`,
+      )
+    } else {
+      folderOf.set(component, slug)
+    }
+  }
+  if (problems.length > 0) throw new ComponentDocsError(problems)
   return new Map(
     Object.entries(fixtureManifest).map(([slug, mapping]) => [
       slug,
