@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../../shared/body-font'
 export default {
   title: 'Components/Feedback/Loading',
   tags: ['autodocs'],
@@ -20,6 +21,8 @@ export const Default = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-loading__text']),
 }
 
 export const SpinnerOnly = {

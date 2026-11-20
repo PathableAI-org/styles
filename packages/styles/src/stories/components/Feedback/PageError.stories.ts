@@ -1,5 +1,6 @@
 import { expect, within } from 'storybook/test'
 import { expectKeyboardFocusIndicator } from '../../shared/focus-indicator'
+import { expectBodyFont } from '../../shared/body-font'
 
 type PlayContext = { canvasElement: HTMLElement }
 
@@ -115,6 +116,10 @@ export const FullPage = {
   play: async ({ canvasElement }: PlayContext) => {
     await expectCentredActions(canvasElement, 'Go to home')
     await expectRetryFocusIndicator(canvasElement)
+    await expectBodyFont(canvasElement, [
+      '.pathable-page-error__body',
+      '.pathable-page-error__nav',
+    ])
   },
 }
 
