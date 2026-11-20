@@ -106,10 +106,10 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 // container the light ring would be 1.3:1 on Base and 2.8:1 on Accent, so
 // they set the dark ring the Silver and Jade surfaces use (9.6:1 and 6.3:1).
 // The Jade pathable-bg-success is the same case. The plain, info, success,
-// warning and error alerts paint light tints or Jade, where the white ring is about 1:1
-// to 2.8:1 and Bright Blue Brooks about 2.7:1, so they take the dark ring too.
-// So does the error alert, whose body is a light tint. The emergency alert is
-// rust, so it keeps the white ring (6.8:1; the dark ring is 2.6:1).
+// warning and error alerts take the dark ring too: their controls sit on a
+// light tint or Jade body, where the white ring is about 1:1 to 2.8:1. The
+// emergency alert is rust, so it keeps the white ring (6.8:1; the dark ring is
+// 2.6:1).
 :where(.pathable-bg-link)
   :where(.pathable-bg-base, .hover\:pathable-bg-base:hover):not(
     :where(#{$-surface-focus-ring-controls})
