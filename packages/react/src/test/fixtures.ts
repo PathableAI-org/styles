@@ -43,6 +43,8 @@ const INLINE_ELEMENTS = new Set([
   'del',
   'dfn',
   'em',
+  // Renamed from svg by normalise: an inline icon does not separate words.
+  'fixture-svg',
   'i',
   'img',
   'input',

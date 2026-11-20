@@ -190,4 +190,15 @@ describe('expectToRenderFixture', () => {
       ),
     ).toThrow(/rendered text/u)
   })
+
+  it('fails when a space beside an inline icon is missing', () => {
+    expect(() =>
+      expectToRenderFixture(
+        <p>
+          Read<svg aria-hidden="true"></svg>more
+        </p>,
+        '<p>Read <svg aria-hidden="true"></svg> more</p>',
+      ),
+    ).toThrow(/rendered text/u)
+  })
 })

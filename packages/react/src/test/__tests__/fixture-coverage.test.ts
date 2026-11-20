@@ -11,9 +11,11 @@ import { fixtureManifest } from '../fixture-manifest'
 const srcDir = fileURLToPath(new URL('../../', import.meta.url))
 const fixturesDir = resolve(srcDir, '../../../fixtures')
 
-const fixtures = globSync('*/*.html', { cwd: fixturesDir }).map((path) =>
-  path.replace(/\.html$/u, ''),
-)
+// harness/ holds the checks, not a component (see fixtures/README.md).
+const fixtures = globSync('*/*.html', {
+  cwd: fixturesDir,
+  exclude: ['harness/**'],
+}).map((path) => path.replace(/\.html$/u, ''))
 const examples = globSync('components/*/examples/*.tsx', { cwd: srcDir }).map(
   (path) =>
     path.replace(/^components\/([^/]+)\/examples\/(.+)\.tsx$/u, '$1/$2'),
@@ -192,6 +194,8 @@ export type { SrOnlyProps } from './components/SrOnly/SrOnly.js'`,
     for (const skipped of [
       `it('later', { skip: true }, () => {})`,
       `it('later', ({ skip }) => { skip() })`,
+      `it('later', { timeout: 5000, skip: true }, () => {})`,
+      `it('later', { todo: true }, () => {})`,
     ]) {
       const { errors } = checkFixtureCoverage({
         ...base,
