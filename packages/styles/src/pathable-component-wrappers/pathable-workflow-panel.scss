@@ -15,6 +15,7 @@
 @use 'uswds-core' as *;
 
 .pathable-workflow-panel {
+  font-family: var(--pathable-font-body);
   max-width: var(--pathable-workflow-panel-max-width);
   display: flex;
   flex-direction: column;
