@@ -18,6 +18,15 @@
   color: var(--pathable-color-action-primary-text);
 }
 
+// USWDS sets `width: auto` on buttons from mobile-lg (30em) up. That rule and
+// the `.pathable-width-full` utility have one class of specificity, so the
+// button rule won wherever it compiled later and `width="full"` stopped
+// filling the container. Compound the selector so the utility's intent holds
+// at every viewport regardless of stylesheet order.
+.pathable-button.pathable-width-full {
+  width: 100%;
+}
+
 .pathable-button--primary {
   @extend .pathable-button;
 }
