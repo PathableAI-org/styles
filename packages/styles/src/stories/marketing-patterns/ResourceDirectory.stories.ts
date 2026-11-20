@@ -107,7 +107,7 @@ const resourceCards = [
     provider: 'National Workforce Association',
     summary:
       'A comprehensive guide to conducting effective participant intake sessions.',
-    image: placeholderImage(400, 250, 'Intake Guide', '#dde2e8', '#00365c'),
+    image: placeholderImage(400, 250, '', '#dde2e8', '#00365c'),
     tags: ['Guide', 'Beginner'],
     updated: '2 days ago',
     rating: '★★★★★',
@@ -117,7 +117,7 @@ const resourceCards = [
     provider: 'Dept. of Labor',
     summary:
       'Interactive checklist for ensuring compliance with federal reporting requirements.',
-    image: placeholderImage(400, 250, 'Compliance Tool', '#dde2e8', '#00365c'),
+    image: placeholderImage(400, 250, '', '#dde2e8', '#00365c'),
     tags: ['Tool', 'Advanced'],
     updated: '1 week ago',
     rating: '★★★★☆',
@@ -127,13 +127,7 @@ const resourceCards = [
     provider: 'PathAble Learning Center',
     summary:
       'Learn how to set up and customize outcome tracking for your programs.',
-    image: placeholderImage(
-      400,
-      250,
-      'Outcomes Dashboard',
-      '#e0e0e0',
-      '#666666',
-    ),
+    image: placeholderImage(400, 250, '', '#dde2e8', '#00365c'),
     tags: ['Training', 'Intermediate'],
     updated: '3 days ago',
     rating: '★★★★★',
@@ -143,13 +137,7 @@ const resourceCards = [
     provider: 'Workforce Innovation Network',
     summary:
       'Evidence-based strategies for improving participant engagement and retention.',
-    image: placeholderImage(
-      400,
-      250,
-      'Engagement Strategies',
-      '#e0e0e0',
-      '#666666',
-    ),
+    image: placeholderImage(400, 250, '', '#dde2e8', '#00365c'),
     tags: ['Guide', 'Intermediate'],
     updated: '1 month ago',
     rating: '★★★★☆',
@@ -159,13 +147,7 @@ const resourceCards = [
     provider: 'Federal Programs Office',
     summary:
       'Pre-formatted template for quarterly program performance reports.',
-    image: placeholderImage(
-      400,
-      250,
-      'Reporting Template',
-      '#e0e0e0',
-      '#666666',
-    ),
+    image: placeholderImage(400, 250, '', '#dde2e8', '#00365c'),
     tags: ['Tool', 'All Levels'],
     updated: '2 weeks ago',
     rating: '★★★★☆',
@@ -175,13 +157,7 @@ const resourceCards = [
     provider: 'PathAble Learning Center',
     summary:
       'Self-paced training course covering the fundamentals of case management.',
-    image: placeholderImage(
-      400,
-      250,
-      'Onboarding Training',
-      '#e0e0e0',
-      '#666666',
-    ),
+    image: placeholderImage(400, 250, '', '#dde2e8', '#00365c'),
     tags: ['Training', 'Beginner'],
     updated: 'Just now',
     rating: '★★★★★',
