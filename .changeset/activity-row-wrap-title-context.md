@@ -12,3 +12,6 @@ guarantee and adds `title-context-wrap` and `body-min-width`.
 **Migration:** rows are taller when a title or context is long. A fixed-height
 or virtualised activity list that relied on one-line rows must measure its rows
 or allow them to grow.
+At narrow widths, rows with short titles can be a line taller than before and
+rows in one list can break their lines differently, because the title column
+now keeps a 12rem minimum before the other parts move to a new line.
