@@ -110,13 +110,12 @@
     }
   }
 
-  // A button never grows past the footer. A single word wider than the footer
-  // is not broken: the button keeps the word whole, because the row rule above
-  // relies on the longest word as the minimum width so the row wraps before a
-  // label is squeezed.
+  // A button stays inside the footer. The exception is a footer row on a
+  // phone: its buttons are at least as wide as their longest word (see the row
+  // rule above), so a single word wider than the footer overflows it. The row
+  // wraps before a label is squeezed instead.
   .pathable-button {
     max-width: 100%;
-    overflow-wrap: break-word;
   }
 }
 
