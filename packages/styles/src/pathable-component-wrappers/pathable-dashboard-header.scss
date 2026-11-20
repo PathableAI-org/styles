@@ -44,6 +44,12 @@
   @media (max-width: 640px) {
     overflow: hidden;
     text-overflow: ellipsis;
+    // The clip is the padding box, so padding keeps the outline of a link
+    // at the trail's edge inside it. The negative block margin keeps the
+    // trail's height. There is no negative inline margin: it would make the
+    // trail wider than the header and scroll a page with no side padding.
+    padding: var(--pathable-space-1);
+    margin-block: calc(-1 * var(--pathable-space-1));
   }
 }
 
@@ -62,7 +68,7 @@
 .pathable-dashboard-header__title {
   font-family: var(--pathable-font-heading);
   font-size: var(--pathable-font-size-display-lg);
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   margin: 0;
   flex: 1 1 auto;

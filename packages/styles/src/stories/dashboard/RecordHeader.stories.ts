@@ -1,4 +1,5 @@
 import { expectBodyFont } from '../shared/body-font'
+import { placeholderImage } from '../shared/placeholder-image'
 
 export default {
   title: 'Dashboard/Record Header',
@@ -17,7 +18,7 @@ export const Default = {
   render: () => `
     <div class="pathable-record-header">
       <div class="pathable-record-header__media">
-        <img src="https://placehold.co/80x80/00365c/ffffff?text=JD" alt="Jane Doe profile photo">
+        <img src="${placeholderImage(80, 80, 'JD', '#00365c', '#ffffff')}" alt="Jane Doe profile photo">
       </div>
       <div class="pathable-record-header__body">
         <h2 class="pathable-record-header__identity">Jane Doe</h2>
@@ -45,7 +46,7 @@ export const WithOverflow = {
   render: () => `
     <div class="pathable-record-header">
       <div class="pathable-record-header__media">
-        <img src="https://placehold.co/80x80/015a76/ffffff?text=CO" alt="Community Outreach logo">
+        <img src="${placeholderImage(80, 80, 'CO', '#015a76', '#ffffff')}" alt="Community Outreach logo">
       </div>
       <div class="pathable-record-header__body">
         <h2 class="pathable-record-header__identity">Community Outreach Program</h2>
@@ -96,7 +97,7 @@ export const Centered = {
   render: () => `
     <div class="pathable-record-header pathable-record-header--centered">
       <div class="pathable-record-header__media">
-        <img src="https://placehold.co/80x80/1cae96/ffffff?text=SS" alt="Support Services icon">
+        <img src="${placeholderImage(80, 80, 'SS', '#1cae96', '#001a33')}" alt="Support Services icon">
       </div>
       <div class="pathable-record-header__body">
         <h2 class="pathable-record-header__identity">Support Services</h2>
@@ -136,7 +137,7 @@ export const LongName = {
   render: () => `
     <div class="pathable-record-header" style="max-width: 400px;">
       <div class="pathable-record-header__media">
-        <img src="https://placehold.co/80x80/00365c/ffffff?text=JD" alt="Profile photo">
+        <img src="${placeholderImage(80, 80, 'JD', '#00365c', '#ffffff')}" alt="Profile photo">
       </div>
       <div class="pathable-record-header__body">
         <h2 class="pathable-record-header__identity">Dr. Jonathan Michael Williamson the Third</h2>
@@ -154,7 +155,7 @@ export const Mobile = {
   render: () => `
     <div class="pathable-record-header" style="max-width: 375px;">
       <div class="pathable-record-header__media">
-        <img src="https://placehold.co/80x80/00365c/ffffff?text=JD" alt="Jane Doe profile photo">
+        <img src="${placeholderImage(80, 80, 'JD', '#00365c', '#ffffff')}" alt="Jane Doe profile photo">
       </div>
       <div class="pathable-record-header__body">
         <h2 class="pathable-record-header__identity">Jane Doe</h2>
