@@ -141,9 +141,9 @@ root. A theme that changes these tokens changes them.
   class takes the container's white, so it is readable on the dark background.
   A tone modifier or `--pathable-text-color` on such an element still sets its
   own colour, which may not be readable there. Inside
-  `pathable-surface--raised`, `--inset` or `--interactive` in those containers,
-  a `<div>` or a `<li>` with the class keeps the theme text colour, but a
-  `<p>` there is still white. Other light components inside a dark container,
+  a raised, inset or interactive `pathable-surface` in those containers, a
+  `<div>` or a `<li>` with the class keeps the theme text colour, but a `<p>`
+  there is still white. Other light components inside a dark container,
   such as a resource card, pass the container's white to the class and are not
   readable; use a light surface from the list above inside a dark container.
 - The danger and success tones fall below 4.5:1 on the page background colour
