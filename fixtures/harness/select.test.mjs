@@ -103,6 +103,7 @@ test('a fixtures change outside a component folder selects nothing, without cont
     /No file in a component folder or component page changed/u,
   )
   assert.match(summary, /html-validate ran/u)
+  assert.match(summary, /contract check ran on every folder/u)
 })
 
 test('a changed component page selects its folder', () => {

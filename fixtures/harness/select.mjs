@@ -121,7 +121,11 @@ export function renderSummary(
   }
   if (names.length === 0) {
     lines.push(
-      '**No fixture folder was selected.** No file in a component folder or component page changed, and the compiled CSS diff touches no class or custom property that a fixture uses. The contract check and axe did not run.',
+      `**No fixture folder was selected.** No file in a component folder or component page changed, and the compiled CSS diff touches no class or custom property that a fixture uses. ${
+        fixturesChanged
+          ? 'axe did not run. The contract check ran on every folder, because files under `fixtures/` changed and it checks `folders.json` against the folders on disk.'
+          : 'The contract check and axe did not run.'
+      }`,
       '',
     )
   } else {

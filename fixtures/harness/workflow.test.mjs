@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
-import { join } from 'node:path'
+import { join, matchesGlob } from 'node:path'
 import { test } from 'node:test'
 
 import { repoRoot } from './affected.mjs'
@@ -23,4 +23,21 @@ test('the Fixtures workflow runs on every path the selection reads', () => {
     [],
     `add these to pull_request.paths in fixtures.yml: ${missing.join(', ')}`,
   )
+})
+
+test('the Fixtures workflow runs for the folder list and the lockfile', () => {
+  const workflow = parse(
+    readFileSync(join(repoRoot, '.github/workflows/fixtures.yml'), 'utf8'),
+  )
+  const triggers = workflow.on.pull_request.paths
+  for (const path of ['fixtures/folders.json', 'pnpm-lock.yaml']) {
+    assert.ok(
+      triggers.some((glob) => matchesGlob(path, glob)),
+      `no pull_request.paths entry in fixtures.yml matches ${path}`,
+    )
+    assert.ok(
+      INPUT_GLOBS.some((glob) => matchesGlob(path, glob)),
+      `INPUT_GLOBS in select.mjs does not cover ${path}`,
+    )
+  }
 })
