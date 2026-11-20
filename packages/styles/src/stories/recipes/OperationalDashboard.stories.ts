@@ -56,7 +56,7 @@ const topbarHtml = `
 const dashboardHeaderHtml = `
 <div class="pathable-dashboard-header">
   <div class="pathable-dashboard-header__breadcrumb">
-    <a href="#">Home</a>
+    <a class="pathable-link" href="#">Home</a>
     <span>Programs</span>
     <span>Employment Pathways</span>
   </div>
@@ -372,7 +372,7 @@ const skeletonHtml = `
 const emptyContentHtml = `
 <div class="pathable-dashboard-header">
   <div class="pathable-dashboard-header__breadcrumb">
-    <a href="#">Home</a>
+    <a class="pathable-link" href="#">Home</a>
     <span>Programs</span>
   </div>
   <div class="pathable-dashboard-header__row">
