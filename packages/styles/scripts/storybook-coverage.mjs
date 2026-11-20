@@ -33,6 +33,7 @@ const EXPECTED_COVERAGE = {
     'components-button--keyboard-focus',
     'components-button--forced-colors',
     'components-button-group--default',
+    'components-button-group--narrow-container',
     'components-button-group--wrapping',
     'components-card--default',
     'components-card--workflow-card-action-container',
