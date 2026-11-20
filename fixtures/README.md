@@ -3,9 +3,11 @@
 Canonical HTML for each static `@pathableai/styles` component, one file per
 state. A fixture is the reference markup a consuming application copies, so it
 shows classes, structure and ARIA exactly as a well-built client application
-should write them. The fixtures are checked on their own here; later work will
-render the styles Storybook stories from them and hold the
-`@pathableai/react` output to them.
+should write them. The fixtures are checked on their own here. The planned
+next steps are listed in
+[docs/testing/fixtures.md](../docs/testing/fixtures.md): React fixture tests
+that hold the `@pathableai/react` output to these fixtures, and component docs
+generated from them.
 
 How the checks run, locally and in CI, is in
 [docs/testing/fixtures.md](../docs/testing/fixtures.md).
