@@ -18,9 +18,13 @@
 }
 
 // Containers that set their own text colour keep it, so a legend on a dark
-// surface stays readable like the control labels beside it.
+// surface or under a `pathable-text-*` utility stays readable like the control
+// labels beside it.
 .pathable-surface--inverse .pathable-legend,
 .pathable-surface--tone-primary .pathable-legend,
-.pathable-section--dark .pathable-legend {
+.pathable-section--dark .pathable-legend,
+.pathable-hero .pathable-legend,
+.pathable-dark-background .pathable-legend,
+[class*='pathable-text-'] .pathable-legend {
   color: inherit;
 }
