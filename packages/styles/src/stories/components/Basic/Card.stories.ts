@@ -95,6 +95,38 @@ export const MediaCard = {
   },
 }
 
+export const MediaCardNarrow = {
+  render: () => `
+    <div style="max-width: 280px">
+      <div class="pathable-card pathable-card--media" data-testid="narrow-media-card">
+        <div class="pathable-card__container" data-testid="narrow-media-container">
+          <div class="pathable-card__media" data-testid="narrow-media">
+            <svg role="img" aria-label="Employment support planning session" focusable="false" viewBox="0 0 600 400" width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+              <rect width="600" height="400" fill="currentColor" opacity="0.08" />
+              <circle cx="210" cy="170" r="54" fill="currentColor" opacity="0.35" />
+            </svg>
+          </div>
+          <div class="pathable-card__header">
+            <h3 class="pathable-card__heading">Narrow Media Card</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('narrow-media-container')
+    const media = canvas.getByRole('img', {
+      name: 'Employment support planning session',
+    })
+
+    await expect(media.getBoundingClientRect().right).toBeLessThanOrEqual(
+      container.getBoundingClientRect().right,
+    )
+    await expect(media.getBoundingClientRect().width).toBeGreaterThan(200)
+  },
+}
+
 export const CardWithVariants = {
   render: () => `
     <div class="pathable-card pathable-card--header-first" data-testid="header-first-card">
