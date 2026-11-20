@@ -23,28 +23,33 @@
 
 // Containers that set their own text colour, or a coloured background that
 // the legend's inherited colour was chosen for, keep the colour they give the
-// legend, so the legend is never harder to read than before it had a default. The whole selector is inside :where(), so these
-// rules have zero specificity: they follow the default above by source order,
-// and a colour utility on the legend itself still wins over both.
-:where(
-  .pathable-surface--inverse .pathable-legend,
-  .pathable-surface--tone-primary .pathable-legend,
-  .pathable-section--dark .pathable-legend,
-  .pathable-hero .pathable-legend,
-  .pathable-dark-background .pathable-legend,
-  .pathable-surface--brand .pathable-legend,
-  .pathable-alert .pathable-legend,
-  .pathable-bg-accent .pathable-legend,
-  .pathable-bg-danger .pathable-legend,
-  .pathable-bg-link .pathable-legend,
-  .pathable-bg-primary .pathable-legend,
-  .pathable-bg-success .pathable-legend,
-  .pathable-text-accent .pathable-legend,
-  .pathable-text-base .pathable-legend,
-  .pathable-text-link .pathable-legend,
-  .pathable-text-muted .pathable-legend,
-  .pathable-text-primary .pathable-legend,
-  .pathable-text-white .pathable-legend
-) {
-  color: inherit;
+// legend, so the legend is never harder to read than before it had a default.
+// Each rule is inside :where(), so it has zero specificity: it follows the
+// default above by source order, and a colour utility on the legend itself
+// still wins over both.
+$-legend-inherits-colour-under: (
+  '.pathable-surface--inverse',
+  '.pathable-surface--tone-primary',
+  '.pathable-section--dark',
+  '.pathable-hero',
+  '.pathable-dark-background',
+  '.pathable-surface--brand',
+  '.pathable-alert',
+  '.pathable-bg-accent',
+  '.pathable-bg-danger',
+  '.pathable-bg-link',
+  '.pathable-bg-primary',
+  '.pathable-bg-success',
+  '.pathable-text-accent',
+  '.pathable-text-base',
+  '.pathable-text-link',
+  '.pathable-text-muted',
+  '.pathable-text-primary',
+  '.pathable-text-white'
+);
+
+@each $container in $-legend-inherits-colour-under {
+  :where(#{$container} .pathable-legend) {
+    color: inherit;
+  }
 }
