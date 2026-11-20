@@ -13,6 +13,14 @@
   @extend .usa-legend;
 
   // The USWDS legend sets no colour, so it would inherit the browser's black
-  // on a page that sets none. Use the brand text colour like the labels do.
+  // on a page that sets none. Default to the brand text colour.
   color: var(--pathable-color-text);
+}
+
+// Containers that set their own text colour keep it, so a legend on a dark
+// surface stays readable like the control labels beside it.
+.pathable-surface--inverse .pathable-legend,
+.pathable-surface--tone-primary .pathable-legend,
+.pathable-section--dark .pathable-legend {
+  color: inherit;
 }
