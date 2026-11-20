@@ -20,7 +20,10 @@ guarantees:
     claim: Row padding and the gap between a row's parts are 16, 24 or 32 px and the title is 12, 14 or 16 px at compact, default and comfortable, except that at a viewport 640 px wide or narrower the default row's gap is 16 px.
   - id: single-line-truncation
     status: unverified
-    claim: The title, context, status text, date and owner text each stay on one line and end in an ellipsis instead of wrapping or overflowing the row.
+    claim: The status text, date and owner text each stay on one line and end in an ellipsis instead of wrapping or overflowing the row.
+  - id: title-context-wrap
+    status: unverified
+    claim: The title and context wrap onto further lines instead of being cut off, so no text is lost at a large root font size, and a word wider than the column breaks instead of leaving the row.
   - id: status-shapes
     status: unverified
     claim: The completed, in-progress, pending and cancelled status marks are a filled circle, a filled square, a hollow ring and a 10 by 4 px bar, and any other status value is a 10 px neutral circle.
@@ -172,8 +175,8 @@ from the package source, and no test checks it yet.
 Today a group heading asks for bold, and the package ships only Fredoka Regular
 (400), so browsers draw a synthesised bold; `group-heading-weight` is unmet.
 
-Truncation hides the end of long text on screen; the full text stays in the
-document.
+Truncation of the status text, date and owner text hides the end of long text
+on screen; the full text stays in the document. The title and context wrap.
 
 ## The consumer owns
 

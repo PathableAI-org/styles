@@ -119,18 +119,16 @@
   font-weight: var(--pathable-font-weight-semibold);
   color: var(--pathable-color-text);
   margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  // Wraps, so no text is lost at a large root font size.
+  overflow-wrap: anywhere;
 }
 
 .pathable-activity-row__context {
   font-size: var(--pathable-font-size-caption-md);
   color: var(--pathable-color-text-muted);
   margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  // Wraps, so no text is lost at a large root font size.
+  overflow-wrap: anywhere;
 }
 
 // --- Date/time ---
