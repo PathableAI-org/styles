@@ -9,6 +9,7 @@
 @use 'uswds-core' as *;
 
 .pathable-loading {
+  font-family: var(--pathable-font-body);
   display: flex;
   align-items: center;
   gap: var(--pathable-space-2);

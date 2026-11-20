@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../../shared/body-font'
 export default {
   title: 'Components/Communication/Site Alert',
   tags: ['autodocs'],
@@ -18,6 +19,8 @@ export const Info = {
       <p>This site uses cookies to improve your experience.</p>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-site-alert']),
 }
 
 export const Default = Info

@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../../shared/body-font'
 import { guarantee } from '../../shared/guarantee'
 
 export default {
@@ -22,6 +23,8 @@ export const Default = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-loading__text']),
 }
 
 export const SpinnerOnly = {
