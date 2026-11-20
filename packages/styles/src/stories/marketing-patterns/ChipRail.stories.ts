@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../shared/body-font'
 export default {
   title: 'Marketing Patterns/Chip Rail',
   tags: ['autodocs'],
@@ -41,6 +42,8 @@ export const Static = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-chip-rail__chip']),
 }
 
 export const Marquee = {
