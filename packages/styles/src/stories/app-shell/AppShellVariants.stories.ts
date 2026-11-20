@@ -30,7 +30,7 @@ const shortNavItems = [
 const sidebar = (items) => `
   <aside class="pathable-app-shell__sidebar">
     <div class="pathable-app-shell__brand" style="padding: 0.5rem 0;">
-      <strong style="font-size: 1.125rem; color: var(--pathable-color-accent, #00365c);">MyApp</strong>
+      <strong style="font-size: 1.125rem; color: var(--pathable-color-link, #015a76);">MyApp</strong>
     </div>
     <nav class="pathable-app-shell__nav">
       ${items
@@ -94,7 +94,19 @@ export const WideContent = {
 
 export const FixedSidebar = {
   render: () => `
-    <p style="color: #555; font-size: 0.875rem; margin: 0 0 1rem;">
+    <style>
+      .story-fixed-sidebar-caption {
+        color: #555;
+        font-size: 0.875rem;
+        margin: 0 0 1rem;
+      }
+      @media (min-width: 1024px) {
+        .story-fixed-sidebar-caption {
+          margin-left: var(--pathable-app-shell-sidebar-width, 280px);
+        }
+      }
+    </style>
+    <p class="story-fixed-sidebar-caption">
       Desktop shell with fixed sidebar positioning. The sidebar stays in place while content scrolls.
     </p>
     <div class="pathable-app-shell">
