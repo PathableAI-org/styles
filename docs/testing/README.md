@@ -39,6 +39,8 @@ review, and manual review remain separate evidence.
   baselines, which stories they cover so far, and how to update them.
 - [Adding tests for a component](adding-component-tests.md) is the practical
   workflow for new work.
+- [HTML fixtures](fixtures.md) describes the canonical per-state HTML in
+  `fixtures/` and the checks that validate it.
 
 ## The testing model
 
