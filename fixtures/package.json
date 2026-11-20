@@ -1,0 +1,23 @@
+{
+  "name": "@pathableai/fixtures",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Canonical HTML fixtures for @pathableai/styles components, one file per state, and the checks that validate them.",
+  "type": "module",
+  "scripts": {
+    "check": "pnpm check:html && pnpm check:contract && pnpm check:axe",
+    "check:html": "node harness/html.mjs",
+    "check:contract": "node harness/contract.mjs",
+    "check:axe": "node harness/axe.mjs",
+    "changed": "node harness/changed.mjs",
+    "test": "node --test \"harness/*.test.mjs\""
+  },
+  "dependencies": {
+    "@pathableai/styles": "workspace:*"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "html-validate": "^11.21.1",
+    "playwright": "^1.65.1"
+  }
+}
