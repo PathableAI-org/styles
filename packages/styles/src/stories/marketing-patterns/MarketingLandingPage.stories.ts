@@ -1,3 +1,4 @@
+import { placeholderImage } from '../shared/placeholder-image'
 export default {
   title: 'Marketing Patterns/Marketing Landing Page',
   tags: ['autodocs'],
@@ -100,7 +101,7 @@ const featureSectionsHtml = `
           <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
           <div class="pathable-screenshot-frame__browser-url">app.pathable.com/participants</div>
         </div>
-        <img class="pathable-screenshot-frame__image" src="https://placehold.co/800x500/e0e0e0/666666?text=Case+Management+Preview" alt="Case management dashboard preview" loading="lazy" />
+        <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Case Management Preview', '#dde2e8', '#00365c')}" alt="Case management dashboard preview" loading="lazy" />
       </figure>
     </div>
   </div>
@@ -113,7 +114,7 @@ const featureSectionsHtml = `
           <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
           <div class="pathable-screenshot-frame__browser-url">app.pathable.com/reports</div>
         </div>
-        <img class="pathable-screenshot-frame__image" src="https://placehold.co/800x500/e0e0e0/666666?text=Analytics+Preview" alt="Analytics dashboard preview" loading="lazy" />
+        <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#dde2e8', '#00365c')}" alt="Analytics dashboard preview" loading="lazy" />
       </figure>
       <div class="pathable-stack pathable-stack--gap-md">
         <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Reporting</p>
@@ -132,7 +133,7 @@ const statsHtml = `
     <div class="pathable-stack pathable-stack--gap-lg" style="align-items: center; text-align: center;">
       <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700;">Trusted across the country</h2>
       <p style="margin: 0; font-size: 1rem; color: var(--pathable-color-text-muted); max-width: 480px;">Organizations of all sizes rely on PathAble to deliver better outcomes.</p>
-      <div class="pathable-card-grid pathable-card-grid--gap-lg" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); max-width: 800px;">
+      <div class="pathable-kpi-grid" style="--pathable-kpi-grid-min-width: 10rem; max-width: 50rem;">
         <div class="pathable-kpi-card">
           <p class="pathable-kpi-card__value">500+</p>
           <p class="pathable-kpi-card__label">Organizations</p>
@@ -220,7 +221,7 @@ ${headerHtml}
             <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
             <div class="pathable-screenshot-frame__browser-url">app.pathable.com/participants</div>
           </div>
-          <img class="pathable-screenshot-frame__image" src="https://placehold.co/800x500/e0e0e0/666666?text=Case+Management+Preview" alt="Case management dashboard preview" loading="lazy" />
+          <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Case Management Preview', '#dde2e8', '#00365c')}" alt="Case management dashboard preview" loading="lazy" />
         </figure>
       </div>
     </div>
@@ -233,7 +234,7 @@ ${headerHtml}
             <div class="pathable-screenshot-frame__browser-dots"><span></span><span></span><span></span></div>
             <div class="pathable-screenshot-frame__browser-url">app.pathable.com/reports</div>
           </div>
-          <img class="pathable-screenshot-frame__image" src="https://placehold.co/800x500/e0e0e0/666666?text=Analytics+Preview" alt="Analytics dashboard preview" loading="lazy" />
+          <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#dde2e8', '#00365c')}" alt="Analytics dashboard preview" loading="lazy" />
         </figure>
         <div class="pathable-stack pathable-stack--gap-md">
           <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Reporting</p>
@@ -268,7 +269,7 @@ export const Mobile = {
     docs: {
       description: {
         story:
-          'Marketing landing page at mobile viewport (320px). Sections stack vertically, hero CTA buttons wrap, feature images reflow, cards fill full width.',
+          'Marketing landing page at mobile viewport (375px). Sections stack vertically, hero CTA buttons wrap, feature images reflow, cards fill full width.',
       },
     },
   },
