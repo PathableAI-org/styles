@@ -203,10 +203,13 @@ it('renders sr-only/inline', () => {
    each reference must still point at the same element; a duplicate ID or a
    reference to a missing ID fails. A fragment link (`href="#id"`) to an
    element in the markup is rewritten too; one to an ID outside it, such as a
-   skip link's target, is compared as written;
-4. collapses each run of whitespace inside text to one space, as rendering
-   does (outside `pre` and `textarea`, and leaving non-breaking spaces alone),
-   so a fixture whose text Prettier wraps still matches, and renames
+   skip link's target, is marked unresolved and compared as written, so it
+   never matches a link that resolves;
+4. collapses each run of HTML whitespace inside ordinary text to one space,
+   as rendering does, so a fixture whose text Prettier wraps still matches,
+   while non-breaking spaces stay distinct, even at the ends of a text node,
+   and the text of `pre`, `textarea`, `script` and `style` is compared
+   exactly; it also renames
    `svg`, `script` and `style` elements, which `getDiffableHTML` would
    otherwise drop with their content;
 5. compares the two with `getDiffableHTML` from
@@ -237,6 +240,8 @@ The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
   from `../examples/<state>` with an import from
   `@pathableai/fixtures/<folder>/<state>.html?raw` of the same state and the
   component's mapped folder.
+- two manifest entries map to the same React component, or the manifest
+  file lists the same folder twice;
 - a fixture test passes anything other than two imported names to
   `expectToRenderFixture`, or skips a test. Commented-out calls do not count.
 

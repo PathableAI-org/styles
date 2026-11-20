@@ -27,6 +27,10 @@ const testSources = Object.fromEntries(
   ]),
 )
 const indexSource = readFileSync(resolve(srcDir, 'index.ts'), 'utf8')
+const manifestSource = readFileSync(
+  resolve(srcDir, 'test/fixture-manifest.ts'),
+  'utf8',
+)
 
 describe('fixture coverage', () => {
   it('has a fixture test or a "not offered" reason for every fixture of a mapped component', async ({
@@ -39,6 +43,7 @@ describe('fixture coverage', () => {
         testSources,
         manifest: fixtureManifest,
         indexSource,
+        manifestSource,
       })
 
     await annotate(
@@ -225,6 +230,32 @@ export type { SrOnlyProps } from './components/SrOnly/SrOnly.js'`,
     })
     expect(errors).toEqual([
       `${testFile}: every expectToRenderFixture call must take two imported names, an example and a fixture`,
+    ])
+  })
+
+  it('fails when two manifest entries map to the same component', () => {
+    const { errors } = checkFixtureCoverage({
+      ...base,
+      manifest: {
+        'sr-only': { component: 'SrOnly' },
+        'visually-hidden': { component: 'SrOnly' },
+      },
+    })
+    expect(errors).toContain(
+      'Fixture manifest entries sr-only and visually-hidden both map to SrOnly',
+    )
+  })
+
+  it('fails when the manifest source repeats a folder', () => {
+    const { errors } = checkFixtureCoverage({
+      ...base,
+      manifestSource: `export const fixtureManifest = {
+  'sr-only': { component: 'SrOnly' },
+  'sr-only': { component: 'VisuallyHidden' },
+}`,
+    })
+    expect(errors).toEqual([
+      'The fixture manifest has more than one entry for folder sr-only',
     ])
   })
 })
