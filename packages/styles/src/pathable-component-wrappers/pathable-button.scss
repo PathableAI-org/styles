@@ -5,6 +5,7 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
+@use 'sass:map';
 @use 'uswds-core' as *;
 @use 'pathable-interaction-state-mixins' as states;
 @use '../utilities-config' as uc;
@@ -29,7 +30,9 @@
 // unprefixed class. `--destructive` is listed because it renders a whole
 // button on its own; --primary and --continue pick the rule up through their
 // @extend.
-@each $width-name, $width-value in ('full': 100%, 'auto': auto) {
+@each $width-name,
+  $width-value in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
+{
   .pathable-button.pathable-width-#{$width-name},
   .pathable-button--destructive.pathable-width-#{$width-name} {
     width: $width-value;
@@ -38,7 +41,10 @@
 
 @each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
   @media (min-width: $bp-width) {
-    @each $width-name, $width-value in ('full': 100%, 'auto': auto) {
+    @each $width-name,
+      $width-value
+        in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
+    {
       .pathable-button.#{$bp-name}\:pathable-width-#{$width-name},
       .pathable-button--destructive.#{$bp-name}\:pathable-width-#{$width-name} {
         width: $width-value;

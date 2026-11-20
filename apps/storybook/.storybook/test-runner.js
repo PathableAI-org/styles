@@ -71,6 +71,10 @@ const config = {
         { width: 375, height: 812 },
       ],
       [
+        'components-button--responsive-width-override-below-tablet',
+        { width: 600, height: 900 },
+      ],
+      [
         'components-form-controls-form-row--at-desktop-breakpoint',
         { width: 1024, height: 900 },
       ],
