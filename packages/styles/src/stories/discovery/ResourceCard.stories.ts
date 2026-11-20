@@ -1,4 +1,6 @@
+import { expect } from 'storybook/test'
 import { expectBodyFont } from '../shared/body-font'
+import { placeholderImage } from '../shared/placeholder-image'
 
 export default {
   title: 'Discovery/Resource Card',
@@ -15,7 +17,7 @@ export default {
 
 const defaultContent = `
   <div class="pathable-resource-card__media">
-    <img src="https://placehold.co/300x200/1cae96/ffffff?text=Thumbnail" alt="" aria-hidden="true">
+    <img src="${placeholderImage(300, 200, '', '#1cae96', '#001a33')}" alt="" aria-hidden="true">
   </div>
   <div class="pathable-resource-card__body">
     <a href="#" class="pathable-resource-card__link">
@@ -83,6 +85,39 @@ export const ListLayout = {
   `,
 }
 
+export const ListLayoutMobile = {
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
+  render: () => `
+    <div class="pathable-card-grid">
+      <div class="pathable-resource-card pathable-resource-card--list pathable-resource-card--interactive">
+        ${defaultContent}
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const card = canvasElement.querySelector<HTMLElement>(
+      '.pathable-resource-card',
+    )
+    const media = canvasElement.querySelector<HTMLElement>(
+      '.pathable-resource-card__media',
+    )
+    const body = canvasElement.querySelector<HTMLElement>(
+      '.pathable-resource-card__body',
+    )
+    if (!card || !media || !body) throw new Error('Resource card missing')
+
+    await expect(window.innerWidth).toBe(320)
+    await expect(getComputedStyle(card).flexDirection).toBe('column')
+    await expect(media.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      body.getBoundingClientRect().top,
+    )
+    await expect(body.getBoundingClientRect().width).toBeGreaterThan(160)
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth,
+    )
+  },
+}
+
 export const NoImage = {
   render: () => `
     <div class="pathable-card-grid" style="max-width: 400px">
@@ -139,7 +174,7 @@ export const Grid = {
       </div>
       <div class="pathable-resource-card pathable-resource-card--grid pathable-resource-card--interactive pathable-resource-card--has-action">
         <div class="pathable-resource-card__media">
-          <img src="https://placehold.co/300x200/00365c/ffffff?text=Guide" alt="" aria-hidden="true">
+          <img src="${placeholderImage(300, 200, 'Guide', '#00365c', '#ffffff')}" alt="" aria-hidden="true">
         </div>
         <div class="pathable-resource-card__body">
           <a href="#" class="pathable-resource-card__link">
@@ -154,7 +189,7 @@ export const Grid = {
       </div>
       <div class="pathable-resource-card pathable-resource-card--grid pathable-resource-card--interactive">
         <div class="pathable-resource-card__media">
-          <img src="https://placehold.co/300x200/015a76/ffffff?text=Tool" alt="" aria-hidden="true">
+          <img src="${placeholderImage(300, 200, 'Tool', '#015a76', '#ffffff')}" alt="" aria-hidden="true">
         </div>
         <div class="pathable-resource-card__body">
           <a href="#" class="pathable-resource-card__link">

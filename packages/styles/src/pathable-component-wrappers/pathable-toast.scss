@@ -39,8 +39,8 @@
 // --- Individual Toast ---
 
 .pathable-toast {
-  // Light container: reset the surface focus ring so controls in it do not inherit
-  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  // A white container: the outlines inside it are drawn on white, so a light
+  // ring from a dark container around it is not inherited.
   --pathable-surface-focus-ring: initial;
   display: flex;
   gap: var(--pathable-space-2);
@@ -120,7 +120,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
   }
 }

@@ -78,19 +78,22 @@
 // fallback, and the Tech Teal pathable-bg-link, where it is only 2.6:1 (#382),
 // sets a light ring (--pathable-color-surface, 7.7:1). A light ring would
 // inherit into light containers nested in the teal one, where it is 1.0:1, so
-// the light background utilities and every light component container reset
+// the pathable-bg-surface utility and every light component container reset
 // --pathable-surface-focus-ring themselves (a new light container needs the
-// same reset). The hover variants do the same, for a container that changes
-// under the pointer while a control in it has focus. The focus variants do
-// not: :focus matches only the focused control. The shared state-focus
-// controls are left out, because their ring is drawn on the surface behind
-// them, so one that carries one of these classes itself keeps that surface's
-// ring.
+// same reset). The Jade, Silver and danger utilities and the alerts below set
+// a ring of their own, so they hold inside the teal container too. The hover
+// variants do the same, for a container that changes under the pointer while a
+// control in it has focus. The focus variants do not: :focus matches only the
+// focused control. The shared state-focus controls are left out, because their
+// ring is drawn on the surface behind them, so one that carries one of these
+// classes itself keeps that surface's ring.
 // The :where() keeps the reset at the utility's own specificity, so a
 // container's own --pathable-surface-focus-ring, or a surface variant on the
 // same element, still wins. Keep the list in step with the selectors that
-// include state-focus (pathable-button.scss explains the button modifiers).
-$-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive, .pathable-icon-button, .pathable-input, .pathable-select, .pathable-textarea';
+// include state-focus (pathable-button.scss explains the button modifiers) and
+// with the other controls whose own outline reads the ring: the unstyled
+// button, the link and the interactive surface.
+$-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive, .pathable-button--unstyled, .pathable-icon-button, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-surface--interactive';
 
 .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
 .hover\:pathable-bg-primary:hover:not(:where(#{$-surface-focus-ring-controls})),
@@ -101,34 +104,45 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
   --pathable-surface-focus-ring: initial;
 }
 
-// Base (Shilling Silver) and Accent (Intelligent Jade) set no ring of their
-// own, so one in a surface that sets a dark ring keeps it. Inside the teal
-// container the light ring would be 1.3:1 on Base and 2.8:1 on Accent, so
-// they set the dark ring the Silver and Jade surfaces use (9.6:1 and 6.3:1).
-// The Jade pathable-bg-success is the same case. The plain, info, success,
-// warning and error alerts take the dark ring too: their controls sit on a
-// light tint or Jade body, where the white ring is about 1:1 to 2.8:1. The
-// emergency alert is rust, so it keeps the white ring (6.8:1; the dark ring is
-// 2.6:1).
-:where(.pathable-bg-link)
-  :where(.pathable-bg-base, .hover\:pathable-bg-base:hover):not(
+// Jade, Silver and danger backgrounds set the ring for the controls and
+// components on them. Bright Blue Brooks is 1.1:1 on Intelligent Jade, 2.3:1 on
+// Shilling Silver and 1.5:1 on the danger red (WCAG 1.4.11 needs 3:1), so the
+// on-accent dark blue (6.3:1 on Jade, 3.9:1 on the red) and the text blue
+// (9.6:1 on Silver) take its place. A dark ring also stays visible on the light
+// containers that sit inside these backgrounds. The shared state-focus controls are left out for the same reason
+// as above: a control that carries the class itself sits on the surface
+// behind it.
+.pathable-bg-accent:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-accent:hover:not(:where(#{$-surface-focus-ring-controls})),
+.pathable-bg-success:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-success:hover:not(
     :where(#{$-surface-focus-ring-controls})
   ) {
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
+}
+
+.pathable-bg-base:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-base:hover:not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: var(--pathable-color-text);
 }
 
-:where(.pathable-bg-link)
-  :where(
-    .pathable-bg-accent,
-    .hover\:pathable-bg-accent:hover,
-    .pathable-bg-success,
-    .hover\:pathable-bg-success:hover,
-    .pathable-alert:not(.pathable-alert--emergency)
-  ):not(:where(#{$-surface-focus-ring-controls})) {
+.pathable-bg-danger:not(:where(#{$-surface-focus-ring-controls})),
+.hover\:pathable-bg-danger:hover:not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }
 
 .pathable-bg-link:not(:where(#{$-surface-focus-ring-controls})),
 .hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: var(--pathable-color-surface);
+}
+
+// The info and plain alerts set no ring of their own, so inside the teal
+// container they would inherit its white ring on their light tint (1.0:1).
+// The other alerts set one in pathable-alert.scss.
+:where(.pathable-bg-link)
+  :where(
+    .pathable-alert--info,
+    .pathable-alert:not([class*='pathable-alert--'])
+  ) {
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }
