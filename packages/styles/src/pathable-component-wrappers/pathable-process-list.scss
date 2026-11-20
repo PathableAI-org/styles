@@ -44,4 +44,6 @@
 
 .pathable-process-list__heading {
   @extend .usa-process-list__heading;
+  font-family: var(--pathable-font-heading);
+  font-weight: var(--pathable-font-weight-normal);
 }
