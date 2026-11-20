@@ -27,7 +27,8 @@ const FIXTURE_SPECIFIER =
   /^@pathableai\/fixtures\/([a-z0-9-]+)\/([a-z0-9-]+)\.html\?raw$/u
 const EXAMPLE_SPECIFIER = /^\.\.\/examples\/([a-z0-9-]+)$/u
 const CALL = /expectToRenderFixture\(/gu
-const SKIPPED_BY_OPTION = /\{\s*skip\s*:\s*true\b|\bskip\s*\(/u
+// Any `skip` or `todo` option, or a `skip()` call from the test context.
+const SKIPPED_BY_OPTION = /['"]?\b(?:skip|todo)['"]?\s*:|\bskip\s*\(/u
 const SKIPPED =
   /\b(?:it|test|describe)\.(?:skip|todo|fails|skipIf|runIf)\b|\bx(?:it|test|describe)\(/u
 const COMMENT = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu
