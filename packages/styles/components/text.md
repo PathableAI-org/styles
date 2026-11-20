@@ -34,7 +34,7 @@ guarantees:
     status: unverified
     claim: The class sets no margin, padding, display or width, so the element keeps the box other rules give it.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: The body, small and caption sizes follow the root font size, so at a 200% root font size every role's size doubles.
 ---
 
@@ -156,9 +156,6 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
-px values, so the role sizes do not follow the user's default font size.
 
 ## The consumer owns
 
