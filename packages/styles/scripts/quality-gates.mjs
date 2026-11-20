@@ -206,6 +206,9 @@ const CANONICAL_STORIES = [
   { id: 'components-button--unstyled', mode: 'both' },
   // The accent-warm modifier beside the primary button (#303).
   { id: 'components-button--accent-warm', mode: 'desktop' },
+  // Button group: stacked gap and focus ring below 480px, and wrapping (#356).
+  { id: 'components-button-group--default', mode: 'both' },
+  { id: 'components-button-group--wrapping', mode: 'both' },
   { id: 'components-card--workflow-card-with-status', mode: 'desktop' },
   // Components – Feedback
   { id: 'components-feedback-toast--stacked', mode: 'desktop' },

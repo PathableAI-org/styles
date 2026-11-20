@@ -65,6 +65,13 @@
 }
 
 // Completion action buttons
+// usa-button keeps `margin-right: units(1)`; the region's gap already spaces
+// buttons. `:where()` keeps one-class specificity so the rule still follows
+// the button wrapper and a margin utility loaded later still wins.
+.pathable-workflow-panel__actions :where(.pathable-button) {
+  margin-right: 0;
+}
+
 .pathable-workflow-panel__actions {
   display: flex;
   flex-wrap: wrap;

@@ -15,4 +15,7 @@
 
 .pathable-graphic-list__heading {
   @extend .usa-graphic-list__heading;
+  // Heading typeface (Fredoka) ships only Regular (400); USWDS and the browser
+  // default ask for bold, which the browser would synthesise. Brand rules: Regular.
+  font-weight: var(--pathable-font-weight-normal);
 }
