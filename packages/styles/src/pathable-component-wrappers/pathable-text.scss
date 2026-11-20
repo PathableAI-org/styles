@@ -8,7 +8,10 @@
 //   --pathable-text-font-size   (default: var(--pathable-font-size-body-md))
 //   --pathable-text-line-height (default: var(--pathable-font-line-height-body))
 //   --pathable-text-font-weight  (default: var(--pathable-font-weight-normal))
-//   --pathable-text-color       (default: var(--pathable-color-text))
+//   --pathable-text-color       (default: var(--pathable-color-text); inside
+//                                pathable-section--dark and
+//                                pathable-dark-background, the colour inherited
+//                                from the container)
 //
 // Variant modifier classes:
 //   .pathable-text--body    — body-md scale (16px/24px, weight 400)
@@ -33,6 +36,16 @@
     var(--pathable-font-weight-normal)
   );
   color: var(--pathable-text-color, var(--pathable-color-text));
+}
+
+// Dark containers recolour only some descendants (headings, p, a, and span in
+// the dark background), so text on any other element would keep the theme text
+// colour on a dark surface. With no tone or custom colour set, take the colour
+// the container gives its content. :where() keeps the specificity of
+// .pathable-text, so the containers' own heading and link colours still win and
+// a tone modifier or --pathable-text-color still sets the colour.
+:where(.pathable-section--dark, .pathable-dark-background) .pathable-text {
+  color: var(--pathable-text-color, inherit);
 }
 
 // Variant modifiers
