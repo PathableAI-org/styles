@@ -57,6 +57,16 @@ test('html-validate rejects inline directive comments', async () => {
   assert.ok(ruleIds(results).has('fixtures-no-directives'))
 })
 
+test('html-validate rejects directive comments without brackets', async () => {
+  fixture(
+    'html-directive-bare',
+    'quiet.html',
+    '<!-- html-validate-disable no-inline-style -->\n<p style="color: #ccc">Text</p>\n',
+  )
+  const { results } = await validateFolders(['html-directive-bare'], root)
+  assert.ok(ruleIds(results).has('fixtures-no-directives'))
+})
+
 test('the contract check fails a folder missing a variant fixture', async () => {
   fixture(
     'activity-list',

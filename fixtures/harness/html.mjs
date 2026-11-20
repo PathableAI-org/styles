@@ -28,7 +28,7 @@ import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
 /** The fixtures' html-validate configuration. */
 export const configPath = join(fixturesRoot, '.htmlvalidate.json')
 
-const DIRECTIVE = /<!--\s*\[\s*html-validate-/gu
+const DIRECTIVE = /<!--\s*\[?\s*html-validate-/gu
 
 /** A result, in html-validate's shape, for each inline directive comment. */
 export function directiveResult(filePath, source) {
