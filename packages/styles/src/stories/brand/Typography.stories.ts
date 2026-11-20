@@ -238,7 +238,7 @@ export const Default = {
                   ${
                     r.uswdsRole
                       ? `<span style="background: #4899e8; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">USWDS: ${r.uswdsRole}</span>`
-                      : `<span style="background: #888; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
+                      : `<span style="background: #dde2e8; color: #00365c; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
                   }
                 </div>
                 <div style="font-family: monospace; font-size: 0.7rem; color: #555; margin-bottom: 0.375rem;">
@@ -311,7 +311,7 @@ export const Default = {
         <div style="margin-bottom: 2rem; padding: 1.25rem; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #1cae96;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
             <span style="font-weight: 600; font-size: 0.8rem; color: #00365c;">Body Medium</span>
-            <span style="background: #1cae96; color: #00365c; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">1rem / 1.5</span>
+            <span style="background: #1cae96; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">1rem / 1.5</span>
             <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-md</span>
           </div>
           <p style="font-family: Nunito, system-ui, serif; font-size: 1rem; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
