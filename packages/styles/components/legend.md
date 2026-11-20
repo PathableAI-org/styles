@@ -90,7 +90,6 @@ that is the page's main heading.
 overrides it recolours the legend. The font family, size, line-height and
 margin are fixed values in the compiled stylesheet, not custom properties, so
 a theme does not change them.
-Today the legend sets no colour; see the Guarantees section.
 
 ## Composition
 
@@ -121,10 +120,10 @@ The legend sets its text colour to the brand text colour,
 `pathable-text-white` on the legend itself wins. Inside a container that sets
 its own text colour the legend takes that colour instead: `pathable-surface--inverse`,
 `pathable-surface--tone-primary`, `pathable-section--dark`, `pathable-hero`,
-`pathable-dark-background`, and the `pathable-text-accent`, `-base`, `-link`,
+and the `pathable-text-accent`, `-base`, `-link`,
 `-muted`, `-primary` and `-white` utilities. A container that sets a background
 but no text colour, such as `pathable-bg-primary` on its own or
-`pathable-dark-background`, leaves the legend with the colour it inherits
+`pathable-dark-background` (which sets no text colour), leaves the legend with the colour it inherits
 there; add a text colour utility to that container.
 
 The maximum width applies to the legend's content box: the legend is
