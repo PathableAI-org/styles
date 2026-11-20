@@ -61,6 +61,9 @@
 
 .pathable-modal {
   font-family: var(--pathable-font-body);
+  // Light container: reset the surface focus ring (see pathable-bg-link in
+  // _utilities.scss).
+  --pathable-surface-focus-ring: initial;
   @extend .usa-modal;
 }
 
