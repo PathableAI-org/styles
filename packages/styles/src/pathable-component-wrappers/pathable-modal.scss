@@ -108,20 +108,18 @@
     // USWDS makes a button full width below 30em, which would put each button
     // of the row on its own line even when they fit side by side. Let them
     // share the row as they did in a non-wrapping row, and wrap only when
-    // their labels no longer fit. From 30em up the buttons keep their size.
+    // their labels no longer fit on one line. From 30em up the buttons keep
+    // their size.
     @media (max-width: 29.99em) {
       > .pathable-button {
-        flex: 1 1 0;
-        min-width: max-content;
+        flex: 1 1 max-content;
         width: auto;
       }
     }
   }
 
-  // A button stays inside the footer. The exception is a footer row on a
-  // phone: its buttons are at least as wide as their longest word (see the row
-  // rule above), so a single word wider than the footer overflows it. The row
-  // wraps before a label is squeezed instead.
+  // A button never grows wider than the footer. A single word wider than the
+  // footer is still not broken, so it can overflow.
   .pathable-button {
     max-width: 100%;
   }
