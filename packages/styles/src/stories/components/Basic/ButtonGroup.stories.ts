@@ -21,6 +21,19 @@ export const Default = {
   `,
 }
 
+export const Wrapping = {
+  render: () => `
+    <div style="max-width: 20rem; padding: 0 0.25rem">
+      <div class="pathable-button-group">
+        <button class="pathable-button pathable-button--outline">Option One</button>
+        <button class="pathable-button pathable-button--outline">Option Two</button>
+        <button class="pathable-button pathable-button--outline">Option Three</button>
+        <button class="pathable-button pathable-button--outline">Option Four</button>
+      </div>
+    </div>
+  `,
+}
+
 export const Segmented = {
   render: () => `
     <div class="pathable-button-group pathable-button-group--segmented">
