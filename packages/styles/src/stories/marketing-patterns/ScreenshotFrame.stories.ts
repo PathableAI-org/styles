@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../shared/body-font'
 import { placeholderImage } from '../shared/placeholder-image'
 export default {
   title: 'Marketing Patterns/Screenshot Frame',
@@ -64,6 +65,11 @@ export const BrowserFrame = {
       <figcaption class="pathable-screenshot-frame__caption">Application viewed in a browser</figcaption>
     </figure>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-screenshot-frame__browser-url',
+      '.pathable-screenshot-frame__caption',
+    ]),
 }
 
 export const PhoneFrame = {

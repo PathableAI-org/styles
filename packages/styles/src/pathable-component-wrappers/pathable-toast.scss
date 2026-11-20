@@ -39,6 +39,7 @@
 // --- Individual Toast ---
 
 .pathable-toast {
+  font-family: var(--pathable-font-body);
   // A white container: the outlines inside it are drawn on white, so a light
   // ring from a dark container around it is not inherited.
   --pathable-surface-focus-ring: initial;
@@ -86,6 +87,7 @@
 
 // Toast action link/button slot
 .pathable-toast__action {
+  font-family: inherit;
   flex-shrink: 0;
   color: var(--pathable-color-text);
   font-size: var(--pathable-font-size-body-sm);
@@ -99,6 +101,7 @@
 
 // Toast dismiss button
 .pathable-toast__dismiss {
+  font-family: inherit;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
