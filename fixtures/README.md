@@ -37,6 +37,8 @@ fixtures/
 - Only markup the component page describes, plus what the page says the
   consumer owns. No demo-only wrappers, layout boxes or headings that are
   there only to frame the example.
+- No `html-validate-*` directive comments. The check rejects them; fix the
+  markup, or ask a person if a rule seems wrong.
 - No `style` attributes. Where the page asks the consumer to adjust something,
   use a documented class, such as `pathable-margin-0`.
 - Literal IDs, unique within the fixture and prefixed with the folder and
@@ -46,7 +48,8 @@ fixtures/
   "Lorem ipsum" or "Item 1".
 - Prefer native elements to ARIA roles. html-validate's `prefer-native-element`
   and `no-redundant-role` rules enforce this, so a list is a `<ul>` with `<li>`
-  items, not a `<div role="list">`.
+  items, not a `<div role="list">`. The one allowed redundant role is
+  `role="list"` on a `<ul>`; see ARIA rule 2.
 
 ## ARIA rules
 
@@ -56,11 +59,15 @@ to these rules:
 1. **Every `aria-*` attribute and `role` traces to a source**: a consumer
    responsibility in the component page ("The consumer owns" or Composition),
    or a standard WAI-ARIA or WCAG requirement. No redundant or speculative
-   ARIA: no role that repeats an element's native semantics, and no
-   `aria-label` that replaces visible text.
-2. **Lists that hold rows are lists with a name.** Use `<ul>` and `<li>`,
-   whose native roles are `list` and `listitem`, and give each list an
-   accessible name:
+   ARIA: no role that repeats an element's native semantics (except the
+   `role="list"` in rule 2), and no `aria-label` that replaces visible text.
+2. **Lists that hold rows are lists with a name.** Use `<ul role="list">` and
+   `<li>`. The `role="list"` repeats the `<ul>` element's native role on
+   purpose: WebKit (Safari with VoiceOver) exposes a `<ul>` whose items draw
+   no list marker as a plain group, and rows such as `pathable-activity-row`
+   are flex boxes with no marker, so the explicit role keeps the list and its
+   item count announced. The `<li>` keeps its native `listitem` role with no
+   attribute. Give each list an accessible name:
    - a standalone list gets `aria-label` with meaningful text, such as
      `aria-label="Recent activity"`;
    - a list under a visible heading gets `aria-labelledby` pointing at that
@@ -110,16 +117,25 @@ contract and axe checks need the built stylesheet:
 | `pnpm check:axe`      | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                          |
 | `pnpm check`          | All three                                                                                                                                                                                                     |
 | `pnpm changed [base]` | Prints the folders `git diff <base>...HEAD -- fixtures/` touched ([`harness/changed.mjs`](harness/changed.mjs)); default base `origin/main`, `--all` for every folder                                         |
-| `pnpm test`           | Unit tests of the harness (`node --test`)                                                                                                                                                                     |
+| `pnpm test`           | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                         |
 
 ### html-validate configuration
 
 [`.htmlvalidate.json`](.htmlvalidate.json) extends both presets, turns no rule
-off and turns one on:
+off, turns one on and narrows one:
 
 - `no-missing-references` is not in either preset. It fails an
   `aria-labelledby`, `aria-describedby` or other ID reference that names no
   element in the fixture, which ARIA rule 6 requires and axe does not catch.
+- `no-redundant-role` excludes the `list` role only, so `<ul role="list">`
+  passes while every other redundant role, `<li role="listitem">` included,
+  still fails. The reason is WebKit's handling of lists without markers
+  (ARIA rule 2). A maintainer chose this in pull request #593.
+
+The harness loads this file explicitly, so a missing or moved configuration
+fails the check instead of validating with no rules, and it rejects inline
+`html-validate-*` directive comments, which would turn rules off inside one
+fixture (`fixtures-no-directives`).
 
 `no-inline-style` stays on. Rules that only make sense for a whole document,
 such as `missing-doctype` or the initial heading rank, do not fire on these

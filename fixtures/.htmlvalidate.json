@@ -2,6 +2,7 @@
   "root": true,
   "extends": ["html-validate:recommended", "html-validate:a11y"],
   "rules": {
-    "no-missing-references": "error"
+    "no-missing-references": "error",
+    "no-redundant-role": ["error", { "exclude": ["list"] }]
   }
 }

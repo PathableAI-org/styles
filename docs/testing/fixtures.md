@@ -29,8 +29,11 @@ Each check takes a list of component folders and defaults to every folder.
 | All three     | `pnpm --filter @pathableai/fixtures check`          | Every folder                 |
 
 - **html-validate** uses the `html-validate:recommended` and
-  `html-validate:a11y` presets, plus `no-missing-references`. It is cheap, so
-  CI runs it on every fixture.
+  `html-validate:a11y` presets, plus `no-missing-references`, with
+  `no-redundant-role` allowing only `role="list"` on a `<ul>`, loaded
+  explicitly from `fixtures/.htmlvalidate.json`. It rejects inline
+  `html-validate-*` directive comments. It is cheap, so CI runs it on every
+  fixture.
 - **Contract** fails when a folder is not named after a page in
   `packages/styles/components/`, when a `pathable-*` class in a fixture is not
   a class selector in `@pathableai/styles/dist/styles.css`, or when a
@@ -64,10 +67,21 @@ cd fixtures && node harness/axe.mjs $(node harness/changed.mjs)
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
 on a pull request that changes `fixtures/**` or the workflow itself, and on
-every push to `main`. It builds `@pathableai/styles`, runs the harness tests,
-html-validate and the contract on everything, and axe on the folders
-`changed.mjs` selects (every folder on `main`), then uploads the axe report as
-the `fixtures-axe-report` artifact. It is not a required check.
+every push to `main`. It:
+
+1. builds `@pathableai/styles`;
+2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
+   lint jobs filter on `packages/`, `apps/` and `scripts/` and skip a pull
+   request that changes only `fixtures/`;
+3. runs the harness tests, including the integration tests that feed
+   known-bad markup through each check;
+4. runs html-validate and the contract on every folder;
+5. runs axe on the folders `changed.mjs` selects, or on every folder on
+   `main` and when the workflow itself changed, so a workflow edit is
+   exercised before it merges;
+6. uploads the axe report as the `fixtures-axe-report` artifact.
+
+It is not a required check.
 
 A pull request that changes only `packages/styles` does not run it yet, so a
 SCSS change that removes a class a fixture uses is caught on `main`, not on
