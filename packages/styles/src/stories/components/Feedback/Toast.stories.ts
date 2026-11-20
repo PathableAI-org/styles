@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../../shared/body-font'
 export default {
   title: 'Components/Feedback/Toast',
   tags: ['autodocs'],
@@ -21,6 +22,12 @@ export const Info = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-toast__icon',
+      '.pathable-toast__message',
+      '.pathable-toast__dismiss',
+    ]),
 }
 
 export const Progress = {

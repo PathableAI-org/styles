@@ -1,6 +1,7 @@
 import { expect, userEvent, within } from 'storybook/test'
 
 import { expectKeyboardFocusIndicator } from '../shared/focus-indicator'
+import { expectBodyFont } from '../shared/body-font'
 
 export default {
   title: 'Application Shell/Mobile Shell',
@@ -124,6 +125,10 @@ export const Default = {
     const main = within(canvasElement).getByRole('main')
     await expect(main).toHaveAttribute('tabindex', '0')
     await expectKeyboardFocusIndicator(canvasElement, main)
+    await expectBodyFont(canvasElement, [
+      '.pathable-app-shell__topbar-title',
+      '.pathable-bottom-navigation__item',
+    ])
   },
 }
 

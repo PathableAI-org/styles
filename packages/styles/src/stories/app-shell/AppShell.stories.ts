@@ -1,5 +1,7 @@
 import { expect, within } from 'storybook/test'
 
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Application Shell/Desktop Shell',
   tags: ['autodocs'],
@@ -80,6 +82,14 @@ export const Default = {
       ${mainContent()}
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-app-shell__brand',
+      '.pathable-app-shell__nav-item',
+      '.pathable-app-shell__account',
+      '.pathable-app-shell__topbar-title',
+      '.pathable-app-shell__content',
+    ]),
 }
 
 export const WithNotification = {

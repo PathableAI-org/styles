@@ -12,6 +12,7 @@
 @use 'uswds-core' as *;
 
 .pathable-screenshot-frame {
+  font-family: var(--pathable-font-body);
   display: inline-block;
   max-width: 100%;
   border-radius: var(

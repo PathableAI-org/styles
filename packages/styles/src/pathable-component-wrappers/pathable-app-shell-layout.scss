@@ -54,6 +54,7 @@
 
 // Desktop shell layout (1024px+)
 .pathable-app-shell {
+  font-family: var(--pathable-font-body);
   display: grid;
   grid-template-areas:
     'sidebar notification'

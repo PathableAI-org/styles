@@ -58,7 +58,7 @@ const heroHtml = `
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-split pathable-split--ratio-1-2" style="align-items: center;">
       <div class="pathable-stack pathable-stack--gap-md">
-        <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color:var(--pathable-color-accent);text-transform:uppercase;">Intake Assessment Tool</p>
+        <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color: var(--pathable-color-link);text-transform:uppercase;">Intake Assessment Tool</p>
         <h1 style="margin:0;font-family:var(--pathable-font-heading);font-size:2rem;font-weight:400;line-height:1.2;color:var(--pathable-color-text);">
           Streamline participant intake in minutes
         </h1>
@@ -139,7 +139,7 @@ const featureHtml = `
     <div class="pathable-stack pathable-stack--gap-lg">
       <div class="pathable-split pathable-split--ratio-1-2" style="align-items:center;">
         <div class="pathable-stack pathable-stack--gap-md">
-          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color:var(--pathable-color-accent);text-transform:uppercase;">Guided Workflow</p>
+          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color: var(--pathable-color-link);text-transform:uppercase;">Guided Workflow</p>
           <h2 style="margin:0;font-family:var(--pathable-font-subheading);font-size:1.5rem;font-weight:700;line-height:1.3;color:var(--pathable-color-text);">Four steps from blank form to case summary</h2>
           <p style="margin:0;font-size:1rem;line-height:1.6;color:var(--pathable-color-text-muted);">Participant info, assessment, goals, and review — each step validates input and saves progress automatically. Case workers finish intakes in under 15 minutes.</p>
         </div>
@@ -189,7 +189,7 @@ const featureHtml = `
           </div>
         </figure>
         <div class="pathable-stack pathable-stack--gap-md">
-          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color:var(--pathable-color-accent);text-transform:uppercase;">Case Summary</p>
+          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color: var(--pathable-color-link);text-transform:uppercase;">Case Summary</p>
           <h2 style="margin:0;font-family:var(--pathable-font-subheading);font-size:1.5rem;font-weight:700;line-height:1.3;color:var(--pathable-color-text);">One-click summaries ready for review</h2>
           <p style="margin:0;font-size:1rem;line-height:1.6;color:var(--pathable-color-text-muted);">After intake, the tool generates a structured summary with key tags, employment goals, and next steps — ready to share with your team.</p>
         </div>
@@ -262,7 +262,7 @@ ${headerHtml}
     <div class="pathable-container pathable-container--standard">
       <div class="pathable-stack pathable-stack--gap-lg">
         <div class="pathable-stack pathable-stack--gap-md">
-          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color:var(--pathable-color-accent);text-transform:uppercase;">Guided Workflow</p>
+          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color: var(--pathable-color-link);text-transform:uppercase;">Guided Workflow</p>
           <h2 style="margin:0;font-family:var(--pathable-font-subheading);font-size:1.25rem;font-weight:700;line-height:1.3;color:var(--pathable-color-text);">Four steps from blank form to case summary</h2>
           <p style="margin:0;font-size:0.875rem;line-height:1.5;color:var(--pathable-color-text-muted);">Each step validates input and saves progress automatically. Case workers finish intakes in under 15 minutes.</p>
         </div>
@@ -286,7 +286,7 @@ ${headerHtml}
           </div>
         </figure>
         <div class="pathable-stack pathable-stack--gap-md">
-          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color:var(--pathable-color-accent);text-transform:uppercase;">Case Summary</p>
+          <p style="margin:0;font-size:0.875rem;font-weight:600;letter-spacing:0.04em;color: var(--pathable-color-link);text-transform:uppercase;">Case Summary</p>
           <h2 style="margin:0;font-family:var(--pathable-font-subheading);font-size:1.25rem;font-weight:700;line-height:1.3;color:var(--pathable-color-text);">One-click summaries ready for review</h2>
           <p style="margin:0;font-size:0.875rem;line-height:1.5;color:var(--pathable-color-text-muted);">After intake, the tool generates a structured summary with key tags, employment goals, and next steps.</p>
         </div>
