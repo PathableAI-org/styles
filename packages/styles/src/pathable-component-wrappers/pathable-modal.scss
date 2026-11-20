@@ -103,16 +103,19 @@
     // their labels no longer fit. From 30em up the buttons keep their size.
     @media (max-width: 29.99em) {
       > .pathable-button {
-        flex: 1 1 auto;
+        flex: 1 1 0;
+        min-width: min-content;
         width: auto;
       }
     }
   }
 
   // A button wider than the footer breaks its label rather than overflowing.
+  // break-word, not anywhere: the row rule above relies on the longest word
+  // as the minimum width, so the row wraps before a label is broken.
   .pathable-button {
     max-width: 100%;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 }
 

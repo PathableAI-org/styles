@@ -191,6 +191,7 @@ export const Narrow = {
  * row is an unclassed flex container, as in the React Modal stories.
  */
 export const IncreasedText = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   parameters: {
     docs: {
       // The story sets the root font size, so the docs page renders it in its
@@ -224,12 +225,14 @@ export const IncreasedText = {
       '.pathable-modal__footer',
     ) as HTMLElement
     const footerBox = footer.getBoundingClientRect()
+    const dialogBox = dialog.getBoundingClientRect()
     expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
     // The padding keeps its 100 % size instead of doubling with the text.
     const overlay = canvasElement.querySelector(
       '.pathable-modal-overlay',
     ) as HTMLElement
     expect(getComputedStyle(overlay).paddingLeft).toBe('24px')
+    expect(footerBox.left - dialogBox.left).toBe(32)
     for (const name of ['Cancel', 'Add Activity']) {
       const box = within(dialog)
         .getByRole('button', { name })
@@ -237,6 +240,15 @@ export const IncreasedText = {
       expect(box.left).toBeGreaterThanOrEqual(footerBox.left)
       expect(box.right).toBeLessThanOrEqual(footerBox.right)
     }
+    // The labels no longer fit on one line, so the row wraps instead of
+    // shrinking the buttons side by side.
+    const cancelBox = within(dialog)
+      .getByRole('button', { name: 'Cancel' })
+      .getBoundingClientRect()
+    const addBox = within(dialog)
+      .getByRole('button', { name: 'Add Activity' })
+      .getBoundingClientRect()
+    expect(addBox.top).toBeGreaterThanOrEqual(cancelBox.bottom)
   },
 }
 
@@ -245,6 +257,7 @@ export const IncreasedText = {
  * React Modal stories, stays on one line inside the footer.
  */
 export const NarrowFooterRow = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
   parameters: {
     docs: {
       description: {
