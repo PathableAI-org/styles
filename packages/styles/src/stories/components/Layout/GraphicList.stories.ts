@@ -1,5 +1,12 @@
 import { expect, within } from 'storybook/test'
 
+import { guarantee } from '../../shared/guarantee'
+
+type PlayContext = {
+  canvasElement: HTMLElement
+  step: Parameters<typeof guarantee>[0]
+}
+
 const renderBlock = (title: string, description: string) => `
   <div class="pathable-media-block" data-testid="graphic-list-block">
     <svg class="pathable-media-block__img" aria-hidden="true" focusable="false" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
@@ -33,30 +40,36 @@ export const Default = {
       ${renderBlock('Workplace adjustments', 'Help agreeing changes with your employer.')}
     </section>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  play: async ({ canvasElement, step }: PlayContext) => {
     const canvas = within(canvasElement)
     const blocks = canvas.getAllByTestId('graphic-list-block')
     const rootFontSize = parseFloat(
       window.getComputedStyle(document.documentElement).fontSize,
     )
-    const spaced = parseFloat(window.getComputedStyle(blocks[0]).marginBottom)
 
-    // 2rem below the 40em tablet breakpoint, 4rem from it.
-    const fromTablet = window.matchMedia('(min-width: 40em)').matches
-    await expect(spaced).toBe((fromTablet ? 4 : 2) * rootFontSize)
-    await expect(window.getComputedStyle(blocks[1]).marginBottom).toBe('0px')
+    await guarantee(step, 'graphic-list/block-spacing', async () => {
+      const spaced = parseFloat(window.getComputedStyle(blocks[0]).marginBottom)
+      // 2rem below the 40em tablet breakpoint, 4rem from it.
+      const fromTablet = window.matchMedia('(min-width: 40em)').matches
+      await expect(spaced).toBe((fromTablet ? 4 : 2) * rootFontSize)
+      await expect(window.getComputedStyle(blocks[1]).marginBottom).toBe('0px')
+    })
 
-    const image = blocks[0].querySelector('.pathable-media-block__img')
-    await expect(window.getComputedStyle(image as Element).marginRight).toBe(
-      `${1.5 * rootFontSize}px`,
-    )
+    await guarantee(step, 'graphic-list/image-gap', async () => {
+      const image = blocks[0].querySelector('.pathable-media-block__img')
+      await expect(window.getComputedStyle(image as Element).marginRight).toBe(
+        `${1.5 * rootFontSize}px`,
+      )
+    })
 
-    const firstChild = blocks[0].querySelector(
-      '.pathable-media-block__body > :first-child',
-    )
-    await expect(window.getComputedStyle(firstChild as Element).marginTop).toBe(
-      '0px',
-    )
+    await guarantee(step, 'graphic-list/body-first-child', async () => {
+      const firstChild = blocks[0].querySelector(
+        '.pathable-media-block__body > :first-child',
+      )
+      await expect(
+        window.getComputedStyle(firstChild as Element).marginTop,
+      ).toBe('0px')
+    })
   },
 }
 
