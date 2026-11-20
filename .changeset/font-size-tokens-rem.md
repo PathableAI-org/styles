@@ -12,3 +12,9 @@ body-md 1rem, body-sm and label-md 0.875rem, label-sm and caption-md 0.75rem.
 tokens now scales with it (at a 200% root, every size doubles). Consumers that
 read the tokens as pixel values, for example in `calc()` with px lengths or
 JavaScript that parses them, must handle `rem`.
+
+The Sass variables `$ui-display-lg` to `$ui-caption-md` and the font sizes in
+`$typography-scale` are `rem` too, so Sass that adds or subtracts them with px
+lengths now fails with an incompatible-units error. The line heights in
+`$typography-scale` stay in px and do not scale with the text; use the
+unitless `--pathable-font-line-height-*` tokens instead.

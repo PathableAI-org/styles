@@ -28,7 +28,7 @@ guarantees:
     status: unmet
     claim: The heading is set in the heading typeface at weight 400, Fredoka Regular.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: The heading and body font sizes follow the root font size, so at a 200% root font size both sizes double.
   - id: action-space
     status: unverified
@@ -149,10 +149,6 @@ from the package source and no test checks it yet.
 
 Today the heading asks for bold, and the package ships only Fredoka Regular
 (400), so browsers draw a synthesised bold; `heading-weight` is unmet.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed px
-values, so the heading and body sizes do not follow the user's default font
-size.
 
 ## The consumer owns
 

@@ -25,7 +25,7 @@ guarantees:
     status: unverified
     claim: The status text is 0.875rem with a line height of 1.5 by default and 1rem at large, which is 14 px and 16 px at a 16 px root font size.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: The status text size follows the root font size, so at a 200% root font size it doubles at both sizes.
   - id: no-shrink
     status: unverified
@@ -136,10 +136,6 @@ and 46 px at a 16 px root font size, unless the application applies
 The forced colours guarantee is unmet: in Chromium the browser replaces the
 transparent top of the ring with the system colour, so the ring shows as a
 closed circle and its turning cannot be seen.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
-px values, so the status text size does not follow the user's default font
-size.
 
 ## The consumer owns
 
