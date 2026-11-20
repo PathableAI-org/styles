@@ -1,5 +1,7 @@
 import { expect, within } from 'storybook/test'
 
+import { guarantee } from '../../shared/guarantee'
+
 export default {
   title: 'Components/Button Group',
   tags: ['autodocs'],
@@ -43,7 +45,13 @@ export const NarrowContainer = {
       </div>
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  play: async ({
+    canvasElement,
+    step,
+  }: {
+    canvasElement: HTMLElement
+    step: Parameters<typeof guarantee>[0]
+  }) => {
     const canvas = within(canvasElement)
     const frame = canvas.getByTestId('frame')
     const group = frame.querySelector<HTMLElement>('.pathable-button-group')
@@ -54,19 +62,21 @@ export const NarrowContainer = {
     await expect(view.innerWidth).toBeGreaterThanOrEqual(480)
     await expect(view.getComputedStyle(group).flexWrap).toBe('wrap')
 
-    const frameRight = frame.getBoundingClientRect().right
-    const buttons = canvas.getAllByRole('button')
-    for (const button of buttons) {
-      await expect(button.getBoundingClientRect().right).toBeLessThanOrEqual(
-        frameRight,
-      )
-    }
+    await guarantee(step, 'button-group/row-from-480', async () => {
+      const frameRight = frame.getBoundingClientRect().right
+      const buttons = canvas.getAllByRole('button')
+      for (const button of buttons) {
+        await expect(button.getBoundingClientRect().right).toBeLessThanOrEqual(
+          frameRight,
+        )
+      }
 
-    // The buttons need more than one line, so the row did wrap.
-    const tops = new Set(
-      buttons.map((button) => Math.round(button.getBoundingClientRect().top)),
-    )
-    await expect(tops.size).toBeGreaterThan(1)
+      // The buttons need more than one line, so the row did wrap.
+      const tops = new Set(
+        buttons.map((button) => Math.round(button.getBoundingClientRect().top)),
+      )
+      await expect(tops.size).toBeGreaterThan(1)
+    })
   },
   parameters: {
     docs: {
