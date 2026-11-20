@@ -31,7 +31,7 @@ guarantees:
     status: unverified
     claim: The spinner keeps its size when the status text wraps onto several lines in a narrow container.
   - id: forced-colours
-    status: unmet
+    status: met
     claim: In forced colours mode the ring is drawn in a system colour and keeps a visible gap, or another visible sign of motion, so its turning can be seen.
 ---
 
@@ -132,10 +132,6 @@ The spinner is unmet because its width and height exclude the border: it is
 1.5rem plus 2 px on each side by default and 2.5rem plus 3 px at large, 28 px
 and 46 px at a 16 px root font size, unless the application applies
 `box-sizing: border-box` to every element.
-
-The forced colours guarantee is unmet: in Chromium the browser replaces the
-transparent top of the ring with the system colour, so the ring shows as a
-closed circle and its turning cannot be seen.
 
 The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
 px values, so the status text size does not follow the user's default font
