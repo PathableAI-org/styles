@@ -63,12 +63,21 @@ const config = {
         { width: 320, height: 700 },
       ],
       [
+        'discovery-resource-card--list-layout-mobile',
+        { width: 320, height: 700 },
+      ],
+      [
         'dashboard-dashboard-header--breadcrumb-focus-mobile',
         { width: 375, height: 812 },
       ],
       [
         'components-feedback-pageerror--mobile-full-page',
         { width: 375, height: 812 },
+      ],
+      ['components-button--width-auto-mobile', { width: 375, height: 812 }],
+      [
+        'components-button--responsive-width-override-below-tablet',
+        { width: 600, height: 900 },
       ],
       [
         'components-form-controls-form-row--at-desktop-breakpoint',
@@ -104,11 +113,14 @@ const config = {
     const isFilterableOptionList = context.id.startsWith(
       'components-form-controls-filterable-option-list--',
     )
-    // The workflow card's status text once failed contrast (#314); keep the
-    // rule on for the story that shows it.
+    // The workflow card's status text once failed contrast (#314), and the KPI
+    // up trend and schedule item status and cancelled text did too (#378);
+    // keep the rule on for the stories that show them.
     const checksColorContrast =
       isFilterableOptionList ||
-      context.id === 'components-card--workflow-card-with-status'
+      context.id === 'components-card--workflow-card-with-status' ||
+      context.id === 'dashboard-kpi-grid--default' ||
+      context.id.startsWith('dashboard-schedule-item--')
     await checkA11y(page, 'body', {
       detailedReport: true,
       detailedReportOptions: { html: true },

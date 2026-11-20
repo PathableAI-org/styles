@@ -28,6 +28,7 @@
 
 // --- Base: single-select horizontal strip ---
 .pathable-segmented-control {
+  font-family: var(--pathable-font-body);
   box-sizing: border-box;
   display: inline-flex;
   max-width: 100%;
