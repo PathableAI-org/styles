@@ -26,7 +26,7 @@ export default {
 const sidebarHtml = `
 <aside class="pathable-app-shell__sidebar">
   <div class="pathable-app-shell__brand" style="padding:0.5rem 0;">
-    <strong style="font-size:1.125rem;color:var(--pathable-color-accent);">PathAble</strong>
+    <strong style="font-size:1.125rem;color: var(--pathable-color-link);">PathAble</strong>
   </div>
   <nav class="pathable-app-shell__nav">
     <a href="#" class="pathable-app-shell__nav-item pathable-app-shell__nav-item--active" aria-current="page">Dashboard</a>
@@ -56,7 +56,7 @@ const topbarHtml = `
 const dashboardHeaderHtml = `
 <div class="pathable-dashboard-header">
   <div class="pathable-dashboard-header__breadcrumb">
-    <a href="#">Home</a>
+    <a class="pathable-link" href="#">Home</a>
     <span>Programs</span>
     <span>Employment Pathways</span>
   </div>
@@ -372,7 +372,7 @@ const skeletonHtml = `
 const emptyContentHtml = `
 <div class="pathable-dashboard-header">
   <div class="pathable-dashboard-header__breadcrumb">
-    <a href="#">Home</a>
+    <a class="pathable-link" href="#">Home</a>
     <span>Programs</span>
   </div>
   <div class="pathable-dashboard-header__row">

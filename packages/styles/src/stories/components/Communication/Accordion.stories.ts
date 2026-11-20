@@ -9,6 +9,7 @@ import {
   verifyFocusRetention,
   type StoryHarness,
 } from '@pathable/storybook-contracts'
+import { expectBodyFont } from '../../shared/body-font'
 
 export default {
   title: 'Components/Communication/Accordion',
@@ -122,6 +123,7 @@ export const Default = {
     await verifyPanelAvailability(harness, FIRST_AMENDMENT)
     await verifyEnterExpandsDisclosure(harness, FIRST_AMENDMENT)
     await verifyFocusRetention(harness, FIRST_AMENDMENT)
+    await expectBodyFont(canvasElement, ['.pathable-accordion__button'])
   },
 }
 

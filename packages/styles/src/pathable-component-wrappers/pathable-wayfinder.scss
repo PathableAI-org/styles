@@ -1,15 +1,19 @@
 // packages/styles/src/pathable-component-wrappers/pathable-wayfinder.scss
 //
 // Guided wayfinder panel — presents complex resource-discovery choices as
-// approachable questions. Raised panel with decorative icon, heading,
+// approachable questions. Flat, bordered panel with decorative icon, heading,
 // explanatory text, labeled question groups, and a primary action.
 //
 // Modifier classes:
-//   .pathable-wayfinder--raised  — elevated surface appearance (default)
+//   .pathable-wayfinder--raised  — optional elevated surface instead of the
+//                                  bordered default
 
 @use 'uswds-core' as *;
 
 .pathable-wayfinder {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;
@@ -37,7 +41,7 @@
 .pathable-wayfinder__heading {
   font-family: var(--pathable-font-heading);
   font-size: var(--pathable-font-size-heading-lg);
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   margin: 0;
 }
@@ -99,7 +103,8 @@
 
   input[type='radio'],
   input[type='checkbox'] {
-    accent-color: var(--pathable-color-accent);
+    // Checked fill needs 3:1 on the panel (WCAG 1.4.11); the brand accent is 2.78:1.
+    accent-color: var(--pathable-color-action-primary-bg);
   }
 }
 

@@ -25,7 +25,7 @@ guarantees:
     status: unverified
     claim: The level modifier alone sets the size, so an `<h2>` with `pathable-heading--level-4` renders at the same 1.125rem (18 px) as an `<h4>` with it.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: Every level's font size follows the root font size, so at a 200% root font size every level's size doubles.
   - id: text-colour
     status: unverified
@@ -131,9 +131,6 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
-px values, so the level sizes do not follow the user's default font size.
 
 The dark-background-contrast guarantee is unmet: today the heading is drawn in
 the theme text colour inside `pathable-dark-background`, which in the default

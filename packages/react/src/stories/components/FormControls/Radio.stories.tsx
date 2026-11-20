@@ -20,7 +20,7 @@ const meta = {
 
 **Accessibility**: The required \`children\` prop supplies the visible accessible label. Use \`aria-describedby\` for external hints or validation messages. Native arrow-key navigation and Space selection remain browser-managed.
 
-**Supported styling**: The wrapper exposes the default PathAble radio contract only. The source \`pathable-radio--tile\` story reference is not exposed because that modifier is not implemented by the owning stylesheet contract.`,
+**Supported styling**: The wrapper exposes the default PathAble radio contract only. A \`pathable-radio--tile\` modifier is not exposed because the owning stylesheet contract does not implement it.`,
       },
     },
   },

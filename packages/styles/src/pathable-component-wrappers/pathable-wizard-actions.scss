@@ -29,6 +29,13 @@
   }
 }
 
+// usa-button keeps `margin-right: units(1)`; the region's gap already spaces
+// buttons. `:where()` keeps one-class specificity so the rule still follows
+// the button wrapper and a margin utility loaded later still wins.
+.pathable-wizard__actions :where(.pathable-button) {
+  margin-right: 0;
+}
+
 // Push Continue and Submit to the right
 // Right-align the primary action and last button in the footer
 .pathable-wizard__actions .pathable-button--continue,
@@ -46,6 +53,9 @@
 // Back on the left, Continue/Submit on the right (full-height)
 @include at-media-max('tablet') {
   .pathable-wizard__actions {
+    // Light container: reset the surface focus ring (see pathable-bg-link in
+    // _utilities.scss).
+    --pathable-surface-focus-ring: initial;
     position: sticky;
     bottom: 0;
     background: color('white');

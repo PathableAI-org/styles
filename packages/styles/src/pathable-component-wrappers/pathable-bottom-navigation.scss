@@ -47,6 +47,7 @@
 // Placed inside .pathable-app-shell so the shell grid controls visibility on mobile.
 // The shell layout assigns `bottomnav` as the grid area for this element.
 .pathable-bottom-navigation {
+  font-family: var(--pathable-font-body);
   display: flex;
   grid-area: bottomnav;
   justify-content: space-around;

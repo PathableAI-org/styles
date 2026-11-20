@@ -60,6 +60,10 @@
 }
 
 .pathable-modal {
+  font-family: var(--pathable-font-body);
+  // Light container: reset the surface focus ring (see pathable-bg-link in
+  // _utilities.scss).
+  --pathable-surface-focus-ring: initial;
   @extend .usa-modal;
 }
 
@@ -80,6 +84,13 @@
   // Keep a wrapping title clear of the corner-pinned close button below
   // (its inset plus its 44 px box), whatever margin the heading element has.
   padding-inline-end: calc(var(--pathable-space-1) + 44px);
+  font-weight: var(--pathable-font-weight-normal);
+}
+
+// The title element inside the heading wrapper takes the user agent's bold
+// unless it inherits the wrapper's Regular weight.
+.pathable-modal__heading :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: inherit;
 }
 
 .pathable-modal__footer {
@@ -91,6 +102,8 @@
 // nests it in .pathable-modal__heading under a column content box, so pin it
 // to the dialog's top-right corner instead (.usa-modal is position: relative).
 .pathable-modal__close {
+  // Nested in the heading, so inheriting would give it the heading typeface.
+  font-family: var(--pathable-font-body);
   @extend .usa-modal__close;
   position: absolute;
   inset-block-start: var(--pathable-space-1);

@@ -34,7 +34,7 @@ guarantees:
     status: unverified
     claim: The description is at most 40rem wide, at 0.875rem (14 px at a 16 px root) with a line height of 1.5, in the muted text colour.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: The breadcrumb, title, context and description font sizes follow the root font size, so at a 200% root font size each size doubles.
   - id: context-nowrap
     status: unverified
@@ -179,10 +179,6 @@ setting them does nothing.
 
 Today the title asks for bold, and the package ships only Fredoka Regular (400),
 so browsers draw a synthesised bold; `title-weight` is unmet.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
-px values, so the header's text sizes do not follow the user's default font
-size.
 
 ## The consumer owns
 

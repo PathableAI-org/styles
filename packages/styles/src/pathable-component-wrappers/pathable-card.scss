@@ -15,6 +15,10 @@
 
 .pathable-card__container {
   @extend .usa-card__container;
+
+  // Light container: reset the surface focus ring (see pathable-bg-link in
+  // _utilities.scss).
+  --pathable-surface-focus-ring: initial;
 }
 
 .pathable-card__header {
@@ -31,10 +35,65 @@
 
 .pathable-card__heading {
   @extend .usa-card__heading;
+
+  // A long single word breaks inside the card instead of running past it at
+  // increased text size on a narrow viewport. `break-word`, unlike `anywhere`,
+  // leaves the min-content width alone, so a flex card does not squeeze its
+  // heading into fragments. It is set on the heading only: the React Card's
+  // base, media, flag and header-first presentations render the title in
+  // `.pathable-card__header`, which this does not reach.
+  overflow-wrap: break-word;
+
+  // Heading typeface (Fredoka) ships only Regular (400); the browser's default
+  // heading weight is bold, which it would synthesise. Brand rules: Regular.
+  font-weight: var(--pathable-font-weight-normal);
 }
 
 .pathable-card__media {
   @extend .usa-card__media;
+}
+
+// Media scales to the card width at every viewport instead of keeping an
+// intrinsic width attribute that overflows narrow cards. USWDS crops flag card
+// media to a fixed column from the tablet breakpoint up, so flag cards keep
+// that behaviour there and are sized like any other card below it.
+@mixin pathable-card-media-fit {
+  > img,
+  > svg,
+  > video,
+  > picture,
+  > picture > img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.pathable-card:not(.pathable-card--flag) .pathable-card__media {
+  @include pathable-card-media-fit;
+}
+
+// Full-width media must not square off the container's rounded top corners.
+// Header-first cards put the media below the header, where USWDS keeps square
+// corners, and flag cards crop media to a column. The React Card renders media
+// without a container, border or radius, so it stays square.
+.pathable-card:not(.pathable-card--flag):not(.pathable-card--header-first)
+  > .pathable-card__container
+  > .pathable-card__media {
+  overflow: hidden;
+  border-start-start-radius: calc(
+    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+  );
+  border-start-end-radius: calc(
+    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+  );
+}
+
+@include at-media-max($theme-card-flag-min-width) {
+  .pathable-card--flag .pathable-card__media {
+    @include pathable-card-media-fit;
+  }
 }
 
 .pathable-card__media--exdent {
@@ -57,6 +116,12 @@
 // Brand opinion: Shilling Silver or white surface, PathAble Blue heading,
 // optional status in the text-safe deep jade (AA on white, not on Shilling
 // Silver), Tech Teal links, generous spacing
+// The card's own outline is drawn on the surface around it, so the reset for
+// what sits on its white background goes on its children, not on the card.
+:where(.pathable-card--workflow) > * {
+  --pathable-surface-focus-ring: initial;
+}
+
 .pathable-card--workflow {
   background-color: var(--pathable-color-surface);
   border: 1px solid var(--pathable-color-border);
@@ -102,9 +167,49 @@
 // In the container form the colour and underline belong to the links, not to
 // the container, so other inline content and the gaps between actions are
 // not drawn as a link.
-.pathable-card--workflow .pathable-card__action:has(a) {
+.pathable-card--workflow
+  .pathable-card__action:has(:is(a, button, input, select, textarea)) {
   color: inherit;
   text-decoration: none;
+}
+
+// The container also sits below the content above it, and lays out buttons and
+// form controls with a gap, so a focused action's 2px ring plus its offset
+// shows on all four sides and crosses no text or neighbouring action. Links
+// alone keep inline flow, so prose mixed with links is not split into spaced
+// items. The whole selector is inside :where(), so it has zero specificity and
+// a utility such as .pathable-cluster on the container still sets its own gap.
+:where(
+  .pathable-card--workflow
+    .pathable-card__action:has(:is(a, button, input, select, textarea))
+) {
+  margin-top: var(--pathable-space-2);
+}
+
+:where(
+  .pathable-card--workflow
+    .pathable-card__action:has(
+      :is(button, input, select, textarea, .pathable-button, .usa-button)
+    )
+) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pathable-space-2);
+}
+
+// Inside that flex container the actions are spaced by the gap alone, so a
+// button drops its own right margin. A .pathable-button-group fills the
+// container's width, as it does outside it, and can shrink below its widest
+// button at large text sizes.
+.pathable-card--workflow
+  .pathable-card__action
+  > :is(button, .pathable-button, .usa-button) {
+  margin-right: 0;
+}
+
+.pathable-card--workflow .pathable-card__action > .pathable-button-group {
+  flex: 1 1 100%;
+  min-width: 0;
 }
 
 // A plain link gets no focus outline from this package (USWDS styles one
@@ -117,7 +222,8 @@
 .pathable-card--workflow
   .pathable-card__action
   a:where(:not([class]), [class=''], .pathable-link, .usa-link):focus-visible {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 
@@ -138,7 +244,8 @@
 
 // Focus state for the entire card when any child is focused
 .pathable-card--workflow:focus-within {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 

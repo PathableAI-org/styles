@@ -16,7 +16,7 @@ export const Populated = {
     <div style="display: flex; flex-direction: column; gap: 2rem;">
       <div class="pathable-dashboard-header">
         <div class="pathable-dashboard-header__breadcrumb">
-          <a href="#">Home</a>
+          <a class="pathable-link" href="#">Home</a>
           <span>Programs</span>
           <span>Employment Pathways</span>
         </div>

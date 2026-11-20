@@ -55,6 +55,9 @@
 // --- KPI card ---
 
 .pathable-kpi-card {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;
@@ -91,7 +94,7 @@
 .pathable-kpi-card__value {
   font-family: var(--pathable-font-heading);
   font-size: var(--pathable-font-size-display-lg);
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   line-height: 1.1;
   margin: 0;
@@ -129,7 +132,7 @@
 
   // Semantic trend cues — always include text/icon in addition to color
   &[data-trend='up'] {
-    color: var(--pathable-color-success);
+    color: var(--pathable-color-text-success);
 
     &::before {
       border-left: 0.35rem solid transparent;

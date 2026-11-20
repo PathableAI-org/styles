@@ -17,6 +17,9 @@
 // --- Base container ---
 
 .pathable-record-header {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   font-family: var(--pathable-font-body);
   display: flex;
   gap: var(--pathable-record-header-gap, var(--pathable-space-4));
@@ -72,7 +75,7 @@
 .pathable-record-header__identity {
   font-family: var(--pathable-font-heading);
   font-size: var(--pathable-font-size-heading-md);
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   margin: 0;
   word-break: break-word;

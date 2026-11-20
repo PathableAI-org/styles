@@ -12,3 +12,13 @@
 .pathable-prose {
   @extend .usa-prose;
 }
+
+// Prose headings use the heading typeface (Fredoka), which ships only Regular
+// (400); keep them from drawing a synthesised bold.
+.pathable-prose > h1,
+.pathable-prose > h2,
+.pathable-prose > h3,
+.pathable-prose > h4,
+.pathable-prose > h5 {
+  font-weight: var(--pathable-font-weight-normal);
+}

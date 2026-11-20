@@ -15,6 +15,9 @@
 // --- Base item ---
 
 .pathable-schedule-item {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   font-family: var(--pathable-font-body);
   display: flex;
   gap: var(--pathable-space-3);
@@ -54,7 +57,7 @@
 .pathable-schedule-item__date-day {
   font-family: var(--pathable-font-heading);
   font-size: var(--pathable-font-size-heading-lg);
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   line-height: 1.2;
 }
@@ -132,10 +135,9 @@
 
 // --- Status variants ---
 
-// Cancelled: struck-through text, muted
+// Cancelled: struck-through text, muted. The item is still content with a
+// working Details action, so it is not faded: muted text stays at 4.5:1 or more.
 .pathable-schedule-item--cancelled {
-  opacity: 0.6;
-
   .pathable-schedule-item__title {
     text-decoration: line-through;
     color: var(--pathable-color-text-muted);
@@ -150,8 +152,9 @@
 // Completed: subtle success treatment
 .pathable-schedule-item--completed {
   .pathable-schedule-item__status {
-    background: var(--pathable-color-bg);
-    color: var(--pathable-color-success);
+    background: var(--pathable-color-surface);
+    border: 1px solid var(--pathable-color-border);
+    color: var(--pathable-color-text-success);
   }
 }
 
@@ -172,8 +175,9 @@
 // Upcoming: default (no extra changes)
 .pathable-schedule-item--upcoming {
   .pathable-schedule-item__status {
-    background: var(--pathable-color-bg);
-    color: var(--pathable-color-accent);
+    background: var(--pathable-color-surface);
+    border: 1px solid var(--pathable-color-border);
+    color: var(--pathable-color-link);
   }
 }
 
@@ -235,10 +239,6 @@
 @media (forced-colors: active) {
   .pathable-schedule-item {
     border: 2px solid CanvasText;
-
-    &.pathable-schedule-item--cancelled {
-      opacity: 1;
-    }
 
     &.pathable-schedule-item--tentative {
       border-style: dashed;

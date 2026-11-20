@@ -28,7 +28,7 @@ guarantees:
     status: unverified
     claim: Below a 640 px viewport, the action footer sticks to the bottom of the viewport as two equal columns, with a save button alone on the first row.
   - id: region-sizes
-    status: unmet
+    status: unverified
     claim: At a 16 px root, the heading is set at the theme's large type size, 1.5rem (24 px), the section heading at its medium size, 1.125rem (18 px), and the mobile summary at its small size, 1rem (16 px), instead of the inherited or element default size.
 ---
 
@@ -113,7 +113,8 @@ is an element modifier described under Composition.
 | -------------------------------- | --------------------------------- |
 | Maximum width                    | `--pathable-wizard-max-width`     |
 | Gap between regions and sections | `--pathable-wizard-gap`           |
-| Heading and section weight       | `--pathable-font-weight-bold`     |
+| Heading and section typeface     | `--pathable-font-heading`         |
+| Heading and section weight       | `--pathable-font-weight-normal`   |
 | Mobile summary weight            | `--pathable-font-weight-semibold` |
 
 `--pathable-wizard-max-width` is 64rem (1024 px) and `--pathable-wizard-gap`
@@ -130,7 +131,7 @@ Direct children stack in source order, each separated by the wizard gap:
   it.
 - `pathable-wizard__mobile-summary`: a one-line step summary such as "Step 2 of
   4: Participant intake", shown only below 640 px.
-- `pathable-wizard__heading`: the step's heading, bold, with no margin of its
+- `pathable-wizard__heading`: the step's heading, in Fredoka Regular, with no margin of its
   own apart from the wizard gap above it.
 - `pathable-wizard__validation`: the error summary region, hidden until you add
   `pathable-wizard__validation--visible`. Put a `pathable-alert` with
@@ -163,9 +164,9 @@ and below 480 px the back button touches the button beside it.
 Today the heading has no top margin and sits directly against the element
 before it, because its margin reset also removes the wizard gap.
 
-Today the heading, section and mobile summary sizes compile to invalid
-declarations, so the text renders at the inherited or element default size
-and `region-sizes` is unmet.
+The heading, section and mobile summary sizes compile to the theme's large,
+medium and small type sizes, so the text no longer renders at the inherited or
+element default size.
 
 ## The consumer owns
 

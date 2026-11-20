@@ -22,8 +22,8 @@ guarantees:
     status: unverified
     claim: Except as a direct child of `pathable-filterable-option-list`, the legend's content box is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
   - id: text-colour
-    status: unmet
-    claim: 'In the default theme, where no container sets a text colour of its own, the legend text is #00365c, PathAble Blue, the brand text colour; inside a container that sets its own text colour, such as a dark surface, it takes that colour.'
+    status: met
+    claim: 'In the default theme, the legend text is #00365c, PathAble Blue, the brand text colour, except inside one of the containers the Guarantees section lists (dark surfaces, alerts, background utilities and text colour utilities), where it takes the colour it inherits there; a colour utility on the legend itself wins in both cases.'
 ---
 
 # Legend
@@ -86,9 +86,10 @@ that is the page's main heading.
 
 ## Tokens
 
-None. The font family, size, line-height and margin are fixed values in the
-compiled stylesheet, not custom properties, so a theme does not change them.
-Today the legend sets no colour; see the Guarantees section.
+`--pathable-color-text` sets the legend's text colour, so a theme that
+overrides it recolours the legend. The font family, size, line-height and
+margin are fixed values in the compiled stylesheet, not custom properties, so
+a theme does not change them.
 
 ## Composition
 
@@ -114,10 +115,22 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-Today the legend sets no colour, so its text takes the colour of the element it
-sits in. On a page that sets no text colour it renders in the browser's
-default black, while the hint and control labels beside it render in brand
-colours.
+The legend sets its text colour to the brand text colour,
+`var(--pathable-color-text)`, at zero specificity, so a colour utility such as
+`pathable-text-white` on the legend itself wins. Inside a coloured container
+the legend takes the colour it inherits from that container, as it did before
+it had a default: `pathable-surface--inverse`, `pathable-surface--brand`,
+`pathable-surface--tone-primary`, `pathable-section--dark`, `pathable-hero`,
+`pathable-dark-background`, `pathable-alert`, `pathable-bg-accent`,
+`pathable-bg-danger`, `pathable-bg-link`, `pathable-bg-primary`,
+`pathable-bg-success`, `pathable-bg-focus-ring`, `pathable-identifier`,
+`pathable-screenshot-frame--dashboard`, and the `pathable-text-accent`, `-base`, `-link`,
+`-muted`, `-primary` and `-white` utilities. A container that sets a
+background but no text colour, such as `pathable-bg-primary` on its own,
+leaves the legend in the browser's default black there; add a text colour
+utility to that container. A container of your own that is not in this list
+gives the legend PathAble Blue, the colour the control labels have, whatever
+its text colour: set the legend's colour with a utility class on the legend.
 
 The maximum width applies to the legend's content box: the legend is
 content-box, so the browser's small inline padding on `<legend>` adds to it.

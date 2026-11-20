@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../shared/body-font'
 export default {
   title: 'Structured Workflow/Wizard',
   tags: ['autodocs'],
@@ -57,6 +58,8 @@ export const Default = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-wizard__mobile-summary']),
 }
 
 export const Mobile = {
@@ -65,7 +68,7 @@ export const Mobile = {
     docs: {
       description: {
         story:
-          'On viewports smaller than 768px, the wizard shows a compact step summary line instead of the full horizontal step indicator. The action footer becomes a 2-column sticky bar at the bottom of the viewport.',
+          'On viewports smaller than 640px, the wizard shows a compact step summary line instead of the full horizontal step indicator. The action footer becomes a 2-column sticky bar at the bottom of the viewport.',
       },
     },
   },
@@ -135,7 +138,7 @@ export const ValidationError = {
               <li>Email is required</li>
               <li>Phone number format is invalid</li>
             </ul>
-            <p class="usa-hint">After correcting errors, continue to move to the next step.</p>
+            <p class="pathable-hint">After correcting errors, continue to move to the next step.</p>
           </div>
         </div>
       </div>

@@ -43,6 +43,9 @@
 }
 
 .pathable-filterable-option-list__options {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   box-sizing: border-box;
   max-height: var(--pathable-filterable-option-list-max-height, 20rem);
   min-width: 0;
@@ -120,6 +123,9 @@
 }
 
 .pathable-filterable-option-list__empty {
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   box-sizing: border-box;
   margin: 0;
   padding: var(--space-16);

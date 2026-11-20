@@ -29,13 +29,13 @@ guarantees:
     status: unverified
     claim: Every pathable-button in the actions region is at least 44 by 44 px, and below a 640 px viewport the actions region sticks to the bottom of the viewport.
   - id: text-contrast
-    status: unmet
+    status: unverified
     claim: The current-activity text and the saved, completed and offline status messages each have a contrast of at least 4.5:1 against their background.
   - id: offline-continue
     status: unmet
     claim: The offline modifier does not change the continue button's opacity or pointer behaviour; a continue button the application disables with disabled or aria-disabled="true" looks disabled through pathable-button's own disabled styles.
   - id: region-sizes
-    status: unmet
+    status: unverified
     claim: At a 16 px root, the context header, current activity, prompt and status regions and the offline and validation-error status messages are set at the theme's small type size, 1rem (16 px), and the objective and the completed status message at its medium size, 1.125rem (18 px), instead of the inherited size.
 ---
 
@@ -173,18 +173,19 @@ from the package source, and no test checks it yet.
 Today each state modifier except the default writes a fixed English message
 with generated content at the start of the status region: "Loading…",
 "Saving…", "✓ Saved", an offline warning, a validation warning or
-"✓ Completed". The contrast guarantee falls short in all four cases: the
-current-activity text is about 2.2:1 on white, the saved and completed
-messages about 2.8:1 on white, and the offline message about 4.3:1 on its
-amber box.
+"✓ Completed". The contrast guarantee holds in all four cases: the
+current-activity text is `#5c5c5c` (about 6.7:1 on white), the saved and
+completed messages are `#0d7a63` (about 5.3:1 on white), and the offline
+message is `#00365c` (about 11.6:1 on its amber box). No test measures them
+yet, so `text-contrast` is unverified.
 
 Today the offline state also dims the continue button to 60% opacity and
 ignores pointer clicks on it, but it stays in the tab order and can still be
 pressed with the keyboard, and no disabled state reaches assistive technology.
 So `offline-continue` is unmet.
 
-Today the region and status message sizes compile to invalid declarations, so
-the text renders at the inherited size and `region-sizes` is unmet.
+The region and status message sizes compile to the theme's small and medium
+type sizes, so the text no longer renders at the inherited size.
 
 ## The consumer owns
 

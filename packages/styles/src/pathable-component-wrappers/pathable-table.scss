@@ -22,10 +22,16 @@
 
 .pathable-table {
   @extend .usa-table;
+
+  // Light container: reset the surface focus ring (see pathable-bg-link in
+  // _utilities.scss).
+  --pathable-surface-focus-ring: initial;
 }
 
 .pathable-table--borderless {
   @extend .usa-table--borderless;
+
+  --pathable-surface-focus-ring: initial;
 }
 
 .pathable-table--compact {
