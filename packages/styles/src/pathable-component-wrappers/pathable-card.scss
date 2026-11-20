@@ -15,6 +15,10 @@
 
 .pathable-card__container {
   @extend .usa-card__container;
+
+  // Light container: reset the surface focus ring (see pathable-bg-link in
+  // _utilities.scss).
+  --pathable-surface-focus-ring: initial;
 }
 
 .pathable-card__header {
