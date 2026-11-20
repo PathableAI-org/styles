@@ -13,6 +13,32 @@
   @extend .usa-link;
 }
 
+// USWDS compiles the link, visited, hover and active colours from the theme
+// settings, so a theme override of --pathable-color-link would not reach them.
+// .pathable-link reads the property instead; its default is the value the
+// settings give. The hover and active colours stay the brand's fixed PathAble
+// Blue values.
+.pathable-link {
+  color: var(--pathable-color-link);
+
+  // Not while hovered or pressed, so USWDS's hover and active colours, which
+  // follow its visited rule, still apply to a visited link.
+  &:visited:not(:hover, :active) {
+    color: var(--pathable-color-link);
+  }
+}
+
+// The USWDS focus outline is Bright Blue Brooks, which is under 3:1 on
+// Intelligent Jade and Shilling Silver. It is drawn on the surface behind the
+// link, so it takes that surface's ring colour. The rule comes after the
+// extended USWDS :focus rule and has the same specificity.
+.pathable-link:focus {
+  outline-color: var(
+    --pathable-surface-focus-ring,
+    var(--pathable-color-focus-ring)
+  );
+}
+
 .pathable-link--external {
   @extend .usa-link--external;
 }
