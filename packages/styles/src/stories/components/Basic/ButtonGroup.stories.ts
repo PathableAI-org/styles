@@ -38,16 +38,6 @@ export const Wrapping = {
   `,
 }
 
-export const Segmented = {
-  render: () => `
-    <div class="pathable-button-group pathable-button-group--segmented">
-      <button class="pathable-button pathable-button--outline">Option One</button>
-      <button class="pathable-button pathable-button--outline">Option Two</button>
-      <button class="pathable-button pathable-button--outline">Option Three</button>
-    </div>
-  `,
-}
-
 export const NarrowContainer = {
   render: () => `
     <div data-testid="wide-frame" style="max-width: 40rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid currentColor">
