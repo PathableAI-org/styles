@@ -1,3 +1,6 @@
+import { expect } from 'storybook/test'
+import { contrastRatio, findOpaqueBackground } from '../shared/contrast'
+
 export default {
   title: 'Brand/Typography',
   tags: ['autodocs'],
@@ -365,4 +368,43 @@ export const Default = {
 
     </div>
   `,
+}
+
+// pathable-text on elements other than <p> inside the dark containers
+// (issue #423): the text takes the container's colour and stays readable.
+export const TextInDarkContainers = {
+  render: () => `
+    <section class="pathable-section pathable-section--dark" data-testid="dark-section" style="padding: 1.5rem;">
+      <div class="pathable-text pathable-text--body">Body text on a div in pathable-section--dark</div>
+      <span class="pathable-text pathable-text--small">Small text on a span in pathable-section--dark</span>
+    </section>
+    <div class="pathable-dark-background" data-testid="dark-background" style="padding: 1.5rem;">
+      <div class="pathable-text pathable-text--body">Body text on a div in pathable-dark-background</div>
+      <ul>
+        <li class="pathable-text">Text on a list item in pathable-dark-background</li>
+      </ul>
+      <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
+        <div class="pathable-text">Text on a raised surface inside it stays dark</div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    for (const container of canvasElement.querySelectorAll<HTMLElement>(
+      '[data-testid]',
+    )) {
+      const background = findOpaqueBackground(container, window)
+
+      for (const text of container.querySelectorAll<HTMLElement>(
+        '.pathable-text',
+      )) {
+        const surface = text.closest<HTMLElement>('.pathable-surface')
+        const against = surface
+          ? findOpaqueBackground(surface, window)
+          : background
+        expect(
+          contrastRatio(getComputedStyle(text).color, against),
+        ).toBeGreaterThanOrEqual(4.5)
+      }
+    }
+  },
 }

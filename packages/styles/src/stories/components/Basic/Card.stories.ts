@@ -427,3 +427,43 @@ export const InDarkSection = {
     }
   },
 }
+
+export const LongWordHeading = {
+  render: () => `
+    <div data-testid="card-long-word" style="width: 300px; max-width: 100%;">
+      <div class="pathable-card" data-testid="card-with-heading">
+        <div class="pathable-card__container">
+          <div class="pathable-card__header">
+            <h3 class="pathable-card__heading">Comprehensive</h3>
+          </div>
+          <div class="pathable-card__body">
+            <p>Review</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const card = canvas.getByTestId('card-with-heading')
+    const title = within(card).getByRole('heading', {
+      level: 3,
+      name: 'Comprehensive',
+    })
+    const root = document.documentElement
+    const previousFontSize = root.style.fontSize
+    root.style.fontSize = '200%'
+
+    try {
+      const range = document.createRange()
+      range.selectNodeContents(title)
+
+      await expect(title).toBeVisible()
+      await expect(range.getBoundingClientRect().right).toBeLessThanOrEqual(
+        card.getBoundingClientRect().right,
+      )
+    } finally {
+      root.style.fontSize = previousFontSize
+    }
+  },
+}

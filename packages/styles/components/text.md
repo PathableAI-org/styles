@@ -138,10 +138,14 @@ root. A theme that changes these tokens changes them.
   role or tone. The tone modifiers do not change the colour there; put toned
   text on a light surface. On any other element in those containers, such as a
   `<div>` or a `<li>` (and a `<span>` inside `pathable-section--dark`), the
-  class keeps its own text colour, which is too dark to read on the dark
-  background: 1.36:1 in `pathable-section--dark` and 1:1 in
-  `pathable-dark-background` in the default theme. Do not put `pathable-text`
-  on those elements there yet; use a `<p>`.
+  class takes the container's white, so it is readable on the dark background.
+  A tone modifier or `--pathable-text-color` on such an element still sets its
+  own colour, which may not be readable there. Inside
+  a raised, inset or interactive `pathable-surface` in those containers, a
+  `<div>` or a `<li>` with the class keeps the theme text colour, but a `<p>`
+  there is still white. Other light components inside a dark container,
+  such as a resource card, pass the container's white to the class and are not
+  readable; use a light surface from the list above inside a dark container.
 - The danger and success tones fall below 4.5:1 on the page background colour
   (3.48:1 and 4.05:1 in the default theme); keep danger and success text on a
   white surface, such as `pathable-surface--raised`.
