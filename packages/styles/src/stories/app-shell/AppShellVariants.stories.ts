@@ -30,7 +30,7 @@ const shortNavItems = [
 const sidebar = (items) => `
   <aside class="pathable-app-shell__sidebar">
     <div class="pathable-app-shell__brand" style="padding: 0.5rem 0;">
-      <strong style="font-size: 1.125rem; color: var(--pathable-color-accent, #00365c);">MyApp</strong>
+      <strong style="font-size: 1.125rem; color: var(--pathable-color-link, #015a76);">MyApp</strong>
     </div>
     <nav class="pathable-app-shell__nav">
       ${items
