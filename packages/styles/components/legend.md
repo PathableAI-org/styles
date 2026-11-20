@@ -23,7 +23,7 @@ guarantees:
     claim: Except as a direct child of `pathable-filterable-option-list`, the legend's content box is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
   - id: text-colour
     status: met
-    claim: 'In the default theme, where no container sets a text colour of its own, the legend text is #00365c, PathAble Blue, the brand text colour; inside a container that sets its own text colour, such as a dark surface, it takes that colour.'
+    claim: 'In the default theme, where no container sets a text colour of its own or gives the legend a coloured background to inherit from, the legend text is #00365c, PathAble Blue, the brand text colour; inside such a container, such as a dark surface or an alert, it takes the colour it inherits there.'
 ---
 
 # Legend
