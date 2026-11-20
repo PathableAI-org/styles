@@ -26,17 +26,24 @@ function compile(entry) {
 // specificity, so the utility only wins when it is emitted after the component.
 test('styles.css emits utilities after every component rule', () => {
   const css = compile('src/index.scss')
-  const lastComponent = css.lastIndexOf('\n.pathable-checkbox')
-  const display = css.indexOf('\n.pathable-display-none {')
-  const responsive = css.lastIndexOf('pathable-display-none {')
-  assert.ok(lastComponent > -1, 'checkbox rules are present')
-  assert.ok(display > -1, 'display utility is present')
-  assert.ok(
-    display > lastComponent,
-    '.pathable-display-none must come after the last .pathable-checkbox rule',
+  // The last component rule: marketing and text patterns end the component
+  // bundle, so check against one of the final ones as well as the checkbox.
+  const lastComponent = Math.max(
+    css.lastIndexOf('\n.pathable-text-highlight'),
+    css.lastIndexOf('\n.pathable-checkbox'),
   )
+  const firstUtility = css.indexOf('\n.pathable-bg-primary')
+  const display = css.indexOf('\n.pathable-display-none {')
+  const responsive = css.indexOf('.tablet\\:pathable-display-flex')
+  assert.ok(lastComponent > -1, 'component rules are present')
+  assert.ok(firstUtility > -1, 'utility rules are present')
+  assert.ok(
+    firstUtility > lastComponent,
+    'the first utility must come after the last component rule',
+  )
+  assert.ok(display > lastComponent, 'display utilities come after components')
   assert.ok(
     responsive > lastComponent,
-    'responsive variants must come last too',
+    'responsive variants come after components',
   )
 })

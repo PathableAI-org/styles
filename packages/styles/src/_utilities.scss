@@ -81,9 +81,11 @@
 // these classes itself keeps that surface's ring. On Tech Teal the fallback is
 // 2.6:1 (#382); a light ring there would inherit into light containers nested
 // in it.
-// The :where() keeps the reset at the utility's own specificity, so a
-// container's own --pathable-surface-focus-ring, or a surface variant on the
-// same element, still wins. Keep the list in step with the selectors that
+// The :where() keeps the reset at the utility's own specificity. In
+// styles.css utilities come after the component rules, so on the same element
+// this reset wins over a one-class ring set by a component or surface variant,
+// as the utility's background does; a container's own ring on a different
+// element is unaffected. Keep the list in step with the selectors that
 // include state-focus (pathable-button.scss explains the button modifiers) and
 // with the other controls whose own outline reads the ring: the unstyled
 // button, the link and the interactive surface.
