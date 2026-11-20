@@ -125,9 +125,9 @@ it had a default: `pathable-surface--inverse`, `pathable-surface--brand`,
 `pathable-bg-danger`, `pathable-bg-link`, `pathable-bg-primary`,
 `pathable-bg-success`, and the `pathable-text-accent`, `-base`, `-link`,
 `-muted`, `-primary` and `-white` utilities. A container that sets a
-background but no text colour, such as `pathable-bg-primary` on its own or
-`pathable-dark-background`, leaves the legend in the browser's default black
-there; add a text colour utility to that container.
+background but no text colour, such as `pathable-bg-primary` on its own,
+leaves the legend in the browser's default black there; add a text colour
+utility to that container.
 
 The maximum width applies to the legend's content box: the legend is
 content-box, so the browser's small inline padding on `<legend>` adds to it.
