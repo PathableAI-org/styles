@@ -92,6 +92,8 @@
 // List: media beside content (stacks above content at 480px and narrower)
 .pathable-resource-card--list {
   flex-direction: row;
+  // The body moves below the media before it gets too narrow to read.
+  flex-wrap: wrap;
   gap: var(--pathable-space-4);
 
   .pathable-resource-card__media {
@@ -104,8 +106,8 @@
   }
 
   .pathable-resource-card__body {
-    flex: 1;
-    min-width: 0;
+    flex: 1 1 12rem;
+    min-width: min(12rem, 100%);
   }
 
   // Narrow viewports: stack the media above the body so the text column keeps
@@ -160,6 +162,8 @@
   font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   margin: 0;
+  // A long word wraps at a large root font size instead of leaving the card.
+  overflow-wrap: break-word;
 }
 
 .pathable-resource-card__provider {
@@ -186,6 +190,13 @@
   flex-wrap: wrap;
   gap: var(--pathable-space-1);
   margin-block-start: var(--pathable-space-1);
+
+  // A tag wider than the card wraps its text instead of leaving the card.
+  .pathable-tag {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
 }
 
 .pathable-resource-card__metadata {

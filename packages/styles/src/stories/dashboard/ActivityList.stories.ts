@@ -123,7 +123,7 @@ export const LongContent = {
   render: () => `
     <div class="pathable-activity-list" role="list" style="max-width: 48rem;">
       ${activityRow(
-        'Localized activity title that remains on one line while preserving the complete supplied text in the document',
+        'Localized activity title that wraps onto further lines while preserving the complete supplied text in the document',
         'Participant context with deliberately extended localized-looking content for constrained layouts',
         'Wednesday, September 30, 2026 at 11:45 in the morning',
         'Alexandria Montgomery-Rivera, Regional Program Coordinator',

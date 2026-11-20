@@ -25,7 +25,7 @@ guarantees:
     status: unverified
     claim: The status text is 0.875rem with a line height of 1.5 by default and 1rem at large, which is 14 px and 16 px at a 16 px root font size.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: The status text size follows the root font size, so at a 200% root font size it doubles at both sizes.
   - id: no-shrink
     status: unverified
@@ -128,10 +128,6 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
-px values, so the status text size does not follow the user's default font
-size.
 
 ## The consumer owns
 

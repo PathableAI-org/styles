@@ -235,7 +235,7 @@ export const LongContent: Story = {
       {
         id: 'long-content',
         title:
-          'A deliberately long localized activity title that remains one line',
+          'A deliberately long localized activity title that wraps onto further lines',
         context:
           'A deliberately long context value that must stay within the available row width and height',
         date: 'Wednesday, September 30, 2026 at 2:30 in the afternoon Eastern Daylight Time',
@@ -251,8 +251,12 @@ export const LongContent: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const row = canvas.getByRole('listitem')
+    const title = canvas.getByText(
+      'A deliberately long localized activity title that wraps onto further lines',
+    )
+    await expect(title).toBeInTheDocument()
+    await expect(getComputedStyle(title).whiteSpace).toBe('normal')
     const values = [
-      'A deliberately long localized activity title that remains one line',
       'Wednesday, September 30, 2026 at 2:30 in the afternoon Eastern Daylight Time',
       'A case owner with a deliberately long localized display name for containment',
     ]

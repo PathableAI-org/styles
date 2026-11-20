@@ -613,9 +613,11 @@ The component preserves group and row order and never sorts or infers groups.
 
 `density="compact"` and `density="comfortable"` map to the shared source
 variants; omit `density` or use `"default"` for the standard treatment. The
-shared stylesheet keeps title, context, status, date, and owner text to one
-line with ellipsis when space is constrained. Its existing viewport behavior
-wraps rows and exposes actions at 640 pixels and below.
+shared stylesheet wraps the title and context, and keeps status, date, and
+owner text to one line with ellipsis when space is constrained. The row wraps
+its other parts onto a new line before the title and context column is narrower
+than 12rem, and its existing viewport behavior wraps rows and exposes actions
+at 640 pixels and below.
 
 For zero items or only empty groups, provide `emptyContent`. The component
 renders only the shared empty region and does not fabricate a message, row,
