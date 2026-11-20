@@ -10,7 +10,7 @@ variants:
     values: [default, large]
 guarantees:
   - id: spinner-size
-    status: unmet
+    status: unverified
     claim: The spinner's outer size, border included, is 1.5rem across by default and 2.5rem across at large, which is 24 px and 40 px at a 16 px root font size.
   - id: ring
     status: unverified
@@ -87,8 +87,9 @@ Add at most one modifier class to `pathable-loading`.
 | size | `default` | none                      | Small ring and 0.875rem (14 px) text, inside a list or panel |
 | size | `large`   | `pathable-loading--large` | Larger ring and 1rem (16 px) text, for a whole view          |
 
-The ring's content box is 1.5rem by default and 2.5rem at large; the border is
-drawn outside it.
+The ring is 1.5rem across by default and 2.5rem at large, border included: it
+is `border-box` sized, so the 2 px border (3 px at large) is drawn inside that
+size.
 
 ## Tokens
 
@@ -127,11 +128,6 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
-
-The spinner is unmet because its width and height exclude the border: it is
-1.5rem plus 2 px on each side by default and 2.5rem plus 3 px at large, 28 px
-and 46 px at a 16 px root font size, unless the application applies
-`box-sizing: border-box` to every element.
 
 The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
 px values, so the status text size does not follow the user's default font
