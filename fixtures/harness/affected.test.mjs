@@ -1,10 +1,18 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import {
+  mkdirSync,
+  mkdtempSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { after, describe, it } from 'node:test'
 
 import {
+  changedPathsSince,
   compileStyles,
   dependencyReasons,
   diffStyles,
@@ -364,5 +372,35 @@ describe('cases that cannot be narrowed to classes', () => {
     )
     assert.equal(selection.all, true)
     assert.match(selection.allReasons[0].selector, /^@layer/u)
+  })
+})
+
+describe('changedPathsSince', () => {
+  it('lists both paths of a renamed component page', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'affected-git-'))
+    dirs.push(dir)
+    const git = (...args) =>
+      execFileSync('git', args, { cwd: dir, encoding: 'utf8' }).trim()
+    git('init', '--quiet')
+    git('config', 'user.email', 'test@example.com')
+    git('config', 'user.name', 'Test')
+    git('config', 'commit.gpgsign', 'false')
+    mkdirSync(join(dir, 'packages/styles/components'), { recursive: true })
+    const page = join(dir, 'packages/styles/components/activity-list.md')
+    writeFileSync(
+      page,
+      `---\nslug: activity-list\n---\n${'Body.\n'.repeat(20)}`,
+    )
+    git('add', '.')
+    git('commit', '--quiet', '-m', 'base')
+    const base = git('rev-parse', 'HEAD')
+    renameSync(page, join(dir, 'packages/styles/components/activity.md'))
+    git('add', '-A')
+    git('commit', '--quiet', '-m', 'rename')
+
+    assert.deepEqual(changedPathsSince(base, 'HEAD', dir).sort(), [
+      'packages/styles/components/activity-list.md',
+      'packages/styles/components/activity.md',
+    ])
   })
 })

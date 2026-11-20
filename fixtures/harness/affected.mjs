@@ -500,6 +500,18 @@ const readAt = (ref, path) => {
   }
 }
 
+/**
+ * The paths that differ between `mergeBase` and `head` (`head` undefined: the
+ * working tree). Renames are listed as a delete of the old path and an add of
+ * the new one (`--no-renames`), so a renamed component page still names the
+ * fixture folder of its old slug.
+ */
+export function changedPathsSince(mergeBase, head, cwd = repoRoot) {
+  const args = ['diff', '--name-only', '--no-renames', mergeBase]
+  if (head) args.push(head)
+  return git(args, cwd).split('\n').filter(Boolean)
+}
+
 /** Compiles the base in a temporary worktree, reusing the head's node_modules. */
 function compileAt(ref) {
   const dir = mkdtempSync(join(tmpdir(), 'fixtures-affected-'))
@@ -519,13 +531,7 @@ function compileAt(ref) {
  */
 export function affected({ base, head } = {}) {
   const mergeBase = git(['merge-base', base, head ?? 'HEAD'])
-  const changedPaths = (
-    head
-      ? git(['diff', '--name-only', '--no-renames', mergeBase, head])
-      : git(['diff', '--name-only', '--no-renames', mergeBase])
-  )
-    .split('\n')
-    .filter(Boolean)
+  const changedPaths = changedPathsSince(mergeBase, head)
 
   const uswds = {
     base: uswdsRange(readAt(mergeBase, `${stylesPackage}/package.json`)),
