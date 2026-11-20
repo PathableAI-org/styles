@@ -36,19 +36,44 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+      # The workflow also runs for React-only pull requests, for the react
+      # job. They cannot change a fixture, the stylesheet or the harness, so
+      # this job skips them, says so in the summary, and checks everything
+      # else. The steps below that use steps.changed skip with it.
+      - name: Decide whether fixture checks run
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ] &&
+            [ -z "$(git diff --name-only "origin/$BASE_REF...HEAD" | grep -v '^packages/react/')" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Fixtures"
+              echo
+              echo "Skipped: this pull request changes only files under packages/react/, so no fixture, stylesheet or harness input changed. The React fixture tests job covers it."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: ./.github/actions/setup
+        if: steps.gate.outputs.run == 'true'
         with:
           install_playwright: 'true'
       - name: Build styles
+        if: steps.gate.outputs.run == 'true'
         run: pnpm --filter @pathableai/styles build
       # CI Full's lint jobs filter on packages/, apps/ and scripts/, so they
       # skip a pull request that changes only fixtures/.
       - name: Lint fixtures
+        if: steps.gate.outputs.run == 'true'
         run: |
           pnpm exec eslint fixtures --max-warnings=0
           pnpm exec markdownlint fixtures --ignore-path .markdownlintignore
           pnpm exec prettier --check fixtures
       - name: Test fixture harness
+        if: steps.gate.outputs.run == 'true'
         run: pnpm --filter @pathableai/fixtures test
       # The union of the folders whose files changed, the folders the
       # compiled-CSS diff affects and the folders whose component page
@@ -56,6 +81,7 @@ jobs:
       # folders and fixtures_changed outputs.
       - name: Select fixture folders
         id: changed
+        if: steps.gate.outputs.run == 'true'
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_REF: ${{ github.base_ref }}

@@ -136,7 +136,9 @@ every folder. In GitHub Actions it also writes the `folders` and
 on a pull request that changes `fixtures/**`, `packages/styles/src/**/*.scss`,
 `packages/styles/components/*.md`, `pnpm-lock.yaml`, the React paths listed
 under [React fixture tests in CI](#in-ci-1) or the workflow itself, and on
-every push to `main`. Its `fixtures` job:
+every push to `main`. Its `fixtures` job skips a pull request that changes
+only files under `packages/react/`, and says so in its job summary; otherwise
+it:
 
 1. builds `@pathableai/styles`;
 2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
@@ -209,9 +211,8 @@ it('renders sr-only/inline', () => {
    as rendering does, so a fixture whose text Prettier wraps still matches,
    while non-breaking spaces stay distinct, even at the ends of a text node,
    and the text of `pre`, `textarea`, `script` and `style` is compared
-   exactly; it also renames
-   `svg`, `script` and `style` elements, which `getDiffableHTML` would
-   otherwise drop with their content;
+   exactly; it also renames `svg`, `script` and `style` elements, which
+   `getDiffableHTML` would otherwise drop with their content;
 5. compares the two with `getDiffableHTML` from
    `@open-wc/semantic-dom-diff`, which sorts attributes and class tokens and
    normalises whitespace between elements, using Vitest's `toBe`, so a
