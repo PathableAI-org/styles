@@ -12,7 +12,7 @@ export default {
     docs: {
       description: {
         story:
-          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. In a workflow card, put `.pathable-card__action` on the action link, or on a container around the actions. Inside the container, a plain link gets the action colour and underline, a `.pathable-link` keeps its own, both get the action focus indicator, and other anchors such as a `.pathable-button` keep their own styling. No JavaScript is required.',
+          '**Interaction Model**: CSS-only. Cards remain static unless consumers provide native interactive descendants.\n\n**Semantics verified**: Published container, header, heading, body, media, status, and action classes preserve native content semantics under content pressure.\n\n**Consumers must**: Import `@pathableai/styles` CSS and use native links or buttons for actions. In a base card, use `.pathable-link` on a footer link for the link colour and focus ring. In a workflow card, put `.pathable-card__action` on the action link, or on a container around the actions. Inside the container, a plain link gets the action colour and underline, a `.pathable-link` keeps its own, both get the action focus indicator, and other anchors such as a `.pathable-button` keep their own styling. No JavaScript is required.',
       },
     },
   },
@@ -188,8 +188,7 @@ export const WorkflowCardWithStatus = {
 // action link styling, the `.pathable-link` keeps its own link colour and
 // underline, and both get the action focus ring. The anchor styled as a
 // button keeps its own styling, and the container itself is not drawn as a
-// link. `.pathable-cluster` spaces the actions so their focus rings do not
-// overlap; the container has no spacing of its own (#368).
+// link. `.pathable-cluster` sets its own gap between the actions.
 export const WorkflowCardActionContainer = {
   render: () => `
     <div class="pathable-card pathable-card--workflow" data-testid="workflow-action-container-card">
@@ -239,6 +238,70 @@ export const WorkflowCardActionContainer = {
   },
 }
 
+// Buttons in the action container, as the React Card renders them: the
+// container spaces them from the meta line and from each other and does not
+// draw the button labels as links (#368).
+export const WorkflowCardButtonActions = {
+  render: () => `
+    <div class="pathable-card pathable-card--workflow" data-testid="workflow-button-actions-card">
+      <div class="pathable-card__container">
+        <div class="pathable-card__header">
+          <h3 class="pathable-card__heading">Quarterly report</h3>
+        </div>
+        <div class="pathable-card__body">
+          <div class="pathable-card__meta" data-testid="workflow-button-meta">Generated: Jul 8, 2026</div>
+          <div class="pathable-card__action" data-testid="workflow-button-actions">
+            <button type="button" class="pathable-button">Download Report</button>
+            <button type="button" class="pathable-button pathable-button--outline">Share</button>
+          </div>
+          <div class="pathable-card__action" data-testid="workflow-button-group-actions">
+            <div class="pathable-button-group" data-testid="workflow-button-group">
+              <button type="button" class="pathable-button">Download</button>
+              <button type="button" class="pathable-button">Schedule</button>
+            </div>
+          </div>
+          <div class="pathable-card__action pathable-cluster pathable-cluster--gap-xl" data-testid="workflow-button-cluster">
+            <button type="button" class="pathable-button">Save</button>
+            <button type="button" class="pathable-button">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('workflow-button-actions')
+    const cluster = canvas.getByTestId('workflow-button-cluster')
+    const group = canvas.getByTestId('workflow-button-group')
+    const groupContainer = canvas.getByTestId('workflow-button-group-actions')
+    const meta = canvas.getByTestId('workflow-button-meta')
+    const first = canvas.getByRole('button', { name: 'Download Report' })
+    const second = canvas.getByRole('button', { name: 'Share' })
+
+    await expect(getComputedStyle(container).textDecorationLine).toBe('none')
+    await expect(getComputedStyle(first).textDecorationLine).toBe('none')
+    const gapAbove =
+      container.getBoundingClientRect().top -
+      meta.getBoundingClientRect().bottom
+    await expect(gapAbove).toBeGreaterThanOrEqual(8)
+    const styles = getComputedStyle(container)
+    await expect(styles.display).toBe('flex')
+    await expect(Number.parseFloat(styles.rowGap)).toBeGreaterThanOrEqual(8)
+    await expect(Number.parseFloat(styles.columnGap)).toBeGreaterThanOrEqual(8)
+    await expect(second).toBeVisible()
+    await expect(getComputedStyle(first).marginRight).toBe('0px')
+    await expect(group.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+      groupContainer.getBoundingClientRect().width,
+    )
+    await expect(getComputedStyle(group).minWidth).toBe('0px')
+    // A utility on the container still sets its own gap.
+    await expect(
+      Number.parseFloat(getComputedStyle(cluster).columnGap),
+    ).toBeGreaterThan(Number.parseFloat(styles.columnGap))
+    await expectKeyboardFocusIndicator(canvasElement, first)
+  },
+}
+
 export const ContentPressure = {
   render: () => `
     <div data-testid="card-content-pressure" style="width: 18rem; max-width: 100%;">
@@ -251,7 +314,7 @@ export const ContentPressure = {
             <p>Review transportation access, workplace accommodations, documentation deadlines, and follow-up responsibilities with the participant and regional support team.</p>
           </div>
           <div class="pathable-card__footer">
-            <a href="#review-plan" class="pathable-card__action">Review coordinated support plan</a>
+            <a href="#review-plan" class="pathable-link">Review coordinated support plan</a>
           </div>
         </div>
       </div>
@@ -272,6 +335,10 @@ export const ContentPressure = {
     await expect(heading).toHaveClass('pathable-card__heading')
     await expect(action).toBeVisible()
     await expect(action.parentElement).toHaveClass('pathable-card__footer')
+    await expect(getComputedStyle(action).color).toBe(
+      resolveColor(canvasElement, 'var(--pathable-color-link)'),
+    )
+    await expectKeyboardFocusIndicator(canvasElement, action)
     await expect(fixture.scrollWidth).toBeLessThanOrEqual(fixture.clientWidth)
   },
 }
