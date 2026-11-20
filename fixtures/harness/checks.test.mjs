@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { after, test } from 'node:test'
 
-import { runAxe } from './axe.mjs'
+import { problemsOf, renderSummary, runAxe } from './axe.mjs'
 import { checkFolders } from './contract.mjs'
 import { validateFolders } from './html.mjs'
 
@@ -104,4 +104,21 @@ test('the axe run reports duplicate button names from the browser', async () => 
     )
     assert.ok(result.passes > 0, 'axe ran no rules')
   }
+})
+
+test('an axe incomplete result fails the run and reaches the summary', async () => {
+  fixture(
+    'axe-incomplete',
+    'gradient.html',
+    '<p style="background: linear-gradient(#ffffff, #000000); color: #777777">Text over a gradient</p>\n',
+  )
+  const report = await runAxe(['axe-incomplete'], root)
+  const incomplete = problemsOf(report).filter((p) => p.kind === 'incomplete')
+  assert.ok(
+    incomplete.some((p) => p.rule.id === 'color-contrast'),
+    'expected an incomplete color-contrast result',
+  )
+  const summary = renderSummary(report)
+  assert.match(summary, /incomplete result\(s\)/u)
+  assert.match(summary, /\| incomplete \| color-contrast/u)
 })

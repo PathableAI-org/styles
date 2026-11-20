@@ -4,15 +4,23 @@
  *   node harness/contract.mjs [folder …]    default: every component folder
  *
  * It fails when:
+ *   - a folder on disk is missing from fixtures/folders.json, or a folder that
+ *     file lists is missing from disk (always checked, whatever folders are
+ *     named, so deleting a folder has to edit the list visibly);
  *   - a folder's name is not the slug of a page in packages/styles/components/;
  *   - a folder holds no fixture;
+ *   - a fixture's file name is not a kebab-case state name such as
+ *     `no-actions.html`;
  *   - a `pathable-*` class in a fixture is not a class selector in
  *     @pathableai/styles/dist/styles.css;
  *   - a non-default variant in the page's front matter has no fixture in the
  *     folder that uses its modifier class.
  *
- * Page parsing and CSS reading are the component-page check's own
- * (packages/styles/scripts/), so the two checks read the same facts.
+ * Classes are read by parsing each fixture: only `class` attributes of
+ * elements count, not `data-class` or similar attributes, and not markup
+ * inside comments. Page parsing and CSS reading are the component-page
+ * check's own (packages/styles/scripts/), so the two checks read the same
+ * facts.
  */
 
 import { existsSync, readFileSync } from 'node:fs'
@@ -20,18 +28,68 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
+import { parseFragment } from 'parse5'
+
 import { readCss } from '../../packages/styles/scripts/check-component-pages.mjs'
 import { readPages } from '../../packages/styles/scripts/component-pages.mjs'
 
 import { stylesCssPath } from './css.mjs'
-import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
+import {
+  allFolders,
+  fixtureFiles,
+  fixturesRoot,
+  foldersFromArgs,
+} from './folders.mjs'
 
-/** Every class named in a `class` attribute of the markup. */
+/** A fixture file name: a kebab-case state name ending in `.html`. */
+export const STATE_FILE_NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$/u
+
+/** The committed list of component folders. */
+export const folderListPath = join(fixturesRoot, 'folders.json')
+
+/** Every class in a `class` attribute of an element in the markup. */
 export function classesIn(html) {
   const classes = new Set()
-  for (const [, , value] of html.matchAll(/\bclass\s*=\s*(["'])(.*?)\1/gsu))
-    for (const name of value.split(/\s+/u)) if (name) classes.add(name)
+  const visit = (node) => {
+    for (const attr of node.attrs ?? []) {
+      if (attr.name !== 'class') continue
+      for (const name of attr.value.split(/\s+/u)) if (name) classes.add(name)
+    }
+    for (const child of node.childNodes ?? []) visit(child)
+    if (node.content) visit(node.content)
+  }
+  visit(parseFragment(html))
   return classes
+}
+
+/**
+ * Compares the committed folder list with the component folders on disk, in
+ * both directions. Returns errors.
+ */
+export function checkFolderList(listed, onDisk) {
+  const errors = []
+  const listedSet = new Set(listed)
+  const diskSet = new Set(onDisk)
+  for (const folder of listed) {
+    if (!diskSet.has(folder)) {
+      errors.push(
+        `folders.json lists ${folder}/, which is not on disk; remove it from folders.json if the removal is deliberate`,
+      )
+    }
+  }
+  for (const folder of onDisk) {
+    if (!listedSet.has(folder))
+      errors.push(`${folder}/ is on disk but not listed in folders.json`)
+  }
+  return errors
+}
+
+/** Reads fixtures/folders.json: a JSON array of folder names. */
+export function readFolderList(path = folderListPath) {
+  const list = JSON.parse(readFileSync(path, 'utf8'))
+  if (!Array.isArray(list) || !list.every((name) => typeof name === 'string'))
+    throw new Error('folders.json must be a JSON array of folder names')
+  return list
 }
 
 /**
@@ -49,6 +107,11 @@ export function checkFolder(folder, fixtures, page, css) {
 
   const used = new Set()
   for (const [file, html] of fixtures) {
+    if (!STATE_FILE_NAME.test(file)) {
+      errors.push(
+        `${folder}/${file}: a fixture file name must be a kebab-case state name, such as no-actions.html`,
+      )
+    }
     for (const name of classesIn(html)) {
       used.add(name)
       if (name.startsWith('pathable-') && !css.classes.has(name)) {
@@ -92,7 +155,10 @@ export async function checkFolders(folders, root = fixturesRoot) {
 
 async function main(argv) {
   const folders = foldersFromArgs(argv)
-  const errors = await checkFolders(folders)
+  const errors = [
+    ...checkFolderList(readFolderList(), allFolders()),
+    ...(await checkFolders(folders)),
+  ]
   for (const error of errors)
     process.stderr.write(`[fixtures:contract] ${error}\n`)
   process.stdout.write(

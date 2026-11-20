@@ -6,9 +6,10 @@
  *   node harness/changed.mjs --all        every folder
  *
  * It runs `git diff --name-only <base>...HEAD -- fixtures/`. A change to the
- * shared tooling (harness/, .htmlvalidate.json or package.json) can change
- * the result for every fixture, so it selects every folder. A deleted folder
- * is not printed, because there is nothing left in it to check.
+ * shared tooling (harness/, .htmlvalidate.json, folders.json or package.json)
+ * can change the result for every fixture, so it selects every folder. A
+ * deleted folder is not printed, because there is nothing left in it to
+ * check; the contract check fails it instead, through folders.json.
  */
 
 import { execFileSync } from 'node:child_process'
@@ -20,7 +21,11 @@ import process from 'node:process'
 import { HARNESS_DIR, allFolders, fixturesRoot } from './folders.mjs'
 
 /** Files at the fixtures root whose change selects every folder. */
-const SHARED_FILES = new Set(['.htmlvalidate.json', 'package.json'])
+const SHARED_FILES = new Set([
+  '.htmlvalidate.json',
+  'folders.json',
+  'package.json',
+])
 
 /**
  * Maps changed paths (repository-relative, as git prints them) to the
