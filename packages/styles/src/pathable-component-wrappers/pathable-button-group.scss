@@ -11,4 +11,14 @@
 
 .pathable-button-group {
   @extend .usa-button-group;
+
+  // Keep 0.5rem (8px at the default size, like the buttons' own margins)
+  // between stacked buttons so the focus ring of the focused button shows on
+  // all four sides, and between rows when the row wraps.
+  row-gap: units(1);
+
+  // The row wraps instead of running past the container.
+  @include at-media('mobile-lg') {
+    flex-wrap: wrap;
+  }
 }
