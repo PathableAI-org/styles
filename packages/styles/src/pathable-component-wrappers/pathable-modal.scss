@@ -87,7 +87,7 @@
   padding-inline-end: calc(var(--pathable-space-1) + 44px);
   // At 200 % text a long word is wider than the dialog's content box; break
   // it rather than let it run past the dialog (WCAG 1.4.4).
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   font-weight: var(--pathable-font-weight-normal);
 }
 
@@ -118,10 +118,12 @@
     }
   }
 
-  // A button never grows wider than the footer. A single word wider than the
-  // footer is still not broken, so it can overflow.
+  // A button never grows wider than the footer, and a label wider than the
+  // footer breaks rather than overflowing it. The row rule above sizes a row
+  // from max-content, so breaking a label does not change when a row wraps.
   .pathable-button {
     max-width: 100%;
+    overflow-wrap: anywhere;
   }
 }
 

@@ -14,6 +14,10 @@ const config = {
         'components-communication-modal--narrow-footer-row',
         { width: 375, height: 812 },
       ],
+      [
+        'components-communication-modal--long-footer-label',
+        { width: 320, height: 700 },
+      ],
     ])
     const storyViewport = storyViewports.get(context.id)
     if (storyViewport) {

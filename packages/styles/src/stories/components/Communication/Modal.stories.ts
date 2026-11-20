@@ -289,6 +289,48 @@ export const NarrowFooterRow = {
       .getBoundingClientRect()
     expect(add.top).toBe(cancel.top)
     expect(add.left).toBeGreaterThanOrEqual(cancel.right)
+    // Both labels fit on one line, so the buttons are the same height.
+    expect(add.height).toBe(cancel.height)
+  },
+}
+
+/**
+ * A footer label wider than the dialog at 200 % text on the narrowest phone
+ * breaks inside its button instead of losing letters (WCAG 1.4.4).
+ */
+export const LongFooterLabel = {
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
+  parameters: {
+    docs: {
+      story: { inline: false, iframeHeight: 600 },
+      description: {
+        story:
+          'Open Modal with the root font size at 200 % on a 320px viewport and a one-word footer label wider than the dialog. The label breaks inside its button and the button stays inside the footer.',
+      },
+    },
+  },
+  render: () =>
+    openShellMarkup({
+      headingId: 'modal-heading-long-footer-label',
+      preamble: '<style>:root { font-size: 200%; }</style>',
+      footerHtml: `<div style="display: flex; gap: 0.5rem; justify-content: flex-end">
+            <button class="pathable-button pathable-button--outline" type="button">Cancel</button>
+            <button class="pathable-button" type="button">Acknowledgements</button>
+          </div>`,
+    }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await assertOpenShell(canvasElement)
+    const dialog = within(canvasElement).getByRole('dialog', {
+      name: DIALOG_NAME,
+    })
+    const footerBox = (
+      dialog.querySelector('.pathable-modal__footer') as HTMLElement
+    ).getBoundingClientRect()
+    const box = within(dialog)
+      .getByRole('button', { name: 'Acknowledgements' })
+      .getBoundingClientRect()
+    expect(box.left).toBeGreaterThanOrEqual(footerBox.left)
+    expect(box.right).toBeLessThanOrEqual(footerBox.right)
   },
 }
 
