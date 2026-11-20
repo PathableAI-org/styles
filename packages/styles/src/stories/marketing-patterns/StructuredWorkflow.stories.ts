@@ -104,7 +104,7 @@ const inProgressHtml = `
           <p class="pathable-summary-box__text">Employment status is required. Please select from the dropdown above.</p>
         </div>
         <div style="display: flex; justify-content: flex-end; color: var(--pathable-color-text-muted);">
-          <span class="pathable-workflow-panel__status">Draft saved · 2:45 PM</span>
+          <span class="pathable-workflow-panel__status" role="status">Draft saved · 2:45 PM</span>
         </div>
       </div>
     </div>

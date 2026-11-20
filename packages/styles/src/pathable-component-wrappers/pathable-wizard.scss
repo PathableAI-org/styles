@@ -12,6 +12,7 @@
 @use '../type-scale' as *;
 
 .pathable-wizard {
+  font-family: var(--pathable-font-body);
   max-width: var(--pathable-wizard-max-width);
   margin-inline: auto;
 
@@ -22,9 +23,10 @@
 
 // Semantic page heading for the current step
 .pathable-wizard__heading {
+  font-family: var(--pathable-font-heading);
   margin: 0;
   font-size: type-scale-rem('lg');
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
 }
 
 // Content/form region for the current step's form controls
@@ -41,7 +43,7 @@
   display: block;
 }
 
-// Mobile compact step summary — hidden on desktop, visible <768px
+// Mobile compact step summary — hidden on desktop, visible below 640px
 .pathable-wizard__mobile-summary {
   display: none;
   font-size: type-scale-rem('sm');
@@ -57,10 +59,11 @@
 
 // Section heading for long-form sectioning within a wizard step
 .pathable-wizard__section {
+  font-family: var(--pathable-font-heading);
   margin: 0;
   padding-top: var(--pathable-wizard-gap);
   font-size: type-scale-rem('md');
-  font-weight: var(--pathable-font-weight-bold);
+  font-weight: var(--pathable-font-weight-normal);
   border-bottom: 1px solid color('gray-20');
   padding-bottom: units(1);
   margin-bottom: units(1);

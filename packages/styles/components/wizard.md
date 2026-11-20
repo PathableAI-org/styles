@@ -113,7 +113,8 @@ is an element modifier described under Composition.
 | -------------------------------- | --------------------------------- |
 | Maximum width                    | `--pathable-wizard-max-width`     |
 | Gap between regions and sections | `--pathable-wizard-gap`           |
-| Heading and section weight       | `--pathable-font-weight-bold`     |
+| Heading and section typeface     | `--pathable-font-heading`         |
+| Heading and section weight       | `--pathable-font-weight-normal`   |
 | Mobile summary weight            | `--pathable-font-weight-semibold` |
 
 `--pathable-wizard-max-width` is 64rem (1024 px) and `--pathable-wizard-gap`
@@ -130,7 +131,7 @@ Direct children stack in source order, each separated by the wizard gap:
   it.
 - `pathable-wizard__mobile-summary`: a one-line step summary such as "Step 2 of
   4: Participant intake", shown only below 640 px.
-- `pathable-wizard__heading`: the step's heading, bold, with no margin of its
+- `pathable-wizard__heading`: the step's heading, in Fredoka Regular, with no margin of its
   own apart from the wizard gap above it.
 - `pathable-wizard__validation`: the error summary region, hidden until you add
   `pathable-wizard__validation--visible`. Put a `pathable-alert` with

@@ -15,6 +15,7 @@
 @use '../type-scale' as *;
 
 .pathable-chip-rail {
+  font-family: var(--pathable-font-body);
   display: flex;
   flex-wrap: nowrap;
   gap: var(--pathable-chip-rail-gap, var(--usa-chip-rail-gap, #{units(1)}));

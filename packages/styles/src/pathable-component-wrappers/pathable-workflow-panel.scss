@@ -16,6 +16,7 @@
 @use '../type-scale' as *;
 
 .pathable-workflow-panel {
+  font-family: var(--pathable-font-body);
   max-width: var(--pathable-workflow-panel-max-width);
   display: flex;
   flex-direction: column;
@@ -38,7 +39,7 @@
 
 .pathable-workflow-panel__current-activity {
   font-size: type-scale-rem('sm');
-  color: color('gray-30');
+  color: var(--pathable-color-text-muted);
   font-weight: var(--pathable-font-weight-normal);
 }
 
@@ -59,12 +60,20 @@
   // This region wraps the input for layout spacing
 }
 
-// Progress/save-status region
+// Progress/save-status region. The application supplies the text; the state
+// modifiers below only style it.
 .pathable-workflow-panel__status {
   font-size: type-scale-rem('sm');
 }
 
 // Completion action buttons
+// usa-button keeps `margin-right: units(1)`; the region's gap already spaces
+// buttons. `:where()` keeps one-class specificity so the rule still follows
+// the button wrapper and a margin utility loaded later still wins.
+.pathable-workflow-panel__actions :where(.pathable-button) {
+  margin-right: 0;
+}
+
 .pathable-workflow-panel__actions {
   display: flex;
   flex-wrap: wrap;
@@ -82,48 +91,45 @@
 }
 
 // --- State modifier classes ---
+//
+// A state modifier only styles the status text the application puts in
+// `.pathable-workflow-panel__status` (give that element `role="status"`).
+// No modifier writes a message of its own.
 
 // Loading state
 .pathable-workflow-panel--loading {
-  .pathable-workflow-panel__status::before {
-    content: 'Loading…';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
+    color: var(--pathable-color-text-muted);
   }
 }
 
 // Saving state
 .pathable-workflow-panel--saving {
-  .pathable-workflow-panel__status::before {
-    content: 'Saving…';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
+    color: var(--pathable-color-text-muted);
   }
 }
 
 // Saved confirmation state
 .pathable-workflow-panel--saved {
-  .pathable-workflow-panel__status::before {
-    content: '✓ Saved';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
-    color: color('success');
+  .pathable-workflow-panel__status {
+    color: var(--pathable-color-text-success);
   }
 }
 
 // Offline state
 .pathable-workflow-panel--offline {
-  .pathable-workflow-panel__status::before {
-    content: "⚠ You're offline. Changes will sync when connected.";
-    display: block;
+  .pathable-workflow-panel__status {
     padding: units(1);
     background-color: color('warning-lighter');
     border-radius: radius('sm');
-    color: color('warning-darker');
-    font-size: type-scale-rem('sm');
+    color: var(--pathable-color-text);
+
+    // Keep the live region in the DOM when empty, but draw no box for it
+    &:empty {
+      padding: 0;
+      background-color: transparent;
+    }
   }
 
   .pathable-workflow-panel__actions .pathable-button--continue {
@@ -134,14 +140,16 @@
 
 // Validation error state
 .pathable-workflow-panel--validation-error {
-  .pathable-workflow-panel__status::before {
-    content: '⚠ Please fix errors before continuing.';
-    display: block;
+  .pathable-workflow-panel__status {
     padding: units(1);
     background-color: color('error-lighter');
     border-radius: radius('sm');
     color: color('error-darker');
-    font-size: type-scale-rem('sm');
+
+    &:empty {
+      padding: 0;
+      background-color: transparent;
+    }
   }
 }
 
@@ -152,14 +160,10 @@
     display: none;
   }
 
-  .pathable-workflow-panel__status::before {
-    content: '✓ Completed';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
     font-size: type-scale-rem('md');
     font-weight: var(--pathable-font-weight-bold);
-    color: color('success');
+    color: var(--pathable-color-text-success);
   }
 }
 

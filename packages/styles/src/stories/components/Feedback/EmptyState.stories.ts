@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../../shared/body-font'
 export default {
   title: 'Components/Feedback/EmptyState',
   tags: ['autodocs'],
@@ -23,6 +24,8 @@ export const NoData = {
       <a href="#" class="pathable-empty-state__action pathable-button">Add your first item</a>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, ['.pathable-empty-state__body']),
 }
 
 export const NoResults = {

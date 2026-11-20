@@ -63,11 +63,19 @@
 
 // Variant: interactive — clickable with hover/focus states
 .pathable-surface--interactive {
-  --pathable-surface-focus-ring: initial;
   background: var(--pathable-color-surface);
   border: 2px solid transparent;
   box-shadow: var(--elevation-sm);
   cursor: pointer;
+}
+
+// The surface's own outline is drawn on the surface behind it, so it reads the
+// ring the surrounding surface set. The reset for what sits on this white
+// surface goes on its children, not on the element itself, which would hide
+// the surrounding surface's ring from its own outline. The :where() keeps it
+// below any surface variant or utility on a child.
+:where(.pathable-surface--interactive) > * {
+  --pathable-surface-focus-ring: initial;
 }
 
 .pathable-surface--interactive:hover {
@@ -75,12 +83,14 @@
 }
 
 .pathable-surface--interactive:focus-visible {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 
 .pathable-surface--interactive:focus-within {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 
@@ -210,4 +220,18 @@
   .pathable-surface {
     transition: none;
   }
+}
+
+// A light surface inside a dark container sets the theme text colour so
+// content that sets no colour of its own, such as pathable-text on a <div>, does
+// not inherit the container's white. A <p>, heading or link inside it is still
+// recoloured by the container's own rules. Outside a dark container
+// these surfaces set no colour. :where() keeps the specificity of the variant.
+:where(.pathable-section--dark, .pathable-dark-background)
+  :is(
+    .pathable-surface--raised,
+    .pathable-surface--inset,
+    .pathable-surface--interactive
+  ) {
+  color: var(--pathable-color-text);
 }

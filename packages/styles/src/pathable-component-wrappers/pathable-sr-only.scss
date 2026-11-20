@@ -10,4 +10,21 @@
 
 .pathable-sr-only {
   @extend .usa-sr-only;
+
+  // usa-sr-only moves the element 999em to the left, which adds about 999em
+  // of horizontal scroll in a right-to-left page, and any other offset adds
+  // scroll or jumps the page in some direction, scroller or ancestor. Hide
+  // it in place instead, as a 1px box clipped to nothing, so there is no
+  // offset to scroll to. The text stays in the accessibility tree.
+  position: absolute;
+  left: auto;
+  right: auto;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
