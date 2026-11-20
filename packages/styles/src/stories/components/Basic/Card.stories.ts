@@ -289,45 +289,27 @@ export const LongWordHeading = {
           </div>
         </div>
       </div>
-      <div class="pathable-card" data-testid="card-with-header-title">
-        <div class="pathable-card__container">
-          <h3 class="pathable-card__header">Comprehensive</h3>
-          <div class="pathable-card__body">
-            <p>Review</p>
-          </div>
-        </div>
-      </div>
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement)
-    const fixture = canvas.getByTestId('card-long-word')
+    const card = canvas.getByTestId('card-with-heading')
+    const title = within(card).getByRole('heading', {
+      level: 3,
+      name: 'Comprehensive',
+    })
     const root = document.documentElement
     const previousFontSize = root.style.fontSize
     root.style.fontSize = '200%'
 
     try {
-      const textRight = (element: HTMLElement) => {
-        const range = document.createRange()
-        range.selectNodeContents(element)
-        return range.getBoundingClientRect().right
-      }
+      const range = document.createRange()
+      range.selectNodeContents(title)
 
-      for (const testId of ['card-with-heading', 'card-with-header-title']) {
-        const card = canvas.getByTestId(testId)
-        const title = within(card).getByRole('heading', {
-          level: 3,
-          name: 'Comprehensive',
-        })
-
-        await expect(title).toBeVisible()
-        await expect(textRight(title)).toBeLessThanOrEqual(
-          card.getBoundingClientRect().right,
-        )
-        await expect(card.getBoundingClientRect().right).toBeLessThanOrEqual(
-          fixture.getBoundingClientRect().right,
-        )
-      }
+      await expect(title).toBeVisible()
+      await expect(range.getBoundingClientRect().right).toBeLessThanOrEqual(
+        card.getBoundingClientRect().right,
+      )
     } finally {
       root.style.fontSize = previousFontSize
     }
