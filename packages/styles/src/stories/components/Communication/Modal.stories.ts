@@ -281,16 +281,21 @@ export const NarrowFooterRow = {
     const dialog = within(canvasElement).getByRole('dialog', {
       name: DIALOG_NAME,
     })
-    const cancel = within(dialog)
-      .getByRole('button', { name: 'Cancel' })
-      .getBoundingClientRect()
-    const add = within(dialog)
-      .getByRole('button', { name: 'Add Activity' })
-      .getBoundingClientRect()
+    const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
+    const addButton = within(dialog).getByRole('button', {
+      name: 'Add Activity',
+    })
+    const cancel = cancelButton.getBoundingClientRect()
+    const add = addButton.getBoundingClientRect()
     expect(add.top).toBe(cancel.top)
     expect(add.left).toBeGreaterThanOrEqual(cancel.right)
-    // Both labels fit on one line, so the buttons are the same height.
-    expect(add.height).toBe(cancel.height)
+    // Each label fits on one line, so a button is no taller than its minimum
+    // height. A row that squeezed a label onto two lines would be taller.
+    for (const button of [cancelButton, addButton]) {
+      expect(button.getBoundingClientRect().height).toBe(
+        parseFloat(getComputedStyle(button).minHeight),
+      )
+    }
   },
 }
 
