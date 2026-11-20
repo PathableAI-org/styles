@@ -47,6 +47,10 @@ const config = {
     const storyViewports = new Map([
       ['application-shell-mobile-shell--default', { width: 320, height: 700 }],
       [
+        'application-shell-mobile-shell--with-notification',
+        { width: 375, height: 700 },
+      ],
+      [
         'application-shell-mobile-shell--legacy-active-color-override',
         { width: 320, height: 700 },
       ],

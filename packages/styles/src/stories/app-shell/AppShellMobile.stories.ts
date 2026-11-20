@@ -220,26 +220,15 @@ export const WithNotification = {
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const box = (selector: string) =>
-      (
-        canvasElement.querySelector(selector) as HTMLElement
-      ).getBoundingClientRect()
-    const topbarBox = box('.pathable-app-shell__topbar')
-    const notificationBox = box('.pathable-app-shell__notification')
-    const mainBox = box('.pathable-app-shell__content')
-    const navBox = box('.pathable-bottom-navigation')
+    const canvas = within(canvasElement)
+    const box = (element: HTMLElement) => element.getBoundingClientRect()
+    const topbarBox = box(canvas.getByText('MyApp'))
+    const notificationBox = box(canvas.getByRole('status'))
+    const mainBox = box(canvas.getByRole('main'))
+    const navBox = box(canvas.getByRole('navigation', { name: 'Primary' }))
     await expect(notificationBox.height).toBeGreaterThan(0)
-    await expect(notificationBox.top).toBeGreaterThanOrEqual(
-      topbarBox.bottom - 1,
-    )
+    await expect(notificationBox.top).toBeGreaterThanOrEqual(topbarBox.bottom)
     await expect(notificationBox.bottom).toBeLessThanOrEqual(mainBox.top + 1)
-    // The test runner renders at its own width; below 1024px the bottom
-    // navigation is shown and the notification must sit above it.
-    const nav = canvasElement.querySelector(
-      '.pathable-bottom-navigation',
-    ) as HTMLElement
-    if (getComputedStyle(nav).display !== 'none') {
-      await expect(notificationBox.bottom).toBeLessThanOrEqual(navBox.top)
-    }
+    await expect(notificationBox.bottom).toBeLessThanOrEqual(navBox.top)
   },
 }

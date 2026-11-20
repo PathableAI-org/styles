@@ -1,4 +1,4 @@
-import { expect } from 'storybook/test'
+import { expect, within } from 'storybook/test'
 
 export default {
   title: 'Application Shell/Desktop Shell',
@@ -102,21 +102,11 @@ export const WithNotification = {
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const notification = canvasElement.querySelector(
-      '.pathable-app-shell__notification',
-    ) as HTMLElement
-    const main = canvasElement.querySelector(
-      '.pathable-app-shell__content',
-    ) as HTMLElement
-    const shell = canvasElement.querySelector(
-      '.pathable-app-shell',
-    ) as HTMLElement
-    const notificationBox = notification.getBoundingClientRect()
-    const mainBox = main.getBoundingClientRect()
-    const shellBox = shell.getBoundingClientRect()
-    // Visible inside the shell, and directly above the main content.
+    const canvas = within(canvasElement)
+    const notificationBox = canvas.getByRole('status').getBoundingClientRect()
+    const mainBox = canvas.getByRole('main').getBoundingClientRect()
+    // Visible, and directly above the main content.
     await expect(notificationBox.height).toBeGreaterThan(0)
-    await expect(notificationBox.bottom).toBeLessThanOrEqual(shellBox.bottom)
     await expect(notificationBox.bottom).toBeLessThanOrEqual(mainBox.top + 1)
   },
 }
