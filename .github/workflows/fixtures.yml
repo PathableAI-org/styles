@@ -13,6 +13,8 @@ on:
     paths:
       - 'fixtures/**'
       - 'packages/styles/components/*.md'
+      - 'packages/styles/scripts/check-component-pages.mjs'
+      - 'packages/styles/scripts/component-pages.mjs'
       - 'packages/styles/src/**/*.scss'
       - 'packages/styles/src/**/*.sass'
       - 'packages/styles/package.json'
@@ -68,8 +70,8 @@ jobs:
           if [ "$EVENT_NAME" = "pull_request" ] &&
             git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml; then
             # A lockfile, workspace or patches change selects every folder
-            # here, with that reason in the job summary, and runs
-            # html-validate.
+            # here, with that reason in the job summary; a lockfile change
+            # also runs html-validate.
             node fixtures/harness/select.mjs "origin/$BASE_REF"
           else
             # On main, or when this workflow changed, check every folder.
