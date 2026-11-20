@@ -221,10 +221,24 @@ function renderMdx(page, name, sources) {
     trimNewlines(text)
       ? [`<Markdown>{${literal(trimNewlines(text))}}</Markdown>`]
       : []
-  const example = (state) => [
-    `<Canvas of={Stories.${storyName(state)}} sourceState="none" />`,
-    `<CodeTabs of={Stories.${storyName(state)}} />`,
-  ]
+  // Each story is previewed once per page: a second live preview of the same
+  // fixture would repeat its ids, and its ID references could resolve to the
+  // first copy. A state shown again gets its code tabs only.
+  const previewed = new Set()
+  const example = (state) => {
+    const tabs = `<CodeTabs of={Stories.${storyName(state)}} />`
+    if (previewed.has(state)) {
+      return [
+        ...markdown('Its live preview is shown earlier on this page.'),
+        tabs,
+      ]
+    }
+    previewed.add(state)
+    return [
+      `<Canvas of={Stories.${storyName(state)}} sourceState="none" />`,
+      tabs,
+    ]
+  }
 
   const blocks = (items) =>
     items.flatMap((item) => {

@@ -244,6 +244,21 @@ It reports fixture folders the manifest does not map yet, and exported React
 components that no folder maps to yet, as a notice, without failing. Only
 `sr-only` is mapped so far.
 
+The manifest and the example modules also feed the component docs
+([`components/README.md`](../../components/README.md)). Mapping a folder gives
+the component a React page in the shipped agent guidance, so before you map
+one:
+
+- convert the folder's component page in `components/` to take its examples
+  from the fixtures, or `check:component-pages` and the React page build fail;
+- write each example as consumer code: it ships verbatim as guidance, except
+  that a relative import of the component becomes `@pathableai/react`. An
+  example may import only `react`, `@pathableai/react`, or names that
+  `src/index.ts` exports, by relative path; any other import fails the build;
+- run `node scripts/component-docs/cli.mjs react` and commit the pages it
+  writes in `packages/react/agent-guidance/pathable-react/references/components/`.
+  `pnpm check:agent-guidance` fails when they are out of date.
+
 ### Running them
 
 The fixture tests are the `fixtures` project of the React package's Vitest

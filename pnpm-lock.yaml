@@ -263,6 +263,9 @@ importers:
       '@pathable/storybook-contracts':
         specifier: workspace:*
         version: link:../../packages/storybook-contracts
+      '@pathableai/component-docs':
+        specifier: workspace:*
+        version: link:../../scripts/component-docs
       '@storybook/addon-a11y':
         specifier: ^10.6.7
         version: 10.6.7(storybook@10.6.7(@types/react@19.3.0)(prettier@3.10.1)(react@19.3.1))
@@ -426,6 +429,9 @@ importers:
       '@pathable/storybook-contracts':
         specifier: workspace:*
         version: link:../storybook-contracts
+      '@pathableai/component-docs':
+        specifier: workspace:*
+        version: link:../../scripts/component-docs
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2

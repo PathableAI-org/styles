@@ -417,3 +417,15 @@ describe('component docs: pre-push review fixes', () => {
     assert.equal(storyName('2-up'), 'State2Up')
   })
 })
+
+describe('component docs: one live preview per story', () => {
+  it('previews a state shown twice only once', () => {
+    const { mdx } = render(
+      page('# Widget\n\n<!-- example: loud -->\n\n<!-- examples -->\n'),
+      'storybook',
+      covered,
+    )
+    assert.equal(mdx.match(/<Canvas of=\{Stories\.Loud\}/gu).length, 1)
+    assert.equal(mdx.match(/<CodeTabs of=\{Stories\.Loud\} \/>/gu).length, 2)
+  })
+})

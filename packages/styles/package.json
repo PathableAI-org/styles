@@ -48,6 +48,7 @@
     "@fontsource/nunito": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
     "@pathable/storybook-contracts": "workspace:*",
+    "@pathableai/component-docs": "workspace:*",
     "esbuild": "^0.28.2",
     "postcss": "^8.5.33",
     "postcss-selector-parser": "^7.2.1",

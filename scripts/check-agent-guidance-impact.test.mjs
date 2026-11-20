@@ -73,3 +73,16 @@ test('fails when the git comparison cannot be performed', () => {
   assert.notEqual(result.status, 0)
   assert.match(result.stderr, /Audit infrastructure failed/u)
 })
+
+test('does not count a regenerated component page as a guidance review', () => {
+  const result = analyzeChangedPaths([
+    'packages/react/src/components/SrOnly/SrOnly.tsx',
+    'packages/react/agent-guidance/pathable-react/references/components/SrOnly.md',
+  ])
+
+  assert.equal(result.guidanceChanged, false)
+  assert.deepEqual(
+    result.impacts.map(({ category }) => category),
+    ['public React components or exports'],
+  )
+})
