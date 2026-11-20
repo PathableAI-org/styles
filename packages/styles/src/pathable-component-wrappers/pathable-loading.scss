@@ -65,8 +65,11 @@
 // --- Accessibility: forced-colors ---
 
 @media (forced-colors: active) {
+  // Forced colours replaces a transparent border colour with the same colour
+  // as the other sides, which closes the ring and hides the rotation. A system
+  // colour is kept, so the top of the ring is drawn in Canvas to keep the gap.
   .pathable-loading__spinner {
     border-color: ButtonText;
-    border-top-color: transparent;
+    border-top-color: Canvas;
   }
 }

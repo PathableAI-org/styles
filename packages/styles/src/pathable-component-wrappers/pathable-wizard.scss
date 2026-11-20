@@ -42,7 +42,7 @@
   display: block;
 }
 
-// Mobile compact step summary — hidden on desktop, visible <768px
+// Mobile compact step summary — hidden on desktop, visible below 640px
 .pathable-wizard__mobile-summary {
   display: none;
   font-size: type-scale('sm');

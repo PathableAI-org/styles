@@ -22,7 +22,11 @@ const RESULTS_DIR = resolve('apps/storybook/test-results')
 // ---------------------------------------------------------------------------
 
 const EXPECTED_COVERAGE = {
-  Brand: ['brand-color-usage--default', 'brand-typography--default'],
+  Brand: [
+    'brand-color-usage--default',
+    'brand-typography--default',
+    'brand-typography--text-in-dark-containers',
+  ],
   'Basic components': [
     'components-button--primary',
     'components-button--outline',
@@ -32,6 +36,10 @@ const EXPECTED_COVERAGE = {
     'components-button--accent-warm',
     'components-button--keyboard-focus',
     'components-button--forced-colors',
+    'components-button--full-width',
+    'components-button--responsive-width-override',
+    'components-button--responsive-width-override-below-tablet',
+    'components-button--width-auto-mobile',
     'components-button-group--default',
     'components-button-group--narrow-container',
     'components-button-group--wrapping',
@@ -50,6 +58,7 @@ const EXPECTED_COVERAGE = {
     'components-form-controls-checkbox--required',
     'components-form-controls-checkbox--invalid',
     'components-form-controls-checkbox--with-hint-and-error',
+    'components-form-controls-checkbox--legend-colour',
     'components-form-controls-combo-box--default',
     'components-form-controls-form-stack--default',
     'components-form-controls-form-stack--constrained',
@@ -127,6 +136,7 @@ const EXPECTED_COVERAGE = {
   Feedback: [
     'components-feedback-emptystate--no-data',
     'components-feedback-loading--default',
+    'components-feedback-loading--forced-colors',
     'components-feedback-pageerror--full-page',
     'components-feedback-skeleton--card',
     'components-feedback-toast--stacked',

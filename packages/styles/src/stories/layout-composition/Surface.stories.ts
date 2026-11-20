@@ -262,7 +262,7 @@ const utilitiesOnControls: FocusCase & { outer: string; inner: string } = {
   outer: 'pathable-surface pathable-surface--brand',
   inner: 'pathable-surface pathable-surface--base',
   ring: '--pathable-color-on-accent',
-  controlClass: 'pathable-bg-primary',
+  controlClass: 'pathable-bg-primary pathable-text-white',
 }
 nestedCases.push(utilitiesOnControls)
 

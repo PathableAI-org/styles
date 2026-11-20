@@ -402,3 +402,64 @@ export const WorkflowLowEmphasis = {
   render: () =>
     '<button class="pathable-button pathable-button--low-emphasis">Cancel</button>',
 }
+
+export const FullWidth = {
+  render: () =>
+    '<div data-testid="width-container"><button class="pathable-button pathable-width-full">Full Width Button</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('width-container')
+    const button = canvas.getByRole('button', { name: 'Full Width Button' })
+    // USWDS sets `width: auto` on buttons from 30em up; the utility must win.
+    await expect(button.getBoundingClientRect().width).toBeCloseTo(
+      container.getBoundingClientRect().width,
+      0,
+    )
+  },
+}
+
+// Runs at 1280 px, above the tablet breakpoint.
+export const ResponsiveWidthOverride = {
+  render: () =>
+    '<div data-testid="width-container"><button class="pathable-button pathable-width-full tablet:pathable-width-auto">Auto From Tablet</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('width-container')
+    const button = canvas.getByRole('button', { name: 'Auto From Tablet' })
+    await expect(button.getBoundingClientRect().width).toBeLessThan(
+      container.getBoundingClientRect().width,
+    )
+  },
+}
+
+// Runs at 600 px, above mobile-lg and below tablet.
+export const ResponsiveWidthOverrideBelowTablet = {
+  globals: { viewport: { value: 'belowTablet', isRotated: false } },
+  render: () =>
+    '<div data-testid="width-container"><button class="pathable-button pathable-width-full tablet:pathable-width-auto">Full Below Tablet</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('width-container')
+    const button = canvas.getByRole('button', { name: 'Full Below Tablet' })
+    await expect(button.getBoundingClientRect().width).toBeCloseTo(
+      container.getBoundingClientRect().width,
+      0,
+    )
+  },
+}
+
+// Runs at 375 px, below mobile-lg. USWDS keeps buttons full width there, but
+// the width utility now wins, so `width="auto"` shrinks to the label.
+export const WidthAutoMobile = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  render: () =>
+    '<div data-testid="width-container"><button class="pathable-button pathable-width-auto">Auto Width</button></div>',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const container = canvas.getByTestId('width-container')
+    const button = canvas.getByRole('button', { name: 'Auto Width' })
+    await expect(button.getBoundingClientRect().width).toBeLessThan(
+      container.getBoundingClientRect().width,
+    )
+  },
+}
