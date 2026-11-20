@@ -54,6 +54,7 @@
 
 // Desktop shell layout (1024px+)
 .pathable-app-shell {
+  font-family: var(--pathable-font-body);
   display: grid;
   grid-template-areas: 'sidebar main';
   grid-template-columns:
@@ -66,10 +67,14 @@
 }
 
 .pathable-app-shell__sidebar {
+  // A white container: the outlines inside it are drawn on white, so a light
+  // ring from a dark container around it is not inherited.
+  --pathable-surface-focus-ring: initial;
   grid-area: sidebar;
   position: sticky;
   top: 0;
   height: 100dvh;
+  box-sizing: border-box;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -118,7 +123,8 @@
 }
 
 .pathable-app-shell__nav-item:focus-visible {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: 2px;
 }
 
@@ -166,7 +172,8 @@
 // :focus-visible only, so focus on a control inside the region does not
 // outline the whole region.
 .pathable-app-shell__content:focus-visible {
-  outline: 2px solid var(--pathable-color-focus-ring);
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
   outline-offset: -2px;
 }
 

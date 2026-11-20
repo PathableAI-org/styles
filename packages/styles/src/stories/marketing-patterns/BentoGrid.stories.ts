@@ -1,3 +1,5 @@
+import { expectBodyFont } from '../shared/body-font'
+import { placeholderImage } from '../shared/placeholder-image'
 export default {
   title: 'Marketing Patterns/Bento Grid',
   tags: ['autodocs'],
@@ -37,11 +39,17 @@ export const MixedLayout = {
         <span class="pathable-bento-tile__label">Engagement rate</span>
       </div>
       <div class="pathable-bento-tile pathable-bento-tile--image" style="min-height: 180px;">
-        <img src="https://placehold.co/400x300/primary/white?text=Image" alt="Feature screenshot" />
+        <img src="${placeholderImage(400, 300, 'Image', '#00365c', '#ffffff')}" alt="Feature screenshot" />
       </div>
       <div class="pathable-bento-tile pathable-bento-tile--image2" style="min-height: 180px;" id="bento-image-2">
-        <img src="https://placehold.co/400x300/primary-lighter/333?text=Analytics" alt="Analytics screenshot" />
+        <img src="${placeholderImage(400, 300, 'Analytics', '#4899e8', '#001a33')}" alt="Analytics screenshot" />
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-bento-tile',
+      '.pathable-bento-tile__value',
+      '.pathable-bento-tile__label',
+    ]),
 }

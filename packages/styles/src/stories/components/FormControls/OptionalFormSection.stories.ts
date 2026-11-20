@@ -1,4 +1,5 @@
 import { expect, within } from 'storybook/test'
+import { expectBodyFont } from '../../shared/body-font'
 
 type SectionOptions = {
   content?: string
@@ -210,12 +211,16 @@ export const LongContent = {
         ${fieldContent('optional-long-details')}
       `,
     }),
-  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
-    verifySection(
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await verifySection(
       canvasElement,
       'Add optional accommodations, scheduling considerations, and communication details for future planning sessions',
       true,
-    ),
+    )
+    await expectBodyFont(canvasElement, [
+      '.pathable-optional-form-section__content',
+    ])
+  },
 }
 
 export const Narrow = {

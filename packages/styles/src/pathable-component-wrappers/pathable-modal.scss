@@ -62,6 +62,7 @@
 }
 
 .pathable-modal {
+  font-family: var(--pathable-font-body);
   @extend .usa-modal;
 }
 
@@ -87,6 +88,13 @@
   // At 200 % text a long word is wider than the dialog's content box; break
   // it rather than let it run past the dialog (WCAG 1.4.4).
   overflow-wrap: anywhere;
+  font-weight: var(--pathable-font-weight-normal);
+}
+
+// The title element inside the heading wrapper takes the user agent's bold
+// unless it inherits the wrapper's Regular weight.
+.pathable-modal__heading :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: inherit;
 }
 
 .pathable-modal__footer {
@@ -104,7 +112,7 @@
     @media (max-width: 29.99em) {
       > .pathable-button {
         flex: 1 1 0;
-        min-width: min-content;
+        min-width: max-content;
         width: auto;
       }
     }
@@ -124,6 +132,8 @@
 // nests it in .pathable-modal__heading under a column content box, so pin it
 // to the dialog's top-right corner instead (.usa-modal is position: relative).
 .pathable-modal__close {
+  // Nested in the heading, so inheriting would give it the heading typeface.
+  font-family: var(--pathable-font-body);
   @extend .usa-modal__close;
   position: absolute;
   inset-block-start: var(--pathable-space-1);

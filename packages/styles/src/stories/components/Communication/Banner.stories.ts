@@ -6,6 +6,7 @@ import {
   verifySpaceCollapsesDisclosure,
   type StoryHarness,
 } from '@pathable/storybook-contracts'
+import { expectBodyFont } from '../../shared/body-font'
 
 export default {
   title: 'Components/Communication/Banner',
@@ -85,6 +86,7 @@ export const Default = {
     await verifyDisclosurePanelAssociation(harness, HERE_API)
     await verifyPanelAvailability(harness, HERE_API)
     await verifyEnterExpandsDisclosure(harness, HERE_API)
+    await expectBodyFont(canvasElement, ['.pathable-banner__button'])
   },
 }
 
