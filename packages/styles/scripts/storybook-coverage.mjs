@@ -49,6 +49,7 @@ const EXPECTED_COVERAGE = {
     'components-form-controls-checkbox--required',
     'components-form-controls-checkbox--invalid',
     'components-form-controls-checkbox--with-hint-and-error',
+    'components-form-controls-checkbox--legend-colour',
     'components-form-controls-combo-box--default',
     'components-form-controls-form-stack--default',
     'components-form-controls-form-stack--constrained',

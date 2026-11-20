@@ -22,18 +22,22 @@
 }
 
 // Containers that set their own text colour keep it, so a legend on a dark
-// surface or under a `pathable-text-*` utility stays readable like the control
-// labels beside it.
-.pathable-surface--inverse .pathable-legend,
-.pathable-surface--tone-primary .pathable-legend,
-.pathable-section--dark .pathable-legend,
-.pathable-hero .pathable-legend,
-.pathable-dark-background .pathable-legend,
-.pathable-text-accent .pathable-legend,
-.pathable-text-base .pathable-legend,
-.pathable-text-link .pathable-legend,
-.pathable-text-muted .pathable-legend,
-.pathable-text-primary .pathable-legend,
-.pathable-text-white .pathable-legend {
+// surface or under a `pathable-text-*` colour utility stays readable like the
+// control labels beside it. The whole selector is inside :where(), so these
+// rules have zero specificity: they follow the default above by source order,
+// and a colour utility on the legend itself still wins over both.
+:where(
+  .pathable-surface--inverse .pathable-legend,
+  .pathable-surface--tone-primary .pathable-legend,
+  .pathable-section--dark .pathable-legend,
+  .pathable-hero .pathable-legend,
+  .pathable-dark-background .pathable-legend,
+  .pathable-text-accent .pathable-legend,
+  .pathable-text-base .pathable-legend,
+  .pathable-text-link .pathable-legend,
+  .pathable-text-muted .pathable-legend,
+  .pathable-text-primary .pathable-legend,
+  .pathable-text-white .pathable-legend
+) {
   color: inherit;
 }
