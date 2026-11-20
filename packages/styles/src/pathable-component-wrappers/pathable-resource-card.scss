@@ -85,6 +85,9 @@
 // List: media beside content
 .pathable-resource-card--list {
   flex-direction: row;
+  // The body wraps below the media once it would be narrower than 10rem, so
+  // enlarged text keeps its width instead of squeezing the body to nothing.
+  flex-wrap: wrap;
   gap: var(--pathable-space-4);
 
   .pathable-resource-card__media {
@@ -97,7 +100,7 @@
   }
 
   .pathable-resource-card__body {
-    flex: 1;
+    flex: 1 1 10rem;
     min-width: 0;
   }
 }
