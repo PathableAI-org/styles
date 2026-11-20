@@ -191,6 +191,8 @@
 .pathable-app-shell__notification {
   grid-area: notification;
   min-width: 0;
+  padding-block: var(--space-8);
+  padding-inline: var(--pathable-app-shell-content-padding, var(--space-24));
   position: relative;
   z-index: 20;
 }
