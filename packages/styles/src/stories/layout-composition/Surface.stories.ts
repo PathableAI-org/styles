@@ -574,6 +574,22 @@ const tealCases: (FocusCase & { outer: string; inner: string })[] = [
     ring: '--pathable-color-on-accent',
   },
   {
+    label: 'Plain alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Slim alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert pathable-alert--slim',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
     label: 'Base background in subtle in link',
     outer: 'pathable-bg-link pathable-text-white',
     inner:
@@ -591,9 +607,13 @@ const tealCases: (FocusCase & { outer: string; inner: string })[] = [
 
 const tealStyles = `
   <style>
-    .teal-case .pathable-input { max-width: 100%; box-sizing: border-box; }
+    .teal-case { overflow-wrap: anywhere; padding: 0.5rem; }
+    .teal-case > * { padding: 0.5rem; }
+    .teal-case .pathable-alert { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .teal-case .pathable-alert__body { display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.5rem 0.5rem 0.5rem 2.5rem; margin: 0; min-width: 0; flex: 1 1 auto; box-sizing: border-box; }
+    .teal-case .pathable-alert__body > * { max-width: 100%; margin: 0; box-sizing: border-box; }
+    .teal-case .pathable-input { width: 100%; max-width: 100%; box-sizing: border-box; }
     .teal-case .pathable-button { max-width: 100%; white-space: normal; }
-    .teal-case { overflow-wrap: anywhere; }
   </style>`
 
 export const KeyboardFocusInTechTeal = {
@@ -601,7 +621,7 @@ export const KeyboardFocusInTechTeal = {
     docs: {
       description: {
         story:
-          'A button, an icon button and an input in light containers nested in Tech Teal (`pathable-bg-link`), which sets `--pathable-surface-focus-ring` to `--pathable-color-surface` (white) because Bright Blue Brooks is 2.6:1 there. A white ring would be 1.0:1 on a light container, so each of these resets or sets its own: `pathable-bg-surface` and `pathable-card__container` to Bright Blue Brooks, `pathable-bg-base` to `--pathable-color-text`, `pathable-bg-accent`, `pathable-bg-success` and the info, warning and error alerts to `--pathable-color-on-accent`, and the emergency alert to `--pathable-color-status-danger-text`. The alert cases put their controls in `.pathable-alert__body`, as real alert markup does.  The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.',
+          'A button, an icon button and an input in light containers nested in Tech Teal (`pathable-bg-link`), which sets `--pathable-surface-focus-ring` to `--pathable-color-surface` (white) because Bright Blue Brooks is 2.6:1 there. A white ring would be 1.0:1 on a light container, so each of these resets or sets its own: `pathable-bg-surface` and `pathable-card__container` to Bright Blue Brooks, `pathable-bg-base` to `--pathable-color-text`, `pathable-bg-accent`, `pathable-bg-success` and the info, plain, slim, warning and error alerts to `--pathable-color-on-accent`, and the emergency alert to `--pathable-color-status-danger-text`. The alert cases put their controls in `.pathable-alert__body`, as real alert markup does.  The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.',
       },
     },
   },
@@ -611,8 +631,8 @@ export const KeyboardFocusInTechTeal = {
       ${tealCases
         .map(
           (focusCase) => `
-        <div class="teal-case ${focusCase.outer} pathable-padding-3">
-          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm pathable-padding-2" style="${focusCase.innerStyle ?? ''}">
+        <div class="teal-case ${focusCase.outer}">
+          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm" style="${focusCase.innerStyle ?? ''}">
             ${
               focusCase.alertBody
                 ? `<div class="pathable-alert__body" style="${focusCase.bodyStyle ?? ''}">${focusControls(focusCase)}</div>`
@@ -625,10 +645,7 @@ export const KeyboardFocusInTechTeal = {
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    await expectFocusRings(
-      canvasElement,
-      tealCases.map((focusCase) => ({ ...focusCase, withFields: false })),
-    )
+    await expectFocusRings(canvasElement, tealCases)
   },
 }
 

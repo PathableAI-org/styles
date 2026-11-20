@@ -80,13 +80,14 @@
 // inherit into light containers nested in the teal one, where it is 1.0:1, so
 // the pathable-bg-surface utility and every light component container reset
 // --pathable-surface-focus-ring themselves (a new light container needs the
-// same reset). The Jade, Silver and danger utilities and the alerts below set
-// a ring of their own, so they hold inside the teal container too. The hover
-// variants do the same, for a container that changes under the pointer while a
-// control in it has focus. The focus variants do not: :focus matches only the
-// focused control. The shared state-focus controls are left out, because their
-// ring is drawn on the surface behind them, so one that carries one of these
-// classes itself keeps that surface's ring.
+// same reset). The Jade, Silver and danger utilities and the success, warning,
+// error and emergency alerts set a ring of their own, so they hold inside the
+// teal container too. The hover variants of the utilities set the ring the
+// same way, for a container that changes under the pointer while a control in
+// it has focus. The focus variants do not: :focus matches only the focused
+// control. The shared state-focus controls are left out, because their ring is
+// drawn on the surface behind them, so one that carries one of these classes
+// itself keeps that surface's ring.
 // The :where() keeps the reset at the utility's own specificity, so a
 // container's own --pathable-surface-focus-ring, or a surface variant on the
 // same element, still wins. Keep the list in step with the selectors that
@@ -136,13 +137,18 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
   --pathable-surface-focus-ring: var(--pathable-color-surface);
 }
 
-// The info and plain alerts set no ring of their own, so inside the teal
-// container they would inherit its white ring on their light tint (1.0:1).
-// The other alerts set one in pathable-alert.scss.
+// The success, warning, error and emergency alerts set a ring of their own in
+// pathable-alert.scss. Every other alert (info, plain, slim) sets none, so
+// inside the teal container it would inherit the white ring on its light tint
+// (1.0:1).
 :where(.pathable-bg-link)
   :where(
-    .pathable-alert--info,
-    .pathable-alert:not([class*='pathable-alert--'])
+    .pathable-alert:not(
+      .pathable-alert--success,
+      .pathable-alert--warning,
+      .pathable-alert--error,
+      .pathable-alert--emergency
+    )
   ) {
   --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }
