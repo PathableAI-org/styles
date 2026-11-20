@@ -198,3 +198,48 @@ export const LegacyActiveColorOverride = {
     await expect(getComputedStyle(activeItem).color).toBe('rgb(255, 255, 255)')
   },
 }
+
+export const WithNotification = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `pathable-app-shell__notification` layer sits between the top bar and the main content, never below the bottom navigation.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-app-shell">
+      ${topbar()}
+      <div class="pathable-app-shell__notification" role="status">
+        System maintenance scheduled for Sunday 2:00 AM.
+      </div>
+      ${mainContent()}
+      ${bottomNav()}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const box = (selector: string) =>
+      (
+        canvasElement.querySelector(selector) as HTMLElement
+      ).getBoundingClientRect()
+    const topbarBox = box('.pathable-app-shell__topbar')
+    const notificationBox = box('.pathable-app-shell__notification')
+    const mainBox = box('.pathable-app-shell__content')
+    const navBox = box('.pathable-bottom-navigation')
+    await expect(notificationBox.height).toBeGreaterThan(0)
+    await expect(notificationBox.top).toBeGreaterThanOrEqual(
+      topbarBox.bottom - 1,
+    )
+    await expect(notificationBox.bottom).toBeLessThanOrEqual(mainBox.top + 1)
+    // The test runner renders at its own width; below 1024px the bottom
+    // navigation is shown and the notification must sit above it.
+    const nav = canvasElement.querySelector(
+      '.pathable-bottom-navigation',
+    ) as HTMLElement
+    if (getComputedStyle(nav).display !== 'none') {
+      await expect(notificationBox.bottom).toBeLessThanOrEqual(navBox.top)
+    }
+  },
+}

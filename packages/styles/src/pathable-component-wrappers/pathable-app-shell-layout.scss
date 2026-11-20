@@ -191,6 +191,8 @@
 .pathable-app-shell__notification {
   grid-area: notification;
   min-width: 0;
+  max-height: 40dvh; // a tall notification must not squeeze out main
+  overflow-y: auto;
   position: relative;
   z-index: 20;
 }
