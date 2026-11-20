@@ -11,10 +11,10 @@ How to write a fixture, and the ARIA rules fixtures are held to, are in
 [`fixtures/README.md`](../../fixtures/README.md). This page covers how the
 fixtures are checked.
 
-Fixtures exist for ActivityList so far. Planned next steps, each its own pull
-request: render the styles Storybook stories from the fixtures, choose the
-affected fixtures from a SCSS change, and assert that `@pathableai/react`
-renders the same normalised HTML as a fixture.
+Fixtures exist for ActivityList and SrOnly so far. Planned next steps, each its own pull
+request: render the styles Storybook stories from the fixtures and choose the
+affected fixtures from a SCSS change. `@pathableai/react` components are held
+to the fixtures by [React fixture tests](#react-fixture-tests).
 
 ## The checks
 
@@ -86,3 +86,97 @@ It is not a required check.
 A pull request that changes only `packages/styles` does not run it yet, so a
 SCSS change that removes a class a fixture uses is caught on `main`, not on
 the pull request. Selecting fixtures from SCSS changes is a planned step.
+
+## React fixture tests
+
+Fixture tests check that a `@pathableai/react` component renders the classes
+and markup structure of a fixture. They do not test behaviour or the component
+page's guarantees; stories and unit tests cover those.
+
+### How a fixture test is written
+
+Each fixture a React component renders has an example module beside the
+component, named after the fixture's state, which default-exports the example
+element:
+
+```text
+fixtures/sr-only/inline.html
+packages/react/src/components/SrOnly/examples/inline.tsx
+packages/react/src/components/SrOnly/__tests__/SrOnly.fixtures.test.tsx
+```
+
+An example is written as a consumer would write it, with the fixture's words,
+and holds no test code. It imports the component relatively (`../SrOnly`),
+because the package's own name resolves to its build output inside the
+package.
+
+The fixture test imports the example and the fixture, the fixture with Vite's
+`?raw` query, and compares them:
+
+```tsx
+import inlineFixture from '@pathableai/fixtures/sr-only/inline.html?raw'
+import { expectToRenderFixture } from '../../../test/fixtures'
+import inlineExample from '../examples/inline'
+
+it('renders sr-only/inline', () => {
+  expectToRenderFixture(inlineExample, inlineFixture)
+})
+```
+
+`expectToRenderFixture`, in
+[`packages/react/src/test/fixtures.ts`](../../packages/react/src/test/fixtures.ts):
+
+1. renders the element with `renderToStaticMarkup`;
+2. parses the output and the fixture with the same HTML parser (jsdom);
+3. renumbers `id` values in document order and rewrites ID references
+   (`aria-labelledby`, `aria-describedby`, `for`, `aria-controls` and the
+   other ID-list attributes) to match, so `useId` output compares equal while
+   each reference must still point at the same element; a duplicate ID or a
+   reference to a missing ID fails;
+4. compares the two with `getDiffableHTML` from
+   `@open-wc/semantic-dom-diff`, which sorts attributes and class tokens and
+   normalises whitespace between elements, using Vitest's `toBe`, so a
+   mismatch shows a line diff;
+5. compares the readable text, with the spaces between words, because
+   `getDiffableHTML` trims each text node: `Edit<span> Jordan</span>` and
+   `Edit<span>Jordan</span>` read differently.
+
+Nothing is ignored: an extra wrapper element, a class on the wrong element, a
+`style` attribute or different words fail.
+
+### Coverage
+
+[`packages/react/src/test/fixture-manifest.ts`](../../packages/react/src/test/fixture-manifest.ts)
+maps fixture folders to React components, for example `sr-only` to `SrOnly`.
+The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
+
+- a fixture in a mapped folder has neither an example nor a "not offered in
+  React" entry in the manifest with a reason;
+- an example or a fixture test names a fixture that does not exist, or a
+  "not offered" entry names one that does not exist or gives no reason;
+- an example has no fixture test that compares it with its fixture;
+- a fixture test's `expectToRenderFixture` call does not compare an import
+  from `../examples/<state>` with an import from
+  `@pathableai/fixtures/<folder>/<state>.html?raw` of the same state and the
+  component's mapped folder.
+
+It reports exported React components that no folder maps to yet as a notice,
+without failing. Only `sr-only` is mapped so far.
+
+### Running them
+
+The fixture tests are the `fixtures` project of the React package's Vitest
+configuration (`*.fixtures.test.tsx` and the helper's own tests in
+`src/test/__tests__/`). `pnpm --filter @pathableai/react test:unit` runs them
+with the unit tests;
+`pnpm --filter @pathableai/react test:fixtures` runs them alone.
+
+`vitest run --project fixtures --changed <base>` runs only the fixture tests
+whose module graph contains a changed file: editing one fixture, one example
+or one component runs that component's fixture test. This relies on the
+project's environment, `src/test/fixture-environment.ts`: jsdom, but
+processed by Vite's SSR environment. In Vite's client environment, which
+Vitest uses for plain jsdom, a `?raw` import is recorded as `?import&raw` and
+`--changed` does not connect the test to the fixture file. The coverage test
+reads its inputs from disk, so `--changed` never selects it; CI runs it on
+every run.
