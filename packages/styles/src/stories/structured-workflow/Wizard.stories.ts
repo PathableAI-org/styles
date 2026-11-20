@@ -135,7 +135,7 @@ export const ValidationError = {
               <li>Email is required</li>
               <li>Phone number format is invalid</li>
             </ul>
-            <p class="usa-hint">After correcting errors, continue to move to the next step.</p>
+            <p class="pathable-hint">After correcting errors, continue to move to the next step.</p>
           </div>
         </div>
       </div>
