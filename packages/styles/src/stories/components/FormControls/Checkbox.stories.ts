@@ -6,6 +6,8 @@ import {
 } from '@pathable/storybook-contracts'
 import { expect, userEvent, within } from 'storybook/test'
 
+import { guarantee } from '../../shared/guarantee'
+
 export default {
   title: 'Components/Form Controls/Checkbox',
   tags: ['autodocs'],
@@ -209,4 +211,62 @@ export const WorkflowCoachingSupports = {
   </fieldset>
 </form>
   `,
+}
+
+const legendFieldset = (legendClasses: string, text: string) => `
+<fieldset class="pathable-fieldset">
+  <legend class="${legendClasses}" data-testid="${text}">${text}</legend>
+</fieldset>
+`
+
+const legendContainer = (classes: string, content: string) => `
+<div class="${classes}" style="padding: 1rem; margin-bottom: 1rem;">
+  ${content}
+</div>
+`
+
+export const LegendColour = {
+  render: () => `
+${legendContainer('', legendFieldset('pathable-legend', 'Default legend'))}
+${legendContainer('pathable-surface pathable-surface--inverse', legendFieldset('pathable-legend', 'Inverse surface legend'))}
+${legendContainer('pathable-section--dark', legendFieldset('pathable-legend', 'Dark section legend'))}
+${legendContainer('pathable-text-white pathable-bg-primary', legendFieldset('pathable-legend', 'White text container legend'))}
+${legendContainer('pathable-identifier', legendFieldset('pathable-legend', 'Identifier legend'))}
+${legendContainer('pathable-bg-focus-ring', legendFieldset('pathable-legend', 'Focus ring background legend'))}
+${legendContainer('pathable-surface pathable-surface--brand', legendFieldset('pathable-legend', 'Brand surface legend'))}
+${legendContainer('pathable-alert pathable-alert--error', legendFieldset('pathable-legend', 'Error alert legend'))}
+${legendContainer('pathable-text-primary', legendFieldset('pathable-legend pathable-text-muted', 'Utility on legend') + '<span class="pathable-text-muted" data-testid="Muted reference" style="font-family: var(--pathable-font-body);">Muted reference</span>')}
+  `,
+  play: async ({
+    canvasElement,
+    step,
+  }: {
+    canvasElement: HTMLElement
+    step: Parameters<typeof guarantee>[0]
+  }) => {
+    const view = canvasElement.ownerDocument.defaultView as Window
+    const colourOf = (id: string) =>
+      view.getComputedStyle(within(canvasElement).getByTestId(id)).color
+
+    await guarantee(step, 'legend/text-colour', async () => {
+      await expect(colourOf('Default legend')).toBe('rgb(0, 54, 92)')
+      await expect(colourOf('Inverse surface legend')).toBe(
+        'rgb(255, 255, 255)',
+      )
+      await expect(colourOf('Dark section legend')).not.toBe('rgb(0, 54, 92)')
+      await expect(colourOf('White text container legend')).toBe(
+        'rgb(255, 255, 255)',
+      )
+      await expect(colourOf('Identifier legend')).toBe('rgb(255, 255, 255)')
+      await expect(colourOf('Focus ring background legend')).not.toBe(
+        'rgb(0, 54, 92)',
+      )
+      await expect(colourOf('Brand surface legend')).not.toBe('rgb(0, 54, 92)')
+      await expect(colourOf('Error alert legend')).not.toBe('rgb(0, 54, 92)')
+      await expect(colourOf('Utility on legend')).toBe(
+        colourOf('Muted reference'),
+      )
+      await expect(colourOf('Utility on legend')).not.toBe('rgb(0, 54, 92)')
+    })
+  },
 }

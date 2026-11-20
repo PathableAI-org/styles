@@ -187,6 +187,18 @@ export const STORIES = [
     id: 'components-form-controls-form-stack--with-form-row',
     key: 'form-stack/with-form-row',
   },
+  // ButtonGroup `default` guards the stacked gap below 480px: the first
+  // button is captured focused, so its ring shows on all four sides (#356).
+  {
+    id: 'components-button-group--default',
+    key: 'button-group/default',
+  },
+  // `wrapping` guards the row wrapping inside a narrow container, so no
+  // button runs past it (#356).
+  {
+    id: 'components-button-group--wrapping',
+    key: 'button-group/wrapping',
+  },
   // Checkbox has no aggregate story. With hint and error shows the root's
   // block layout (the control on its own line between the hint and the error
   // message, #281), the unchecked box, its label and its focus ring at every
@@ -273,6 +285,7 @@ export const STORIES = [
 export const ROLLOUT = [
   'app-shell',
   'button',
+  'button-group',
   'card',
   'checkbox',
   'filterable-option-list',
