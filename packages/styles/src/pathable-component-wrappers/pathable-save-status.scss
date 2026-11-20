@@ -7,7 +7,7 @@
 // Each state displays both a text label and a visual indicator.
 //
 // CSS custom properties:
-//   --pathable-save-status-font-size  (default: type-scale('sm'))
+//   --pathable-save-status-font-size  (default: the theme small type size)
 //   --pathable-save-status-icon-size  (default: 1em)
 
 @use 'uswds-core' as *;

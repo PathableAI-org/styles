@@ -1,0 +1,15 @@
+// Resolve a theme type-scale name ('sm', 'md', 'lg', ...) to a rem length.
+//
+// USWDS has no `type-scale()` function: the scale is a map. Sass leaves an
+// unknown function call as plain CSS, so `font-size: type-scale('sm')` reaches
+// `dist` uncompiled and the browser drops it as invalid. This divides the
+// scale's pixel value by 16px without rounding, so 18px stays 1.125rem and the
+// size follows the root font size.
+
+@use 'sass:map';
+@use 'sass:math';
+@use 'uswds-core' as *;
+
+@function type-scale-rem($name) {
+  @return math.div(map.get($all-type-scale, $name), 16px) * 1rem;
+}

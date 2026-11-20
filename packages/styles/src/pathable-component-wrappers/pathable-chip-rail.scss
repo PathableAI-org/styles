@@ -12,6 +12,7 @@
 //   --marquee (opt-in auto-scroll animation)
 
 @use 'uswds-core' as *;
+@use '../type-scale' as *;
 
 .pathable-chip-rail {
   font-family: var(--pathable-font-body);
@@ -51,7 +52,7 @@
     --pathable-chip-rail-chip-radius,
     var(--usa-chip-rail-chip-radius, #{radius('md')})
   );
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
   background: color('gray-5');
   color: color('ink');
   text-decoration: none;

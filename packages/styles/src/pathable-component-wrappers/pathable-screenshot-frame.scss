@@ -10,6 +10,7 @@
 //   --browser, --phone, --dashboard (default: plain elevated)
 
 @use 'uswds-core' as *;
+@use '../type-scale' as *;
 
 .pathable-screenshot-frame {
   font-family: var(--pathable-font-body);
@@ -41,7 +42,7 @@
 
 .pathable-screenshot-frame__caption {
   padding: units(1.5);
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
   color: color('ink');
   background: color('white');
   text-align: center;
@@ -106,7 +107,7 @@ button.pathable-screenshot-frame {
 
   .pathable-screenshot-frame__browser-url {
     flex: 1;
-    font-size: type-scale('3xs');
+    font-size: type-scale-rem('3xs');
     background: color('white');
     padding: units(0.5) units(1);
     border-radius: radius('sm');
