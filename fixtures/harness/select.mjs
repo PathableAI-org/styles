@@ -16,14 +16,13 @@
  * $GITHUB_STEP_SUMMARY.
  */
 
-import { appendFileSync, existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { appendFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
 import { DEPENDENCY_GLOBS, STYLESHEET_GLOBS, affected } from './affected.mjs'
 import { selectFolders } from './changed.mjs'
-import { allFolders, fixturesRoot } from './folders.mjs'
+import { allFolders } from './folders.mjs'
 
 /** How many reasons the summary lists per folder before it counts the rest. */
 const SUMMARY_REASONS = 15
@@ -35,6 +34,9 @@ const SUMMARY_REASONS = 15
 export const INPUT_GLOBS = [
   'fixtures/**',
   'packages/styles/components/*.md',
+  // The selection reads selectors and pages with these scripts.
+  'packages/styles/scripts/check-component-pages.mjs',
+  'packages/styles/scripts/component-pages.mjs',
   ...STYLESHEET_GLOBS,
   ...DEPENDENCY_GLOBS,
 ]
@@ -145,12 +147,13 @@ export function renderSummary(
       lines.push('')
     }
   }
-  lines.push(
-    fixturesChanged
-      ? 'html-validate ran on every fixture, because files under `fixtures/` or `pnpm-lock.yaml` changed.'
-      : 'html-validate was skipped: no file under `fixtures/` and not `pnpm-lock.yaml` changed.',
-    '',
-  )
+  let html =
+    'html-validate was skipped: no file under `fixtures/` and not `pnpm-lock.yaml` changed.'
+  if (everything) html = 'html-validate ran on every fixture.'
+  else if (fixturesChanged)
+    html =
+      'html-validate ran on every fixture, because files under `fixtures/` or `pnpm-lock.yaml` changed.'
+  lines.push(html, '')
   return lines.join('\n')
 }
 
@@ -167,13 +170,14 @@ function main(argv) {
     }
   } else {
     const base = argv[0] ?? 'origin/main'
-    // One set of changed paths for both selections: affected() diffs the
-    // working tree against the merge base, as CI's clean checkout of HEAD.
+    // One set of changed paths for every selection: affected() diffs the
+    // working tree against the merge base (CI's clean checkout of HEAD),
+    // with renames listed as a delete and an add. changed.mjs's own listing
+    // is not used, so `pnpm changed` and `pnpm select` can differ on
+    // uncommitted or renamed fixture files.
     const css = affected({ base })
     const paths = css.changedPaths
-    const changed = selectFolders(paths, folderList).filter((folder) =>
-      existsSync(join(fixturesRoot, folder)),
-    )
+    const changed = selectFolders(paths, folderList)
     result = {
       base: css.base,
       fixturesChanged: needsHtmlValidate(paths),

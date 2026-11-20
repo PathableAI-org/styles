@@ -14,6 +14,8 @@ import { after, describe, it } from 'node:test'
 import {
   changedPathsSince,
   compileStyles,
+  movedRules,
+  normalize,
   dependencyReasons,
   diffStyles,
   selectFixtures,
@@ -405,7 +407,7 @@ describe('changedPathsSince', () => {
   })
 })
 
-describe('review round: quoting, selectors and rule order', () => {
+describe('quoted text, selector forms and rule order', () => {
   const diffOne = (before, after, fixtures = FIXTURES) =>
     selectFixtures(
       diffStyles(
@@ -431,12 +433,18 @@ describe('review round: quoting, selectors and rule order', () => {
     assert.deepEqual(folders(selection), ['card'])
   })
 
-  it('ignores whitespace outside quotes', () => {
+  it('selects every fixture for an unread property a class-less rule changed, after a class rule', () => {
     const selection = diffOne(
-      '.pathable-card { margin: 0 1px; }\n',
-      '.pathable-card {\n  margin:   0   1px;\n}\n',
+      '.pathable-card { --x: 1px; }\n:root { --x: 1px; }\n',
+      '.pathable-card { --x: 2px; }\n:root { --x: 2px; }\n',
     )
-    assert.deepEqual(folders(selection), [])
+    assert.equal(selection.all, true)
+  })
+
+  it('normalize collapses whitespace outside quotes only', () => {
+    assert.equal(normalize('  0 \n  1px  '), '0 1px')
+    assert.equal(normalize('[data-label="A  B"]  .x'), '[data-label="A  B"] .x')
+    assert.equal(normalize("content:  'a \\' b'"), "content: 'a \\' b'")
   })
 
   for (const selector of [
@@ -472,16 +480,37 @@ describe('review round: quoting, selectors and rule order', () => {
     assert.ok(folders(selection).includes('card'))
   })
 
-  it('selects both rules when two overlapping rules swap order', () => {
+  it('selects the markup two overlapping rules restyle when they swap order', () => {
+    // Only markup that matches both rules changes; it carries both classes.
+    const overlap = {
+      folder: 'overlap',
+      files: [
+        {
+          path: 'fixtures/overlap/basic.html',
+          html: '<span class="pathable-card pathable-tag">Both</span>',
+        },
+      ],
+    }
     const card = '.pathable-card { color: red; }\n'
     const tag = '.pathable-tag { color: blue; }\n'
-    const selection = diffOne(`${card}${tag}`, `${tag}${card}`)
+    const selection = diffOne(`${card}${tag}`, `${tag}${card}`, [
+      ...FIXTURES,
+      overlap,
+    ])
     assert.equal(selection.all, false)
-    assert.deepEqual(folders(selection), ['card', 'tag'])
+    assert.ok(folders(selection).includes('overlap'), JSON.stringify(selection))
     assert.match(
-      selection.folders.card.reasons[0].via,
+      selection.folders.overlap.reasons[0].via,
       /moved relative to other rules/u,
     )
+  })
+
+  it('does not mark later rules as moved when an earlier occurrence goes away', () => {
+    const selection = diffOne(
+      '.pathable-card { color: red; }\n.pathable-tag { color: blue; }\n.pathable-card { margin: 0; }\nbody { margin: 0; }\n',
+      '.pathable-card { color: red; margin: 0; }\n.pathable-tag { color: blue; }\nbody { margin: 0; }\n',
+    )
+    assert.equal(selection.all, false)
   })
 
   it('selects every fixture when a rule with no class moves', () => {
@@ -499,5 +528,31 @@ describe('review round: quoting, selectors and rule order', () => {
       `${card}.pathable-button { margin: 0; }\n${tag}`,
     )
     assert.deepEqual(folders(selection), ['activity-list'])
+  })
+})
+
+describe('movedRules', () => {
+  const entries = (...keys) => keys.map((key) => ({ key, id: `${key}#1` }))
+
+  it('marks one of two swapped rules', () => {
+    const moved = movedRules(entries('a', 'b'), entries('b', 'a'))
+    assert.equal(moved.size, 1)
+  })
+
+  it('marks only the rule that moved up, not the rules it passed', () => {
+    const moved = movedRules(
+      entries('a', 'b', 'c', 'd'),
+      entries('d', 'a', 'b', 'c'),
+    )
+    assert.deepEqual([...moved], ['d'])
+  })
+
+  it('marks a rule present on one side only', () => {
+    const moved = movedRules(entries('a', 'b', 'c'), entries('a', 'c'))
+    assert.deepEqual([...moved], ['b'])
+  })
+
+  it('marks nothing when the order is the same', () => {
+    assert.equal(movedRules(entries('a', 'b'), entries('a', 'b')).size, 0)
   })
 })

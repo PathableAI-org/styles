@@ -86,13 +86,14 @@ cd fixtures && node harness/axe.mjs $(node harness/changed.mjs)
 
 ### Folders a stylesheet change affects
 
-`node fixtures/harness/affected.mjs --base <ref> [--head <ref>] [--json <file>]`
+`node fixtures/harness/affected.mjs --base <ref> [--json <file>]`
 selects folders from the compiled CSS alone. No component page or fixture
 declares which source files it depends on.
 
 1. It compiles `packages/styles/src/index.scss` (what becomes `styles.css`)
-   at the merge base of `<ref>` and the head, and at the head (the working
-   tree when `--head` is not given). The base compiles in a temporary git
+   at the merge base of `<ref>` and HEAD, and in the working tree, which is
+   the head: its fixtures, stylesheet and dependencies all come from one
+   checkout. The base compiles in a temporary git
    worktree with the head's `node_modules`, so there is no second install.
 2. It parses both with PostCSS and pairs up rules by at-rule context (such as
    a media query) and selector, comparing their declarations property by
@@ -152,9 +153,13 @@ only the fixture HTML is read.
 selection, and `fixtures/harness/workflow.test.mjs` fails when the
 workflow's `pull_request.paths` misses one.
 
-`node fixtures/harness/select.mjs <base>` runs both and prints the union,
-plus every folder whose page `packages/styles/components/<slug>.md` changed
-(the contract check reads the page's slug and variants), one folder per line, with the reasons for each on standard error. `--all` selects
+`node fixtures/harness/select.mjs <base>` lists the changed paths once,
+with `affected.mjs`'s listing (working tree against the merge base, renames
+as a delete and an add), and prints the union of the folders `changed.mjs`'s
+`selectFolders` picks from them, the folders `affected.mjs` selects, and
+every folder whose page `packages/styles/components/<slug>.md` changed (the
+contract check reads the page's slug and variants). It prints one folder per
+line, with the reasons for each on standard error. `--all` selects
 every folder. In GitHub Actions it also writes the `folders` and
 `fixtures_changed` step outputs and a job summary.
 
@@ -162,7 +167,9 @@ every folder. In GitHub Actions it also writes the `folders` and
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
 on a pull request that changes any input of the selection (`fixtures/**`,
-`packages/styles/components/*.md`, `packages/styles/src/**/*.scss` or
+`packages/styles/components/*.md`, the component-page scripts
+`check-component-pages.mjs` and `component-pages.mjs` it reads selectors and
+pages with, `packages/styles/src/**/*.scss` or
 `*.sass`, `packages/styles/package.json`, `pnpm-lock.yaml`,
 `pnpm-workspace.yaml` or `patches/**`) or the workflow itself, and on every push to `main`. It:
 

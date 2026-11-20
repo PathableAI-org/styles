@@ -23,9 +23,10 @@
  * that changed and that no rule reads in the end, or a property read by such
  * a rule.
  *
- *   node fixtures/harness/affected.mjs --base <ref> [--head <ref>] [--json <file>]
+ *   node fixtures/harness/affected.mjs --base <ref> [--json <file>]
  *
- * `--head` defaults to the working tree. The selection is printed as JSON (and
+ * The head is the working tree, so the fixtures, the stylesheet and the
+ * dependencies all come from the same checkout. The selection is printed as JSON (and
  * written to `--json` when given): `{ all, allReasons, folders: { <folder>:
  * { files, reasons } } }`, each reason naming the class or custom property,
  * the selector, and the source file (from the Sass source map) it came from.
@@ -303,6 +304,53 @@ const sameValues = (a = [], b = []) =>
 // ---------------------------------------------------------------------------
 
 /**
+ * The keys of rules that moved relative to the others between two orders of
+ * `{ key, id }` entries. The rules kept in place are the longest run that is
+ * in the same relative order on both sides (a longest increasing subsequence
+ * of their old positions in new order); every other rule moved. One rule
+ * moving, or one occurrence disappearing, therefore marks only that rule.
+ */
+export function movedRules(was, now) {
+  const wasIndex = new Map(was.map(({ id }, index) => [id, index]))
+  const moved = new Set()
+  const nowIds = new Set(now.map(({ id }) => id))
+  for (const { key, id } of was) if (!nowIds.has(id)) moved.add(key)
+
+  const common = now.filter(({ key, id }) => {
+    if (wasIndex.has(id)) return true
+    moved.add(key)
+    return false
+  })
+  // Patience sorting: tails[k] is the index in `common` of the smallest
+  // old position that ends an increasing run of length k + 1.
+  const tails = []
+  const previous = new Array(common.length)
+  common.forEach(({ id }, index) => {
+    const position = wasIndex.get(id)
+    let low = 0
+    let high = tails.length
+    while (low < high) {
+      const middle = (low + high) >> 1
+      if (wasIndex.get(common[tails[middle]].id) < position) low = middle + 1
+      else high = middle
+    }
+    previous[index] = low > 0 ? tails[low - 1] : -1
+    tails[low] = index
+  })
+  const kept = new Set()
+  for (
+    let index = tails.length > 0 ? tails[tails.length - 1] : -1;
+    index >= 0;
+    index = previous[index]
+  )
+    kept.add(index)
+  common.forEach(({ key }, index) => {
+    if (!kept.has(index)) moved.add(key)
+  })
+  return moved
+}
+
+/**
  * Diffs two compiled stylesheets. Returns the classes the change touches, each
  * with its reasons, and the reasons, if any, every fixture must be selected.
  *
@@ -376,6 +424,14 @@ export function diffStyles(base, head) {
           source: sourceOf(prop),
           classless: group.classless,
         })
+      } else if (group.classless) {
+        // Any rule with no class that changed it makes an unread property
+        // select every folder, whichever rule came first.
+        Object.assign(changedTokens.get(prop), {
+          selector: group.selector,
+          source: sourceOf(prop),
+          classless: true,
+        })
       }
     }
   }
@@ -402,13 +458,7 @@ export function diffStyles(base, head) {
   }
   const was = stable(before)
   const now = stable(after)
-  const wasIndex = new Map(was.map(({ id }, index) => [id, index]))
-  const moved = new Set()
-  now.forEach(({ key, id }, index) => {
-    if (wasIndex.get(id) !== index) moved.add(key)
-  })
-  const nowIds = new Set(now.map(({ id }) => id))
-  for (const { key, id } of was) if (!nowIds.has(id)) moved.add(key)
+  const moved = movedRules(was, now)
   for (const key of moved) {
     const group = after.get(key)
     const decl = group.decls[0]
@@ -642,22 +692,22 @@ function compileAt(ref) {
 }
 
 /**
- * The whole selection for `base...head` (`head` undefined: the working tree,
- * compared with the merge base of `base` and HEAD).
+ * The whole selection for the working tree, compared with the merge base of
+ * `base` and HEAD.
  */
-export function affected({ base, head } = {}) {
-  const mergeBase = git(['merge-base', base, head ?? 'HEAD'])
-  const changedPaths = changedPathsSince(mergeBase, head)
+export function affected({ base } = {}) {
+  const mergeBase = git(['merge-base', base, 'HEAD'])
+  const changedPaths = changedPathsSince(mergeBase)
 
   const uswds = {
     base: uswdsRange(readAt(mergeBase, `${stylesPackage}/package.json`)),
-    head: uswdsRange(readAt(head, `${stylesPackage}/package.json`)),
+    head: uswdsRange(readAt(undefined, `${stylesPackage}/package.json`)),
   }
   const fixtures = readFixtures()
   const extraAll = dependencyReasons(changedPaths, uswds)
   const meta = {
     base: mergeBase,
-    head: head ? git(['rev-parse', head]) : 'working tree',
+    head: 'working tree',
     changedPaths,
   }
 
@@ -682,9 +732,10 @@ export function affected({ base, head } = {}) {
   }
 
   const baseCss = compileAt(mergeBase)
-  const headCss = head
-    ? compileAt(head)
-    : { ...compileStyles(join(repoRoot, stylesPackage)), root: repoRoot }
+  const headCss = {
+    ...compileStyles(join(repoRoot, stylesPackage)),
+    root: repoRoot,
+  }
   return { ...meta, ...selectFixtures(diffStyles(baseCss, headCss), fixtures) }
 }
 
@@ -692,7 +743,7 @@ function parseArgs(argv) {
   const args = {}
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index]
-    if (flag === '--base' || flag === '--head' || flag === '--json') {
+    if (flag === '--base' || flag === '--json') {
       args[flag.slice(2)] = argv[index + 1]
       index += 1
     } else {
@@ -700,9 +751,7 @@ function parseArgs(argv) {
     }
   }
   if (!args.base)
-    throw new Error(
-      'Usage: affected.mjs --base <ref> [--head <ref>] [--json <file>]',
-    )
+    throw new Error('Usage: affected.mjs --base <ref> [--json <file>]')
   return args
 }
 
