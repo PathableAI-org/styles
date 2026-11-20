@@ -1,12 +1,16 @@
 name: Fixtures
 
 # Validates the canonical HTML fixtures in fixtures/. Not a required check.
+# On a pull request it checks the fixture folders whose files changed and the
+# folders a compiled-CSS change affects; on main it checks every folder.
 # See docs/testing/fixtures.md.
 
 on:
   pull_request:
     paths:
       - 'fixtures/**'
+      - 'packages/styles/src/**/*.scss'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/fixtures.yml'
   push:
     branches:
@@ -41,7 +45,10 @@ jobs:
           pnpm exec prettier --check fixtures
       - name: Test fixture harness
         run: pnpm --filter @pathableai/fixtures test
-      - name: Select changed fixture folders
+      # The union of the folders whose files changed and the folders the
+      # compiled-CSS diff affects, with a job summary saying why each was
+      # selected. Writes the folders and fixtures_changed outputs.
+      - name: Select fixture folders
         id: changed
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -49,19 +56,21 @@ jobs:
         run: |
           if [ "$EVENT_NAME" = "pull_request" ] &&
             git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml; then
-            FOLDERS=$(node fixtures/harness/changed.mjs "origin/$BASE_REF")
+            node fixtures/harness/select.mjs "origin/$BASE_REF"
           else
             # On main, or when this workflow changed, check every folder.
-            FOLDERS=$(node fixtures/harness/changed.mjs --all)
+            node fixtures/harness/select.mjs --all
           fi
-          FOLDERS=$(echo $FOLDERS)
-          echo "Selected folders: ${FOLDERS:-none}"
-          echo "folders=$FOLDERS" >> "$GITHUB_OUTPUT"
       - name: html-validate (every fixture)
+        if: steps.changed.outputs.fixtures_changed == 'true'
         run: pnpm --filter @pathableai/fixtures check:html
-      - name: Contract (every folder)
-        run: pnpm --filter @pathableai/fixtures check:contract
-      - name: axe (changed folders)
+      - name: Contract (selected folders)
+        if: steps.changed.outputs.folders != ''
+        working-directory: fixtures
+        env:
+          FOLDERS: ${{ steps.changed.outputs.folders }}
+        run: node harness/contract.mjs $FOLDERS
+      - name: axe (selected folders)
         if: steps.changed.outputs.folders != ''
         working-directory: fixtures
         env:
