@@ -71,3 +71,27 @@ test('the summary lists each folder and its reasons', () => {
   assert.match(summary, /### `activity-list`/u)
   assert.match(summary, /html-validate ran/u)
 })
+
+test('the summary caps reasons, and the log form lists them all', () => {
+  const many = {
+    folders: {
+      'activity-list': Array.from({ length: 20 }, (_, i) => `Reason ${i}.`),
+    },
+  }
+  const capped = renderSummary({ base: 'abc123', ...many })
+  assert.match(capped, /…and 5 more reason\(s\); the step log lists them all/u)
+  assert.doesNotMatch(capped, /Reason 19\./u)
+  const full = renderSummary({ base: 'abc123', ...many }, Infinity)
+  assert.match(full, /Reason 19\./u)
+  assert.doesNotMatch(full, /more reason/u)
+})
+
+test('a fixtures change outside a component folder selects nothing, without contradiction', () => {
+  const summary = renderSummary({
+    base: 'abc123',
+    folders: {},
+    fixturesChanged: true,
+  })
+  assert.match(summary, /No file in a component folder changed/u)
+  assert.match(summary, /html-validate ran/u)
+})

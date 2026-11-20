@@ -34,9 +34,10 @@ const BASE = {
   'pathable-card.scss': '.pathable-card { padding: 2rem; }\n',
 }
 
-const INDEX = Object.keys(BASE)
-  .map((file) => `@use '${file.replace(/^_/u, '').replace(/\.scss$/u, '')}';`)
-  .join('\n')
+const indexOf = (files) =>
+  Object.keys(files)
+    .map((file) => `@use '${file.replace(/^_/u, '').replace(/\.scss$/u, '')}';`)
+    .join('\n')
 
 const FIXTURES = [
   {
@@ -84,7 +85,7 @@ function compile(files) {
   dirs.push(dir)
   for (const [file, content] of Object.entries(files))
     writeFileSync(join(dir, file), content)
-  writeFileSync(join(dir, 'index.scss'), INDEX)
+  writeFileSync(join(dir, 'index.scss'), indexOf(files))
   return { ...compileStyles(dir, 'index.scss', []), root: dir }
 }
 
@@ -277,6 +278,74 @@ describe('dependency changes', () => {
         head: '^3',
       }),
       [],
+    )
+  })
+})
+
+describe('cases that cannot be narrowed to classes', () => {
+  /** Diffs two small stylesheets of one file each. */
+  const diffOne = (before, after, fixtures = FIXTURES) =>
+    selectFixtures(
+      diffStyles(
+        compile({ 'one.scss': before }),
+        compile({ 'one.scss': after }),
+      ),
+      fixtures,
+    )
+
+  it('selects every fixture for a rule whose list has a selector with no class', () => {
+    const selection = select(
+      'pathable-card.scss',
+      `${BASE['pathable-card.scss']}button, .pathable-card { margin: 0; }\n`,
+    )
+    assert.equal(selection.all, true)
+    assert.equal(selection.allReasons[0].selector, 'button, .pathable-card')
+  })
+
+  it('selects every fixture for a token read by a rule with no class', () => {
+    const rules = 'p { margin: var(--space); }\n'
+    const selection = diffOne(
+      `:root { --space: 1px; }\n${rules}`,
+      `:root { --space: 2px; }\n${rules}`,
+    )
+    assert.equal(selection.all, true)
+    assert.equal(selection.allReasons[0].token, '--space')
+    assert.equal(selection.allReasons[0].selector, 'p')
+  })
+
+  it('selects every fixture for a token whose only reader is an unread custom property', () => {
+    const selection = diffOne(
+      ':root { --a: #06c; --b: var(--a); }\n',
+      ':root { --a: #0a5; --b: var(--a); }\n',
+    )
+    assert.equal(selection.all, true)
+    assert.equal(selection.allReasons[0].token, '--a')
+  })
+
+  it('selects a fixture that names a changed custom property', () => {
+    const fixtures = [
+      ...FIXTURES,
+      {
+        folder: 'inline',
+        files: [
+          {
+            path: 'fixtures/inline/basic.html',
+            html: '<div class="inline-demo" data-token="--gap"></div>',
+          },
+        ],
+      },
+    ]
+    const rules = '.pathable-card { gap: var(--gap); }\n'
+    const selection = diffOne(
+      `:root { --gap: 1px; }\n${rules}`,
+      `:root { --gap: 2px; }\n${rules}`,
+      fixtures,
+    )
+    assert.equal(selection.all, false)
+    assert.deepEqual(folders(selection), ['card', 'inline'])
+    assert.match(
+      selection.folders.inline.reasons[0].via,
+      /named in the fixture/u,
     )
   })
 })

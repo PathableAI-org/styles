@@ -13,13 +13,12 @@
  * $GITHUB_STEP_SUMMARY.
  */
 
-import { execFileSync } from 'node:child_process'
 import { appendFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
-import { affected, repoRoot } from './affected.mjs'
+import { affected } from './affected.mjs'
 import { selectFolders } from './changed.mjs'
 import { allFolders, fixturesRoot } from './folders.mjs'
 
@@ -69,7 +68,10 @@ export function describe(reason) {
 }
 
 /** The job summary, in Markdown. */
-export function renderSummary({ base, folders, fixturesChanged, everything }) {
+export function renderSummary(
+  { base, folders, fixturesChanged, everything },
+  limit = SUMMARY_REASONS,
+) {
   const names = Object.keys(folders)
   const lines = ['## Fixture selection', '']
   if (everything) {
@@ -79,7 +81,7 @@ export function renderSummary({ base, folders, fixturesChanged, everything }) {
   }
   if (names.length === 0) {
     lines.push(
-      '**No fixture folder was selected.** No file under `fixtures/` changed, and the compiled CSS diff touches no class or custom property that a fixture uses. The contract check and axe did not run.',
+      '**No fixture folder was selected.** No file in a component folder changed, and the compiled CSS diff touches no class or custom property that a fixture uses. The contract check and axe did not run.',
       '',
     )
   } else {
@@ -90,11 +92,10 @@ export function renderSummary({ base, folders, fixturesChanged, everything }) {
     for (const name of names) {
       const reasons = folders[name]
       lines.push(`### \`${name}\``, '')
-      for (const reason of reasons.slice(0, SUMMARY_REASONS))
-        lines.push(`- ${reason}`)
-      if (reasons.length > SUMMARY_REASONS) {
+      for (const reason of reasons.slice(0, limit)) lines.push(`- ${reason}`)
+      if (reasons.length > limit) {
         lines.push(
-          `- …and ${reasons.length - SUMMARY_REASONS} more reason(s); see the step log.`,
+          `- …and ${reasons.length - limit} more reason(s); the step log lists them all.`,
         )
       }
       lines.push('')
@@ -107,15 +108,6 @@ export function renderSummary({ base, folders, fixturesChanged, everything }) {
     '',
   )
   return lines.join('\n')
-}
-
-function changedPaths(base) {
-  return execFileSync('git', ['diff', '--name-only', `${base}...HEAD`], {
-    cwd: repoRoot,
-    encoding: 'utf8',
-  })
-    .split('\n')
-    .filter(Boolean)
 }
 
 function main(argv) {
@@ -131,11 +123,13 @@ function main(argv) {
     }
   } else {
     const base = argv[0] ?? 'origin/main'
-    const paths = changedPaths(base)
+    // One set of changed paths for both selections: affected() diffs the
+    // working tree against the merge base, as CI's clean checkout of HEAD.
+    const css = affected({ base })
+    const paths = css.changedPaths
     const changed = selectFolders(paths, folderList).filter((folder) =>
       existsSync(join(fixturesRoot, folder)),
     )
-    const css = affected({ base })
     result = {
       base: css.base,
       fixturesChanged: paths.some((path) => path.startsWith('fixtures/')),
@@ -145,7 +139,8 @@ function main(argv) {
 
   const names = Object.keys(result.folders)
   const summary = renderSummary(result)
-  process.stderr.write(summary)
+  // The log gets every reason; the job summary is capped.
+  process.stderr.write(renderSummary(result, Infinity))
   if (names.length > 0) process.stdout.write(`${names.join('\n')}\n`)
   if (process.env.GITHUB_OUTPUT) {
     appendFileSync(

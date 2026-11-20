@@ -92,11 +92,12 @@ Every folder is selected when the change cannot be narrowed to classes:
 - `pnpm-lock.yaml`, `pnpm-workspace.yaml` or `patches/` changed, or the
   `@uswds/uswds` range in `packages/styles/package.json` changed, because the
   two sides would not compile with the same packages;
-- a changed rule names no class, such as an element selector, the reset,
-  `@font-face` or a keyframe;
-- a custom property changed on a rule with no class (such as `:root`) and no
-  rule reads it;
-- a changed custom property is read by a rule with no class.
+- a changed rule has a selector that names no class, such as an element
+  selector, the reset, `@font-face` or a keyframe, even when other selectors
+  in the same list name one (`button, .pathable-button`);
+- a custom property changed on a rule with no class (such as `:root`) and,
+  in the end, no rule reads it, directly or through other custom properties;
+- a changed custom property is read by such a rule.
 
 When no stylesheet source changed, it compiles nothing and selects nothing.
 It prints JSON: `all`, `allReasons`, and per folder the selected `files` and

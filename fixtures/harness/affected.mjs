@@ -18,9 +18,10 @@
  *      those classes (or names one of those custom properties).
  *
  * Every fixture is selected when a change cannot be narrowed to classes: a
- * changed rule whose selector names no class (element selectors, the reset,
- * `@font-face`, keyframes), a custom property that changed and that no rule
- * reads, or a property read by a rule that names no class.
+ * changed rule with a selector that names no class, even one in a list
+ * (element selectors, the reset, `@font-face`, keyframes), a custom property
+ * that changed and that no rule reads in the end, or a property read by such
+ * a rule.
  *
  *   node fixtures/harness/affected.mjs --base <ref> [--head <ref>] [--json <file>]
  *
@@ -146,16 +147,20 @@ export function readRules(css, { map, root } = {}) {
   })
   const groups = new Map()
 
-  const groupFor = (node, selector) => {
+  const groupFor = (node, selector, list = []) => {
     const context = contextOf(node)
     const key = [...context, selector].join(' >> ')
     if (!groups.has(key)) {
       groups.set(key, {
         key,
         selector,
-        classes: selector.startsWith('@')
-          ? new Set()
-          : classesInSelector(selector),
+        classes: list.length > 0 ? classesInSelector(selector) : new Set(),
+        // Whether some selector in the list names no class, such as `button`
+        // in `button, .pathable-button`: a change to the rule then reaches
+        // markup that no class identifies.
+        classless:
+          list.length === 0 ||
+          list.some((item) => classesInSelector(item).size === 0),
         decls: [],
       })
     }
@@ -169,7 +174,7 @@ export function readRules(css, { map, root } = {}) {
     if (parent.type === 'rule') {
       // Keyframe steps (`from`, `50%`) are rules too; key them under their
       // @keyframes context like any other rule.
-      group = groupFor(parent, normalize(parent.selector))
+      group = groupFor(parent, normalize(parent.selector), parent.selectors)
     } else if (parent.type === 'atrule') {
       group = groupFor(parent, normalize(`@${parent.name} ${parent.params}`))
     } else {
@@ -256,9 +261,9 @@ export function diffStyles(base, head) {
     }
 
     const plain = changed.filter((prop) => !CUSTOM_PROPERTY.test(prop))
-    if (group.classes.size === 0 && plain.length > 0) {
+    if (group.classless && plain.length > 0) {
       all.push({
-        via: `rule ${status} with no class`,
+        via: `rule ${status} with a selector that names no class`,
         selector: group.selector,
         property: plain[0],
         source: sourceOf(plain[0]),
@@ -269,7 +274,7 @@ export function diffStyles(base, head) {
         changedTokens.set(prop, {
           selector: group.selector,
           source: sourceOf(prop),
-          classless: group.classes.size === 0,
+          classless: group.classless,
         })
       }
     }
@@ -300,12 +305,16 @@ export function diffStyles(base, head) {
         source: origin.source,
       },
     ])
-    let readByAnything = false
+    // Whether the change reaches a rule: a property that is not custom, or a
+    // rule with classes. A chain of custom properties that nothing reads in
+    // the end does not count.
+    let reachesARule = false
 
     while (queue.length > 0) {
       const { name, chain } = queue.shift()
       for (const { group, decl } of readers.get(name) ?? []) {
-        readByAnything = true
+        if (group.classes.size > 0 || !CUSTOM_PROPERTY.test(decl.prop))
+          reachesARule = true
         const via = `reads ${chain.join(' → ')} through var()`
         for (const cls of group.classes) {
           addClass(cls, {
@@ -323,10 +332,10 @@ export function diffStyles(base, head) {
             ])
             queue.push({ name: decl.prop, chain: [...chain, decl.prop] })
           }
-        } else if (group.classes.size === 0) {
+        } else if (group.classless) {
           all.push({
             token,
-            via: `${via} in a rule with no class`,
+            via: `${via} in a rule with a selector that names no class`,
             selector: group.selector,
             source: origin.source,
           })
@@ -334,7 +343,7 @@ export function diffStyles(base, head) {
       }
     }
 
-    if (!readByAnything && origin.classless) {
+    if (!reachesARule && origin.classless) {
       all.push({
         token,
         via: 'custom property changed and no rule reads it',
