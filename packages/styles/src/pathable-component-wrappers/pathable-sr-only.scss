@@ -11,12 +11,20 @@
 .pathable-sr-only {
   @extend .usa-sr-only;
 
-  // usa-sr-only offsets the element with `left: -999em`. In a right-to-left
-  // page the viewport scrolls toward the left, so every hidden element added
-  // about 999em of horizontal scroll. No offset direction is safe in every
-  // direction, scroller and writing mode, so take the element out of every
-  // scroller's overflow instead: a fixed-position box never adds scrollable
-  // overflow and never scrolls into view. Its text stays off screen, in the
-  // accessibility tree and at its natural size.
-  position: fixed;
+  // usa-sr-only moves the element 999em to the left, which adds about 999em
+  // of horizontal scroll in a right-to-left page, and any other offset adds
+  // scroll or jumps the page in some direction, scroller or ancestor. Hide
+  // it in place instead, as a 1px box clipped to nothing, so there is no
+  // offset to scroll to. The text stays in the accessibility tree.
+  position: absolute;
+  left: auto;
+  right: auto;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

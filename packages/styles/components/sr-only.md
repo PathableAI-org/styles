@@ -2,30 +2,27 @@
 name: SrOnly
 slug: sr-only
 kind: static
-summary: A utility class that moves an element off screen so it is not seen but is still read by screen readers.
+summary: A utility class that hides an element visually so it is not seen but is still read by screen readers.
 styles-class: pathable-sr-only
 variants: []
 guarantees:
-  - id: off-screen
-    status: unverified
-    claim: The element is absolutely positioned 999em to the left of its containing block, so it is not visible and takes up no space in the layout.
+  - id: visually-hidden
+    status: met
+    claim: The element is a 1px box clipped to nothing, so it is not visible and takes up no space in the layout.
   - id: still-exposed
     status: unverified
-    claim: The class sets no display, visibility, opacity, size or clipping, so the element and its text stay in the accessibility tree.
-  - id: natural-size
-    status: unverified
-    claim: The element keeps the width and height of its content off screen.
+    claim: The class sets no display, visibility or opacity, so the element and its text stay in the accessibility tree.
   - id: no-scroll
-    status: unmet
-    claim: The element adds no horizontal scroll to the page, in left-to-right and right-to-left pages alike.
+    status: met
+    claim: The element adds no horizontal scroll to the page or to any scrolling container, in left-to-right and right-to-left pages alike.
   - id: stays-hidden-on-focus
     status: unverified
-    claim: An element with the class stays off screen when it receives focus.
+    claim: An element with the class stays hidden when it receives focus.
 ---
 
 # SrOnly
 
-A utility class that moves an element off screen so it is not seen but is
+A utility class that hides an element visually so it is not seen but is
 still read by screen readers. Put the class on a `<span>` of text that adds
 context sighted users get from the layout.
 
@@ -72,9 +69,9 @@ None.
 - Put text, or an element that holds text, inside. Do not put focusable
   content inside: it stays off screen when focused, so a keyboard user cannot
   see where focus is.
-- The element is positioned against its nearest positioned ancestor. Inside
-  an ancestor with `overflow: hidden` it is clipped from view, which is still
-  hidden and still read.
+- The element stays where it sits in the markup, as a clipped 1px box. It
+  does not depend on the page's direction, a positioned ancestor or a scroll
+  container.
 - Start hidden text with a space, as in the example, when it continues a
   visible phrase, so screen readers do not run the words together.
 - The element has no element classes.
@@ -86,17 +83,13 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The offset is in `em`, so it is measured from the element's own font size:
-999 times that size.
-
-The scroll guarantee is unmet: in a left-to-right page the element adds no
-horizontal scroll, but in a right-to-left page it extends the page's
-horizontal scroll by about 999em. On such a page, hide text another way.
+The element is `position: absolute`, 1px by 1px with a `-1px` margin, and
+clipped with `clip-path: inset(50%)`. Its text keeps its font and wrapping
+off (`white-space: nowrap`), so a screen reader reads it as one run.
 
 ## The consumer owns
 
 - Accessibility. Hidden text must agree with what the page shows, and must not
   hide information sighted users need.
 - The wording, in the user's language, and keeping it short.
-- Not using the class on focusable elements or on content inside a
-  right-to-left page.
+- Not using the class on focusable elements.
