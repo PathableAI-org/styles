@@ -610,7 +610,7 @@ const tealStyles = `
     .teal-case { overflow-wrap: anywhere; padding: 0.5rem; }
     .teal-case > * { padding: 0.5rem; }
     .teal-case .pathable-alert { padding-left: 0.5rem; padding-right: 0.5rem; }
-    .teal-case .pathable-alert__body { display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.5rem 0.5rem 0.5rem 2.5rem; margin: 0; min-width: 0; flex: 1 1 auto; box-sizing: border-box; }
+    .teal-case .pathable-alert__body { display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.5rem 0.5rem 0.5rem 4rem; margin: 0; min-width: 0; flex: 1 1 auto; box-sizing: border-box; }
     .teal-case .pathable-alert__body > * { max-width: 100%; margin: 0; box-sizing: border-box; }
     .teal-case .pathable-input { width: 100%; max-width: 100%; box-sizing: border-box; }
     .teal-case .pathable-button { max-width: 100%; white-space: normal; }
