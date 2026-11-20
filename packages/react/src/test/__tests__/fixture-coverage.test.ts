@@ -160,4 +160,41 @@ export type { SrOnlyProps } from './components/SrOnly/SrOnly.js'`,
       `${testFile}: expectToRenderFixture(element, inlineFixture) must compare an import from ../examples/<state> with an import from @pathableai/fixtures/<folder>/<state>.html?raw`,
     ])
   })
+
+  it('does not count a commented-out comparison', () => {
+    const { errors } = checkFixtureCoverage({
+      ...base,
+      testSources: {
+        [testFile]: srOnlyTest.replace(
+          'expectToRenderFixture(headingExample, headingFixture)',
+          '// expectToRenderFixture(headingExample, headingFixture)',
+        ),
+      },
+    })
+    expect(errors).toEqual([
+      'Example SrOnly/heading has no fixture test naming sr-only/heading',
+    ])
+  })
+
+  it('fails when a fixture test is skipped', () => {
+    const { errors } = checkFixtureCoverage({
+      ...base,
+      testSources: { [testFile]: `${srOnlyTest}\nit.skip('later', () => {})` },
+    })
+    expect(errors).toEqual([
+      `${testFile} skips a test; a skipped comparison does not cover its fixture`,
+    ])
+  })
+
+  it('fails when a comparison passes inline JSX instead of an example', () => {
+    const { errors } = checkFixtureCoverage({
+      ...base,
+      testSources: {
+        [testFile]: `${srOnlyTest}\nexpectToRenderFixture(<SrOnly>Text</SrOnly>, inlineFixture)`,
+      },
+    })
+    expect(errors).toEqual([
+      `${testFile}: every expectToRenderFixture call must take two imported names, an example and a fixture`,
+    ])
+  })
 })

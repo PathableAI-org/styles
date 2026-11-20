@@ -145,9 +145,11 @@ export const LongContent: Story = {
     </p>
   ),
   play: async ({ canvasElement }) => {
-    const hidden = canvasElement.querySelector('.pathable-sr-only')
-    await expect(hidden).not.toBeNull()
-    const box = (hidden as Element).getBoundingClientRect()
+    const hidden = within(canvasElement).getByText(
+      /for the participant employment coaching progress/u,
+    )
+    await expect(hidden).toHaveClass('pathable-sr-only')
+    const box = hidden.getBoundingClientRect()
     await expect(box.width).toBeLessThanOrEqual(1)
     await expect(box.height).toBeLessThanOrEqual(1)
   },

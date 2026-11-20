@@ -100,6 +100,33 @@ function renumberIds(root: DocumentFragment): void {
   }
 }
 
+/**
+ * Elements `getDiffableHTML` always drops, with their content. Each is
+ * renamed to `fixture-<name>` before comparing, so a difference in them still
+ * fails.
+ */
+const DROPPED_ELEMENTS = ['script', 'style', 'svg']
+
+/**
+ * Prepare a parsed fragment for `getDiffableHTML`: rename the elements it
+ * would drop, and collapse whitespace runs inside text to one space, as
+ * rendering does, so a fixture whose text Prettier wraps still matches.
+ */
+function normalise(root: DocumentFragment): void {
+  for (const element of root.querySelectorAll(DROPPED_ELEMENTS.join(','))) {
+    const renamed = document.createElement(`fixture-${element.localName}`)
+    for (const { name, value } of element.attributes) {
+      renamed.setAttribute(name, value)
+    }
+    renamed.append(...element.childNodes)
+    element.replaceWith(renamed)
+  }
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    node.nodeValue = (node.nodeValue ?? '').replace(/\s+/gu, ' ')
+  }
+}
+
 function readableText(root: DocumentFragment): string {
   let text = ''
   const visit = (node: Node) => {
@@ -123,6 +150,7 @@ function readableText(root: DocumentFragment): string {
 export function toFixtureComparison(html: string): FixtureComparison {
   const root = parse(html)
   renumberIds(root)
+  normalise(root)
   const text = readableText(root)
   const container = document.createElement('div')
   container.append(root)
@@ -132,8 +160,9 @@ export function toFixtureComparison(html: string): FixtureComparison {
 /**
  * Assert that `element` renders the same elements, attributes, classes and
  * text as `fixtureHtml`, an HTML fixture from `@pathableai/fixtures` imported
- * with `?raw`. Attribute order, class order, whitespace between elements and
- * the values of IDs do not matter; ID references must still resolve to the
+ * with `?raw`. Attribute order, class order, how whitespace is laid out,
+ * comments, empty `class` and `id` attributes and the values of IDs do not
+ * matter; ID references must still resolve to the
  * same elements, and the words and the spaces between them must match.
  */
 export function expectToRenderFixture(

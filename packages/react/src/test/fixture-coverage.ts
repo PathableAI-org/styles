@@ -24,6 +24,10 @@ const COMPARISON = /expectToRenderFixture\(\s*(\w+)\s*,\s*(\w+)\s*,?\s*\)/gu
 const FIXTURE_SPECIFIER =
   /^@pathableai\/fixtures\/([a-z0-9-]+)\/([a-z0-9-]+)\.html\?raw$/u
 const EXAMPLE_SPECIFIER = /^\.\.\/examples\/([a-z0-9-]+)$/u
+const CALL = /expectToRenderFixture\(/gu
+const SKIPPED =
+  /\b(?:it|test|describe)\.(?:skip|todo|fails|skipIf|runIf)\b|\bx(?:it|test|describe)\(/u
+const COMMENT = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu
 const TEST_FILE = /^components\/([^/]+)\/__tests__\//u
 const COMPONENT_EXPORT = /export\s*\{([^}]*)\}\s*from\s*'\.\/components\//gu
 
@@ -63,11 +67,25 @@ export function comparisonsIn(
       errors: [`${file} is not in components/<Component>/__tests__/`],
     }
   }
+  // Commented-out calls never run, so they do not count.
+  const code = source.replace(COMMENT, '')
+  if (SKIPPED.test(code)) {
+    errors.push(
+      `${file} skips a test; a skipped comparison does not cover its fixture`,
+    )
+  }
   const imports = new Map(
-    [...source.matchAll(DEFAULT_IMPORT)].map((match) => [match[1], match[2]]),
+    [...code.matchAll(DEFAULT_IMPORT)].map((match) => [match[1], match[2]]),
   )
+  const calls = [...code.matchAll(CALL)].length
+  const readable = [...code.matchAll(COMPARISON)].length
+  if (calls !== readable) {
+    errors.push(
+      `${file}: every expectToRenderFixture call must take two imported names, an example and a fixture`,
+    )
+  }
 
-  for (const [call, exampleName, fixtureName] of source.matchAll(COMPARISON)) {
+  for (const [call, exampleName, fixtureName] of code.matchAll(COMPARISON)) {
     const example = EXAMPLE_SPECIFIER.exec(imports.get(exampleName) ?? '')
     const fixture = FIXTURE_SPECIFIER.exec(imports.get(fixtureName) ?? '')
     if (!example || !fixture) {

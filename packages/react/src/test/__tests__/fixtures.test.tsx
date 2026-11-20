@@ -108,4 +108,31 @@ describe('expectToRenderFixture', () => {
       ),
     ).toThrow(/rendered markup/u)
   })
+
+  it('fails when an svg differs', () => {
+    expect(() =>
+      expectToRenderFixture(
+        <svg className="pathable-icon" aria-hidden="true">
+          <use href="#check" />
+        </svg>,
+        '<svg class="pathable-icon" aria-hidden="true"><use href="#close"></use></svg>',
+      ),
+    ).toThrow(/rendered markup/u)
+  })
+
+  it('passes when an svg matches', () => {
+    expectToRenderFixture(
+      <svg className="pathable-icon" aria-hidden="true">
+        <use href="#check" />
+      </svg>,
+      '<svg aria-hidden="true" class="pathable-icon"><use href="#check"></use></svg>',
+    )
+  })
+
+  it('passes when the fixture wraps text across lines', () => {
+    expectToRenderFixture(
+      <p>Three sessions are booked for this week.</p>,
+      '<p>\n  Three sessions are booked\n  for this week.\n</p>',
+    )
+  })
 })
