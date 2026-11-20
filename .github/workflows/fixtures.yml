@@ -10,6 +10,7 @@ on:
     paths:
       - 'fixtures/**'
       - 'packages/styles/src/**/*.scss'
+      - 'packages/styles/components/*.md'
       - 'pnpm-lock.yaml'
       - '.github/workflows/fixtures.yml'
   push:
