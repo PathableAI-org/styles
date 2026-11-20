@@ -37,6 +37,12 @@ export const Segmented = {
 
 export const NarrowContainer = {
   render: () => `
+    <div data-testid="wide-frame" style="max-width: 40rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid currentColor">
+      <div class="pathable-button-group">
+        <button class="pathable-button pathable-button--outline">Cancel</button>
+        <button class="pathable-button">Save</button>
+      </div>
+    </div>
     <div data-testid="frame" style="max-width: 20rem; padding: 1.5rem; border: 1px solid currentColor">
       <div class="pathable-button-group">
         <button class="pathable-button pathable-button--outline">Cancel</button>
@@ -64,12 +70,21 @@ export const NarrowContainer = {
 
     await guarantee(step, 'button-group/row-from-480', async () => {
       const frameRight = frame.getBoundingClientRect().right
-      const buttons = canvas.getAllByRole('button')
+      const buttons = within(frame).getAllByRole('button')
       for (const button of buttons) {
         await expect(button.getBoundingClientRect().right).toBeLessThanOrEqual(
           frameRight,
         )
       }
+
+      // In a container wide enough for them, the buttons sit side by side in
+      // DOM order, each as tall as the tallest beside it.
+      const [first, second] = within(canvas.getByTestId('wide-frame'))
+        .getAllByRole('button')
+        .map((button) => button.getBoundingClientRect())
+      await expect(first.top).toBe(second.top)
+      await expect(first.height).toBe(second.height)
+      await expect(first.right).toBeLessThanOrEqual(second.left)
 
       // The buttons need more than one line, so the row did wrap.
       const tops = new Set(
