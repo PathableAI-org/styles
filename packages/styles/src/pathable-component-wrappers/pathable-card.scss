@@ -49,6 +49,49 @@
   @extend .usa-card__media;
 }
 
+// Media scales to the card width at every viewport instead of keeping an
+// intrinsic width attribute that overflows narrow cards. USWDS crops flag card
+// media to a fixed column from the tablet breakpoint up, so flag cards keep
+// that behaviour there and are sized like any other card below it.
+@mixin pathable-card-media-fit {
+  > img,
+  > svg,
+  > video,
+  > picture,
+  > picture > img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.pathable-card:not(.pathable-card--flag) .pathable-card__media {
+  @include pathable-card-media-fit;
+}
+
+// Full-width media must not square off the container's rounded top corners.
+// Header-first cards put the media below the header, where USWDS keeps square
+// corners, and flag cards crop media to a column. The React Card renders media
+// without a container, border or radius, so it stays square.
+.pathable-card:not(.pathable-card--flag):not(.pathable-card--header-first)
+  > .pathable-card__container
+  > .pathable-card__media {
+  overflow: hidden;
+  border-start-start-radius: calc(
+    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+  );
+  border-start-end-radius: calc(
+    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+  );
+}
+
+@include at-media-max($theme-card-flag-min-width) {
+  .pathable-card--flag .pathable-card__media {
+    @include pathable-card-media-fit;
+  }
+}
+
 .pathable-card__media--exdent {
   @extend .usa-card__media--exdent;
 }

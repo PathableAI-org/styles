@@ -9,6 +9,7 @@
 @use 'uswds-core' as *;
 
 .pathable-loading {
+  font-family: var(--pathable-font-body);
   display: flex;
   align-items: center;
   gap: var(--pathable-space-2);
@@ -19,6 +20,7 @@
 .pathable-loading__spinner {
   flex-shrink: 0;
   display: inline-block;
+  box-sizing: border-box;
   width: 1.5rem;
   height: 1.5rem;
   border: 2px solid currentColor;
