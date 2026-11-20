@@ -105,9 +105,18 @@ export function problemsOf(report) {
   ])
 }
 
-const cell = (text) =>
+/**
+ * One Markdown table cell of plain text: whitespace collapsed, and the
+ * characters Markdown or HTML would interpret (`&`, `<`, `>`, `|`, backtick)
+ * escaped, so axe messages such as "does not have a <ul> parent" stay
+ * readable.
+ */
+export const cell = (text) =>
   String(text ?? '')
     .replace(/\s+/gu, ' ')
+    .replace(/&/gu, '&amp;')
+    .replace(/</gu, '&lt;')
+    .replace(/>/gu, '&gt;')
     .replace(/\|/gu, '\\|')
     .replace(/`/gu, "'")
 
@@ -130,7 +139,7 @@ export function renderSummary(report) {
   for (const { fixture, viewport, kind, rule } of problems) {
     for (const node of rule.nodes) {
       lines.push(
-        `| ${cell(fixture)} | ${viewport} | ${kind} | ${cell(rule.id)} (${cell(rule.impact)}) | \`${cell(node.target.join(' '))}\` | ${cell(node.failureSummary || rule.help)} |`,
+        `| ${cell(fixture)} | ${viewport} | ${kind} | ${cell(rule.id)} (${cell(rule.impact)}) | ${cell(node.target.join(' '))} | ${cell(node.failureSummary || rule.help)} |`,
       )
     }
   }

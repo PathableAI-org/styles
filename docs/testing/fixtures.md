@@ -12,9 +12,16 @@ How to write a fixture, and the ARIA rules fixtures are held to, are in
 fixtures are checked.
 
 Fixtures exist for ActivityList so far. Planned next steps, each its own pull
-request: render the styles Storybook stories from the fixtures, choose the
-affected fixtures from a SCSS change, and assert that `@pathableai/react`
-renders the same normalised HTML as a fixture.
+request: choose the affected fixtures from a CSS change, add React fixture
+tests that check a JSX snippet renders the same normalised HTML as a fixture,
+and generate component docs from the fixtures.
+
+Where a fixture and today's markup differ, the markup moves to the fixture.
+The ActivityList fixtures use `<ul role="list">` and `<li>`, while the
+component page, its styles stories and the React `ActivityList` still use
+`<div role="list">`. A styles list reset for ActivityList and a React
+`ActivityList` that renders `ul role="list"`/`li` are planned, so the React
+fixture tests can hold React to these fixtures.
 
 ## The checks
 
@@ -75,8 +82,8 @@ cd fixtures && node harness/axe.mjs $(node harness/changed.mjs)
 ## In CI
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
-on a pull request that changes `fixtures/**` or the workflow itself, and on
-every push to `main`. It:
+on a pull request that changes `fixtures/**`, the workflow itself or
+`pnpm-lock.yaml`, and on every push to `main`. It:
 
 1. builds `@pathableai/styles`;
 2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
@@ -86,8 +93,9 @@ every push to `main`. It:
    known-bad markup through each check;
 4. runs html-validate and the contract on every folder;
 5. runs axe on the folders `changed.mjs` selects, or on every folder on
-   `main` and when the workflow itself changed, so a workflow edit is
-   exercised before it merges;
+   `main` and when the workflow or the lockfile changed, so a workflow edit
+   or a dependency update (such as a new axe-core) is exercised before it
+   merges;
 6. uploads the axe report as the `fixtures-axe-report` artifact.
 
 It is not a required check.

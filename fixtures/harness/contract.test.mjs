@@ -4,6 +4,7 @@ import { test } from 'node:test'
 import {
   STATE_FILE_NAME,
   checkFolder,
+  checkFolderEntries,
   checkFolderList,
   classesIn,
 } from './contract.mjs'
@@ -152,4 +153,21 @@ test('the folder list must match the folders on disk, both ways', () => {
   const unlisted = checkFolderList(['a'], ['a', 'c'])
   assert.equal(unlisted.length, 1)
   assert.match(unlisted[0], /c\/ is on disk but not listed/u)
+})
+
+test('component folders hold only .html files, not subfolders or other files', () => {
+  const errors = checkFolderEntries('thing', [
+    { name: 'flat.html', isDirectory: false },
+    { name: '.DS_Store', isDirectory: false },
+    { name: 'disabled.htm', isDirectory: false },
+    { name: 'Flat.HTML', isDirectory: false },
+    { name: 'dense', isDirectory: true },
+  ])
+  assert.equal(errors.length, 3)
+  assert.match(errors[0], /disabled\.htm: component folders hold only/u)
+  assert.match(errors[1], /Flat\.HTML: component folders hold only/u)
+  assert.match(
+    errors[2],
+    /dense\/: component folders hold only .* not subfolders/u,
+  )
 })

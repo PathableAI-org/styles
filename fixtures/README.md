@@ -31,6 +31,9 @@ fixtures/
   in the same pull request.
 - Every non-default variant in the page's front matter has at least one
   fixture that uses its modifier class.
+- A component folder holds only `<state>.html` files: no subfolders and no
+  other files, which the checks would otherwise skip. The contract check
+  fails anything else.
 - Name a file after the state it shows, in kebab case: `flat.html`,
   `compact.html`, `no-actions.html`. The contract check requires
   `^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$`: lower-case letters and digits,

@@ -6,9 +6,17 @@
  */
 
 import assert from 'node:assert/strict'
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import process from 'node:process'
 import { after, test } from 'node:test'
 
 import { problemsOf, renderSummary, runAxe } from './axe.mjs'
@@ -80,6 +88,17 @@ test('the contract check fails a folder missing a variant fixture', async () => 
   assert.ok(errors.some((error) => /density=compact/u.test(error)))
 })
 
+test('the contract check fails files the other checks would skip', async () => {
+  fixture('stray-files', 'flat.html', '<p>Text</p>\n')
+  fixture('stray-files', 'disabled.htm', '<p>Text</p>\n')
+  fixture('stray-files/dense', 'compact.html', '<p>Text</p>\n')
+  const errors = await checkFolders(['stray-files'], root)
+  assert.ok(
+    errors.some((error) => /disabled\.htm: component folders/u.test(error)),
+  )
+  assert.ok(errors.some((error) => /dense\/: component folders/u.test(error)))
+})
+
 test('the axe run reports duplicate button names from the browser', async () => {
   fixture(
     'axe-dup',
@@ -121,4 +140,72 @@ test('an axe incomplete result fails the run and reaches the summary', async () 
   const summary = renderSummary(report)
   assert.match(summary, /incomplete result\(s\)/u)
   assert.match(summary, /\| incomplete \| color-contrast/u)
+})
+
+/** Runs a harness command against its own scratch FIXTURES_ROOT. */
+function runCommand(script, args, files, extraEnv = {}) {
+  const scratch = mkdtempSync(join(tmpdir(), 'fixtures-cli-'))
+  after(() => rmSync(scratch, { recursive: true, force: true }))
+  for (const [path, content] of Object.entries(files)) {
+    mkdirSync(join(scratch, path, '..'), { recursive: true })
+    writeFileSync(join(scratch, path), content)
+  }
+  const result = spawnSync(
+    process.execPath,
+    [join(import.meta.dirname, script), ...args],
+    {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        GITHUB_STEP_SUMMARY: '',
+        ...extraEnv,
+        FIXTURES_ROOT: scratch,
+      },
+    },
+  )
+  return { ...result, scratch }
+}
+
+test('the contract command fails when folders.json lists a deleted folder', () => {
+  const { status, stderr } = runCommand('contract.mjs', [], {
+    'folders.json': '["activity-list"]\n',
+  })
+  assert.equal(status, 1)
+  assert.match(
+    stderr,
+    /folders\.json lists activity-list\/, which is not on disk/u,
+  )
+})
+
+test('the contract command fails when a folder is not in folders.json', () => {
+  const { status, stderr } = runCommand('contract.mjs', [], {
+    'folders.json': '[]\n',
+    'activity-list/flat.html': '<p>Text</p>\n',
+  })
+  assert.equal(status, 1)
+  assert.match(stderr, /activity-list\/ is on disk but not listed/u)
+})
+
+test('the axe command exits 1 on an incomplete result and writes it to the summary', () => {
+  const summaryPath = join(
+    mkdtempSync(join(tmpdir(), 'fixtures-summary-')),
+    'summary.md',
+  )
+  after(() => rmSync(join(summaryPath, '..'), { recursive: true, force: true }))
+  const { status, stdout, stderr } = runCommand(
+    'axe.mjs',
+    ['gradient'],
+    {
+      'gradient/text.html':
+        '<p style="background: linear-gradient(#ffffff, #000000); color: #777777">Text over a gradient</p>\n',
+    },
+    { GITHUB_STEP_SUMMARY: summaryPath },
+  )
+  assert.equal(status, 1, stdout + stderr)
+  assert.match(stdout, /0 violation\(s\), [1-9]\d* incomplete result\(s\)/u)
+  assert.match(stderr, /incomplete color-contrast/u)
+  assert.match(
+    readFileSync(summaryPath, 'utf8'),
+    /\| incomplete \| color-contrast/u,
+  )
 })

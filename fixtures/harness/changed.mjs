@@ -13,12 +13,11 @@
  */
 
 import { execFileSync } from 'node:child_process'
-import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
-import { HARNESS_DIR, allFolders, fixturesRoot } from './folders.mjs'
+import { HARNESS_DIR, allFolders, packageRoot } from './folders.mjs'
 
 /** Files at the fixtures root whose change selects every folder. */
 const SHARED_FILES = new Set([
@@ -48,7 +47,7 @@ export function selectFolders(changedPaths, folders) {
 }
 
 /** The paths under fixtures/ that changed between base and HEAD. */
-export function changedPaths(base, cwd = fixturesRoot) {
+export function changedPaths(base, cwd = packageRoot) {
   const output = execFileSync(
     'git',
     ['diff', '--name-only', `${base}...HEAD`, '--', 'fixtures/'],
@@ -61,9 +60,7 @@ function main(argv) {
   const folders = allFolders()
   const selected = argv.includes('--all')
     ? folders
-    : selectFolders(changedPaths(argv[0] ?? 'origin/main'), folders).filter(
-        (folder) => existsSync(join(fixturesRoot, folder)),
-      )
+    : selectFolders(changedPaths(argv[0] ?? 'origin/main'), folders)
   if (selected.length > 0) process.stdout.write(`${selected.join('\n')}\n`)
 }
 

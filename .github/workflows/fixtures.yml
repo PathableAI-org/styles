@@ -8,6 +8,9 @@ on:
     paths:
       - 'fixtures/**'
       - '.github/workflows/fixtures.yml'
+      # A dependency update (axe-core, html-validate, Playwright) can change
+      # every result, so it runs every folder before it merges.
+      - 'pnpm-lock.yaml'
   push:
     branches:
       - main
@@ -48,10 +51,11 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ] &&
-            git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml; then
+            git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml pnpm-lock.yaml; then
             FOLDERS=$(node fixtures/harness/changed.mjs "origin/$BASE_REF")
           else
-            # On main, or when this workflow changed, check every folder.
+            # On main, or when this workflow or the lockfile changed, check
+            # every folder.
             FOLDERS=$(node fixtures/harness/changed.mjs --all)
           fi
           FOLDERS=$(echo $FOLDERS)

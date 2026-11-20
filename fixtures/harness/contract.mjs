@@ -10,7 +10,8 @@
  *   - a folder's name is not the slug of a page in packages/styles/components/;
  *   - a folder holds no fixture;
  *   - a fixture's file name is not a kebab-case state name such as
- *     `no-actions.html`;
+ *     `no-actions.html`, or a component folder holds anything other than such
+ *     files (a subfolder, `.htm`, `.HTML`), which the checks would skip;
  *   - a `pathable-*` class in a fixture is not a class selector in
  *     @pathableai/styles/dist/styles.css;
  *   - a non-default variant in the page's front matter has no fixture in the
@@ -23,7 +24,7 @@
  * facts.
  */
 
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
@@ -82,6 +83,23 @@ export function checkFolderList(listed, onDisk) {
       errors.push(`${folder}/ is on disk but not listed in folders.json`)
   }
   return errors
+}
+
+/**
+ * Errors for entries of a component folder that are not `.html` files, so a
+ * subfolder or a file such as `disabled.htm` cannot sit beside the fixtures
+ * unchecked. `entries` is a list of `{ name, isDirectory }`; dotfiles are
+ * ignored.
+ */
+export function checkFolderEntries(folder, entries) {
+  return entries
+    .filter(({ name }) => !name.startsWith('.'))
+    .filter(({ name, isDirectory }) => isDirectory || !name.endsWith('.html'))
+    .map(({ name, isDirectory }) =>
+      isDirectory
+        ? `${folder}/${name}/: component folders hold only <state>.html fixtures, not subfolders`
+        : `${folder}/${name}: component folders hold only <state>.html fixtures; this file would not be checked`,
+    )
 }
 
 /** Reads fixtures/folders.json: a JSON array of folder names. */
@@ -149,7 +167,13 @@ export async function checkFolders(folders, root = fixturesRoot) {
         readFileSync(join(root, folder, file), 'utf8'),
       ]),
     )
-    return checkFolder(folder, fixtures, pages.get(folder), css)
+    const entries = readdirSync(join(root, folder), {
+      withFileTypes: true,
+    }).map((entry) => ({ name: entry.name, isDirectory: entry.isDirectory() }))
+    return [
+      ...checkFolderEntries(folder, entries),
+      ...checkFolder(folder, fixtures, pages.get(folder), css),
+    ]
   })
 }
 
