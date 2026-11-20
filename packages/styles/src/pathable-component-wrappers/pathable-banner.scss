@@ -11,6 +11,7 @@
 @use 'usa-banner/src/styles';
 
 .pathable-banner {
+  font-family: var(--pathable-font-body);
   @extend .usa-banner;
 }
 
@@ -19,6 +20,7 @@
 }
 
 .pathable-banner__button {
+  font-family: inherit;
   @extend .usa-banner__button;
 }
 
