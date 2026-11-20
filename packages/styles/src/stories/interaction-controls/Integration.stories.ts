@@ -1,4 +1,5 @@
 import { expect, userEvent, within } from 'storybook/test'
+import { expectBodyFont } from '../shared/body-font'
 
 export default {
   title: 'Interaction Controls/Integration',
@@ -374,6 +375,7 @@ export const ViewSwitcher = {
     await runIntegrationProof(id, 'integration.view-switcher', async () => {
       await verifyViewSwitcher(canvasElement)
     })
+    await expectBodyFont(canvasElement, ['.pathable-segmented-control__option'])
   },
 }
 
