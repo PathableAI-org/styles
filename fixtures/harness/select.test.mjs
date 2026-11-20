@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { combine, describe, renderSummary } from './select.mjs'
+import {
+  combine,
+  describe,
+  needsHtmlValidate,
+  pagesChanged,
+  renderSummary,
+} from './select.mjs'
 
 const css = {
   folders: {
@@ -92,6 +98,25 @@ test('a fixtures change outside a component folder selects nothing, without cont
     folders: {},
     fixturesChanged: true,
   })
-  assert.match(summary, /No file in a component folder changed/u)
+  assert.match(
+    summary,
+    /No file in a component folder or component page changed/u,
+  )
   assert.match(summary, /html-validate ran/u)
+})
+
+test('a changed component page selects its folder', () => {
+  const pages = pagesChanged(
+    ['packages/styles/components/activity-list.md', 'fixtures/README.md'],
+    ['activity-list', 'button'],
+  )
+  assert.deepEqual(pages, ['activity-list'])
+  const { folders } = combine([], { folders: {} }, pages)
+  assert.match(folders['activity-list'][0], /Component page/u)
+})
+
+test('html-validate runs for a fixtures or lockfile change only', () => {
+  assert.equal(needsHtmlValidate(['fixtures/activity-list/flat.html']), true)
+  assert.equal(needsHtmlValidate(['pnpm-lock.yaml']), true)
+  assert.equal(needsHtmlValidate(['packages/styles/src/_semantic.scss']), false)
 })
