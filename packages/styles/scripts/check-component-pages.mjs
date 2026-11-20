@@ -108,6 +108,15 @@ export const isVerified = (page) =>
 // Compiled CSS
 // ---------------------------------------------------------------------------
 
+/** The class names a selector list names, anywhere in it (`:is()` and `:not()` included). */
+export function classesInSelector(selector) {
+  const classes = new Set()
+  selectorParser((selectors) => {
+    selectors.walkClasses((node) => classes.add(node.value))
+  }).processSync(selector)
+  return classes
+}
+
 /**
  * Parses compiled CSS into the facts the checks use: every class that appears
  * in a rule's selector, and for each class the custom properties the rules
@@ -119,10 +128,7 @@ export function readCss(css) {
   const tokens = new Map()
 
   postcss.parse(css).walkRules((rule) => {
-    const inRule = new Set()
-    selectorParser((selectors) => {
-      selectors.walkClasses((node) => inRule.add(node.value))
-    }).processSync(rule.selector)
+    const inRule = classesInSelector(rule.selector)
 
     const used = new Set()
     rule.walkDecls((declaration) => {
