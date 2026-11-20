@@ -123,10 +123,10 @@ in the stylesheet and is not a token.
   content that cannot shrink, such as a wide table or a long unbroken
   string, can widen its column beyond the ratio.
 - Set vertical alignment with the align modifiers or
-  `--pathable-split-align`, not a utility such as
-  `pathable-flex-align-start`: whether the utility overrides the split's own
-  alignment currently depends on how the stylesheet is loaded, which is a
-  known defect. A `pathable-sticky-panel` region keeps its own height at the
+  `--pathable-split-align`. A utility such as `pathable-flex-align-start`
+  also overrides the split's own alignment, because utilities come after the
+  component rules, but the modifiers keep the choice with the split. A
+  `pathable-sticky-panel` region keeps its own height at the
   top of the row whatever the alignment.
 - The split has no element classes and no padding. Put it inside
   `pathable-container` for a width limit, and give each region its own

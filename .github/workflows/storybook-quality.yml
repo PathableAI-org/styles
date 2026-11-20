@@ -48,8 +48,8 @@ jobs:
               - '.github/workflows/storybook-quality.yml'
               - 'scripts/test-storybook-modal-css.mjs'
               - '**/*.mdx'
-            # Everything both Storybooks consume from packages/styles: all
-            # but its Markdown, component pages and stories.
+            # Everything the HTML Storybook consumes from packages/styles:
+            # all but its Markdown, component pages and stories.
             styles_source: &styles_source
               - 'packages/styles/!(*.md)'
               - 'packages/styles/!(src|components|*.md)/**/!(*.md)'
@@ -64,9 +64,14 @@ jobs:
               - 'packages/styles/src/stories/**'
               - 'apps/storybook/**/!(*.md)'
               - 'visual-baselines/**'
+            # A change to styles source alone does not run the React
+            # Storybook jobs: the HTML Storybook jobs test what the classes
+            # do. The styles manifest still does, because React imports
+            # styles through its exports. See
+            # https://github.com/PathableAI-org/styles/issues/590.
             react_storybook:
               - *shared
-              - *styles_source
+              - 'packages/styles/package.json'
               - *contracts
               - 'packages/react/**/!(*.md)'
               - 'apps/storybook-react/**/!(*.md)'

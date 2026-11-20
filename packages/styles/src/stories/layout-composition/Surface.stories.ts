@@ -262,18 +262,162 @@ const utilitiesOnControls: FocusCase & { outer: string; inner: string } = {
   outer: 'pathable-surface pathable-surface--brand',
   inner: 'pathable-surface pathable-surface--base',
   ring: '--pathable-color-on-accent',
-  controlClass: 'pathable-bg-primary',
+  controlClass: 'pathable-bg-primary pathable-text-white',
 }
 nestedCases.push(utilitiesOnControls)
 
 const focusCases = [...focusSurfaces, ...nestedCases]
+
+// Components that draw their own outline, and links and unstyled buttons that
+// keep the USWDS one, are drawn on the background behind them too. Each one
+// reads the same --pathable-surface-focus-ring, so it needs the same ring on
+// Jade, Silver, danger red and the emergency alert (3:1, WCAG 1.4.11).
+const componentRingCases = [
+  {
+    label: 'Inset',
+    text: '--pathable-color-text',
+    outer: 'pathable-surface pathable-surface--inset',
+    ring: '--pathable-color-text',
+  },
+  {
+    label: 'Brand',
+    text: '--pathable-color-on-accent',
+    outer: 'pathable-surface pathable-surface--brand',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Accent utility',
+    text: '--pathable-color-on-accent',
+    outer: 'pathable-bg-accent',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Success utility',
+    text: '--pathable-color-on-accent',
+    outer: 'pathable-bg-success',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Base utility',
+    text: '--pathable-color-text',
+    outer: 'pathable-bg-base',
+    ring: '--pathable-color-text',
+  },
+  {
+    label: 'Danger utility',
+    text: '--pathable-color-status-danger-text',
+    outer: 'pathable-bg-danger',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Success alert',
+    text: '--pathable-color-on-accent',
+    outer: 'pathable-alert pathable-alert--success',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Warning alert',
+    text: '--pathable-color-on-accent',
+    outer: 'pathable-alert pathable-alert--warning',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Error alert',
+    text: '--pathable-color-status-danger-text',
+    outer: 'pathable-alert pathable-alert--error',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Emergency alert',
+    text: '--pathable-color-status-danger-text',
+    outer: 'pathable-alert pathable-alert--emergency',
+    ring: '--pathable-color-status-danger-text',
+  },
+]
+
+export const ComponentFocusOnBackgrounds = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A focusable `.pathable-surface--interactive`, a `.pathable-link`, a `.pathable-button--unstyled` and a `.pathable-filter-pill__dismiss` on each background where Bright Blue Brooks is under 3:1: Shilling Silver (`--inset`, `pathable-bg-base`), Intelligent Jade (`--brand`, `pathable-bg-accent`, `pathable-bg-success`), the danger red and the success, warning, error and emergency alerts. Each outline is drawn on the background behind it, so it takes `--pathable-surface-focus-ring` (#362). The play function tabs to every one and checks the outline colour and its contrast of at least 3:1 with the background.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-cluster pathable-cluster--gap-lg" style="align-items: stretch;">
+      ${componentRingCases
+        .map(
+          ({ label, outer, text }) => `
+        <div class="${outer} pathable-stack pathable-stack--gap-sm pathable-padding-3" style="${blockStyle} margin: 0; color: var(${text});">
+          <div style="font-size: 0.875rem; font-weight: 600;">${label}</div>
+          <div class="pathable-surface pathable-surface--interactive pathable-padding-2" tabindex="0" style="color: var(--pathable-color-text);" aria-label="Card on ${label}">Card</div>
+          <a class="pathable-link" style="color: inherit;" href="#focus-${label.replaceAll(' ', '-')}">Link on ${label}</a>
+          <button type="button" class="pathable-button pathable-button--unstyled" style="color: inherit; align-self: flex-start;">Unstyled on ${label}</button>
+          <span class="pathable-filter-pill" style="border: 1px solid var(--pathable-color-text);">
+            <span class="pathable-filter-pill__label">Pill</span>
+            <button type="button" class="pathable-filter-pill__dismiss" aria-label="Remove pill on ${label}">&times;</button>
+          </span>
+        </div>`,
+        )
+        .join('')}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const view = canvasElement.ownerDocument.defaultView
+
+    if (!view) throw new Error('Surface story window is unavailable')
+
+    let first = true
+    for (const { label, ring } of componentRingCases) {
+      // The pill is a Silver container, so its dismiss outline uses the text
+      // ring whatever background the pill sits on.
+      const components = [
+        { component: canvas.getByLabelText(`Card on ${label}`), ring },
+        {
+          component: canvas.getByRole('link', { name: `Link on ${label}` }),
+          ring,
+        },
+        {
+          component: canvas.getByRole('button', {
+            name: `Unstyled on ${label}`,
+          }),
+          ring,
+        },
+        {
+          component: canvas.getByRole('button', {
+            name: `Remove pill on ${label}`,
+          }),
+          ring: '--pathable-color-text',
+        },
+      ]
+      for (const { component, ring: expectedRing } of components) {
+        await expectKeyboardFocusIndicator(canvasElement, component, {
+          color: `var(${expectedRing})`,
+          fromCurrentFocus: !first,
+        })
+        first = false
+
+        const container = component.parentElement
+        if (!container) throw new Error('Focus story component has no parent')
+        await expect(
+          contrastRatio(
+            view.getComputedStyle(component).outlineColor,
+            findOpaqueBackground(container, view),
+          ),
+        ).toBeGreaterThanOrEqual(3)
+      }
+    }
+  },
+}
 
 export const KeyboardFocusOnSurfaces = {
   parameters: {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline in Bright Blue Brooks on the Silver around it, at 2.3:1; #362 tracks that component-owned outline.",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline on the Silver around it, in that surface's ring, `--pathable-color-text`.",
       },
     },
   },

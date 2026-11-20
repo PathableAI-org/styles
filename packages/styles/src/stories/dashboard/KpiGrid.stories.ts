@@ -1,4 +1,8 @@
+import { expect } from 'storybook/test'
+
 import { expectBodyFont } from '../shared/body-font'
+import { contrastRatio, findOpaqueBackground } from '../shared/contrast'
+import { guarantee } from '../shared/guarantee'
 
 export default {
   title: 'Dashboard/KPI Grid',
@@ -37,11 +41,33 @@ export const Default = {
       ${kpiCard('28', 'Partner Organizations', 'neutral')}
     </div>
   `,
-  play: async ({ canvasElement }: { canvasElement: HTMLElement }) =>
-    expectBodyFont(canvasElement, [
+  play: async ({
+    canvasElement,
+    step,
+  }: {
+    canvasElement: HTMLElement
+    step: Parameters<typeof guarantee>[0]
+  }) => {
+    await expectBodyFont(canvasElement, [
       '.pathable-kpi-card__label',
       '.pathable-kpi-card__trend-label',
-    ]),
+    ])
+    await guarantee(step, 'kpi-grid/up-trend-contrast', async () => {
+      const view = canvasElement.ownerDocument.defaultView as Window
+      const trends = canvasElement.querySelectorAll<HTMLElement>(
+        '.pathable-kpi-card__trend[data-trend="up"]',
+      )
+
+      await expect(trends.length).toBeGreaterThan(0)
+      for (const trend of trends) {
+        const ratio = contrastRatio(
+          view.getComputedStyle(trend).color,
+          findOpaqueBackground(trend, view),
+        )
+        await expect(ratio).toBeGreaterThanOrEqual(4.5)
+      }
+    })
+  },
 }
 
 export const TwoColumns = {

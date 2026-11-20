@@ -1,3 +1,6 @@
+import { expect } from 'storybook/test'
+import { contrastRatio, findOpaqueBackground } from '../shared/contrast'
+
 export default {
   title: 'Brand/Typography',
   tags: ['autodocs'],
@@ -67,8 +70,8 @@ const typeScale = [
     name: 'display-lg',
     displayName: 'Display Large',
     typeface: 'Fredoka',
-    fontSize: '32px',
-    lineHeight: '40px',
+    fontSize: '2rem',
+    lineHeight: '2.5rem',
     fontWeight: 400,
     sizeToken: '--pathable-font-size-display-lg',
     uiToken: '--ui-display-lg',
@@ -77,8 +80,8 @@ const typeScale = [
     name: 'heading-lg',
     displayName: 'Heading Large',
     typeface: 'Poppins',
-    fontSize: '24px',
-    lineHeight: '32px',
+    fontSize: '1.5rem',
+    lineHeight: '2rem',
     fontWeight: 700,
     sizeToken: '--pathable-font-size-heading-lg',
     uiToken: '--ui-heading-lg',
@@ -87,8 +90,8 @@ const typeScale = [
     name: 'heading-md',
     displayName: 'Heading Medium',
     typeface: 'Poppins',
-    fontSize: '20px',
-    lineHeight: '28px',
+    fontSize: '1.25rem',
+    lineHeight: '1.75rem',
     fontWeight: 700,
     sizeToken: '--pathable-font-size-heading-md',
     uiToken: '--ui-heading-md',
@@ -97,8 +100,8 @@ const typeScale = [
     name: 'heading-sm',
     displayName: 'Heading Small',
     typeface: 'Poppins',
-    fontSize: '18px',
-    lineHeight: '24px',
+    fontSize: '1.125rem',
+    lineHeight: '1.5rem',
     fontWeight: 700,
     sizeToken: '--pathable-font-size-heading-sm',
     uiToken: '--ui-heading-sm',
@@ -107,8 +110,8 @@ const typeScale = [
     name: 'body-lg',
     displayName: 'Body Large',
     typeface: 'Nunito',
-    fontSize: '18px',
-    lineHeight: '28px',
+    fontSize: '1.125rem',
+    lineHeight: '1.75rem',
     fontWeight: 400,
     sizeToken: '--pathable-font-size-body-lg',
     uiToken: '--ui-body-lg',
@@ -117,8 +120,8 @@ const typeScale = [
     name: 'body-md',
     displayName: 'Body Medium',
     typeface: 'Nunito',
-    fontSize: '16px',
-    lineHeight: '24px',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
     fontWeight: 400,
     sizeToken: '--pathable-font-size-body-md',
     uiToken: '--ui-body-md',
@@ -127,8 +130,8 @@ const typeScale = [
     name: 'body-sm',
     displayName: 'Body Small',
     typeface: 'Nunito',
-    fontSize: '14px',
-    lineHeight: '20px',
+    fontSize: '0.875rem',
+    lineHeight: '1.25rem',
     fontWeight: 400,
     sizeToken: '--pathable-font-size-body-sm',
     uiToken: '--ui-body-sm',
@@ -137,8 +140,8 @@ const typeScale = [
     name: 'label-md',
     displayName: 'Label Medium',
     typeface: 'Nunito',
-    fontSize: '14px',
-    lineHeight: '20px',
+    fontSize: '0.875rem',
+    lineHeight: '1.25rem',
     fontWeight: 600,
     sizeToken: '--pathable-font-size-label-md',
     uiToken: '--ui-label-md',
@@ -147,8 +150,8 @@ const typeScale = [
     name: 'label-sm',
     displayName: 'Label Small',
     typeface: 'Nunito',
-    fontSize: '12px',
-    lineHeight: '16px',
+    fontSize: '0.75rem',
+    lineHeight: '1rem',
     fontWeight: 600,
     sizeToken: '--pathable-font-size-label-sm',
     uiToken: '--ui-label-sm',
@@ -157,8 +160,8 @@ const typeScale = [
     name: 'caption-md',
     displayName: 'Caption Medium',
     typeface: 'Nunito',
-    fontSize: '12px',
-    lineHeight: '16px',
+    fontSize: '0.75rem',
+    lineHeight: '1rem',
     fontWeight: 400,
     sizeToken: '--pathable-font-size-caption-md',
     uiToken: '--ui-caption-md',
@@ -238,7 +241,7 @@ export const Default = {
                   ${
                     r.uswdsRole
                       ? `<span style="background: #4899e8; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">USWDS: ${r.uswdsRole}</span>`
-                      : `<span style="background: #888; color: #fff; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
+                      : `<span style="background: #dde2e8; color: #00365c; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">No USWDS role</span>`
                   }
                 </div>
                 <div style="font-family: monospace; font-size: 0.7rem; color: #555; margin-bottom: 0.375rem;">
@@ -311,10 +314,10 @@ export const Default = {
         <div style="margin-bottom: 2rem; padding: 1.25rem; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #1cae96;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
             <span style="font-weight: 600; font-size: 0.8rem; color: #00365c;">Body Medium</span>
-            <span style="background: #1cae96; color: #00365c; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">16px / 1.5</span>
+            <span style="background: #1cae96; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">1rem / 1.5</span>
             <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-md</span>
           </div>
-          <p style="font-family: Nunito, system-ui, serif; font-size: 16px; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
+          <p style="font-family: Nunito, system-ui, serif; font-size: 1rem; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
             PathAble is a workflow-first platform designed for staff who deliver guided behavioral health services. Every session, note, compliance signal, and approval artifact must be captured quickly and accurately. The typography system supports this mission by providing clear, readable body text that reduces eye strain during extended documentation sessions. Nunito was chosen for body text because its open letterforms and generous x-height maintain readability at small sizes, even on lower-resolution displays or when users are working under time pressure.
           </p>
         </div>
@@ -322,10 +325,10 @@ export const Default = {
         <div style="padding: 1.25rem; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #4899e8;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
             <span style="font-weight: 600; font-size: 0.8rem; color: #00365c;">Body Large</span>
-            <span style="background: #4899e8; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">18px / 1.5</span>
+            <span style="background: #4899e8; color: #001a33; font-size: 0.65rem; padding: 0.125rem 0.375rem; border-radius: 3px; font-family: monospace;">1.125rem / 1.5</span>
             <span style="font-family: monospace; font-size: 0.65rem; color: #555;">--pathable-font-size-body-lg</span>
           </div>
-          <p style="font-family: Nunito, system-ui, serif; font-size: 18px; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
+          <p style="font-family: Nunito, system-ui, serif; font-size: 1.125rem; line-height: 1.5; font-weight: 400; margin: 0; color: #00365c;">
             For longer reading sessions, such as reviewing session notes, composing compliance documentation, or reading through participant history, the body large size provides additional comfort. The increased font size reduces the cognitive load of tracking lines of text, while the 1.5 line-height ensures adequate vertical rhythm. This size is particularly useful for primary content areas where users spend extended periods reading or writing, such as the session note editor, participant summary view, and report generation interfaces.
           </p>
         </div>
@@ -365,4 +368,43 @@ export const Default = {
 
     </div>
   `,
+}
+
+// pathable-text on elements other than <p> inside the dark containers
+// (issue #423): the text takes the container's colour and stays readable.
+export const TextInDarkContainers = {
+  render: () => `
+    <section class="pathable-section pathable-section--dark" data-testid="dark-section" style="padding: 1.5rem;">
+      <div class="pathable-text pathable-text--body">Body text on a div in pathable-section--dark</div>
+      <span class="pathable-text pathable-text--small">Small text on a span in pathable-section--dark</span>
+    </section>
+    <div class="pathable-dark-background" data-testid="dark-background" style="padding: 1.5rem;">
+      <div class="pathable-text pathable-text--body">Body text on a div in pathable-dark-background</div>
+      <ul>
+        <li class="pathable-text">Text on a list item in pathable-dark-background</li>
+      </ul>
+      <div class="pathable-surface pathable-surface--raised" style="padding: 1rem;">
+        <div class="pathable-text">Text on a raised surface inside it stays dark</div>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    for (const container of canvasElement.querySelectorAll<HTMLElement>(
+      '[data-testid]',
+    )) {
+      const background = findOpaqueBackground(container, window)
+
+      for (const text of container.querySelectorAll<HTMLElement>(
+        '.pathable-text',
+      )) {
+        const surface = text.closest<HTMLElement>('.pathable-surface')
+        const against = surface
+          ? findOpaqueBackground(surface, window)
+          : background
+        expect(
+          contrastRatio(getComputedStyle(text).color, against),
+        ).toBeGreaterThanOrEqual(4.5)
+      }
+    }
+  },
 }

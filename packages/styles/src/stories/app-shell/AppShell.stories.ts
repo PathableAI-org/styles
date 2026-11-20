@@ -1,3 +1,7 @@
+import { expect, within } from 'storybook/test'
+
+import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Application Shell/Desktop Shell',
   tags: ['autodocs'],
@@ -21,7 +25,7 @@ const navItems = [
 const sidebar = () => `
   <aside class="pathable-app-shell__sidebar">
     <div class="pathable-app-shell__brand" style="padding: 0.5rem 0;">
-      <strong style="font-size: 1.125rem; color: var(--pathable-color-accent, #00365c);">MyApp</strong>
+      <strong style="font-size: 1.125rem; color: var(--pathable-color-link, #015a76);">MyApp</strong>
     </div>
     <nav class="pathable-app-shell__nav">
       ${navItems
@@ -78,4 +82,41 @@ export const Default = {
       ${mainContent()}
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-app-shell__brand',
+      '.pathable-app-shell__nav-item',
+      '.pathable-app-shell__account',
+      '.pathable-app-shell__topbar-title',
+      '.pathable-app-shell__content',
+    ]),
+}
+
+export const WithNotification = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `pathable-app-shell__notification` layer owns a row above the main content, beside the sidebar, so it stays visible at desktop width.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-app-shell">
+      ${sidebar()}
+      ${topbar()}
+      <div class="pathable-app-shell__notification" role="status">
+        System maintenance scheduled for Sunday 2:00 AM.
+      </div>
+      ${mainContent()}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const notificationBox = canvas.getByRole('status').getBoundingClientRect()
+    const mainBox = canvas.getByRole('main').getBoundingClientRect()
+    // Visible, and directly above the main content.
+    await expect(notificationBox.height).toBeGreaterThan(0)
+    await expect(notificationBox.bottom).toBeLessThanOrEqual(mainBox.top + 1)
+  },
 }
