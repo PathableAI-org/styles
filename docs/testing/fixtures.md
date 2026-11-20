@@ -193,16 +193,22 @@ it('renders sr-only/inline', () => {
    other ID-list attributes) to match, so `useId` output compares equal while
    each reference must still point at the same element; a duplicate ID or a
    reference to a missing ID fails;
-4. compares the two with `getDiffableHTML` from
+4. collapses each run of whitespace inside text to one space, as rendering
+   does, so a fixture whose text Prettier wraps still matches, and renames
+   `svg`, `script` and `style` elements, which `getDiffableHTML` would
+   otherwise drop with their content;
+5. compares the two with `getDiffableHTML` from
    `@open-wc/semantic-dom-diff`, which sorts attributes and class tokens and
    normalises whitespace between elements, using Vitest's `toBe`, so a
    mismatch shows a line diff;
-5. compares the readable text, with the spaces between words, because
+6. compares the readable text, with the spaces between words, because
    `getDiffableHTML` trims each text node: `Edit<span> Jordan</span>` and
    `Edit<span>Jordan</span>` read differently.
 
-Nothing is ignored: an extra wrapper element, a class on the wrong element, a
-`style` attribute or different words fail.
+An extra wrapper element, a class on the wrong element, a `style` attribute, a
+different icon or different words fail. Only comments, empty `class` and `id`
+attributes, attribute and class order, the layout of whitespace and the values
+of IDs are ignored.
 
 ### Coverage
 
@@ -219,6 +225,8 @@ The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
   from `../examples/<state>` with an import from
   `@pathableai/fixtures/<folder>/<state>.html?raw` of the same state and the
   component's mapped folder.
+- a fixture test passes anything other than two imported names to
+  `expectToRenderFixture`, or skips a test. Commented-out calls do not count.
 
 It reports exported React components that no folder maps to yet as a notice,
 without failing. Only `sr-only` is mapped so far.
