@@ -348,4 +348,21 @@ describe('cases that cannot be narrowed to classes', () => {
       /named in the fixture/u,
     )
   })
+
+  it('selects a rule whose declarations only changed order', () => {
+    const selection = diffOne(
+      '.pathable-card { padding: 1rem; padding-inline: 2rem; }\n',
+      '.pathable-card { padding-inline: 2rem; padding: 1rem; }\n',
+    )
+    assert.deepEqual(folders(selection), ['card'])
+  })
+
+  it('selects every fixture for a changed statement at-rule', () => {
+    const selection = diffOne(
+      '@layer base, components;\n.pathable-card { padding: 1rem; }\n',
+      '@layer components, base;\n.pathable-card { padding: 1rem; }\n',
+    )
+    assert.equal(selection.all, true)
+    assert.match(selection.allReasons[0].selector, /^@layer/u)
+  })
 })

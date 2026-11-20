@@ -8,7 +8,8 @@
  *
  * Prints the selected folders, one per line. In GitHub Actions it also writes
  * `folders` (space-separated) and `fixtures_changed` (whether any path under
- * fixtures/ changed, which decides whether html-validate runs) to
+ * fixtures/, or pnpm-lock.yaml, changed, which decides whether html-validate
+ * runs) to
  * $GITHUB_OUTPUT, and a summary of why each folder was selected to
  * $GITHUB_STEP_SUMMARY.
  */
@@ -26,11 +27,32 @@ import { allFolders, fixturesRoot } from './folders.mjs'
 const SUMMARY_REASONS = 15
 
 /**
- * Combines the two selections. `changed` is the folder list from
- * changed.mjs, `css` the selection from affected.mjs. Returns
- * `{ folders: { <folder>: string[] } }`, each string a reason in Markdown.
+ * The folders whose component page (packages/styles/components/<slug>.md)
+ * changed: the contract check reads the page's slug and variants.
  */
-export function combine(changed, css) {
+export function pagesChanged(paths, folders) {
+  return folders.filter((folder) =>
+    paths.includes(`packages/styles/components/${folder}.md`),
+  )
+}
+
+/**
+ * Whether html-validate must run: a file under fixtures/ changed, or the
+ * lockfile did, which can change the html-validate version.
+ */
+export function needsHtmlValidate(paths) {
+  return paths.some(
+    (path) => path.startsWith('fixtures/') || path === 'pnpm-lock.yaml',
+  )
+}
+
+/**
+ * Combines the selections. `changed` is the folder list from changed.mjs,
+ * `css` the selection from affected.mjs and `pages` the folders whose
+ * component page changed. Returns `{ folders: { <folder>: string[] } }`,
+ * each string a reason in Markdown.
+ */
+export function combine(changed, css, pages = []) {
   const folders = {}
   const add = (folder, reason) => {
     folders[folder] ??= []
@@ -38,6 +60,11 @@ export function combine(changed, css) {
   }
   for (const folder of changed)
     add(folder, 'Fixture files changed under `fixtures/`.')
+  for (const folder of pages)
+    add(
+      folder,
+      `Component page \`packages/styles/components/${folder}.md\` changed.`,
+    )
   for (const [folder, { reasons }] of Object.entries(css.folders)) {
     for (const reason of reasons) add(folder, describe(reason))
   }
@@ -81,7 +108,7 @@ export function renderSummary(
   }
   if (names.length === 0) {
     lines.push(
-      '**No fixture folder was selected.** No file in a component folder changed, and the compiled CSS diff touches no class or custom property that a fixture uses. The contract check and axe did not run.',
+      '**No fixture folder was selected.** No file in a component folder or component page changed, and the compiled CSS diff touches no class or custom property that a fixture uses. The contract check and axe did not run.',
       '',
     )
   } else {
@@ -103,8 +130,8 @@ export function renderSummary(
   }
   lines.push(
     fixturesChanged
-      ? 'html-validate ran on every fixture, because files under `fixtures/` changed.'
-      : 'html-validate was skipped: no file under `fixtures/` changed.',
+      ? 'html-validate ran on every fixture, because files under `fixtures/` or `pnpm-lock.yaml` changed.'
+      : 'html-validate was skipped: no file under `fixtures/` and not `pnpm-lock.yaml` changed.',
     '',
   )
   return lines.join('\n')
@@ -132,8 +159,8 @@ function main(argv) {
     )
     result = {
       base: css.base,
-      fixturesChanged: paths.some((path) => path.startsWith('fixtures/')),
-      ...combine(changed, css),
+      fixturesChanged: needsHtmlValidate(paths),
+      ...combine(changed, css, pagesChanged(paths, folderList)),
     }
   }
 

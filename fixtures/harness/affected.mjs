@@ -168,6 +168,20 @@ export function readRules(css, { map, root } = {}) {
   }
 
   ast.walk((node) => {
+    // A statement at-rule, such as `@import` or `@layer a, b`, holds no
+    // declarations; record it as a group with no class, so any change to it
+    // selects every fixture.
+    if (node.type === 'atrule' && !node.nodes) {
+      const statement = normalize(`@${node.name} ${node.params}`)
+      groupFor(node, statement).decls.push({
+        prop: `@${node.name}`,
+        value: normalize(node.params),
+        reads: [],
+        node,
+        root,
+      })
+      return
+    }
     if (node.type !== 'decl') return
     const parent = node.parent
     let group
@@ -199,6 +213,13 @@ const valuesByProp = (decls) => {
   }
   return byProp
 }
+
+const sameOrder = (a = [], b = []) =>
+  a.length === b.length &&
+  a.every(
+    (decl, index) =>
+      decl.prop === b[index].prop && decl.value === b[index].value,
+  )
 
 const sameValues = (a = [], b = []) =>
   a.length === b.length &&
@@ -239,9 +260,13 @@ export function diffStyles(base, head) {
     const wasProps = valuesByProp(was?.decls ?? [])
     const nowProps = valuesByProp(now?.decls ?? [])
     const props = new Set([...wasProps.keys(), ...nowProps.keys()])
-    const changed = [...props].filter(
+    let changed = [...props].filter(
       (prop) => !sameValues(wasProps.get(prop), nowProps.get(prop)),
     )
+    // Declarations that only changed order, such as a shorthand moved after
+    // its longhand, change what wins: count every property as changed.
+    if (changed.length === 0 && !sameOrder(was?.decls, now?.decls))
+      changed = [...props]
     if (changed.length === 0) continue
 
     const group = now ?? was

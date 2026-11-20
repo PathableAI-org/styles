@@ -32,7 +32,8 @@ Each check takes a list of component folders and defaults to every folder.
   `no-redundant-role` allowing only `role="list"` on a `<ul>`, loaded
   explicitly from `fixtures/.htmlvalidate.json`. It rejects inline
   `html-validate-*` directive comments. It is cheap, so CI runs it on every
-  fixture, but only when a file under `fixtures/` changed.
+  fixture, but only when a file under `fixtures/` or `pnpm-lock.yaml`
+  changed.
 - **Contract** fails when a folder is not named after a page in
   `packages/styles/components/`, when a `pathable-*` class in a fixture is not
   a class selector in `@pathableai/styles/dist/styles.css`, or when a
@@ -52,7 +53,8 @@ The contract and axe checks need the built stylesheet, so run
 
 ## Choosing folders
 
-Two scripts choose folders, and CI checks their union.
+Two scripts choose folders, and CI checks their union together with the
+folders whose component page changed.
 
 ### Folders whose files changed
 
@@ -109,15 +111,21 @@ So a change to an `.pathable-activity-row` rule in `pathable-dashboard.scss`
 selects `activity-list`, a change to `.pathable-button` selects it through the
 buttons in its fixtures, and a change to `.pathable-tag` does not select it.
 
-Known limits: a rule that only moves, with the same selector and
+Declarations that only change order within a rule, such as a shorthand
+moved after its longhand, count as a change to every property of the rule,
+and a changed statement at-rule such as `@import` or `@layer a, b` selects
+every folder.
+
+Known limits: a whole rule that only moves, with the same selector and
 declarations, is not seen, although moving it can change the cascade. A
 class added to the markup by JavaScript is not seen, because only the
 fixture HTML is read.
 
 ### The union
 
-`node fixtures/harness/select.mjs <base>` runs both and prints the union, one
-folder per line, with the reasons for each on standard error. `--all` selects
+`node fixtures/harness/select.mjs <base>` runs both and prints the union,
+plus every folder whose page `packages/styles/components/<slug>.md` changed
+(the contract check reads the page's slug and variants), one folder per line, with the reasons for each on standard error. `--all` selects
 every folder. In GitHub Actions it also writes the `folders` and
 `fixtures_changed` step outputs and a job summary.
 
@@ -125,7 +133,7 @@ every folder. In GitHub Actions it also writes the `folders` and
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
 on a pull request that changes `fixtures/**`, `packages/styles/src/**/*.scss`,
-`pnpm-lock.yaml` or the workflow itself, and on every push to `main`. It:
+`packages/styles/components/*.md`, `pnpm-lock.yaml` or the workflow itself, and on every push to `main`. It:
 
 1. builds `@pathableai/styles`;
 2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
@@ -134,8 +142,9 @@ on a pull request that changes `fixtures/**`, `packages/styles/src/**/*.scss`,
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
 4. selects folders with `select.mjs`;
-5. runs html-validate on every fixture when a file under `fixtures/` changed,
-   and skips it otherwise;
+5. runs html-validate on every fixture when a file under `fixtures/` or
+   `pnpm-lock.yaml` changed (the lockfile can change the html-validate
+   version), and skips it otherwise;
 6. runs the contract check and axe on the selected folders, and skips them
    when none was selected;
 7. uploads the axe report as the `fixtures-axe-report` artifact.
