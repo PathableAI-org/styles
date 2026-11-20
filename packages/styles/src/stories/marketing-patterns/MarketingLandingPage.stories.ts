@@ -91,7 +91,7 @@ const featureSectionsHtml = `
   <div class="pathable-container pathable-container--standard">
     <div class="pathable-split pathable-split--ratio-1-2" style="align-items: center;">
       <div class="pathable-stack pathable-stack--gap-md">
-        <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Case Management</p>
+        <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-link);">Case Management</p>
         <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700; line-height: 1.3;">End-to-end participant journey tracking</h2>
         <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--pathable-color-text-muted);">From enrollment to outcome, every step of the participant journey is documented and accessible. Reduce paperwork and spend more time on meaningful interactions.</p>
         <a href="#" class="pathable-button pathable-button--outline">Learn more</a>
@@ -117,7 +117,7 @@ const featureSectionsHtml = `
         <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#dde2e8', '#00365c')}" alt="Analytics dashboard preview" loading="lazy" />
       </figure>
       <div class="pathable-stack pathable-stack--gap-md">
-        <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Reporting</p>
+        <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-link);">Reporting</p>
         <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700; line-height: 1.3;">Data-driven insights at your fingertips</h2>
         <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--pathable-color-text-muted);">Generate funder-ready reports with a single click. Track outcomes across programs, identify trends, and demonstrate the impact of your work.</p>
         <a href="#" class="pathable-button pathable-button--outline">Explore reports</a>
@@ -211,7 +211,7 @@ ${headerHtml}
     <div class="pathable-container pathable-container--standard">
       <div class="pathable-stack pathable-stack--gap-lg">
         <div class="pathable-stack pathable-stack--gap-md">
-          <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Case Management</p>
+          <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-link);">Case Management</p>
           <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700; line-height: 1.3;">End-to-end participant journey tracking</h2>
           <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--pathable-color-text-muted);">From enrollment to outcome, every step is documented and accessible.</p>
           <a href="#" class="pathable-button pathable-button--outline" style="align-self: flex-start;">Learn more</a>
@@ -237,7 +237,7 @@ ${headerHtml}
           <img class="pathable-screenshot-frame__image" src="${placeholderImage(800, 500, 'Analytics Preview', '#dde2e8', '#00365c')}" alt="Analytics dashboard preview" loading="lazy" />
         </figure>
         <div class="pathable-stack pathable-stack--gap-md">
-          <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-accent);">Reporting</p>
+          <p style="margin: 0; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pathable-color-link);">Reporting</p>
           <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700; line-height: 1.3;">Data-driven insights at your fingertips</h2>
           <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--pathable-color-text-muted);">Generate funder-ready reports with a single click.</p>
           <a href="#" class="pathable-button pathable-button--outline" style="align-self: flex-start;">Explore reports</a>
