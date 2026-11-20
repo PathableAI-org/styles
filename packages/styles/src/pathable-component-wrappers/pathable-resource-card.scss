@@ -49,6 +49,11 @@
   &:hover {
     box-shadow: var(--elevation-md);
     background: var(--pathable-color-bg);
+
+    // text-success is 4.05:1 on Shilling Silver; 15 % black gives 5.2:1.
+    .pathable-resource-card__rating {
+      color: color-mix(in srgb, var(--pathable-color-text-success) 85%, black);
+    }
   }
 
   &:focus-within {
@@ -87,6 +92,8 @@
 // List: media beside content (stacks above content at 480px and narrower)
 .pathable-resource-card--list {
   flex-direction: row;
+  // The body moves below the media before it gets too narrow to read.
+  flex-wrap: wrap;
   gap: var(--pathable-space-4);
 
   .pathable-resource-card__media {
@@ -99,8 +106,8 @@
   }
 
   .pathable-resource-card__body {
-    flex: 1;
-    min-width: 0;
+    flex: 1 1 12rem;
+    min-width: min(12rem, 100%);
   }
 
   // Narrow viewports: stack the media above the body so the text column keeps
@@ -155,6 +162,8 @@
   font-weight: var(--pathable-font-weight-normal);
   color: var(--pathable-color-text);
   margin: 0;
+  // A long word wraps at a large root font size instead of leaving the card.
+  overflow-wrap: break-word;
 }
 
 .pathable-resource-card__provider {
@@ -181,6 +190,13 @@
   flex-wrap: wrap;
   gap: var(--pathable-space-1);
   margin-block-start: var(--pathable-space-1);
+
+  // A tag wider than the card wraps its text instead of leaving the card.
+  .pathable-tag {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
 }
 
 .pathable-resource-card__metadata {
@@ -191,7 +207,11 @@
 
 .pathable-resource-card__rating {
   font-size: var(--pathable-font-size-body-sm);
-  color: var(--pathable-color-accent);
+  // Text-safe jade: the brand accent is 2.78:1 on white, below the 3:1 a
+  // meaningful graphic needs, and BRAND_RULES.md rules it out for small text.
+  // This is 5.3:1 on white. An interactive card shows Shilling Silver on
+  // hover, where the rating darkens (see below) to keep 4.5:1.
+  color: var(--pathable-color-text-success);
   margin: 0;
 
   &:empty {

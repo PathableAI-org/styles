@@ -1,6 +1,7 @@
 import { expect, userEvent, within } from 'storybook/test'
 
 import { expectKeyboardFocusIndicator } from '../shared/focus-indicator'
+import { expectBodyFont } from '../shared/body-font'
 
 export default {
   title: 'Application Shell/Mobile Shell',
@@ -124,6 +125,10 @@ export const Default = {
     const main = within(canvasElement).getByRole('main')
     await expect(main).toHaveAttribute('tabindex', '0')
     await expectKeyboardFocusIndicator(canvasElement, main)
+    await expectBodyFont(canvasElement, [
+      '.pathable-app-shell__topbar-title',
+      '.pathable-bottom-navigation__item',
+    ])
   },
 }
 
@@ -196,5 +201,39 @@ export const LegacyActiveColorOverride = {
 
     await expect(window.innerWidth).toBe(320)
     await expect(getComputedStyle(activeItem).color).toBe('rgb(255, 255, 255)')
+  },
+}
+
+export const WithNotification = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `pathable-app-shell__notification` layer sits between the top bar and the main content, never below the bottom navigation.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-app-shell">
+      ${topbar()}
+      <div class="pathable-app-shell__notification" role="status">
+        System maintenance scheduled for Sunday 2:00 AM.
+      </div>
+      ${mainContent()}
+      ${bottomNav()}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const box = (element: HTMLElement) => element.getBoundingClientRect()
+    const topbarBox = box(canvas.getByText('MyApp'))
+    const notificationBox = box(canvas.getByRole('status'))
+    const mainBox = box(canvas.getByRole('main'))
+    const navBox = box(canvas.getByRole('navigation', { name: 'Primary' }))
+    await expect(notificationBox.height).toBeGreaterThan(0)
+    await expect(notificationBox.top).toBeGreaterThanOrEqual(topbarBox.bottom)
+    await expect(notificationBox.bottom).toBeLessThanOrEqual(mainBox.top + 1)
+    await expect(notificationBox.bottom).toBeLessThanOrEqual(navBox.top)
   },
 }

@@ -4,6 +4,7 @@
 // state and must synchronize aria-expanded with the content's hidden attribute.
 
 .pathable-optional-form-section {
+  font-family: var(--pathable-font-body);
   // Light container: reset the surface focus ring so controls in it do not inherit
   // the light ring from a pathable-bg-link ancestor (_utilities.scss).
   --pathable-surface-focus-ring: initial;

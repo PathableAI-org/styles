@@ -202,7 +202,7 @@ Most typography CSS custom properties are emitted in two namespaces: `--pathable
 
 ### SCSS Typography Token Reference Rules
 
-- Agents MUST use `uswds-core` functions to reference typography theme tokens (e.g., `uswds.family('heading')`, `uswds.type-scale('lg')`)
+- Agents MUST use `uswds-core` functions to reference typography theme tokens (e.g., `uswds.family('heading')`). USWDS has no `type-scale()` function: a call to it compiles to invalid CSS. For a type-scale size, use `type-scale-rem('lg')` from `src/_type-scale.scss`
 - Agents MUST NOT use `$theme-font-*` variables directly — those are USWDS internal configuration values
 - Agents MUST NOT edit `_uswds-theme.scss` to add new typography overrides without explicit instructions
 - Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss`

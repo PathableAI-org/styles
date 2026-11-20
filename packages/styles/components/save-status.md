@@ -25,7 +25,7 @@ guarantees:
     status: unverified
     claim: The indicator and the label sit in an inline row, centred on each other vertically, 0.25rem apart.
   - id: default-font-size
-    status: unmet
+    status: unverified
     claim: With no override, the text is set at the theme's small type size instead of inheriting the size of the text around it.
   - id: text-contrast
     status: unmet
@@ -117,9 +117,9 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The default text size is unmet because its default value does not resolve:
-the text inherits the size of the text around it. Set
-`--pathable-save-status-font-size` yourself, for example to `0.875rem`.
+With no override, the text is set at the theme's small type size, 1rem
+(16 px at a 16 px root), whatever the size of the text around it. Set
+`--pathable-save-status-font-size` to use another size.
 
 The contrast is unmet. Today the symbol and the label are `#1cae96` for saved,
 `#f5a623` for offline and `#dc3545` for error. On white they are 2.78:1, 2.03:1

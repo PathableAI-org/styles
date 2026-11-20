@@ -11,6 +11,7 @@
 //   --featured (2x2), --standard (1x1), --metric (1x1), --image (1x1)
 
 @use 'uswds-core' as *;
+@use '../type-scale' as *;
 
 .pathable-bento-grid {
   display: grid;
@@ -40,6 +41,7 @@
 
 // Bento tile base
 .pathable-bento-tile {
+  font-family: var(--pathable-font-body);
   // Light container: reset the surface focus ring so controls in it do not inherit
   // the light ring from a pathable-bg-link ancestor (_utilities.scss).
   --pathable-surface-focus-ring: initial;
@@ -79,7 +81,7 @@
   justify-content: center;
 
   .pathable-bento-tile__value {
-    font-size: type-scale('2xl');
+    font-size: type-scale-rem('2xl');
     font-weight: var(--pathable-font-weight-bold);
     color: color('primary');
     line-height: 1;
@@ -87,7 +89,7 @@
   }
 
   .pathable-bento-tile__label {
-    font-size: type-scale('sm');
+    font-size: type-scale-rem('sm');
     color: color('gray-50');
   }
 }
@@ -132,7 +134,7 @@
 
   .pathable-bento-tile--metric {
     .pathable-bento-tile__value {
-      font-size: type-scale('xl');
+      font-size: type-scale-rem('xl');
     }
   }
 }

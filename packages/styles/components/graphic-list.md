@@ -16,13 +16,13 @@ guarantees:
     status: unverified
     claim: The heading has no top margin when it is the first child, a 1.5em top margin when it follows another element and no bottom margin, and the element after it has a 1em top margin.
   - id: block-spacing
-    status: unmet
-    claim: Each pathable-media-block in the list has a bottom margin of 2rem below a 40em viewport and 4rem from 40em, and the last one has none.
+    status: met
+    claim: Each pathable-media-block that is a direct child of the list has a bottom margin of 2rem below a 40em viewport and 4rem from 40em, and the last one has none.
   - id: image-gap
-    status: unmet
+    status: met
     claim: The image of a pathable-media-block in the list has a right margin of 1.5rem.
   - id: body-first-child
-    status: unmet
+    status: met
     claim: The first child of a pathable-media-block body in the list has no top margin, so its heading lines up with the top of the image.
 ---
 
@@ -32,9 +32,8 @@ A section of media blocks, each a picture beside a heading and text, set in the
 body typeface with brand headings. Put the class on a `<div>` or `<section>`
 that holds `pathable-media-block` elements.
 
-Today the class sets the section's type and its heading only. The spacing
-between the media blocks and inside them is not applied to
-`pathable-media-block` markup yet: see Guarantees.
+The class sets the section's type and its heading, the space between the media
+blocks, the gap after each image and the top of each block's body.
 
 ## When to use
 
@@ -101,13 +100,14 @@ None. The typefaces, sizes and spacing are fixed in the stylesheet.
 - `pathable-graphic-list__heading` goes on the section's heading. Its
   spacing rules also apply outside a graphic list, wherever the class is used.
 - Each item is a `pathable-media-block` with `pathable-media-block__img` and
-  `pathable-media-block__body`. Today the blocks take only their own layout:
-  a 0.5rem image gap and no space between blocks. Until the unmet guarantees
-  are met, add the spacing between blocks yourself, for example with
-  `pathable-stack`.
+  `pathable-media-block__body`. A block that is a direct child of the list
+  gets the spacing between blocks; the list also sets the image gap and the
+  body's first-child margin for blocks at any depth. No framework class or
+  row element is needed.
 - For more than one column, put the blocks in a `pathable-grid` with
   `pathable-grid--cols-2`, `pathable-grid--cols-3` or `pathable-grid--cols-4`;
-  its row gap also spaces the blocks. Those columns hold at every viewport
+  its row gap spaces the blocks, because the list's block spacing applies only
+  to direct children of the list. Those columns hold at every viewport
   width, so switch the modifier yourself where a narrow screen needs fewer.
   There is no column modifier specific to `pathable-graphic-list`.
 - Headings inside each block's body keep their own size and margins.
@@ -123,12 +123,10 @@ Today the heading asks for weight 700 in Fredoka, and the stylesheet loads only
 Fredoka Regular, so the browser draws a synthesised bold; the brand rules give
 Fredoka Regular for headings, so `heading-type` is unmet.
 
-The other three unmet guarantees are spacing the stylesheet has for this list but
-does not apply to `pathable-media-block` children, although the package says
-the wrapper needs no other classes in the markup. The stylesheet writes the
-block spacing per row, against the framework's row element, which has no
-`pathable-` class; the guarantee states the spacing for a single column of
-blocks with no row element, which is how this list is built today.
+`block-spacing`, `image-gap` and `body-first-child` are met for
+`pathable-media-block` markup with no framework class and no row element. The
+block spacing applies to blocks that are direct children of the list; blocks in
+a `pathable-grid` are spaced by the grid's gap.
 
 ## The consumer owns
 
@@ -136,6 +134,6 @@ blocks with no row element, which is how this list is built today.
   the same thing, and a real `alt` only when the image adds information.
 - Heading levels that fit the page outline, for the section heading and the
   heading in each block.
-- Spacing between the blocks until the unmet guarantees are met, and any
-  column layout.
+- The column layout, and the spacing between blocks that are not direct
+  children of the list.
 - Layout around the section: its width and the space above and below it.

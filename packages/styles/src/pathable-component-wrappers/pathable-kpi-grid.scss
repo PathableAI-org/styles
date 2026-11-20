@@ -132,7 +132,7 @@
 
   // Semantic trend cues — always include text/icon in addition to color
   &[data-trend='up'] {
-    color: var(--pathable-color-success);
+    color: var(--pathable-color-text-success);
 
     &::before {
       border-left: 0.35rem solid transparent;

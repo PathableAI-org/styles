@@ -148,13 +148,15 @@ jobs:
               - 'packages/react/!(src|*.md)/**/!(*.md)'
               - 'packages/react/src/!(*.md)'
               - 'packages/react/src/!(stories|*.md)/**/!(*.md)'
-            # Styles source the packed packages are built from: all of
-            # packages/styles but its Markdown, component pages and stories.
-            styles_source: &styles_source
-              - 'packages/styles/!(*.md)'
-              - 'packages/styles/!(src|components|*.md)/**/!(*.md)'
-              - 'packages/styles/src/!(*.md)'
-              - 'packages/styles/src/!(stories|*.md)/**/!(*.md)'
+            # The styles package manifest. React imports styles through its
+            # exports, so its entry points and dependencies can break the
+            # React build, tests and packed consumers. A change to styles
+            # source alone runs no React job: the styles jobs test what the
+            # classes do, and the token lint (stylelint) checks the React
+            # theme files against the styles tokens. See
+            # https://github.com/PathableAI-org/styles/issues/590.
+            styles_package: &styles_package
+              - 'packages/styles/package.json'
             # Markdown that check:agent-guidance validates and the packed
             # consumer test checks in the React tarball.
             agent_guidance: &agent_guidance
@@ -164,14 +166,14 @@ jobs:
               - 'scripts/check-agent-guidance*.test.mjs'
             react:
               - *react_source
-              - *styles_source
+              - *styles_package
               - '.github/actions/setup/**'
               - '.github/workflows/ci-full.yml'
               - 'package.json'
               - 'pnpm-lock.yaml'
             react_build:
               - *react_source
-              - *styles_source
+              - *styles_package
               - *agent_guidance
               - '.github/actions/setup/**'
               - '.github/workflows/ci-full.yml'
@@ -179,7 +181,7 @@ jobs:
               - 'pnpm-lock.yaml'
             next_consumer:
               - *react_source
-              - *styles_source
+              - *styles_package
               - *agent_guidance
               - 'scripts/test-next-consumer.mjs'
               - 'scripts/fixtures/next-consumer/**'

@@ -10,7 +10,7 @@ variants:
     values: [default, large]
 guarantees:
   - id: spinner-size
-    status: unmet
+    status: unverified
     claim: The spinner's outer size, border included, is 1.5rem across by default and 2.5rem across at large, which is 24 px and 40 px at a 16 px root font size.
   - id: ring
     status: unverified
@@ -25,13 +25,13 @@ guarantees:
     status: unverified
     claim: The status text is 0.875rem with a line height of 1.5 by default and 1rem at large, which is 14 px and 16 px at a 16 px root font size.
   - id: scales-with-root
-    status: unmet
+    status: unverified
     claim: The status text size follows the root font size, so at a 200% root font size it doubles at both sizes.
   - id: no-shrink
     status: unverified
     claim: The spinner keeps its size when the status text wraps onto several lines in a narrow container.
   - id: forced-colours
-    status: unmet
+    status: met
     claim: In forced colours mode the ring is drawn in a system colour and keeps a visible gap, or another visible sign of motion, so its turning can be seen.
 ---
 
@@ -87,8 +87,9 @@ Add at most one modifier class to `pathable-loading`.
 | size | `default` | none                      | Small ring and 0.875rem (14 px) text, inside a list or panel |
 | size | `large`   | `pathable-loading--large` | Larger ring and 1rem (16 px) text, for a whole view          |
 
-The ring's content box is 1.5rem by default and 2.5rem at large; the border is
-drawn outside it.
+The ring is 1.5rem across by default and 2.5rem at large, border included: it
+is `border-box` sized, so the 2 px border (3 px at large) is drawn inside that
+size.
 
 ## Tokens
 
@@ -127,19 +128,6 @@ The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
-
-The spinner is unmet because its width and height exclude the border: it is
-1.5rem plus 2 px on each side by default and 2.5rem plus 3 px at large, 28 px
-and 46 px at a 16 px root font size, unless the application applies
-`box-sizing: border-box` to every element.
-
-The forced colours guarantee is unmet: in Chromium the browser replaces the
-transparent top of the ring with the system colour, so the ring shows as a
-closed circle and its turning cannot be seen.
-
-The scales-with-root guarantee is unmet. Today the font-size tokens are fixed
-px values, so the status text size does not follow the user's default font
-size.
 
 ## The consumer owns
 

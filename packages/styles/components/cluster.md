@@ -131,10 +131,9 @@ The pixel figures are those of the default theme's spacing scale.
   one with a long unbroken string or a fixed minimum width, takes a line of
   its own and overflows unless its own content can wrap.
 - Set vertical alignment with the align modifiers or
-  `--pathable-cluster-align`, not a utility such as
-  `pathable-flex-align-start`: whether the utility overrides the cluster's
-  own alignment currently depends on how the stylesheet is loaded, which is
-  a known defect.
+  `--pathable-cluster-align`. A utility such as `pathable-flex-align-start`
+  also overrides the cluster's own alignment, because utilities come after
+  the component rules, but the modifiers keep the choice with the cluster.
 - Children keep their own margins, which add to the gap. `pathable-button`
   has an 8 px right margin, so buttons in a cluster sit 8 px further apart
   than the gap, and below a 480 px viewport each button is full width and

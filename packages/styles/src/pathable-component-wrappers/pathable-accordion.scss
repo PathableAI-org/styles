@@ -11,6 +11,7 @@
 @use 'usa-accordion/src/styles';
 
 .pathable-accordion {
+  font-family: var(--pathable-font-body);
   @extend .usa-accordion;
 }
 
@@ -19,6 +20,7 @@
 }
 
 .pathable-accordion__button {
+  font-family: inherit;
   @extend .usa-accordion__button;
 }
 
