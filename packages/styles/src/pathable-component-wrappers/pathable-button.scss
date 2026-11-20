@@ -116,6 +116,15 @@
   // color.
   @include button-unstyled;
   color: var(--pathable-color-link);
+
+  // The USWDS ring is drawn on the surface behind the button, so it takes that
+  // surface's ring colour, as the other buttons do.
+  &:focus {
+    outline-color: var(
+      --pathable-surface-focus-ring,
+      var(--pathable-color-focus-ring)
+    );
+  }
 }
 
 // Workflow-intent variant classes (T016-T020)

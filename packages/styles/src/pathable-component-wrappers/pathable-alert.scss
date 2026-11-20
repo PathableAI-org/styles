@@ -20,6 +20,11 @@
 
 .pathable-alert--success {
   @extend .usa-alert--success;
+  // The success, warning and error alerts have Jade, amber and danger red
+  // backgrounds, where Bright Blue Brooks is under 3:1. The on-accent dark blue
+  // is 6.3:1, 8.4:1 and 3.9:1 on them, and stays visible on the light
+  // containers nested inside.
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
   background-color: var(--pathable-color-status-success-bg);
   color: var(--pathable-color-status-success-text);
 }
@@ -32,6 +37,7 @@
 
 .pathable-alert--warning {
   @extend .usa-alert--warning;
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
   background-color: var(--pathable-color-status-warning-bg);
   color: var(--pathable-color-status-warning-text);
 }
@@ -44,6 +50,7 @@
 
 .pathable-alert--error {
   @extend .usa-alert--error;
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
   background-color: var(--pathable-color-status-danger-bg);
   color: var(--pathable-color-status-danger-text);
 }
@@ -56,6 +63,10 @@
 
 .pathable-alert--emergency {
   @extend .usa-alert--emergency;
+
+  // Bright Blue Brooks is 2.3:1 on the emergency red; its white text colour is
+  // 6.8:1.
+  --pathable-surface-focus-ring: var(--pathable-color-status-danger-text);
 }
 
 .pathable-alert--slim {
