@@ -11,9 +11,13 @@
 
 .pathable-legend {
   @extend .usa-legend;
+}
 
-  // The USWDS legend sets no colour, so it would inherit the browser's black
-  // on a page that sets none. Default to the brand text colour.
+// The USWDS legend sets no colour, so it would inherit the browser's black on a
+// page that sets none. Default to the brand text colour. :where() keeps the
+// default at zero specificity, so a colour utility on the legend itself, such
+// as pathable-text-white, still wins.
+:where(.pathable-legend) {
   color: var(--pathable-color-text);
 }
 
@@ -25,6 +29,11 @@
 .pathable-section--dark .pathable-legend,
 .pathable-hero .pathable-legend,
 .pathable-dark-background .pathable-legend,
-[class*='pathable-text-'] .pathable-legend {
+.pathable-text-accent .pathable-legend,
+.pathable-text-base .pathable-legend,
+.pathable-text-link .pathable-legend,
+.pathable-text-muted .pathable-legend,
+.pathable-text-primary .pathable-legend,
+.pathable-text-white .pathable-legend {
   color: inherit;
 }
