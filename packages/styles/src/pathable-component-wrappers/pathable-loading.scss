@@ -20,6 +20,7 @@
 .pathable-loading__spinner {
   flex-shrink: 0;
   display: inline-block;
+  box-sizing: border-box;
   width: 1.5rem;
   height: 1.5rem;
   border: 2px solid currentColor;
