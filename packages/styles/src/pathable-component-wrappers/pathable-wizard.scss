@@ -25,7 +25,7 @@
   font-family: var(--pathable-font-heading);
   margin: 0;
   font-size: type-scale('lg');
-  font-weight: var(--pathable-font-weight-normal);
+  font-weight: var(--pathable-font-weight-bold);
 }
 
 // Content/form region for the current step's form controls
@@ -62,7 +62,7 @@
   margin: 0;
   padding-top: var(--pathable-wizard-gap);
   font-size: type-scale('md');
-  font-weight: var(--pathable-font-weight-normal);
+  font-weight: var(--pathable-font-weight-bold);
   border-bottom: 1px solid color('gray-20');
   padding-bottom: units(1);
   margin-bottom: units(1);
