@@ -11,6 +11,9 @@ on:
       - 'fixtures/**'
       - 'packages/styles/src/**/*.scss'
       - 'pnpm-lock.yaml'
+      - 'packages/react/src/**'
+      - 'packages/react/vitest.config.ts'
+      - 'packages/react/package.json'
       - '.github/workflows/fixtures.yml'
   push:
     branches:
@@ -84,3 +87,84 @@ jobs:
           name: fixtures-axe-report
           path: ${{ runner.temp }}/fixtures-axe-report.json
           if-no-files-found: ignore
+
+  react:
+    name: React fixture tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      # The workflow also runs for changes that cannot affect React rendering,
+      # so the job decides for itself whether to run, and which tests.
+      - name: Select React fixture tests
+        id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            MODE=all
+          elif ! git diff --quiet "origin/$BASE_REF...HEAD" -- \
+            .github/workflows/fixtures.yml packages/react/vitest.config.ts \
+            packages/react/package.json packages/react/src/test pnpm-lock.yaml; then
+            # The test setup changed, so every fixture test could be affected.
+            MODE=all
+          elif ! git diff --quiet "origin/$BASE_REF...HEAD" -- \
+            fixtures packages/react/src; then
+            MODE=changed
+          else
+            MODE=none
+          fi
+          echo "Mode: $MODE"
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/setup
+        if: steps.select.outputs.mode != 'none'
+      - name: Run fixture tests
+        if: steps.select.outputs.mode != 'none'
+        working-directory: packages/react
+        env:
+          MODE: ${{ steps.select.outputs.mode }}
+          BASE_REF: ${{ github.base_ref }}
+          REPORT_DIR: ${{ runner.temp }}/react-fixture-tests
+        run: |
+          mkdir -p "$REPORT_DIR"
+          if [ "$MODE" = "all" ]; then
+            pnpm exec vitest run --project fixtures \
+              --reporter=default --reporter=github-actions \
+              --reporter=json --outputFile.json="$REPORT_DIR/tests.json"
+          else
+            # Only the fixture tests whose module graph holds a changed file.
+            pnpm exec vitest run --project fixtures --changed "origin/$BASE_REF" \
+              --reporter=default --reporter=github-actions \
+              --reporter=json --outputFile.json="$REPORT_DIR/tests.json"
+            # --changed never selects the coverage test, which reads its
+            # inputs from disk, so it runs on every run.
+            pnpm exec vitest run --project fixtures \
+              src/test/__tests__/fixture-coverage.test.ts \
+              --reporter=default --reporter=github-actions \
+              --reporter=json --outputFile.json="$REPORT_DIR/coverage.json"
+          fi
+      - name: Summarise fixture tests
+        if: always()
+        env:
+          MODE: ${{ steps.select.outputs.mode }}
+          REPORT_DIR: ${{ runner.temp }}/react-fixture-tests
+        run: |
+          {
+            echo "## React fixture tests"
+            echo
+            case "$MODE" in
+              all) echo "Ran every fixture test." ;;
+              changed) echo "Ran the fixture tests affected by this pull request, and the coverage test." ;;
+              *) echo "No React or fixture change, so no fixture test ran." ;;
+            esac
+            echo
+            for report in "$REPORT_DIR"/*.json; do
+              [ -f "$report" ] || continue
+              jq -r '.testResults[] |
+                "- `\(.name | sub(".*/packages/react/"; ""))`",
+                (.assertionResults[] |
+                  "  - \(if .status == "passed" then "✅" else "❌" end) \(.fullName)")' "$report"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -30,6 +30,7 @@
     "check:package": "publint --pack false",
     "check:types": "attw --pack --profile esm-only",
     "test:unit": "vitest run",
+    "test:fixtures": "vitest run --project fixtures",
     "test:unit:watch": "vitest",
     "test:unit:coverage": "vitest run --coverage"
   },
@@ -41,7 +42,9 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@open-wc/semantic-dom-diff": "^0.21.0",
     "@pathable/storybook-contracts": "workspace:*",
+    "@pathableai/fixtures": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^26.6.6",

@@ -1,9 +1,18 @@
 import { defineConfig } from 'vitest/config'
 
+const testFiles = ['src/**/*.test.ts', 'src/**/*.test.tsx']
+
+// Fixture tests compare rendered markup with the HTML fixtures in
+// `@pathableai/fixtures`. They run as their own project so CI can select them
+// alone; see docs/testing/fixtures.md.
+const fixtureTestFiles = [
+  'src/**/*.fixtures.test.tsx',
+  'src/test/__tests__/*.test.{ts,tsx}',
+]
+
 export default defineConfig({
   test: {
     environment: 'jsdom',
-    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     coverage: {
       provider: 'v8',
       include: ['src/internal/resolvers/**/*.ts'],
@@ -12,5 +21,23 @@ export default defineConfig({
         functions: 100,
       },
     },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: testFiles,
+          exclude: fixtureTestFiles,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'fixtures',
+          include: fixtureTestFiles,
+          environment: './src/test/fixture-environment.ts',
+        },
+      },
+    ],
   },
 })

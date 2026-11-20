@@ -4,6 +4,9 @@
   "private": true,
   "description": "Canonical HTML fixtures for @pathableai/styles components, one file per state, and the checks that validate them.",
   "type": "module",
+  "exports": {
+    "./*.html": "./*.html"
+  },
   "scripts": {
     "check": "pnpm check:html && pnpm check:contract && pnpm check:axe",
     "check:html": "node harness/html.mjs",

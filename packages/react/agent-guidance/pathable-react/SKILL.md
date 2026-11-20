@@ -79,6 +79,10 @@ raw HTML and `usa-*` or `pathable-*` classes.
   behavior, and non-color cues.
 - Give informative images meaningful alternative text and decorative images
   `alt=""`.
+- Use `SrOnly` for text only screen readers need, such as the row name after
+  repeated "Edit" links or a heading for a visually obvious region
+  (`as="h2"` to `as="h6"`). Never put focusable content inside it, and do not
+  add `pathable-sr-only` to elements by hand.
 
 ## Route to focused guidance
 
