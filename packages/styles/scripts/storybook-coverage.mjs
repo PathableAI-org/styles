@@ -37,6 +37,7 @@ const EXPECTED_COVERAGE = {
     'components-button--responsive-width-override-below-tablet',
     'components-button--width-auto-mobile',
     'components-button-group--default',
+    'components-button-group--narrow-container',
     'components-button-group--wrapping',
     'components-card--default',
     'components-card--workflow-card-action-container',
@@ -146,6 +147,7 @@ const EXPECTED_COVERAGE = {
     'discovery-filter-bar--default',
     'discovery-filter-pill--default',
     'discovery-resource-card--grid',
+    'discovery-resource-card--list-layout-mobile',
     'discovery-wayfinder--default',
   ],
   'Structured Workflow / Wizard': [
