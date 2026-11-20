@@ -216,28 +216,23 @@ export const WorkflowCoachingSupports = {
 const legendFieldset = (legendClasses: string, text: string) => `
 <fieldset class="pathable-fieldset">
   <legend class="${legendClasses}" data-testid="${text}">${text}</legend>
-  <label class="pathable-checkbox">
-    <input type="checkbox" class="pathable-checkbox__input" />
-    <span class="pathable-checkbox__label">Option for ${text}</span>
-  </label>
 </fieldset>
+`
+
+const legendContainer = (classes: string, content: string) => `
+<div class="${classes}" style="padding: 1rem; margin-bottom: 1rem;">
+  ${content}
+</div>
 `
 
 export const LegendColour = {
   render: () => `
-${legendFieldset('pathable-legend', 'Default legend')}
-<div class="pathable-surface pathable-surface--inverse">
-  ${legendFieldset('pathable-legend', 'Inverse surface legend')}
-</div>
-<div class="pathable-section--dark">
-  ${legendFieldset('pathable-legend', 'Dark section legend')}
-</div>
-<div class="pathable-text-white pathable-bg-primary">
-  ${legendFieldset('pathable-legend', 'White text container legend')}
-</div>
-<div class="pathable-surface pathable-surface--inverse">
-  ${legendFieldset('pathable-legend pathable-text-accent', 'Utility on legend')}
-</div>
+${legendContainer('', legendFieldset('pathable-legend', 'Default legend'))}
+${legendContainer('pathable-surface pathable-surface--inverse', legendFieldset('pathable-legend', 'Inverse surface legend'))}
+${legendContainer('pathable-section--dark', legendFieldset('pathable-legend', 'Dark section legend'))}
+${legendContainer('pathable-text-white pathable-bg-primary', legendFieldset('pathable-legend', 'White text container legend'))}
+${legendContainer('pathable-alert pathable-alert--error', legendFieldset('pathable-legend', 'Error alert legend'))}
+${legendContainer('pathable-text-primary', legendFieldset('pathable-legend pathable-text-muted', 'Utility on legend') + '<span class="pathable-text-muted" data-testid="Muted reference">Muted reference</span>')}
   `,
   play: async ({
     canvasElement,
@@ -259,7 +254,11 @@ ${legendFieldset('pathable-legend', 'Default legend')}
       await expect(colourOf('White text container legend')).toBe(
         'rgb(255, 255, 255)',
       )
-      await expect(colourOf('Utility on legend')).not.toBe('rgb(255, 255, 255)')
+      await expect(colourOf('Error alert legend')).not.toBe('rgb(0, 54, 92)')
+      await expect(colourOf('Utility on legend')).toBe(
+        colourOf('Muted reference'),
+      )
+      await expect(colourOf('Utility on legend')).not.toBe('rgb(0, 54, 92)')
     })
   },
 }

@@ -117,13 +117,16 @@ from the package source and no test checks it yet.
 
 The legend sets its text colour to the brand text colour,
 `var(--pathable-color-text)`, at zero specificity, so a colour utility such as
-`pathable-text-white` on the legend itself wins. Inside a container that sets
-its own text colour the legend takes that colour instead: `pathable-surface--inverse`,
+`pathable-text-white` on the legend itself wins. Inside a coloured container
+the legend takes the colour it inherits from that container, as it did before
+it had a default: `pathable-surface--inverse`, `pathable-surface--brand`,
 `pathable-surface--tone-primary`, `pathable-section--dark`, `pathable-hero`,
-and the `pathable-text-accent`, `-base`, `-link`,
-`-muted`, `-primary` and `-white` utilities. A container that sets a background
-but no text colour, such as `pathable-bg-primary` on its own or
-`pathable-dark-background` (which sets no text colour), leaves the legend with the colour it inherits
+`pathable-dark-background`, `pathable-alert`, `pathable-bg-accent`,
+`pathable-bg-danger`, `pathable-bg-link`, `pathable-bg-primary`,
+`pathable-bg-success`, and the `pathable-text-accent`, `-base`, `-link`,
+`-muted`, `-primary` and `-white` utilities. A container that sets a
+background but no text colour, such as `pathable-bg-primary` on its own or
+`pathable-dark-background`, leaves the legend in the browser's default black
 there; add a text colour utility to that container.
 
 The maximum width applies to the legend's content box: the legend is

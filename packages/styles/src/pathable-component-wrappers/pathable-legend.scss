@@ -21,9 +21,9 @@
   color: var(--pathable-color-text);
 }
 
-// Containers that set their own text colour keep it, so a legend on a dark
-// surface or under a `pathable-text-*` colour utility stays readable like the
-// control labels beside it. The whole selector is inside :where(), so these
+// Containers that set their own text colour, or a coloured background that
+// the legend's inherited colour was chosen for, keep the colour they give the
+// legend, so the legend is never harder to read than before it had a default. The whole selector is inside :where(), so these
 // rules have zero specificity: they follow the default above by source order,
 // and a colour utility on the legend itself still wins over both.
 :where(
@@ -32,6 +32,13 @@
   .pathable-section--dark .pathable-legend,
   .pathable-hero .pathable-legend,
   .pathable-dark-background .pathable-legend,
+  .pathable-surface--brand .pathable-legend,
+  .pathable-alert .pathable-legend,
+  .pathable-bg-accent .pathable-legend,
+  .pathable-bg-danger .pathable-legend,
+  .pathable-bg-link .pathable-legend,
+  .pathable-bg-primary .pathable-legend,
+  .pathable-bg-success .pathable-legend,
   .pathable-text-accent .pathable-legend,
   .pathable-text-base .pathable-legend,
   .pathable-text-link .pathable-legend,
