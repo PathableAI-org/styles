@@ -11,4 +11,8 @@
 
 .pathable-legend {
   @extend .usa-legend;
+
+  // The USWDS legend sets no colour, so it would inherit the browser's black
+  // on a page that sets none. Use the brand text colour like the labels do.
+  color: var(--pathable-color-text);
 }
