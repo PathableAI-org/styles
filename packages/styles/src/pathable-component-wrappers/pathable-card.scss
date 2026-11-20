@@ -60,9 +60,11 @@
 
 // Full-width media must not square off the container's rounded top corners.
 // Header-first cards put the media below the header, where USWDS keeps square
-// corners, and flag cards crop media to a column.
+// corners, and flag cards crop media to a column. The React Card renders media
+// without a container, border or radius, so it stays square.
 .pathable-card:not(.pathable-card--flag):not(.pathable-card--header-first)
-  .pathable-card__media {
+  > .pathable-card__container
+  > .pathable-card__media {
   overflow: hidden;
   border-start-start-radius: calc(
     #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
