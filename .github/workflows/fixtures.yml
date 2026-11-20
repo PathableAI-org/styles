@@ -16,6 +16,8 @@ on:
       - 'packages/styles/src/**/*.scss'
       - 'packages/styles/src/**/*.sass'
       - 'packages/styles/package.json'
+      # A dependency update (axe-core, html-validate, Playwright) can change
+      # every result, so select.mjs checks every folder for it.
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'patches/**'
@@ -65,6 +67,9 @@ jobs:
         run: |
           if [ "$EVENT_NAME" = "pull_request" ] &&
             git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml; then
+            # A lockfile, workspace or patches change selects every folder
+            # here, with that reason in the job summary, and runs
+            # html-validate.
             node fixtures/harness/select.mjs "origin/$BASE_REF"
           else
             # On main, or when this workflow changed, check every folder.
@@ -73,8 +78,11 @@ jobs:
       - name: html-validate (every fixture)
         if: steps.changed.outputs.fixtures_changed == 'true'
         run: pnpm --filter @pathableai/fixtures check:html
+      # The contract always checks folders.json against the folders on disk.
+      # It also runs when fixtures/ changed with no folder selected (such as
+      # a deleted folder), and then, with no folder named, checks every one.
       - name: Contract (selected folders)
-        if: steps.changed.outputs.folders != ''
+        if: steps.changed.outputs.folders != '' || steps.changed.outputs.fixtures_changed == 'true'
         working-directory: fixtures
         env:
           FOLDERS: ${{ steps.changed.outputs.folders }}

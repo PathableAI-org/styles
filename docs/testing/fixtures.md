@@ -12,8 +12,15 @@ How to write a fixture, and the ARIA rules fixtures are held to, are in
 fixtures are checked.
 
 Fixtures exist for ActivityList so far. Planned next steps, each its own pull
-request: render the styles Storybook stories from the fixtures, and assert
-that `@pathableai/react` renders the same normalised HTML as a fixture.
+request: add React fixture tests that check a JSX snippet renders the same normalised HTML as a fixture,
+and generate component docs from the fixtures.
+
+Where a fixture and today's markup differ, the markup moves to the fixture.
+The ActivityList fixtures use `<ul role="list">` and `<li>`, while the
+component page, its styles stories and the React `ActivityList` still use
+`<div role="list">`. A styles list reset for ActivityList and a React
+`ActivityList` that renders `ul role="list"`/`li` are planned, so the React
+fixture tests can hold React to these fixtures.
 
 ## The checks
 
@@ -34,18 +41,26 @@ Each check takes a list of component folders and defaults to every folder.
   `html-validate-*` directive comments. It is cheap, so CI runs it on every
   fixture, but only when a file under `fixtures/` or `pnpm-lock.yaml`
   changed.
-- **Contract** fails when a folder is not named after a page in
-  `packages/styles/components/`, when a `pathable-*` class in a fixture is not
-  a class selector in `@pathableai/styles/dist/styles.css`, or when a
-  non-default variant in the page's front matter has no fixture using its
-  modifier class. It reads the page and the CSS with the same code as the
-  component-page check (`packages/styles/scripts/`).
+- **Contract** fails when `fixtures/folders.json` and the component folders
+  on disk disagree in either direction (so deleting a folder fails unless the
+  list is edited in the same change), when a folder is not named after a page
+  in `packages/styles/components/`, when a fixture's file name is not a
+  kebab-case state name (`^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$`), when a
+  `pathable-*` class in a fixture is not a class selector in
+  `@pathableai/styles/dist/styles.css`, or when a non-default variant in the
+  page's front matter has no fixture using its modifier class. Classes are
+  read by parsing each fixture, so only element `class` attributes count, not
+  `data-class` and the like or markup inside comments. It reads the page and
+  the CSS with the same code as the component-page check
+  (`packages/styles/scripts/`).
 - **axe** loads each fixture into a `<main>` on a page that links
   `styles.css`, in Chromium at 1280 px and 375 px wide, and runs
   `@axe-core/playwright`. Only the page-level rules `region`,
   `landmark-one-main` and `page-has-heading-one` are off. It also fails when
   two buttons or links in a fixture share an accessible name. Any violation
-  fails; there is no exceptions mechanism. It writes a JSON report to
+  fails, and so does any axe "incomplete" result; there is no exceptions
+  mechanism or allowlist. Each is listed with its nodes in the output and in
+  the GitHub job summary. It writes a JSON report to
   `fixtures/.cache/axe-report.json`, or to `FIXTURES_AXE_REPORT`.
 
 The contract and axe checks need the built stylesheet, so run
@@ -61,7 +76,8 @@ folders whose component page changed.
 `node fixtures/harness/changed.mjs [base]` prints the component folders that
 `git diff --name-only <base>...HEAD -- fixtures/` touched, one per line;
 `base` defaults to `origin/main`. A change to `fixtures/harness/`,
-`fixtures/.htmlvalidate.json` or `fixtures/package.json` selects every folder.
+`fixtures/.htmlvalidate.json`, `fixtures/folders.json` or `fixtures/package.json`
+selects every folder.
 `--all` prints every folder. Pass the output to a check:
 
 ```sh
@@ -161,7 +177,9 @@ on a pull request that changes any input of the selection (`fixtures/**`,
    `pnpm-lock.yaml` changed (the lockfile can change the html-validate
    version), and skips it otherwise;
 6. runs the contract check and axe on the selected folders, and skips them
-   when none was selected;
+   when none was selected, except that the contract also runs, on every
+   folder, when a file under `fixtures/` changed, so its `folders.json`
+   check catches a deleted folder;
 7. uploads the axe report as the `fixtures-axe-report` artifact.
 
 The job summary lists each selected folder with its reasons, and says

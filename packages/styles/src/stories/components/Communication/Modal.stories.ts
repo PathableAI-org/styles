@@ -32,13 +32,20 @@ const DIALOG_NAME = /Add Support Activity/i
 function openShellMarkup(options?: {
   headingId?: string
   bodyHtml?: string
+  footerHtml?: string
+  preamble?: string
 }): string {
   const headingId = options?.headingId ?? 'modal-heading'
   const bodyHtml =
     options?.bodyHtml ??
     `<p>Select the type of support activity to add to this participant's coaching plan. Activities are tied to employment goals and require supervisor approval.</p>`
 
-  return `
+  const footerHtml =
+    options?.footerHtml ??
+    `<button class="pathable-button">Add Activity</button>
+          <button class="pathable-button pathable-button--outline">Cancel</button>`
+
+  return `${options?.preamble ?? ''}
 <div class="pathable-modal-wrapper is-visible">
   <div class="pathable-modal-overlay">
     <div class="pathable-modal usa-modal" role="dialog" aria-modal="true" aria-labelledby="${headingId}">
@@ -49,8 +56,7 @@ function openShellMarkup(options?: {
         </div>
         ${bodyHtml}
         <div class="pathable-modal__footer">
-          <button class="pathable-button">Add Activity</button>
-          <button class="pathable-button pathable-button--outline">Cancel</button>
+          ${footerHtml}
         </div>
       </div>
     </div>
@@ -178,6 +184,158 @@ export const Narrow = {
   render: () => openShellMarkup({ headingId: 'modal-heading-narrow' }),
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     await assertOpenShell(canvasElement)
+  },
+}
+
+/**
+ * Increased-text fixture (WCAG 1.4.4): at 200 % root text on a 375px viewport
+ * the heading and a flex row of footer buttons stay inside the dialog. The
+ * row is an unclassed flex container, as in the React Modal stories.
+ */
+export const IncreasedText = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  parameters: {
+    docs: {
+      // The story sets the root font size, so the docs page renders it in its
+      // own frame rather than applying 200 % to the other stories on the page.
+      story: { inline: false, iframeHeight: 600 },
+      description: {
+        story:
+          'Open Modal with the root font size at 200 % on a 375px viewport. The heading breaks inside the dialog and the footer button row wraps and stays inside it.',
+      },
+    },
+  },
+  render: () =>
+    openShellMarkup({
+      headingId: 'modal-heading-increased-text',
+      // The rem-based dialog follows the root size, so the story sets it from
+      // a style element that goes away with the story.
+      preamble: '<style>:root { font-size: 200%; }</style>',
+      footerHtml: `<div style="display: flex; gap: 0.5rem; justify-content: flex-end">
+            <button class="pathable-button pathable-button--outline" type="button">Cancel</button>
+            <button class="pathable-button" type="button">Add Activity</button>
+          </div>`,
+    }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await assertOpenShell(canvasElement)
+    const canvas = within(canvasElement)
+    const dialog = canvas.getByRole('dialog', { name: DIALOG_NAME })
+    const heading = within(dialog).getByRole('heading', {
+      name: DIALOG_NAME,
+    })
+    const footer = dialog.querySelector(
+      '.pathable-modal__footer',
+    ) as HTMLElement
+    const footerBox = footer.getBoundingClientRect()
+    const dialogBox = dialog.getBoundingClientRect()
+    expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
+    // The padding keeps its 100 % size instead of doubling with the text.
+    const overlay = canvasElement.querySelector(
+      '.pathable-modal-overlay',
+    ) as HTMLElement
+    expect(getComputedStyle(overlay).paddingLeft).toBe('24px')
+    expect(footerBox.left - dialogBox.left).toBe(32)
+    for (const name of ['Cancel', 'Add Activity']) {
+      const box = within(dialog)
+        .getByRole('button', { name })
+        .getBoundingClientRect()
+      expect(box.left).toBeGreaterThanOrEqual(footerBox.left)
+      expect(box.right).toBeLessThanOrEqual(footerBox.right)
+    }
+    // The labels no longer fit on one line, so the row wraps instead of
+    // shrinking the buttons side by side.
+    const cancelBox = within(dialog)
+      .getByRole('button', { name: 'Cancel' })
+      .getBoundingClientRect()
+    const addBox = within(dialog)
+      .getByRole('button', { name: 'Add Activity' })
+      .getBoundingClientRect()
+    expect(addBox.top).toBeGreaterThanOrEqual(cancelBox.bottom)
+  },
+}
+
+/**
+ * Footer row at default text on a phone: a flex row of two buttons, as in the
+ * React Modal stories, stays on one line inside the footer.
+ */
+export const NarrowFooterRow = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Open Modal at 100 % text on a 375px viewport with a flex row of two footer buttons. The buttons share one line instead of each filling its own.',
+      },
+    },
+  },
+  render: () =>
+    openShellMarkup({
+      headingId: 'modal-heading-narrow-footer-row',
+      footerHtml: `<div style="display: flex; gap: 0.5rem; justify-content: flex-end">
+            <button class="pathable-button pathable-button--outline" type="button">Cancel</button>
+            <button class="pathable-button" type="button">Add Activity</button>
+          </div>`,
+    }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await assertOpenShell(canvasElement)
+    const dialog = within(canvasElement).getByRole('dialog', {
+      name: DIALOG_NAME,
+    })
+    const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
+    const addButton = within(dialog).getByRole('button', {
+      name: 'Add Activity',
+    })
+    const cancel = cancelButton.getBoundingClientRect()
+    const add = addButton.getBoundingClientRect()
+    expect(add.top).toBe(cancel.top)
+    expect(add.left).toBeGreaterThanOrEqual(cancel.right)
+    // Each label fits on one line, so a button is no taller than its minimum
+    // height. A row that squeezed a label onto two lines would be taller.
+    for (const button of [cancelButton, addButton]) {
+      expect(button.getBoundingClientRect().height).toBe(
+        parseFloat(getComputedStyle(button).minHeight),
+      )
+    }
+  },
+}
+
+/**
+ * A footer label wider than the dialog at 200 % text on the narrowest phone
+ * breaks inside its button instead of losing letters (WCAG 1.4.4).
+ */
+export const LongFooterLabel = {
+  globals: { viewport: { value: 'mobile320', isRotated: false } },
+  parameters: {
+    docs: {
+      story: { inline: false, iframeHeight: 600 },
+      description: {
+        story:
+          'Open Modal with the root font size at 200 % on a 320px viewport and a one-word footer label wider than the dialog. The label breaks inside its button and the button stays inside the footer.',
+      },
+    },
+  },
+  render: () =>
+    openShellMarkup({
+      headingId: 'modal-heading-long-footer-label',
+      preamble: '<style>:root { font-size: 200%; }</style>',
+      footerHtml: `<div style="display: flex; gap: 0.5rem; justify-content: flex-end">
+            <button class="pathable-button pathable-button--outline" type="button">Cancel</button>
+            <button class="pathable-button" type="button">Acknowledgements</button>
+          </div>`,
+    }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await assertOpenShell(canvasElement)
+    const dialog = within(canvasElement).getByRole('dialog', {
+      name: DIALOG_NAME,
+    })
+    const footerBox = (
+      dialog.querySelector('.pathable-modal__footer') as HTMLElement
+    ).getBoundingClientRect()
+    const box = within(dialog)
+      .getByRole('button', { name: 'Acknowledgements' })
+      .getBoundingClientRect()
+    expect(box.left).toBeGreaterThanOrEqual(footerBox.left)
+    expect(box.right).toBeLessThanOrEqual(footerBox.right)
   },
 }
 

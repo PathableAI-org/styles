@@ -6,6 +6,18 @@ const config = {
     await page.setViewportSize({ width: 1280, height: 900 })
     const storyViewports = new Map([
       ['components-communication-modal--narrow', { width: 320, height: 700 }],
+      [
+        'components-communication-modal--increased-text',
+        { width: 375, height: 812 },
+      ],
+      [
+        'components-communication-modal--narrow-footer-row',
+        { width: 375, height: 812 },
+      ],
+      [
+        'components-communication-modal--long-footer-label',
+        { width: 320, height: 700 },
+      ],
     ])
     const storyViewport = storyViewports.get(context.id)
     if (storyViewport) {

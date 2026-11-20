@@ -67,6 +67,18 @@ const config = {
         { width: 320, height: 700 },
       ],
       [
+        'components-communication-modal--increased-text',
+        { width: 375, height: 812 },
+      ],
+      [
+        'components-communication-modal--narrow-footer-row',
+        { width: 375, height: 812 },
+      ],
+      [
+        'components-communication-modal--long-footer-label',
+        { width: 320, height: 700 },
+      ],
+      [
         'discovery-resource-card--list-layout-mobile',
         { width: 320, height: 700 },
       ],
