@@ -107,7 +107,7 @@ contract and axe checks need the built stylesheet:
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `pnpm check:html`     | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                  |
 | `pnpm check:contract` | The folder is a page slug, every `pathable-*` class is a class selector in `dist/styles.css`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
-| `pnpm check:axe`      | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `reports/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                         |
+| `pnpm check:axe`      | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                          |
 | `pnpm check`          | All three                                                                                                                                                                                                     |
 | `pnpm changed [base]` | Prints the folders `git diff <base>...HEAD -- fixtures/` touched ([`harness/changed.mjs`](harness/changed.mjs)); default base `origin/main`, `--all` for every folder                                         |
 | `pnpm test`           | Unit tests of the harness (`node --test`)                                                                                                                                                                     |
@@ -143,7 +143,7 @@ checked.
 
 The same run adds one check of its own, reported in the JSON report as
 `fixtures-unique-control-name`: it reads the fixture's accessibility tree
-(Playwright's ARIA snapshot) and fails when two buttons or two links share an
+(Chromium's computed accessible names, through the DevTools protocol) and fails when two buttons or two links share an
 accessible name, which holds ARIA rule 4. axe has no rule for it.
 
 ## What the checks do not catch

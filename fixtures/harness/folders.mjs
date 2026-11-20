@@ -13,7 +13,7 @@ export const fixturesRoot = resolve(import.meta.dirname, '..')
 export const HARNESS_DIR = 'harness'
 
 /** Folders that are never component folders (tooling output). */
-const IGNORED_DIRS = new Set([HARNESS_DIR, 'node_modules', 'reports'])
+const IGNORED_DIRS = new Set([HARNESS_DIR, 'node_modules'])
 
 /** Every component folder under fixtures/, sorted. */
 export function allFolders(root = fixturesRoot) {

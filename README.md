@@ -10,6 +10,7 @@ component library, and a Storybook for each. It is a pnpm workspace.
 | [`@pathableai/styles`](packages/styles/)                        | The source of truth for PathAble visual design: tokens, fonts, icons, compiled CSS, `.pathable-*` component and utility classes built on USWDS, and small JavaScript helpers. |
 | [`@pathableai/react`](packages/react/)                          | React components that wrap `@pathableai/styles`. It depends on the styles package and loads its CSS, so consumers install and import only `@pathableai/react`.                |
 | [`packages/storybook-contracts`](packages/storybook-contracts/) | Private, renderer-neutral behavior checks shared by both Storybooks.                                                                                                          |
+| [`fixtures`](fixtures/)                                         | Private canonical HTML for each static styles component, one file per state, and the checks that validate it.                                                                 |
 
 Both published packages are versioned independently with
 [Changesets](.changeset/README.md).

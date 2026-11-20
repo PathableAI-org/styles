@@ -32,6 +32,13 @@ jobs:
           install_playwright: 'true'
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
+      # CI Full's lint jobs filter on packages/, apps/ and scripts/, so they
+      # skip a pull request that changes only fixtures/.
+      - name: Lint fixtures
+        run: |
+          pnpm exec eslint fixtures --max-warnings=0
+          pnpm exec markdownlint fixtures --ignore-path .markdownlintignore
+          pnpm exec prettier --check fixtures
       - name: Test fixture harness
         run: pnpm --filter @pathableai/fixtures test
       - name: Select changed fixture folders
@@ -40,9 +47,11 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           BASE_REF: ${{ github.base_ref }}
         run: |
-          if [ "$EVENT_NAME" = "pull_request" ]; then
+          if [ "$EVENT_NAME" = "pull_request" ] &&
+            git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml; then
             FOLDERS=$(node fixtures/harness/changed.mjs "origin/$BASE_REF")
           else
+            # On main, or when this workflow changed, check every folder.
             FOLDERS=$(node fixtures/harness/changed.mjs --all)
           fi
           FOLDERS=$(echo $FOLDERS)

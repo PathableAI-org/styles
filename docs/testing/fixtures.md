@@ -43,7 +43,7 @@ Each check takes a list of component folders and defaults to every folder.
   `landmark-one-main` and `page-has-heading-one` are off. It also fails when
   two buttons or links in a fixture share an accessible name. Any violation
   fails; there is no exceptions mechanism. It writes a JSON report to
-  `fixtures/reports/axe-report.json`, or to `FIXTURES_AXE_REPORT`.
+  `fixtures/.cache/axe-report.json`, or to `FIXTURES_AXE_REPORT`.
 
 The contract and axe checks need the built stylesheet, so run
 `pnpm --filter @pathableai/styles build` first.

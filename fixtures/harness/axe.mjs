@@ -3,8 +3,10 @@
  *
  *   node harness/axe.mjs [folder …]    default: every component folder
  *
- * harness/page.html links /styles.css (served from @pathableai/styles/dist,
- * with the fonts and icons it references) and has one empty <main>. Each
+ * harness/page.html links /dist/styles.css. The @pathableai/styles package
+ * root is served at /, so the stylesheet's ../fonts and ../img references
+ * resolve to the package's own fonts and images; a missing asset fails the
+ * run. The page has one empty <main>. Each
  * fixture is injected into that <main> and checked at a desktop and a phone
  * viewport, because some parts (such as an activity row's trailing actions)
  * are only visible at one of them.
@@ -12,7 +14,7 @@
  * Only page-level rules are off, because a fixture is a fragment of a page,
  * not a page; fixtures/README.md gives the reason for each. Any violation
  * fails: there is no exceptions mechanism. A JSON report is written to
- * reports/axe-report.json (or the path in FIXTURES_AXE_REPORT).
+ * .cache/axe-report.json (or the path in FIXTURES_AXE_REPORT).
  */
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -42,20 +44,29 @@ export const VIEWPORTS = [
 const NAMED_CONTROL_ROLES = new Set(['button', 'link'])
 
 /**
- * Finds buttons and links that share an accessible name, from a Playwright
- * ARIA snapshot (lines such as `- button "View Intake assessment"`). axe has
+ * Finds buttons and links that share an accessible name. `controls` is a list
+ * of `{ role, name }`, as read from the browser's accessibility tree. axe has
  * no rule for this, so the harness checks it itself (README ARIA rule 4).
  */
-export function duplicateControlNames(snapshot) {
+export function duplicateControlNames(controls) {
   const seen = new Map()
-  for (const [, role, name] of snapshot.matchAll(
-    /^\s*- (\w+) "((?:[^"\\]|\\.)*)"/gmu,
-  )) {
+  for (const { role, name } of controls) {
     if (!NAMED_CONTROL_ROLES.has(role)) continue
     const key = `${role} "${name}"`
     seen.set(key, (seen.get(key) ?? 0) + 1)
   }
   return [...seen].filter(([, count]) => count > 1).map(([key]) => key)
+}
+
+/** The role and computed accessible name of every exposed node on the page. */
+async function accessibleNodes(cdp) {
+  const { nodes } = await cdp.send('Accessibility.getFullAXTree')
+  return nodes
+    .filter((node) => !node.ignored)
+    .map((node) => ({
+      role: node.role?.value ?? '',
+      name: node.name?.value ?? '',
+    }))
 }
 
 const ORIGIN = 'http://fixtures.test'
@@ -69,8 +80,11 @@ const CONTENT_TYPES = {
   '.ttf': 'font/ttf',
 }
 
-/** Serves page.html at / and everything else from the styles dist folder. */
-async function serve(context, distDir) {
+/**
+ * Serves page.html at / and everything else from the styles package root.
+ * Paths that are not found are added to `missing`.
+ */
+async function serve(context, packageDir, missing) {
   const pageHtml = readFileSync(join(import.meta.dirname, 'page.html'))
   await context.route(`${ORIGIN}/**`, async (route) => {
     const { pathname } = new URL(route.request().url())
@@ -78,8 +92,8 @@ async function serve(context, distDir) {
       await route.fulfill({ body: pageHtml, contentType: 'text/html' })
       return
     }
-    const file = normalize(join(distDir, decodeURIComponent(pathname)))
-    if (!file.startsWith(distDir)) {
+    const file = normalize(join(packageDir, decodeURIComponent(pathname)))
+    if (!file.startsWith(packageDir)) {
       await route.fulfill({ status: 403 })
       return
     }
@@ -89,13 +103,15 @@ async function serve(context, distDir) {
         contentType: CONTENT_TYPES[extname(file)] ?? 'application/octet-stream',
       })
     } catch {
+      missing.add(pathname)
       await route.fulfill({ status: 404 })
     }
   })
 }
 
 export async function runAxe(folders, root = fixturesRoot) {
-  const distDir = dirname(stylesCssPath())
+  const packageDir = dirname(dirname(stylesCssPath()))
+  const missing = new Set()
   const browser = await chromium.launch()
   const results = []
   let axeVersion
@@ -104,8 +120,9 @@ export async function runAxe(folders, root = fixturesRoot) {
       const context = await browser.newContext({
         viewport: { width: viewport.width, height: viewport.height },
       })
-      await serve(context, distDir)
+      await serve(context, packageDir, missing)
       const page = await context.newPage()
+      const cdp = await context.newCDPSession(page)
       await page.goto(`${ORIGIN}/`)
       const rules = await page.evaluate(
         () => document.styleSheets[0]?.cssRules.length ?? 0,
@@ -123,9 +140,7 @@ export async function runAxe(folders, root = fixturesRoot) {
             .disableRules(DISABLED_RULES)
             .analyze()
           axeVersion = axe.testEngine.version
-          const duplicates = duplicateControlNames(
-            await page.locator('#fixture').ariaSnapshot(),
-          )
+          const duplicates = duplicateControlNames(await accessibleNodes(cdp))
           const violations = axe.violations.map((violation) => ({
             id: violation.id,
             impact: violation.impact,
@@ -164,6 +179,11 @@ export async function runAxe(folders, root = fixturesRoot) {
   } finally {
     await browser.close()
   }
+  if (missing.size > 0) {
+    throw new Error(
+      `the stylesheet requested files that do not exist: ${[...missing].sort().join(', ')}`,
+    )
+  }
   return {
     axeVersion,
     disabledRules: DISABLED_RULES,
@@ -177,7 +197,7 @@ async function main(argv) {
   const report = await runAxe(folders)
   const reportPath = resolve(
     process.env.FIXTURES_AXE_REPORT ??
-      join(fixturesRoot, 'reports/axe-report.json'),
+      join(fixturesRoot, '.cache/axe-report.json'),
   )
   mkdirSync(dirname(reportPath), { recursive: true })
   writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`)
