@@ -136,6 +136,8 @@
   font-weight: var(--pathable-font-weight-bold);
   color: var(--pathable-color-text);
   margin: 0;
+  // A long word wraps at a large root font size instead of leaving the card.
+  overflow-wrap: anywhere;
 }
 
 .pathable-resource-card__provider {
@@ -162,6 +164,13 @@
   flex-wrap: wrap;
   gap: var(--pathable-space-1);
   margin-block-start: var(--pathable-space-1);
+
+  // A tag wider than the card wraps its text instead of leaving the card.
+  .pathable-tag {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
 
 .pathable-resource-card__metadata {
