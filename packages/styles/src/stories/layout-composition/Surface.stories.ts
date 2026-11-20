@@ -614,6 +614,9 @@ const tealStyles = `
     .teal-case .pathable-alert__body > * { max-width: 100%; margin: 0; box-sizing: border-box; }
     .teal-case .pathable-input { width: 100%; max-width: 100%; box-sizing: border-box; }
     .teal-case .pathable-button { max-width: 100%; white-space: normal; }
+    @media (max-width: 30rem) {
+      .teal-case .pathable-alert__body { padding: 3rem 0.5rem 0.5rem; }
+    }
   </style>`
 
 export const KeyboardFocusInTechTeal = {
