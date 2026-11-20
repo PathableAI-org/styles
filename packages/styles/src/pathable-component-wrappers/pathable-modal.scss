@@ -43,7 +43,9 @@
   left: 0;
   overflow: scroll;
   overflow-x: hidden;
-  padding: 1.5rem;
+  // Capped at its 100 % size (24px) so that increased text size does not eat
+  // the width of a narrow viewport.
+  padding: min(1.5rem, 24px);
   position: fixed;
   // Jump, rather than smooth-scroll, to focused controls so the open state
   // settles immediately.
@@ -72,7 +74,9 @@
   // the USWDS top value (2rem). Border-box keeps the padded box inside the
   // dialog, because USWDS also sets width: 100% here.
   box-sizing: border-box;
-  padding: var(--pathable-space-4);
+  // Capped at its 100 % size (32px), as the overlay padding is, so a
+  // 200 % root size leaves the heading and buttons room on a narrow dialog.
+  padding: min(var(--pathable-space-4), 32px);
 }
 
 .pathable-modal__heading {
@@ -92,6 +96,14 @@
   // dialog (increased text size, narrow viewport) instead of overflowing it.
   > * {
     flex-wrap: wrap;
+
+    // USWDS makes a button full width below 30em, which would put each button
+    // of the row on its own line even when they fit side by side. Size them to
+    // their labels and let the row wrap only when they no longer fit.
+    > .pathable-button {
+      flex: 0 1 auto;
+      width: auto;
+    }
   }
 
   // A button wider than the footer breaks its label rather than overflowing.
