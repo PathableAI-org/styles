@@ -8,11 +8,17 @@ name: Fixtures
 
 on:
   pull_request:
+    # Every input of the selection (INPUT_GLOBS in fixtures/harness/select.mjs);
+    # fixtures/harness/workflow.test.mjs fails when one is missing.
     paths:
       - 'fixtures/**'
-      - 'packages/styles/src/**/*.scss'
       - 'packages/styles/components/*.md'
+      - 'packages/styles/src/**/*.scss'
+      - 'packages/styles/src/**/*.sass'
+      - 'packages/styles/package.json'
       - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'patches/**'
       - '.github/workflows/fixtures.yml'
   push:
     branches:
