@@ -201,9 +201,12 @@ it('renders sr-only/inline', () => {
    (`aria-labelledby`, `aria-describedby`, `for`, `aria-controls` and the
    other ID-list attributes) to match, so `useId` output compares equal while
    each reference must still point at the same element; a duplicate ID or a
-   reference to a missing ID fails;
+   reference to a missing ID fails. A fragment link (`href="#id"`) to an
+   element in the markup is rewritten too; one to an ID outside it, such as a
+   skip link's target, is compared as written;
 4. collapses each run of whitespace inside text to one space, as rendering
-   does, so a fixture whose text Prettier wraps still matches, and renames
+   does (outside `pre` and `textarea`, and leaving non-breaking spaces alone),
+   so a fixture whose text Prettier wraps still matches, and renames
    `svg`, `script` and `style` elements, which `getDiffableHTML` would
    otherwise drop with their content;
 5. compares the two with `getDiffableHTML` from
@@ -237,8 +240,9 @@ The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
 - a fixture test passes anything other than two imported names to
   `expectToRenderFixture`, or skips a test. Commented-out calls do not count.
 
-It reports exported React components that no folder maps to yet as a notice,
-without failing. Only `sr-only` is mapped so far.
+It reports fixture folders the manifest does not map yet, and exported React
+components that no folder maps to yet, as a notice, without failing. Only
+`sr-only` is mapped so far.
 
 ### Running them
 

@@ -30,16 +30,17 @@ describe('fixture coverage', () => {
   it('has a fixture test or a "not offered" reason for every fixture of a mapped component', async ({
     annotate,
   }) => {
-    const { errors, unmappedComponents } = checkFixtureCoverage({
-      fixtures,
-      examples,
-      testSources,
-      manifest: fixtureManifest,
-      indexSource,
-    })
+    const { errors, unmappedComponents, unmappedFolders } =
+      checkFixtureCoverage({
+        fixtures,
+        examples,
+        testSources,
+        manifest: fixtureManifest,
+        indexSource,
+      })
 
     await annotate(
-      `React components with no fixture folder yet (not a failure): ${unmappedComponents.join(', ')}`,
+      `Not a failure. Fixture folders not mapped to a React component yet: ${unmappedFolders.join(', ') || 'none'}. React components with no fixture folder mapped yet: ${unmappedComponents.join(', ')}.`,
     )
     expect(errors).toEqual([])
   })
@@ -67,6 +68,7 @@ export type { SrOnlyProps } from './components/SrOnly/SrOnly.js'`,
     expect(checkFixtureCoverage(base)).toEqual({
       errors: [],
       unmappedComponents: ['Button', 'ButtonGroup'],
+      unmappedFolders: [],
     })
   })
 
@@ -184,6 +186,30 @@ export type { SrOnlyProps } from './components/SrOnly/SrOnly.js'`,
     expect(errors).toEqual([
       `${testFile} skips a test; a skipped comparison does not cover its fixture`,
     ])
+  })
+
+  it('fails when a fixture test is skipped through its options or context', () => {
+    for (const skipped of [
+      `it('later', { skip: true }, () => {})`,
+      `it('later', ({ skip }) => { skip() })`,
+    ]) {
+      const { errors } = checkFixtureCoverage({
+        ...base,
+        testSources: { [testFile]: `${srOnlyTest}\n${skipped}` },
+      })
+      expect(errors).toEqual([
+        `${testFile} skips a test; a skipped comparison does not cover its fixture`,
+      ])
+    }
+  })
+
+  it('reports fixture folders the manifest does not map', () => {
+    const { errors, unmappedFolders } = checkFixtureCoverage({
+      ...base,
+      fixtures: [...base.fixtures, 'activity-list/compact'],
+    })
+    expect(errors).toEqual([])
+    expect(unmappedFolders).toEqual(['activity-list'])
   })
 
   it('fails when a comparison passes inline JSX instead of an example', () => {

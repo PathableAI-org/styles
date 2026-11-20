@@ -10,12 +10,21 @@ const ID_REFERENCE_ATTRIBUTES = [
   'aria-describedby',
   'aria-details',
   'aria-errormessage',
+  'aria-flowto',
   'aria-labelledby',
   'aria-owns',
   'for',
+  'form',
   'headers',
   'list',
+  'popovertarget',
 ]
+
+/** Attributes whose value can be a fragment link, `#id`, to an element. */
+const FRAGMENT_ATTRIBUTES = ['href']
+
+/** Whitespace as HTML defines it. Unlike `\s`, it leaves `&nbsp;` alone. */
+const WHITESPACE = /[ \t\n\f\r]+/gu
 
 /**
  * Inline elements, whose start and end do not separate words. Every other
@@ -27,29 +36,39 @@ const INLINE_ELEMENTS = new Set([
   'b',
   'bdi',
   'bdo',
+  'button',
   'cite',
   'code',
   'data',
+  'del',
   'dfn',
   'em',
   'i',
+  'img',
+  'input',
+  'ins',
   'kbd',
   'label',
   'mark',
+  'meter',
+  'output',
+  'progress',
   'q',
   's',
   'samp',
+  'select',
   'small',
   'span',
   'strong',
   'sub',
   'sup',
+  'textarea',
   'time',
   'u',
   'var',
 ])
 
-export interface FixtureComparison {
+export interface NormalisedFixture {
   /** Markup with IDs renumbered, attributes and classes sorted, and whitespace normalised. */
   markup: string
   /** The words a reader meets, in order, with the spaces between them. */
@@ -66,12 +85,15 @@ function parse(html: string): DocumentFragment {
  * Renumber every `id` in document order and rewrite ID references to match,
  * so generated IDs such as `useId` output compare equal while each reference
  * must still point at the same element. Throws on a duplicate ID or a
- * reference to an ID that does not exist.
+ * reference to an ID that does not exist. An empty `id` is not an ID. A
+ * fragment link (`href="#id"`) to an element in the markup is rewritten too;
+ * one to an ID outside the markup, such as a skip link's target, stays as
+ * written and is compared literally.
  */
 function renumberIds(root: DocumentFragment): void {
   const renumbered = new Map<string, string>()
 
-  for (const element of root.querySelectorAll('[id]')) {
+  for (const element of root.querySelectorAll('[id]:not([id=""])')) {
     const id = element.id
     if (renumbered.has(id)) {
       throw new Error(`Duplicate id "${id}"`)
@@ -98,6 +120,15 @@ function renumberIds(root: DocumentFragment): void {
       element.setAttribute(attribute, rewritten.join(' '))
     }
   }
+
+  for (const attribute of FRAGMENT_ATTRIBUTES) {
+    for (const element of root.querySelectorAll(`[${attribute}^="#"]`)) {
+      const target = renumbered.get(
+        (element.getAttribute(attribute) ?? '').slice(1),
+      )
+      if (target !== undefined) element.setAttribute(attribute, `#${target}`)
+    }
+  }
 }
 
 /**
@@ -111,6 +142,7 @@ const DROPPED_ELEMENTS = ['script', 'style', 'svg']
  * Prepare a parsed fragment for `getDiffableHTML`: rename the elements it
  * would drop, and collapse whitespace runs inside text to one space, as
  * rendering does, so a fixture whose text Prettier wraps still matches.
+ * Text inside `pre` and `textarea` keeps its whitespace.
  */
 function normalise(root: DocumentFragment): void {
   for (const element of root.querySelectorAll(DROPPED_ELEMENTS.join(','))) {
@@ -123,7 +155,8 @@ function normalise(root: DocumentFragment): void {
   }
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    node.nodeValue = (node.nodeValue ?? '').replace(/\s+/gu, ' ')
+    if (node.parentElement?.closest('pre, textarea')) continue
+    node.nodeValue = (node.nodeValue ?? '').replace(WHITESPACE, ' ')
   }
 }
 
@@ -141,13 +174,13 @@ function readableText(root: DocumentFragment): string {
     if (separates) text += ' '
   }
   root.childNodes.forEach(visit)
-  return text.replace(/\s+/gu, ' ').trim()
+  return text.replace(WHITESPACE, ' ').trim()
 }
 
 /**
  * Parse an HTML fragment into the form fixture tests compare.
  */
-export function toFixtureComparison(html: string): FixtureComparison {
+export function toFixtureComparison(html: string): NormalisedFixture {
   const root = parse(html)
   renumberIds(root)
   normalise(root)

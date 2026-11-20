@@ -17,6 +17,8 @@ export interface FixtureCoverageResult {
   errors: string[]
   /** Exported React components that no fixture folder maps to yet. */
   unmappedComponents: string[]
+  /** Fixture folders that the manifest does not map to a component yet. */
+  unmappedFolders: string[]
 }
 
 const DEFAULT_IMPORT = /import\s+(\w+)\s+from\s+'([^']+)'/gu
@@ -25,6 +27,7 @@ const FIXTURE_SPECIFIER =
   /^@pathableai\/fixtures\/([a-z0-9-]+)\/([a-z0-9-]+)\.html\?raw$/u
 const EXAMPLE_SPECIFIER = /^\.\.\/examples\/([a-z0-9-]+)$/u
 const CALL = /expectToRenderFixture\(/gu
+const SKIPPED_BY_OPTION = /\{\s*skip\s*:\s*true\b|\bskip\s*\(/u
 const SKIPPED =
   /\b(?:it|test|describe)\.(?:skip|todo|fails|skipIf|runIf)\b|\bx(?:it|test|describe)\(/u
 const COMMENT = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu
@@ -41,7 +44,7 @@ export function exportedComponents(indexSource: string): string[] {
   )
 }
 
-export interface FixtureComparison {
+export interface FixturePair {
   /** The example compared, as `Component/state`. */
   example: string
   /** The fixture it is compared with, as `folder/state`. */
@@ -57,8 +60,8 @@ export interface FixtureComparison {
 export function comparisonsIn(
   file: string,
   source: string,
-): { comparisons: FixtureComparison[]; errors: string[] } {
-  const comparisons: FixtureComparison[] = []
+): { comparisons: FixturePair[]; errors: string[] } {
+  const comparisons: FixturePair[] = []
   const errors: string[] = []
   const component = TEST_FILE.exec(file)?.[1]
   if (component === undefined) {
@@ -69,7 +72,7 @@ export function comparisonsIn(
   }
   // Commented-out calls never run, so they do not count.
   const code = source.replace(COMMENT, '')
-  if (SKIPPED.test(code)) {
+  if (SKIPPED.test(code) || SKIPPED_BY_OPTION.test(code)) {
     errors.push(
       `${file} skips a test; a skipped comparison does not cover its fixture`,
     )
@@ -208,5 +211,8 @@ export function checkFixtureCoverage({
   return {
     errors,
     unmappedComponents: components.filter((name) => !mapped.has(name)),
+    unmappedFolders: [
+      ...new Set(fixtures.map((fixture) => fixture.split('/')[0])),
+    ].filter((folder) => !(folder in manifest)),
   }
 }

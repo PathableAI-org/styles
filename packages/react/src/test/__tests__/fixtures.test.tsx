@@ -135,4 +135,59 @@ describe('expectToRenderFixture', () => {
       '<p>\n  Three sessions are booked\n  for this week.\n</p>',
     )
   })
+
+  it('fails when a fragment link points at a different element', () => {
+    expect(() =>
+      expectToRenderFixture(
+        <>
+          <a href="#main-content">Skip</a>
+          <main id="main">Content</main>
+        </>,
+        '<a href="#main-content">Skip</a><main id="main-content">Content</main>',
+      ),
+    ).toThrow(/rendered markup/u)
+  })
+
+  it('compares a fragment link to an ID outside the markup literally', () => {
+    expectToRenderFixture(
+      <a href="#main-content">Skip to main content</a>,
+      '<a href="#main-content">Skip to main content</a>',
+    )
+  })
+
+  it('fails when an aria-flowto reference does not resolve', () => {
+    expect(() =>
+      expectToRenderFixture(
+        <p aria-flowto="next">Text</p>,
+        '<p aria-flowto="next">Text</p><p id="next">More</p>',
+      ),
+    ).toThrow(/refers to an id that is not in the markup/u)
+  })
+
+  it('ignores an empty id', () => {
+    expectToRenderFixture(<p id="">Text</p>, '<p>Text</p>')
+  })
+
+  it('keeps a non-breaking space distinct from a space', () => {
+    expect(() => expectToRenderFixture(<p>a b</p>, '<p>a&nbsp;b</p>')).toThrow(
+      /rendered markup/u,
+    )
+  })
+
+  it('keeps whitespace inside pre', () => {
+    expect(() =>
+      expectToRenderFixture(<pre>a b</pre>, '<pre>a\nb</pre>'),
+    ).toThrow(/rendered markup/u)
+  })
+
+  it('fails when a space before an inline button is missing', () => {
+    expect(() =>
+      expectToRenderFixture(
+        <p>
+          Read<button type="button">more</button>
+        </p>,
+        '<p>Read <button type="button">more</button></p>',
+      ),
+    ).toThrow(/rendered text/u)
+  })
 })

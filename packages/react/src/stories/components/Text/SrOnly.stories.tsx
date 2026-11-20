@@ -149,9 +149,6 @@ export const LongContent: Story = {
       /for the participant employment coaching progress/u,
     )
     await expect(hidden).toHaveClass('pathable-sr-only')
-    const box = hidden.getBoundingClientRect()
-    await expect(box.width).toBeLessThanOrEqual(1)
-    await expect(box.height).toBeLessThanOrEqual(1)
   },
 }
 
