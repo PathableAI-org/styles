@@ -86,3 +86,17 @@ test('does not count a regenerated component page as a guidance review', () => {
     ['public React components or exports'],
   )
 })
+
+test('counts an edited source component page as a guidance update', () => {
+  const result = analyzeChangedPaths([
+    'packages/react/src/components/SrOnly/SrOnly.tsx',
+    'components/sr-only.md',
+    'packages/react/agent-guidance/pathable-react/references/components/SrOnly.md',
+  ])
+
+  assert.equal(result.guidanceChanged, true)
+  assert.equal(
+    analyzeChangedPaths(['components/README.md']).guidanceChanged,
+    false,
+  )
+})

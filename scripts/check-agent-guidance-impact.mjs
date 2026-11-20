@@ -64,13 +64,16 @@ function isIgnored(path) {
 /**
  * Component pages that scripts/component-docs generates from the source pages,
  * fixtures and example modules. Regenerating one is mechanical, so it does
- * not count as a person reviewing the guidance.
+ * not count as a person reviewing the guidance; editing the source page it is
+ * built from (components/<slug>.md) does.
  */
 const generatedGuidance =
   'packages/react/agent-guidance/pathable-react/references/components/'
+const sourcePage = /^components\/(?!README\.md$)[^/]+\.md$/u
 
 function isGuidance(path) {
   if (path.startsWith(generatedGuidance)) return false
+  if (sourcePage.test(path)) return true
   return guidancePaths.some((candidate) =>
     candidate.endsWith('/') ? path.startsWith(candidate) : path === candidate,
   )
