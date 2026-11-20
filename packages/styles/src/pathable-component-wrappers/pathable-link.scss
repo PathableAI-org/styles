@@ -13,6 +13,17 @@
   @extend .usa-link;
 }
 
+// The USWDS focus outline is Bright Blue Brooks, which is under 3:1 on
+// Intelligent Jade and Shilling Silver. It is drawn on the surface behind the
+// link, so it takes that surface's ring colour. The rule comes after the
+// extended USWDS :focus rule and has the same specificity.
+.pathable-link:focus {
+  outline-color: var(
+    --pathable-surface-focus-ring,
+    var(--pathable-color-focus-ring)
+  );
+}
+
 .pathable-link--external {
   @extend .usa-link--external;
 }
