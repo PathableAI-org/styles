@@ -140,6 +140,7 @@ import {
   SiteAlert,
   Skeleton,
   Skipnav,
+  SrOnly,
   StepIndicator,
   SummaryBox,
   Table,
@@ -1444,6 +1445,35 @@ Any other standard anchor attributes, including `id`, `aria-*`, `data-*`, and ev
 #### Skipnav Accessibility
 
 Place Skipnav near the beginning of the page or application shell. Point `href` to a unique `id` on the page's main content landmark, for example `<main id="main-content">`. Provide meaningful link text and keep the target landmark present in the rendered page.
+
+### SrOnly Props
+
+`SrOnly` renders text that is hidden visually but still read by screen readers. It wraps a native `<span>` with the `pathable-sr-only` class.
+
+| Prop      | Type                                                    | Default  | Description                                                   |
+| --------- | ------------------------------------------------------- | -------- | ------------------------------------------------------------- |
+| children  | `React.ReactNode`                                       | —        | The hidden text.                                              |
+| as        | `'span' \| 'p' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'span'` | The element to render. Only non-focusable text elements.      |
+| className | `string`                                                | —        | Additional CSS class names appended after `pathable-sr-only`. |
+
+Any other standard attributes, including `id`, `aria-*`, `data-*`, and event handlers, are forwarded to the rendered element. `tabIndex`, `autoFocus` and `contentEditable` are not accepted, because they would make the hidden element focusable.
+
+```tsx
+<a href="/participants/42/edit">
+  Edit<SrOnly> Jordan Lee's profile</SrOnly>
+</a>
+
+<section aria-labelledby="upcoming-sessions">
+  <SrOnly as="h2" id="upcoming-sessions">
+    Upcoming sessions
+  </SrOnly>
+  <p>Three sessions are booked for this week.</p>
+</section>
+```
+
+#### SrOnly Accessibility
+
+Use SrOnly for context sighted users get from the layout: the row name after repeated "Edit" links, status text beside an indicator hidden from assistive technology, or a heading for a region whose purpose is clear visually. Start hidden text with a space when it continues a visible phrase. Do not put links, buttons or other focusable content inside, because it stays hidden when focused; use `Skipnav` for a skip link. Hidden text must agree with what the page shows.
 
 ### Select Props
 
