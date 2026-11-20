@@ -581,3 +581,12 @@ test('counts an example placeholder as the one html example', () => {
   const { page: rendered } = renderForCheck(page(two), sources())
   assert.ok(includes(checkPage(rendered, facts()), 'expected one html example'))
 })
+
+test('does not count an example placeholder inside any kind of code block', () => {
+  const fenced = converted.replace(
+    '## States',
+    '~~~md\n<!-- example: plain -->\n~~~\n\n## States',
+  )
+  const { page: rendered } = renderForCheck(page(fenced), sources())
+  assert.deepEqual(checkPage(rendered, facts()), [])
+})

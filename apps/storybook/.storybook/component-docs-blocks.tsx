@@ -25,7 +25,7 @@ type Tab = {
 }
 
 /** The tabs a story's sources give: HTML always, React when there is one. */
-export function tabsFor(sources: Sources): Tab[] {
+function tabsFor(sources: Sources): Tab[] {
   const tabs: Tab[] = [
     { id: 'html', label: 'HTML', language: 'html', code: sources.html },
   ]
@@ -43,7 +43,7 @@ export function tabsFor(sources: Sources): Tab[] {
 const tabListStyle = {
   display: 'flex',
   gap: '0.25rem',
-  borderBottom: '1px solid #d6d7d9',
+  borderBottom: '1px solid var(--pathable-color-border)',
   marginTop: '-1rem',
 }
 
@@ -51,8 +51,8 @@ const tabStyle = (selected: boolean) => ({
   appearance: 'none' as const,
   background: 'none',
   border: 0,
-  borderBottom: `3px solid ${selected ? '#1b1b1b' : 'transparent'}`,
-  color: '#1b1b1b',
+  borderBottom: `3px solid ${selected ? 'var(--pathable-color-text)' : 'transparent'}`,
+  color: 'var(--pathable-color-text)',
   cursor: 'pointer',
   font: 'inherit',
   fontWeight: selected ? 700 : 400,
@@ -138,7 +138,7 @@ export function PackageNote({
   return (
     <div
       style={{
-        borderLeft: '4px solid #a9aeb1',
+        borderLeft: '4px solid var(--pathable-color-border)',
         margin: '1rem 0',
         paddingLeft: '1rem',
       }}

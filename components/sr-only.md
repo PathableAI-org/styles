@@ -44,16 +44,30 @@ which renders a `<span>` with the `pathable-sr-only` class.
 - A control whose visible text is ambiguous out of context, such as several
   "Edit" links in a table: add the row's name in hidden text.
 - Status text for assistive technology beside a visual indicator that is
-  hidden from it, such as a `pathable-save-status`.
+  hidden from it, such as a save status.
 - A heading for a region whose purpose is obvious visually.
 
 Use something else when:
+
+<!-- package: styles -->
 
 - the content should be hidden from everyone: use the `hidden` attribute;
 - the element can receive focus, such as a skip link: use `pathable-skipnav`,
   which is shown when focused;
 - sighted users would also benefit from the text: show it, for example with
   `pathable-label` or `pathable-hint`.
+
+<!-- /package -->
+
+<!-- package: react -->
+
+- the content should be hidden from everyone: use the `hidden` attribute;
+- the element can receive focus, such as a skip link: use `Skipnav`, which is
+  shown when focused;
+- sighted users would also benefit from the text: show it, for example with
+  `Label` or `Hint`.
+
+<!-- /package -->
 
 ## Example
 
@@ -130,4 +144,4 @@ wrapping inside the 1px box, so a screen reader reads it as one run.
 - Accessibility. Hidden text must agree with what the page shows, and must not
   hide information sighted users need.
 - The wording, in the user's language, and keeping it short.
-- Not using the class on focusable elements.
+- Keeping focusable elements out of hidden text.

@@ -376,3 +376,44 @@ describe('component docs: the React fixture manifest', () => {
     assert.deepEqual(coverage.get('sr-only')?.notOffered, {})
   })
 })
+
+describe('component docs: pre-push review fixes', () => {
+  it('lets a styles block show a state React does not offer', () => {
+    const partial = {
+      fixtures,
+      examples: new Map([['loud', examples.get('loud')]]),
+      component: 'Widget',
+      notOffered: { quiet: 'not in React' },
+    }
+    const body =
+      '# Widget\n\n<!-- package: styles -->\n\n<!-- example: quiet -->\n\n<!-- /package -->\n\n<!-- example: loud -->\n'
+    assert.ok(render(page(body), 'react', partial).includes('<W loud>'))
+    assert.ok(render(page(body), 'styles', partial).includes('w">Hi'))
+  })
+
+  it('makes no React page from a page without placeholders', () => {
+    assert.match(
+      problems(() =>
+        render(page('# Widget\n\n```html\n<p>Hi</p>\n```\n'), 'react', covered),
+      )[0] ?? '',
+      /must take its examples from the fixtures/u,
+    )
+  })
+
+  it('cites source line numbers in Storybook problems', () => {
+    assert.match(
+      problems(() =>
+        render(
+          page('# Widget\n\n<!-- example: gone -->\n'),
+          'storybook',
+          covered,
+        ),
+      )[0] ?? '',
+      /^line 8:/u,
+    )
+  })
+
+  it('gives a state that starts with a digit a valid story name', () => {
+    assert.equal(storyName('2-up'), 'State2Up')
+  })
+})

@@ -185,17 +185,15 @@ export function segment(markdown) {
   return root
 }
 
-/** Every example and examples placeholder, in or out of package blocks. */
-export function exampleSegments(segments) {
-  return segments
-    .flatMap((item) =>
-      item.type === 'package' ? exampleSegments(item.segments) : [item],
-    )
-    .filter((item) => item.type === 'example' || item.type === 'examples')
-}
-
-/** Whether the page has any placeholder, which makes it a converted page. */
-export function isConverted(markdown) {
-  const { placeholders, problems } = findPlaceholders(markdown)
-  return placeholders.length > 0 || problems.length > 0
+/**
+ * The example and examples placeholders a target shows: those outside
+ * package blocks and those in the target's own blocks.
+ */
+export function exampleSegments(segments, target) {
+  return segments.flatMap((item) => {
+    if (item.type === 'package') {
+      return item.name === target ? exampleSegments(item.segments, target) : []
+    }
+    return item.type === 'example' || item.type === 'examples' ? [item] : []
+  })
 }

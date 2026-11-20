@@ -93,9 +93,4 @@ export async function readCoverage(manifest = fixtureManifestPath) {
   )
 }
 
-export {
-  fixturesDir,
-  reactComponentsDir,
-  repoRoot,
-  sourcePagesDir,
-} from './paths.mjs'
+export { fixturesDir, reactComponentsDir, repoRoot } from './paths.mjs'

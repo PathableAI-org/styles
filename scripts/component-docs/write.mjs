@@ -19,6 +19,8 @@ import {
   readPages,
 } from '../../packages/styles/scripts/component-pages.mjs'
 
+import prettier from 'prettier'
+
 import { render } from './render.mjs'
 import { ComponentDocsError } from './segments.mjs'
 import {
@@ -53,7 +55,9 @@ export async function pageSources(page, coverage) {
  */
 export async function renderTarget(target, { pages, coverage } = {}) {
   pages ??= await readPages()
-  coverage ??= await readCoverage()
+  // The styles pages use only the fixtures, so the styles build reads nothing
+  // from the React package.
+  coverage ??= target === 'styles' ? new Map() : await readCoverage()
   const files = new Map()
   const problems = []
 
@@ -64,7 +68,10 @@ export async function renderTarget(target, { pages, coverage } = {}) {
         files.set(page.file, render(page, 'styles', sources))
       } else if (target === 'react') {
         if (sources.component) {
-          files.set(`${sources.component}.md`, render(page, 'react', sources))
+          files.set(
+            `${sources.component}.md`,
+            await formatMarkdown(render(page, 'react', sources)),
+          )
         }
       } else if (target === 'storybook') {
         if (sources.fixtures.size > 0) {
@@ -87,10 +94,24 @@ export async function renderTarget(target, { pages, coverage } = {}) {
     const covered = [...coverage]
       .filter(([slug]) => pages.some((page) => page.slug === slug))
       .map(([slug, { component }]) => [slug, component])
-    files.set(REACT_INDEX, renderReactIndex(pages, covered))
+    files.set(
+      REACT_INDEX,
+      await formatMarkdown(renderReactIndex(pages, covered)),
+    )
   }
   if (problems.length > 0) throw new ComponentDocsError(problems)
   return files
+}
+
+/**
+ * Formats committed Markdown with the repository's Prettier configuration, so
+ * the commit hook's Prettier run leaves it unchanged and the drift check
+ * (`react --check`) compares like with like.
+ */
+async function formatMarkdown(markdown) {
+  const filepath = join(reactOutputDir, 'page.md')
+  const options = (await prettier.resolveConfig(filepath)) ?? {}
+  return prettier.format(markdown, { ...options, filepath })
 }
 
 /** The index the React guidance's SKILL.md links to. */

@@ -68,7 +68,11 @@ import postcss from 'postcss'
 import selectorParser from 'postcss-selector-parser'
 
 import { render } from '../../../scripts/component-docs/render.mjs'
-import { ComponentDocsError } from '../../../scripts/component-docs/segments.mjs'
+import {
+  ComponentDocsError,
+  exampleSegments,
+  segment,
+} from '../../../scripts/component-docs/segments.mjs'
 import { readCoverage } from '../../../scripts/component-docs/sources.mjs'
 import { pageSources } from '../../../scripts/component-docs/write.mjs'
 
@@ -342,13 +346,14 @@ function checkVariants(page, css, errors) {
   }
 }
 
-/** Example placeholders (`<!-- example: … -->`) in a source page. */
+/**
+ * The `<!-- example: … -->` placeholders the styles page shows, read by the
+ * generator's own parser, so a placeholder in a code block does not count.
+ */
 const examplePlaceholders = (markdown) =>
-  [
-    ...markdown
-      .replace(/^```[\s\S]*?^```$/gmu, '')
-      .matchAll(/^<!--\s*example:/gmu),
-  ].length
+  exampleSegments(segment(markdown), 'styles').filter(
+    (item) => item.type === 'example',
+  ).length
 
 function checkNames(page, css, errors) {
   // A page has one minimal example: a literal html block, or a placeholder
@@ -421,11 +426,8 @@ export function renderForCheck(page, sources) {
     return { errors: error.problems }
   }
   const converted = markdown !== page.markdown
-  if (sources.component && !converted) {
-    errors.push(
-      `the React package covers this component (${sources.component}), so the page must take its examples from the fixtures through placeholders`,
-    )
-  }
+  // A page the React fixture manifest lists but that has no placeholders
+  // fails the React render above.
   if (converted) {
     const shown = new Set(fencedBlocks(parsePage(markdown).body, 'html'))
     for (const [state, fixture] of sources.fixtures) {

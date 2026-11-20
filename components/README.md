@@ -86,14 +86,19 @@ Rules:
 - Any other HTML comment is left in the page as it is.
 
 A converted page must show every fixture in its folder: use
-`<!-- examples -->` in a **States** section. A page whose component the React
-package covers (it has example modules for the folder) must be converted, and
-every state it shows needs an example module. The check above and the build
-fail on a placeholder that names a missing fixture or example, and on a
-malformed package block.
+`<!-- examples -->` in a **States** section. The React package covers a
+component when its fixture manifest
+([`packages/react/src/test/fixture-manifest.ts`](../packages/react/src/test/fixture-manifest.ts))
+lists the folder. Only a covered component gets a React page, and its page
+must be converted: every state the React page shows needs an example module.
+A state the manifest marks `notOffered` is left out of the React page's
+`<!-- examples -->`; to show it on its own, put its `<!-- example: … -->` in a
+styles package block. The check above and the build fail on a placeholder that
+names a missing fixture or example, and on a malformed package block.
 
 A page with no placeholder is copied to the styles package unchanged, byte for
-byte, and gets no React page.
+byte. The styles build reads only the source pages and the fixtures, never the
+React package.
 
 ## The Storybook page
 

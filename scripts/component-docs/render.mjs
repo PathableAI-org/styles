@@ -28,12 +28,18 @@ export const TARGETS = ['styles', 'react', 'storybook']
 export const stateTitle = (state) =>
   state.charAt(0).toUpperCase() + state.slice(1).replace(/-/gu, ' ')
 
-/** `no-actions` to `NoActions`, for a story export name. */
-export const storyName = (state) =>
-  state
+/**
+ * `no-actions` to `NoActions`, for a story export name. A state may start
+ * with a digit (`2-up`), which an identifier cannot, so such a name gets a
+ * `State` prefix (`State2Up`).
+ */
+export const storyName = (state) => {
+  const name = state
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join('')
+  return /^[0-9]/u.test(name) ? `State${name}` : name
+}
 
 /** A fenced code block whose fence is longer than any backtick run inside. */
 export function fence(language, code) {
@@ -101,13 +107,18 @@ function resolveStates(item, slug, target, sources, problems) {
   return states.filter((state) => sources.fixtures.has(state))
 }
 
-/** Every placeholder resolves, or ComponentDocsError lists what does not. */
+/**
+ * Every placeholder the target shows resolves, or ComponentDocsError lists
+ * what does not. A Markdown target skips the other package's blocks, which it
+ * does not show; Storybook shows both.
+ */
 function resolveAll(segments, slug, target, sources) {
   const problems = []
   const resolved = new Map()
+  const shows = (block) => target === 'storybook' || block.name === target
   const visit = (items) => {
     for (const item of items) {
-      if (item.type === 'package') visit(item.segments)
+      if (item.type === 'package' && shows(item)) visit(item.segments)
       if (item.type === 'example' || item.type === 'examples') {
         resolved.set(item, resolveStates(item, slug, target, sources, problems))
       }
@@ -129,7 +140,13 @@ const trimNewlines = (text) => text.replace(/^\n+|\n+$/gu, '')
 function renderMarkdown(page, target, sources) {
   const segments = segment(page.markdown)
   if (findPlaceholders(page.markdown).placeholders.length === 0) {
-    if (target === 'react') resolveAll(segments, page.slug, target, sources)
+    if (target === 'react') {
+      // A React page made from an unconverted page would show HTML examples.
+      resolveAll(segments, page.slug, target, sources)
+      throw new ComponentDocsError([
+        `the React fixture manifest lists "${page.slug}", so the page must take its examples from the fixtures through placeholders`,
+      ])
+    }
     return page.markdown
   }
   const resolved = resolveAll(segments, page.slug, target, sources)
@@ -192,7 +209,12 @@ function renderStories(page, sources) {
 
 /** The MDX page: the shared prose, with each example as a live preview. */
 function renderMdx(page, name, sources) {
-  const segments = segment(stripFrontMatter(page.markdown))
+  // Segment the whole page, so problems cite source line numbers, then drop
+  // the front matter from the first segment; it is shown at the end instead.
+  const segments = segment(page.markdown)
+  if (segments[0]?.type === 'markdown') {
+    segments[0] = { ...segments[0], text: stripFrontMatter(segments[0].text) }
+  }
   const resolved = resolveAll(segments, page.slug, 'storybook', sources)
 
   const markdown = (text) =>
