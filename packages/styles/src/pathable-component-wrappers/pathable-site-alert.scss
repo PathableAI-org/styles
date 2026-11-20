@@ -11,6 +11,7 @@
 @use 'usa-site-alert/src/styles';
 
 .pathable-site-alert {
+  font-family: var(--pathable-font-body);
   @extend .usa-site-alert;
 }
 

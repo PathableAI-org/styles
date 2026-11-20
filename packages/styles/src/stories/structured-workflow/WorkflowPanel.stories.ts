@@ -1,3 +1,4 @@
+import { expectBodyFont } from '../shared/body-font'
 export default {
   title: 'Structured Workflow/Workflow Panel',
   tags: ['autodocs'],
@@ -33,6 +34,13 @@ export const Default = {
       </div>
     </div>
   `,
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) =>
+    expectBodyFont(canvasElement, [
+      '.pathable-workflow-panel__context-header',
+      '.pathable-workflow-panel__objective',
+      '.pathable-workflow-panel__current-activity',
+      '.pathable-workflow-panel__prompt',
+    ]),
 }
 
 export const Loading = {

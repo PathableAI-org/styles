@@ -1,4 +1,5 @@
 import { expect, within } from 'storybook/test'
+import { expectBodyFont } from '../../shared/body-font'
 
 const renderUnevenHints = (className = 'pathable-form-row') => `
   <form aria-label="Participant filters">
@@ -263,6 +264,7 @@ export const UnevenErrors = {
     await expect(email).toHaveAccessibleDescription(
       'Enter a valid email address.',
     )
+    await expectBodyFont(canvasElement, ['.pathable-error-message'])
   },
 }
 

@@ -9,6 +9,7 @@
 // --- Compact Panel ---
 
 .pathable-page-error {
+  font-family: var(--pathable-font-body);
   display: flex;
   flex-direction: column;
   gap: var(--pathable-space-2);
