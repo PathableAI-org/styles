@@ -1,8 +1,9 @@
 name: Fixtures
 
 # Validates the canonical HTML fixtures in fixtures/. Not a required check.
-# On a pull request it checks the fixture folders whose files changed and the
-# folders a compiled-CSS change affects; on main it checks every folder.
+# On a pull request it checks the fixture folders whose files changed, the
+# folders a compiled-CSS change affects and the folders whose component page
+# changed; on main it checks every folder.
 # See docs/testing/fixtures.md.
 
 on:
@@ -49,9 +50,10 @@ jobs:
           pnpm exec prettier --check fixtures
       - name: Test fixture harness
         run: pnpm --filter @pathableai/fixtures test
-      # The union of the folders whose files changed and the folders the
-      # compiled-CSS diff affects, with a job summary saying why each was
-      # selected. Writes the folders and fixtures_changed outputs.
+      # The union of the folders whose files changed, the folders the
+      # compiled-CSS diff affects and the folders whose component page
+      # changed, with a job summary saying why each was selected. Writes the
+      # folders and fixtures_changed outputs.
       - name: Select fixture folders
         id: changed
         env:
