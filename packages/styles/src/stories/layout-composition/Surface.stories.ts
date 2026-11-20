@@ -97,10 +97,14 @@ type FocusCase = {
   label: string
   ring: string
   dark?: boolean
-  /** Issue tracking a background where the ring is known to be under 3:1. */
-  lowContrastIssue?: string
   /** Extra classes on the button and icon button themselves. */
   controlClass?: string
+  /** Inline style on the nested container, for text colour on Jade. */
+  innerStyle?: string
+  /** Wrap the controls in a .pathable-alert__body, as real alert markup does. */
+  alertBody?: boolean
+  /** Inline style on the .pathable-alert__body, for its text colour. */
+  bodyStyle?: string
 }
 
 // Top-level surfaces also get a select and a textarea; nested cases test which
@@ -219,9 +223,8 @@ const nestedCases: (FocusCase & { outer: string; inner: string })[] = [
     label: 'Link background in subtle',
     outer: 'pathable-surface pathable-surface--tone-subtle',
     inner: 'pathable-bg-link pathable-text-white',
-    ring: '--pathable-color-focus-ring',
+    ring: '--pathable-color-surface',
     dark: true,
-    lowContrastIssue: '#382',
   },
   {
     label: 'Dark section in inset',
@@ -262,9 +265,68 @@ const utilitiesOnControls: FocusCase & { outer: string; inner: string } = {
   outer: 'pathable-surface pathable-surface--brand',
   inner: 'pathable-surface pathable-surface--base',
   ring: '--pathable-color-on-accent',
-  controlClass: 'pathable-bg-primary',
+  controlClass: 'pathable-bg-primary pathable-text-white',
 }
 nestedCases.push(utilitiesOnControls)
+
+// Tabs to the base controls of each case, and to the select and textarea of the
+// top-level surfaces, and checks the outline colour and its 3:1 contrast with
+// the background behind the control.
+const expectFocusRings = async (
+  canvasElement: HTMLElement,
+  cases: (FocusCase & { variant?: string })[],
+) => {
+  const canvas = within(canvasElement)
+  const view = canvasElement.ownerDocument.defaultView
+
+  if (!view) throw new Error('Surface story window is unavailable')
+
+  const baseControls = ({ label, ring }: FocusCase) => [
+    {
+      control: canvas.getByRole('button', { name: `Save on ${label}` }),
+      ring,
+    },
+    {
+      control: canvas.getByRole('button', { name: `Close on ${label}` }),
+      ring,
+    },
+    {
+      control: canvas.getByRole('textbox', { name: `Note on ${label}` }),
+      ring,
+    },
+  ]
+  const fieldControls = ({ label, ring }: FocusCase) => [
+    {
+      control: canvas.getByRole('combobox', { name: `Goal on ${label}` }),
+      ring,
+    },
+    {
+      control: canvas.getByRole('textbox', { name: `Details on ${label}` }),
+      ring,
+    },
+  ]
+  const controls = cases.flatMap((focusCase) => [
+    ...baseControls(focusCase),
+    ...('variant' in focusCase ? fieldControls(focusCase) : []),
+  ])
+
+  for (const [index, { control, ring }] of controls.entries()) {
+    await expectKeyboardFocusIndicator(canvasElement, control, {
+      width: 2,
+      color: `var(${ring})`,
+      fromCurrentFocus: index > 0,
+    })
+
+    const container = control.parentElement
+    if (!container) throw new Error('Focus story control has no parent')
+    await expect(
+      contrastRatio(
+        view.getComputedStyle(control).outlineColor,
+        findOpaqueBackground(container, view),
+      ),
+    ).toBeGreaterThanOrEqual(3)
+  }
+}
 
 const focusCases = [...focusSurfaces, ...nestedCases]
 
@@ -417,7 +479,7 @@ export const KeyboardFocusOnSurfaces = {
     docs: {
       description: {
         story:
-          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background, except on Tech Teal (`pathable-bg-link`), where Bright Blue Brooks is 2.6:1 (#382). In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline on the Silver around it, in that surface's ring, `--pathable-color-text`.",
+          "A `.pathable-button`, a `.pathable-icon-button`, a `.pathable-input`, a `.pathable-select` and a `.pathable-textarea` on each surface variant with a background of its own, and a button, icon button and input in thirteen nested cases. Twelve put a surface, a dark utility or a dark component container inside a surface that sets a different ring, and one puts the dark utility on the controls themselves, which keep the surface's ring; `--base` is transparent and inherits its parent's. The focus outline is drawn on the background behind the control, so each of these sets `--pathable-surface-focus-ring` for the shared `state-focus` ring: `--pathable-color-on-accent` on Intelligent Jade, `--pathable-color-text` on Shilling Silver, and `--pathable-color-focus-ring` (Bright Blue Brooks) on white and on the dark containers, except Tech Teal (`pathable-bg-link`), where it is `--pathable-color-surface` (white) because Bright Blue Brooks is 2.6:1 there; the light containers nested in Tech Teal have their own story, `KeyboardFocusInTechTeal`. The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background. In the interactive case the inner `.pathable-surface--interactive` also draws its own `:focus-within` outline on the Silver around it, in that surface's ring, `--pathable-color-text`.",
       },
     },
   },
@@ -435,7 +497,7 @@ export const KeyboardFocusOnSurfaces = {
         .map(
           (focusCase) => `
         <div class="${focusCase.outer} pathable-padding-3" style="${blockStyle}">
-          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm pathable-padding-2">
+          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm pathable-padding-2" style="${focusCase.innerStyle ?? ''}">
             ${focusControls(focusCase)}
           </div>
         </div>`,
@@ -444,65 +506,149 @@ export const KeyboardFocusOnSurfaces = {
     </div>
   `,
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const canvas = within(canvasElement)
-    const view = canvasElement.ownerDocument.defaultView
+    await expectFocusRings(canvasElement, focusCases)
+  },
+}
 
-    if (!view) throw new Error('Surface story window is unavailable')
+// Containers nested in Tech Teal (`pathable-bg-link`), which sets a white ring.
+// Each light container resets or sets its own, and each case gets a full-width
+// block so a narrow viewport or large text cannot squeeze it.
+const tealCases: (FocusCase & { outer: string; inner: string })[] = [
+  {
+    label: 'Surface background in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-bg-surface pathable-text-primary',
+    ring: '--pathable-color-focus-ring',
+  },
+  {
+    label: 'Base background in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-bg-base pathable-text-primary',
+    ring: '--pathable-color-text',
+  },
+  {
+    label: 'Accent background in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-bg-accent',
+    innerStyle: 'color: var(--pathable-color-on-accent)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Success background in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-bg-success',
+    innerStyle: 'color: var(--pathable-color-on-accent)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Warning alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert pathable-alert--warning',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Error alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert pathable-alert--error',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Emergency alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert pathable-alert--emergency',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-surface)',
+    dark: true,
+    ring: '--pathable-color-status-danger-text',
+  },
+  {
+    label: 'Info alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert pathable-alert--info',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Plain alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Slim alert in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-alert pathable-alert--slim',
+    alertBody: true,
+    bodyStyle: 'color: var(--pathable-color-text)',
+    ring: '--pathable-color-on-accent',
+  },
+  {
+    label: 'Base background in subtle in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner:
+      'pathable-surface pathable-surface--tone-subtle pathable-bg-base pathable-text-primary',
+    ring: '--pathable-color-text',
+  },
+  {
+    label: 'Card container in link',
+    outer: 'pathable-bg-link pathable-text-white',
+    inner: 'pathable-card__container',
+    innerStyle: 'height: auto',
+    ring: '--pathable-color-focus-ring',
+  },
+]
 
-    const baseControls = ({ label, ring, lowContrastIssue }: FocusCase) => [
-      {
-        control: canvas.getByRole('button', { name: `Save on ${label}` }),
-        ring,
-        lowContrastIssue,
-      },
-      {
-        control: canvas.getByRole('button', { name: `Close on ${label}` }),
-        ring,
-        lowContrastIssue,
-      },
-      {
-        control: canvas.getByRole('textbox', { name: `Note on ${label}` }),
-        ring,
-        lowContrastIssue,
-      },
-    ]
-    const fieldControls = ({ label, ring }: FocusCase) => [
-      {
-        control: canvas.getByRole('combobox', { name: `Goal on ${label}` }),
-        ring,
-      },
-      {
-        control: canvas.getByRole('textbox', { name: `Details on ${label}` }),
-        ring,
-      },
-    ]
-    const controls = focusCases.flatMap((focusCase) => [
-      ...baseControls(focusCase),
-      ...('variant' in focusCase ? fieldControls(focusCase) : []),
-    ])
-
-    for (const [
-      index,
-      { control, ring, lowContrastIssue },
-    ] of controls.entries()) {
-      await expectKeyboardFocusIndicator(canvasElement, control, {
-        width: 2,
-        color: `var(${ring})`,
-        fromCurrentFocus: index > 0,
-      })
-
-      // A known gap is tracked in its issue instead of asserted here.
-      if (lowContrastIssue) continue
-
-      const container = control.parentElement
-      if (!container) throw new Error('Focus story control has no parent')
-      await expect(
-        contrastRatio(
-          view.getComputedStyle(control).outlineColor,
-          findOpaqueBackground(container, view),
-        ),
-      ).toBeGreaterThanOrEqual(3)
+const tealStyles = `
+  <style>
+    .teal-case { overflow-wrap: anywhere; padding: 0.5rem; }
+    .teal-case > * { padding: 0.5rem; }
+    .teal-case .pathable-alert { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .teal-case .pathable-alert__body { display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.5rem 0.5rem 0.5rem 4rem; margin: 0; min-width: 0; flex: 1 1 auto; box-sizing: border-box; }
+    .teal-case .pathable-alert__body > * { max-width: 100%; margin: 0; box-sizing: border-box; }
+    .teal-case .pathable-input { width: 100%; max-width: 100%; box-sizing: border-box; }
+    .teal-case .pathable-button { max-width: 100%; white-space: normal; }
+    @media (max-width: 30rem) {
+      .teal-case .pathable-alert__body { padding: 3rem 0.5rem 0.5rem; }
     }
+  </style>`
+
+export const KeyboardFocusInTechTeal = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A button, an icon button and an input in light containers nested in Tech Teal (`pathable-bg-link`), which sets `--pathable-surface-focus-ring` to `--pathable-color-surface` (white) because Bright Blue Brooks is 2.6:1 there. A white ring would be 1.0:1 on a light container, so each of these resets or sets its own: `pathable-bg-surface` and `pathable-card__container` to Bright Blue Brooks, `pathable-bg-base` to `--pathable-color-text`, `pathable-bg-accent`, `pathable-bg-success` and the info, plain, slim, warning and error alerts to `--pathable-color-on-accent`, and the emergency alert to `--pathable-color-status-danger-text`. The alert cases put their controls in `.pathable-alert__body`, as real alert markup does.  The play function tabs to every control and checks the outline colour and its contrast of at least 3:1 with the background.',
+      },
+    },
+  },
+  render: () => `
+    ${tealStyles}
+    <div class="pathable-stack pathable-stack--gap-lg">
+      ${tealCases
+        .map(
+          (focusCase) => `
+        <div class="teal-case ${focusCase.outer}">
+          <div class="${focusCase.inner} pathable-stack pathable-stack--gap-sm" style="${focusCase.innerStyle ?? ''}">
+            ${
+              focusCase.alertBody
+                ? `<div class="pathable-alert__body" style="${focusCase.bodyStyle ?? ''}">${focusControls(focusCase)}</div>`
+                : focusControls(focusCase)
+            }
+          </div>
+        </div>`,
+        )
+        .join('')}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await expectFocusRings(canvasElement, tealCases)
   },
 }
 

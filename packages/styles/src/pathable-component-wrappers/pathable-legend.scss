@@ -12,3 +12,47 @@
 .pathable-legend {
   @extend .usa-legend;
 }
+
+// The USWDS legend sets no colour, so it would inherit the browser's black on a
+// page that sets none. Default to the brand text colour. :where() keeps the
+// default at zero specificity, so a colour utility on the legend itself, such
+// as pathable-text-white, still wins.
+:where(.pathable-legend) {
+  color: var(--pathable-color-text);
+}
+
+// Containers that set their own text colour, or a coloured background that
+// the legend's inherited colour was chosen for, keep the colour they give the
+// legend, so the legend is never harder to read than before it had a default.
+// Each rule is inside :where(), so it has zero specificity: it follows the
+// default above by source order, and a colour utility on the legend itself
+// still wins over both.
+$-legend-inherits-colour-under: (
+  '.pathable-surface--inverse',
+  '.pathable-surface--tone-primary',
+  '.pathable-section--dark',
+  '.pathable-hero',
+  '.pathable-dark-background',
+  '.pathable-surface--brand',
+  '.pathable-alert',
+  '.pathable-bg-accent',
+  '.pathable-bg-danger',
+  '.pathable-bg-link',
+  '.pathable-bg-primary',
+  '.pathable-bg-success',
+  '.pathable-bg-focus-ring',
+  '.pathable-identifier',
+  '.pathable-screenshot-frame--dashboard',
+  '.pathable-text-accent',
+  '.pathable-text-base',
+  '.pathable-text-link',
+  '.pathable-text-muted',
+  '.pathable-text-primary',
+  '.pathable-text-white'
+);
+
+@each $container in $-legend-inherits-colour-under {
+  :where(#{$container} .pathable-legend) {
+    color: inherit;
+  }
+}

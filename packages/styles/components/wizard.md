@@ -28,7 +28,7 @@ guarantees:
     status: unverified
     claim: Below a 640 px viewport, the action footer sticks to the bottom of the viewport as two equal columns, with a save button alone on the first row.
   - id: region-sizes
-    status: unmet
+    status: unverified
     claim: At a 16 px root, the heading is set at the theme's large type size, 1.5rem (24 px), the section heading at its medium size, 1.125rem (18 px), and the mobile summary at its small size, 1rem (16 px), instead of the inherited or element default size.
 ---
 
@@ -164,9 +164,9 @@ and below 480 px the back button touches the button beside it.
 Today the heading has no top margin and sits directly against the element
 before it, because its margin reset also removes the wizard gap.
 
-Today the heading, section and mobile summary sizes compile to invalid
-declarations, so the text renders at the inherited or element default size
-and `region-sizes` is unmet.
+The heading, section and mobile summary sizes compile to the theme's large,
+medium and small type sizes, so the text no longer renders at the inherited or
+element default size.
 
 ## The consumer owns
 

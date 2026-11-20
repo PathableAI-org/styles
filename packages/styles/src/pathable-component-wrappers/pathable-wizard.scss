@@ -9,6 +9,7 @@
 //   --pathable-wizard-gap        (default: units(2)) — gap between wizard regions
 
 @use 'uswds-core' as *;
+@use '../type-scale' as *;
 
 .pathable-wizard {
   font-family: var(--pathable-font-body);
@@ -24,7 +25,7 @@
 .pathable-wizard__heading {
   font-family: var(--pathable-font-heading);
   margin: 0;
-  font-size: type-scale('lg');
+  font-size: type-scale-rem('lg');
   font-weight: var(--pathable-font-weight-normal);
 }
 
@@ -42,10 +43,10 @@
   display: block;
 }
 
-// Mobile compact step summary — hidden on desktop, visible <768px
+// Mobile compact step summary — hidden on desktop, visible below 640px
 .pathable-wizard__mobile-summary {
   display: none;
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
   font-weight: var(--pathable-font-weight-semibold);
   color: color('ink');
 }
@@ -61,7 +62,7 @@
   font-family: var(--pathable-font-heading);
   margin: 0;
   padding-top: var(--pathable-wizard-gap);
-  font-size: type-scale('md');
+  font-size: type-scale-rem('md');
   font-weight: var(--pathable-font-weight-normal);
   border-bottom: 1px solid color('gray-20');
   padding-bottom: units(1);

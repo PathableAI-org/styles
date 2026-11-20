@@ -13,6 +13,7 @@
 //   --loading, --saving, --saved, --offline, --validation-error, --completed
 
 @use 'uswds-core' as *;
+@use '../type-scale' as *;
 
 .pathable-workflow-panel {
   font-family: var(--pathable-font-body);
@@ -25,20 +26,20 @@
 // --- Internal regions ---
 
 .pathable-workflow-panel__context-header {
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
   color: color('ink');
   font-weight: var(--pathable-font-weight-semibold);
 }
 
 .pathable-workflow-panel__objective {
-  font-size: type-scale('md');
+  font-size: type-scale-rem('md');
   font-weight: var(--pathable-font-weight-bold);
   color: color('primary');
 }
 
 .pathable-workflow-panel__current-activity {
-  font-size: type-scale('sm');
-  color: color('gray-60');
+  font-size: type-scale-rem('sm');
+  color: var(--pathable-color-text-muted);
   font-weight: var(--pathable-font-weight-normal);
 }
 
@@ -47,7 +48,7 @@
   background-color: var(--pathable-workflow-panel-prompt-bg);
   padding: units(1.5);
   border-radius: radius('sm');
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
   line-height: var(--pathable-font-line-height-body);
   overflow-y: auto;
   max-height: 20rem;
@@ -59,9 +60,10 @@
   // This region wraps the input for layout spacing
 }
 
-// Progress/save-status region
+// Progress/save-status region. The application supplies the text; the state
+// modifiers below only style it.
 .pathable-workflow-panel__status {
-  font-size: type-scale('sm');
+  font-size: type-scale-rem('sm');
 }
 
 // Completion action buttons
@@ -89,48 +91,45 @@
 }
 
 // --- State modifier classes ---
+//
+// A state modifier only styles the status text the application puts in
+// `.pathable-workflow-panel__status` (give that element `role="status"`).
+// No modifier writes a message of its own.
 
 // Loading state
 .pathable-workflow-panel--loading {
-  .pathable-workflow-panel__status::before {
-    content: 'Loading…';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
+    color: var(--pathable-color-text-muted);
   }
 }
 
 // Saving state
 .pathable-workflow-panel--saving {
-  .pathable-workflow-panel__status::before {
-    content: 'Saving…';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
+  .pathable-workflow-panel__status {
+    color: var(--pathable-color-text-muted);
   }
 }
 
 // Saved confirmation state
 .pathable-workflow-panel--saved {
-  .pathable-workflow-panel__status::before {
-    content: '✓ Saved';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
-    color: color('success-dark');
+  .pathable-workflow-panel__status {
+    color: var(--pathable-color-text-success);
   }
 }
 
 // Offline state
 .pathable-workflow-panel--offline {
-  .pathable-workflow-panel__status::before {
-    content: "⚠ You're offline. Changes will sync when connected.";
-    display: block;
+  .pathable-workflow-panel__status {
     padding: units(1);
     background-color: color('warning-lighter');
     border-radius: radius('sm');
-    color: color('ink');
-    font-size: type-scale('sm');
+    color: var(--pathable-color-text);
+
+    // Keep the live region in the DOM when empty, but draw no box for it
+    &:empty {
+      padding: 0;
+      background-color: transparent;
+    }
   }
 
   .pathable-workflow-panel__actions .pathable-button--continue {
@@ -141,14 +140,16 @@
 
 // Validation error state
 .pathable-workflow-panel--validation-error {
-  .pathable-workflow-panel__status::before {
-    content: '⚠ Please fix errors before continuing.';
-    display: block;
+  .pathable-workflow-panel__status {
     padding: units(1);
     background-color: color('error-lighter');
     border-radius: radius('sm');
     color: color('error-darker');
-    font-size: type-scale('sm');
+
+    &:empty {
+      padding: 0;
+      background-color: transparent;
+    }
   }
 }
 
@@ -159,14 +160,10 @@
     display: none;
   }
 
-  .pathable-workflow-panel__status::before {
-    content: '✓ Completed';
-    display: inline-flex;
-    align-items: center;
-    gap: units(0.5);
-    font-size: type-scale('md');
+  .pathable-workflow-panel__status {
+    font-size: type-scale-rem('md');
     font-weight: var(--pathable-font-weight-bold);
-    color: color('success-dark');
+    color: var(--pathable-color-text-success);
   }
 }
 
@@ -180,6 +177,9 @@
 // --- Mobile ---
 @include at-media-max('tablet') {
   .pathable-workflow-panel__actions {
+    // Light container: reset the surface focus ring (see pathable-bg-link in
+    // _utilities.scss).
+    --pathable-surface-focus-ring: initial;
     position: sticky;
     bottom: 0;
     background: color('white');

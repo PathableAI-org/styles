@@ -26,7 +26,7 @@ export const Default = {
         <label for="default-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="default-notes" rows="4" aria-label="Assessment notes" placeholder="Enter your observations and notes here..." style="width: 100%;">Jamie has 3 years of retail experience and expresses interest in healthcare roles. Primary barrier identified is lack of reliable transportation. Recommended: connect with transportation assistance program.</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"></div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--low-emphasis">Cancel</button>
         <button class="pathable-button pathable-button--save">Save Draft</button>
@@ -55,7 +55,7 @@ export const Loading = {
   render: () => `
     <div class="pathable-workflow-panel pathable-workflow-panel--loading">
       <div class="pathable-workflow-panel__context-header">Participant: Loading...</div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status">Loading…</div>
     </div>
   `,
 }
@@ -78,7 +78,7 @@ export const Saving = {
         <label for="saving-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="saving-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status">Saving…</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue">Continue</button>
@@ -105,7 +105,7 @@ export const Saved = {
         <label for="saved-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="saved-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">✓</span> Saved</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue">Continue</button>
@@ -132,7 +132,7 @@ export const Offline = {
         <label for="offline-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="offline-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Jamie has 3 years of retail experience...</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">⚠</span> You're offline. Changes will sync when connected.</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue" disabled>Continue</button>
@@ -161,7 +161,7 @@ export const ValidationError = {
         <textarea class="pathable-textarea" id="ve-notes" rows="3" aria-label="Assessment notes" style="width: 100%;"></textarea>
         <span class="usa-error-message" role="alert">Assessment notes are required before continuing.</span>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">⚠</span> Please fix errors before continuing.</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--save">Save Draft</button>
         <button class="pathable-button pathable-button--continue">Continue</button>
@@ -188,7 +188,7 @@ export const Completed = {
         <label for="completed-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="completed-notes" rows="3" aria-label="Assessment notes" style="width: 100%;">Assessment completed. Jamie enrolled in Employment Pathways program.</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"><span aria-hidden="true">✓</span> Completed</div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--continue">Start New Assessment</button>
       </div>
@@ -232,7 +232,7 @@ export const LongPrompt = {
         <label for="lp-notes" class="usa-sr-only">Comprehensive assessment notes</label>
         <textarea class="pathable-textarea" id="lp-notes" rows="6" aria-label="Comprehensive assessment notes" placeholder="Enter your comprehensive assessment notes here..." style="width: 100%;">Casey has 8+ years of experience in customer service and retail management. Strong communication skills identified. Expresses interest in transitioning to healthcare administration. Completed some college coursework in business administration. Primary barriers: lack of healthcare industry connections and need for additional certification.</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"></div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--low-emphasis">Cancel</button>
         <button class="pathable-button pathable-button--save">Save Draft</button>
@@ -264,7 +264,7 @@ export const Mobile = {
         <label for="mobile-notes" class="usa-sr-only">Assessment notes</label>
         <textarea class="pathable-textarea" id="mobile-notes" rows="4" aria-label="Assessment notes" placeholder="Enter your observations..." style="width: 100%;">Initial assessment in progress...</textarea>
       </div>
-      <div class="pathable-workflow-panel__status"></div>
+      <div class="pathable-workflow-panel__status" role="status"></div>
       <div class="pathable-workflow-panel__actions">
         <button class="pathable-button pathable-button--low-emphasis">Cancel</button>
         <button class="pathable-button pathable-button--save">Save Draft</button>

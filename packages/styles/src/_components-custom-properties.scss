@@ -3,6 +3,7 @@
 // for backward compatibility with existing USWDS token consumers.
 
 @use 'uswds-core' as *;
+@use 'type-scale' as *;
 
 :where(:root) {
   // --- Button component tokens ---
@@ -16,10 +17,10 @@
   // --- Alert component tokens ---
   --pathable-alert-padding-x: #{units(2)};
   --pathable-alert-padding-y: #{units(1.5)};
-  --pathable-alert-font-size: #{type-scale('sm')};
+  --pathable-alert-font-size: #{type-scale-rem('sm')};
   --usa-alert-padding-x: #{units(2)};
   --usa-alert-padding-y: #{units(1.5)};
-  --usa-alert-font-size: #{type-scale('sm')};
+  --usa-alert-font-size: #{type-scale-rem('sm')};
 
   // --- Card component tokens ---
   --pathable-card-border-radius: #{radius($theme-card-border-radius)};
@@ -70,9 +71,9 @@
   --usa-workflow-panel-prompt-bg: #{color('gray-5')};
 
   // --- Save-status tokens ---
-  --pathable-save-status-font-size: #{type-scale('sm')};
+  --pathable-save-status-font-size: #{type-scale-rem('sm')};
   --pathable-save-status-icon-size: 1em;
-  --usa-save-status-font-size: #{type-scale('sm')};
+  --usa-save-status-font-size: #{type-scale-rem('sm')};
   --usa-save-status-icon-size: 1em;
 
   // --- Decorative background tokens ---

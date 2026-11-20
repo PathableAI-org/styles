@@ -10,6 +10,9 @@
 
 .pathable-page-error {
   font-family: var(--pathable-font-body);
+  // Light container: reset the surface focus ring so controls in it do not inherit
+  // the light ring from a pathable-bg-link ancestor (_utilities.scss).
+  --pathable-surface-focus-ring: initial;
   display: flex;
   flex-direction: column;
   gap: var(--pathable-space-2);
@@ -69,6 +72,9 @@
 // --- Full Page Layout ---
 
 .pathable-page-error--full-page {
+  // Transparent: the controls sit on the background behind the page error, so
+  // they keep the ring that background sets.
+  --pathable-surface-focus-ring: inherit;
   display: flex;
   flex-direction: column;
   align-items: center;

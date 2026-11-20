@@ -26,6 +26,10 @@ const preview = {
           name: 'Mobile (375px)',
           styles: { width: '375px', height: '812px' },
         },
+        belowTablet: {
+          name: 'Below tablet breakpoint (600px)',
+          styles: { width: '600px', height: '900px' },
+        },
         tablet: {
           name: 'Tablet (768px)',
           styles: { width: '768px', height: '1024px' },

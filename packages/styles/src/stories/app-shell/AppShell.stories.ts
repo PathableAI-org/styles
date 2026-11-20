@@ -1,4 +1,7 @@
+import { expect, within } from 'storybook/test'
+
 import { expectBodyFont } from '../shared/body-font'
+
 export default {
   title: 'Application Shell/Desktop Shell',
   tags: ['autodocs'],
@@ -87,4 +90,33 @@ export const Default = {
       '.pathable-app-shell__topbar-title',
       '.pathable-app-shell__content',
     ]),
+}
+
+export const WithNotification = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `pathable-app-shell__notification` layer owns a row above the main content, beside the sidebar, so it stays visible at desktop width.',
+      },
+    },
+  },
+  render: () => `
+    <div class="pathable-app-shell">
+      ${sidebar()}
+      ${topbar()}
+      <div class="pathable-app-shell__notification" role="status">
+        System maintenance scheduled for Sunday 2:00 AM.
+      </div>
+      ${mainContent()}
+    </div>
+  `,
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+    const notificationBox = canvas.getByRole('status').getBoundingClientRect()
+    const mainBox = canvas.getByRole('main').getBoundingClientRect()
+    // Visible, and directly above the main content.
+    await expect(notificationBox.height).toBeGreaterThan(0)
+    await expect(notificationBox.bottom).toBeLessThanOrEqual(mainBox.top + 1)
+  },
 }
