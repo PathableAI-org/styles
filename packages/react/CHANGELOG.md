@@ -1,5 +1,29 @@
 # @pathableai/react
 
+## 0.5.2
+
+### Patch Changes
+
+- Updated dependencies [b9ee8f7]
+- Updated dependencies [fed6fad]
+- Updated dependencies [6525a15]
+- Updated dependencies [9c99822]
+- Updated dependencies [1f474dd]
+- Updated dependencies [6a60e25]
+- Updated dependencies [5763cf9]
+- Updated dependencies [f3a9c9d]
+- Updated dependencies [cb2f028]
+- Updated dependencies [c34d1c0]
+- Updated dependencies [c5966be]
+- Updated dependencies [150241e]
+- Updated dependencies [fa4b336]
+- Updated dependencies [6bf6ba3]
+- Updated dependencies [08c32a5]
+- Updated dependencies [39ea147]
+- Updated dependencies [f92c05d]
+- Updated dependencies [894685c]
+  - @pathableai/styles@0.5.1
+
 ## 0.5.1
 
 ### Patch Changes
