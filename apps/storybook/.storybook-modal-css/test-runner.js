@@ -10,6 +10,10 @@ const config = {
         'components-communication-modal--increased-text',
         { width: 375, height: 812 },
       ],
+      [
+        'components-communication-modal--narrow-footer-row',
+        { width: 375, height: 812 },
+      ],
     ])
     const storyViewport = storyViewports.get(context.id)
     if (storyViewport) {

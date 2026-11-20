@@ -94,15 +94,18 @@
 
   // A button row inside the footer wraps when the buttons are wider than the
   // dialog (increased text size, narrow viewport) instead of overflowing it.
-  > * {
+  > :not(.pathable-button-group) {
     flex-wrap: wrap;
 
     // USWDS makes a button full width below 30em, which would put each button
-    // of the row on its own line even when they fit side by side. Size them to
-    // their labels and let the row wrap only when they no longer fit.
-    > .pathable-button {
-      flex: 0 1 auto;
-      width: auto;
+    // of the row on its own line even when they fit side by side. Let them
+    // share the row as they did in a non-wrapping row, and wrap only when
+    // their labels no longer fit. From 30em up the buttons keep their size.
+    @media (max-width: 29.99em) {
+      > .pathable-button {
+        flex: 1 1 auto;
+        width: auto;
+      }
     }
   }
 

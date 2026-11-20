@@ -67,6 +67,10 @@ const config = {
         { width: 375, height: 812 },
       ],
       [
+        'components-communication-modal--narrow-footer-row',
+        { width: 375, height: 812 },
+      ],
+      [
         'components-feedback-pageerror--mobile-full-page',
         { width: 375, height: 812 },
       ],

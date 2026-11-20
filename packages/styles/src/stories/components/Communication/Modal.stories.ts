@@ -225,6 +225,11 @@ export const IncreasedText = {
     ) as HTMLElement
     const footerBox = footer.getBoundingClientRect()
     expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth)
+    // The padding keeps its 100 % size instead of doubling with the text.
+    const overlay = canvasElement.querySelector(
+      '.pathable-modal-overlay',
+    ) as HTMLElement
+    expect(getComputedStyle(overlay).paddingLeft).toBe('24px')
     for (const name of ['Cancel', 'Add Activity']) {
       const box = within(dialog)
         .getByRole('button', { name })
@@ -232,6 +237,43 @@ export const IncreasedText = {
       expect(box.left).toBeGreaterThanOrEqual(footerBox.left)
       expect(box.right).toBeLessThanOrEqual(footerBox.right)
     }
+  },
+}
+
+/**
+ * Footer row at default text on a phone: a flex row of two buttons, as in the
+ * React Modal stories, stays on one line inside the footer.
+ */
+export const NarrowFooterRow = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Open Modal at 100 % text on a 375px viewport with a flex row of two footer buttons. The buttons share one line instead of each filling its own.',
+      },
+    },
+  },
+  render: () =>
+    openShellMarkup({
+      headingId: 'modal-heading-narrow-footer-row',
+      footerHtml: `<div style="display: flex; gap: 0.5rem; justify-content: flex-end">
+            <button class="pathable-button pathable-button--outline" type="button">Cancel</button>
+            <button class="pathable-button" type="button">Add Activity</button>
+          </div>`,
+    }),
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    await assertOpenShell(canvasElement)
+    const dialog = within(canvasElement).getByRole('dialog', {
+      name: DIALOG_NAME,
+    })
+    const cancel = within(dialog)
+      .getByRole('button', { name: 'Cancel' })
+      .getBoundingClientRect()
+    const add = within(dialog)
+      .getByRole('button', { name: 'Add Activity' })
+      .getBoundingClientRect()
+    expect(add.top).toBe(cancel.top)
+    expect(add.left).toBeGreaterThanOrEqual(cancel.right)
   },
 }
 

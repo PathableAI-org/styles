@@ -294,6 +294,7 @@ const CANONICAL_STORIES = [
   { id: 'components-communication-modal--narrow', mode: 'mobile' },
   { id: 'components-communication-modal--long-content', mode: 'desktop' },
   { id: 'components-communication-modal--increased-text', mode: 'mobile' },
+  { id: 'components-communication-modal--narrow-footer-row', mode: 'mobile' },
 ]
 
 /**
