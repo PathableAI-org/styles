@@ -5,7 +5,6 @@ import { join } from 'node:path'
 import { after, describe, it } from 'node:test'
 
 import {
-  classesInHtml,
   compileStyles,
   dependencyReasons,
   diffStyles,
@@ -278,19 +277,6 @@ describe('dependency changes', () => {
         head: '^3',
       }),
       [],
-    )
-  })
-})
-
-describe('classesInHtml', () => {
-  it('reads class attributes with either quote', () => {
-    assert.deepEqual(
-      [
-        ...classesInHtml(
-          `<a class="a  b"><b class='c'>x</b><i data-class="d"></i></a>`,
-        ),
-      ],
-      ['a', 'b', 'c'],
     )
   })
 })

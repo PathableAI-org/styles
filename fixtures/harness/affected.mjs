@@ -31,13 +31,7 @@
  */
 
 import { execFileSync } from 'node:child_process'
-import {
-  mkdtempSync,
-  readFileSync,
-  readdirSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import process from 'node:process'
@@ -46,8 +40,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { classesInSelector } from '../../packages/styles/scripts/check-component-pages.mjs'
 
+import { classesIn } from './contract.mjs'
+import { allFolders, fixtureFiles, fixturesRoot } from './folders.mjs'
+
 export const repoRoot = resolve(import.meta.dirname, '../..')
-export const fixturesDir = resolve(import.meta.dirname, '..')
 const stylesPackage = 'packages/styles'
 
 // The compiler and parser are the styles package's own, so the base and the
@@ -355,38 +351,19 @@ export function diffStyles(base, head) {
 // Fixtures
 // ---------------------------------------------------------------------------
 
-/** Every fixture folder (except the harness) and its HTML files. */
-export function readFixtures(dir = fixturesDir) {
-  return readdirSync(dir, { withFileTypes: true })
-    .filter(
-      (entry) =>
-        entry.isDirectory() &&
-        entry.name !== 'harness' &&
-        entry.name !== 'node_modules',
-    )
-    .map((entry) => ({
-      folder: entry.name,
-      files: readdirSync(join(dir, entry.name))
-        .filter((file) => file.endsWith('.html'))
-        .sort()
-        .map((file) => ({
-          path: relative(repoRoot, join(dir, entry.name, file))
-            .split(sep)
-            .join('/'),
-          html: readFileSync(join(dir, entry.name, file), 'utf8'),
-        })),
+/** Every component folder and its HTML fixtures, from the harness's folder list. */
+export function readFixtures(root = fixturesRoot) {
+  return allFolders(root)
+    .map((folder) => ({
+      folder,
+      files: fixtureFiles(folder, root).map((file) => ({
+        path: relative(repoRoot, join(root, folder, file))
+          .split(sep)
+          .join('/'),
+        html: readFileSync(join(root, folder, file), 'utf8'),
+      })),
     }))
     .filter((fixture) => fixture.files.length > 0)
-    .sort((a, b) => a.folder.localeCompare(b.folder))
-}
-
-/** The classes an HTML document uses in `class` attributes. */
-export function classesInHtml(html) {
-  const classes = new Set()
-  for (const [, , value] of html.matchAll(/\sclass\s*=\s*(["'])(.*?)\1/gsu)) {
-    for (const name of value.split(/\s+/u)) if (name) classes.add(name)
-  }
-  return classes
 }
 
 /**
@@ -402,7 +379,7 @@ export function selectFixtures(diff, fixtures, extraAll = []) {
     const reasons = []
     const matched = new Set()
     for (const file of files) {
-      const used = classesInHtml(file.html)
+      const used = classesIn(file.html)
       for (const name of used) {
         for (const reason of diff.classes.get(name) ?? []) {
           reasons.push({ ...reason, file: file.path })

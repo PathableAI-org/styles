@@ -110,14 +110,16 @@ Run them from `fixtures/` or with `pnpm --filter @pathableai/fixtures`. The
 contract and axe checks need the built stylesheet:
 `pnpm --filter @pathableai/styles build`.
 
-| Script                | What it checks                                                                                                                                                                                                |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm check:html`     | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                  |
-| `pnpm check:contract` | The folder is a page slug, every `pathable-*` class is a class selector in `dist/styles.css`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
-| `pnpm check:axe`      | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                          |
-| `pnpm check`          | All three                                                                                                                                                                                                     |
-| `pnpm changed [base]` | Prints the folders `git diff <base>...HEAD -- fixtures/` touched ([`harness/changed.mjs`](harness/changed.mjs)); default base `origin/main`, `--all` for every folder                                         |
-| `pnpm test`           | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                         |
+| Script                       | What it checks                                                                                                                                                                                                |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm check:html`            | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                  |
+| `pnpm check:contract`        | The folder is a page slug, every `pathable-*` class is a class selector in `dist/styles.css`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
+| `pnpm check:axe`             | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                          |
+| `pnpm check`                 | All three                                                                                                                                                                                                     |
+| `pnpm changed [base]`        | Prints the folders `git diff <base>...HEAD -- fixtures/` touched ([`harness/changed.mjs`](harness/changed.mjs)); default base `origin/main`, `--all` for every folder                                         |
+| `pnpm affected --base <ref>` | Prints, as JSON, the folders a compiled-CSS change affects and why ([`harness/affected.mjs`](harness/affected.mjs)); see [Choosing folders](../docs/testing/fixtures.md#choosing-folders)                     |
+| `pnpm select [base]`         | Prints the union of `changed` and `affected` ([`harness/select.mjs`](harness/select.mjs)); what CI checks on a pull request                                                                                   |
+| `pnpm test`                  | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                         |
 
 ### html-validate configuration
 

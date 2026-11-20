@@ -10,6 +10,8 @@
     "check:contract": "node harness/contract.mjs",
     "check:axe": "node harness/axe.mjs",
     "changed": "node harness/changed.mjs",
+    "affected": "node harness/affected.mjs",
+    "select": "node harness/select.mjs",
     "test": "node --test \"harness/*.test.mjs\""
   },
   "dependencies": {
