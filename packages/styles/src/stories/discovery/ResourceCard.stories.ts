@@ -1,5 +1,6 @@
 import { expect } from 'storybook/test'
 import { expectBodyFont } from '../shared/body-font'
+import { placeholderImage } from '../shared/placeholder-image'
 
 export default {
   title: 'Discovery/Resource Card',
@@ -16,7 +17,7 @@ export default {
 
 const defaultContent = `
   <div class="pathable-resource-card__media">
-    <img src="https://placehold.co/300x200/1cae96/ffffff?text=Thumbnail" alt="" aria-hidden="true">
+    <img src="${placeholderImage(300, 200, '', '#1cae96', '#001a33')}" alt="" aria-hidden="true">
   </div>
   <div class="pathable-resource-card__body">
     <a href="#" class="pathable-resource-card__link">
@@ -173,7 +174,7 @@ export const Grid = {
       </div>
       <div class="pathable-resource-card pathable-resource-card--grid pathable-resource-card--interactive pathable-resource-card--has-action">
         <div class="pathable-resource-card__media">
-          <img src="https://placehold.co/300x200/00365c/ffffff?text=Guide" alt="" aria-hidden="true">
+          <img src="${placeholderImage(300, 200, 'Guide', '#00365c', '#ffffff')}" alt="" aria-hidden="true">
         </div>
         <div class="pathable-resource-card__body">
           <a href="#" class="pathable-resource-card__link">
@@ -188,7 +189,7 @@ export const Grid = {
       </div>
       <div class="pathable-resource-card pathable-resource-card--grid pathable-resource-card--interactive">
         <div class="pathable-resource-card__media">
-          <img src="https://placehold.co/300x200/015a76/ffffff?text=Tool" alt="" aria-hidden="true">
+          <img src="${placeholderImage(300, 200, 'Tool', '#015a76', '#ffffff')}" alt="" aria-hidden="true">
         </div>
         <div class="pathable-resource-card__body">
           <a href="#" class="pathable-resource-card__link">

@@ -19,6 +19,12 @@
 
 // --- Base card container ---
 
+// The card's own outline is drawn on the surface around it, so the reset for
+// what sits on its white background goes on its children, not on the card.
+:where(.pathable-resource-card) > * {
+  --pathable-surface-focus-ring: initial;
+}
+
 .pathable-resource-card {
   font-family: var(--pathable-font-body);
   display: flex;
@@ -46,7 +52,8 @@
   }
 
   &:focus-within {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
   }
 
@@ -209,7 +216,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
@@ -229,7 +237,8 @@
   z-index: 1;
 
   &:focus-visible {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }

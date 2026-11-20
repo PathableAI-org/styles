@@ -37,6 +37,8 @@ const EXPECTED_COVERAGE = {
     'components-card--default',
     'components-card--workflow-card-action-container',
     'components-link--default',
+    'components-link--theme-override',
+    'components-link--surface-focus-ring',
     'components-list--default',
     'components-table--default',
     'components-tag--default',
