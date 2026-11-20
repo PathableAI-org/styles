@@ -231,10 +231,11 @@ ${legendContainer('', legendFieldset('pathable-legend', 'Default legend'))}
 ${legendContainer('pathable-surface pathable-surface--inverse', legendFieldset('pathable-legend', 'Inverse surface legend'))}
 ${legendContainer('pathable-section--dark', legendFieldset('pathable-legend', 'Dark section legend'))}
 ${legendContainer('pathable-text-white pathable-bg-primary', legendFieldset('pathable-legend', 'White text container legend'))}
-${legendContainer('pathable-bg-primary', legendFieldset('pathable-legend', 'Primary background legend'))}
+${legendContainer('pathable-identifier', legendFieldset('pathable-legend', 'Identifier legend'))}
+${legendContainer('pathable-bg-focus-ring', legendFieldset('pathable-legend', 'Focus ring background legend'))}
 ${legendContainer('pathable-surface pathable-surface--brand', legendFieldset('pathable-legend', 'Brand surface legend'))}
 ${legendContainer('pathable-alert pathable-alert--error', legendFieldset('pathable-legend', 'Error alert legend'))}
-${legendContainer('pathable-text-primary', legendFieldset('pathable-legend pathable-text-muted', 'Utility on legend') + '<span class="pathable-text-muted" data-testid="Muted reference">Muted reference</span>')}
+${legendContainer('pathable-text-primary', legendFieldset('pathable-legend pathable-text-muted', 'Utility on legend') + '<span class="pathable-text-muted" data-testid="Muted reference" style="font-family: var(--pathable-font-body);">Muted reference</span>')}
   `,
   play: async ({
     canvasElement,
@@ -256,7 +257,8 @@ ${legendContainer('pathable-text-primary', legendFieldset('pathable-legend patha
       await expect(colourOf('White text container legend')).toBe(
         'rgb(255, 255, 255)',
       )
-      await expect(colourOf('Primary background legend')).not.toBe(
+      await expect(colourOf('Identifier legend')).toBe('rgb(255, 255, 255)')
+      await expect(colourOf('Focus ring background legend')).not.toBe(
         'rgb(0, 54, 92)',
       )
       await expect(colourOf('Brand surface legend')).not.toBe('rgb(0, 54, 92)')

@@ -23,7 +23,7 @@ guarantees:
     claim: Except as a direct child of `pathable-filterable-option-list`, the legend's content box is at most 30rem (480 px at a 16 px root) wide, and text longer than that wraps at its spaces.
   - id: text-colour
     status: met
-    claim: 'In the default theme, where no container sets a text colour of its own or gives the legend a coloured background to inherit from, the legend text is #00365c, PathAble Blue, the brand text colour; inside such a container, such as a dark surface or an alert, it takes the colour it inherits there.'
+    claim: 'In the default theme, the legend text is #00365c, PathAble Blue, the brand text colour, except inside one of the containers the Guarantees section lists (dark surfaces, alerts, background utilities and text colour utilities), where it takes the colour it inherits there; a colour utility on the legend itself wins in both cases.'
 ---
 
 # Legend
@@ -123,11 +123,14 @@ it had a default: `pathable-surface--inverse`, `pathable-surface--brand`,
 `pathable-surface--tone-primary`, `pathable-section--dark`, `pathable-hero`,
 `pathable-dark-background`, `pathable-alert`, `pathable-bg-accent`,
 `pathable-bg-danger`, `pathable-bg-link`, `pathable-bg-primary`,
-`pathable-bg-success`, and the `pathable-text-accent`, `-base`, `-link`,
+`pathable-bg-success`, `pathable-bg-focus-ring`, `pathable-identifier`,
+`pathable-screenshot-frame--dashboard`, and the `pathable-text-accent`, `-base`, `-link`,
 `-muted`, `-primary` and `-white` utilities. A container that sets a
 background but no text colour, such as `pathable-bg-primary` on its own,
 leaves the legend in the browser's default black there; add a text colour
-utility to that container.
+utility to that container. A container of your own that is not in this list
+gives the legend PathAble Blue, the colour the control labels have, whatever
+its text colour: set the legend's colour with a utility class on the legend.
 
 The maximum width applies to the legend's content box: the legend is
 content-box, so the browser's small inline padding on `<legend>` adds to it.
