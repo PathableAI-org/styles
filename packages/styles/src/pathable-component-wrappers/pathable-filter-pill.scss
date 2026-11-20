@@ -6,6 +6,9 @@
 @use 'uswds-core' as *;
 
 .pathable-filter-pill {
+  // The dismiss outline is drawn on the pill's own Silver background, so it
+  // does not inherit a light ring from a dark container around the pill.
+  --pathable-surface-focus-ring: var(--pathable-color-text);
   font-family: var(--pathable-font-body);
   display: inline-flex;
   align-items: center;
@@ -51,7 +54,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--pathable-color-focus-ring);
+    outline: 2px solid
+      var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
     outline-offset: 2px;
   }
 
