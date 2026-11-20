@@ -37,7 +37,7 @@
 
 .pathable-workflow-panel__current-activity {
   font-size: type-scale('sm');
-  color: color('gray-30');
+  color: var(--pathable-color-text-muted);
   font-weight: var(--pathable-font-weight-normal);
 }
 
@@ -114,7 +114,7 @@
     padding: units(1);
     background-color: color('warning-lighter');
     border-radius: radius('sm');
-    color: color('warning-darker');
+    color: var(--pathable-color-text);
 
     // Keep the live region in the DOM when empty, but draw no box for it
     &:empty {
