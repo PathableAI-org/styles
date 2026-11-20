@@ -477,3 +477,18 @@ test('renders the index as one unpadded line per page', () => {
     ),
   )
 })
+
+test('the index explains the unmet and unverified guarantee statuses', () => {
+  const index = renderIndex([page()]).replace(/\n/g, ' ')
+
+  assert.ok(
+    index.includes(
+      'A guarantee marked `status: unmet` is expected behaviour the component does not have yet: do not rely on it.',
+    ),
+  )
+  assert.ok(
+    index.includes(
+      'One marked `status: unverified` was read from the package source and no test checks it yet.',
+    ),
+  )
+})

@@ -12,12 +12,13 @@
 .pathable-button-group {
   @extend .usa-button-group;
 
-  // USWDS keeps the row on one line from 480 px, so in a narrow container or at
-  // a large text size the last button runs past the container. Let the row
-  // wrap. The row gap keeps the buttons of a wrapped line apart; the buttons
-  // already carry their own right margin for the column gap.
+  // Keep 0.5rem (8px at the default size, like the buttons' own margins)
+  // between stacked buttons so the focus ring of the focused button shows on
+  // all four sides, and between rows when the row wraps.
+  row-gap: units(1);
+
+  // The row wraps instead of running past the container.
   @include at-media('mobile-lg') {
     flex-wrap: wrap;
-    row-gap: units(1);
   }
 }
