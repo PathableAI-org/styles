@@ -24,6 +24,9 @@ guarantees:
   - id: title-context-wrap
     status: unverified
     claim: The title and context wrap onto further lines instead of being cut off, so no text is lost at a large root font size, and a word wider than the column breaks instead of leaving the row.
+  - id: body-min-width
+    status: unverified
+    claim: The title and context column is at least 12rem wide, or the row's full width when that is narrower, and the other parts of the row move to a new line instead of squeezing it.
   - id: status-shapes
     status: unverified
     claim: The completed, in-progress, pending and cancelled status marks are a filled circle, a filled square, a hollow ring and a 10 by 4 px bar, and any other status value is a 10 px neutral circle.

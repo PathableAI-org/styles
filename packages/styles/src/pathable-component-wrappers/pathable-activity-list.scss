@@ -44,6 +44,9 @@
 .pathable-activity-row {
   font-family: var(--pathable-font-body);
   display: flex;
+  // The other parts move to a new line before the body column gets too narrow
+  // to read, which keeps the wrapped title and context legible.
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--pathable-space-3);
   padding: var(--pathable-space-3);
@@ -107,8 +110,8 @@
 // --- Row body: title + context ---
 
 .pathable-activity-row__body {
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 12rem;
+  min-width: min(12rem, 100%);
   display: flex;
   flex-direction: column;
   gap: var(--pathable-space-0);
@@ -120,7 +123,7 @@
   color: var(--pathable-color-text);
   margin: 0;
   // Wraps, so no text is lost at a large root font size.
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .pathable-activity-row__context {
@@ -128,7 +131,7 @@
   color: var(--pathable-color-text-muted);
   margin: 0;
   // Wraps, so no text is lost at a large root font size.
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 // --- Date/time ---
