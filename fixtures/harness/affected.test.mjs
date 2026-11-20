@@ -404,3 +404,100 @@ describe('changedPathsSince', () => {
     ])
   })
 })
+
+describe('review round: quoting, selectors and rule order', () => {
+  const diffOne = (before, after, fixtures = FIXTURES) =>
+    selectFixtures(
+      diffStyles(
+        compile({ 'one.scss': before }),
+        compile({ 'one.scss': after }),
+      ),
+      fixtures,
+    )
+
+  it('sees whitespace inside a quoted attribute value in a selector', () => {
+    const selection = diffOne(
+      '.pathable-card[data-label="A B"] { color: red; }\n',
+      '.pathable-card[data-label="A  B"] { color: red; }\n',
+    )
+    assert.deepEqual(folders(selection), ['card'])
+  })
+
+  it('sees whitespace inside a quoted declaration value', () => {
+    const selection = diffOne(
+      '.pathable-card::before { content: "a b"; }\n',
+      '.pathable-card::before { content: "a  b"; }\n',
+    )
+    assert.deepEqual(folders(selection), ['card'])
+  })
+
+  it('ignores whitespace outside quotes', () => {
+    const selection = diffOne(
+      '.pathable-card { margin: 0 1px; }\n',
+      '.pathable-card {\n  margin:   0   1px;\n}\n',
+    )
+    assert.deepEqual(folders(selection), [])
+  })
+
+  for (const selector of [
+    ':not(.pathable-card)',
+    ':is(button, .pathable-card)',
+    ':where(button, .pathable-card)',
+    'div:has(.pathable-card)',
+  ]) {
+    it(`selects every fixture for ${selector}, which can match without a class`, () => {
+      const selection = diffOne(
+        `${selector} { color: red; }\n`,
+        `${selector} { color: blue; }\n`,
+      )
+      assert.equal(selection.all, true)
+    })
+  }
+
+  it('narrows :where() and :is() whose arguments all need a class', () => {
+    const selection = diffOne(
+      ':where(.pathable-card) :is(.pathable-tag, .pathable-card) { color: red; }\n',
+      ':where(.pathable-card) :is(.pathable-tag, .pathable-card) { color: blue; }\n',
+    )
+    assert.equal(selection.all, false)
+    assert.deepEqual(folders(selection), ['card', 'tag'])
+  })
+
+  it('narrows a class with a :not() qualifier to its class', () => {
+    const selection = diffOne(
+      '.pathable-card:not(.pathable-tag) { color: red; }\n',
+      '.pathable-card:not(.pathable-tag) { color: blue; }\n',
+    )
+    assert.equal(selection.all, false)
+    assert.ok(folders(selection).includes('card'))
+  })
+
+  it('selects both rules when two overlapping rules swap order', () => {
+    const card = '.pathable-card { color: red; }\n'
+    const tag = '.pathable-tag { color: blue; }\n'
+    const selection = diffOne(`${card}${tag}`, `${tag}${card}`)
+    assert.equal(selection.all, false)
+    assert.deepEqual(folders(selection), ['card', 'tag'])
+    assert.match(
+      selection.folders.card.reasons[0].via,
+      /moved relative to other rules/u,
+    )
+  })
+
+  it('selects every fixture when a rule with no class moves', () => {
+    const card = '.pathable-card { color: red; }\n'
+    const body = 'body { color: blue; }\n'
+    const selection = diffOne(`${card}${body}`, `${body}${card}`)
+    assert.equal(selection.all, true)
+  })
+
+  it('does not count an added rule as moving the others', () => {
+    const card = '.pathable-card { color: red; }\n'
+    const tag = '.pathable-tag { color: blue; }\n'
+    const selection = diffOne(
+      `${card}${tag}`,
+      `${card}.pathable-button { margin: 0; }\n${tag}`,
+    )
+    assert.deepEqual(folders(selection), ['activity-list'])
+  })
+})

@@ -21,12 +21,23 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
-import { affected } from './affected.mjs'
+import { DEPENDENCY_GLOBS, STYLESHEET_GLOBS, affected } from './affected.mjs'
 import { selectFolders } from './changed.mjs'
 import { allFolders, fixturesRoot } from './folders.mjs'
 
 /** How many reasons the summary lists per folder before it counts the rest. */
 const SUMMARY_REASONS = 15
+
+/**
+ * Every path whose change can change the selection. The Fixtures workflow's
+ * `pull_request.paths` must list each of these globs; a test checks it.
+ */
+export const INPUT_GLOBS = [
+  'fixtures/**',
+  'packages/styles/components/*.md',
+  ...STYLESHEET_GLOBS,
+  ...DEPENDENCY_GLOBS,
+]
 
 /**
  * The folders whose component page (packages/styles/components/<slug>.md)

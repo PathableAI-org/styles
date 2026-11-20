@@ -36,7 +36,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import process from 'node:process'
-import { join, relative, resolve, sep } from 'node:path'
+import { join, matchesGlob, relative, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { classesInSelector } from '../../packages/styles/scripts/check-component-pages.mjs'
@@ -54,19 +54,27 @@ const stylesRequire = createRequire(
 )
 const postcss = stylesRequire('postcss')
 const sass = stylesRequire('sass')
+const selectorParser = stylesRequire('postcss-selector-parser')
 
-/** Paths whose change means the two sides do not share dependencies. */
-const DEPENDENCY_PATHS = [
-  /^pnpm-lock\.yaml$/u,
-  /^pnpm-workspace\.yaml$/u,
-  /^patches\//u,
+/**
+ * Paths whose change means the two sides do not share dependencies. Globs, so
+ * the Fixtures workflow's trigger list can be checked against them.
+ */
+export const DEPENDENCY_GLOBS = [
+  'pnpm-lock.yaml',
+  'pnpm-workspace.yaml',
+  'patches/**',
 ]
 
 /** Paths whose change can change the compiled stylesheet. */
-const STYLESHEET_PATHS = [
-  /^packages\/styles\/src\/.*\.s[ac]ss$/u,
-  /^packages\/styles\/package\.json$/u,
+export const STYLESHEET_GLOBS = [
+  'packages/styles/src/**/*.scss',
+  'packages/styles/src/**/*.sass',
+  'packages/styles/package.json',
 ]
+
+const matchesAny = (path, globs) =>
+  globs.some((glob) => matchesGlob(path, glob))
 
 const CUSTOM_PROPERTY = /^--/u
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/gu
@@ -128,7 +136,66 @@ function contextOf(node) {
   return chain
 }
 
-const normalize = (text) => text.replace(/\s+/gu, ' ').trim()
+const QUOTED = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/u
+
+/**
+ * Collapses whitespace outside quoted strings, so formatting differences do
+ * not count as changes while `content: "a  b"` or `[data-label="A  B"]` keep
+ * their exact text.
+ */
+export const normalize = (text) =>
+  text
+    .split(QUOTED)
+    .map((part, index) => (index % 2 ? part : part.replace(/\s+/gu, ' ')))
+    .join('')
+    .trim()
+
+/** Pseudo-classes that match when one of their arguments matches. */
+const MATCHES_ANY = new Set([
+  ':is',
+  ':where',
+  ':matches',
+  ':any',
+  ':-webkit-any',
+])
+
+/**
+ * Whether every element a selector (one item of a list) matches, or one of
+ * its ancestors or siblings in the same markup, carries one of the classes
+ * the selector names. A class written directly counts; so does `:is()` or
+ * `:where()` when each of its arguments needs a class. Classes inside
+ * `:not()`, `:has()` or any other pseudo-class do not count.
+ */
+function needsClass(item) {
+  return item.nodes.some(
+    (node) =>
+      node.type === 'class' ||
+      (node.type === 'pseudo' &&
+        MATCHES_ANY.has(node.value.toLowerCase()) &&
+        node.nodes.length > 0 &&
+        node.nodes.every(needsClass)),
+  )
+}
+
+/**
+ * Whether some selector in the list can match markup that has none of the
+ * classes it names, such as `button`, `:not(.x)`, `:is(button, .x)` or
+ * `:where(button)`. A selector that does not parse counts as matching
+ * without a class.
+ */
+export function canMatchWithoutClass(selector) {
+  let result = false
+  try {
+    selectorParser((root) => {
+      root.each((item) => {
+        if (!needsClass(item)) result = true
+      })
+    }).processSync(selector)
+  } catch {
+    return true
+  }
+  return result
+}
 
 /**
  * Reads compiled CSS into rule groups. A group is every rule with the same
@@ -146,6 +213,8 @@ export function readRules(css, { map, root } = {}) {
     map: map ? { prev: map, inline: false, annotation: false } : false,
   })
   const groups = new Map()
+  const order = []
+  const seen = new WeakSet()
 
   const groupFor = (node, selector, list = []) => {
     const context = contextOf(node)
@@ -155,14 +224,17 @@ export function readRules(css, { map, root } = {}) {
         key,
         selector,
         classes: list.length > 0 ? classesInSelector(selector) : new Set(),
-        // Whether some selector in the list names no class, such as `button`
-        // in `button, .pathable-button`: a change to the rule then reaches
-        // markup that no class identifies.
-        classless:
-          list.length === 0 ||
-          list.some((item) => classesInSelector(item).size === 0),
+        // Whether some selector in the list can match without a class, such
+        // as `button` in `button, .pathable-button` or `:not(.x)`: a change
+        // to the rule then reaches markup that no class identifies.
+        classless: list.length === 0 || canMatchWithoutClass(selector),
         decls: [],
       })
+    }
+    // Record each rule once, in document order, to compare rule order.
+    if (!seen.has(node)) {
+      seen.add(node)
+      order.push(key)
     }
     return groups.get(key)
   }
@@ -202,6 +274,7 @@ export function readRules(css, { map, root } = {}) {
       root,
     })
   })
+  groups.order = order
   return groups
 }
 
@@ -253,6 +326,7 @@ export function diffStyles(base, head) {
   }
 
   const changedTokens = new Map()
+  const changedKeys = new Set()
   const keys = new Set([...before.keys(), ...after.keys()])
   for (const key of keys) {
     const was = before.get(key)
@@ -268,6 +342,7 @@ export function diffStyles(base, head) {
     if (changed.length === 0 && !sameOrder(was?.decls, now?.decls))
       changed = [...props]
     if (changed.length === 0) continue
+    changedKeys.add(key)
 
     const group = now ?? was
     const status = !was ? 'added' : !now ? 'removed' : 'changed'
@@ -303,6 +378,47 @@ export function diffStyles(base, head) {
         })
       }
     }
+  }
+
+  // Rule order. Two rules that match the same element and set the same
+  // property resolve by order when their specificity is equal, so moving a
+  // rule can restyle markup with no declaration changed. Compare the order of
+  // the unchanged rules present on both sides: a rule whose position among
+  // them moved contributes its classes. An element restyled by two rules
+  // swapping matches both, so it carries the required classes of the one
+  // that moved. A moved rule that can match without a class selects every
+  // fixture. A changed rule already contributes its classes above.
+  const stable = (groups) => {
+    const count = new Map()
+    return groups.order
+      .filter(
+        (key) => !changedKeys.has(key) && before.has(key) && after.has(key),
+      )
+      .map((key) => {
+        const n = (count.get(key) ?? 0) + 1
+        count.set(key, n)
+        return { key, id: `${key}#${n}` }
+      })
+  }
+  const was = stable(before)
+  const now = stable(after)
+  const wasIndex = new Map(was.map(({ id }, index) => [id, index]))
+  const moved = new Set()
+  now.forEach(({ key, id }, index) => {
+    if (wasIndex.get(id) !== index) moved.add(key)
+  })
+  const nowIds = new Set(now.map(({ id }) => id))
+  for (const { key, id } of was) if (!nowIds.has(id)) moved.add(key)
+  for (const key of moved) {
+    const group = after.get(key)
+    const decl = group.decls[0]
+    const reason = {
+      via: 'rule moved relative to other rules',
+      selector: group.selector,
+      source: decl ? originOf(decl.node, decl.root) : null,
+    }
+    if (group.classless) all.push(reason)
+    else for (const name of group.classes) addClass(name, reason)
   }
 
   // Follow each changed custom property to the rules that read it, on either
@@ -471,7 +587,7 @@ const git = (args, cwd = repoRoot) =>
  */
 export function dependencyReasons(changedPaths, uswds = {}) {
   const reasons = changedPaths
-    .filter((path) => DEPENDENCY_PATHS.some((pattern) => pattern.test(path)))
+    .filter((path) => matchesAny(path, DEPENDENCY_GLOBS))
     .map((path) => ({ via: 'dependencies changed', source: path }))
   if (uswds.base !== uswds.head) {
     reasons.push({
@@ -555,11 +671,7 @@ export function affected({ base, head } = {}) {
       ),
     }
   }
-  if (
-    !changedPaths.some((path) =>
-      STYLESHEET_PATHS.some((pattern) => pattern.test(path)),
-    )
-  ) {
+  if (!changedPaths.some((path) => matchesAny(path, STYLESHEET_GLOBS))) {
     return {
       ...meta,
       all: false,

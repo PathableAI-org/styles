@@ -94,9 +94,13 @@ Every folder is selected when the change cannot be narrowed to classes:
 - `pnpm-lock.yaml`, `pnpm-workspace.yaml` or `patches/` changed, or the
   `@uswds/uswds` range in `packages/styles/package.json` changed, because the
   two sides would not compile with the same packages;
-- a changed rule has a selector that names no class, such as an element
-  selector, the reset, `@font-face` or a keyframe, even when other selectors
-  in the same list name one (`button, .pathable-button`);
+- a changed rule has a selector that can match markup without any of the
+  classes it names, even when other selectors in the same list name one
+  (`button, .pathable-button`). That covers an element selector, the reset,
+  `@font-face`, a keyframe, and a class only inside `:not()`, `:has()` or
+  another pseudo-class (`:not(.x)`, `div:has(.x)`). An `:is()` or `:where()`
+  counts as needing a class only when every argument needs one, so
+  `:where(.x)` narrows to `.x` and `:is(button, .x)` selects every folder;
 - a custom property changed on a rule with no class (such as `:root`) and,
   in the end, no rule reads it, directly or through other custom properties;
 - a changed custom property is read by such a rule.
@@ -114,14 +118,23 @@ buttons in its fixtures, and a change to `.pathable-tag` does not select it.
 Declarations that only change order within a rule, such as a shorthand
 moved after its longhand, count as a change to every property of the rule,
 and a changed statement at-rule such as `@import` or `@layer a, b` selects
-every folder.
+every folder. Whitespace is collapsed before comparing, except inside quoted
+strings, so `content: "a  b"` or `[data-label="A  B"]` changing is seen.
 
-Known limits: a whole rule that only moves, with the same selector and
-declarations, is not seen, although moving it can change the cascade. A
-class added to the markup by JavaScript is not seen, because only the
-fixture HTML is read.
+Rule order is compared too. Among the rules that did not change, a rule
+whose position moved relative to the others contributes its classes, or
+selects every folder when it can match without a class. Markup restyled by
+two rules swapping matches both, so it carries the classes of the one that
+moved. A changed rule already contributes its classes.
+
+Known limit: a class added to the markup by JavaScript is not seen, because
+only the fixture HTML is read.
 
 ### The union
+
+`INPUT_GLOBS` in `select.mjs` lists every path that can change the
+selection, and `fixtures/harness/workflow.test.mjs` fails when the
+workflow's `pull_request.paths` misses one.
 
 `node fixtures/harness/select.mjs <base>` runs both and prints the union,
 plus every folder whose page `packages/styles/components/<slug>.md` changed
@@ -132,8 +145,10 @@ every folder. In GitHub Actions it also writes the `folders` and
 ## In CI
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
-on a pull request that changes `fixtures/**`, `packages/styles/src/**/*.scss`,
-`packages/styles/components/*.md`, `pnpm-lock.yaml` or the workflow itself, and on every push to `main`. It:
+on a pull request that changes any input of the selection (`fixtures/**`,
+`packages/styles/components/*.md`, `packages/styles/src/**/*.scss` or
+`*.sass`, `packages/styles/package.json`, `pnpm-lock.yaml`,
+`pnpm-workspace.yaml` or `patches/**`) or the workflow itself, and on every push to `main`. It:
 
 1. builds `@pathableai/styles`;
 2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
