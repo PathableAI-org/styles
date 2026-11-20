@@ -67,7 +67,7 @@ None.
 ## Composition
 
 - Put text, or an element that holds text, inside. Do not put focusable
-  content inside: it stays off screen when focused, so a keyboard user cannot
+  content inside: it stays hidden when focused, so a keyboard user cannot
   see where focus is.
 - The element stays where it sits in the markup, as a clipped 1px box. It
   does not depend on the page's direction, a positioned ancestor or a scroll
@@ -84,8 +84,8 @@ does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
 The element is `position: absolute`, 1px by 1px with a `-1px` margin, and
-clipped with `clip-path: inset(50%)`. Its text keeps its font and wrapping
-off (`white-space: nowrap`), so a screen reader reads it as one run.
+clipped with `clip-path: inset(50%)`. `white-space: nowrap` stops its text
+wrapping inside the 1px box, so a screen reader reads it as one run.
 
 ## The consumer owns
 
