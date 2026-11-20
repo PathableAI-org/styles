@@ -177,6 +177,9 @@
 // --- Mobile ---
 @include at-media-max('tablet') {
   .pathable-workflow-panel__actions {
+    // Light container: reset the surface focus ring (see pathable-bg-link in
+    // _utilities.scss).
+    --pathable-surface-focus-ring: initial;
     position: sticky;
     bottom: 0;
     background: color('white');
