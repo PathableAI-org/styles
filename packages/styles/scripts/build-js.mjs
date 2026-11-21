@@ -12,8 +12,7 @@ async function main() {
   // Ensure dist directory exists
   mkdirSync(distDir, { recursive: true })
 
-  // Build the main JS bundle from patched USWDS source
-  // The patch changes all class prefixes from "usa" to "pathable"
+  // Build the main JS bundle from the USWDS source
   await esbuild.build({
     entryPoints: [
       join(
