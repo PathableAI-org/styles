@@ -5,25 +5,20 @@ kind: static
 summary: A secondary navigation trail that shows the path from the top of the site to the current page, as a row of links ending in the current page's name.
 styles-class: pathable-breadcrumb
 variants:
-  - axis: wrap
+  - axis: overflow
     default: default
-    values: [default, wrap]
+    values: [default, truncate]
 guarantees:
-  - id: single-line
-    status: unverified
-    claim: From a viewport width of 480 px the trail sits on one line, each item but the last is followed by a chevron separator, and a trail wider than its container is cut off with an ellipsis instead of wrapping.
+  - id: wrapping
+    claim: From a viewport width of 480 px the trail wraps onto further lines when it is wider than its container, each item but the last is followed by a chevron separator, and lines are 1.5 times the font size apart.
   - id: narrow-parent-link
-    status: unverified
     claim: Below a viewport width of 480 px only the parent link, the item before the current page, is shown, with a back arrow before it; the other items are hidden from view and stay in the page for screen readers.
   - id: link-style
-    status: unverified
     claim: Each link is in the theme link colour with no underline on the link itself, the underline is drawn under its text only, and the link changes to the darker hover colour on hover.
   - id: spacing
-    status: unverified
     claim: From a viewport width of 480 px the trail has 16 px of padding above and below and none at the sides, and its list has 4 px of padding with a matching negative margin so a focus ring on the first link is not clipped.
-  - id: wrap
-    status: unmet
-    claim: With the wrap modifier the trail wraps onto further lines at every width instead of being cut off with an ellipsis, each item stays whole, and lines are 1.5 times the font size apart. The pathable-breadcrumb--wrap class is not in the stylesheet yet.
+  - id: truncate
+    claim: With the truncate modifier, from a viewport width of 480 px the trail sits on one line, and a trail wider than its container is cut off with an ellipsis instead of wrapping.
 ---
 
 # Breadcrumb
@@ -68,12 +63,10 @@ what you need.
 
 Add the modifier class to `pathable-breadcrumb`.
 
-| Axis | Value     | Class                       | What it is for                                                 |
-| ---- | --------- | --------------------------- | -------------------------------------------------------------- |
-| wrap | `default` | none                        | One line; a trail wider than its container ends in an ellipsis |
-| wrap | `wrap`    | `pathable-breadcrumb--wrap` | Long page names that should wrap instead of being cut off      |
-
-The wrap modifier is not in the stylesheet yet; see Guarantees.
+| Axis     | Value      | Class                           | What it is for                                                 |
+| -------- | ---------- | ------------------------------- | -------------------------------------------------------------- |
+| overflow | `default`  | none                            | A trail wider than its container wraps onto further lines      |
+| overflow | `truncate` | `pathable-breadcrumb--truncate` | One line; a trail wider than its container ends in an ellipsis |
 
 ## Composition
 
@@ -86,8 +79,9 @@ The wrap modifier is not in the stylesheet yet; see Guarantees.
 - `pathable-breadcrumb__link`: the `<a>` in every item except the last. Put
   the link text in a `<span>` inside the link: the underline is drawn under
   the span so it does not run past the text.
-- The last item holds the current page's name as plain text, not a link, and
-  carries `aria-current="page"` on the `<li>`.
+- The last item is `<li class="pathable-breadcrumb__list-item pathable-current"
+aria-current="page">` and holds the current page's name in a `<span>`, not a
+  link.
 - The separators and the back arrow are drawn by the stylesheet; do not add
   icons or separator characters to the markup.
 - The 480 px breakpoint follows the viewport, not the trail's container, and
@@ -100,13 +94,8 @@ The wrap modifier is not in the stylesheet yet; see Guarantees.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
-
-The `wrap` guarantee is unmet. Today a trail cannot be told to wrap on a wide
-screen: a long trail is always cut off with an ellipsis, and the full text
-stays in the document.
+is expected behaviour. The full text of every item stays in the document, also
+when the truncate modifier cuts it off on screen.
 
 ## The consumer owns
 
@@ -117,5 +106,5 @@ stays in the document.
 - The landmark label: an `aria-label` on the `<nav>` that names the trail in
   the page's language. Two navigation landmarks on one page need different
   labels.
-- Marking the last item with `aria-current="page"`.
+- Marking the last item with `pathable-current` and `aria-current="page"`.
 - Space above and below the trail beyond its own padding.

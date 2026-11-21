@@ -1,7 +1,13 @@
-<!-- description: An informational alert with a heading and a message that includes a link. It sets no role, because it is on the page when it loads. -->
-<div class="pathable-alert pathable-alert--info">
+<!-- description: An informational alert on the page when it loads. It is a static named region: role="region" and an aria-label give it a name, and the heading opens with the alert type. -->
+<div
+  class="pathable-alert pathable-alert--info"
+  role="region"
+  aria-label="Orientation schedule"
+>
   <div class="pathable-alert__body">
-    <h3 class="pathable-alert__heading">Orientation moved to Thursday</h3>
+    <h3 class="pathable-alert__heading">
+      Information: orientation moved to Thursday
+    </h3>
     <p class="pathable-alert__text">
       The employment readiness orientation for new participants now starts at
       10:00 AM. Review the

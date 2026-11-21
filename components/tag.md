@@ -10,19 +10,14 @@ variants:
     values: [default, big]
 guarantees:
   - id: font-size
-    status: unverified
     claim: The tag text is uppercase Nunito at 0.87rem by default and 0.99rem at big, which is 13.92 px and 15.84 px at a 16 px root font size.
   - id: box
-    status: unverified
     claim: The tag has 1 px of padding above and below, 0.5rem of padding left and right, and 2 px rounded corners, at both sizes.
   - id: colour
-    status: unverified
     claim: 'The text is white on a #565c65 background, a contrast of 6.74:1, at both sizes and in every theme.'
   - id: trailing-margin
-    status: unverified
     claim: A tag has a 0.25rem right margin, which is 0 when the tag is the only element of its element type among its siblings.
   - id: inline-wrap
-    status: unverified
     claim: Outside a flex or grid container the tag is inline, so long text wraps onto further lines with the text around it inside a narrow container instead of overflowing it.
 ---
 
@@ -44,8 +39,7 @@ Use something else when:
 - the label performs an action or applies a filter: use a `<button>` with
   `pathable-button`, since a tag cannot be focused or pressed;
 - the state needs a status colour, such as success or error: the tag has one
-  colour only; pair it with a `pathable-icon-tile` status, or use
-  `pathable-alert` for a message;
+  colour only; use `pathable-alert` for a message;
 - the label is a whole sentence: write it as text, not a tag.
 
 ## Example
@@ -80,8 +74,7 @@ The big tag changes only the font size; the padding is the same.
 
 None. The font size, padding, corner radius and colours are fixed values in
 the stylesheet, so a theme does not change them. The tag sets no line height, so
-its height follows the line height of the text around it; this was checked
-against the compiled stylesheet.
+its height follows the line height of the text around it.
 
 ## Composition
 
@@ -101,10 +94,7 @@ against the compiled stylesheet.
 
 ## Guarantees
 
-The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source and no test checks it yet.
+The guarantees are the list in the front matter at the top of this page.
 
 The rem figures scale with the root font size; the pixel figures are those at
 a 16 px root.

@@ -2,7 +2,7 @@
 name: Icon
 slug: icon
 kind: static
-summary: An inline SVG icon sized to the current font size and painted in the current text colour.
+summary: An inline SVG icon that references a named icon in the PathAble sprite, sized to the current font size and painted in the current text colour.
 styles-class: pathable-icon
 variants:
   - axis: size
@@ -10,30 +10,25 @@ variants:
     values: [default, size-3, size-4, size-5, size-6, size-7, size-8, size-9]
 guarantees:
   - id: em-size
-    status: unverified
     claim: Outside a pathable-icon-tile or a pathable-bottom-navigation__item, the icon is 1em square, the font size of the icon element, whatever width and height attributes the SVG carries.
   - id: current-colour
-    status: unverified
-    claim: The SVG's fill is the current text colour, so every shape without its own fill attribute paints in that colour, and a fill attribute on the svg element itself is overridden.
+    claim: The SVG's fill is the current text colour, so every shape in the referenced sprite symbol paints in that colour, and a fill attribute on the svg element itself is overridden.
   - id: baseline
-    status: unverified
     claim: The icon is an inline block with no vertical alignment of its own, so its bottom edge sits on the baseline of the text around it.
   - id: relative
-    status: unverified
     claim: The icon is relatively positioned with no offset, so a top or left value nudges it without moving the text around it.
   - id: in-tile
-    status: unverified
     claim: Inside a pathable-icon-tile the tile's icon size replaces the 1em size, and the icon stays centred in the tile.
   - id: size-modifiers
-    status: unmet
-    claim: The classes pathable-icon--size-3 to pathable-icon--size-9 are not in the stylesheet yet. When they are, they make the icon a square of 24, 32, 40, 48, 56, 64 and 72 px, whatever the font size around it.
+    claim: The classes pathable-icon--size-3 to pathable-icon--size-9 make the icon a square of 24, 32, 40, 48, 56, 64 and 72 px, whatever the font size around it.
 ---
 
 # Icon
 
-An inline SVG icon sized to the current font size and painted in the current
-text colour. Put the class on an `<svg>` with a `viewBox`. It is not
-interactive: the class adds no role, no tab stop and no accessible name.
+An inline SVG icon that references a named icon in the PathAble sprite, sized
+to the current font size and painted in the current text colour. Put the class
+on an `<svg>` that holds a `<use>` pointing at a symbol of the sprite. It is
+not interactive: the class adds no role, no tab stop and no accessible name.
 
 ## When to use
 
@@ -84,20 +79,49 @@ that should keep a fixed size whatever the text around it does.
 | size | `size-8`  | `pathable-icon--size-8` | 64 px square                        |
 | size | `size-9`  | `pathable-icon--size-9` | 72 px square                        |
 
-The size modifiers are not in the stylesheet yet; see the `size-modifiers`
-guarantee. Until they are, set `font-size` on the icon.
-
 ## Tokens
 
 None. The size comes from the font size and the colour from the text colour
 where the icon sits.
 
+## The sprite
+
+The icons are the named symbols of the PathAble sprite, the package's asset
+`@pathableai/styles/dist/img/sprite.svg`. An icon is the symbol's name after
+the `#` in the `<use>` reference, such as `#check_circle`, `#schedule`,
+`#warning` or `#navigate_next`. The sprite is a file that the application
+serves, and the `href` is the URL it is served from, such as
+`/assets/img/sprite.svg`.
+
+A decorative icon, beside text that says the same thing, is hidden from
+assistive technology:
+
+```svg
+<svg class="pathable-icon" aria-hidden="true" focusable="false" role="img">
+  <use href="/assets/img/sprite.svg#check_circle"></use>
+</svg>
+```
+
+An icon that carries meaning on its own has a `<title>` and is named by
+`aria-labelledby`:
+
+```svg
+<svg
+  class="pathable-icon"
+  focusable="false"
+  role="img"
+  aria-labelledby="overdue-icon-title"
+>
+  <title id="overdue-icon-title">Overdue</title>
+  <use href="/assets/img/sprite.svg#warning"></use>
+</svg>
+```
+
 ## Composition
 
-- Put the class on the `<svg>` itself, with a square `viewBox` such as
-  `0 0 24 24`. Width and height attributes are overridden, so leave them out.
-- Use filled artwork. The fill overrides a `fill="none"` attribute on the
-  `<svg>`, so stroke-only artwork renders as solid shapes.
+- Put the class on the `<svg>` itself, with one `<use>` inside it that
+  references a symbol of the sprite. Leave out width and height attributes
+  and the `viewBox`: the class sets the size.
 - The icon adds no space around itself. Next to text, put a space or a gap
   between them.
 - Sitting on the baseline, the icon rises slightly above the centre of
@@ -109,9 +133,7 @@ where the icon sits.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source and no test checks it yet.
+is expected behaviour.
 
 The size guarantee is about the icon's box, not the drawing inside it: artwork
 that does not fill its own view box looks smaller.
@@ -120,13 +142,9 @@ that does not fill its own view box looks smaller.
 
 - Accessibility. For a decorative icon beside text that says the same thing,
   set `aria-hidden="true"` and `focusable="false"`. For an icon that carries
-  meaning on its own, give the SVG `role="img"` and an accessible name with
-  `aria-label` or `aria-labelledby`.
+  meaning on its own, give the SVG `role="img"`, a `<title>` with an `id`, and
+  `aria-labelledby` pointing at that `id`.
 - The colour contrast of the icon against its background, which is that of
   the text colour it inherits.
-- The icon artwork. The package ships no icon set. The examples draw each
-  icon as inline `<path>` data, copied from the USWDS icon files. An
-  application can instead keep its own SVG sprite and point `<use href>` at
-  it from inside the `<svg>`; the sprite file and the URL it is served from
-  belong to the application too.
+- Serving the sprite file, and the URL it is served from.
 - Layout around the icon: spacing and alignment with text.

@@ -1,4 +1,4 @@
-<!-- description: A trail of three links and the current page. On a narrow screen only the parent link shows. -->
+<!-- description: A trail of three links and the current page. Long trails wrap onto further lines, and on a narrow screen only the parent link shows. -->
 <nav class="pathable-breadcrumb" aria-label="Breadcrumb">
   <ol class="pathable-breadcrumb__list">
     <li class="pathable-breadcrumb__list-item">
@@ -14,8 +14,11 @@
         ><span>Maria Gonzalez</span></a
       >
     </li>
-    <li class="pathable-breadcrumb__list-item" aria-current="page">
-      Employment plan
+    <li
+      class="pathable-breadcrumb__list-item pathable-current"
+      aria-current="page"
+    >
+      <span>Employment plan</span>
     </li>
   </ol>
 </nav>

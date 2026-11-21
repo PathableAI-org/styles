@@ -1,5 +1,5 @@
 ---
-name: SummaryBox
+name: Summary box
 slug: summary-box
 kind: static
 summary: A bordered box with a heading and a short body that gives a reader the key points to know or act on.
@@ -7,31 +7,26 @@ styles-class: pathable-summary-box
 variants: []
 guarantees:
   - id: box-surface
-    status: unverified
     claim: The box has 24 px of padding on every side, a 1 px solid border and 4 px rounded corners, on a light information-blue background with the theme text colour.
   - id: heading
-    status: unverified
     claim: The heading has no top margin and an 8 px bottom margin, and is set in the larger heading size of the component, not the browser's default for its element.
   - id: text-margins
-    status: unverified
-    claim: The body text has no top or bottom margin, so a paragraph or list in it adds no space of its own above or below.
+    claim: The text has no top or bottom margin, so a paragraph or list in it adds no space of its own above or below.
   - id: following-gap
-    status: unverified
     claim: A box that follows another element in the same parent starts 16 px below it; a box that is the first child of its parent has no top margin.
   - id: list-last-margin
-    status: unverified
-    claim: A pathable-list that is the last child of the body text has no bottom margin, so the box's 24 px padding is the only space below the last item.
+    claim: A pathable-list that is the last child of the text has no bottom margin, so the box's 24 px padding is the only space below the last item.
   - id: link-colours
-    status: unverified
     claim: A link in the box has the theme link colour with a contrast ratio of at least 4.5 to 1 against the box background, and a different colour while hovered.
 ---
 
-# SummaryBox
+# Summary box
 
 A bordered box with a heading and a short body that gives a reader the key
-points to know or act on. Put the class on a `<section>` that holds a
-`pathable-summary-box__heading` and a `pathable-summary-box__text`. The box
-adds no role and no label: name it yourself.
+points to know or act on. Put the class on a `<div>` with `role="region"` and an
+`aria-labelledby` that points at the heading. Inside it, a
+`pathable-summary-box__body` holds a `pathable-summary-box__heading` and a
+`pathable-summary-box__text`.
 
 ## When to use
 
@@ -72,38 +67,35 @@ class.
 
 ## Composition
 
-- `pathable-summary-box__heading`: the heading, an `<h3>` in the examples.
-  Choose the level that follows the page's heading outline.
-- `pathable-summary-box__text`: the body. Put it on a `<div>` that holds a
-  `pathable-list`, or on a `<p>` for one sentence.
-- `pathable-summary-box__link`: a link inside the body, in the box's own link
+- `pathable-summary-box`: the `<div role="region" aria-labelledby>`, the
+  box itself.
+- `pathable-summary-box__body`: the `<div>` inside the box that holds the
+  heading and the text.
+- `pathable-summary-box__heading`: the heading, an `<h3>` in the examples,
+  with a literal `id` that the box's `aria-labelledby` names. Choose the level
+  that follows the page's heading outline.
+- `pathable-summary-box__text`: the body text. It is a `<div>` that holds a
+  `pathable-list` or paragraphs.
+- `pathable-summary-box__link`: a link inside the text, in the box's own link
   colours. A plain `pathable-link` also works but does not follow the box
   background.
 - `pathable-list`: the list of key points. A `pathable-list` that ends the
-  body adds no bottom margin.
-- There is no wrapper element around the heading and body. Both are direct
-  children of the box, and the box needs no `pathable-summary-box__body`
-  element.
+  text adds no bottom margin.
 - A box that follows a sibling is 16 px below it. Place the box inside a
   `pathable-stack` when the page needs another gap.
 
 ## Guarantees
 
-The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
-
-The colours come from the theme, so a themed application may show other
-colours; the figures on this page are those of the default theme.
+The guarantees are the list in the front matter at the top of this page. The
+colours come from the theme, so a themed application may show other colours;
+the figures on this page are those of the default theme.
 
 ## The consumer owns
 
-- The landmark and its name. The examples use a `<section>` named by its
-  heading through `aria-labelledby`, which a screen reader exposes as a
-  region. Give each heading a literal `id` that is unique on the page. Use a
-  `<section>` with this label only when the box deserves a place in the
-  landmark list; two or three on a page is a sensible limit.
+- The region's name. The box is a `role="region"` named by its heading
+  through `aria-labelledby`. Give each heading a literal `id` that is unique
+  on the page. Keep to two or three boxes on a page, because each is a
+  landmark.
 - The heading level, which must follow the page outline.
 - The content: keep it short, and put the most important point first.
 - Link targets, and link text that makes sense out of context.

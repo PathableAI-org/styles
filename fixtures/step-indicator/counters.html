@@ -1,45 +1,38 @@
 <!-- description: Each step has a numbered circle on its bar, 2.5rem across. The last segment has no bar, because its circle ends the row. -->
-<section
-  class="pathable-step-indicator pathable-step-indicator--counters"
-  aria-label="Intake progress"
->
+<div class="pathable-step-indicator pathable-step-indicator--counters">
   <ol class="pathable-step-indicator__segments">
     <li
       class="pathable-step-indicator__segment pathable-step-indicator__segment--complete"
     >
-      <span class="pathable-sr-only">Intake, completed</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
-        >Intake</span
+      <span class="pathable-step-indicator__segment-label"
+        >Intake <span class="pathable-sr-only">completed</span></span
       >
     </li>
     <li
       class="pathable-step-indicator__segment pathable-step-indicator__segment--current"
       aria-current="step"
     >
-      <span class="pathable-sr-only">Eligibility</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
-        >Eligibility</span
+      <span class="pathable-step-indicator__segment-label">Eligibility</span>
+    </li>
+    <li class="pathable-step-indicator__segment">
+      <span class="pathable-step-indicator__segment-label"
+        >Documents <span class="pathable-sr-only">not completed</span></span
       >
     </li>
     <li class="pathable-step-indicator__segment">
-      <span class="pathable-sr-only">Documents, not completed</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
-        >Documents</span
-      >
-    </li>
-    <li class="pathable-step-indicator__segment">
-      <span class="pathable-sr-only">Review, not completed</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
-        >Review</span
+      <span class="pathable-step-indicator__segment-label"
+        >Review <span class="pathable-sr-only">not completed</span></span
       >
     </li>
   </ol>
   <div class="pathable-step-indicator__header">
     <h2 class="pathable-step-indicator__heading">
-      <span class="pathable-sr-only">Step</span>
-      <span class="pathable-step-indicator__current-step">2</span>
-      <span class="pathable-step-indicator__total-steps">of 4</span>
-      Eligibility
+      <span class="pathable-step-indicator__heading-counter">
+        <span class="pathable-sr-only">Step</span>
+        <span class="pathable-step-indicator__current-step">2</span>
+        <span class="pathable-step-indicator__total-steps">of 4</span>
+      </span>
+      <span class="pathable-step-indicator__heading-text">Eligibility</span>
     </h2>
   </div>
-</section>
+</div>

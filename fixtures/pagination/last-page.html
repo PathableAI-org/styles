@@ -1,54 +1,76 @@
 <!-- description: The last page of eight: no next link, and the current page is marked. -->
-<nav class="pathable-pagination" aria-label="Participant list pages">
-  <ul class="pathable-pagination__list" role="list">
+<nav aria-label="Participant list pages" class="pathable-pagination">
+  <ul class="pathable-pagination__list">
     <li class="pathable-pagination__item pathable-pagination__arrow">
       <a
-        class="pathable-pagination__link pathable-pagination__previous-page"
         href="/participants?page=7"
-        ><svg
+        class="pathable-pagination__link pathable-pagination__previous-page"
+        aria-label="Previous page"
+      >
+        <svg
           class="pathable-icon"
-          viewBox="0 0 24 24"
           aria-hidden="true"
           focusable="false"
+          role="img"
         >
-          <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></svg
-        ><span>Previous<span class="pathable-sr-only"> page</span></span></a
-      >
+          <use href="/assets/img/sprite.svg#navigate_before"></use>
+        </svg>
+        <span class="pathable-pagination__link-text">Previous</span>
+      </a>
     </li>
-    <li class="pathable-pagination__item">
-      <a class="pathable-pagination__link" href="/participants?page=1"
-        ><span class="pathable-sr-only">Page </span>1</a
-      >
-    </li>
-    <li class="pathable-pagination__item pathable-pagination__overflow">
-      <span aria-hidden="true">…</span>
-    </li>
-    <li class="pathable-pagination__item">
-      <a class="pathable-pagination__link" href="/participants?page=4"
-        ><span class="pathable-sr-only">Page </span>4</a
-      >
-    </li>
-    <li class="pathable-pagination__item">
-      <a class="pathable-pagination__link" href="/participants?page=5"
-        ><span class="pathable-sr-only">Page </span>5</a
-      >
-    </li>
-    <li class="pathable-pagination__item">
-      <a class="pathable-pagination__link" href="/participants?page=6"
-        ><span class="pathable-sr-only">Page </span>6</a
-      >
-    </li>
-    <li class="pathable-pagination__item">
-      <a class="pathable-pagination__link" href="/participants?page=7"
-        ><span class="pathable-sr-only">Page </span>7</a
-      >
-    </li>
-    <li class="pathable-pagination__item">
+    <li class="pathable-pagination__item pathable-pagination__page-no">
       <a
-        class="pathable-pagination__link pathable-current"
+        href="/participants?page=1"
+        class="pathable-pagination__button"
+        aria-label="Page 1"
+        >1</a
+      >
+    </li>
+    <li
+      class="pathable-pagination__item pathable-pagination__overflow"
+      aria-label="ellipsis indicating non-visible pages"
+    >
+      <span>…</span>
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__page-no">
+      <a
+        href="/participants?page=4"
+        class="pathable-pagination__button"
+        aria-label="Page 4"
+        >4</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__page-no">
+      <a
+        href="/participants?page=5"
+        class="pathable-pagination__button"
+        aria-label="Page 5"
+        >5</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__page-no">
+      <a
+        href="/participants?page=6"
+        class="pathable-pagination__button"
+        aria-label="Page 6"
+        >6</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__page-no">
+      <a
+        href="/participants?page=7"
+        class="pathable-pagination__button"
+        aria-label="Page 7"
+        >7</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__page-no">
+      <a
         href="/participants?page=8"
+        class="pathable-pagination__button pathable-current"
+        aria-label="Last page, page 8"
         aria-current="page"
-        ><span class="pathable-sr-only">Last page, page </span>8</a
+        >8</a
       >
     </li>
   </ul>

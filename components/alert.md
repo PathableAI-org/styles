@@ -6,8 +6,8 @@ summary: A block-level message with a coloured left bar, an optional status icon
 styles-class: pathable-alert
 variants:
   - axis: status
-    default: default
-    values: [default, info, success, warning, error, emergency]
+    default: info
+    values: [info, success, warning, error, emergency]
   - axis: size
     default: default
     values: [default, slim]
@@ -16,38 +16,27 @@ variants:
     values: [default, no-icon]
 guarantees:
   - id: surface-and-bar
-    status: unverified
-    claim: An alert with no status modifier has a light grey background and an 8 px grey bar on its left edge, and shows no icon.
+    claim: An alert has a status surface and an 8 px bar on its left edge in the status colour, and fills the width of its container.
   - id: body-padding
-    status: unverified
     claim: The body has 16 px of padding above and below and 20 px at the sides, and the alert fills the width of its container.
   - id: stacked-spacing
-    status: unverified
     claim: An alert that follows another element in the same parent has a 16 px top margin.
   - id: status-icon
-    status: unverified
-    claim: The info, success, warning, error and emergency alerts show a 32 px icon at the top left of the body, the body is at least 53 px tall, and the heading and text are indented 40 px so they clear the icon.
+    claim: The alert shows a 32 px icon at the top left of the body, the body is at least 53 px tall, and the heading and text are indented 40 px so they clear the icon.
   - id: info-colours
-    status: unverified
     claim: The info alert has a pale blue background (#edf5fd), a blue bar (#4899e8) and dark blue text (#00365c).
   - id: emergency-colours
-    status: unverified
     claim: The emergency alert has a #9c3d10 background and bar, white text and a white icon.
   - id: slim
-    status: unverified
     claim: The slim alert has 8 px of padding above and below, a 24 px icon and 32 px of indent for the text, and no minimum height.
   - id: status-fill
-    status: unmet
-    claim: The success, warning and error alerts fill the whole alert, body included, with the status background (#1cae96, #f5a623, #dc3545) and set their text in the status text colour (#001a33, #001a33, #ffffff), so every pairing has at least 4.5:1 contrast. Today the body keeps a pale tint over the status background, so error text is white on pale red.
+    claim: The success, warning and error alerts fill the whole alert, body included, with the status background (#1cae96, #f5a623, #dc3545) and set their text in the status text colour (#001a33, #001a33, #ffffff), so every pairing has at least 4.5:1 contrast.
   - id: heading-text-type
-    status: unmet
-    claim: The heading is set about 24 px (1.49rem) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves. Today those classes only set a colour, and the heading and text take the page's default heading and paragraph styles.
+    claim: The heading is set about 24 px (1.49rem) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves.
   - id: link-colour
-    status: unmet
-    claim: A link inside an alert is set in a colour that has at least 4.5:1 contrast on that alert's background. Today only the framework's own link class receives these colours, so a link in an alert keeps the page's link colour.
+    claim: A link inside an alert is set in a colour that has at least 4.5:1 contrast on that alert's background.
   - id: no-icon
-    status: unmet
-    claim: With the no-icon modifier the icon is hidden, the body has no minimum height and the heading and text have no indent. The class is not in the stylesheet yet.
+    claim: With the no-icon modifier the icon is hidden, the body has no minimum height and the heading and text have no indent.
 ---
 
 # Alert
@@ -55,7 +44,8 @@ guarantees:
 A block-level message with a coloured left bar, an optional status icon, an
 optional heading and a short text, for information that belongs to the content
 around it. Put the class on a `<div>` that holds one `pathable-alert__body`. It
-adds no role, no live region and no dismiss control.
+adds no role, no live region and no dismiss control; the role comes from
+how the alert is announced, as set out under Announcing an alert.
 
 ## When to use
 
@@ -99,8 +89,7 @@ Add at most one modifier class from each axis to `pathable-alert`.
 
 | Axis   | Value       | Class                       | What it is for                                                |
 | ------ | ----------- | --------------------------- | ------------------------------------------------------------- |
-| status | `default`   | none                        | A neutral note, grey with no icon                             |
-| status | `info`      | `pathable-alert--info`      | Helpful context or a schedule change                          |
+| status | `info`      | none                        | Helpful context or a schedule change                          |
 | status | `success`   | `pathable-alert--success`   | A confirmed change or a finished task                         |
 | status | `warning`   | `pathable-alert--warning`   | Something that needs attention soon                           |
 | status | `error`     | `pathable-alert--error`     | A failed action or a problem that blocks the reader           |
@@ -110,7 +99,25 @@ Add at most one modifier class from each axis to `pathable-alert`.
 | icon   | `default`   | none                        | The status icon shows                                         |
 | icon   | `no-icon`   | `pathable-alert--no-icon`   | The icon is hidden and the text uses the full width           |
 
-An alert with no heading needs no modifier: leave the heading out.
+Info is the default status; the examples also carry
+`pathable-alert--info`, which gives the same look. An alert with no heading needs no modifier: leave the heading out.
+
+## Announcing an alert
+
+An alert is one of three kinds, by how a screen reader meets it:
+
+- A static named region: the alert is in the page when it loads. Give it
+  `role="region"` and an `aria-label` so it is a landmark with a name.
+- An advisory alert: the application adds it after load for news that can
+  wait, such as a saved change. Give it `role="status"`, which is read when
+  the reader is next idle.
+- An urgent alert: the application adds it after load for news the reader
+  must hear now, such as a failed save or an emergency. Give it
+  `role="alert"`, which interrupts what is being read.
+
+Put the alert type in the opening words of the heading, or of the message
+when there is no heading, such as "Warning: benefits recertification due
+soon". Colour and the icon are never the only cue.
 
 ## Tokens
 
@@ -143,25 +150,16 @@ token.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
-
-Today the heading and text classes only set a colour, and the no-icon modifier
-does not exist; see `heading-text-type`, `no-icon` and `status-fill`. Do not
-rely on the success, warning and error text colours until `status-fill` is met.
+is expected behaviour.
 
 ## The consumer owns
 
-- The role. An alert that is in the page when it loads needs none. Give one
-  that the application adds after load, such as an error after a failed save,
-  `role="alert"` so a screen reader announces it. Do not put a role on every
-  alert.
+- The role, as set out under Announcing an alert. Do not put a live role on
+  every alert: use `role="alert"` only for urgent news.
 - The heading level, and whether there is a heading at all.
 - The words. Say what happened and what to do; status is never carried by the
   colour or icon alone.
 - Showing and removing the alert, and any dismiss control.
-- Serving the status icons: the stylesheet refers to icon files by a path
-  relative to itself, so the application's build must publish them there.
+- Serving the status icons at the path the stylesheet expects.
 - Not putting personal details in an alert that is announced or shown to
   people who should not see them.
