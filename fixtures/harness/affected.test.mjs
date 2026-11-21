@@ -513,6 +513,28 @@ describe('quoted text, selector forms and rule order', () => {
     assert.equal(selection.all, false)
   })
 
+  it('sees a declaration moving between two rules Sass split from one block', () => {
+    // Sass emits `.pathable-card {...}`, `.pathable-card--big {...}`,
+    // `.pathable-card {...}`; moving `margin: 0` below the nested rule keeps
+    // the `.pathable-card` group's declarations and order the same.
+    const overlap = {
+      folder: 'overlap',
+      files: [
+        {
+          path: 'fixtures/overlap/big.html',
+          html: '<div class="pathable-card pathable-card--big">Big</div>',
+        },
+      ],
+    }
+    const selection = diffOne(
+      '.pathable-card { color: red; margin: 0; &--big { margin: 1rem; } padding: 0; }\n',
+      '.pathable-card { color: red; &--big { margin: 1rem; } margin: 0; padding: 0; }\n',
+      [...FIXTURES, overlap],
+    )
+    assert.equal(selection.all, false)
+    assert.ok(folders(selection).includes('overlap'), JSON.stringify(selection))
+  })
+
   it('selects every fixture when a rule with no class moves', () => {
     const card = '.pathable-card { color: red; }\n'
     const body = 'body { color: blue; }\n'

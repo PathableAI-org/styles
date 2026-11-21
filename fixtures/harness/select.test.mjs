@@ -7,6 +7,7 @@ import {
   needsHtmlValidate,
   pagesChanged,
   renderSummary,
+  sharedScriptsChanged,
 } from './select.mjs'
 
 const css = {
@@ -120,4 +121,28 @@ test('html-validate runs for a fixtures or lockfile change only', () => {
   assert.equal(needsHtmlValidate(['fixtures/activity-list/flat.html']), true)
   assert.equal(needsHtmlValidate(['pnpm-lock.yaml']), true)
   assert.equal(needsHtmlValidate(['packages/styles/src/_semantic.scss']), false)
+})
+
+test('a change to a shared component-page script selects every folder', () => {
+  const paths = [
+    'packages/styles/scripts/check-component-pages.mjs',
+    'docs/testing/fixtures.md',
+  ]
+  const scripts = sharedScriptsChanged(paths)
+  assert.deepEqual(scripts, [
+    'packages/styles/scripts/check-component-pages.mjs',
+  ])
+  const { folders } = combine([], { folders: {} }, [], {
+    changed: scripts,
+    folders: ['activity-list', 'button'],
+  })
+  assert.deepEqual(Object.keys(folders), ['activity-list', 'button'])
+  assert.match(folders.button[0], /check-component-pages\.mjs` changed/u)
+})
+
+test('other scripts select nothing', () => {
+  assert.deepEqual(
+    sharedScriptsChanged(['packages/styles/scripts/lint-tokens.mjs']),
+    [],
+  )
 })

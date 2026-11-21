@@ -31,12 +31,20 @@ const SUMMARY_REASONS = 15
  * Every path whose change can change the selection. The Fixtures workflow's
  * `pull_request.paths` must list each of these globs; a test checks it.
  */
+/**
+ * Scripts outside fixtures/ that the selection and the contract check read
+ * selectors, CSS and pages with. A change to one can change any folder's
+ * result, so it selects every folder, as a change to fixtures/harness/ does.
+ */
+export const SHARED_SCRIPTS = [
+  'packages/styles/scripts/check-component-pages.mjs',
+  'packages/styles/scripts/component-pages.mjs',
+]
+
 export const INPUT_GLOBS = [
   'fixtures/**',
   'packages/styles/components/*.md',
-  // The selection reads selectors and pages with these scripts.
-  'packages/styles/scripts/check-component-pages.mjs',
-  'packages/styles/scripts/component-pages.mjs',
+  ...SHARED_SCRIPTS,
   ...STYLESHEET_GLOBS,
   ...DEPENDENCY_GLOBS,
 ]
@@ -61,18 +69,30 @@ export function needsHtmlValidate(paths) {
   )
 }
 
+/** The shared scripts among the changed paths. */
+export function sharedScriptsChanged(paths) {
+  return SHARED_SCRIPTS.filter((script) => paths.includes(script))
+}
+
 /**
  * Combines the selections. `changed` is the folder list from changed.mjs,
- * `css` the selection from affected.mjs and `pages` the folders whose
- * component page changed. Returns `{ folders: { <folder>: string[] } }`,
+ * `css` the selection from affected.mjs, `pages` the folders whose
+ * component page changed, and `scripts` the shared scripts that changed
+ * (`changed`) with the folders they select (`folders`, every folder). Returns `{ folders: { <folder>: string[] } }`,
  * each string a reason in Markdown.
  */
-export function combine(changed, css, pages = []) {
+export function combine(changed, css, pages = [], scripts = {}) {
   const folders = {}
   const add = (folder, reason) => {
     folders[folder] ??= []
     folders[folder].push(reason)
   }
+  for (const script of scripts.changed ?? [])
+    for (const folder of scripts.folders ?? [])
+      add(
+        folder,
+        `\`${script}\` changed; the selection and the contract check read selectors, CSS and pages with it, so every folder is checked.`,
+      )
   for (const folder of changed)
     add(folder, 'Fixture files changed under `fixtures/`.')
   for (const folder of pages)
@@ -181,7 +201,10 @@ function main(argv) {
     result = {
       base: css.base,
       fixturesChanged: needsHtmlValidate(paths),
-      ...combine(changed, css, pagesChanged(paths, folderList)),
+      ...combine(changed, css, pagesChanged(paths, folderList), {
+        changed: sharedScriptsChanged(paths),
+        folders: folderList,
+      }),
     }
   }
 

@@ -214,8 +214,9 @@ export function readRules(css, { map, root } = {}) {
     map: map ? { prev: map, inline: false, annotation: false } : false,
   })
   const groups = new Map()
+  // One entry per rule node, in document order, with its own declarations.
   const order = []
-  const seen = new WeakSet()
+  const entries = new Map()
 
   const groupFor = (node, selector, list = []) => {
     const context = contextOf(node)
@@ -233,9 +234,10 @@ export function readRules(css, { map, root } = {}) {
       })
     }
     // Record each rule once, in document order, to compare rule order.
-    if (!seen.has(node)) {
-      seen.add(node)
-      order.push(key)
+    if (!entries.has(node)) {
+      const entry = { key, decls: [] }
+      entries.set(node, entry)
+      order.push(entry)
     }
     return groups.get(key)
   }
@@ -246,13 +248,15 @@ export function readRules(css, { map, root } = {}) {
     // selects every fixture.
     if (node.type === 'atrule' && !node.nodes) {
       const statement = normalize(`@${node.name} ${node.params}`)
-      groupFor(node, statement).decls.push({
+      const decl = {
         prop: `@${node.name}`,
         value: normalize(node.params),
         reads: [],
         node,
         root,
-      })
+      }
+      groupFor(node, statement).decls.push(decl)
+      entries.get(node).decls.push(decl)
       return
     }
     if (node.type !== 'decl') return
@@ -267,15 +271,23 @@ export function readRules(css, { map, root } = {}) {
     } else {
       return
     }
-    group.decls.push({
+    const decl = {
       prop: node.prop,
       value: normalize(`${node.value}${node.important ? ' !important' : ''}`),
       reads: [...node.value.matchAll(VAR_REFERENCE)].map(([, name]) => name),
       node,
       root,
-    })
+    }
+    group.decls.push(decl)
+    entries.get(parent).decls.push(decl)
   })
-  groups.order = order
+  // Each rule is identified by its key and its own declarations, so a
+  // declaration moving between two rules with the same selector (as Sass
+  // splits a block around a nested rule) changes their identities.
+  groups.order = order.map(({ key, decls }) => ({
+    key,
+    content: decls.map(({ prop, value }) => `${prop}:${value}`).join(';'),
+  }))
   return groups
 }
 
@@ -448,12 +460,13 @@ export function diffStyles(base, head) {
     const count = new Map()
     return groups.order
       .filter(
-        (key) => !changedKeys.has(key) && before.has(key) && after.has(key),
+        ({ key }) => !changedKeys.has(key) && before.has(key) && after.has(key),
       )
-      .map((key) => {
-        const n = (count.get(key) ?? 0) + 1
-        count.set(key, n)
-        return { key, id: `${key}#${n}` }
+      .map(({ key, content }) => {
+        const base = `${key}{${content}}`
+        const n = (count.get(base) ?? 0) + 1
+        count.set(base, n)
+        return { key, id: `${base}#${n}` }
       })
   }
   const was = stable(before)

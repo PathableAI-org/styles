@@ -142,7 +142,10 @@ Rule order is compared too. Among the rules that did not change, a rule
 whose position moved relative to the others contributes its classes, or
 selects every folder when it can match without a class. Markup restyled by
 two rules swapping matches both, so it carries the classes of the one that
-moved. A changed rule already contributes its classes.
+moved. A changed rule already contributes its classes. Each rule is
+identified by its selector and its own declarations, so a declaration that
+moves between two rules with the same selector (as Sass splits a block
+around a nested rule) counts as both rules moving.
 
 Known limit: a class added to the markup by JavaScript is not seen, because
 only the fixture HTML is read.
@@ -158,7 +161,11 @@ with `affected.mjs`'s listing (working tree against the merge base, renames
 as a delete and an add), and prints the union of the folders `changed.mjs`'s
 `selectFolders` picks from them, the folders `affected.mjs` selects, and
 every folder whose page `packages/styles/components/<slug>.md` changed (the
-contract check reads the page's slug and variants). It prints one folder per
+contract check reads the page's slug and variants). A change to
+`packages/styles/scripts/check-component-pages.mjs` or `component-pages.mjs`,
+which the selection and the contract check read selectors, CSS and pages
+with, selects every folder, as a change to `fixtures/harness/` does. It
+prints one folder per
 line, with the reasons for each on standard error. `--all` selects
 every folder. In GitHub Actions it also writes the `folders` and
 `fixtures_changed` step outputs and a job summary.
