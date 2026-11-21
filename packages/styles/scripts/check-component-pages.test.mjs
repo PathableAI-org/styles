@@ -3,6 +3,8 @@ import test from 'node:test'
 
 import {
   REQUIRED_SECTIONS,
+  SETTINGS_SECTIONS,
+  SETTINGS_VALUES_SECTION,
   TOKEN_SECTIONS,
   UTILITY_SECTIONS,
   checkExecuted,
@@ -875,4 +877,152 @@ test('the index groups tokens, utilities and components, naming a class only for
     ),
   )
   assert.ok(!index.includes('## Design tokens'))
+})
+
+// --- Settings pages -------------------------------------------------------
+
+const settingsFront = `---
+name: Color
+slug: settings-color
+kind: settings
+summary: The color settings.
+uswds: https://designsystem.digital.gov/documentation/settings/#color-settings
+---
+`
+const settingsBody = (
+  sections = [...SETTINGS_SECTIONS, SETTINGS_VALUES_SECTION],
+  extra = '',
+) => `
+# Color
+
+The color settings. They are fixed at build time.
+
+${sectionsText(sections)}
+${extra}`
+const settings = (
+  front = settingsFront,
+  body = settingsBody(),
+  slug = front.match(/^slug: (.+)$/mu)[1],
+) => ({ ...page(front + body), slug })
+
+test('a settings page with the two sections, no guarantees and an anchored link passes', () => {
+  assert.deepEqual(checkPage(settings(), utilityFacts()), [])
+})
+
+test('the settings overview needs only "Not public API"; a settings-<name> page also needs "Values"', () => {
+  const overview = settings(
+    settingsFront
+      .replace('slug: settings-color', 'slug: settings')
+      .replace('name: Color', 'name: Overview'),
+    settingsBody(SETTINGS_SECTIONS).replace('# Color', '# Overview'),
+  )
+  assert.deepEqual(checkPage(overview, utilityFacts()), [])
+  const noValues = settings(settingsFront, settingsBody(SETTINGS_SECTIONS))
+  assert.ok(
+    includes(
+      checkPage(noValues, utilityFacts()),
+      'missing section "## Values"',
+    ),
+  )
+})
+
+test('a settings page must open with "Not public API"', () => {
+  const late = settings(
+    settingsFront,
+    settingsBody([SETTINGS_VALUES_SECTION, ...SETTINGS_SECTIONS]),
+  )
+  const errors = checkPage(late, utilityFacts())
+  assert.ok(includes(errors, 'the first section must be "## Not public API"'))
+  assert.ok(includes(errors, 'the sections must come in this order'))
+})
+
+test('a settings page takes no guarantees, classes, styles-class or variants', () => {
+  const extra = settingsFront.replace(
+    'uswds:',
+    'styles-class: pathable-widget\nvariants: []\nclasses:\n  - a\nguarantees:\n  - id: a\n    claim: b\nuswds:',
+  )
+  const errors = checkPage(settings(extra), utilityFacts())
+  for (const field of ['styles-class', 'variants', 'classes', 'guarantees']) {
+    assert.ok(includes(errors, `a settings page has no "${field}"`), field)
+  }
+  const bare = settingsFront.replace(/^uswds:.*\n/mu, '')
+  assert.deepEqual(checkPage(settings(bare), utilityFacts()), [])
+})
+
+test('a settings page has a settings slug and a settings link', () => {
+  const elsewhere = settingsFront.replace(
+    'designsystem.digital.gov/documentation/settings/',
+    'designsystem.digital.gov/utilities/',
+  )
+  assert.ok(
+    includes(
+      checkPage(settings(elsewhere), utilityFacts()),
+      '"uswds" must be a https://designsystem.digital.gov/documentation/settings/',
+    ),
+  )
+  const slug = settingsFront.replace('slug: settings-color', 'slug: color')
+  assert.ok(
+    includes(
+      checkPage(settings(slug), utilityFacts()),
+      'slug must be "settings" or start with "settings-"',
+    ),
+  )
+})
+
+test('a settings page may name Sass settings but no example, placeholder, custom property or usa- class', () => {
+  const sass = settings(
+    settingsFront,
+    settingsBody(undefined, 'Set `$theme-color-primary` in `@use` ... with.\n'),
+  )
+  assert.deepEqual(checkPage(sass, utilityFacts()), [])
+
+  const html = settings(
+    settingsFront,
+    settingsBody(undefined, '```html\n<span class="margin-2"></span>\n```\n'),
+  )
+  assert.ok(includes(checkPage(html, utilityFacts()), 'has no example'))
+
+  const placeholder = settings(
+    settingsFront,
+    settingsBody(undefined, '<!-- examples -->\n'),
+  )
+  assert.ok(
+    includes(
+      checkPage(placeholder, utilityFacts()),
+      'has no fixture or example',
+    ),
+  )
+
+  const property = settings(
+    settingsFront,
+    settingsBody(undefined, 'See `--pathable-color-link`.\n'),
+  )
+  assert.ok(
+    includes(
+      checkPage(property, utilityFacts()),
+      'documents Sass settings only',
+    ),
+  )
+
+  const usa = settings(
+    settingsFront,
+    settingsBody(undefined, 'The usa-link.\n'),
+  )
+  assert.ok(includes(checkPage(usa, utilityFacts()), 'usa-'))
+})
+
+test('a settings page renders for the check without a fixture folder', () => {
+  const { page: rendered, errors } = renderForCheck(settings(), {
+    fixtures: new Map(),
+    examples: undefined,
+    component: undefined,
+  })
+  assert.deepEqual(errors, [])
+  assert.deepEqual(checkPage(rendered, utilityFacts()), [])
+})
+
+test('the index lists no settings page', () => {
+  const index = renderIndex([page(), settings()])
+  assert.ok(!index.includes('settings-color.md'))
+  assert.ok(!index.includes('Color'))
 })

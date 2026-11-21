@@ -16,7 +16,7 @@
  *
  * There are two stages, because they need different inputs.
  *
- * A page has one of three kinds, which decide its front matter and sections:
+ * A page has one of four kinds, which decide its front matter and sections:
  *   - `static`, a component: `styles-class` and `variants`, and the sections
  *     When to use, Example, Variants, Composition, Guarantees and The consumer
  *     owns. Everything below that is not marked otherwise applies to it.
@@ -29,6 +29,15 @@
  *     States, Guarantees and The consumer owns, in order.
  *     The public contract of both is the compiled CSS only: the pages
  *     document class names and the values they output, never a Sass API.
+ *   - `settings`, how the build configures USWDS (slug `settings` or
+ *     `settings-<name>`): `name`, `slug`, `kind` and `summary`, and an optional
+ *     `uswds` link under /documentation/settings/. The first section is "Not
+ *     public API", which says plainly that the settings are information only;
+ *     a `settings-<name>` page also has "Values". A settings page is the one
+ *     place that names Sass settings (`$theme-color-primary`), and it has no
+ *     fixture, example, html block, `styles-class`, `variants`, `classes` or
+ *     `guarantees`: nothing on it is a consumer contract, so there is nothing
+ *     to cite from a test. It renders to the Storybook only.
  * `utility` and `token` pages have no `styles-class` and no `variants` (both
  * are rejected), because they describe unprefixed USWDS names rather than one
  * `pathable-*` component with modifiers. The class of a variant, the variant
@@ -101,6 +110,7 @@ import {
   codeBlocks,
   ComponentDocsError,
   exampleSegments,
+  findPlaceholders,
   segment,
   visibleMarkdown,
 } from '../../../scripts/component-docs/segments.mjs'
@@ -181,7 +191,16 @@ export const TOKEN_SECTIONS = [
   'The consumer owns',
 ]
 
-const KINDS = ['static', 'utility', 'token']
+/** The fields of a settings page; `uswds` is optional. */
+export const SETTINGS_FIELDS = ['name', 'slug', 'kind', 'summary']
+export const SETTINGS_OPTIONAL_FIELDS = ['uswds']
+/** The sections of every settings page; the first must come first on the page. */
+export const SETTINGS_SECTIONS = ['Not public API']
+/** The extra section of a `settings-<name>` page, which lists the values. */
+export const SETTINGS_VALUES_SECTION = 'Values'
+const SETTINGS_URL = 'https://designsystem.digital.gov/documentation/settings/'
+
+const KINDS = ['static', 'utility', 'token', 'settings']
 /** Where the page's `uswds` link must point, and how its slug starts. */
 const USWDS_KINDS = {
   utility: {
@@ -197,14 +216,32 @@ const USWDS_KINDS = {
 /** Whether the page documents unprefixed USWDS names rather than one component. */
 const isUswdsPage = (page) => page.data.kind in USWDS_KINDS
 
+/** Whether the page documents the USWDS build settings (information only). */
+const isSettingsPage = (page) => page.data.kind === 'settings'
+
 /** The front matter fields a page of this kind has (static when unknown). */
 const fieldsOf = (kind) =>
-  ({ utility: UTILITY_FIELDS, token: TOKEN_FIELDS })[kind] ?? REQUIRED_FIELDS
+  ({
+    utility: UTILITY_FIELDS,
+    token: TOKEN_FIELDS,
+    settings: SETTINGS_FIELDS,
+  })[kind] ?? REQUIRED_FIELDS
 
-/** The sections a page of this kind has (static when unknown). */
-const sectionsOf = (kind) =>
-  ({ utility: UTILITY_SECTIONS, token: TOKEN_SECTIONS })[kind] ??
-  REQUIRED_SECTIONS
+/** The fields a page of this kind may have without requiring them. */
+const optionalFieldsOf = (kind) =>
+  kind === 'settings' ? SETTINGS_OPTIONAL_FIELDS : []
+
+/**
+ * The sections a page has (static when the kind is unknown). Only the
+ * overview, slug `settings`, has no `## Values`.
+ */
+const sectionsOf = ({ kind, slug }) =>
+  kind === 'settings'
+    ? slug === 'settings'
+      ? SETTINGS_SECTIONS
+      : [...SETTINGS_SECTIONS, SETTINGS_VALUES_SECTION]
+    : ({ utility: UTILITY_SECTIONS, token: TOKEN_SECTIONS }[kind] ??
+      REQUIRED_SECTIONS)
 const STATUSES = ['met', 'unmet', 'unverified']
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -326,19 +363,45 @@ function checkUswdsFields(page, errors) {
   }
 }
 
+/** The slug and the `uswds` link of a settings page. */
+function checkSettingsFields(page, errors) {
+  const { data, slug } = page
+  if (slug !== 'settings' && !slug.startsWith('settings-')) {
+    errors.push(
+      'a settings page\'s slug must be "settings" or start with "settings-"',
+    )
+  }
+  if (data.uswds !== undefined) {
+    if (
+      typeof data.uswds !== 'string' ||
+      !data.uswds.startsWith(SETTINGS_URL)
+    ) {
+      errors.push(
+        `"uswds" must be a ${SETTINGS_URL}… URL for a settings page; received "${data.uswds}"`,
+      )
+    }
+  }
+}
+
 function checkFrontMatter(page, errors) {
   const { data, slug } = page
   const fields = fieldsOf(data.kind)
+  const optional = optionalFieldsOf(data.kind)
   for (const field of fields) {
     if (data[field] === undefined)
       errors.push(`missing front matter field "${field}"`)
   }
   for (const field of Object.keys(data)) {
-    if (fields.includes(field)) continue
+    if (fields.includes(field) || optional.includes(field)) continue
     errors.push(
       isUswdsPage(page) && ['styles-class', 'variants'].includes(field)
         ? `a ${data.kind} page has no "${field}": it documents unprefixed USWDS names, not one component with modifiers`
-        : `unknown front matter field "${field}"`,
+        : isSettingsPage(page) &&
+            ['styles-class', 'variants', 'classes', 'guarantees'].includes(
+              field,
+            )
+          ? `a settings page has no "${field}": it is information only and states no consumer contract`
+          : `unknown front matter field "${field}"`,
     )
   }
   if (data.slug !== undefined && data.slug !== slug) {
@@ -359,6 +422,7 @@ function checkFrontMatter(page, errors) {
     }
   }
   if (isUswdsPage(page)) checkUswdsFields(page, errors)
+  if (isSettingsPage(page)) checkSettingsFields(page, errors)
 
   const ids = new Set()
   for (const guarantee of list(data.guarantees)) {
@@ -401,13 +465,13 @@ function checkBody(page, errors) {
       )
     }
   }
-  const required = sectionsOf(data.kind)
+  const required = sectionsOf({ kind: data.kind, slug: page.slug })
   for (const heading of required) {
     if (!headings.has(heading)) errors.push(`missing section "## ${heading}"`)
   }
-  if (isUswdsPage(page)) {
-    // The sections of a utility or token page come in a fixed order, so every
-    // page reads the same way. (A static page's order is not checked.)
+  if (isUswdsPage(page) || isSettingsPage(page)) {
+    // The sections of a utility, token or settings page come in a fixed order,
+    // so every page reads the same way. (A static page's order is not checked.)
     const found = [
       ...body.replace(/^```[\s\S]*?^```$/gmu, '').matchAll(/^## (.+)$/gmu),
     ]
@@ -417,6 +481,18 @@ function checkBody(page, errors) {
     if (found.join('|') !== expected.join('|')) {
       errors.push(
         `the sections must come in this order: ${required.map((heading) => `"${heading}"`).join(', ')}`,
+      )
+    }
+  }
+  if (isSettingsPage(page)) {
+    // The reader must learn that the settings are not API before anything else.
+    const first = body
+      .replace(/^```[\s\S]*?^```$/gmu, '')
+      .match(/^## (.+)$/mu)?.[1]
+      .trim()
+    if (first !== SETTINGS_SECTIONS[0]) {
+      errors.push(
+        `the first section must be "## ${SETTINGS_SECTIONS[0]}", so a reader learns first that the settings are information only; found "${first ?? 'none'}"`,
       )
     }
   }
@@ -558,6 +634,29 @@ function checkNames(page, css, errors) {
   }
 }
 
+/**
+ * A settings page shows no example: no html block, no example placeholder and
+ * no package block, and it names no custom property (the settings are Sass
+ * and are not part of any consumer contract).
+ */
+function checkSettingsBody(page, errors) {
+  const source = page.source ?? page.markdown
+  if (fencedBlocks(page.body, 'html').length > 0) {
+    errors.push('a settings page has no example: remove the html block')
+  }
+  if (findPlaceholders(source).placeholders.length > 0) {
+    errors.push(
+      'a settings page has no fixture or example: remove the "<!-- example -->", "<!-- examples -->" or "<!-- package -->" placeholder',
+    )
+  }
+  const prose = page.body.replace(/^```[\s\S]*?^```$/gmu, '')
+  for (const [, token] of prose.matchAll(/`(--[a-z0-9-]+)`/gu)) {
+    errors.push(
+      `the page names \`${token}\`, but a settings page documents Sass settings only, not custom properties`,
+    )
+  }
+}
+
 /** A utility or token page shows every fixture of its folder under `## States`. */
 function checkStates(page, errors) {
   const states = section(page.source ?? page.markdown, 'States')
@@ -587,8 +686,11 @@ export function renderForCheck(page, sources) {
   try {
     markdown = render(page, 'styles', sources)
     if (sources.examples) render(page, 'react', sources)
-    // The Storybook page turns each state into a story export name.
-    if (sources.fixtures.size > 0) render(page, 'storybook', sources)
+    // The Storybook page turns each state into a story export name. A settings
+    // page has no fixtures but still renders to the Storybook.
+    if (sources.fixtures.size > 0 || page.data?.kind === 'settings') {
+      render(page, 'storybook', sources)
+    }
   } catch (error) {
     if (!(error instanceof ComponentDocsError)) throw error
     return { errors: error.problems }
@@ -619,6 +721,13 @@ export function checkPage(page, facts) {
   const errors = []
   checkFrontMatter(page, errors)
   if (errors.length) return errors
+
+  if (isSettingsPage(page)) {
+    // Nothing on a settings page is checked against the CSS: it is not API.
+    checkBody(page, errors)
+    checkSettingsBody(page, errors)
+    return errors
+  }
 
   const cls = page.data['styles-class']
   if (!isUswdsPage(page) && !facts.css.classes.has(cls)) {
@@ -979,7 +1088,9 @@ async function main() {
     )
     const withPage = new Set(pages.map((page) => page.data['styles-class']))
     const covered = components.filter((name) => withPage.has(name)).length
-    const verified = pages.filter(isVerified).length
+    const verified = pages.filter(
+      (page) => !isSettingsPage(page) && isVerified(page),
+    ).length
     summary = `stage 1 (page against compiled CSS and pixel entries): ${pages.length} page(s) checked, ${verified} with every guarantee under test; ${covered} of ${components.length} component wrapper stylesheets have a page`
   }
 

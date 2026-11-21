@@ -29,7 +29,12 @@ import {
   parseFixture,
   readCoverage,
 } from '../component-docs/sources.mjs'
-import { compareFiles, writeFiles } from '../component-docs/write.mjs'
+import {
+  compareFiles,
+  renderTarget,
+  storybookOnly,
+  writeFiles,
+} from '../component-docs/write.mjs'
 
 const frontMatter = '---\nname: Widget\nslug: widget\n---\n\n'
 const page = (body) => ({
@@ -258,6 +263,60 @@ describe('component docs: Storybook sections', () => {
     assert.equal(titleOf('token'), 'Design tokens/Widget')
     assert.equal(titleOf('utility'), 'Utilities/Widget')
     assert.equal(titleOf('static'), 'Component pages/Widget')
+    assert.equal(titleOf('settings'), 'Settings/Widget')
+  })
+})
+
+describe('component docs: settings pages', () => {
+  const settings = {
+    slug: 'settings-widget',
+    file: 'settings-widget.md',
+    markdown:
+      '---\nname: Widget\nslug: settings-widget\nkind: settings\n---\n\n# Widget\n\nSee [Overview](settings.md).\n',
+    data: { name: 'Widget', kind: 'settings' },
+  }
+  const overview = {
+    ...settings,
+    slug: 'settings',
+    file: 'settings.md',
+    data: { name: 'Overview', kind: 'settings' },
+  }
+  const noSources = { fixtures: new Map() }
+
+  it('renders an MDX page with no stories file, imports or previews', () => {
+    const { mdx, stories } = render(settings, 'storybook', noSources)
+    assert.equal(stories, undefined)
+    assert.ok(mdx.includes('<Meta title="Settings/Widget" />'))
+    assert.ok(!mdx.includes('Canvas'))
+    assert.ok(!mdx.includes('Stories'))
+    assert.ok(!mdx.includes('component-docs-blocks'))
+    assert.ok(mdx.includes('<Markdown>'))
+  })
+
+  it('rewrites a link to another settings page to its docs route', () => {
+    const titles = new Map([['settings', 'Settings/Overview']])
+    const { mdx } = render(settings, 'storybook', { ...noSources, titles })
+    assert.ok(mdx.includes('/docs/settings-overview--docs'))
+  })
+
+  it('is for the Storybook only: the styles and React targets skip it', async () => {
+    assert.ok(storybookOnly(settings))
+    assert.ok(!storybookOnly(page('Text.\n')))
+    const options = { pages: [settings, overview], coverage: new Map() }
+    assert.deepEqual([...(await renderTarget('styles', options)).keys()], [])
+    const react = await renderTarget('react', options)
+    assert.deepEqual([...react.keys()], ['index.md'])
+    assert.ok(!react.get('index.md').includes('Widget'))
+    const storybook = await renderTarget('storybook', options)
+    assert.deepEqual([...storybook.keys()].sort(), [
+      'settings-widget.mdx',
+      'settings.mdx',
+    ])
+    assert.ok(
+      storybook
+        .get('settings-widget.mdx')
+        .includes('/docs/settings-overview--docs'),
+    )
   })
 })
 

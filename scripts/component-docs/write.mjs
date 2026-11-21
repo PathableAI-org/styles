@@ -37,6 +37,13 @@ export const reactOutputDir = join(
 export const storybookOutputDir = join(repoRoot, 'apps/storybook/generated')
 export const REACT_INDEX = 'index.md'
 
+/**
+ * Whether a page is for the Storybook only. A settings page documents how the
+ * build configures USWDS, which is not consumer API, so the styles package and
+ * the React guidance do not ship it.
+ */
+export const storybookOnly = (page) => page.data?.kind === 'settings'
+
 /** The sources one page renders from, for every target. */
 export async function pageSources(page, coverage) {
   const { component, notOffered = {} } = coverage.get(page.slug) ?? {}
@@ -66,12 +73,15 @@ export async function renderTarget(target, { pages, coverage } = {}) {
     target === 'storybook'
       ? new Map(
           pages
-            .filter((page) => readFixtures(page.slug).size > 0)
+            .filter(
+              (page) => storybookOnly(page) || readFixtures(page.slug).size > 0,
+            )
             .map((page) => [page.slug, storybookTitle(page)]),
         )
       : undefined
 
   for (const page of pages) {
+    if (target !== 'storybook' && storybookOnly(page)) continue
     try {
       const sources = await pageSources(page, coverage)
       if (target === 'styles') {
@@ -84,13 +94,14 @@ export async function renderTarget(target, { pages, coverage } = {}) {
           )
         }
       } else if (target === 'storybook') {
-        if (sources.fixtures.size > 0) {
+        if (sources.fixtures.size > 0 || storybookOnly(page)) {
           const { mdx, stories } = render(page, 'storybook', {
             ...sources,
             titles,
           })
           files.set(`${page.slug}.mdx`, mdx)
-          files.set(`${page.slug}.stories.ts`, stories)
+          if (stories !== undefined)
+            files.set(`${page.slug}.stories.ts`, stories)
         }
       }
     } catch (error) {

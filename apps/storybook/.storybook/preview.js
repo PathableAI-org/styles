@@ -6,10 +6,19 @@ const preview = {
   parameters: {
     options: {
       // The generated pages' sections, in the order they are read: what a
-      // consumer sets (tokens), what it applies (utilities), what it uses
-      // (components). Anything else follows, in file order.
+      // consumer sets (tokens), what it applies (utilities), how the build
+      // configures USWDS (settings, information only), what it uses
+      // (components). Anything else follows, in file order. Overview is
+      // first within Settings.
       storySort: {
-        order: ['Design tokens', 'Utilities', 'Component pages', 'Fixtures'],
+        order: [
+          'Design tokens',
+          'Utilities',
+          'Settings',
+          ['Overview', 'General', 'Color', 'Typography'],
+          'Component pages',
+          'Fixtures',
+        ],
       },
     },
     a11y: {

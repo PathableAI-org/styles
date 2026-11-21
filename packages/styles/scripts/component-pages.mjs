@@ -60,7 +60,11 @@ export async function readPages(dir = pagesDir) {
   )
 }
 
-/** The index sections, in order: the page kinds each lists and its heading. */
+/**
+ * The index sections, in order: the page kinds each lists and its heading. A
+ * settings page is in none of them: it is for the Storybook only, and the
+ * styles build does not write it (scripts/component-docs/write.mjs).
+ */
 const INDEX_GROUPS = [
   { heading: 'Design tokens', kinds: ['token'] },
   { heading: 'Utilities', kinds: ['utility'] },

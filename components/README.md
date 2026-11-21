@@ -6,11 +6,11 @@ example, its variants, its tokens, how to compose it, what it guarantees and
 what the consumer owns. These are the source pages; every published copy is
 built from them:
 
-| Reader                      | Built output                                                                                                           | Examples        | Committed |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------- | --------- |
-| `@pathableai/styles` on npm | `packages/styles/components/<slug>.md` and `index.md`                                                                  | HTML (fixtures) | No        |
-| `@pathableai/react` on npm  | `packages/react/agent-guidance/pathable-react/references/components/<Name>.md`                                         | JSX (examples)  | Yes       |
-| People, on GitHub Pages     | The styles Storybook's **Design tokens**, **Utilities** and **Component pages** sections (`apps/storybook/generated/`) | Live, with tabs | No        |
+| Reader                      | Built output                                                                                                                         | Examples                                 | Committed |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- | --------- |
+| `@pathableai/styles` on npm | `packages/styles/components/<slug>.md` and `index.md`                                                                                | HTML (fixtures)                          | No        |
+| `@pathableai/react` on npm  | `packages/react/agent-guidance/pathable-react/references/components/<Name>.md`                                                       | JSX (examples)                           | Yes       |
+| People, on GitHub Pages     | The styles Storybook's **Design tokens**, **Utilities**, **Settings** and **Component pages** sections (`apps/storybook/generated/`) | Live, with tabs; none on a settings page | No        |
 
 The generator is [`scripts/component-docs/`](../scripts/component-docs/). The
 styles `build` writes the styles pages, the Storybook `storybook` and
@@ -21,17 +21,18 @@ the repository. `pnpm check:agent-guidance` fails when they are out of date.
 
 Edit only the source pages here. Never edit built output.
 
-## Three kinds of page
+## Four kinds of page
 
 The `kind` front matter field decides what a page documents, its front matter
-and its sections. Each kind has its own Storybook section, in this order, and
-its own heading in the styles `index.md`.
+and its sections. Each kind has its own Storybook section, in this order. All
+kinds but `settings` have their own heading in the styles `index.md`.
 
-| `kind`    | Documents                                                  | Slug                                                                    | Storybook section   |
-| --------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------- |
-| `token`   | A group of USWDS design tokens, as the CSS outputs them    | `tokens-<uswds path>`, the path under `/design-tokens/` with `/` as `-` | **Design tokens**   |
-| `utility` | A family of unprefixed USWDS utility classes               | `utilities-<uswds slug>`, the segment under `/utilities/`               | **Utilities**       |
-| `static`  | One component, with a `pathable-*` class and its modifiers | The component name, such as `button`                                    | **Component pages** |
+| `kind`     | Documents                                                  | Slug                                                                    | Storybook section   |
+| ---------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------- |
+| `token`    | A group of USWDS design tokens, as the CSS outputs them    | `tokens-<uswds path>`, the path under `/design-tokens/` with `/` as `-` | **Design tokens**   |
+| `utility`  | A family of unprefixed USWDS utility classes               | `utilities-<uswds slug>`, the segment under `/utilities/`               | **Utilities**       |
+| `settings` | How the build configures USWDS (information only)          | `settings`, or `settings-<name>` for one USWDS settings file            | **Settings**        |
+| `static`   | One component, with a `pathable-*` class and its modifiers | The component name, such as `button`                                    | **Component pages** |
 
 Utility and token pages describe names that USWDS does not prefix, which
 `@pathableai/styles` keeps unchanged (`margin-x-2`, `tablet:padding-3`). They
@@ -50,6 +51,8 @@ them. The sections, in order:
   pages.
 - `static`: When to use, Example, Variants, Composition, Guarantees, The
   consumer owns.
+- `settings`: Not public API, then Values on every page but the overview.
+  See [Settings pages](#settings-pages).
 
 **The public contract of a utility or token page is the compiled CSS only.**
 Consumers import `@pathableai/styles` as CSS. These pages therefore document
@@ -81,6 +84,39 @@ compiled CSS.
 Links to another component page are plain relative links (`utilities-border.md`
 or `tokens-color.md#anchor`). They resolve as files in the styles package; the
 Storybook render rewrites each into the docs route of that page.
+
+## Settings pages
+
+A `settings` page records how the build sets the USWDS Sass settings
+(`$theme-*`, passed to `@use 'uswds-core' with (...)` in
+`packages/styles/src/_uswds-theme.scss`). It is information for people who
+want to know why a token or class has the value it has. It is not consumer
+documentation: the package ships compiled CSS, a consumer cannot set these
+settings, and they are not part of the public API.
+
+- Pages: `settings.md` (name "Overview": what USWDS settings are, why ours are
+  fixed, how to get the effect from the documented tokens, utilities and
+  components, and the settings groups left at USWDS defaults) and one
+  `settings-<name>.md` for each USWDS settings file the build overrides
+  (`settings-general.md`, `settings-color.md`, `settings-typography.md`).
+- Front matter: `name`, `slug`, `kind` and `summary`, and optionally `uswds`,
+  a link under `https://designsystem.digital.gov/documentation/settings/`
+  (an anchor is fine). No `styles-class`, `variants`, `classes` or
+  `guarantees`: there is no consumer contract to guarantee or test.
+- Sections, in order: **Not public API** first, which says plainly, near the
+  top, that the page is information only and the settings are not public API.
+  Every page but the overview then has **Values**, a table of every setting
+  the build sets, with the columns Setting, USWDS default, PathAble value and
+  Notes. List a setting that is set to its USWDS default too, and mark it
+  "Same as default". Other sections may follow.
+- Take every value from `_uswds-theme.scss` and every default from the USWDS
+  3.14.0 settings files. Do not invent a value.
+- No fixtures, no `<!-- example -->` placeholders, no package blocks and no
+  `html` code blocks. The page may name Sass settings; it names no custom
+  property and no `usa-` class.
+- A settings page renders to the Storybook only. The styles build does not
+  write it into the package, it is not in the styles `index.md`, and the React
+  guidance does not include it. It links to other pages as any page does.
 
 ## What a page contains
 
@@ -246,9 +282,11 @@ React package.
 
 ## The Storybook page
 
-The styles Storybook shows each page that has a fixture folder under the
-section of its kind (**Design tokens**, **Utilities** or **Component pages**,
-in that order; `storySort` in `apps/storybook/.storybook/preview.js`), with one live preview per example rendered with
+The styles Storybook shows each page that has a fixture folder, and each
+settings page, under the section of its kind (**Design tokens**,
+**Utilities**, **Settings** or **Component pages**, in that order; `storySort`
+in `apps/storybook/.storybook/preview.js`). A settings page is prose and
+tables only, with no stories file. For the others, there is one live preview per example rendered with
 `styles.css`, and **HTML** and **React** tabs beneath it showing the fixture
 and the example module verbatim (only **HTML** when the React package does not
 cover the component). Package blocks are shown labelled with their package.
