@@ -1,4 +1,6 @@
 // Utility entry point.
 // Compiles utility classes (no default :root theme tokens) into dist/utilities.css.
+// Configure USWDS before loading any PathAble additions.
 @forward 'uswds-theme';
+
 @forward '_utilities';

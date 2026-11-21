@@ -1,7 +1,9 @@
 @use 'sass:map';
 
-@forward 'fonts';
+// Configure USWDS before loading any USWDS source or PathAble additions.
 @forward 'uswds-theme';
+
+@forward 'fonts';
 @forward '_colors';
 @forward '_typography';
 @forward '_spacing';
