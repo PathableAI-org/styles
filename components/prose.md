@@ -7,28 +7,20 @@ styles-class: pathable-prose
 variants: []
 guarantees:
   - id: base-type
-    status: unverified
     claim: The container sets the body typeface, Nunito, at 0.99rem with a line height of 1.6 for the text inside it.
   - id: paragraph-measure
-    status: unverified
     claim: A paragraph that is a direct child has a line height of 1.6 and is at most 68ex wide, and longer text wraps inside that width.
   - id: heading-scale
-    status: unverified
     claim: Direct-child headings h1 to h6 are 1.49rem, 1.12rem, 1.12rem, 0.99rem, 0.87rem and 0.75rem, with a margin of 0 and a line height of 1.4, and an h6 is uppercase with 0.025em letter spacing.
   - id: heading-weight
-    status: unverified
     claim: Direct-child headings h1 to h5 use the normal font weight token, --pathable-font-weight-normal.
   - id: block-rhythm
-    status: unverified
     claim: A direct child that follows another has a top margin of 1em, and a heading that follows another child has a top margin of 1.5em.
   - id: list-rules
-    status: unverified
     claim: A list that is a direct child has a 1em top and bottom margin, 3ch of left padding and a line height of 1.6, and its items have a 0.25em bottom margin and a width of at most 68ex.
   - id: table-rules
-    status: unverified
     claim: A table that is a direct child has the body typeface at 0.99rem, collapsed borders and a 1.25rem top and bottom margin.
   - id: heading-typeface
-    status: unmet
     claim: A direct-child heading is set in the heading typeface at weight 400, Fredoka Regular.
 ---
 
@@ -90,19 +82,17 @@ and relative to the container's font size.
 - A list placed directly in the container takes the prose list rules, not
   only the `pathable-list` rules. `pathable-collection` and
   `pathable-process-list` placed in a container are affected: their own list
-  spacing is overridden, which is why their `inside-prose` guarantees are
-  unmet. Wrap such a component in an element so the list is not a direct
-  child.
-- Give a table a `<caption>` and `scope` on its header cells. A table with
-  `pathable-table` classes keeps those classes' own styling.
+  spacing is kept, as their `inside-prose` guarantees state.
+- Give a table a `<caption>`, a `<thead>` and a `<tbody>`, and `scope` on its
+  header cells. A table with `pathable-table` classes keeps those classes' own
+  styling.
+- Nest lists inside the `<li>` they belong to. Each level keeps the prose list
+  spacing.
 - Keep headings in order, with one `<h1>` for the page.
 
 ## Guarantees
 
-The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source and no test checks it yet.
+The guarantees are the list in the front matter at the top of this page.
 
 The 68ex limit applies to each paragraph and list item, not to the container,
 so the container can be as wide as its parent.

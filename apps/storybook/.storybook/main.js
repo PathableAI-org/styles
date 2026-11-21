@@ -4,7 +4,6 @@ import path from 'path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const isBuild = process.env.STORYBOOK_BUILD === 'true'
-const reactUrl = isBuild ? '/styles/react/' : 'http://localhost:6007'
 
 export default {
   framework: '@storybook/html-vite',
@@ -16,12 +15,6 @@ export default {
   ],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   docs: { autodocs: true },
-  refs: {
-    react: {
-      title: 'React',
-      url: reactUrl,
-    },
-  },
   async viteFinal(config, { configType }) {
     if (configType === 'PRODUCTION' && isBuild) {
       config.base = '/styles/'

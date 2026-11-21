@@ -218,19 +218,21 @@ describe('component docs: Storybook', () => {
   const body =
     '# Widget\n\n<!-- example: loud -->\n\n<!-- package: react -->\n\nR.\n\n<!-- /package -->\n'
 
-  it('writes one story per fixture with its verbatim sources', () => {
+  it('writes one hidden story per fixture with its verbatim HTML and no React', () => {
     const { stories } = render(page(body), 'storybook', covered)
-    assert.ok(stories.includes('title: "Fixtures/widget"'))
+    assert.ok(!stories.includes('Fixtures/'))
+    assert.ok(stories.includes('title: "Component examples/widget"'))
+    assert.ok(stories.includes("tags: ['!autodocs', '!dev']"))
     assert.ok(stories.includes('export const Loud = {'))
     assert.ok(stories.includes('export const Quiet = {'))
-    assert.ok(
-      stories.includes(`react: ${JSON.stringify(examples.get('loud'))},`),
-    )
+    assert.ok(!stories.includes('react'))
   })
 
-  it('has no React source when the React package does not cover the component', () => {
-    const { stories } = render(page(body), 'storybook', stylesOnly)
-    assert.ok(stories.includes('react: null,'))
+  it('renders the same stories whether or not the React package covers the component', () => {
+    assert.equal(
+      render(page(body), 'storybook', stylesOnly).stories,
+      render(page(body), 'storybook', covered).stories,
+    )
   })
 
   it('turns an example into a preview and code tabs, and marks package blocks', () => {
@@ -238,7 +240,8 @@ describe('component docs: Storybook', () => {
     assert.ok(mdx.includes('<Meta title="Component pages/Widget" />'))
     assert.ok(mdx.includes('<Canvas of={Stories.Loud} sourceState="none" />'))
     assert.ok(mdx.includes('<CodeTabs of={Stories.Loud} />'))
-    assert.ok(mdx.includes('<PackageNote name="react">'))
+    assert.ok(!mdx.includes('<PackageNote'))
+    assert.ok(!mdx.includes('"R."'))
     assert.ok(!mdx.includes('slug: widget\n---'))
   })
 })
@@ -437,7 +440,8 @@ describe('component docs: states React does not offer', () => {
       'storybook',
       partial,
     )
-    assert.match(stories, /export const Quiet = \{[\s\S]*?react: null,/u)
+    assert.match(stories, /export const Quiet = \{/u)
+    assert.ok(!stories.includes('react'))
   })
 })
 

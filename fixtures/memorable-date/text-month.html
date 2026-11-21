@@ -1,0 +1,58 @@
+<!-- description: A memorable date whose month is a two-digit text input, like the day, instead of a select. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">Credential expiry date</legend>
+  <span class="pathable-hint" id="memorable-date-text-month-hint"
+    >For example: 4 28 2027</span
+  >
+  <div class="pathable-memorable-date">
+    <div class="pathable-form-group pathable-form-group--month">
+      <label class="pathable-label" for="memorable-date-text-month-month"
+        >Month</label
+      >
+      <input
+        class="pathable-input"
+        type="text"
+        aria-describedby="memorable-date-text-month-hint"
+        id="memorable-date-text-month-month"
+        name="expiry_month"
+        maxlength="2"
+        pattern="[0-9]*"
+        inputmode="numeric"
+        value=""
+      />
+    </div>
+    <div class="pathable-form-group pathable-form-group--day">
+      <label class="pathable-label" for="memorable-date-text-month-day"
+        >Day</label
+      >
+      <input
+        class="pathable-input"
+        type="text"
+        aria-describedby="memorable-date-text-month-hint"
+        id="memorable-date-text-month-day"
+        name="expiry_day"
+        maxlength="2"
+        pattern="[0-9]*"
+        inputmode="numeric"
+        value=""
+      />
+    </div>
+    <div class="pathable-form-group pathable-form-group--year">
+      <label class="pathable-label" for="memorable-date-text-month-year"
+        >Year</label
+      >
+      <input
+        class="pathable-input"
+        type="text"
+        aria-describedby="memorable-date-text-month-hint"
+        id="memorable-date-text-month-year"
+        name="expiry_year"
+        minlength="4"
+        maxlength="4"
+        pattern="[0-9]*"
+        inputmode="numeric"
+        value=""
+      />
+    </div>
+  </div>
+</fieldset>

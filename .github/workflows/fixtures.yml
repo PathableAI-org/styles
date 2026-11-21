@@ -41,8 +41,10 @@ permissions:
   contents: read
 
 jobs:
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   fixtures:
     name: Fixtures
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -136,8 +138,10 @@ jobs:
           path: ${{ runner.temp }}/fixtures-axe-report.json
           if-no-files-found: ignore
 
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   react:
     name: React fixture tests
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -1,29 +1,25 @@
-<!-- description: The big modifier, for a prominent search at the top of a page. From 480 px wide the field and button are 3rem tall. -->
-<form
-  class="pathable-search pathable-search--big"
-  role="search"
-  aria-label="Search case notes and documents"
->
-  <label class="pathable-sr-only" for="search-big-query"
-    >Search case notes and documents</label
-  >
-  <input
-    class="pathable-input"
-    id="search-big-query"
-    type="search"
-    name="search"
-  />
-  <button type="submit" class="pathable-button">
-    <svg
-      class="pathable-icon"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      focusable="false"
+<!-- description: The big search: a taller field and button with larger text, for a prominent search at the top of a page. -->
+<section aria-label="Big participant search">
+  <form class="pathable-search pathable-search--big" role="search">
+    <label class="pathable-sr-only" for="search-big-query"
+      >Search participants</label
     >
-      <path
-        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-      />
-    </svg>
-    <span class="pathable-sr-only">Search</span>
-  </button>
-</form>
+    <input
+      class="pathable-input"
+      id="search-big-query"
+      type="search"
+      name="search"
+    />
+    <button class="pathable-button" type="submit">
+      <span class="pathable-search__submit-text">Search</span>
+      <svg
+        class="pathable-icon pathable-search__submit-icon"
+        aria-hidden="true"
+        focusable="false"
+        role="img"
+      >
+        <use href="/assets/img/sprite.svg#search"></use>
+      </svg>
+    </button>
+  </form>
+</section>

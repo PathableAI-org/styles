@@ -1,13 +1,15 @@
-<!-- description: A text input whose value has passed validation. The border is the only visual cue, so give the field a visible confirmation in text where it matters. -->
-<div class="pathable-form-group">
-  <label class="pathable-label" for="text-input-success-email">
-    Participant email address
-  </label>
-  <input
-    class="pathable-input pathable-input--success"
-    id="text-input-success-email"
-    name="email"
-    type="email"
-    value="amara.okafor@example.org"
-  />
-</div>
+<!-- description: A text input whose value has passed validation. The success border is paired with a visible confirmation in text, which the input references with aria-describedby. -->
+<label class="pathable-label" for="text-input-success-email">
+  Participant email address
+</label>
+<span class="pathable-hint" id="text-input-success-email-message">
+  The email address is valid.
+</span>
+<input
+  class="pathable-input pathable-input--success"
+  id="text-input-success-email"
+  name="email"
+  type="email"
+  value="amara.okafor@example.org"
+  aria-describedby="text-input-success-email-message"
+/>

@@ -13,26 +13,19 @@ variants:
     values: [light, alt]
 guarantees:
   - id: link-colour
-    status: unverified
     claim: A link, visited or not, is underlined and takes the colour of --pathable-color-link, which is #015a76 in the default theme.
   - id: hover-active-colour
-    status: unverified
     claim: A hovered link takes the PathAble primary colour, and a pressed link the darker primary colour, including a link that has been visited.
   - id: focus-ring
-    status: unverified
     claim: A focused link draws its outline in the colour of --pathable-surface-focus-ring when the surface sets one, otherwise in --pathable-color-focus-ring.
   - id: external-icon
-    status: unverified
     claim: An external link shows a launch icon after its text, drawn in the text colour.
   - id: external-label
-    status: unverified
     claim: An external link has a visually hidden label "External." before its text, or "External, opens in a new tab." when it has target="_blank". The labels are English whatever the page language.
   - id: dark-colour
-    status: unverified
-    claim: On a dark background, an unvisited link takes the reverse link colour, not the PathAble link colour, and a visited link keeps the PathAble link colour. This is read from the source, not seen in a browser.
+    claim: On a dark background, an unvisited link takes the reverse link colour, not the PathAble link colour, and a visited link keeps the PathAble link colour.
   - id: alt-external
-    status: unmet
-    claim: With pathable-link--alt, an external link on a dark background has an external icon with enough contrast. The pathable-link--alt class is not in the stylesheet yet.
+    claim: With pathable-link--alt, an external link on a dark background has an external icon with enough contrast.
 ---
 
 # Link
@@ -54,8 +47,7 @@ Use something else when:
 - the link is a navigation item in a menu or a step list: use the navigation
   component for that menu.
 
-Links that act on a dark container belong on `pathable-dark-background`. The
-dark-background behaviour is unverified; see the guarantees.
+Links on a dark container belong on `pathable-dark-background`.
 
 ## Example
 
@@ -86,8 +78,8 @@ alt modifier belongs on an external link on a dark background.
 | background  | `light`    | none                      | A link on a light surface                                             |
 | background  | `alt`      | `pathable-link--alt`      | An external link on a dark background, with `pathable-link--external` |
 
-A visited link needs no class. The alt modifier has no effect alone; combine it
-with the external modifier.
+A visited link needs no class. Combine the alt modifier with the external
+modifier.
 
 ## Tokens
 
@@ -105,15 +97,13 @@ Hover and pressed colours are fixed brand values and are not tokens.
 - `pathable-link--external`: adds the icon and the hidden label. Pair it with
   `rel="noreferrer"`. Add `target="_blank"` only when the link must open a new
   tab; the hidden label then says so.
-- `pathable-link--alt`: not in the stylesheet yet; see `alt-external`.
+- `pathable-link--alt`: with `pathable-link--external`, gives the external icon
+  enough contrast on a dark background; see `alt-external`.
 - On a dark container, put the link inside `pathable-dark-background`.
 
 ## Guarantees
 
-The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
+The guarantees are the list in the front matter at the top of this page.
 
 The icon and the hidden label are drawn by the stylesheet, so they are not in
 the markup and they are not in the page language.

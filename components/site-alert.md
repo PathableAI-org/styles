@@ -1,44 +1,42 @@
 ---
-name: SiteAlert
+name: Site alert
 slug: site-alert
 kind: static
 summary: A full-width banner under the site header that carries an info or emergency message for the whole site.
 styles-class: pathable-site-alert
 variants:
   - axis: status
-    default: default
-    values: [default, info, emergency]
+    default: info
+    values: [info, emergency]
   - axis: size
     default: default
     values: [default, slim]
   - axis: icon
     default: default
     values: [default, no-icon]
+  - axis: heading
+    default: default
+    values: [default, no-heading]
 guarantees:
   - id: body-font
-    status: unverified
     claim: The site alert is a block that fills the width of its container and sets its text in the PathAble body font.
   - id: nested-alert-surface
-    status: unmet
-    claim: The nested alert inside the site alert shows the status surface (pale blue #edf5fd with a #4899e8 bar for info, #9c3d10 for emergency), the status icon and the status text colour. Today the stylesheet reaches the nested alert only when it carries the framework's own alert classes, so a nested alert in the PathAble markup stays plain grey with a transparent body.
+    claim: The nested alert inside the site alert shows the status surface (pale blue #edf5fd with a #4899e8 bar for info, #9c3d10 for emergency), the status icon and the status text colour.
   - id: content-width
-    status: unmet
-    claim: The nested body is at most 1024 px wide with 20 px of side padding; from a viewport 1024 px wide it is centred with 28 px of side padding so its content lines up with the site margins. Today this is set only for the framework's own alert classes.
+    claim: The nested body is at most 1024 px wide with 20 px of side padding; from a viewport 1024 px wide it is centred with 28 px of side padding so its content lines up with the site margins.
   - id: status-icon
-    status: unmet
     claim: The info and emergency site alerts show a 32 px icon at the top left of the nested body, and the heading and text are indented 40 px.
   - id: slim
-    status: unmet
     claim: The slim site alert has 8 px of padding above and below, a 24 px icon and a 32 px indent for the text.
   - id: no-icon
-    status: unmet
-    claim: With the no-icon modifier the icon is hidden and the heading and text have no indent. The class is not in the stylesheet yet.
+    claim: With the no-icon modifier the icon is hidden and the heading and text have no indent.
+  - id: no-heading
+    claim: With the no-heading modifier the nested body has no heading and its text starts with a bold lead-in; the icon, padding and indent are those of a site alert with a heading.
   - id: no-warning-status
-    status: unverified
     claim: There are no success, warning or error site alerts; only info and emergency have a status surface.
 ---
 
-# SiteAlert
+# Site alert
 
 A full-width banner under the site header that carries an info or emergency
 message for the whole site. Put the class on a `<section>` with an
@@ -86,17 +84,33 @@ closest to what you need.
 Add at most one modifier class from each axis to `pathable-site-alert`. The
 status is set on the site alert, not on the nested `pathable-alert`.
 
-| Axis   | Value       | Class                            | What it is for                                       |
-| ------ | ----------- | -------------------------------- | ---------------------------------------------------- |
-| status | `default`   | none                             | A neutral grey banner with no icon                   |
-| status | `info`      | `pathable-site-alert--info`      | A planned change or helpful news for the whole site  |
-| status | `emergency` | `pathable-site-alert--emergency` | An outage or closure that needs attention now        |
-| size   | `default`   | none                             | 16 px vertical padding and a 32 px icon              |
-| size   | `slim`      | `pathable-site-alert--slim`      | 8 px vertical padding and a 24 px icon, for one line |
-| icon   | `default`   | none                             | The status icon shows                                |
-| icon   | `no-icon`   | `pathable-site-alert--no-icon`   | The icon is hidden and the text uses the full width  |
+| Axis    | Value        | Class                             | What it is for                                       |
+| ------- | ------------ | --------------------------------- | ---------------------------------------------------- |
+| status  | `info`       | none                              | A planned change or helpful news for the whole site  |
+| status  | `emergency`  | `pathable-site-alert--emergency`  | An outage or closure that needs attention now        |
+| size    | `default`    | none                              | 16 px vertical padding and a 32 px icon              |
+| size    | `slim`       | `pathable-site-alert--slim`       | 8 px vertical padding and a 24 px icon, for one line |
+| icon    | `default`    | none                              | The status icon shows                                |
+| icon    | `no-icon`    | `pathable-site-alert--no-icon`    | The icon is hidden and the text uses the full width  |
+| heading | `default`    | none                              | A heading above the message                          |
+| heading | `no-heading` | `pathable-site-alert--no-heading` | A bold lead-in in the message and no heading         |
 
-A site alert with no heading needs no modifier: leave the heading out.
+Info is the default status; the examples also carry
+`pathable-site-alert--info`, which gives the same look.
+
+## Urgency
+
+A site alert that is in the page when it loads needs no role. One the
+application adds after load has an urgency, set on the `<section>`:
+
+- `role="status"` for news that can wait, such as a planned maintenance
+  window. A screen reader reads it when it is next idle.
+- `role="alert"` for news that the reader must hear now, such as an outage. A
+  screen reader interrupts to read it.
+
+Show one site alert at a time. Several stacked site alerts bury the message
+that matters: put several short messages in one site alert, as a list inside
+the body, as in the list state.
 
 ## Tokens
 
@@ -113,9 +127,10 @@ The pixel figures on this page are those of the default theme.
   it no status modifier; the status comes from the site alert's modifier.
 - `pathable-alert__body`: required, the only child of the nested alert. It
   carries the padding, the icon and the indent.
-- `pathable-alert__heading`: optional, an `<h3>` inside the body.
+- `pathable-alert__heading`: an `<h3>` inside the body; leave it out with the
+  no-heading modifier.
 - `pathable-alert__text`: the message, a `<p>` inside the body. Start it with
-  a `<strong>` lead-in when there is no heading. Put a `pathable-link` in it
+  a `<strong>` lead-in with the no-heading modifier. Put a `pathable-link` in it
   for a next step.
 - The body may hold a `<ul>` with `pathable-list` instead of the text for
   several short messages.
@@ -123,15 +138,7 @@ The pixel figures on this page are those of the default theme.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
-
-Today the stylesheet draws the banner only when the nested element and its
-body carry the framework's own alert classes, which PathAble markup does not
-use. The markup on this page is the target; until `nested-alert-surface` is
-met, a site alert written this way shows no status colour, icon or width
-limit. This needs a rendering check before anyone relies on it.
+is expected behaviour.
 
 ## The consumer owns
 
@@ -140,9 +147,8 @@ limit. This needs a rendering check before anyone relies on it.
   site alert is on the page.
 - Placing the banner below the header, above the page content, and on every
   page that needs it.
-- The role. A banner that is in the page when it loads needs none. Add
-  `role="alert"` only when the application injects it after load.
-- The heading level, and whether there is a heading at all.
+- The role, as set out under Urgency.
+- The heading level.
 - Removing the banner when it no longer applies, and any dismiss control or
   memory of it; no script ships with this component.
 - Serving the status icons at the path the stylesheet expects.

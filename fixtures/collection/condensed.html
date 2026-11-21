@@ -1,9 +1,5 @@
-<!-- description: The condensed modifier, for a list of headings with one line of details each. The condensed class is not in the stylesheet yet. -->
-<ul
-  class="pathable-collection pathable-collection--condensed"
-  role="list"
-  aria-label="Recent updates"
->
+<!-- description: The condensed modifier, for a list of headings with one line of details each. A link to another website carries the external modifier, and its details name the source with an icon. -->
+<ul class="pathable-collection pathable-collection--condensed">
   <li class="pathable-collection__item">
     <div class="pathable-collection__body">
       <h3 class="pathable-collection__heading">
@@ -11,11 +7,7 @@
           >A shorter intake form for new participants</a
         >
       </h3>
-      <ul
-        class="pathable-collection__meta"
-        role="list"
-        aria-label="Details for new intake form"
-      >
+      <ul class="pathable-collection__meta" aria-label="More information">
         <li class="pathable-collection__meta-item">Programme news</li>
       </ul>
     </div>
@@ -27,12 +19,33 @@
           >Winter office hours for case workers</a
         >
       </h3>
-      <ul
-        class="pathable-collection__meta"
-        role="list"
-        aria-label="Details for office hours"
-      >
+      <ul class="pathable-collection__meta" aria-label="More information">
         <li class="pathable-collection__meta-item">Staff notice</li>
+      </ul>
+    </div>
+  </li>
+  <li class="pathable-collection__item">
+    <div class="pathable-collection__body">
+      <h3 class="pathable-collection__heading">
+        <a
+          class="pathable-link pathable-link--external"
+          rel="noreferrer"
+          href="https://www.careeronestop.org/"
+          >Find a local American Job Center</a
+        >
+      </h3>
+      <ul class="pathable-collection__meta" aria-label="More information">
+        <li class="pathable-collection__meta-item">
+          <svg
+            class="pathable-icon"
+            aria-hidden="true"
+            focusable="false"
+            role="img"
+          >
+            <use href="/assets/img/sprite.svg#public"></use>
+          </svg>
+          CareerOneStop
+        </li>
       </ul>
     </div>
   </li>

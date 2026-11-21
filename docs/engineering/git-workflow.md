@@ -479,32 +479,42 @@ doing so.
 
 Temporarily, for the `@pathableai/styles` refactor described in
 [Target state](target-state.md) (it began with the component reset,
-[PR #607][reset-pr]), CI is expected to be partly red. The package lint
-(ESLint, stylelint, markdownlint, the token lint and the Prettier check) and
-the component-page checks (`check:component-pages` and
-`check:component-pages:executed`) are gated with `if: false` in the workflows
-and skipped, because the component pages describe target `pathable-*` classes
-the SCSS does not have yet. The fixtures checks in `fixtures.yml`
-(html-validate, contract and axe) still run, and the `Fixtures` workflow's
-contract step is expected to fail until the SCSS catches up; the axe step
-after it is then skipped.
+[PR #607][reset-pr]), the repository is in a refactor, planning and
+documentation phase, and CI checks only two things: that the Markdown lints
+(`pnpm lint:md`, the `Markdownlint` job in `ci-full.yml`) and that the styles
+Storybook builds (the `Build styles Storybook` job in `storybook-quality.yml`,
+and the build in `docs-deploy.yml`, which publishes it to GitHub Pages from
+`main`). Everything else is gated with `if: false` in the workflows, not
+deleted, and skipped:
 
-This does not contradict the gate's "none failed" rule, because the two
-checks it names cover different things:
+- In `ci-full.yml`: `js-lint` (ESLint and the repository tooling tests),
+  `stylelint` (including the token lint), `format` (Prettier),
+  `react-typecheck`, `react-build`, `next-consumer` and
+  `agent-guidance-impact`.
+- In `storybook-quality.yml`: the accessibility tests (styles and React),
+  `visual-smoke`, `pixels-styles`, `coverage`, `quality-gates` and
+  `component-pages`. The build no longer builds `@pathableai/react` or the
+  React Storybook.
+- In `docs-deploy.yml`: the token lint, Storybook coverage, the accessibility
+  tests, the component-page records cache and the visual smoke tests. The
+  deploy builds only the styles Storybook, once, with the `/styles/` base path.
+- In `fixtures.yml`: both the `Fixtures` and the `React fixture tests` jobs.
 
-- GitHub's required checks are the aggregate jobs `CI result` and
-  `Storybook result`. They treat skipped jobs as passing and do not include
-  `fixtures.yml`, which has no aggregate job, so the red `Fixtures` run does not
-  stop GitHub from merging.
-- `pnpm merge:gate` reads every check run and commit status on the head, not
-  only those two. The red `Fixtures` run therefore makes it report a failed
-  check, and an agent cannot merge under [agent merge](#agent-merge) while it is
-  red. A person decides on the merge, as for any pull request the gate does not
-  approve.
+The reason is that the component pages describe target `pathable-*` classes
+the SCSS does not have yet, so most checks would fail or test code being
+replaced. The Storybook is documentation of the components being defined: it
+has no `React` reference and no `Fixtures` section, and its component pages
+show HTML and CSS only. The fixture stories that back the page previews still
+exist but are hidden from the sidebar.
 
-Report the red checks in the pull request's Evidence or Validation section.
-Re-enable the gated jobs and steps, and make the fixtures checks merge-gating,
-when the SCSS has caught up.
+This does not contradict the gate's "none failed" rule. GitHub's required
+checks are the aggregate jobs `CI result` and `Storybook result`. They treat
+skipped jobs as passing, so they are green when Markdownlint and the Storybook
+build pass. `pnpm merge:gate` reads every check run and commit status on the
+head and also accepts skipped ones, so the disabled jobs do not block it.
+
+Say in the pull request's Evidence or Validation section which checks did not
+run. Re-enable the gated jobs and steps when the refactor lands.
 
 [reset-pr]: https://github.com/PathableAI-org/styles/pull/607
 

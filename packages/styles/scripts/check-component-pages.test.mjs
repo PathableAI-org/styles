@@ -632,12 +632,19 @@ test('tracks coverage by state, not by markup two states share', () => {
   assert.ok(includes(errors, 'fixtures/widget/plain.html is not shown'))
 })
 
-test('fails on a placeholder only the Storybook page resolves', () => {
+test('fails on a placeholder in a React block that names no fixture', () => {
   const reactOnly = converted.replace(
     '## States',
     '<!-- package: react -->\n\n<!-- example: missing-state -->\n\n<!-- /package -->\n\n## States',
   )
-  const { errors } = renderForCheck(page(reactOnly), sources())
+  const examples = new Map([
+    ['loud', 'export default <Widget loud />\n'],
+    ['plain', 'export default <Widget />\n'],
+  ])
+  const { errors } = renderForCheck(
+    page(reactOnly),
+    sources({ examples, component: 'Widget' }),
+  )
   assert.ok(
     includes(errors, 'fixtures/widget/missing-state.html does not exist'),
   )

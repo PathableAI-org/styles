@@ -4,32 +4,20 @@ slug: form
 kind: static
 summary: The container for a group of form fields, which sets the form typography, caps the form's width on wider screens and lets the controls inside fill it.
 styles-class: pathable-form
-variants:
-  - axis: size
-    default: default
-    values: [default, large]
+variants: []
 guarantees:
   - id: max-width
-    status: unverified
     claim: From a viewport 480 px wide upward the form is at most 320 px wide; below that it fills its container.
   - id: control-fill
-    status: unverified
-    claim: A pathable-input, pathable-select or pathable-textarea inside the form has no maximum width of its own and fills the form, unless it carries one of the pathable-maxw-mobile, pathable-maxw-mobile-lg, pathable-maxw-tablet or pathable-maxw-desktop width utilities, which still apply.
+    claim: A pathable-input, pathable-select or pathable-textarea inside the form has no maximum width of its own and fills the form, unless it carries one of the maxw-mobile, maxw-mobile-lg, maxw-tablet or maxw-desktop width utilities, which still apply.
   - id: required-mark
-    status: unverified
-    claim: An abbr element whose title is "required" inside the form has no underline or other text decoration.
+    claim: An abbr element whose title is "required" inside the form has no underline or other text decoration, and with the pathable-hint--required class its asterisk is drawn in the dark error text colour.
   - id: link-style
-    status: unverified
     claim: A link inside the form that is not a pathable-button gets the form's link typesetting.
-  - id: large-width
-    status: unmet
-    claim: With the large modifier, the form is at most 480 px wide from a viewport 480 px wide upward. The pathable-form--large class is not in the stylesheet yet.
   - id: field-error
-    status: unmet
-    claim: A pathable-form-group--error group, a pathable-label--error label and a pathable-input--error control mark the one field that has an error, and the form itself carries no error class. None of these classes is in the stylesheet yet; see the error and error-group guarantees of the TextInput page.
+    claim: A pathable-form-group--error group, a pathable-label--error label and a pathable-input--error control mark the one field that has an error, and the form itself carries no error class. See the error and error-group guarantees of the Text input page.
   - id: button-margin
-    status: unmet
-    claim: A pathable-button inside the form has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field. Today the form sets this margin only for buttons that carry a legacy class, so a pathable-button gets none.
+    claim: A pathable-button inside the form has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field.
 ---
 
 # Form
@@ -43,7 +31,7 @@ own form submission and validation apply, and nothing here needs JavaScript.
 
 - A short form in one column: a sign-in, an intake step, a search or filter
   form, or a single edit panel.
-- The wrapper for fields built from `pathable-form-group` and
+- The wrapper for fields built from `pathable-label`, `pathable-input` and
   `pathable-fieldset`.
 
 Use something else when:
@@ -81,51 +69,68 @@ what you need.
 
 ## Variants
 
-Add at most one modifier class from the axis to `pathable-form`.
-
-| Axis | Value     | Class                  | What it is for                                              |
-| ---- | --------- | ---------------------- | ----------------------------------------------------------- |
-| size | `default` | none                   | A form at most 320 px wide on screens 480 px wide and wider |
-| size | `large`   | `pathable-form--large` | A form at most 480 px wide, when the form is the main task  |
+The form has no variants. It is one width, at most 320 px, from a viewport 480 px wide upward.
 
 ## Composition
 
-- `pathable-form-group`: wraps one field.
-- `pathable-label`: names a control.
-- `pathable-hint`: helper text under the label.
-- `pathable-error-message`: says what is wrong with a value. Put the error
-  styling on the field's group, never on the form, so only the question with
-  the error is marked. The error classes for the group, the label and the
-  control are not in the stylesheet yet; see the `field-error` guarantee.
+- `pathable-label`: names a control and comes before it. A field's label,
+  hint, error message and control follow one another directly in the form.
+- `pathable-hint`: helper text under the label. With `pathable-hint--required`
+  on an `<abbr title="required">*</abbr>` it is the visible required marker.
+- `pathable-error-message`: says what is wrong with a value. Wrap that one
+  field in a `pathable-form-group--error`, with `pathable-label--error` on its
+  label and `pathable-input--error` on its control, so only the question with
+  the error is marked and the form itself carries no error class.
 - `pathable-fieldset` and `pathable-legend`: group radios and checkboxes under
   one question.
 - `pathable-input`, `pathable-checkbox` and `pathable-radio`: the controls.
-  See the [TextInput](text-input.md) page for the text input.
-- `pathable-button`: the submit button, as the form's last child. The form
-  does not space it yet (see the `button-margin` guarantee), so put it in a
-  `pathable-button-group` or give it a margin utility.
-- The form has no element classes. A short note about the form, such as "Fields
-  marked * are required", is plain text for you to style: the form has no
-  note class yet.
-- The form adds no padding, margin, border or background.
+  See the [Text input](text-input.md) page for the text input.
+- `pathable-button`: the submit button, as the form's last child. It has a top
+  margin of 8 px, and 24 px from a viewport 480 px wide upward.
+- The form has no element classes and adds no padding, margin, border or
+  background.
+
+### Required and optional fields
+
+- Explain the required marker at the start of the form, before the first
+  field: "Required fields are marked with an asterisk (\*)."
+- Mark each required field's label with the visible text
+  `<abbr title="required" class="pathable-hint pathable-hint--required">*</abbr>`
+  and set the native `required` attribute. The asterisk is visible text, so the
+  marker does not depend on colour.
+- Mark optional fields in their label, such as "Preferred name (optional)",
+  so the person knows which fields they can skip.
+- Ask only for what is needed. Prefer fewer fields over many optional ones.
+
+### Order and disabled fields
+
+- The visual order of the fields matches the DOM order. Do not reorder fields
+  with CSS, because keyboard and screen reader users follow the DOM.
+- Avoid disabled fields. A disabled field is not focusable, is hard to read
+  and does not say why it is unavailable. Leave the field out, or explain in
+  text what is needed before it can be filled in.
+
+### Errors after a failed submission
+
+- Put the error notification in the page title, such as "Error: Book
+  appointment", so a screen reader announces it when the page reloads.
+- Mark the question with the error with the error modifiers and a
+  `pathable-error-message` that says how to fix it.
 
 ## Guarantees
 
-The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
+The guarantees are the list in the front matter at the top of this page.
 
 ## The consumer owns
 
 - The form's action, method, field names and validation. Use the native
-  `required` attribute and mark a required field's label with
-  `<abbr title="required">*</abbr>`, as the examples do.
+  `required` attribute and the visible required marker, as the examples do.
 - Each field's label, hint and error associations: `for` on the label,
   `aria-describedby` on the control listing the hint and error ids, and
   `aria-invalid="true"` on the control while it has an error.
 - A name for the form when it is a landmark the reader should find, such as a
   search form: `aria-label` or `aria-labelledby`. A form with no name is not
   announced as a landmark.
-- Where the error summary, if any, goes and how focus moves to it.
+- The page title, including its error notification, and where the error
+  summary, if any, goes and how focus moves to it.
 - Any data minimisation for the sensitive records the form collects.

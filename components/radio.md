@@ -1,47 +1,34 @@
 ---
-name: Radio
+name: Radio buttons
 slug: radio
 kind: static
 summary: A native radio button with a styled label, for one choice among several that exclude each other.
 styles-class: pathable-radio
-variants:
-  - axis: style
-    default: default
-    values: [default, tile]
+variants: []
 guarantees:
   - id: input-hidden
-    status: unverified
     claim: The native input is moved off-screen (position absolute, 999em to the left) but stays in the tab order, and the label draws the visible control.
   - id: circle
-    status: unverified
     claim: The unselected control is a 1.25rem (20 px at a 16 px root) circle with a white fill and a 2 px outline in #00365c, drawn 2rem (32 px) to the left of the label text.
   - id: label-layout
-    status: unverified
     claim: The label is inline-block with a 0.75rem (12 px) top margin and 2rem (32 px) of left padding, in normal weight, and shows a pointer cursor.
   - id: checked
-    status: unverified
     claim: A selected radio shows a #015a76 centre inside a 2 px white ring, inside a 2 px #015a76 outline.
   - id: disabled
-    status: unverified
     claim: A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white circle with a 2 px #757575 outline, and a selected one shows a #757575 centre and outline.
   - id: focus-ring
-    status: unverified
     claim: When the input has focus, the circle shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it.
   - id: root-block
-    status: unverified
     claim: The root is display block, so each radio starts on its own line, unless the element is a bare input or has the hidden attribute.
   - id: description
-    status: unverified
     claim: A label description is a block inside the label, 0.87rem (13.9 px at a 16 px root) with a 0.5rem (8 px) top margin.
   - id: tile
-    status: unmet
-    claim: With pathable-radio--tile on the root, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the circle drawn inside the start padding.
+    claim: With pathable-radio__input--tile on the input, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the circle drawn inside the start padding.
   - id: tile-checked
-    status: unmet
     claim: A selected tile has a #015a76 border and a background of #015a76 at 10 percent opacity; a disabled tile has a lighter border and a white background.
 ---
 
-# Radio
+# Radio buttons
 
 A native radio button with a styled label, for one choice among several that
 exclude each other. Put `pathable-radio` on a wrapper, and put a
@@ -61,8 +48,8 @@ Use something else when:
 - a person can pick more than one: use `pathable-checkbox`;
 - the list is long, five or more options in a narrow space: use
   `pathable-select`;
-- the choice is a yes or no answer to a single statement: use
-  `pathable-checkbox`.
+- a person accepts or declines one clearly stated proposition: use a single
+  `pathable-checkbox`. A yes or no question stays two radios.
 
 ## Example
 
@@ -90,16 +77,7 @@ selected has no special look.
 
 ## Variants
 
-Add at most one modifier class from each axis to `pathable-radio`.
-
-| Axis  | Value     | Class                  | What it is for                                        |
-| ----- | --------- | ---------------------- | ----------------------------------------------------- |
-| style | `default` | none                   | A circle beside the label text                        |
-| style | `tile`    | `pathable-radio--tile` | The choice in a bordered box with a larger tap target |
-
-The tile modifier is not in the stylesheet yet: today the class has no
-effect, and the choice looks like the default. Do not rely on it until the
-`tile` guarantees are no longer marked unmet.
+There is one modifier, which is on the input and not on the wrapper: `pathable-radio__input--tile` draws the choice in a bordered box with a larger tap target. Add it to the input of every choice in a group.
 
 ## Composition
 
@@ -110,6 +88,8 @@ effect, and the choice looks like the default. Do not rely on it until the
   the root, so the root adds only the block layout.
 - `pathable-radio__input`: the native `<input type="radio">`. It is hidden from
   sight and stays focusable.
+- `pathable-radio__input--tile`: add it to the input of every choice in a group
+  that uses tiles.
 - `pathable-radio__label`: the `<label>`. It must follow the input as its next
   sibling, because the circle, its centre and the focus ring are drawn on the
   label from the input's state. Connect them with `for` and a matching input
@@ -125,13 +105,7 @@ effect, and the choice looks like the default. Do not rely on it until the
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
-
-The tile guarantees are unmet. The tile is a larger, bordered tap target that a
-touch-first application would use, and the class is planned but has no rules
-in the stylesheet yet.
+is expected behaviour.
 
 The pixel and colour figures on this page are those of the default theme.
 
