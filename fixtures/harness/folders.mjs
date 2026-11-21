@@ -5,9 +5,19 @@
 
 import { readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import process from 'node:process'
 
 /** The fixtures package root (the parent of harness/). */
-export const fixturesRoot = resolve(import.meta.dirname, '..')
+export const packageRoot = resolve(import.meta.dirname, '..')
+
+/**
+ * Where the component folders and folders.json are read from: the package
+ * root, or FIXTURES_ROOT when it is set. The harness's own tests set it to run
+ * the real commands against a scratch folder; nothing else should.
+ */
+export const fixturesRoot = process.env.FIXTURES_ROOT
+  ? resolve(process.env.FIXTURES_ROOT)
+  : packageRoot
 
 /** The only folder under fixtures/ that is not a component folder. */
 export const HARNESS_DIR = 'harness'

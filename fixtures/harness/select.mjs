@@ -1,8 +1,9 @@
 /**
  * Chooses the fixture folders CI checks on a pull request: the union of the
  * folders whose files changed (changed.mjs), the folders the compiled-CSS
- * diff affects (affected.mjs) and the folders whose component page changed,
- * each with the reasons it was selected. Renames count as a delete and an
+ * diff affects (affected.mjs), the folders whose component page changed, and
+ * every folder when a shared component-page script changed, each with the
+ * reasons it was selected. Renames count as a delete and an
  * add, so a renamed page selects the folder named after its old path.
  *
  *   node harness/select.mjs <base>     a pull request against <base>
@@ -16,17 +17,38 @@
  * $GITHUB_STEP_SUMMARY.
  */
 
-import { appendFileSync, existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { appendFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
-import { affected } from './affected.mjs'
+import { DEPENDENCY_GLOBS, STYLESHEET_GLOBS, affected } from './affected.mjs'
 import { selectFolders } from './changed.mjs'
-import { allFolders, fixturesRoot } from './folders.mjs'
+import { allFolders } from './folders.mjs'
 
 /** How many reasons the summary lists per folder before it counts the rest. */
 const SUMMARY_REASONS = 15
+
+/**
+ * Scripts outside fixtures/ that the selection and the contract check read
+ * selectors, CSS and pages with. A change to one can change any folder's
+ * result, so it selects every folder, as a change to fixtures/harness/ does.
+ */
+export const SHARED_SCRIPTS = [
+  'packages/styles/scripts/check-component-pages.mjs',
+  'packages/styles/scripts/component-pages.mjs',
+]
+
+/**
+ * Every path whose change can change the selection. The Fixtures workflow's
+ * `pull_request.paths` must list each of these globs; a test checks it.
+ */
+export const INPUT_GLOBS = [
+  'fixtures/**',
+  'packages/styles/components/*.md',
+  ...SHARED_SCRIPTS,
+  ...STYLESHEET_GLOBS,
+  ...DEPENDENCY_GLOBS,
+]
 
 /**
  * The folders whose component page (packages/styles/components/<slug>.md)
@@ -48,18 +70,30 @@ export function needsHtmlValidate(paths) {
   )
 }
 
+/** The shared scripts among the changed paths. */
+export function sharedScriptsChanged(paths) {
+  return SHARED_SCRIPTS.filter((script) => paths.includes(script))
+}
+
 /**
  * Combines the selections. `changed` is the folder list from changed.mjs,
- * `css` the selection from affected.mjs and `pages` the folders whose
- * component page changed. Returns `{ folders: { <folder>: string[] } }`,
+ * `css` the selection from affected.mjs, `pages` the folders whose
+ * component page changed, and `scripts` the shared scripts that changed
+ * (`changed`) with the folders they select (`folders`, every folder). Returns `{ folders: { <folder>: string[] } }`,
  * each string a reason in Markdown.
  */
-export function combine(changed, css, pages = []) {
+export function combine(changed, css, pages = [], scripts = {}) {
   const folders = {}
   const add = (folder, reason) => {
     folders[folder] ??= []
     folders[folder].push(reason)
   }
+  for (const script of scripts.changed ?? [])
+    for (const folder of scripts.folders ?? [])
+      add(
+        folder,
+        `\`${script}\` changed; the selection and the contract check read selectors, CSS and pages with it, so every folder is checked.`,
+      )
   for (const folder of changed)
     add(folder, 'Fixture files changed under `fixtures/`.')
   for (const folder of pages)
@@ -110,7 +144,11 @@ export function renderSummary(
   }
   if (names.length === 0) {
     lines.push(
-      '**No fixture folder was selected.** No file in a component folder or component page changed, and the compiled CSS diff touches no class or custom property that a fixture uses. The contract check and axe did not run.',
+      `**No fixture folder was selected.** No file in a component folder or component page changed, and the compiled CSS diff touches no class or custom property that a fixture uses. ${
+        fixturesChanged
+          ? 'axe did not run. The contract check ran on every folder, because files under `fixtures/` changed and it checks `folders.json` against the folders on disk.'
+          : 'The contract check and axe did not run.'
+      }`,
       '',
     )
   } else {
@@ -130,12 +168,13 @@ export function renderSummary(
       lines.push('')
     }
   }
-  lines.push(
-    fixturesChanged
-      ? 'html-validate ran on every fixture, because files under `fixtures/` or `pnpm-lock.yaml` changed.'
-      : 'html-validate was skipped: no file under `fixtures/` and not `pnpm-lock.yaml` changed.',
-    '',
-  )
+  let html =
+    'html-validate was skipped: no file under `fixtures/` and not `pnpm-lock.yaml` changed.'
+  if (everything) html = 'html-validate ran on every fixture.'
+  else if (fixturesChanged)
+    html =
+      'html-validate ran on every fixture, because files under `fixtures/` or `pnpm-lock.yaml` changed.'
+  lines.push(html, '')
   return lines.join('\n')
 }
 
@@ -152,17 +191,21 @@ function main(argv) {
     }
   } else {
     const base = argv[0] ?? 'origin/main'
-    // One set of changed paths for both selections: affected() diffs the
-    // working tree against the merge base, as CI's clean checkout of HEAD.
+    // One set of changed paths for every selection: affected() diffs the
+    // working tree against the merge base (CI's clean checkout of HEAD),
+    // with renames listed as a delete and an add. changed.mjs's own listing
+    // is not used, so `pnpm changed` and `pnpm select` can differ on
+    // uncommitted or renamed fixture files.
     const css = affected({ base })
     const paths = css.changedPaths
-    const changed = selectFolders(paths, folderList).filter((folder) =>
-      existsSync(join(fixturesRoot, folder)),
-    )
+    const changed = selectFolders(paths, folderList)
     result = {
       base: css.base,
       fixturesChanged: needsHtmlValidate(paths),
-      ...combine(changed, css, pagesChanged(paths, folderList)),
+      ...combine(changed, css, pagesChanged(paths, folderList), {
+        changed: sharedScriptsChanged(paths),
+        folders: folderList,
+      }),
     }
   }
 

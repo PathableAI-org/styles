@@ -23,10 +23,15 @@ import {
   formatterFactory,
 } from 'html-validate'
 
-import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
+import {
+  fixtureFiles,
+  fixturesRoot,
+  foldersFromArgs,
+  packageRoot,
+} from './folders.mjs'
 
 /** The fixtures' html-validate configuration. */
-export const configPath = join(fixturesRoot, '.htmlvalidate.json')
+export const configPath = join(packageRoot, '.htmlvalidate.json')
 
 const DIRECTIVE = /<!--\s*\[?\s*html-validate-/gu
 
