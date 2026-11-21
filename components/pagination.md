@@ -94,8 +94,8 @@ unbounded result set differ in which items the markup holds, not in classes.
 - `pathable-pagination__link-text`: the `<span>` that holds the visible
   "Previous" or "Next" inside the arrow link, beside the icon.
 - `pathable-pagination__overflow`: an item that stands for pages left out. It
-  holds a `…` in a `<span aria-hidden="true">` and a `pathable-sr-only` span
-  reading "ellipsis indicating non-visible pages".
+  carries `aria-label="ellipsis indicating non-visible pages"` and holds a
+  `<span>` with the `…`.
 - `pathable-current`: added to the numbered page button of the current page,
   together with `aria-current="page"`.
 - Show the previous link only when there is a previous page, and the next link

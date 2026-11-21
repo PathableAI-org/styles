@@ -4,10 +4,7 @@ slug: checkbox
 kind: static
 summary: A native checkbox with a styled label, for one choice among several that a person can select independently.
 styles-class: pathable-checkbox
-variants:
-  - axis: style
-    default: default
-    values: [default, tile]
+variants: []
 guarantees:
   - id: input-hidden
     claim: The native input is moved off-screen (position absolute, 999em to the left) but stays in the tab order, and the label draws the visible control.
@@ -86,13 +83,7 @@ Updating the group's other choices is also the application's job.
 
 ## Variants
 
-Add at most one modifier class from each axis. The tile modifier goes on each
-`pathable-checkbox__input`, not on the wrapper.
-
-| Axis  | Value     | Class                            | What it is for                                        |
-| ----- | --------- | -------------------------------- | ----------------------------------------------------- |
-| style | `default` | none                             | A box beside the label text                           |
-| style | `tile`    | `pathable-checkbox__input--tile` | The choice in a bordered box with a larger tap target |
+There is one modifier, which is on the input and not on the wrapper: `pathable-checkbox__input--tile` draws the choice in a bordered box with a larger tap target. Add it to the input of every choice in a group.
 
 ## Composition
 

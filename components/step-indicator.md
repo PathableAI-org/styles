@@ -125,8 +125,8 @@ the upcoming label text.
   a 0.5rem gap). Its second child is `pathable-step-indicator__heading-text`,
   the current step's name.
 - The counters, centred and no-label modifiers go on the block and combine:
-  `--center` goes with `--counters` or `--counters-sm`, and `--center` also
-  combines with `--no-labels`. The numbers in the circles are drawn by the
+  --center goes with --counters or --counters-sm, and --center also
+  combines with --no-labels. The numbers in the circles are drawn by the
   stylesheet from the segment order, so the segments carry no number in their
   text.
 - Interactive steps, such as links to earlier steps or a button that moves on,

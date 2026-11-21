@@ -38,8 +38,9 @@ guarantees:
 
 # Text input
 
-A text field with a bordered box, a brand focus ring and states for an error, a
-success and a disabled control. Put `pathable-input` on an `<input>` element.
+A text field, single-line or multi-line, with a bordered box, a brand focus ring
+and states for an error, a success and a disabled control. Put `pathable-input`
+on an `<input>` element.
 The same class serves every text-like `type`, such as `text`, `email`, `tel`,
 `search` and `password`; there are no per-type modifiers. A multi-line field is
 a `<textarea>` with the `pathable-textarea` class.

@@ -117,9 +117,10 @@ colour of its own: it takes the item's text colour.
 - `pathable-collection__meta-item` goes on each `<li>` of a meta list. Put the
   `pathable-tag` class on the same `<li>` for a topic, rather than a nested
   `<span>`. A detail may start with a `pathable-icon`.
-- `pathable-collection__calendar-date` goes on a `<time>` before the body, in
-  place of a thumbnail. It holds a `pathable-collection__calendar-date-month`
-  and a `pathable-collection__calendar-date-day` span.
+- `pathable-collection__calendar-date` goes on a `<div>` before the body, in
+  place of a thumbnail. It holds a `<time>` with a `datetime`, which holds a
+  `pathable-collection__calendar-date-month` and a
+  `pathable-collection__calendar-date-day` span.
 - A heading link to another website takes `pathable-link--external`, so the
   icon and hidden label say it leaves the application.
 - JavaScript is not part of this component: it does not sort, filter or page

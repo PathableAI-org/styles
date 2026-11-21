@@ -62,7 +62,7 @@ Every example follows the USWDS example for the same component:
 6. Icons inside a component reference the sprite with `<use>`, as USWDS does,
    and are not drawn with inline paths.
 
-USWDS version reviewed for parity: 3.13.0 (package lock).
+Pages follow USWDS 3.14.0.
 
 ## Catalog scope
 

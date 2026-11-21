@@ -96,7 +96,7 @@ serves, and the `href` is the URL it is served from, such as
 A decorative icon, beside text that says the same thing, is hidden from
 assistive technology:
 
-```html
+```svg
 <svg class="pathable-icon" aria-hidden="true" focusable="false" role="img">
   <use href="/assets/img/sprite.svg#check_circle"></use>
 </svg>
@@ -105,7 +105,7 @@ assistive technology:
 An icon that carries meaning on its own has a `<title>` and is named by
 `aria-labelledby`:
 
-```html
+```svg
 <svg
   class="pathable-icon"
   focusable="false"
