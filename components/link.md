@@ -10,7 +10,7 @@ variants:
     values: [internal, external]
   - axis: background
     default: light
-    values: [light, dark]
+    values: [light, alt]
 guarantees:
   - id: link-colour
     status: unverified
@@ -84,7 +84,7 @@ alt modifier belongs on an external link on a dark background.
 | destination | `internal` | none                                     | A link within the application                            |
 | destination | `external` | `pathable-link--external`                | A link to another website, with an icon and hidden label |
 | background  | `light`    | none                                     | A link on a light surface                                |
-| background  | `dark`     | `pathable-link--alt` (with `--external`) | An external link on a dark background                    |
+| background  | `alt`      | `pathable-link--alt` (with `--external`) | An external link on a dark background                    |
 
 A visited link needs no class. The alt modifier has no effect alone; combine it
 with the external modifier.
