@@ -169,10 +169,14 @@ $_jade-text: #0d7a63;
   // -------- USWDS utility classes (same names as USWDS) --------
   // _uswds-utility-classes.scss emits the unprefixed utilities. These settings
   // keep them to the base class (no responsive or hover variants). The global
-  // colour palette feeds bg-* and text-*: the theme tokens (primary,
-  // secondary, accent-*, base, ink) plus USWDS's always-present transparent,
-  // black and white, not the USWDS system colours.
-  $global-color-palettes: ('palette-color-theme'),
+  // colour palette feeds bg-* and text-*: USWDS's default colour palette, which
+  // is the theme tokens (primary, secondary, accent-*, base, ink), the state
+  // tokens (error, warning, success, info, disabled), the grayscale tokens
+  // (gray-5 to gray-90) and the basic names (red, orange, gold, blue and so
+  // on), plus USWDS's always-present transparent, black and white. It leaves
+  // out the numbered system colours (red-50v, gray-cool-60), which get no
+  // class, as docs/styles/uswds-build-settings.md says.
+  $global-color-palettes: ('palette-color-default'),
   $color-settings: (
     hover: false,
   ),

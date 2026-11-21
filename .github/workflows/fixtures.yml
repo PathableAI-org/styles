@@ -46,7 +46,7 @@ permissions:
 # CSS; the other folders stay unchecked in this workflow until the SCSS
 # catches up, and then the list and the filtering step below go away.
 env:
-  REENABLED_FOLDERS: tokens-color-theme-tokens
+  REENABLED_FOLDERS: tokens-color-theme-tokens tokens-color-system-tokens
 
 jobs:
   # The checks run only for the folders in REENABLED_FOLDERS; the rest stay

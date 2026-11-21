@@ -131,8 +131,9 @@ acceptable:
   skipped;
 - the jobs and steps gated `if: false` (package lint and the component-page
   checks in CI), except that the `stylelint` job runs again on changed SCSS
-  files, and the `Fixtures` job runs for the `tokens-color-theme-tokens` folder
-  only (the other folders stay unchecked until the SCSS catches up);
+  files, and the `Fixtures` job runs for the `tokens-color-theme-tokens` and
+  `tokens-color-system-tokens` folders only (the other folders stay unchecked
+  until the SCSS catches up);
 - `check:component-pages`, which fails by design when run locally.
 
 Nothing else is excused. A new failure that a change introduces is not
