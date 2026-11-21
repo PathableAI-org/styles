@@ -61,6 +61,8 @@ Run these from the repository root.
 - [AGENTS.md](AGENTS.md) routes each kind of change to the document that owns
   its rules, and lists the checks to run before committing. It applies to
   people as well as coding agents.
+- CI temporarily skips the package lint and the component-page checks for the
+  component reset (PR #607); `pnpm lint` still runs locally.
 - Commits follow Conventional Commits and are checked by commitlint.
 - New features are specified with Spec Kit under `specs/`; those folders and
   `docs/plans/` are historical records. Current behaviour is documented in

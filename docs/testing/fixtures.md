@@ -184,7 +184,8 @@ files under `packages/react/`, and says so in its job summary; otherwise it:
 1. builds `@pathableai/styles`;
 2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
    lint jobs filter on `packages/`, `apps/` and `scripts/` and skip a pull
-   request that changes only `fixtures/`;
+   request that changes only `fixtures/` (temporarily disabled for the
+   component reset, PR #607, along with the package lint);
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
 4. selects folders with `select.mjs`;

@@ -477,6 +477,19 @@ maintainer requires them in the ruleset on `main`, GitHub itself would merge a
 pull request with failing checks, and the gate is what stops an agent from
 doing so.
 
+Temporarily, for the component reset ([PR #607][reset-pr]), CI does not run
+the package lint (ESLint, stylelint, markdownlint, the token lint and the
+Prettier check) or the component-page checks (`check:component-pages` and
+`check:component-pages:executed`), because the component pages describe
+target `pathable-*` classes the SCSS does not have yet. Those jobs and steps
+are gated with `if: false` in the workflows and are skipped, so `CI result`
+and `Storybook result` still pass. The fixtures checks in `fixtures.yml`
+(html-validate, contract and axe) still run, and the contract and axe checks
+are expected to fail until the SCSS catches up. Re-enable the gated jobs and
+steps then.
+
+[reset-pr]: https://github.com/PathableAI-org/styles/pull/607
+
 ## Corrections
 
 Change the earliest phase that owns the decision.
