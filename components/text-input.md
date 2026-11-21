@@ -142,9 +142,10 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source, and no test checks it yet.
 
-Some stories and React components pass `pathable-input--error` and type
-modifiers such as `pathable-input--email`; the stylesheet has no rule for any of
-them, so they have no visual effect today.
+Some stories and React components pass type modifiers for the input `type`,
+such as an email modifier; the stylesheet has no rule for any of them, so they
+have no visual effect today. The error modifier is covered by the `error`
+guarantee above.
 
 ## The consumer owns
 

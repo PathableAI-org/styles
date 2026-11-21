@@ -89,7 +89,7 @@ modifier classes the stylesheet does not have yet; see Variants.
 
 ## Variants
 
-| axis     | value         | class or none                          | what it is for                                                                                        |
+| Axis     | Value         | Class                                  | What it is for                                                                                        |
 | -------- | ------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | counters | `default`     | none                                   | Bars only, with the label under each bar.                                                             |
 | counters | `counters`    | `pathable-step-indicator--counters`    | A numbered circle on each bar, so the step order reads without the labels. Not in the stylesheet yet. |

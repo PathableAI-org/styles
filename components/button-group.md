@@ -66,7 +66,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
 Style each button with the `pathable-button` modifiers, such as
 `pathable-button--outline`. The group itself has one style modifier.
 
-| axis  | value       | class                              | what it is for                                                                 |
+| Axis  | Value       | Class                              | What it is for                                                                 |
 | ----- | ----------- | ---------------------------------- | ------------------------------------------------------------------------------ |
 | style | `default`   | none                               | Separate buttons that stack on a phone and sit in a row from 480 px.           |
 | style | `segmented` | `pathable-button-group--segmented` | Joined buttons in one strip, for a few closely related actions. Not built yet. |

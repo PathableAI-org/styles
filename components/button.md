@@ -123,29 +123,29 @@ The modifiers are independent of each other, apart from the ones noted below.
 Use `pathable-button` on every button and add at most one modifier from the
 style and intent axes.
 
-| axis      | value          | class                           | what it is for                                                                     |
-| --------- | -------------- | ------------------------------- | ---------------------------------------------------------------------------------- |
-| style     | `default`      | none                            | The main action on a page. Same look as `primary`.                                 |
-| style     | `primary`      | `pathable-button--primary`      | The main action, written out. Use when a component sets the class from a prop.     |
-| style     | `secondary`    | `pathable-button--secondary`    | A supporting action in the secondary colour.                                       |
-| style     | `accent-cool`  | `pathable-button--accent-cool`  | A tertiary action in Bright Blue Brooks.                                           |
-| style     | `accent-warm`  | `pathable-button--accent-warm`  | An attention-drawing action in Lived-In Lime.                                      |
-| style     | `base`         | `pathable-button--base`         | A neutral action on the page background colour.                                    |
-| style     | `outline`      | `pathable-button--outline`      | A quieter action beside a filled one, such as "Cancel".                            |
-| style     | `unstyled`     | `pathable-button--unstyled`     | An action that reads as a link but must be a button.                               |
-| intent    | `default`      | none                            | No workflow meaning of its own.                                                    |
-| intent    | `save`         | `pathable-button--save`         | Saves work without leaving the page. Looks like `secondary`.                       |
-| intent    | `continue`     | `pathable-button--continue`     | Moves to the next step. Looks like the default button.                             |
-| intent    | `review`       | `pathable-button--review`       | Opens a review of the work. Looks like `accent-cool`.                              |
-| intent    | `low-emphasis` | `pathable-button--low-emphasis` | An action that should not compete with the others. Looks like `base`.              |
-| intent    | `destructive`  | `pathable-button--destructive`  | An action that deletes or cannot be undone, in the danger colour.                  |
-| size      | `default`      | none                            | The standard size.                                                                 |
-| size      | `big`          | `pathable-button--big`          | A larger button for a lone call to action.                                         |
-| surface   | `default`      | none                            | A button on a light surface.                                                       |
-| surface   | `inverse`      | `pathable-button--inverse`      | An outline button on a dark surface. It has an effect only with `--outline`.       |
-| placement | `default`      | none                            | A button anywhere on the page.                                                     |
-| placement | `back`         | `pathable-button--back`         | The back button in `pathable-wizard__actions`. It has no effect elsewhere.         |
-| placement | `submit`       | `pathable-button--submit`       | The final submit button in `pathable-wizard__actions`. It has no effect elsewhere. |
+| Axis      | Value          | Class                           | What it is for                                                                              |
+| --------- | -------------- | ------------------------------- | ------------------------------------------------------------------------------------------- |
+| style     | `default`      | none                            | The main action on a page. Same look as `primary`.                                          |
+| style     | `primary`      | `pathable-button--primary`      | The main action, written out. Use when a component sets the class from a prop.              |
+| style     | `secondary`    | `pathable-button--secondary`    | A supporting action in the secondary colour.                                                |
+| style     | `accent-cool`  | `pathable-button--accent-cool`  | A tertiary action in Bright Blue Brooks.                                                    |
+| style     | `accent-warm`  | `pathable-button--accent-warm`  | An attention-drawing action in Lived-In Lime.                                               |
+| style     | `base`         | `pathable-button--base`         | A neutral action on the page background colour.                                             |
+| style     | `outline`      | `pathable-button--outline`      | A quieter action beside a filled one, such as "Cancel".                                     |
+| style     | `unstyled`     | `pathable-button--unstyled`     | An action that reads as a link but must be a button.                                        |
+| intent    | `default`      | none                            | No workflow meaning of its own.                                                             |
+| intent    | `save`         | `pathable-button--save`         | Saves work without leaving the page. Looks like `secondary`.                                |
+| intent    | `continue`     | `pathable-button--continue`     | Moves to the next step. Looks like the default button.                                      |
+| intent    | `review`       | `pathable-button--review`       | Opens a review of the work. Looks like `accent-cool`.                                       |
+| intent    | `low-emphasis` | `pathable-button--low-emphasis` | An action that should not compete with the others. Looks like `base`.                       |
+| intent    | `destructive`  | `pathable-button--destructive`  | An action that deletes or cannot be undone, in the danger colour.                           |
+| size      | `default`      | none                            | The standard size.                                                                          |
+| size      | `big`          | `pathable-button--big`          | A larger button for a lone call to action.                                                  |
+| surface   | `default`      | none                            | A button on a light surface.                                                                |
+| surface   | `inverse`      | `pathable-button--inverse`      | An outline button on a dark surface. It has an effect only with `pathable-button--outline`. |
+| placement | `default`      | none                            | A button anywhere on the page.                                                              |
+| placement | `back`         | `pathable-button--back`         | The back button in `pathable-wizard__actions`. It has no effect elsewhere.                  |
+| placement | `submit`       | `pathable-button--submit`       | The final submit button in `pathable-wizard__actions`. It has no effect elsewhere.          |
 
 The `back` and `submit` classes only mark a button's position inside the
 actions region of a `pathable-wizard`. They add no colour or size, so outside

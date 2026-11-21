@@ -79,12 +79,12 @@ what you need.
 Add the external modifier to `pathable-link` for a link to another website. The
 alt modifier belongs on an external link on a dark background.
 
-| Axis        | Value      | Class                                    | What it is for                                           |
-| ----------- | ---------- | ---------------------------------------- | -------------------------------------------------------- |
-| destination | `internal` | none                                     | A link within the application                            |
-| destination | `external` | `pathable-link--external`                | A link to another website, with an icon and hidden label |
-| background  | `light`    | none                                     | A link on a light surface                                |
-| background  | `alt`      | `pathable-link--alt` (with `--external`) | An external link on a dark background                    |
+| Axis        | Value      | Class                     | What it is for                                                        |
+| ----------- | ---------- | ------------------------- | --------------------------------------------------------------------- |
+| destination | `internal` | none                      | A link within the application                                         |
+| destination | `external` | `pathable-link--external` | A link to another website, with an icon and hidden label              |
+| background  | `light`    | none                      | A link on a light surface                                             |
+| background  | `alt`      | `pathable-link--alt`      | An external link on a dark background, with `pathable-link--external` |
 
 A visited link needs no class. The alt modifier has no effect alone; combine it
 with the external modifier.
@@ -106,9 +106,7 @@ Hover and pressed colours are fixed brand values and are not tokens.
   `rel="noreferrer"`. Add `target="_blank"` only when the link must open a new
   tab; the hidden label then says so.
 - `pathable-link--alt`: not in the stylesheet yet; see `alt-external`.
-- On a dark container, put the link inside `pathable-dark-background`. The
-  `pathable-link--nav` class that appears in a Storybook story has no rules and
-  is not part of this component.
+- On a dark container, put the link inside `pathable-dark-background`.
 
 ## Guarantees
 

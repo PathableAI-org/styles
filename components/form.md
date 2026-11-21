@@ -24,9 +24,12 @@ guarantees:
   - id: large-width
     status: unmet
     claim: With the large modifier, the form is at most 480 px wide from a viewport 480 px wide upward. The pathable-form--large class is not in the stylesheet yet.
+  - id: field-error
+    status: unmet
+    claim: A pathable-form-group--error group, a pathable-label--error label and a pathable-input--error control mark the one field that has an error, and the form itself carries no error class. None of these classes is in the stylesheet yet; see the error and error-group guarantees of the TextInput page.
   - id: button-margin
     status: unmet
-    claim: A pathable-button inside the form has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field. Today the form sets this margin only for buttons that carry the USWDS class, so a pathable-button gets none.
+    claim: A pathable-button inside the form has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field. Today the form sets this margin only for buttons that carry a legacy class, so a pathable-button gets none.
 ---
 
 # Form
@@ -92,7 +95,8 @@ Add at most one modifier class from the axis to `pathable-form`.
 - `pathable-hint`: helper text under the label.
 - `pathable-error-message`: says what is wrong with a value. Put the error
   styling on the field's group, never on the form, so only the question with
-  the error is marked.
+  the error is marked. The error classes for the group, the label and the
+  control are not in the stylesheet yet; see the `field-error` guarantee.
 - `pathable-fieldset` and `pathable-legend`: group radios and checkboxes under
   one question.
 - `pathable-input`, `pathable-checkbox` and `pathable-radio`: the controls.
