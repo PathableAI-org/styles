@@ -3,6 +3,7 @@
   "extends": ["html-validate:recommended", "html-validate:a11y"],
   "rules": {
     "no-missing-references": "error",
-    "no-redundant-role": ["error", { "exclude": ["list"] }]
+    "no-redundant-role": ["error", { "exclude": ["list"] }],
+    "void-style": ["error", { "style": "selfclose" }]
   }
 }

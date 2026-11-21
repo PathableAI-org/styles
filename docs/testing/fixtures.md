@@ -37,7 +37,9 @@ Each check takes a list of component folders and defaults to every folder.
 
 - **html-validate** uses the `html-validate:recommended` and
   `html-validate:a11y` presets, plus `no-missing-references`, with
-  `no-redundant-role` allowing only `role="list"` on a `<ul>`, loaded
+  `no-redundant-role` allowing only `role="list"` on a `<ul>` and
+  `void-style` requiring self-closed void elements (as Prettier writes
+  them), loaded
   explicitly from `fixtures/.htmlvalidate.json`. It rejects inline
   `html-validate-*` directive comments. It is cheap, so CI runs it on every
   fixture, but only when a file under `fixtures/` or `pnpm-lock.yaml`

@@ -146,7 +146,7 @@ contract and axe checks need the built stylesheet:
 ### html-validate configuration
 
 [`.htmlvalidate.json`](.htmlvalidate.json) extends both presets, turns no rule
-off, turns one on and narrows one:
+off, turns one on and narrows two:
 
 - `no-missing-references` is not in either preset. It fails an
   `aria-labelledby`, `aria-describedby` or other ID reference that names no
@@ -155,6 +155,11 @@ off, turns one on and narrows one:
   passes while every other redundant role, `<li role="listitem">` included,
   still fails. The reason is WebKit's handling of lists without markers
   (ARIA rule 2). A maintainer chose this in pull request #593.
+- `void-style` is set to `selfclose`, so `<input />` and `<img />` pass and the
+  bare `<input>` fails. Prettier writes void elements self-closed, with no
+  option to omit the slash, and lint-staged and `pnpm lint` enforce Prettier on
+  `fixtures/**/*.html`, so the two tools now agree. A maintainer chose this in
+  pull request #607.
 
 html-validate is pinned to 11.4.0, the newest release whose `engines` covers
 the repository's Node range (`^24.0.0 || >=26.0.0`); from 11.5.0 it needs
