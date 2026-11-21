@@ -144,12 +144,14 @@ jobs:
         env:
           FOLDERS: ${{ steps.enabled.outputs.folders }}
         run: pnpm --filter @pathableai/fixtures check:html $FOLDERS
+      # Contract always runs, because it always checks folders.json against the
+      # folders on disk, even when fixtures/ changed with no folder selected
+      # (such as a deleted folder). It is given the re-enabled folders, never
+      # no arguments, which would check every folder.
       - name: Contract (re-enabled folders)
-        if: steps.enabled.outputs.folders != ''
+        if: steps.gate.outputs.run == 'true'
         working-directory: fixtures
-        env:
-          FOLDERS: ${{ steps.enabled.outputs.folders }}
-        run: node harness/contract.mjs $FOLDERS
+        run: node harness/contract.mjs $REENABLED_FOLDERS
       - name: axe (re-enabled folders)
         if: steps.enabled.outputs.folders != ''
         working-directory: fixtures
