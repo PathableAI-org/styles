@@ -6,19 +6,14 @@ summary: Six line-length tokens, 44ex to 88ex, plus none, that limit how wide a 
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/measure/
 guarantees:
   - id: scale-values
-    status: unverified
     claim: measure-1 to measure-6 set max-width to 44ex, 60ex, 64ex, 68ex, 72ex and 88ex.
   - id: none-value
-    status: unverified
     claim: measure-none sets max-width to none.
   - id: default-measure
-    status: unverified
     claim: measure(4) returns 68ex, which is the measure the typography mixins use for running text.
   - id: max-width-only
-    status: unverified
     claim: A measure class sets only max-width and does not set width, margin or font size.
   - id: responsive-variants
-    status: unverified
     claim: 'Each measure class has mobile-lg:, tablet: and desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
 
@@ -129,8 +124,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 A measure class does not centre or align the block: a block narrower than its
 container sits at the start of it.

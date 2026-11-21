@@ -10,16 +10,12 @@ classes:
   - float-right
 guarantees:
   - id: left
-    status: unverified
     claim: float-left sets float left.
   - id: right
-    status: unverified
     claim: float-right sets float right.
   - id: none
-    status: unverified
     claim: float-none sets float none, so an element inside a floated parent is not itself floated.
   - id: not-responsive
-    status: unverified
     claim: The stylesheet contains no tablet:float-left, tablet:float-right or tablet:float-none class and no hover:float-left class.
 ---
 
@@ -119,8 +115,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

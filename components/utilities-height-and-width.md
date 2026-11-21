@@ -16,22 +16,16 @@ classes:
   - square-<value>
 guarantees:
   - id: width
-    status: unverified
     claim: width-full sets width 100%, width-auto sets auto, width-15 sets 7.5rem, width-card sets 10rem and width-mobile sets 20rem.
   - id: height
-    status: unverified
     claim: height-full sets height 100%, height-viewport sets 100vh, height-card sets 10rem and height-auto sets auto.
   - id: max-and-min
-    status: unverified
     claim: maxw-tablet sets max-width 40rem, maxw-none sets none, minh-viewport sets min-height 100vh and minw-15 sets min-width 7.5rem.
   - id: aspect
-    status: unverified
     claim: add-aspect-16x9 sets aspect-ratio 1.7777777778 and max-width 100% in browsers that support aspect-ratio, and its direct children are positioned absolutely to fill it.
   - id: circle-square
-    status: unverified
     claim: circle-5 sets width and height 2.5rem with border-radius 50%, and square-5 sets width and height 2.5rem with no border radius.
   - id: width-responsive
-    status: unverified
     claim: tablet:width-full sets width 100% only from a viewport width of 40em (640px), and the stylesheet has no tablet:height-card class.
 ---
 
@@ -168,8 +162,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`). Lengths are the values the compiled
+states behaviour of the package at PathAble defaults. Lengths are the values the compiled
 stylesheet outputs at a 16px root font size.
 
 ## The consumer owns

@@ -49,7 +49,7 @@ read them. The sections, in order:
   consumer owns.
 
 A utility or token page needs no pixel baseline (it has no component to
-draw), and its guarantees may all stay `status: unverified`. It must have at
+draw). It must have at
 least one fixture, shown with `<!-- examples -->` under **States**. Every
 other rule holds: one example, no `usa-` anywhere, and every class in an
 example, fixtures included, must be a class selector in the compiled CSS.

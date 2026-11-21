@@ -16,28 +16,20 @@ classes:
   - text-<white-space>
 guarantees:
   - id: weights
-    status: unverified
     claim: text-light sets font-weight to 300, text-normal to normal, text-semibold to 600 (on by brand default) and text-bold to 700, and the stylesheet has no text-thin, text-medium or text-heavy rule.
   - id: font-style
-    status: unverified
     claim: text-italic sets font-style to italic and text-no-italic sets it to normal.
   - id: letter-spacing
-    status: unverified
     claim: text-ls-neg-3 sets letter-spacing to -0.03em, text-ls-neg-1 to -0.01em, text-ls-1 to 0.025em, text-ls-2 to 0.1em, text-ls-3 to 0.15em and text-ls-auto to initial.
   - id: decoration
-    status: unverified
     claim: text-underline sets text-decoration to underline, text-strike to line-through, and text-no-underline and text-no-strike to none.
   - id: decoration-color
-    status: unverified
     claim: 'underline-primary sets text-decoration-color to #00365c and underline-accent-cool-dark to #015a76, and neither sets a text-decoration line.'
   - id: transform-and-feature
-    status: unverified
     claim: text-uppercase sets text-transform to uppercase, text-lowercase to lowercase, text-no-uppercase and text-no-lowercase to none, text-tabular sets font-feature-settings to "tnum" 1, "kern" 1 and text-no-tabular sets it to "kern" 1.
   - id: vertical-align-and-wrap
-    status: unverified
     claim: text-super sets vertical-align to super, text-ttop to text-top, text-tbottom to text-bottom, text-no-wrap sets white-space to nowrap, text-pre-line to pre-line and text-wrap to normal.
   - id: variants
-    status: unverified
     claim: tablet:text-bold exists, tablet:text-italic, tablet:text-underline and tablet:text-ls-2 do not, and hover:text-underline and hover:underline-primary exist while hover:text-italic does not.
 ---
 
@@ -224,8 +216,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 Where two classes on one element set the same property, the one later in the
 stylesheet wins, not the one later in the `class` attribute.

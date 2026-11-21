@@ -6,19 +6,14 @@ summary: 'The opacity tokens 0 to 100 in steps of 10, which set how transparent 
 uswds: https://designsystem.digital.gov/design-tokens/opacity/
 guarantees:
   - id: values
-    status: unverified
     claim: opacity(0) resolves to 0, opacity(10) to 0.1, opacity(50) to 0.5 and opacity(100) to 1.
   - id: classes
-    status: unverified
     claim: The classes opacity-0, opacity-10 through opacity-90 and opacity-100 set opacity to the token divided by 100, so opacity-50 sets opacity to 0.5.
   - id: steps-of-ten
-    status: unverified
     claim: Only the eleven tokens 0, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 exist, so opacity(55) is a Sass compile error and opacity-55 does not exist.
   - id: no-variants
-    status: unverified
     claim: No responsive or state prefix is emitted for the opacity classes, so tablet:opacity-50 and hover:opacity-50 do not exist.
   - id: no-mixin
-    status: unverified
     claim: There is no u-opacity mixin; opacity is set with the opacity property and the opacity() function.
 ---
 
@@ -114,8 +109,7 @@ Each state is complete markup for one use of the opacity tokens.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

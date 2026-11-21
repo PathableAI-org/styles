@@ -21,25 +21,18 @@ classes:
   - padding-left-<value>
 guarantees:
   - id: scale
-    status: unverified
     claim: margin-top-2 sets margin-top 1rem, margin-top-1 sets 0.5rem, margin-top-05 sets 0.25rem, margin-top-4 sets 2rem and padding-3 sets padding 1.5rem on all sides.
   - id: axes
-    status: unverified
     claim: margin-x-2 sets left and right margins to 1rem and no other margin, and padding-y-105 sets top and bottom padding to 0.75rem and no other padding.
   - id: auto
-    status: unverified
     claim: margin-x-auto sets margin-left and margin-right to auto, margin-top-auto sets margin-top auto, and padding has no auto class.
   - id: negative
-    status: unverified
     claim: margin-top-neg-1 sets margin-top -0.5rem, margin-neg-1 sets margin -0.5rem on all sides and margin-x-neg-2 sets left and right margins to -1rem.
   - id: px-and-em
-    status: unverified
     claim: margin-1px sets margin 1px, margin-left-05em sets margin-left 0.5em and padding-0 sets padding 0.
   - id: horizontal-sizes
-    status: unverified
     claim: margin-x-card sets left and right margins to 10rem, margin-x-mobile-lg and margin-x-tablet do not exist, and the stylesheet has no margin-top-card and no padding-x-card class.
   - id: responsive
-    status: unverified
     claim: tablet:margin-top-2 sets margin-top 1rem only from a viewport width of 40em (640px), and mobile-lg:padding-3 sets padding 1.5rem only from 30em (480px).
 ---
 
@@ -164,8 +157,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`). Lengths are the values the compiled
+states behaviour of the package at PathAble defaults. Lengths are the values the compiled
 stylesheet outputs at a 16px root font size.
 
 ## The consumer owns

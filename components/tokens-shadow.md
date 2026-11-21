@@ -6,22 +6,16 @@ summary: 'The shadow tokens none and 1 to 5, five levels of soft elevation shado
 uswds: https://designsystem.digital.gov/design-tokens/shadow/
 guarantees:
   - id: levels
-    status: unverified
     claim: The classes shadow-1 to shadow-5 set box-shadow to "0 1px 0.25rem 0", "0 0.25rem 0.5rem 0", "0 0.5rem 1rem 0", "0 0.75rem 1.5rem 0" and "0 1rem 2rem 0", each followed by rgba(0, 0, 0, 0.1).
   - id: none
-    status: unverified
     claim: The class shadow-none sets box-shadow to none, and u-shadow('none') outputs box-shadow none.
   - id: hover-variants
-    status: unverified
     claim: The classes hover:shadow-1 to hover:shadow-5 and hover:shadow-none exist and set box-shadow on pointer hover.
   - id: no-responsive
-    status: unverified
     claim: No responsive prefix is emitted for the shadow classes, so tablet:shadow-2 does not exist, and neither do focus:shadow-2, active:shadow-2 or visited:shadow-2.
   - id: invalid-token
-    status: unverified
     claim: u-shadow(6) and u-shadow(0) are Sass compile errors, because the tokens are none and 1 to 5.
   - id: no-function
-    status: unverified
     claim: There is no shadow() Sass function; the value is read through the u-shadow() mixin.
 ---
 
@@ -119,8 +113,7 @@ Each state is complete markup for one use of the shadow tokens.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

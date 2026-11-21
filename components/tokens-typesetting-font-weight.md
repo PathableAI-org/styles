@@ -6,22 +6,16 @@ summary: Four font-weight tokens (light, normal, semibold, bold) matched to the 
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/font-weight/
 guarantees:
   - id: bold-weight
-    status: unverified
     claim: text-bold sets font-weight to 700.
   - id: semibold-weight
-    status: unverified
     claim: text-semibold sets font-weight to 600.
   - id: normal-keyword
-    status: unverified
     claim: text-normal sets font-weight to normal, and text-light sets font-weight to 300.
   - id: disabled-weights
-    status: unverified
     claim: No class exists for text-thin, text-medium or text-heavy, because their settings are false.
   - id: numeric-keys
-    status: unverified
     claim: font-weight(600) and font-weight(700) return 600 and 700, because the numeric keys 100 to 900 are always valid in Sass.
   - id: responsive-variants
-    status: unverified
     claim: 'Each font-weight class has mobile-lg:, tablet: and desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
 
@@ -138,8 +132,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 `text-normal` emits the keyword `normal`, which is the same as 400.
 

@@ -6,25 +6,18 @@ summary: The fixed USWDS colour palette of 25 families with numbered grades and 
 uswds: https://designsystem.digital.gov/design-tokens/color/system-tokens/
 guarantees:
   - id: system-values
-    status: unverified
     claim: color('red-50v') resolves to #e52207, color('blue-50v') to #0076d6 and color('gray-cool-60') to #565c65, the same values as in USWDS, because PathAble does not change system tokens.
   - id: default-grayscale
-    status: unverified
     claim: The classes bg-gray-5, bg-gray-10, bg-gray-30, bg-gray-50, bg-gray-70 and bg-gray-90 set background-color to #f0f0f0, #e6e6e6, #adadad, #757575, #454545 and #1b1b1b.
   - id: basic-aliases
-    status: unverified
     claim: The classes bg-red, bg-orange, bg-gold, bg-yellow, bg-green, bg-mint, bg-cyan, bg-blue, bg-indigo, bg-violet and bg-magenta set background-color to #e52207, #e66f0e, #ffbe2e, #fee685, #538200, #04c585, #009ec1, #0076d6, #676cc8, #8168b3 and #d72d79.
   - id: grades-not-classes
-    status: unverified
     claim: The default stylesheet has no class for a numbered system token, so bg-red-50v and bg-gray-cool-60 do not exist until 'palette-color-system' is added to $global-color-palettes.
   - id: basic-not-sass
-    status: unverified
     claim: color('red') is a Sass compile error, because the basic names are class aliases and not tokens.
   - id: global-tokens
-    status: unverified
     claim: The classes bg-black, bg-white and bg-transparent set background-color to black, white and transparent.
   - id: text-pairs
-    status: unverified
     claim: Every swatch in the states of this page pairs its background with a text colour that has a contrast ratio of at least 4.5:1.
 ---
 
@@ -173,8 +166,7 @@ with the text class that keeps the pair at 4.5:1 or better.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

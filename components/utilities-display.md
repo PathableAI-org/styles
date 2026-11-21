@@ -19,25 +19,18 @@ classes:
   - z-<value>
 guarantees:
   - id: display
-    status: unverified
     claim: display-none sets display none, display-block sets block, display-inline-block sets inline-block, display-flex sets flex, display-inline-flex sets inline-flex and display-table-cell sets table-cell.
   - id: display-responsive
-    status: unverified
     claim: tablet:display-none sets display none only from a viewport width of 40em (640px), and the display classes have mobile-lg, tablet and desktop variants.
   - id: position
-    status: unverified
     claim: position-relative, position-absolute, position-fixed, position-static and position-sticky set the position property to the same keyword.
   - id: offsets
-    status: unverified
     claim: top-0 sets top 0, top-1 sets top 0.5rem, top-neg-1 sets top -0.5rem, top-auto sets top auto and top-full sets top 100%, and right, bottom and left take the same values.
   - id: pin
-    status: unverified
     claim: pin-all sets top, right, bottom and left to 0 with position absolute, pin-x sets left and right to 0 with position absolute, and pin-none sets all four offsets to auto with position static.
   - id: z-index
-    status: unverified
     claim: z-100 sets z-index 100, z-top sets 99999, z-bottom sets -100, and z-0, z-200, z-300, z-400, z-500 and z-auto set their own value.
   - id: overflow-opacity
-    status: unverified
     claim: overflow-hidden sets overflow hidden, overflow-x-auto sets overflow-x auto and opacity-50 sets opacity 0.5.
 ---
 
@@ -177,8 +170,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

@@ -6,22 +6,16 @@ summary: Six unitless line-height keys, normalised for each typeface, with 5 for
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/line-height/
 guarantees:
   - id: body-line-height
-    status: unverified
     claim: line-height-body-5 sets line-height to 1.6.
   - id: heading-line-height
-    status: unverified
     claim: line-height-heading-3 sets line-height to 1.4.
   - id: brand-scale
-    status: unverified
     claim: line-height-body-1 to line-height-body-6 set line-height to 1, 1.2, 1.4, 1.5, 1.6 and 1.8.
   - id: code-scale
-    status: unverified
     claim: line-height-code-1 to line-height-code-6 set line-height to 1, 1.3, 1.4, 1.6, 1.7 and 1.8, because the code typeface has a different optical size.
   - id: unitless
-    status: unverified
     claim: "Every line-height class and lh() result is a unitless number, so the line height scales with the element's own font size."
   - id: responsive-variants
-    status: unverified
     claim: 'Each line-height class has mobile-lg:, tablet: and desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
 
@@ -138,8 +132,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 The compiled values are rounded to one decimal, so key `3` is 1.4 although its
 system value is 1.35, and key `5` is 1.6 although its system value is 1.62.

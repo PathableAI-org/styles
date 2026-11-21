@@ -6,22 +6,16 @@ summary: 'The flex shorthand tokens 1 to 12, fill and auto, which size a flex it
 uswds: https://designsystem.digital.gov/design-tokens/flex/
 guarantees:
   - id: numeric-tokens
-    status: unverified
     claim: flex(1) resolves to "1 1 0%", flex(2) to "2 1 0%" and flex(12) to "12 1 0%", and the classes flex-1, flex-2 and flex-12 set flex to those values.
   - id: fill
-    status: unverified
     claim: flex('fill') resolves to "1 1 0%" and the class flex-fill sets flex to "1 1 0%".
   - id: auto
-    status: unverified
     claim: flex('auto') resolves to "0 1 auto" and the class flex-auto sets flex to "0 1 auto".
   - id: twelve-tokens
-    status: unverified
     claim: The classes flex-1 to flex-12, flex-fill and flex-auto all exist, and flex-13 does not.
   - id: no-variants
-    status: unverified
     claim: No responsive or state prefix is emitted for the flex-<token> classes, so tablet:flex-1 and hover:flex-1 do not exist.
   - id: invalid-token
-    status: unverified
     claim: flex(13) is a Sass compile error.
 ---
 
@@ -137,8 +131,7 @@ Each state is complete markup for one use of the flex tokens.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

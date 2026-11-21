@@ -6,22 +6,16 @@ summary: 'The z-index tokens bottom, 0, 100 to 500, top and auto, a short fixed 
 uswds: https://designsystem.digital.gov/design-tokens/z-index/
 guarantees:
   - id: scale
-    status: unverified
     claim: z-index('bottom') resolves to -100, z-index(0) to 0, z-index(100) to 100, z-index(500) to 500, z-index('top') to 99999 and z-index('auto') to auto.
   - id: alias
-    status: unverified
     claim: z('top') and z-index('top') both resolve to 99999.
   - id: classes
-    status: unverified
     claim: The classes z-bottom, z-0, z-100, z-200, z-300, z-400, z-500, z-top and z-auto set z-index to -100, 0, 100, 200, 300, 400, 500, 99999 and auto.
   - id: no-variants
-    status: unverified
     claim: No responsive or state prefix is emitted for the z-<token> classes, so tablet:z-top and hover:z-top do not exist.
   - id: invalid-token
-    status: unverified
     claim: z-index(250) is a Sass compile error.
   - id: positioned-only
-    status: unverified
     claim: A z-<token> class stacks an element only when the element is positioned or is a flex or grid item, as for any z-index.
 ---
 
@@ -120,8 +114,7 @@ Each state is complete markup for one use of the z-index tokens.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

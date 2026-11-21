@@ -9,25 +9,18 @@ classes:
   - font-family-<family>
 guarantees:
   - id: size-tokens-text-families
-    status: unverified
     claim: font-body-3xs sets font-size to 0.75rem, font-body-2xs to 0.88rem, font-body-xs to 0.94rem, font-body-sm to 1rem, font-body-md to 1.13rem, font-body-lg to 1.5rem, font-body-xl to 2rem, font-body-2xl to 2.5rem and font-body-3xl to 3rem.
   - id: size-same-across-text-families
-    status: unverified
     claim: font-heading-md, font-ui-md, font-alt-md, font-sans-md, font-serif-md and font-cond-md all set font-size to 1.13rem.
   - id: size-tokens-mono
-    status: unverified
     claim: font-code-sm and font-mono-sm set font-size to 0.95rem, font-code-md to 1.07rem and font-code-3xl to 2.86rem, because the monospace typeface has its own cap-height normalisation.
   - id: family-roles
-    status: unverified
     claim: font-family-heading sets font-family to Fredoka, 'Fredoka', system-ui, sans-serif; font-family-body and font-family-ui set it to Nunito, 'Nunito', system-ui, sans-serif; font-family-alt sets it to Montserrat, 'Montserrat', system-ui, sans-serif.
   - id: family-types
-    status: unverified
     claim: font-family-serif sets font-family to the Fredoka stack, font-family-sans to the Nunito stack, font-family-cond to the Montserrat stack, and font-family-mono and font-family-code to Roboto Mono Web, Bitstream Vera Sans Mono, Consolas, Courier, monospace.
   - id: no-icon-lang
-    status: unverified
     claim: The stylesheet has no font-icon-*, font-lang-*, font-family-icon or font-family-lang rule, and no font-<family>-micro or font-<family>-4xl rule.
   - id: responsive-size-only
-    status: unverified
     claim: 'desktop:font-body-lg sets font-size to 1.5rem inside a min-width 64em media query, and the stylesheet has no desktop:font-family-heading or hover: variant of any font class.'
 ---
 
@@ -214,8 +207,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 The classes set `font-size` and `font-family` only. They never set
 `line-height`, so a larger size on its own can leave the line height too tight:

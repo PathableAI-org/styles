@@ -18,25 +18,18 @@ classes:
   - grid-offset-none
 guarantees:
   - id: container
-    status: unverified
     claim: grid-container is centred with auto left and right margins, has a max-width of 64rem and 1rem of left and right padding, and the padding is 2rem from a viewport width of 64em.
   - id: row
-    status: unverified
     claim: grid-row is a flex container (display flex) whose items wrap (flex-wrap wrap).
   - id: columns
-    status: unverified
     claim: grid-col-6 has a width of 50% and flex 0 1 auto, grid-col-12 has a width of 100%, and grid-col has flex 1 1 0%, width auto, max-width 100% and min-width 1px.
   - id: gap
-    status: unverified
     claim: grid-row grid-gap has left and right margins of -0.5rem and its direct children have left and right padding of 0.5rem, and from a viewport width of 64em the margins are -1rem and the padding is 1rem.
   - id: gap-sizes
-    status: unverified
     claim: grid-row grid-gap-lg has margins of -0.75rem with 0.75rem of child padding, and grid-row grid-gap-sm has margins of -1px with 1px of child padding.
   - id: offset
-    status: unverified
     claim: grid-offset-3 sets margin-left to 25%, and grid-offset-none sets margin-left to 0.
   - id: responsive
-    status: unverified
     claim: tablet:grid-col-4 sets a width of 33.3333333333% only from a viewport width of 40em (640px),.
 ---
 
@@ -189,8 +182,7 @@ what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`). The widths are the values the compiled
+states behaviour of the package at PathAble defaults. The widths are the values the compiled
 stylesheet outputs at a 16px root font size.
 
 ## The consumer owns

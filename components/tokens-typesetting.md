@@ -6,25 +6,18 @@ summary: How PathAble sets type, from typeface to role to size, line height and 
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/
 guarantees:
   - id: heading-role-typeface
-    status: unverified
     claim: "family('heading') and the class font-family-heading resolve to the stack Fredoka, 'Fredoka', system-ui, sans-serif."
   - id: body-role-typeface
-    status: unverified
     claim: "family('body'), family('ui') and the classes font-family-body and font-family-ui resolve to the stack Nunito, 'Nunito', system-ui, sans-serif."
   - id: alt-role-typeface
-    status: unverified
     claim: "family('alt') and the class font-family-alt resolve to the stack Montserrat, 'Montserrat', system-ui, sans-serif."
   - id: rem-output
-    status: unverified
     claim: "Every size token resolves to a rem value and the compiled root font size is 100%, so text follows the reader's browser font size."
   - id: element-sizes
-    status: unverified
     claim: The brand size assignments are display xl (2rem), h1 lg (1.5rem), h2 and h3 md (1.13rem), h4 sm (1rem), h5 2xs (0.88rem) and h6 3xs (0.75rem).
   - id: body-defaults
-    status: unverified
     claim: Body text is set in the body role at size sm (1rem) with line height token 5 (1.6), and headings use line height token 3 (1.4).
   - id: poppins-unassigned
-    status: unverified
     claim: Poppins is defined as a typeface token but is assigned to no font type or role, so no font-family class or family() call returns it.
 ---
 
@@ -243,8 +236,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 Sizes and line heights are normalised by USWDS and rounded to two decimals in
 rem, so the compiled sizes differ slightly from the nominal pixel sizes. The

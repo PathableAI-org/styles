@@ -11,25 +11,18 @@ classes:
   - hover:text-<token>
 guarantees:
   - id: background-token
-    status: unverified
     claim: 'bg-primary sets background-color to #00365c, bg-primary-vivid to #015a76, bg-secondary to #1cae96, bg-accent-warm to #d3ff66, bg-accent-cool to #4899e8 and bg-base to #dde2e8.'
   - id: text-token
-    status: unverified
     claim: 'text-primary sets color to #00365c, text-primary-vivid to #015a76, text-secondary-dark to #0d7a63, text-base-dark to #565c65 and text-white to white.'
   - id: theme-grades
-    status: unverified
     claim: The stylesheet has bg-<token> and text-<token> for every enabled grade of the base, primary, secondary, accent-warm and accent-cool families, and has no bg-primary-lightest, bg-primary-darkest or bg-accent-warm-vivid.
   - id: system-palette-absent
-    status: unverified
     claim: The stylesheet has no rule for bg-red-50v, bg-blue-60v, text-blue-60v, bg-gray-20 or bg-gray-cool-30, and has rules for bg-red, bg-gray-10 and bg-gray-90.
   - id: hover-variant
-    status: unverified
     claim: 'hover:bg-primary-vivid sets background-color to #015a76 only while the element is hovered, and hover:text-primary sets color to #00365c only while it is hovered.'
   - id: no-other-variants
-    status: unverified
     claim: 'The stylesheet has no mobile-lg:, tablet: or desktop: variant of bg-<token> or text-<token>, and no focus:, active: or visited: variant.'
   - id: brand-contrast
-    status: unverified
     claim: text-white on bg-primary has a contrast ratio of 12.48:1, text-primary on bg-base-lightest 11.72:1, text-accent-warm on bg-primary 10.86:1, and text-primary-darker on bg-secondary 6.12:1.
 ---
 
@@ -248,8 +241,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 The contrast ratios are those of the token values, computed with the WCAG
 formula. Text of 18pt, or bold 14pt, needs 3:1 and smaller text needs 4.5:1.

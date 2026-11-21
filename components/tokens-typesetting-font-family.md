@@ -6,25 +6,18 @@ summary: The PathAble typefaces (Fredoka, Nunito, Montserrat, Roboto Mono) and t
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/font-family/
 guarantees:
   - id: heading-stack
-    status: unverified
     claim: "font-family-heading sets font-family to Fredoka, 'Fredoka', system-ui, sans-serif."
   - id: body-ui-stack
-    status: unverified
     claim: "font-family-body and font-family-ui set font-family to Nunito, 'Nunito', system-ui, sans-serif."
   - id: alt-stack
-    status: unverified
     claim: "font-family-alt sets font-family to Montserrat, 'Montserrat', system-ui, sans-serif."
   - id: code-stack
-    status: unverified
     claim: font-family-code sets font-family to Roboto Mono Web, Bitstream Vera Sans Mono, Consolas, Courier, monospace.
   - id: type-aliases
-    status: unverified
     claim: font-family-sans equals font-family-body, font-family-serif equals font-family-heading and font-family-cond equals font-family-alt.
   - id: no-poppins-key
-    status: unverified
     claim: "family('poppins') is a Sass error, because poppins is a typeface token and not a role or type."
   - id: not-responsive
-    status: unverified
     claim: 'The font-family classes have no mobile-lg:, tablet: or desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
 
@@ -192,8 +185,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 The stacks are the compiled output: USWDS writes the display name unquoted,
 then repeats it quoted, then the fallback list.

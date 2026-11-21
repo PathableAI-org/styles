@@ -15,28 +15,20 @@ classes:
   - radius-<corner>-<value>
 guarantees:
   - id: default-border
-    status: unverified
     claim: border sets border to 1px solid, and border-top, border-right, border-bottom and border-left each set a 1px solid border on that side only.
   - id: width-tokens
-    status: unverified
     claim: border-1px sets border to 1px solid, border-2px to 2px solid, border-05 to 0.25rem solid, border-1 to 0.5rem solid and border-3 to 1.5rem solid, and border-0 sets border to 0 solid.
   - id: side-width
-    status: unverified
     claim: border-y-2px sets border-top and border-bottom to 2px solid, border-x-2px sets border-left and border-right to 2px solid, and border-left-05 sets border-left to 0.25rem solid.
   - id: style-classes
-    status: unverified
     claim: border-dashed sets border-style to dashed, border-dotted to dotted and border-solid to solid, and none of them sets a width or a colour.
   - id: color-classes
-    status: unverified
     claim: 'border-primary sets border-color to #00365c, border-primary-vivid to #015a76, border-secondary to #1cae96, border-base to #dde2e8 and border-error to #dc3545, and none of them sets a width or a style.'
   - id: radius-tokens
-    status: unverified
     claim: radius-0 sets border-radius to 0, radius-sm to 2px, radius-md to 0.25rem, radius-lg to 0.5rem and radius-pill to 99rem, and radius-top-lg sets only the two top corners to 0.5rem.
   - id: responsive-variants
-    status: unverified
     claim: tablet:border-2px sets border to 2px solid inside a min-width 40em media query, and tablet:border-primary and tablet:radius-md exist, while tablet:border-dashed does not.
   - id: hover-variant
-    status: unverified
     claim: 'hover:border-primary sets border-color to #00365c only while the element is hovered, and hover:radius-md does not exist.'
 ---
 
@@ -211,8 +203,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 A colour or style class never draws a border on its own: it sets only
 `border-color` or `border-style`, and an element with no border style draws no

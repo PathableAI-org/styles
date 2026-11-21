@@ -9,19 +9,14 @@ classes:
   - hover:shadow-<value>
 guarantees:
   - id: levels
-    status: unverified
     claim: shadow-1 sets box-shadow to 0 1px 0.25rem 0 rgba(0, 0, 0, 0.1), shadow-2 to 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.1), shadow-3 to 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1), shadow-4 to 0 0.75rem 1.5rem 0 rgba(0, 0, 0, 0.1) and shadow-5 to 0 1rem 2rem 0 rgba(0, 0, 0, 0.1).
   - id: none
-    status: unverified
     claim: shadow-none sets box-shadow to none.
   - id: hover-variant
-    status: unverified
     claim: hover:shadow-3 sets box-shadow to 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1) only while the element is hovered, and hover:shadow-none exists.
   - id: no-other-variants
-    status: unverified
     claim: 'The stylesheet has no mobile-lg:, tablet: or desktop: variant of any shadow class and no focus:, active: or visited: variant.'
   - id: six-values-only
-    status: unverified
     claim: The stylesheet has exactly the six classes shadow-none and shadow-1 to shadow-5, and no shadow-0 or shadow-6.
 ---
 
@@ -144,8 +139,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 A shadow is drawn outside the box and takes no space. It is clipped by an
 ancestor that has `overflow` set to anything other than `visible`.

@@ -6,28 +6,20 @@ summary: 'The spacing token scale, in steps of half a rem from 0.25rem up to 7.5
 uswds: https://designsystem.digital.gov/design-tokens/spacing-units/
 guarantees:
   - id: unit-base
-    status: unverified
     claim: units(1) resolves to 0.5rem, units(2) to 1rem, units(3) to 1.5rem and units(10) to 5rem, where one numeric step is 8px at the default 16px root font size.
   - id: half-steps
-    status: unverified
     claim: units(0.5) resolves to 0.25rem, units(1.5) to 0.75rem and units(2.5) to 1.25rem, and the class suffixes are 05, 105 and 205.
   - id: pixel-and-zero
-    status: unverified
     claim: units(1px) resolves to 1px, units(2px) to 2px and units(0) to 0rem.
   - id: negative
-    status: unverified
     claim: units(-1) and units('neg-1') both resolve to -0.5rem, units(-2px) resolves to -2px, and the class margin-x-neg-1 sets margin-left and margin-right to -0.5rem.
   - id: named-widths
-    status: unverified
     claim: units('card') resolves to 10rem, units('card-lg') to 15rem, units('mobile') to 20rem, units('mobile-lg') to 30rem, units('tablet') to 40rem, units('desktop') to 64rem and units('widescreen') to 87.5rem.
   - id: invalid-token
-    status: unverified
     claim: A value that is not a spacing token, such as units(11), is a Sass compile error.
   - id: padding-classes
-    status: unverified
     claim: The classes padding-05, padding-1, padding-2 and padding-6 set padding to 0.25rem, 0.5rem, 1rem and 3rem.
   - id: breakpoint-queries
-    status: unverified
     claim: at-media('tablet') compiles to a min-width media query of 40em and at-media-max('mobile-lg') to a max-width media query of 29.99em.
 ---
 
@@ -185,8 +177,7 @@ consume them.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

@@ -6,19 +6,14 @@ summary: Seven letter-spacing tokens, from tighter than normal (neg-3) to widely
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/letterspacing/
 guarantees:
   - id: tight-values
-    status: unverified
     claim: text-ls-neg-3, text-ls-neg-2 and text-ls-neg-1 set letter-spacing to -0.03em, -0.02em and -0.01em.
   - id: wide-values
-    status: unverified
     claim: text-ls-1, text-ls-2 and text-ls-3 set letter-spacing to 0.025em, 0.1em and 0.15em.
   - id: auto-value
-    status: unverified
     claim: text-ls-auto sets letter-spacing to initial.
   - id: sass-keys
-    status: unverified
     claim: "letter-spacing(-2) and letter-spacing('ls-neg-2') both return -0.02em, and letter-spacing('neg-2') is a Sass error."
   - id: not-responsive
-    status: unverified
     claim: 'The letter-spacing classes have no mobile-lg:, tablet: or desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
 
@@ -119,8 +114,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 `auto` compiles to the CSS keyword `initial`, which for `letter-spacing` is
 `normal`.

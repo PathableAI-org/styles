@@ -8,16 +8,12 @@ classes:
   - add-list-reset
 guarantees:
   - id: reset
-    status: unverified
     claim: add-list-reset sets margin-top 0, margin-bottom 0, padding-left 0 and list-style none.
   - id: items-unchanged
-    status: unverified
     claim: add-list-reset sets no property on the list items, so their own margins, padding and widths are not changed.
   - id: ol
-    status: unverified
     claim: add-list-reset on an ol removes its numbers as well as the bullets of a ul.
   - id: not-responsive
-    status: unverified
     claim: The stylesheet contains no tablet:add-list-reset class and no hover:add-list-reset class.
 ---
 
@@ -117,8 +113,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

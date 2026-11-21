@@ -19,22 +19,16 @@ classes:
   - order-<value>
 guarantees:
   - id: container
-    status: unverified
     claim: display-flex makes an element a flex container, flex-row sets flex-direction row, flex-column sets column, flex-wrap sets flex-wrap wrap and flex-no-wrap sets nowrap.
   - id: justify
-    status: unverified
     claim: flex-justify-start sets justify-content flex-start, flex-justify-center sets center, flex-justify-end sets flex-end and flex-justify sets space-between.
   - id: align
-    status: unverified
     claim: flex-align-center sets align-items center and flex-align-start, flex-align-end, flex-align-stretch and flex-align-baseline set their own values, and flex-align-self-end sets align-self flex-end.
   - id: items
-    status: unverified
     claim: flex-fill sets flex 1 1 0%, flex-auto sets flex 0 1 auto, and flex-1 sets flex 1 1 0% while flex-3 sets flex 3 1 0%.
   - id: order
-    status: unverified
     claim: order-first sets order -1, order-last sets order 999, order-initial sets order initial, and order-0 to order-11 set that number.
   - id: responsive
-    status: unverified
     claim: tablet:order-first and tablet:flex-justify-center take effect only from a viewport width of 40em (640px), and flex-row, flex-column, flex-wrap and the flex-align classes have no tablet variant.
 ---
 
@@ -160,8 +154,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

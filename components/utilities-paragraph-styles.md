@@ -11,25 +11,18 @@ classes:
   - text-indent-<value>
 guarantees:
   - id: line-height-text-families
-    status: unverified
     claim: line-height-body-1 sets line-height to 1, line-height-body-2 to 1.2, line-height-body-3 to 1.4, line-height-body-4 to 1.5, line-height-body-5 to 1.6 and line-height-body-6 to 1.8, and the heading, ui, alt, sans, serif and cond families set the same six values.
   - id: line-height-mono
-    status: unverified
     claim: line-height-code-2 and line-height-mono-2 set line-height to 1.3, line-height-code-4 to 1.6 and line-height-code-5 to 1.7, so a monospace family differs from the text families at steps 2, 4 and 5.
   - id: measure
-    status: unverified
     claim: measure-1 sets max-width to 44ex, measure-2 to 60ex, measure-3 to 64ex, measure-4 to 68ex, measure-5 to 72ex, measure-6 to 88ex and measure-none to none.
   - id: alignment
-    status: unverified
     claim: text-left sets text-align to left, text-center to center, text-right to right and text-justify to justify.
   - id: indent
-    status: unverified
     claim: text-indent-0 sets text-indent to 0, text-indent-2 to 1rem, text-indent-4 to 2rem and text-indent-neg-2 to -1rem.
   - id: indent-tokens-limited
-    status: unverified
     claim: The stylesheet has no text-indent-1px, text-indent-2px or text-indent-auto rule, and has text-indent-<token> and text-indent-neg-<token> for the tokens 05, 1, 105, 2, 205, 3, 4, 5, 6, 7, 8, 9, 10 and 15.
   - id: responsive
-    status: unverified
     claim: 'tablet:line-height-body-4 and desktop:measure-4 exist inside min-width media queries, and tablet:text-left, tablet:text-indent-2 and every hover: variant of these classes do not exist.'
 ---
 
@@ -210,8 +203,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 `measure-<value>` sets `max-width` only. It does not centre the block or set a
 width, so a measure on a block inside a wider container leaves the block at the

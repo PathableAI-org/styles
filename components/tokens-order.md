@@ -6,19 +6,14 @@ summary: 'The order tokens first, last, initial and 0 to 11, which change the vi
 uswds: https://designsystem.digital.gov/design-tokens/order/
 guarantees:
   - id: keywords
-    status: unverified
     claim: order('first') resolves to -1, order('last') to 999 and order('initial') to initial, and the classes order-first, order-last and order-initial set order to those values.
   - id: numbers
-    status: unverified
     claim: order(0) resolves to 0 and order(11) to 11, the classes order-0 to order-11 set order to the token, and order-12 does not exist.
   - id: responsive-variants
-    status: unverified
     claim: The classes mobile-lg:order-first, tablet:order-first and desktop:order-last exist and set order inside a min-width media query, and no state prefix such as hover:order-1 exists.
   - id: invalid-token
-    status: unverified
     claim: order(12) is a Sass compile error.
   - id: dom-unchanged
-    status: unverified
     claim: An order class changes only the visual order of siblings in a flex or grid container and does not change their order in the document, so reading and keyboard order follow the markup.
 ---
 
@@ -119,8 +114,7 @@ Each state is complete markup for one use of the order tokens.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

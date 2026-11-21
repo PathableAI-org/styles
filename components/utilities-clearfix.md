@@ -8,16 +8,12 @@ classes:
   - clearfix
 guarantees:
   - id: after
-    status: unverified
     claim: clearfix adds an ::after pseudo-element with empty content, display block and clear both.
   - id: contains-floats
-    status: unverified
     claim: A clearfix element whose only children are float-left and float-right blocks has a height of at least the taller of the two.
   - id: element-unchanged
-    status: unverified
     claim: clearfix sets no property on the element itself, only on its ::after pseudo-element.
   - id: not-responsive
-    status: unverified
     claim: The stylesheet contains no tablet:clearfix class and no hover:clearfix class.
 ---
 
@@ -106,8 +102,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

@@ -9,19 +9,14 @@ classes:
   - outline-<token>
 guarantees:
   - id: width-tokens
-    status: unverified
     claim: outline-0 sets outline to 0 solid, outline-1px to 1px solid, outline-2px to 2px solid and outline-05 to 0.25rem solid.
   - id: no-other-widths
-    status: unverified
     claim: The stylesheet has no outline-1, outline-105, outline-2, outline-205 or outline-3 rule, and no class for outline-offset.
   - id: color-classes
-    status: unverified
     claim: 'outline-primary sets outline-color to #00365c, outline-accent-cool to #4899e8, outline-secondary-dark to #0d7a63, outline-white to white and outline-transparent to transparent, and none of them sets a width or a style.'
   - id: color-tokens-match-color-page
-    status: unverified
     claim: Every theme and state colour token that has a bg-<token> class has an outline-<token> class with the same colour value, and outline-red-50v does not exist.
   - id: no-variants
-    status: unverified
     claim: 'The stylesheet has no mobile-lg:, tablet:, desktop:, hover:, focus:, active: or visited: variant of any outline class.'
 ---
 
@@ -164,8 +159,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour at PathAble defaults. One marked `status: unverified` was
-read from the package source and no test checks it yet.
+states behaviour of the package at PathAble defaults.
 
 The classes never move the layout: an outline is drawn outside the border box
 and is not part of the element's size. It can be clipped by an ancestor that

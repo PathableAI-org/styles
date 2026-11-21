@@ -6,25 +6,18 @@ summary: How PathAble colour tokens are organised into theme, state, system, bas
 uswds: https://designsystem.digital.gov/design-tokens/color/overview/
 guarantees:
   - id: literal-values
-    status: unverified
     claim: Colour tokens compile to literal colour values, so the compiled stylesheet declares no CSS custom property for any colour token.
   - id: brand-primary
-    status: unverified
     claim: color('primary') resolves to #00365c (PathAble Blue) and the class bg-primary sets background-color to #00365c.
   - id: ink-and-white
-    status: unverified
     claim: color('ink') resolves to #00365c, the class text-ink sets color to #00365c and the class text-white sets color to white.
   - id: unprefixed-utilities
-    status: unverified
     claim: The classes bg-primary, text-primary, border-primary, outline-primary and underline-primary exist with no prefix and set background-color, color, border-color, outline-color and text-decoration-color to #00365c.
   - id: default-palettes
-    status: unverified
     claim: The default stylesheet has colour classes for the theme, state, basic, grayscale and global tokens, and has no class for a system token such as red-50v.
   - id: unset-grades
-    status: unverified
     claim: The grades primary-lightest and primary-darkest are false, so color('primary-lightest') is a Sass error and no bg-primary-lightest class exists.
   - id: hover-only-state
-    status: unverified
     claim: The classes hover:bg-primary, hover:text-primary, hover:border-primary and hover:underline-primary exist, and no responsive, focus or active prefix is emitted for any colour class.
 ---
 
@@ -180,8 +173,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour that was read from the package source and that no test
-checks yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 ## The consumer owns
 

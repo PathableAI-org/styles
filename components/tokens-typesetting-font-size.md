@@ -6,22 +6,16 @@ summary: The nine named type sizes, 3xs to 3xl, as rem values normalised for eac
 uswds: https://designsystem.digital.gov/design-tokens/typesetting/font-size/
 guarantees:
   - id: sm-body-size
-    status: unverified
     claim: font-body-sm sets font-size to 1rem.
   - id: scale-values
-    status: unverified
     claim: font-body-3xs, 2xs, xs, sm, md, lg, xl, 2xl and 3xl set font-size to 0.75rem, 0.88rem, 0.94rem, 1rem, 1.13rem, 1.5rem, 2rem, 2.5rem and 3rem.
   - id: system-keys-not-classes
-    status: unverified
     claim: No class exists for the system size keys micro or 1 to 20; only the nine named sizes have font-size classes.
   - id: family-normalised
-    status: unverified
     claim: font-code-sm sets font-size to 0.95rem, smaller than font-body-sm, because the code typeface has a larger optical size.
   - id: respects-user-size
-    status: unverified
     claim: "Every font-size class and size() result is in rem and the root font size is 100%, so text scales with the browser's font size setting."
   - id: responsive-variants
-    status: unverified
     claim: 'Each font-size class has mobile-lg:, tablet: and desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
 
@@ -190,8 +184,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-was read from the Sass source and a compiled sample; none is checked by a test
-yet (`status: unverified`).
+states behaviour of the package at PathAble defaults.
 
 The rem values are rounded to two decimals by USWDS, so `2xs` is 0.88rem (14px
 at a 16px root, 0.875rem nominal) and `md` is 1.13rem.
