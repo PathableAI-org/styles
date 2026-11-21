@@ -1,6 +1,6 @@
 # Component pages
 
-One Markdown page per component, named after its slug (`activity-list.md`).
+One Markdown page per component, named after its slug (`button.md`).
 A page is the product specification of the component: what it is for, an
 example, its variants, its tokens, how to compose it, what it guarantees and
 what the consumer owns. These are the source pages; every published copy is

@@ -87,15 +87,14 @@ Add at most one modifier class from the axis to `pathable-form`.
 
 ## Composition
 
-- `pathable-form-group`: wraps one field. See the
-  [FormGroup](form-group.md) page.
-- `pathable-label`: names a control. See the [Label](label.md) page.
-- `pathable-hint`: helper text under the label. See the [Hint](hint.md) page.
-- `pathable-error-message`: says what is wrong with a value. See the
-  [ErrorMessage](error-message.md) page. Put the error styling on the field's
-  group, never on the form, so only the question with the error is marked.
+- `pathable-form-group`: wraps one field.
+- `pathable-label`: names a control.
+- `pathable-hint`: helper text under the label.
+- `pathable-error-message`: says what is wrong with a value. Put the error
+  styling on the field's group, never on the form, so only the question with
+  the error is marked.
 - `pathable-fieldset` and `pathable-legend`: group radios and checkboxes under
-  one question. See the [Fieldset](fieldset.md) and [Legend](legend.md) pages.
+  one question.
 - `pathable-input`, `pathable-checkbox` and `pathable-radio`: the controls.
   See the [TextInput](text-input.md) page for the text input.
 - `pathable-button`: the submit button, as the form's last child. The form

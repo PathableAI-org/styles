@@ -9,4 +9,4 @@ These pages are generated from the design system source; do not edit them
 in the installed package. Components not listed here have no React page
 yet: use the package README and the installed declarations.
 
-- [SrOnly](SrOnly.md): Hides an element visually so it is not seen but is still read by screen readers.
+No component has a React page yet.

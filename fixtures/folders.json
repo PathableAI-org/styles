@@ -1,5 +1,4 @@
 [
-  "activity-list",
   "alert",
   "breadcrumb",
   "button",
@@ -21,7 +20,6 @@
   "radio",
   "search",
   "site-alert",
-  "sr-only",
   "step-indicator",
   "summary-box",
   "table",

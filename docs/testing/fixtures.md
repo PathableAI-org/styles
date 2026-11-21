@@ -11,17 +11,12 @@ How to write a fixture, and the ARIA rules fixtures are held to, are in
 [`fixtures/README.md`](../../fixtures/README.md). This page covers how the
 fixtures are checked.
 
-Fixtures exist for ActivityList and SrOnly so far. `@pathableai/react`
+Fixtures exist for the official components, one folder each. `@pathableai/react`
 components are held to the fixtures by
 [React fixture tests](#react-fixture-tests), and converted component pages
 take their examples from them ([`components/README.md`](../../components/README.md)).
 
 Where a fixture and today's markup differ, the markup moves to the fixture.
-The ActivityList fixtures and the ActivityList component page's examples use
-`<ul role="list">` and `<li>`, while its styles stories and the React
-`ActivityList` still use `<div role="list">`. A styles list reset for ActivityList and a React
-`ActivityList` that renders `ul role="list"`/`li` are planned. Until then the
-React fixture tests leave ActivityList unmapped, and report it in every run.
 
 ## The checks
 
@@ -131,9 +126,9 @@ It prints JSON: `all`, `allReasons`, and per folder the selected `files` and
 the selector, and the source file and line from the Sass source map, such as
 `packages/styles/src/pathable-component-wrappers/pathable-dashboard.scss:13`.
 
-So a change to an `.pathable-activity-row` rule in `pathable-dashboard.scss`
-selects `activity-list`, a change to `.pathable-button` selects it through the
-buttons in its fixtures, and a change to `.pathable-tag` does not select it.
+So a change to a `.pathable-button` rule selects `button` and every other
+folder whose fixtures use a button, and a change to a `.pathable-tag` rule
+selects only the folders whose fixtures use a tag.
 
 Declarations that only change order within a rule, such as a shorthand
 moved after its longhand, count as a change to every property of the rule,
@@ -219,13 +214,13 @@ component, named after the fixture's state, which default-exports the example
 element:
 
 ```text
-fixtures/sr-only/inline.html
-packages/react/src/components/SrOnly/examples/inline.tsx
-packages/react/src/components/SrOnly/__tests__/SrOnly.fixtures.test.tsx
+fixtures/button/default.html
+packages/react/src/components/Button/examples/default.tsx
+packages/react/src/components/Button/__tests__/Button.fixtures.test.tsx
 ```
 
 An example is written as a consumer would write it, with the fixture's words,
-and holds no test code. It imports the component relatively (`../SrOnly`),
+and holds no test code. It imports the component relatively (`../Button`),
 because the package's own name resolves to its build output inside the
 package.
 
@@ -233,12 +228,12 @@ The fixture test imports the example and the fixture, the fixture with Vite's
 `?raw` query, and compares them:
 
 ```tsx
-import inlineFixture from '@pathableai/fixtures/sr-only/inline.html?raw'
+import defaultFixture from '@pathableai/fixtures/button/default.html?raw'
 import { expectToRenderFixture } from '../../../test/fixtures'
-import inlineExample from '../examples/inline'
+import defaultExample from '../examples/default'
 
-it('renders sr-only/inline', () => {
-  expectToRenderFixture(inlineExample, inlineFixture)
+it('renders button/default', () => {
+  expectToRenderFixture(defaultExample, defaultFixture)
 })
 ```
 
@@ -277,7 +272,7 @@ of IDs are ignored.
 ### Coverage
 
 [`packages/react/src/test/fixture-manifest.ts`](../../packages/react/src/test/fixture-manifest.ts)
-maps fixture folders to React components, for example `sr-only` to `SrOnly`.
+maps fixture folders to React components, for example `button` to `Button`.
 The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
 
 - a fixture in a mapped folder has neither an example nor a "not offered in
@@ -295,8 +290,8 @@ The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
   `expectToRenderFixture`, or skips a test. Commented-out calls do not count.
 
 It reports fixture folders the manifest does not map yet, and exported React
-components that no folder maps to yet, as a notice, without failing. Only
-`sr-only` is mapped so far.
+components that no folder maps to yet, as a notice, without failing. No folder
+is mapped so far.
 
 The manifest and the example modules also feed the component docs
 ([`components/README.md`](../../components/README.md)). Mapping a folder gives

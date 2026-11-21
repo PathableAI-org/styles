@@ -12,8 +12,9 @@ How the checks run, locally and in CI, is in
 [docs/testing/fixtures.md](../docs/testing/fixtures.md).
 
 A folder that the React fixture manifest maps to a component, such as
-`sr-only`, needs a React example for every fixture in it: adding
-`sr-only/<state>.html` means adding `packages/react/src/components/SrOnly/examples/<state>.tsx` and its
+`button` if it were mapped to `Button` (no folder is mapped yet), needs a React
+example for every fixture in it: adding `button/<state>.html` means adding
+`packages/react/src/components/Button/examples/<state>.tsx` and its
 comparison, or a "not offered in React" entry with a reason. Run
 `pnpm --filter @pathableai/react test:fixtures` as well as the checks below.
 See [React fixture tests](../docs/testing/fixtures.md#react-fixture-tests).
@@ -31,7 +32,7 @@ fixtures/
 
 - A component folder's name is the slug of a page in
   [`components/`](../components/), such as
-  `activity-list` for `activity-list.md`. `harness/` is the only other folder
+  `button` for `button.md`. `harness/` is the only other folder
   allowed.
 - Every component folder is listed in [`folders.json`](folders.json), and
   every listed folder exists. The contract check compares the two both ways,
@@ -111,8 +112,8 @@ to these rules:
 
    The accessible name, "View Intake assessment", begins with the visible text,
    as WCAG 2.5.3 (Label in Name) requires, and tells "View" in one row from
-   "View" in the next. This is the pattern the
-   [SrOnly page](../components/sr-only.md) describes. Do not
+   "View" in the next. This is the pattern
+   the `pathable-sr-only` class exists for. Do not
    use `aria-describedby` for this: a description does not make the name
    unique. Do not use `aria-label` on these buttons.
 

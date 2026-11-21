@@ -122,13 +122,12 @@ at build time and are not custom properties.
 ## Composition
 
 - `pathable-form-group`: wraps the label, hint, input and error message of one
-  field. See the [FormGroup](form-group.md) page.
+  field.
 - `pathable-label`: names the input; connect it with `for` and the input's
-  `id`. See the [Label](label.md) page.
-- `pathable-hint`: helper text between the label and the input. See the
-  [Hint](hint.md) page.
+  `id`.
+- `pathable-hint`: helper text between the label and the input.
 - `pathable-error-message`: says what is wrong, placed between the label and the
-  input. See the [ErrorMessage](error-message.md) page.
+  input.
 - For an error, put `pathable-form-group--error` on the group,
   `pathable-label--error` on the label and `pathable-input--error` on the input
   together. All three are unmet today.
