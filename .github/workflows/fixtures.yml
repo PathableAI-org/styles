@@ -64,6 +64,21 @@ env:
     tokens-typesetting-line-height
     tokens-typesetting-measure
     tokens-z-index
+    utilities-border
+    utilities-clearfix
+    utilities-color
+    utilities-display
+    utilities-flex
+    utilities-float
+    utilities-font-size-and-family
+    utilities-height-and-width
+    utilities-layout-grid
+    utilities-list-reset
+    utilities-margin-and-padding
+    utilities-outline
+    utilities-paragraph-styles
+    utilities-shadow
+    utilities-text-styles
 
 jobs:
   # The checks run only for the folders in REENABLED_FOLDERS; the rest stay
