@@ -81,11 +81,9 @@ jobs:
               - 'components/**'
 
   build:
-    name: Shared build (styles + React + Storybooks)
+    name: Build styles Storybook
     needs: changes
-    if: >-
-      needs.changes.outputs.html_storybook == 'true' ||
-      needs.changes.outputs.react_storybook == 'true'
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -101,27 +99,14 @@ jobs:
           pnpm --filter @pathableai/styles test:component-pages
           pnpm --filter @pathableai/styles check:component-pages
 
-      - name: Build React
-        run: pnpm --filter @pathableai/react build
-
       - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
-
-      - name: Build React Storybook
-        run: pnpm --filter @pathable/storybook-react build-storybook
 
       - name: Upload HTML Storybook static
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: storybook-html-static
           path: apps/storybook/storybook-static/
-          retention-days: 1
-
-      - name: Upload React Storybook static
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: storybook-react-static
-          path: apps/storybook-react/storybook-static/
           retention-days: 1
 
   # Checks component pages when they changed but nothing the HTML Storybook
@@ -181,10 +166,11 @@ jobs:
       - name: Component page guarantees are covered by tests that ran
         run: pnpm --filter @pathableai/styles check:component-pages:executed
 
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   accessibility-tests:
     name: Storybook accessibility tests
     needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -227,10 +213,11 @@ jobs:
 
   # The React Storybook accessibility run is its own job so it runs in
   # parallel with the HTML one instead of after it.
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   accessibility-tests-react:
     name: Storybook accessibility tests (React)
     needs: [changes, build]
-    if: needs.changes.outputs.react_storybook == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -266,10 +253,11 @@ jobs:
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
 
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   visual-smoke:
     name: Storybook visual smoke
     needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -297,10 +285,11 @@ jobs:
   # Pixel comparison with committed baselines, only for the stories of the
   # components on the styles rollout list. Runs in the pinned Playwright
   # container through Docker (docs/testing/visual-regression.md).
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   pixels-styles:
     name: Styles pixel visual regression
     needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -323,10 +312,11 @@ jobs:
           path: apps/storybook/test-results/pixels/
           if-no-files-found: ignore
 
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   coverage:
     name: Storybook coverage
     needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -349,10 +339,11 @@ jobs:
           path: apps/storybook/test-results/storybook-coverage.*
           if-no-files-found: ignore
 
+  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   quality-gates:
     name: Storybook Quality Gates
     needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

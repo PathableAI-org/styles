@@ -17,14 +17,15 @@ Both published packages are versioned independently with
 
 ## Storybooks
 
-| App                                             | Shows                                             | Local port |
-| ----------------------------------------------- | ------------------------------------------------- | ---------- |
-| [`apps/storybook`](apps/storybook/)             | `@pathableai/styles` component pages and fixtures | 6006       |
-| [`apps/storybook-react`](apps/storybook-react/) | `@pathableai/react` components                    | 6007       |
+| App                                             | Shows                                | Local port |
+| ----------------------------------------------- | ------------------------------------ | ---------- |
+| [`apps/storybook`](apps/storybook/)             | `@pathableai/styles` component pages | 6006       |
+| [`apps/storybook-react`](apps/storybook-react/) | `@pathableai/react` components       | 6007       |
 
-The styles Storybook shows the generated component pages and one story per
-HTML fixture, both built from `components/` and `fixtures/`; it has no
-hand-written stories. It is deployed to GitHub Pages from `main`.
+The styles Storybook shows the generated component pages, built from
+`components/` and `fixtures/`; it has no hand-written stories, no `Fixtures`
+section and no React content. It is deployed to GitHub Pages from `main`. The
+React Storybook runs locally only and is not part of the deployed docs.
 
 ## Getting started
 
@@ -61,9 +62,9 @@ Run these from the repository root.
 - [AGENTS.md](AGENTS.md) routes each kind of change to the document that owns
   its rules, and lists the checks to run before committing. It applies to
   people as well as coding agents.
-- CI is expected to be partly red during the `@pathableai/styles` refactor: the
-  `Fixtures` contract check fails, and the package lint and component-page
-  checks are skipped. See
+- During the `@pathableai/styles` refactor CI runs only Markdown lint and the
+  styles Storybook build; every other check is disabled with `if: false`. See
+  [Git workflow](docs/engineering/git-workflow.md) and
   [target state](docs/engineering/target-state.md); `pnpm lint` still runs
   locally.
 - Commits follow Conventional Commits and are checked by commitlint.

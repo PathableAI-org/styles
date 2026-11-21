@@ -426,9 +426,7 @@ export function renderForCheck(page, sources) {
   try {
     markdown = render(page, 'styles', sources)
     if (sources.examples) render(page, 'react', sources)
-    // The Storybook page shows both packages' blocks, so it resolves
-    // placeholders neither Markdown page does, and turns each state into a
-    // story export name.
+    // The Storybook page turns each state into a story export name.
     if (sources.fixtures.size > 0) render(page, 'storybook', sources)
   } catch (error) {
     if (!(error instanceof ComponentDocsError)) throw error
