@@ -1,0 +1,31 @@
+<!-- description: A form where one question has an error. Only that field's group carries the error modifier, not the form. -->
+<form class="pathable-form" action="/appointments" method="post">
+  <div class="pathable-form-group">
+    <label class="pathable-label" for="form-error-participant">
+      Participant name
+    </label>
+    <input
+      class="pathable-input"
+      id="form-error-participant"
+      name="participant"
+      type="text"
+    />
+  </div>
+  <div class="pathable-form-group pathable-form-group--error">
+    <label class="pathable-label pathable-label--error" for="form-error-date">
+      Appointment date
+    </label>
+    <span class="pathable-error-message" id="form-error-date-error">
+      Enter a date in the future.
+    </span>
+    <input
+      class="pathable-input pathable-input--error"
+      id="form-error-date"
+      name="date"
+      type="text"
+      aria-invalid="true"
+      aria-describedby="form-error-date-error"
+    />
+  </div>
+  <button type="submit" class="pathable-button">Book appointment</button>
+</form>

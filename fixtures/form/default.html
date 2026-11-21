@@ -1,0 +1,43 @@
+<!-- description: A participant intake form with a text field and hint, a set of radios in a fieldset, and a submit button. -->
+<form class="pathable-form" action="/participants" method="post">
+  <div class="pathable-form-group">
+    <label class="pathable-label" for="form-default-name">
+      Participant name <abbr title="required">*</abbr>
+    </label>
+    <span class="pathable-hint" id="form-default-name-hint">
+      Use the name on the participant's identification.
+    </span>
+    <input
+      class="pathable-input"
+      id="form-default-name"
+      name="name"
+      type="text"
+      required
+      aria-describedby="form-default-name-hint"
+    />
+  </div>
+  <div class="pathable-form-group">
+    <fieldset class="pathable-fieldset">
+      <legend class="pathable-legend">Preferred contact method</legend>
+      <label class="pathable-radio">
+        <input
+          class="pathable-radio__input"
+          type="radio"
+          name="contact"
+          value="email"
+        />
+        <span class="pathable-radio__label">Email</span>
+      </label>
+      <label class="pathable-radio">
+        <input
+          class="pathable-radio__input"
+          type="radio"
+          name="contact"
+          value="phone"
+        />
+        <span class="pathable-radio__label">Phone</span>
+      </label>
+    </fieldset>
+  </div>
+  <button type="submit" class="pathable-button">Save intake</button>
+</form>

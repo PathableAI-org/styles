@@ -1,0 +1,20 @@
+<!-- description: A text input with an error. The group, label and input carry the error modifiers, the message is in the group and the input references it and is marked invalid. -->
+<div class="pathable-form-group pathable-form-group--error">
+  <label
+    class="pathable-label pathable-label--error"
+    for="text-input-error-employer"
+  >
+    Employer name
+  </label>
+  <span class="pathable-error-message" id="text-input-error-employer-error">
+    Enter the name of the participant's employer.
+  </span>
+  <input
+    class="pathable-input pathable-input--error"
+    id="text-input-error-employer"
+    name="employer"
+    type="text"
+    aria-invalid="true"
+    aria-describedby="text-input-error-employer-error"
+  />
+</div>

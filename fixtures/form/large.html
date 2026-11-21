@@ -1,0 +1,30 @@
+<!-- description: The large form, for a page where the form is the main content, such as an employment plan. It is 480 px wide where the default form is 320 px. -->
+<form class="pathable-form pathable-form--large" action="/plans" method="post">
+  <div class="pathable-form-group">
+    <label class="pathable-label" for="form-large-goal">
+      Employment goal
+    </label>
+    <span class="pathable-hint" id="form-large-goal-hint">
+      Name the job or training the participant is working toward.
+    </span>
+    <input
+      class="pathable-input"
+      id="form-large-goal"
+      name="goal"
+      type="text"
+      aria-describedby="form-large-goal-hint"
+    />
+  </div>
+  <div class="pathable-form-group">
+    <label class="pathable-label" for="form-large-case-worker">
+      Case worker
+    </label>
+    <input
+      class="pathable-input"
+      id="form-large-case-worker"
+      name="caseWorker"
+      type="text"
+    />
+  </div>
+  <button type="submit" class="pathable-button">Save plan</button>
+</form>

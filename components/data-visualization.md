@@ -20,7 +20,7 @@ guarantees:
     claim: The title and takeaway have a contrast ratio of at least 4.5 to 1 against the page background.
   - id: data-table-spacing
     status: unmet
-    claim: A details element that is the last child of the figure is 16 px below the caption, and its summary shows a visible focus ring when focused.
+    claim: A details element that is the last child of the figure is 16 px below the chart, and its summary shows a visible focus ring when focused.
 ---
 
 # DataVisualization
@@ -75,14 +75,14 @@ The figure has no modifier classes.
 - `pathable-data-visualization__chart`: the chart itself, on an `<svg>` or an
   `<img>`. It scales down to the width of the figure and keeps its aspect
   ratio.
-- `pathable-data-visualization__caption`: the `<figcaption>`. It holds the
+- `pathable-data-visualization__caption`: the `<figcaption>`, the first child of the figure, above the chart. It holds the
   title and the takeaway.
 - `pathable-data-visualization__title`: what the chart shows, in a few words.
 - `pathable-data-visualization__takeaway`: one sentence that says what the
   reader should conclude, with the figures.
 - The data table: a `<details>` element with a `<summary>` of "View data
   table", holding a `pathable-table` with a `<caption>` that names it. It is a
-  native element and needs no JavaScript. Put it last in the figure. Leave
+  native element and needs no JavaScript. Put it last in the figure, after the chart. Leave
   the table outside a `<details>` when the figures are what the reader came
   for.
 - Charts that need scripts, such as hover tooltips or zoom, are not part of
