@@ -1,8 +1,9 @@
 /**
  * Chooses the fixture folders CI checks on a pull request: the union of the
  * folders whose files changed (changed.mjs), the folders the compiled-CSS
- * diff affects (affected.mjs) and the folders whose component page changed,
- * each with the reasons it was selected. Renames count as a delete and an
+ * diff affects (affected.mjs), the folders whose component page changed, and
+ * every folder when a shared component-page script changed, each with the
+ * reasons it was selected. Renames count as a delete and an
  * add, so a renamed page selects the folder named after its old path.
  *
  *   node harness/select.mjs <base>     a pull request against <base>
@@ -28,10 +29,6 @@ import { allFolders } from './folders.mjs'
 const SUMMARY_REASONS = 15
 
 /**
- * Every path whose change can change the selection. The Fixtures workflow's
- * `pull_request.paths` must list each of these globs; a test checks it.
- */
-/**
  * Scripts outside fixtures/ that the selection and the contract check read
  * selectors, CSS and pages with. A change to one can change any folder's
  * result, so it selects every folder, as a change to fixtures/harness/ does.
@@ -41,6 +38,10 @@ export const SHARED_SCRIPTS = [
   'packages/styles/scripts/component-pages.mjs',
 ]
 
+/**
+ * Every path whose change can change the selection. The Fixtures workflow's
+ * `pull_request.paths` must list each of these globs; a test checks it.
+ */
 export const INPUT_GLOBS = [
   'fixtures/**',
   'packages/styles/components/*.md',
