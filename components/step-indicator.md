@@ -4,7 +4,16 @@ slug: step-indicator
 kind: static
 summary: A horizontal progress bar for a multi-step process, one equal segment per step, with an optional heading that names the current step.
 styles-class: pathable-step-indicator
-variants: []
+variants:
+  - axis: counters
+    default: default
+    values: [default, counters, counters-sm]
+  - axis: align
+    default: default
+    values: [default, center]
+  - axis: labels
+    default: default
+    values: [default, no-labels]
 guarantees:
   - id: equal-segments
     status: unverified
@@ -19,11 +28,23 @@ guarantees:
     status: unverified
     claim: "From 40em an upcoming step's label is #565c65, a complete step's label is #001e33, and the current step's label is bold #00365c."
   - id: counter
-    status: unmet
-    claim: 'The current-step counter is a 2.5rem circle with its number centred, a #00365c background and white text.'
+    status: unverified
+    claim: 'The current-step counter in the heading is a 2.5rem circle with its number centred, a #00365c background and white text.'
   - id: heading-size
     status: unverified
     claim: 'The heading is bold #00365c at 1.12rem with a 1rem top margin below a 40em viewport, and 1.49rem with a 2rem top margin from 40em.'
+  - id: segment-counters
+    status: unmet
+    claim: With the counters modifier, from 40em each segment shows its number in a 2.5rem circle centred on its bar, upcoming circles ringed #919191 with #565c65 numbers, complete circles #001e33 and the current circle #00365c with white numbers, and the last segment has no bar. The modifier class is not in the stylesheet yet.
+  - id: segment-counters-small
+    status: unmet
+    claim: With the counters-sm modifier the segment circles are 1.5rem across with 0.87rem numbers and the same colours as counters. The modifier class is not in the stylesheet yet.
+  - id: centered-segments
+    status: unmet
+    claim: With the center modifier, from 40em the segment circles and labels are centred on each segment and the label text is centred. The modifier class is not in the stylesheet yet.
+  - id: no-labels
+    status: unmet
+    claim: With the no-labels modifier no segment label is displayed at any width and the heading has a 1rem top margin from 40em. The modifier class is not in the stylesheet yet.
 ---
 
 # StepIndicator
@@ -56,53 +77,38 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
-```html
-<section class="pathable-step-indicator" aria-label="Progress">
-  <ol class="pathable-step-indicator__segments">
-    <li
-      class="pathable-step-indicator__segment pathable-step-indicator__segment--complete"
-    >
-      <span class="pathable-sr-only">Create account, completed</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true">
-        Create account
-      </span>
-    </li>
-    <li
-      class="pathable-step-indicator__segment pathable-step-indicator__segment--current"
-      aria-current="step"
-    >
-      <span class="pathable-sr-only">Verify identity</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true">
-        Verify identity
-      </span>
-    </li>
-    <li class="pathable-step-indicator__segment">
-      <span class="pathable-sr-only">Set up profile, not completed</span>
-      <span class="pathable-step-indicator__segment-label" aria-hidden="true">
-        Set up profile
-      </span>
-    </li>
-  </ol>
-  <div class="pathable-step-indicator__header">
-    <h2 class="pathable-step-indicator__heading">
-      <span class="pathable-sr-only">Step</span>
-      <span class="pathable-step-indicator__current-step">2</span>
-      <span class="pathable-step-indicator__total-steps">of 3</span>
-      Verify identity
-    </h2>
-  </div>
-</section>
-```
+<!-- example: default -->
+
+## States
+
+Each state is complete markup for one use of the step indicator. Copy the one
+closest to what you need. The numbered, centred and no-label states use
+modifier classes the stylesheet does not have yet; see Variants.
+
+<!-- examples -->
 
 ## Variants
 
-The step indicator has no modifier classes. The state of each step is set on
-the segment, not on the block; see Composition.
+| axis     | value         | class or none                          | what it is for                                                                                        |
+| -------- | ------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| counters | `default`     | none                                   | Bars only, with the label under each bar.                                                             |
+| counters | `counters`    | `pathable-step-indicator--counters`    | A numbered circle on each bar, so the step order reads without the labels. Not in the stylesheet yet. |
+| counters | `counters-sm` | `pathable-step-indicator--counters-sm` | The same with smaller circles, for dense layouts. Not in the stylesheet yet.                          |
+| align    | `default`     | none                                   | Labels and bars start at the left of each segment.                                                    |
+| align    | `center`      | `pathable-step-indicator--center`      | Circles and labels centred on each segment; use with a counters modifier. Not in the stylesheet yet.  |
+| labels   | `default`     | none                                   | A visible label under each bar from 40em.                                                             |
+| labels   | `no-labels`   | `pathable-step-indicator--no-labels`   | Bars and the heading only, for a short process whose steps need no names. Not in the stylesheet yet.  |
+
+The state of each step is set on the segment, not on the block; see
+Composition.
 
 ## Tokens
 
 None. The colours, the Nunito font, sizes and spacing are fixed values and do
-not follow a theme.
+not follow a theme. The bar and heading colours come from the theme's colour
+settings: PathAble Blue `#00365c` for the current step, its darker grade
+`#001e33` for complete steps, `#919191` for the upcoming bar and `#565c65` for
+the upcoming label text.
 
 ## Composition
 
@@ -122,9 +128,9 @@ not follow a theme.
   displayed.
 - `pathable-step-indicator__header` is a flex row, aligned on the text
   baseline, under the segments. Put the `pathable-step-indicator__heading`
-  inside it, with `pathable-step-indicator__current-step` (the circled number;
-  see Guarantees for its size today) and `pathable-step-indicator__total-steps` (for example "of 3", followed by
-  a 0.5rem gap) before the step name.
+  inside it, with `pathable-step-indicator__current-step` (the circled number,
+  2.5rem across) and `pathable-step-indicator__total-steps` (for example "of
+  3", followed by a 0.5rem gap) before the step name.
 - `pathable-step-indicator__step`, `pathable-step-indicator__step--current`,
   `pathable-step-indicator__step--complete` and
   `pathable-step-indicator__step-label` are aliases of the segment classes and
@@ -132,6 +138,11 @@ not follow a theme.
 - The class may also go straight on the `<ol>` in place of the wrapper and
   `pathable-step-indicator__segments`. The list then has no bottom or side
   margin, and there is nowhere to put the header.
+- The counters, centred and no-label modifiers go on the block. The numbers in
+  the circles are drawn by the stylesheet from the segment order, so the
+  segments carry no number in their text.
+- Interactive steps, such as links to earlier steps or a button that moves on,
+  are not part of this component.
 
 ## Guarantees
 
@@ -140,9 +151,9 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-The counter guarantee is unmet. Today the counter is content-box, so its
-padding is added to the 2.5rem: it is about 3.7rem across below 40em and 3.3rem
-from 40em, with the number sitting above the centre.
+The four modifier guarantees are unmet: the stylesheet has no class for the
+counters, small counters, centred or no-label layouts, and a fixture that uses
+one renders as the default.
 
 Because segments stop at 15rem, a short process in a wide container leaves the
 row's right-hand part empty.
@@ -152,11 +163,15 @@ row's right-hand part empty.
 - Accessibility. Below 40em the labels are `display: none`, so they are hidden
   from assistive technology as well as from sight. Always include the heading
   with the current step's number and name, or another text equivalent. Mark
-  the current segment with `aria-current="step"`, and give each step its name
-  and state in `pathable-sr-only` text directly in the `<li>`, outside
-  `pathable-step-indicator__segment-label`, as in the example. Text inside the
+  the current segment with `aria-current="step"`: `step` is the WAI-ARIA value
+  for the current step in a process, and the stylesheet does not depend on the
+  value. Give each step its name and, for a complete or upcoming step, "completed" or
+  "not completed" in `pathable-sr-only` text directly in the `<li>`, outside
+  `pathable-step-indicator__segment-label`, as in the examples. Text inside the
   label is lost below 40em, and the bars carry the state in colour only. Hide
   the visible label with `aria-hidden="true"` so the name is not read twice.
+  With the no-labels modifier, hide the whole `<ol>` with `aria-hidden="true"`
+  and rely on the heading.
 - Keeping the classes and the text in step: the stylesheet does not count
   steps or work out which is current.
 - The heading level, and the label text and its length.
