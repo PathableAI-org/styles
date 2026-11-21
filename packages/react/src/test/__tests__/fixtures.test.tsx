@@ -201,4 +201,55 @@ describe('expectToRenderFixture', () => {
       ),
     ).toThrow(/rendered text/u)
   })
+
+  it('fails when a dangling fragment link matches a renumbered id', () => {
+    // Both sides renumber their one id to id-1. The fixture's link resolves
+    // to it; the component's literal "#id-1" resolves to nothing.
+    expect(() =>
+      expectToRenderFixture(
+        <>
+          <a href="#id-1">Details</a>
+          <p id="details">More</p>
+        </>,
+        '<a href="#details">Details</a><p id="details">More</p>',
+      ),
+    ).toThrow(/rendered markup/u)
+  })
+
+  it('compares whitespace inside script and style exactly', () => {
+    expect(() =>
+      expectToRenderFixture(
+        <script>{'const label = "a  b"'}</script>,
+        '<script>const label = "a b"</script>',
+      ),
+    ).toThrow(/rendered markup/u)
+    expect(() =>
+      expectToRenderFixture(
+        <style>{'.a::before { content: "x  y"; }'}</style>,
+        '<style>.a::before { content: "x y"; }</style>',
+      ),
+    ).toThrow(/rendered markup/u)
+  })
+
+  it('compares the text at either end of pre and textarea exactly', () => {
+    expect(() => expectToRenderFixture(<pre>a </pre>, '<pre>a</pre>')).toThrow(
+      /rendered markup/u,
+    )
+    expect(() =>
+      expectToRenderFixture(
+        <textarea defaultValue="a " />,
+        '<textarea>a</textarea>',
+      ),
+    ).toThrow(/rendered markup/u)
+  })
+
+  it('keeps a non-breaking space at the end of ordinary text', () => {
+    expect(() => expectToRenderFixture(<p>a</p>, '<p>a&nbsp;</p>')).toThrow(
+      /rendered markup/u,
+    )
+  })
+
+  it('still ignores HTML whitespace at either end of ordinary text', () => {
+    expectToRenderFixture(<p>a</p>, '<p>\n  a\n</p>')
+  })
 })

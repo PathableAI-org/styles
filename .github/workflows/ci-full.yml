@@ -376,14 +376,18 @@ jobs:
             pnpm lint:styles
             exit 0
           fi
-          # Fails the step if git cannot list the changes.
-          changed=$(git diff --name-only --diff-filter=d HEAD^1 HEAD)
-          if grep -qE '(^|/)\.stylelintrc[^/]*$|(^|/)package\.json$|^pnpm-lock\.yaml$' <<< "$changed"; then
+          # Each fails the step if git cannot list the changes. The
+          # configuration check reads every changed path, deletions included,
+          # so deleting a stylelint config also lints the whole package; only
+          # the files to lint leave deletions out.
+          changed=$(git diff --name-only HEAD^1 HEAD)
+          remaining=$(git diff --name-only --diff-filter=d HEAD^1 HEAD)
+          if grep -qE '(^|/)\.stylelint(rc[^/]*|ignore)$|(^|/)package\.json$|^pnpm-(lock|workspace)\.yaml$' <<< "$changed"; then
             echo "Stylelint configuration or dependencies changed; linting the whole package."
             pnpm lint:styles
             exit 0
           fi
-          mapfile -t files < <(grep -E '^packages/styles/src/.*\.scss$' <<< "$changed" || true)
+          mapfile -t files < <(grep -E '^packages/styles/src/.*\.scss$' <<< "$remaining" || true)
           if [ "${#files[@]}" -eq 0 ]; then
             echo "No .scss file under packages/styles/src changed; stylelint has nothing to lint."
             exit 0

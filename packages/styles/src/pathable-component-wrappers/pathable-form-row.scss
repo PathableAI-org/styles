@@ -74,6 +74,14 @@
     min-width: 0;
   }
 
+  // The select now sizes to its content, so keep it from stretching to a taller
+  // control (such as a textarea) that shares its row of the subgrid.
+  :where(.pathable-form-row)
+    > :where(.pathable-form-group)
+    > :where(.pathable-select) {
+    align-self: start;
+  }
+
   :where(.pathable-form-row)
     > :where(.pathable-form-group)
     > :is(.pathable-input, .pathable-select, .pathable-textarea):not(

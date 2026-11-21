@@ -14,6 +14,8 @@ import { after, describe, it } from 'node:test'
 import {
   changedPathsSince,
   compileStyles,
+  movedRules,
+  normalize,
   dependencyReasons,
   diffStyles,
   selectFixtures,
@@ -402,5 +404,177 @@ describe('changedPathsSince', () => {
       'components/activity-list.md',
       'components/activity.md',
     ])
+  })
+})
+
+describe('quoted text, selector forms and rule order', () => {
+  const diffOne = (before, after, fixtures = FIXTURES) =>
+    selectFixtures(
+      diffStyles(
+        compile({ 'one.scss': before }),
+        compile({ 'one.scss': after }),
+      ),
+      fixtures,
+    )
+
+  it('sees whitespace inside a quoted attribute value in a selector', () => {
+    const selection = diffOne(
+      '.pathable-card[data-label="A B"] { color: red; }\n',
+      '.pathable-card[data-label="A  B"] { color: red; }\n',
+    )
+    assert.deepEqual(folders(selection), ['card'])
+  })
+
+  it('sees whitespace inside a quoted declaration value', () => {
+    const selection = diffOne(
+      '.pathable-card::before { content: "a b"; }\n',
+      '.pathable-card::before { content: "a  b"; }\n',
+    )
+    assert.deepEqual(folders(selection), ['card'])
+  })
+
+  it('selects every fixture for an unread property a class-less rule changed, after a class rule', () => {
+    const selection = diffOne(
+      '.pathable-card { --x: 1px; }\n:root { --x: 1px; }\n',
+      '.pathable-card { --x: 2px; }\n:root { --x: 2px; }\n',
+    )
+    assert.equal(selection.all, true)
+  })
+
+  it('normalize collapses whitespace outside quotes only', () => {
+    assert.equal(normalize('  0 \n  1px  '), '0 1px')
+    assert.equal(normalize('[data-label="A  B"]  .x'), '[data-label="A  B"] .x')
+    assert.equal(normalize("content:  'a \\' b'"), "content: 'a \\' b'")
+  })
+
+  for (const selector of [
+    ':not(.pathable-card)',
+    ':is(button, .pathable-card)',
+    ':where(button, .pathable-card)',
+    'div:has(.pathable-card)',
+  ]) {
+    it(`selects every fixture for ${selector}, which can match without a class`, () => {
+      const selection = diffOne(
+        `${selector} { color: red; }\n`,
+        `${selector} { color: blue; }\n`,
+      )
+      assert.equal(selection.all, true)
+    })
+  }
+
+  it('narrows :where() and :is() whose arguments all need a class', () => {
+    const selection = diffOne(
+      ':where(.pathable-card) :is(.pathable-tag, .pathable-card) { color: red; }\n',
+      ':where(.pathable-card) :is(.pathable-tag, .pathable-card) { color: blue; }\n',
+    )
+    assert.equal(selection.all, false)
+    assert.deepEqual(folders(selection), ['card', 'tag'])
+  })
+
+  it('narrows a class with a :not() qualifier to its class', () => {
+    const selection = diffOne(
+      '.pathable-card:not(.pathable-tag) { color: red; }\n',
+      '.pathable-card:not(.pathable-tag) { color: blue; }\n',
+    )
+    assert.equal(selection.all, false)
+    assert.ok(folders(selection).includes('card'))
+  })
+
+  it('selects the markup two overlapping rules restyle when they swap order', () => {
+    // Only markup that matches both rules changes; it carries both classes.
+    const overlap = {
+      folder: 'overlap',
+      files: [
+        {
+          path: 'fixtures/overlap/basic.html',
+          html: '<span class="pathable-card pathable-tag">Both</span>',
+        },
+      ],
+    }
+    const card = '.pathable-card { color: red; }\n'
+    const tag = '.pathable-tag { color: blue; }\n'
+    const selection = diffOne(`${card}${tag}`, `${tag}${card}`, [
+      ...FIXTURES,
+      overlap,
+    ])
+    assert.equal(selection.all, false)
+    assert.ok(folders(selection).includes('overlap'), JSON.stringify(selection))
+    assert.match(
+      selection.folders.overlap.reasons[0].via,
+      /moved relative to other rules/u,
+    )
+  })
+
+  it('does not mark later rules as moved when an earlier occurrence goes away', () => {
+    const selection = diffOne(
+      '.pathable-card { color: red; }\n.pathable-tag { color: blue; }\n.pathable-card { margin: 0; }\nbody { margin: 0; }\n',
+      '.pathable-card { color: red; margin: 0; }\n.pathable-tag { color: blue; }\nbody { margin: 0; }\n',
+    )
+    assert.equal(selection.all, false)
+  })
+
+  it('sees a declaration moving between two rules Sass split from one block', () => {
+    // Sass emits `.pathable-card {...}`, `.pathable-card--big {...}`,
+    // `.pathable-card {...}`; moving `margin: 0` below the nested rule keeps
+    // the `.pathable-card` group's declarations and order the same.
+    const overlap = {
+      folder: 'overlap',
+      files: [
+        {
+          path: 'fixtures/overlap/big.html',
+          html: '<div class="pathable-card pathable-card--big">Big</div>',
+        },
+      ],
+    }
+    const selection = diffOne(
+      '.pathable-card { color: red; margin: 0; &--big { margin: 1rem; } padding: 0; }\n',
+      '.pathable-card { color: red; &--big { margin: 1rem; } margin: 0; padding: 0; }\n',
+      [...FIXTURES, overlap],
+    )
+    assert.equal(selection.all, false)
+    assert.ok(folders(selection).includes('overlap'), JSON.stringify(selection))
+  })
+
+  it('selects every fixture when a rule with no class moves', () => {
+    const card = '.pathable-card { color: red; }\n'
+    const body = 'body { color: blue; }\n'
+    const selection = diffOne(`${card}${body}`, `${body}${card}`)
+    assert.equal(selection.all, true)
+  })
+
+  it('does not count an added rule as moving the others', () => {
+    const card = '.pathable-card { color: red; }\n'
+    const tag = '.pathable-tag { color: blue; }\n'
+    const selection = diffOne(
+      `${card}${tag}`,
+      `${card}.pathable-button { margin: 0; }\n${tag}`,
+    )
+    assert.deepEqual(folders(selection), ['activity-list'])
+  })
+})
+
+describe('movedRules', () => {
+  const entries = (...keys) => keys.map((key) => ({ key, id: `${key}#1` }))
+
+  it('marks one of two swapped rules', () => {
+    const moved = movedRules(entries('a', 'b'), entries('b', 'a'))
+    assert.equal(moved.size, 1)
+  })
+
+  it('marks only the rule that moved up, not the rules it passed', () => {
+    const moved = movedRules(
+      entries('a', 'b', 'c', 'd'),
+      entries('d', 'a', 'b', 'c'),
+    )
+    assert.deepEqual([...moved], ['d'])
+  })
+
+  it('marks a rule present on one side only', () => {
+    const moved = movedRules(entries('a', 'b', 'c'), entries('a', 'c'))
+    assert.deepEqual([...moved], ['b'])
+  })
+
+  it('marks nothing when the order is the same', () => {
+    assert.equal(movedRules(entries('a', 'b'), entries('a', 'b')).size, 0)
   })
 })

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { selectFolders } from './changed.mjs'
+import { checkFolderList } from './contract.mjs'
 
 const folders = ['activity-list', 'button']
 
@@ -42,8 +43,12 @@ test('a harness change selects every folder', () => {
   )
 })
 
-test('the html-validate config or package.json selects every folder', () => {
-  for (const path of ['fixtures/.htmlvalidate.json', 'fixtures/package.json'])
+test('the html-validate config, folder list or package.json selects every folder', () => {
+  for (const path of [
+    'fixtures/.htmlvalidate.json',
+    'fixtures/folders.json',
+    'fixtures/package.json',
+  ])
     assert.deepEqual(selectFolders([path], folders), folders)
 })
 
@@ -58,8 +63,17 @@ test('paths outside fixtures/ are ignored', () => {
   )
 })
 
-test('a deleted or unknown folder is not selected', () => {
-  assert.deepEqual(selectFolders(['fixtures/removed/flat.html'], folders), [])
+test('a deleted folder is not silently dropped: the folder list check fails it', () => {
+  // The folder is gone from disk, so there is nothing for axe to run on…
+  const onDisk = ['button']
+  assert.deepEqual(
+    selectFolders(['fixtures/activity-list/flat.html'], onDisk),
+    [],
+  )
+  // …but folders.json still lists it, so the contract check fails.
+  const errors = checkFolderList(['activity-list', 'button'], onDisk)
+  assert.equal(errors.length, 1)
+  assert.match(errors[0], /lists activity-list\/, which is not on disk/u)
 })
 
 test('no changes select nothing', () => {

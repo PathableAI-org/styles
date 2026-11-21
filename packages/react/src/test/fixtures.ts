@@ -43,8 +43,6 @@ const INLINE_ELEMENTS = new Set([
   'del',
   'dfn',
   'em',
-  // Renamed from svg by normalise: an inline icon does not separate words.
-  'fixture-svg',
   'i',
   'img',
   'input',
@@ -64,6 +62,7 @@ const INLINE_ELEMENTS = new Set([
   'strong',
   'sub',
   'sup',
+  'svg',
   'textarea',
   'time',
   'u',
@@ -89,8 +88,9 @@ function parse(html: string): DocumentFragment {
  * must still point at the same element. Throws on a duplicate ID or a
  * reference to an ID that does not exist. An empty `id` is not an ID. A
  * fragment link (`href="#id"`) to an element in the markup is rewritten too;
- * one to an ID outside the markup, such as a skip link's target, stays as
- * written and is compared literally.
+ * one to an ID outside the markup, such as a skip link's target, becomes
+ * `#unresolved:<id>`, so it is compared literally and never matches a
+ * resolved link.
  */
 function renumberIds(root: DocumentFragment): void {
   const renumbered = new Map<string, string>()
@@ -125,10 +125,14 @@ function renumberIds(root: DocumentFragment): void {
 
   for (const attribute of FRAGMENT_ATTRIBUTES) {
     for (const element of root.querySelectorAll(`[${attribute}^="#"]`)) {
-      const target = renumbered.get(
-        (element.getAttribute(attribute) ?? '').slice(1),
+      const fragment = (element.getAttribute(attribute) ?? '').slice(1)
+      const target = renumbered.get(fragment)
+      // Mark whether the link resolved, so a dangling `#id-1` never reads
+      // the same as a link to the element renumbered `id-1`.
+      element.setAttribute(
+        attribute,
+        target === undefined ? `#unresolved:${fragment}` : `#${target}`,
       )
-      if (target !== undefined) element.setAttribute(attribute, `#${target}`)
     }
   }
 }
@@ -140,11 +144,23 @@ function renumberIds(root: DocumentFragment): void {
  */
 const DROPPED_ELEMENTS = ['script', 'style', 'svg']
 
+/** Elements whose text is compared exactly, whitespace included. */
+const EXACT_TEXT = 'pre, textarea, fixture-script, fixture-style'
+
+/** HTML whitespace at either end of a string; never `&nbsp;`. */
+const EDGE_WHITESPACE = /^[ \t\n\f\r]+|[ \t\n\f\r]+$/gu
+
 /**
- * Prepare a parsed fragment for `getDiffableHTML`: rename the elements it
- * would drop, and collapse whitespace runs inside text to one space, as
- * rendering does, so a fixture whose text Prettier wraps still matches.
- * Text inside `pre` and `textarea` keeps its whitespace.
+ * Prepare a parsed fragment for `getDiffableHTML`:
+ *
+ * - rename the elements it would drop;
+ * - in ordinary text, collapse runs of HTML whitespace to one space, as
+ *   rendering does, so a fixture whose text Prettier wraps still matches,
+ *   and write each non-breaking space as `&nbsp;`, because
+ *   `getDiffableHTML` trims text nodes with `String.prototype.trim`, which
+ *   would drop one at either end;
+ * - write the text of `pre`, `textarea`, `script` and `style` as a quoted
+ *   string, so the trim cannot touch it and it is compared exactly.
  */
 function normalise(root: DocumentFragment): void {
   for (const element of root.querySelectorAll(DROPPED_ELEMENTS.join(','))) {
@@ -157,8 +173,10 @@ function normalise(root: DocumentFragment): void {
   }
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    if (node.parentElement?.closest('pre, textarea')) continue
-    node.nodeValue = (node.nodeValue ?? '').replace(WHITESPACE, ' ')
+    const value = node.nodeValue ?? ''
+    node.nodeValue = node.parentElement?.closest(EXACT_TEXT)
+      ? JSON.stringify(value)
+      : value.replace(WHITESPACE, ' ').replaceAll('\u00a0', '&nbsp;')
   }
 }
 
@@ -176,7 +194,7 @@ function readableText(root: DocumentFragment): string {
     if (separates) text += ' '
   }
   root.childNodes.forEach(visit)
-  return text.replace(WHITESPACE, ' ').trim()
+  return text.replace(WHITESPACE, ' ').replace(EDGE_WHITESPACE, '')
 }
 
 /**
@@ -185,8 +203,9 @@ function readableText(root: DocumentFragment): string {
 export function toFixtureComparison(html: string): NormalisedFixture {
   const root = parse(html)
   renumberIds(root)
-  normalise(root)
+  // Read the text before normalise quotes and marks it for the markup diff.
   const text = readableText(root)
+  normalise(root)
   const container = document.createElement('div')
   container.append(root)
   return { markup: getDiffableHTML(container.innerHTML), text }

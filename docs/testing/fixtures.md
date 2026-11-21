@@ -11,10 +11,17 @@ How to write a fixture, and the ARIA rules fixtures are held to, are in
 [`fixtures/README.md`](../../fixtures/README.md). This page covers how the
 fixtures are checked.
 
-Fixtures exist for ActivityList and SrOnly so far. The planned next step, in
-its own pull request, is to render the styles Storybook stories from the
-fixtures. `@pathableai/react` components are held to the fixtures by
-[React fixture tests](#react-fixture-tests).
+Fixtures exist for ActivityList and SrOnly so far. `@pathableai/react`
+components are held to the fixtures by
+[React fixture tests](#react-fixture-tests), and converted component pages
+take their examples from them ([`components/README.md`](../../components/README.md)).
+
+Where a fixture and today's markup differ, the markup moves to the fixture.
+The ActivityList fixtures and the ActivityList component page's examples use
+`<ul role="list">` and `<li>`, while its styles stories and the React
+`ActivityList` still use `<div role="list">`. A styles list reset for ActivityList and a React
+`ActivityList` that renders `ul role="list"`/`li` are planned. Until then the
+React fixture tests leave ActivityList unmapped, and report it in every run.
 
 ## The checks
 
@@ -35,18 +42,26 @@ Each check takes a list of component folders and defaults to every folder.
   `html-validate-*` directive comments. It is cheap, so CI runs it on every
   fixture, but only when a file under `fixtures/` or `pnpm-lock.yaml`
   changed.
-- **Contract** fails when a folder is not named after a page in
-  `components/`, when a `pathable-*` class in a fixture is not
-  a class selector in `@pathableai/styles/dist/styles.css`, or when a
-  non-default variant in the page's front matter has no fixture using its
-  modifier class. It reads the page and the CSS with the same code as the
-  component-page check (`packages/styles/scripts/`).
+- **Contract** fails when `fixtures/folders.json` and the component folders
+  on disk disagree in either direction (so deleting a folder fails unless the
+  list is edited in the same change), when a folder is not named after a page
+  in `components/`, when a fixture's file name is not a
+  kebab-case state name (`^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$`), when a
+  `pathable-*` class in a fixture is not a class selector in
+  `@pathableai/styles/dist/styles.css`, or when a non-default variant in the
+  page's front matter has no fixture using its modifier class. Classes are
+  read by parsing each fixture, so only element `class` attributes count, not
+  `data-class` and the like or markup inside comments. It reads the page and
+  the CSS with the same code as the component-page check
+  (`packages/styles/scripts/`).
 - **axe** loads each fixture into a `<main>` on a page that links
   `styles.css`, in Chromium at 1280 px and 375 px wide, and runs
   `@axe-core/playwright`. Only the page-level rules `region`,
   `landmark-one-main` and `page-has-heading-one` are off. It also fails when
   two buttons or links in a fixture share an accessible name. Any violation
-  fails; there is no exceptions mechanism. It writes a JSON report to
+  fails, and so does any axe "incomplete" result; there is no exceptions
+  mechanism or allowlist. Each is listed with its nodes in the output and in
+  the GitHub job summary. It writes a JSON report to
   `fixtures/.cache/axe-report.json`, or to `FIXTURES_AXE_REPORT`.
 
 The contract and axe checks need the built stylesheet, so run
@@ -62,7 +77,8 @@ folders whose component page changed.
 `node fixtures/harness/changed.mjs [base]` prints the component folders that
 `git diff --name-only <base>...HEAD -- fixtures/` touched, one per line;
 `base` defaults to `origin/main`. A change to `fixtures/harness/`,
-`fixtures/.htmlvalidate.json` or `fixtures/package.json` selects every folder.
+`fixtures/.htmlvalidate.json`, `fixtures/folders.json` or `fixtures/package.json`
+selects every folder.
 `--all` prints every folder. Pass the output to a check:
 
 ```sh
@@ -71,13 +87,14 @@ cd fixtures && node harness/axe.mjs $(node harness/changed.mjs)
 
 ### Folders a stylesheet change affects
 
-`node fixtures/harness/affected.mjs --base <ref> [--head <ref>] [--json <file>]`
+`node fixtures/harness/affected.mjs --base <ref> [--json <file>]`
 selects folders from the compiled CSS alone. No component page or fixture
 declares which source files it depends on.
 
 1. It compiles `packages/styles/src/index.scss` (what becomes `styles.css`)
-   at the merge base of `<ref>` and the head, and at the head (the working
-   tree when `--head` is not given). The base compiles in a temporary git
+   at the merge base of `<ref>` and HEAD, and in the working tree, which is
+   the head: its fixtures, stylesheet and dependencies all come from one
+   checkout. The base compiles in a temporary git
    worktree with the head's `node_modules`, so there is no second install.
 2. It parses both with PostCSS and pairs up rules by at-rule context (such as
    a media query) and selector, comparing their declarations property by
@@ -95,9 +112,13 @@ Every folder is selected when the change cannot be narrowed to classes:
 - `pnpm-lock.yaml`, `pnpm-workspace.yaml` or `patches/` changed, or the
   `@uswds/uswds` range in `packages/styles/package.json` changed, because the
   two sides would not compile with the same packages;
-- a changed rule has a selector that names no class, such as an element
-  selector, the reset, `@font-face` or a keyframe, even when other selectors
-  in the same list name one (`button, .pathable-button`);
+- a changed rule has a selector that can match markup without any of the
+  classes it names, even when other selectors in the same list name one
+  (`button, .pathable-button`). That covers an element selector, the reset,
+  `@font-face`, a keyframe, and a class only inside `:not()`, `:has()` or
+  another pseudo-class (`:not(.x)`, `div:has(.x)`). An `:is()` or `:where()`
+  counts as needing a class only when every argument needs one, so
+  `:where(.x)` narrows to `.x` and `:is(button, .x)` selects every folder;
 - a custom property changed on a rule with no class (such as `:root`) and,
   in the end, no rule reads it, directly or through other custom properties;
 - a changed custom property is read by such a rule.
@@ -115,28 +136,53 @@ buttons in its fixtures, and a change to `.pathable-tag` does not select it.
 Declarations that only change order within a rule, such as a shorthand
 moved after its longhand, count as a change to every property of the rule,
 and a changed statement at-rule such as `@import` or `@layer a, b` selects
-every folder.
+every folder. Whitespace is collapsed before comparing, except inside quoted
+strings, so `content: "a  b"` or `[data-label="A  B"]` changing is seen.
 
-Known limits: a whole rule that only moves, with the same selector and
-declarations, is not seen, although moving it can change the cascade. A
-class added to the markup by JavaScript is not seen, because only the
-fixture HTML is read.
+Rule order is compared too. Among the rules that did not change, a rule
+whose position moved relative to the others contributes its classes, or
+selects every folder when it can match without a class. Markup restyled by
+two rules swapping matches both, so it carries the classes of the one that
+moved. A changed rule already contributes its classes. Each rule is
+identified by its selector and its own declarations, so a declaration that
+moves between two rules with the same selector (as Sass splits a block
+around a nested rule) counts as both rules moving.
+
+Known limit: a class added to the markup by JavaScript is not seen, because
+only the fixture HTML is read.
 
 ### The union
 
-`node fixtures/harness/select.mjs <base>` runs both and prints the union,
-plus every folder whose page `components/<slug>.md` changed
-(the contract check reads the page's slug and variants), one folder per line, with the reasons for each on standard error. `--all` selects
+`INPUT_GLOBS` in `select.mjs` lists every path that can change the
+selection, and `fixtures/harness/workflow.test.mjs` fails when the
+workflow's `pull_request.paths` misses one.
+
+`node fixtures/harness/select.mjs <base>` lists the changed paths once,
+with `affected.mjs`'s listing (working tree against the merge base, renames
+as a delete and an add), and prints the union of the folders `changed.mjs`'s
+`selectFolders` picks from them, the folders `affected.mjs` selects, and
+every folder whose page `components/<slug>.md` changed (the
+contract check reads the page's slug and variants). A change to
+`packages/styles/scripts/check-component-pages.mjs` or `component-pages.mjs`,
+which the selection and the contract check read selectors, CSS and pages
+with, selects every folder, as a change to `fixtures/harness/` does. It
+prints one folder per
+line, with the reasons for each on standard error. `--all` selects
 every folder. In GitHub Actions it also writes the `folders` and
 `fixtures_changed` step outputs and a job summary.
 
 ## In CI
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
-on a pull request that changes `fixtures/**`, `packages/styles/src/**/*.scss`,
-`components/*.md`, `pnpm-lock.yaml`, the React paths listed
-under [React fixture tests in CI](#in-ci-1) or the workflow itself, and on
-every push to `main`. Its `fixtures` job:
+on a pull request that changes any input of the selection (`fixtures/**`,
+`components/*.md`, the component-page scripts
+`check-component-pages.mjs` and `component-pages.mjs` it reads selectors and
+pages with, `packages/styles/src/**/*.scss` or `*.sass`,
+`packages/styles/package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` or
+`patches/**`), the React paths listed under
+[React fixture tests in CI](#in-ci-1) or the workflow itself, and on every
+push to `main`. Its `fixtures` job skips a pull request that changes only
+files under `packages/react/`, and says so in its job summary; otherwise it:
 
 1. builds `@pathableai/styles`;
 2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
@@ -149,7 +195,9 @@ every push to `main`. Its `fixtures` job:
    `pnpm-lock.yaml` changed (the lockfile can change the html-validate
    version), and skips it otherwise;
 6. runs the contract check and axe on the selected folders, and skips them
-   when none was selected;
+   when none was selected, except that the contract also runs, on every
+   folder, when a file under `fixtures/` changed, so its `folders.json`
+   check catches a deleted folder;
 7. uploads the axe report as the `fixtures-axe-report` artifact.
 
 The job summary lists each selected folder with its reasons, and says
@@ -203,12 +251,14 @@ it('renders sr-only/inline', () => {
    each reference must still point at the same element; a duplicate ID or a
    reference to a missing ID fails. A fragment link (`href="#id"`) to an
    element in the markup is rewritten too; one to an ID outside it, such as a
-   skip link's target, is compared as written;
-4. collapses each run of whitespace inside text to one space, as rendering
-   does (outside `pre` and `textarea`, and leaving non-breaking spaces alone),
-   so a fixture whose text Prettier wraps still matches, and renames
-   `svg`, `script` and `style` elements, which `getDiffableHTML` would
-   otherwise drop with their content;
+   skip link's target, is marked unresolved and compared as written, so it
+   never matches a link that resolves;
+4. collapses each run of HTML whitespace inside ordinary text to one space,
+   as rendering does, so a fixture whose text Prettier wraps still matches,
+   while non-breaking spaces stay distinct, even at the ends of a text node,
+   and the text of `pre`, `textarea`, `script` and `style` is compared
+   exactly; it also renames `svg`, `script` and `style` elements, which
+   `getDiffableHTML` would otherwise drop with their content;
 5. compares the two with `getDiffableHTML` from
    `@open-wc/semantic-dom-diff`, which sorts attributes and class tokens and
    normalises whitespace between elements, using Vitest's `toBe`, so a
@@ -237,6 +287,8 @@ The coverage test (`src/test/__tests__/fixture-coverage.test.ts`) fails when:
   from `../examples/<state>` with an import from
   `@pathableai/fixtures/<folder>/<state>.html?raw` of the same state and the
   component's mapped folder.
+- two manifest entries map to the same React component, or the manifest
+  file lists the same folder twice;
 - a fixture test passes anything other than two imported names to
   `expectToRenderFixture`, or skips a test. Commented-out calls do not count.
 

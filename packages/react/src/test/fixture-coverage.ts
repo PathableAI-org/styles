@@ -10,6 +10,11 @@ export interface FixtureCoverageInput {
   manifest: Record<string, FixtureFolderMapping>
   /** Source of `src/index.ts`. */
   indexSource: string
+  /**
+   * Source of `src/test/fixture-manifest.ts`, read for duplicate folder keys,
+   * which the parsed manifest object can no longer show.
+   */
+  manifestSource?: string
 }
 
 export interface FixtureCoverageResult {
@@ -33,6 +38,7 @@ const SKIPPED =
   /\b(?:it|test|describe)\.(?:skip|todo|fails|skipIf|runIf)\b|\bx(?:it|test|describe)\(/u
 const COMMENT = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu
 const TEST_FILE = /^components\/([^/]+)\/__tests__\//u
+const MANIFEST_KEY = /^\s*(?:'([a-z0-9-]+)'|([a-z0-9]+))\s*:\s*\{/gmu
 const COMPONENT_EXPORT = /export\s*\{([^}]*)\}\s*from\s*'\.\/components\//gu
 
 /** Value exports from `src/index.ts` that come from `./components/`. */
@@ -111,6 +117,20 @@ export function comparisonsIn(
 }
 
 /**
+ * Fixture folders that appear more than once as keys in the manifest's
+ * source. A JavaScript object keeps only the last of them, so the duplicate
+ * cannot be seen in the imported manifest.
+ */
+export function duplicateManifestFolders(manifestSource: string): string[] {
+  const counts = new Map<string, number>()
+  for (const match of manifestSource.matchAll(MANIFEST_KEY)) {
+    const folder = match[1] ?? match[2]
+    counts.set(folder, (counts.get(folder) ?? 0) + 1)
+  }
+  return [...counts].filter(([, count]) => count > 1).map(([folder]) => folder)
+}
+
+/**
  * Check that every fixture of a mapped folder has an example module that a
  * fixture test compares with it, or a "not offered in React" entry with a
  * reason, and that examples and tests only name fixtures that exist.
@@ -121,16 +141,29 @@ export function checkFixtureCoverage({
   testSources,
   manifest,
   indexSource,
+  manifestSource = '',
 }: FixtureCoverageInput): FixtureCoverageResult {
   const errors: string[] = []
   const existing = new Set(fixtures)
   const components = exportedComponents(indexSource)
-  const folderOf = new Map(
-    Object.entries(manifest).map(([folder, { component }]) => [
-      component,
-      folder,
-    ]),
-  )
+
+  // Each component and each folder may appear in only one manifest entry.
+  for (const folder of duplicateManifestFolders(manifestSource)) {
+    errors.push(
+      `The fixture manifest has more than one entry for folder ${folder}`,
+    )
+  }
+  const folderOf = new Map<string, string>()
+  for (const [folder, { component }] of Object.entries(manifest)) {
+    const earlier = folderOf.get(component)
+    if (earlier === undefined) {
+      folderOf.set(component, folder)
+    } else {
+      errors.push(
+        `Fixture manifest entries ${earlier} and ${folder} both map to ${component}`,
+      )
+    }
+  }
 
   const tested = new Set<string>()
   for (const [file, source] of Object.entries(testSources)) {

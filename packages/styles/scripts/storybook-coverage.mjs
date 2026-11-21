@@ -102,6 +102,7 @@ const EXPECTED_COVERAGE = {
     'components-form-controls-select--default',
     'components-form-controls-select--keyboard-focus',
     'components-form-controls-select--forced-colors',
+    'components-form-controls-select--long-value-increased-text',
     'components-form-controls-textarea--default',
     'components-form-controls-textarea--keyboard-focus',
     'components-form-controls-textarea--forced-colors',
@@ -145,6 +146,9 @@ const EXPECTED_COVERAGE = {
     'components-communication-modal--open',
     'components-communication-modal--narrow',
     'components-communication-modal--long-content',
+    'components-communication-modal--increased-text',
+    'components-communication-modal--narrow-footer-row',
+    'components-communication-modal--long-footer-label',
   ],
   'Layout composition': [
     'layout-composition-surface--keyboard-focus-on-surfaces',
