@@ -40,7 +40,7 @@
     "test:component-pages": "node --test scripts/check-component-pages.test.mjs"
   },
   "dependencies": {
-    "@uswds/uswds": "^3.0.0"
+    "@uswds/uswds": "3.14.0"
   },
   "devDependencies": {
     "@fontsource/fredoka": "^5.3.0",
