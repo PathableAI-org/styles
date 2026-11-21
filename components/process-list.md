@@ -126,10 +126,6 @@ inside `pathable-prose` is given the same rules as one outside it; and the
 heading takes the Fredoka Regular typeface. The pixel figures are those of the
 default theme.
 
-The package does not provide a variant for a numbered list with a body-text
-column (`pathable-process-list__body`); steps put their description directly in
-the item.
-
 ## The consumer owns
 
 - Accessibility. Keep the `<ol>`: the drawn numbers are decoration, and the

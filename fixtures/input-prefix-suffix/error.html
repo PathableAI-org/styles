@@ -1,0 +1,24 @@
+<!-- description: The error modifier on the group, with the message tied to the input. The modifier draws the border; the message and aria-invalid carry the meaning. -->
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-error-wage"
+    >Hourly wage, in dollars</label
+  >
+  <span
+    class="pathable-error-message"
+    id="input-prefix-suffix-error-wage-message"
+    >Enter a wage of 0 or more, such as 18.50.</span
+  >
+  <div class="pathable-input-group pathable-input-group--error">
+    <div class="pathable-input-prefix" aria-hidden="true">$</div>
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-error-wage"
+      name="hourlyWage"
+      type="text"
+      inputmode="decimal"
+      value="-4"
+      aria-invalid="true"
+      aria-describedby="input-prefix-suffix-error-wage-message"
+    />
+  </div>
+</div>

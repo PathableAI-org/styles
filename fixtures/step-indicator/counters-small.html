@@ -1,0 +1,47 @@
+<!-- description: The numbered circles are 1.5rem across, for a denser layout. -->
+<section
+  class="pathable-step-indicator pathable-step-indicator--counters-sm"
+  aria-label="Intake progress"
+>
+  <ol class="pathable-step-indicator__segments">
+    <li
+      class="pathable-step-indicator__segment pathable-step-indicator__segment--complete"
+    >
+      <span class="pathable-sr-only">Intake, completed</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
+        >Intake</span
+      >
+    </li>
+    <li
+      class="pathable-step-indicator__segment pathable-step-indicator__segment--complete"
+    >
+      <span class="pathable-sr-only">Eligibility, completed</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
+        >Eligibility</span
+      >
+    </li>
+    <li
+      class="pathable-step-indicator__segment pathable-step-indicator__segment--current"
+      aria-current="step"
+    >
+      <span class="pathable-sr-only">Documents</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
+        >Documents</span
+      >
+    </li>
+    <li class="pathable-step-indicator__segment">
+      <span class="pathable-sr-only">Review, not completed</span>
+      <span class="pathable-step-indicator__segment-label" aria-hidden="true"
+        >Review</span
+      >
+    </li>
+  </ol>
+  <div class="pathable-step-indicator__header">
+    <h2 class="pathable-step-indicator__heading">
+      <span class="pathable-sr-only">Step</span>
+      <span class="pathable-step-indicator__current-step">3</span>
+      <span class="pathable-step-indicator__total-steps">of 4</span>
+      Documents
+    </h2>
+  </div>
+</section>

@@ -1,0 +1,74 @@
+<!-- description: Width modifiers on the group, to size a field to the value it holds. Each group is capped at the width its modifier names. -->
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-widths-hours"
+    >Hours in the work placement, in hours</label
+  >
+  <div class="pathable-input-group pathable-input-group--xs">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-hours"
+      name="placementHours"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">hrs.</div>
+  </div>
+</div>
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-widths-weight"
+    >Participant weight, in pounds</label
+  >
+  <div class="pathable-input-group pathable-input-group--sm">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-weight"
+      name="weight"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">lbs.</div>
+  </div>
+</div>
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-widths-stipend"
+    >Monthly transportation stipend, in dollars</label
+  >
+  <div class="pathable-input-group pathable-input-group--md">
+    <div class="pathable-input-prefix" aria-hidden="true">$</div>
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-stipend"
+      name="stipend"
+      type="text"
+      inputmode="decimal"
+    />
+  </div>
+</div>
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-widths-case-phone"
+    >Case worker phone number</label
+  >
+  <div class="pathable-input-group pathable-input-group--lg">
+    <div class="pathable-input-prefix" aria-hidden="true">
+      <svg
+        class="pathable-icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+        />
+      </svg>
+    </div>
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-case-phone"
+      name="caseWorkerPhone"
+      type="tel"
+      autocomplete="tel"
+    />
+  </div>
+</div>

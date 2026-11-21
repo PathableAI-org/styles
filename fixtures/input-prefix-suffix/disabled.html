@@ -1,0 +1,35 @@
+<!-- description: A disabled input. The affix is dimmed with the input and the group border changes in high-contrast mode. -->
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-disabled-wage"
+    >Hourly wage, in dollars</label
+  >
+  <div class="pathable-input-group">
+    <div class="pathable-input-prefix" aria-hidden="true">$</div>
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-disabled-wage"
+      name="hourlyWage"
+      type="text"
+      inputmode="decimal"
+      value="18.50"
+      disabled
+    />
+  </div>
+</div>
+<div class="pathable-form-group">
+  <label class="pathable-label" for="input-prefix-suffix-disabled-hours"
+    >Hours worked this week, in hours</label
+  >
+  <div class="pathable-input-group">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-disabled-hours"
+      name="hoursWorked"
+      type="text"
+      inputmode="numeric"
+      value="32"
+      disabled
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">hrs.</div>
+  </div>
+</div>
