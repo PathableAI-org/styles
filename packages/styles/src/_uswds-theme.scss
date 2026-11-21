@@ -144,10 +144,10 @@ $_jade-text: #0d7a63;
   // Bright Blue Brooks 10% over white
   $theme-color-info-lighter: #edf5fd,
 
-  // Disabled: neutral cool gray
-  $theme-color-disabled: 'gray-cool-20',
-  $theme-color-disabled-dark: 'gray-cool-30',
-
+  // Disabled: all five grades stay at the USWDS defaults (gray-5 to gray-90
+  // neutral grays: #c9c9c9, #919191, #757575, #454545, #1b1b1b), which the
+  // state-tokens component page documents and which give white text 4.5:1 or
+  // more on disabled and disabled-dark.
   // -------- Link colors --------
   // Tech Teal (7.7:1 on white, 5.9:1 on Shilling Silver) matches
   // --pathable-color-link. Bright Blue Brooks is only 3.0:1 on white, so it
@@ -189,6 +189,53 @@ $_jade-text: #0d7a63;
   $padding-settings: (
     responsive: false,
   ),
+  // Borders and outlines: base class only. The fixtures use border-2px,
+  // border-primary, outline-2px, outline-accent-cool and underline-accent-cool.
+  $border-settings: (
+    responsive: false,
+    hover: false,
+  ),
+  $border-color-settings: (
+    responsive: false,
+    hover: false,
+  ),
+  $text-decoration-color-settings: (
+    hover: false,
+  ),
+  // Display, size and position: base class only. USWDS turns display and
+  // width responsive on; no fixture uses a display or width prefix.
+  $display-settings: (
+    responsive: false,
+  ),
+  $width-settings: (
+    responsive: false,
+  ),
+  // Order keeps USWDS's responsive prefixes (mobile-lg:, tablet:, desktop:):
+  // tokens-order/responsive-order.html uses tablet:order-first. Flex and the
+  // other flex helpers have no variants.
+  $order-settings: (
+    responsive: true,
+  ),
+  // Shadow keeps USWDS's hover variant (hover:shadow-4 in
+  // tokens-shadow/hover.html) and has no responsive one.
+  $box-shadow-settings: (
+    responsive: false,
+    hover: true,
+  ),
+  // Type utilities: base class only. USWDS turns the responsive prefixes on
+  // for font, font-weight, line-height and measure; no fixture uses one.
+  $font-settings: (
+    responsive: false,
+  ),
+  $font-weight-settings: (
+    responsive: false,
+  ),
+  $line-height-settings: (
+    responsive: false,
+  ),
+  $measure-settings: (
+    responsive: false,
+  ),
 
   // -------- Unused grades (set to false) --------
   $theme-color-primary-lightest: false,
@@ -201,25 +248,28 @@ $_jade-text: #0d7a63;
   $theme-color-accent-warm-darkest: false,
 
   // -------- Typography: Custom Typeface Tokens (T003) --------
+  // Each cap-height is 362px, the USWDS base optical size, so the four brand
+  // typefaces share one normalised size and line-height scale (font-body-sm is
+  // 1rem, as docs/styles/uswds-build-settings.md and the font-size page say).
   $theme-typeface-tokens: (
     'fredoka': (
       'display-name': 'Fredoka',
-      'cap-height': 364px,
+      'cap-height': 362px,
       'stack': "'Fredoka', system-ui, sans-serif",
     ),
     'nunito': (
       'display-name': 'Nunito',
-      'cap-height': 364px,
+      'cap-height': 362px,
       'stack': "'Nunito', system-ui, sans-serif",
     ),
     'poppins': (
       'display-name': 'Poppins',
-      'cap-height': 364px,
+      'cap-height': 362px,
       'stack': "'Poppins', system-ui, sans-serif",
     ),
     'montserrat': (
       'display-name': 'Montserrat',
-      'cap-height': 364px,
+      'cap-height': 362px,
       'stack': "'Montserrat', system-ui, sans-serif",
     ),
   ),
@@ -282,5 +332,11 @@ $_jade-text: #0d7a63;
   $theme-prose-font-family: 'body',
   $theme-heading-margin-top: 1.5em,
   $theme-paragraph-margin-top: 1em,
-  $theme-small-font-size: '2xs'
+  $theme-small-font-size: '2xs',
+
+  // -------- Typography: Font Weight Tokens --------
+  // semibold is on at 600 so text-semibold exists (Nunito SemiBold is loaded
+  // for UI labels); light, normal and bold stay at the USWDS defaults, and
+  // thin, medium and heavy stay off. See docs/styles/uswds-build-settings.md.
+  $theme-font-weight-semibold: 600
 );

@@ -499,8 +499,8 @@ deleted, and skipped:
   tests, the component-page records cache and the visual smoke tests. The
   deploy builds only the styles Storybook, once, with the `/styles/` base path.
 - In `fixtures.yml`: the `React fixture tests` job. The `Fixtures` job runs
-  only for the `tokens-color-theme-tokens` and `tokens-color-system-tokens`
-  folders (the `REENABLED_FOLDERS` variable); see [Fixtures in CI](../testing/fixtures.md#in-ci).
+  only for the `tokens-*` folders (the `REENABLED_FOLDERS` variable); see
+  [Fixtures in CI](../testing/fixtures.md#in-ci).
 
 The reason is that the component pages describe target `pathable-*` classes
 the SCSS does not have yet, so most checks would fail or test code being
