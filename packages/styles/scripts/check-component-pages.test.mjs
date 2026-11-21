@@ -773,7 +773,20 @@ test("a utility page lacks the sections of the kind, and uses no other kind's", 
     utilityFacts(),
   )
   assert.ok(includes(errors, 'missing section "## Classes"'))
-  assert.ok(includes(errors, 'missing section "## Sass"'))
+  assert.ok(includes(errors, 'missing section "## States"'))
+})
+
+test('a utility or token page has no Sass or Settings section', () => {
+  assert.ok(!UTILITY_SECTIONS.includes('Sass'))
+  assert.ok(!UTILITY_SECTIONS.includes('Settings'))
+  assert.ok(!TOKEN_SECTIONS.includes('Sass'))
+  assert.ok(!TOKEN_SECTIONS.includes('Settings'))
+  assert.deepEqual(TOKEN_SECTIONS.slice(0, 4), [
+    'When to use',
+    'Example',
+    'Values',
+    'Utilities',
+  ])
 })
 
 test('the classes in a utility page example must be in the compiled CSS', () => {
@@ -801,7 +814,7 @@ test('a utility or token page may not name a custom property or a usa- class', (
   assert.ok(
     includes(
       checkPage(named, utilityFacts()),
-      'USWDS emits no CSS custom properties',
+      'do not document custom properties',
     ),
   )
   const prefixed = utility(

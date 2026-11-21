@@ -29,30 +29,58 @@ its own heading in the styles `index.md`.
 
 | `kind`    | Documents                                                  | Slug                                                                    | Storybook section   |
 | --------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------- |
-| `token`   | A group of USWDS design tokens, read through Sass          | `tokens-<uswds path>`, the path under `/design-tokens/` with `/` as `-` | **Design tokens**   |
+| `token`   | A group of USWDS design tokens, as the CSS outputs them    | `tokens-<uswds path>`, the path under `/design-tokens/` with `/` as `-` | **Design tokens**   |
 | `utility` | A family of unprefixed USWDS utility classes               | `utilities-<uswds slug>`, the segment under `/utilities/`               | **Utilities**       |
 | `static`  | One component, with a `pathable-*` class and its modifiers | The component name, such as `button`                                    | **Component pages** |
 
 Utility and token pages describe names that USWDS does not prefix, which
-`@pathableai/styles` keeps unchanged (`margin-x-2`, `tablet:padding-3`,
-`units(2)`). They have no `styles-class` and no `variants`, and take a `uswds`
-link to the matching page on designsystem.digital.gov instead; a utility page
-also lists the unprefixed class patterns it defines in `classes`. A token page
-has no classes: its fixtures show the tokens through the utility classes that
-read them. The sections, in order:
+`@pathableai/styles` keeps unchanged (`margin-x-2`, `tablet:padding-3`). They
+have no `styles-class` and no `variants`, and take a `uswds` link to the
+matching page on designsystem.digital.gov instead; a utility page also lists
+the unprefixed class patterns it defines in `classes`. A token page has no
+classes: its fixtures show the tokens through the utility classes that read
+them. The sections, in order:
 
-- `utility`: When to use, Example, Classes, Variants, Sass, Settings, States,
-  Guarantees, The consumer owns.
-- `token`: When to use, Example, Tokens, Sass, Utilities, Settings, States,
-  Guarantees, The consumer owns.
+- `utility`: When to use, Example, Classes, Variants, States, Guarantees, The
+  consumer owns.
+- `token`: When to use, Example, Values, Utilities, States, Guarantees, The
+  consumer owns. **Values** is a table of token, PathAble value and notes,
+  marking each value as a brand choice or the USWDS default; **Utilities**
+  lists the class suffixes that encode the values, linking to the utility
+  pages.
 - `static`: When to use, Example, Variants, Composition, Guarantees, The
   consumer owns.
 
+**The public contract of a utility or token page is the compiled CSS only.**
+Consumers import `@pathableai/styles` as CSS. These pages therefore document
+class names and the values the classes output, and nothing else:
+
+- no Sass: no `@use`, no functions such as `units()` or `color()`, no `u-*`
+  or grid mixins, no `$theme-*` or `$*-settings` variables, and no
+  instruction to enable a class "through settings". A class the package does
+  not output is simply not in the contract; do not tell consumers how to turn
+  it on. There are no `## Sass` or `## Settings` sections;
+- no custom properties: runtime `--pathable-*` properties are documented
+  elsewhere, and the checker fails a utility or token page that names one. Do
+  not deny that they exist either;
+- guarantees are about compiled CSS for a class (selector, computed property
+  and value at PathAble defaults), never about Sass functions, and carry no
+  `status:` line;
+- where a value exists because of a PathAble brand choice, say so in plain
+  words ("PathAble outputs `text-semibold` at weight 600"). Where the USWDS
+  website differs from what 3.14.0 compiles, add one short note saying so.
+  How the package configures USWDS for the build is contributor material
+  (`docs/styles/uswds-build-settings.md`), not linked from these pages.
+
 A utility or token page needs no pixel baseline (it has no component to
-draw). It must have at
-least one fixture, shown with `<!-- examples -->` under **States**. Every
-other rule holds: one example, no `usa-` anywhere, and every class in an
-example, fixtures included, must be a class selector in the compiled CSS.
+draw). It must have at least one fixture, shown with `<!-- examples -->` under
+**States**. Every other rule holds: one example, no `usa-` anywhere, and every
+class in an example, fixtures included, must be a class selector in the
+compiled CSS.
+
+Links to another component page are plain relative links (`utilities-border.md`
+or `tokens-color.md#anchor`). They resolve as files in the styles package; the
+Storybook render rewrites each into the docs route of that page.
 
 ## What a page contains
 

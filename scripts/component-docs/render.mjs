@@ -7,14 +7,16 @@
  *   render(page, 'storybook', sources)  { mdx, stories } for the styles Storybook
  *
  * `page` is { slug, markdown, data }, as readPages() returns it. `sources` is
- * { fixtures, examples, component, notOffered }:
+ * { fixtures, examples, component, notOffered, titles }:
  * `fixtures` maps state to { description, html } (see sources.mjs);
  * `examples` maps state to React example module source, or is undefined when
  * the React package does not cover the component; `component` is the React
  * component name when it does; `notOffered` maps the states React does not
  * offer to the reason (the fixture manifest's `notOffered`). The React page
  * leaves those states out of `<!-- examples -->`, and Storybook shows them
- * with only the HTML tab.
+ * with only the HTML tab. `titles` (Storybook target only, optional) maps the
+ * slug of every page that has a Storybook page to its title, so a link to
+ * another page can be rewritten to its docs route (rewritePageLinks).
  *
  * A page with no placeholder renders to itself, byte for byte, for the
  * Markdown targets.
@@ -244,6 +246,52 @@ function renderStories(page, sources) {
 export const storybookSection = (kind) =>
   ({ token: 'Design tokens', utility: 'Utilities' })[kind] ?? 'Component pages'
 
+/**
+ * Storybook's id for a title, as its `sanitize` makes it: lower case, every
+ * character that is not a letter or digit becomes a dash, dashes collapse and
+ * are trimmed. `Utilities/Border` gives `utilities-border`.
+ */
+export const storybookId = (title) =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]/gu, '-')
+    .replace(/-+/gu, '-')
+    .replace(/^-|-$/gu, '')
+
+/**
+ * The docs route of a page in the Storybook, as a path the docs `<a>` turns
+ * into a link on the top window (`/docs/<id>` becomes `./?path=/docs/<id>`
+ * with `target="_top"`, so it leaves the preview iframe).
+ */
+export const storybookDocsPath = (title) => `/docs/${storybookId(title)}--docs`
+
+/** The sidebar title `renderMdx` gives a page. */
+export const storybookTitle = (page) =>
+  `${storybookSection(page.data?.kind)}/${page.data?.name ?? page.slug}`
+
+/**
+ * Rewrites a relative link to another component page (`foo.md`,
+ * `./foo.md#anchor`) into that page's Storybook docs route. `titles` maps a
+ * slug to its Storybook title; a link to a page with no Storybook page, or to
+ * anything else, is left as written. Fenced code is not touched.
+ */
+export function rewritePageLinks(text, titles) {
+  if (!titles || titles.size === 0) return text
+  const link = /\]\((?:\.\/)?([a-z0-9][a-z0-9-]*)\.md(#[^)\s]*)?\)/gu
+  return text
+    .split(/(^```[\s\S]*?^```$)/gmu)
+    .map((part, index) =>
+      index % 2 === 1
+        ? part
+        : part.replace(link, (whole, slug, anchor = '') =>
+            titles.has(slug)
+              ? `](${storybookDocsPath(titles.get(slug))}${anchor})`
+              : whole,
+          ),
+    )
+    .join('')
+}
+
 /** The MDX page: the shared prose, with each example as a live preview. */
 function renderMdx(page, name, sources) {
   // Segment the whole page, so problems cite source line numbers, then drop
@@ -256,7 +304,9 @@ function renderMdx(page, name, sources) {
 
   const markdown = (text) =>
     trimNewlines(text)
-      ? [`<Markdown>{${literal(trimNewlines(text))}}</Markdown>`]
+      ? [
+          `<Markdown>{${literal(rewritePageLinks(trimNewlines(text), sources.titles))}}</Markdown>`,
+        ]
       : []
   // Each story is previewed once per page: a second live preview of the same
   // fixture would repeat its ids, and its ID references could resolve to the

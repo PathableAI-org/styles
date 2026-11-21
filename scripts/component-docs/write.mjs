@@ -21,7 +21,7 @@ import {
 
 import prettier from 'prettier'
 
-import { render } from './render.mjs'
+import { render, storybookTitle } from './render.mjs'
 import { ComponentDocsError } from './segments.mjs'
 import {
   readCoverage,
@@ -60,6 +60,16 @@ export async function renderTarget(target, { pages, coverage } = {}) {
   coverage ??= target === 'styles' ? new Map() : await readCoverage()
   const files = new Map()
   const problems = []
+  // The Storybook docs route of each page that has a Storybook page, for the
+  // links between pages (a Markdown link to `other.md` does not route there).
+  const titles =
+    target === 'storybook'
+      ? new Map(
+          pages
+            .filter((page) => readFixtures(page.slug).size > 0)
+            .map((page) => [page.slug, storybookTitle(page)]),
+        )
+      : undefined
 
   for (const page of pages) {
     try {
@@ -75,7 +85,10 @@ export async function renderTarget(target, { pages, coverage } = {}) {
         }
       } else if (target === 'storybook') {
         if (sources.fixtures.size > 0) {
-          const { mdx, stories } = render(page, 'storybook', sources)
+          const { mdx, stories } = render(page, 'storybook', {
+            ...sources,
+            titles,
+          })
           files.set(`${page.slug}.mdx`, mdx)
           files.set(`${page.slug}.stories.ts`, stories)
         }

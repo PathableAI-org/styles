@@ -22,20 +22,22 @@
  *     owns. Everything below that is not marked otherwise applies to it.
  *   - `utility`, a family of USWDS utility classes (slug `utilities-<uswds
  *     slug>`): `uswds` and a non-empty `classes` list of unprefixed class
- *     patterns, and the sections When to use, Example, Classes, Variants, Sass,
- *     Settings, States, Guarantees and The consumer owns, in that order.
+ *     patterns, and the sections When to use, Example, Classes, Variants, States,
+ *     Guarantees and The consumer owns, in that order.
  *   - `token`, a USWDS design token group (slug `tokens-<uswds path>`): `uswds`
- *     and no `classes`, and the sections When to use, Example, Tokens, Sass,
- *     Utilities, Settings, States, Guarantees and The consumer owns, in order.
+ *     and no `classes`, and the sections When to use, Example, Values, Utilities,
+ *     States, Guarantees and The consumer owns, in order.
+ *     The public contract of both is the compiled CSS only: the pages
+ *     document class names and the values they output, never a Sass API.
  * `utility` and `token` pages have no `styles-class` and no `variants` (both
  * are rejected), because they describe unprefixed USWDS names rather than one
  * `pathable-*` component with modifiers. The class of a variant, the variant
  * rules, the "every modifier is a variant" rule and the custom property rule
  * (`--name` in prose must be used by the component's rules) are therefore
  * `static` only; a utility or token page that names a `--custom-property`
- * fails, because USWDS emits none. The pixel baseline rule is `static` only
+ * fails, because runtime properties are documented elsewhere. The pixel baseline rule is `static` only
  * too, by decision: a utility or token page has no component to draw, and its
- * guarantees are facts about computed CSS or Sass output that a play function
+ * guarantees are facts about computed CSS that a play function
  * cites. Every other rule applies to all three kinds: the guarantees, the
  * title and summary paragraph, no `usa-` anywhere, exactly one html example,
  * and every class in an html example (fixtures included) being a class
@@ -164,8 +166,6 @@ export const UTILITY_SECTIONS = [
   'Example',
   'Classes',
   'Variants',
-  'Sass',
-  'Settings',
   'States',
   'Guarantees',
   'The consumer owns',
@@ -174,10 +174,8 @@ export const UTILITY_SECTIONS = [
 export const TOKEN_SECTIONS = [
   'When to use',
   'Example',
-  'Tokens',
-  'Sass',
+  'Values',
   'Utilities',
-  'Settings',
   'States',
   'Guarantees',
   'The consumer owns',
@@ -550,7 +548,7 @@ function checkNames(page, css, errors) {
   for (const token of named(/`(--[a-z0-9-]+)`/gu)) {
     if (isUswdsPage(page)) {
       errors.push(
-        `the page names \`${token}\`, but USWDS emits no CSS custom properties; document the Sass token instead`,
+        `the page names \`${token}\`, but utility and token pages do not document custom properties; they are documented elsewhere`,
       )
     } else if (!used.has(token)) {
       errors.push(
