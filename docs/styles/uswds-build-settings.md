@@ -322,17 +322,14 @@ map is `()` everywhere, so no extra token has a class.
 While the styles refactor catches up
 ([target state](../engineering/target-state.md)), `_uswds-theme.scss` turns
 the `responsive` and `hover` variants off for every module whose table row says
-otherwise, except where a `tokens-*` fixture uses one: `order` keeps
-`mobile-lg:`, `tablet:` and `desktop:` (`tablet:order-first`) and `box-shadow`
-keeps `hover:` (`hover:shadow-4`). A variant joins the build when a fixture
-needs it. The build outputs only the modules that `_uswds-utility-classes.scss`
-lists, which are the ones the `tokens-*` fixtures use: `add-list-reset`,
-`align-items`, `background-color`, `border`, `border-color`, `box-shadow`,
-`color`, `display`, `flex`, `flex-direction`, `font`, `font-family`,
-`font-weight`, `height`, `letter-spacing`, `line-height`, `margin`,
-`max-width`, `measure`, `opacity`, `order`, `outline`, `outline-color`,
-`padding`, `position`, `text-align`, `text-decoration-color`,
-`text-transform`, `width` and `z-index`.
+otherwise, except where a `tokens-*` or `utilities-*` fixture uses one: `order`,
+`display`, `font`, `line-height`, `measure`, `margin`, `padding`, `border` and
+`border-radius` keep `mobile-lg:`, `tablet:` and `desktop:` (for example
+`tablet:order-first`, `tablet:display-none`, `tablet:padding-4`), and
+`box-shadow`, `color` and `background-color` keep `hover:` (`hover:shadow-4`,
+`hover:bg-primary`). A variant joins the build when a fixture needs it. The
+build outputs every USWDS utility module except `cursor`, which no page uses;
+`_uswds-utility-classes.scss` lists them in USWDS's order.
 
 The value sets are the `default` palette of each module (for example
 `$font-weight-palettes`, `$measure-palettes`, `$box-shadow-palettes`). The

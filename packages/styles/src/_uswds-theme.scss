@@ -168,7 +168,8 @@ $_jade-text: #0d7a63;
 
   // -------- USWDS utility classes (same names as USWDS) --------
   // _uswds-utility-classes.scss emits the unprefixed utilities. These settings
-  // keep them to the base class (no responsive or hover variants). The global
+  // keep them to the base class unless a fixture uses a responsive or hover
+  // variant (the notes beside each setting say which). The global
   // colour palette feeds bg-* and text-*: USWDS's default colour palette, which
   // is the theme tokens (primary, secondary, accent-*, base, ink), the state
   // tokens (error, warning, success, info, disabled), the grayscale tokens
@@ -177,34 +178,56 @@ $_jade-text: #0d7a63;
   // out the numbered system colours (red-50v, gray-cool-60), which get no
   // class, as docs/styles/uswds-build-settings.md says.
   $global-color-palettes: ('palette-color-default'),
+  // Colour keeps USWDS's hover variant (hover:bg-primary and hover:text-white
+  // in utilities-color/hover.html).
   $color-settings: (
-    hover: false,
+    hover: true,
   ),
   $background-color-settings: (
-    hover: false,
+    hover: true,
   ),
+  // Margin and padding keep USWDS's responsive prefixes (tablet:padding-4 and
+  // mobile-lg:padding-3 in utilities-margin-and-padding/responsive.html).
   $margin-settings: (
-    responsive: false,
+    responsive: true,
   ),
   $padding-settings: (
-    responsive: false,
+    responsive: true,
   ),
-  // Borders and outlines: base class only. The fixtures use border-2px,
-  // border-primary, outline-2px, outline-accent-cool and underline-accent-cool.
+  // Borders and outlines. Border keeps the responsive prefixes
+  // (tablet:border-2px in utilities-border/responsive.html) and radius keeps
+  // them too (tablet:radius-lg). Border colour, width, style and the outline
+  // utilities stay on the base class; the fixtures use border-primary,
+  // outline-2px, outline-accent-cool and underline-accent-cool.
   $border-settings: (
-    responsive: false,
+    responsive: true,
     hover: false,
   ),
   $border-color-settings: (
     responsive: false,
     hover: false,
   ),
+  $border-radius-settings: (
+    responsive: true,
+    hover: false,
+  ),
+  $border-style-settings: (
+    responsive: false,
+  ),
+  $border-width-settings: (
+    responsive: false,
+  ),
   $text-decoration-color-settings: (
     hover: false,
   ),
-  // Display, size and position: base class only. USWDS turns display and
-  // width responsive on; no fixture uses a display or width prefix.
+  // Display keeps USWDS's responsive prefixes (tablet:display-block and
+  // tablet:display-none in utilities-display/show-and-hide.html). Width and
+  // the other size and position utilities stay on the base class; USWDS turns
+  // width responsive on, but no fixture uses a width prefix.
   $display-settings: (
+    responsive: true,
+  ),
+  $justify-content-settings: (
     responsive: false,
   ),
   $width-settings: (
@@ -222,19 +245,21 @@ $_jade-text: #0d7a63;
     responsive: false,
     hover: true,
   ),
-  // Type utilities: base class only. USWDS turns the responsive prefixes on
-  // for font, font-weight, line-height and measure; no fixture uses one.
+  // Type utilities keep USWDS's responsive prefixes for font
+  // (desktop:font-body-lg), line-height (tablet:line-height-body-6) and
+  // measure (desktop:measure-4); font-weight stays on the base class because
+  // no fixture uses a weight prefix.
   $font-settings: (
-    responsive: false,
+    responsive: true,
   ),
   $font-weight-settings: (
     responsive: false,
   ),
   $line-height-settings: (
-    responsive: false,
+    responsive: true,
   ),
   $measure-settings: (
-    responsive: false,
+    responsive: true,
   ),
 
   // -------- Unused grades (set to false) --------
