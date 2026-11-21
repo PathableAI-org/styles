@@ -56,12 +56,14 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
-```html
-<h3>
-  Job coaching referral
-  <span class="pathable-tag">Pending</span>
-</h3>
-```
+<!-- example: default -->
+
+## States
+
+Each state is complete markup for one use of the tag. Copy the one closest to
+what you need.
+
+<!-- examples -->
 
 ## Variants
 
@@ -78,7 +80,8 @@ The big tag changes only the font size; the padding is the same.
 
 None. The font size, padding, corner radius and colours are fixed values in
 the stylesheet, so a theme does not change them. The tag sets no line height, so
-its height follows the line height of the text around it.
+its height follows the line height of the text around it; this was checked
+against the compiled stylesheet.
 
 ## Composition
 
