@@ -1,0 +1,36 @@
+// ==========================================
+// USWDS utilities under their own names
+// ==========================================
+//
+// Emits the unprefixed USWDS utility classes (bg-primary, text-white,
+// padding-2, margin-bottom-1, add-list-reset) that the target-state document
+// says are re-exported unchanged. USWDS generates them with its own utility
+// builder and rule definitions. The colour values come from the theme tokens
+// set in _uswds-theme.scss, which also holds the per-utility settings
+// (responsive and state variants are off).
+//
+// The modules are listed here one by one instead of loading the whole
+// `uswds-utilities` package: that package renders some rules (add-aspect)
+// regardless of $output-these-utilities. Add a module to $-utilities when a
+// fixture or component page needs one more. Loading this file emits the CSS;
+// nothing is forwarded.
+//
+// ==========================================
+
+@use 'sass:map';
+@use 'uswds-core/src/styles/mixins/utility-builder' as builder;
+@use 'uswds-utilities/src/styles/rules/add-list-reset';
+@use 'uswds-utilities/src/styles/rules/background-color';
+@use 'uswds-utilities/src/styles/rules/color';
+@use 'uswds-utilities/src/styles/rules/margin';
+@use 'uswds-utilities/src/styles/rules/padding';
+
+$-utilities: map.merge(
+  map.merge(
+    add-list-reset.$add-list-reset,
+    background-color.$u-background-color
+  ),
+  map.merge(color.$u-color, map.merge(margin.$u-margin, padding.$u-padding))
+);
+
+@include builder.render-utilities-in($-utilities);

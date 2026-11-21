@@ -24,6 +24,10 @@
 //   @forward 'pathable-component-wrappers/pathable-form-controls';
 @forward 'pathable-component-wrappers';
 
+// USWDS utilities (unprefixed, same names as USWDS). Before the
+// .pathable-* utilities so those still win on equal specificity.
+@forward '_uswds-utility-classes';
+
 // Utilities come last so a .pathable-* utility overrides a component class
 // that sets the same property. Both have one-class specificity, so the later
 // rule wins.

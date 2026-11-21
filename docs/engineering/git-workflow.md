@@ -488,9 +488,9 @@ and the build in `docs-deploy.yml`, which publishes it to GitHub Pages from
 deleted, and skipped:
 
 - In `ci-full.yml`: `js-lint` (ESLint and the repository tooling tests),
-  `stylelint` (including the token lint), `format` (Prettier),
-  `react-typecheck`, `react-build`, `next-consumer` and
-  `agent-guidance-impact`.
+  `format` (Prettier), `react-typecheck`, `react-build`, `next-consumer` and
+  `agent-guidance-impact`. The `stylelint` job (including the token lint) is
+  enabled again: on a pull request it lints only the changed `.scss` files.
 - In `storybook-quality.yml`: the accessibility tests (styles and React),
   `visual-smoke`, `pixels-styles`, `coverage`, `quality-gates` and
   `component-pages`. The build no longer builds `@pathableai/react` or the
@@ -498,7 +498,9 @@ deleted, and skipped:
 - In `docs-deploy.yml`: the token lint, Storybook coverage, the accessibility
   tests, the component-page records cache and the visual smoke tests. The
   deploy builds only the styles Storybook, once, with the `/styles/` base path.
-- In `fixtures.yml`: both the `Fixtures` and the `React fixture tests` jobs.
+- In `fixtures.yml`: the `React fixture tests` job. The `Fixtures` job runs
+  only for the `tokens-color-theme-tokens` folder (the `REENABLED_FOLDERS`
+  variable); see [Fixtures in CI](../testing/fixtures.md#in-ci).
 
 The reason is that the component pages describe target `pathable-*` classes
 the SCSS does not have yet, so most checks would fail or test code being

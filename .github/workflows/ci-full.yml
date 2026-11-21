@@ -312,10 +312,12 @@ jobs:
       - name: Markdownlint
         run: pnpm lint:md
 
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
+  # Re-enabled for SCSS changes (docs/engineering/target-state.md): on a pull
+  # request it lints only the changed files, so a change to the SCSS is checked
+  # while the rest of the package is still being refactored.
   stylelint:
     needs: changes
-    if: false
+    if: needs.changes.outputs.stylelint == 'true'
     name: Stylelint
     runs-on: ubuntu-latest
     steps:

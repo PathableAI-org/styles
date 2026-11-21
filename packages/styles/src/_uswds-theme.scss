@@ -166,6 +166,26 @@ $_jade-text: #0d7a63;
   // -------- Suppress notifications --------
   $theme-show-notifications: false,
 
+  // -------- USWDS utility classes (same names as USWDS) --------
+  // _uswds-utility-classes.scss emits the unprefixed utilities. These settings
+  // keep them to the base class (no responsive or hover variants). The global
+  // colour palette feeds bg-* and text-*: the theme tokens (primary,
+  // secondary, accent-*, base, ink) plus USWDS's always-present transparent,
+  // black and white, not the USWDS system colours.
+  $global-color-palettes: ('palette-color-theme'),
+  $color-settings: (
+    hover: false,
+  ),
+  $background-color-settings: (
+    hover: false,
+  ),
+  $margin-settings: (
+    responsive: false,
+  ),
+  $padding-settings: (
+    responsive: false,
+  ),
+
   // -------- Unused grades (set to false) --------
   $theme-color-primary-lightest: false,
   $theme-color-primary-darkest: false,

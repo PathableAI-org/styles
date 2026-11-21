@@ -3,4 +3,6 @@
 // Configure USWDS before loading any PathAble additions.
 @forward 'uswds-theme';
 
+@forward '_uswds-utility-classes';
+
 @forward '_utilities';

@@ -130,7 +130,9 @@ acceptable:
 - the `Fixtures` workflow's contract step, and the axe step it causes to be
   skipped;
 - the jobs and steps gated `if: false` (package lint and the component-page
-  checks in CI);
+  checks in CI), except that the `stylelint` job runs again on changed SCSS
+  files, and the `Fixtures` job runs for the `tokens-color-theme-tokens` folder
+  only (the other folders stay unchecked until the SCSS catches up);
 - `check:component-pages`, which fails by design when run locally.
 
 Nothing else is excused. A new failure that a change introduces is not
@@ -161,8 +163,9 @@ State on `main` at `b643e6e`:
   reads every check run on the head, so a red Fixtures run blocks agent merge
   and a person has to merge; see
   [Git workflow](git-workflow.md#the-merge-gate).
-- The package lint (ESLint, stylelint, markdownlint, token lint, Prettier) and
-  the component-page checks are gated `if: false` in the workflows and skipped.
+- The package lint (ESLint, markdownlint, token lint, Prettier) and the
+  component-page checks are gated `if: false` in the workflows and skipped;
+  stylelint runs again on changed SCSS files.
   `check:component-pages` fails by design when run locally.
 - `ci-full.yml` and `storybook-quality.yml` run on pull requests and on `workflow_dispatch`, not on pushes to `main`.
 

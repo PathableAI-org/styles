@@ -182,25 +182,29 @@ push to `main`. Its `fixtures` job skips a pull request that changes only
 files under `packages/react/`, and says so in its job summary; otherwise it:
 
 1. builds `@pathableai/styles`;
-2. runs ESLint, markdownlint and Prettier on `fixtures/`, because CI Full's
-   lint jobs filter on `packages/`, `apps/` and `scripts/` and skip a pull
-   request that changes only `fixtures/` (temporarily disabled for the
-   component reset, PR #607, along with the package lint);
+2. runs markdownlint and Prettier on the re-enabled folders (see below),
+   because CI Full's lint jobs filter on `packages/`, `apps/` and `scripts/`
+   and skip a pull request that changes only `fixtures/`;
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
 4. selects folders with `select.mjs`;
-5. runs html-validate on every fixture when a file under `fixtures/` or
-   `pnpm-lock.yaml` changed (the lockfile can change the html-validate
-   version), and skips it otherwise;
-6. runs the contract check and axe on the selected folders, and skips them
-   when none was selected, except that the contract also runs, on every
-   folder, when a file under `fixtures/` changed, so its `folders.json`
-   check catches a deleted folder;
+5. keeps only the selected folders that are re-enabled (see below);
+6. runs html-validate, the contract check and axe on those folders, and skips
+   them when none remains;
 7. uploads the axe report as the `fixtures-axe-report` artifact.
 
 The job summary lists each selected folder with its reasons, and says
 explicitly when no folder was selected. On `main`, and on a pull request that
-changes the workflow, every folder is checked. It is not a required check.
+changes the workflow, every folder is selected. It is not a required check.
+
+**Only some folders are re-enabled.** While the styles refactor catches up
+([target state](../engineering/target-state.md)), the workflow checks only
+the folders listed in its `REENABLED_FOLDERS` variable, currently
+`tokens-color-theme-tokens`: the lint step, html-validate, the contract and
+axe run for that folder alone, and only when it is selected. The other folders
+are not checked in CI, and the React fixture tests job stays disabled. A
+folder joins the list when its contract and axe checks pass against the
+compiled CSS.
 
 ## React fixture tests
 
