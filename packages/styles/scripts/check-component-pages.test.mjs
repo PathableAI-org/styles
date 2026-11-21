@@ -3,6 +3,8 @@ import test from 'node:test'
 
 import {
   REQUIRED_SECTIONS,
+  TOKEN_SECTIONS,
+  UTILITY_SECTIONS,
   checkExecuted,
   checkPage,
   checkPixelCitations,
@@ -639,4 +641,218 @@ test('fails on a placeholder only the Storybook page resolves', () => {
   assert.ok(
     includes(errors, 'fixtures/widget/missing-state.html does not exist'),
   )
+})
+
+// --- Utility and token pages ----------------------------------------------
+
+const sectionsText = (names) =>
+  names.map((name) => `## ${name}\n\nText.\n`).join('\n')
+
+const utilityFront = `---
+name: Spacing
+slug: utilities-spacing
+kind: utility
+summary: Space utilities.
+uswds: https://designsystem.digital.gov/utilities/spacing/
+classes:
+  - margin-<value>
+guarantees:
+  - id: margin-2
+    status: unverified
+    claim: margin-2 sets margin to 1rem.
+---
+`
+const uswdsBody = (names, example = '<span class="margin-2"></span>') => `
+# Spacing
+
+Space utilities. Used a lot.
+
+${sectionsText(names)
+  .replace('## States\n\nText.', '## States\n\n<!-- examples -->')
+  .replace(
+    '## Example\n\nText.',
+    `## Example\n\n\`\`\`html\n${example}\n\`\`\``,
+  )}`
+const utility = (front = utilityFront, body = uswdsBody(UTILITY_SECTIONS)) => ({
+  ...page(front + body),
+  slug: front.match(/^slug: (.+)$/mu)[1],
+})
+const utilityCss = () => readCss('.margin-2 { margin: 1rem; }')
+const utilityFacts = () => ({ css: utilityCss(), pixels: [] })
+
+test('a utility page with no class, variants or pixel baseline passes', () => {
+  assert.deepEqual(checkPage(utility(), utilityFacts()), [])
+})
+
+test('a utility page is rejected for styles-class, variants and a missing uswds link', () => {
+  const extra = utilityFront.replace(
+    'classes:',
+    'styles-class: pathable-widget\nvariants: []\nclasses:',
+  )
+  const errors = checkPage(utility(extra), utilityFacts())
+  assert.ok(includes(errors, 'a utility page has no "styles-class"'))
+  assert.ok(includes(errors, 'a utility page has no "variants"'))
+  const bare = utilityFront.replace(/^uswds:.*\n/mu, '')
+  assert.ok(
+    includes(
+      checkPage(utility(bare), utilityFacts()),
+      'missing front matter field "uswds"',
+    ),
+  )
+})
+
+test('a utility page needs a non-empty classes list and a USWDS utilities link', () => {
+  const empty = utilityFront.replace(
+    'classes:\n  - margin-<value>',
+    'classes: []',
+  )
+  assert.ok(
+    includes(
+      checkPage(utility(empty), utilityFacts()),
+      'at least one class pattern',
+    ),
+  )
+  const elsewhere = utilityFront.replace(
+    'designsystem.digital.gov',
+    'example.com',
+  )
+  assert.ok(
+    includes(
+      checkPage(utility(elsewhere), utilityFacts()),
+      '"uswds" must be a https://designsystem.digital.gov/utilities/',
+    ),
+  )
+  const slug = utilityFront.replace('slug: utilities-spacing', 'slug: spacing')
+  assert.ok(
+    includes(
+      checkPage({ ...utility(slug), slug: 'spacing' }, utilityFacts()),
+      'slug must start with "utilities-"',
+    ),
+  )
+})
+
+test('a token page has no classes field and its own sections, in order', () => {
+  const front = utilityFront
+    .replace(/classes:\n {2}- margin-<value>\n/u, '')
+    .replace('utilities-spacing', 'tokens-spacing')
+    .replace('/utilities/', '/design-tokens/')
+    .replace('kind: utility', 'kind: token')
+  const token = (names) => page(front + uswdsBody(names))
+  const ok = { ...token(TOKEN_SECTIONS), slug: 'tokens-spacing' }
+  assert.deepEqual(checkPage(ok, utilityFacts()), [])
+
+  const swapped = [...TOKEN_SECTIONS]
+  ;[swapped[2], swapped[3]] = [swapped[3], swapped[2]]
+  const errors = checkPage(
+    { ...token(swapped), slug: 'tokens-spacing' },
+    utilityFacts(),
+  )
+  assert.ok(includes(errors, 'the sections must come in this order'))
+
+  const withClasses = front.replace(
+    'guarantees:',
+    'classes:\n  - a\nguarantees:',
+  )
+  assert.ok(
+    includes(
+      checkPage(
+        {
+          ...page(withClasses + uswdsBody(TOKEN_SECTIONS)),
+          slug: 'tokens-spacing',
+        },
+        utilityFacts(),
+      ),
+      'unknown front matter field "classes"',
+    ),
+  )
+})
+
+test("a utility page lacks the sections of the kind, and uses no other kind's", () => {
+  const errors = checkPage(
+    utility(utilityFront, uswdsBody(REQUIRED_SECTIONS)),
+    utilityFacts(),
+  )
+  assert.ok(includes(errors, 'missing section "## Classes"'))
+  assert.ok(includes(errors, 'missing section "## Sass"'))
+})
+
+test('the classes in a utility page example must be in the compiled CSS', () => {
+  const unknown = utility(
+    utilityFront,
+    uswdsBody(UTILITY_SECTIONS, '<span class="margin-2 margin-99"></span>'),
+  )
+  assert.deepEqual(checkPage(unknown, utilityFacts()), [
+    'the html example uses .margin-99, which the compiled CSS does not define',
+  ])
+})
+
+test('reads a responsive utility class, escaped in the CSS, by its unescaped name', () => {
+  const responsive = readCss(
+    '@media (min-width: 40em) { .tablet\\:margin-2 { margin: 1rem } }',
+  )
+  assert.ok(responsive.classes.has('tablet:margin-2'))
+})
+
+test('a utility or token page may not name a custom property or a usa- class', () => {
+  const named = utility(
+    utilityFront,
+    uswdsBody(UTILITY_SECTIONS) + '\nUse `--margin-gap`.\n',
+  )
+  assert.ok(
+    includes(
+      checkPage(named, utilityFacts()),
+      'USWDS emits no CSS custom properties',
+    ),
+  )
+  const prefixed = utility(
+    utilityFront,
+    uswdsBody(UTILITY_SECTIONS) + '\nSee usa-sr-only.\n',
+  )
+  assert.ok(
+    includes(checkPage(prefixed, utilityFacts()), 'must not mention usa-'),
+  )
+})
+
+test('a utility page shows its fixtures under States', () => {
+  const states =
+    utilityFront +
+    uswdsBody(UTILITY_SECTIONS, '<!-- example: spaced -->')
+      .replace('## States\n\nText.', '## States\n\n<!-- examples -->')
+      .replace(
+        '```html\n<!-- example: spaced -->\n```',
+        '<!-- example: spaced -->',
+      )
+  const fixtureSources = {
+    fixtures: new Map([
+      ['spaced', { html: '<span class="margin-2"></span>\n' }],
+    ]),
+    examples: undefined,
+    component: undefined,
+  }
+  const { page: rendered, errors } = renderForCheck(
+    utility(states, ''),
+    fixtureSources,
+  )
+  assert.deepEqual(errors, [])
+  assert.deepEqual(checkPage(rendered, utilityFacts()), [])
+
+  const missing = states.replace('<!-- examples -->', 'Nothing.')
+  const bare = renderForCheck(utility(missing, ''), fixtureSources)
+  assert.ok(
+    includes(checkPage(bare.page, utilityFacts()), '"<!-- examples -->"'),
+  )
+})
+
+test('the index groups tokens, utilities and components, naming a class only for components', () => {
+  const index = renderIndex([page(), utility()])
+  assert.ok(index.indexOf('## Utilities') < index.indexOf('## Components'))
+  assert.ok(
+    index.includes(
+      '\n- [Spacing](widget.md) (utility): Space utilities.\n'.replace(
+        'widget.md',
+        'widget.md',
+      ),
+    ),
+  )
+  assert.ok(!index.includes('## Design tokens'))
 })

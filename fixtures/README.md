@@ -33,7 +33,16 @@ fixtures/
 - A component folder's name is the slug of a page in
   [`components/`](../components/), such as
   `button` for `button.md`. `harness/` is the only other folder
-  allowed.
+  allowed. The same holds for the other kinds of page: `utilities-<uswds slug>`
+  for a utility page (`utilities-margin-and-padding`) and `tokens-<uswds path>`
+  for a token page (`tokens-spacing-units`), which show unprefixed USWDS
+  classes such as `margin-x-2` or `bg-primary` rather than `pathable-*`
+  classes. The contract check reads only `pathable-*` classes and only the
+  variants of a component page, so a utility or token folder owes no modifier
+  fixtures; the component-page check still requires every class in its
+  examples to be in the compiled CSS. On Storybook each fixture is a story
+  under **Fixtures**; the page itself is under **Utilities** or
+  **Design tokens**.
 - Every component folder is listed in [`folders.json`](folders.json), and
   every listed folder exists. The contract check compares the two both ways,
   so a folder cannot disappear unnoticed: removing one means editing the list

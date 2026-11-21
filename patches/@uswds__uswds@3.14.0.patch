@@ -1,9 +1,9 @@
 diff --git a/packages/usa-button/src/index.js b/packages/usa-button/src/index.js
-index 2bdf7f50d11d1da74051a11b6e8fc8273d144220..8e4fe638dd8ada3b530bacc3cfaa70b5ec134b1c 100644
+index a6011dc477267c77b53b2944ae61b53662bf5829..e8483fe16c388521ec5d1808160a3eecd06551af 100644
 --- a/packages/usa-button/src/index.js
 +++ b/packages/usa-button/src/index.js
 @@ -1,7 +1,7 @@
- const keymap = require("receptor/keymap");
+ const keymap = require("../../uswds-core/src/js/utils/keymap");
  const behavior = require("../../uswds-core/src/js/utils/behavior");
  
 -const ANCHOR_BUTTON = `a[class*="usa-button"]`;
@@ -12,23 +12,21 @@ index 2bdf7f50d11d1da74051a11b6e8fc8273d144220..8e4fe638dd8ada3b530bacc3cfaa70b5
  const toggleButton = (event) => {
    event.preventDefault();
 diff --git a/packages/usa-character-count/src/index.js b/packages/usa-character-count/src/index.js
-index 8662aa52e5a5871ee7d0f1043abdcd2c4f0d872e..af97e5c491c6cbc747277d81e3c53e52fa7c89a8 100644
+index 3aa8b192aac016c44c2957d77f44361a10fef4fe..8c40047ff579e43e2cbaa20730aac848cdc193e1 100644
 --- a/packages/usa-character-count/src/index.js
 +++ b/packages/usa-character-count/src/index.js
-@@ -77,10 +77,10 @@ const createStatusMessages = (characterCountEl) => {
-   const maxLength = characterCountEl.dataset.maxlength;
+@@ -92,8 +92,8 @@ const createStatusMessages = (characterCountEl) => {
+   const maxLength = getMaxLength(characterCountEl);
    const defaultMessage = `${maxLength} ${DEFAULT_STATUS_LABEL}`;
  
--  statusMessage.classList.add(`${STATUS_MESSAGE_CLASS}`, "usa-hint");
-+  statusMessage.classList.add(`${STATUS_MESSAGE_CLASS}`, "pathable-hint");
-   srStatusMessage.classList.add(
-     `${STATUS_MESSAGE_SR_ONLY_CLASS}`,
--    "usa-sr-only",
-+    "pathable-sr-only",
-   );
+-  statusMessage.classList.add(STATUS_MESSAGE_CLASS, "usa-hint");
+-  srStatusMessage.classList.add(STATUS_MESSAGE_SR_ONLY_CLASS, "usa-sr-only");
++  statusMessage.classList.add(STATUS_MESSAGE_CLASS, "pathable-hint");
++  srStatusMessage.classList.add(STATUS_MESSAGE_SR_ONLY_CLASS, "pathable-sr-only");
  
    statusMessage.setAttribute("aria-hidden", true);
-@@ -185,7 +185,7 @@ const enhanceCharacterCount = (inputEl) => {
+ 
+@@ -252,7 +252,7 @@ const enhanceCharacterCount = (inputEl) => {
    const { characterCountEl, messageEl } = getCharacterCountElements(inputEl);
  
    // Hide hint and remove aria-live for backwards compatibility
@@ -38,30 +36,36 @@ index 8662aa52e5a5871ee7d0f1043abdcd2c4f0d872e..af97e5c491c6cbc747277d81e3c53e52
  
    setDataLength(inputEl);
 diff --git a/packages/usa-combo-box/src/index.js b/packages/usa-combo-box/src/index.js
-index dacdf97d3103613eadfb51702f15557900ff1838..f3a704ad0dd3fd63fdfb49696d4a19951b5ed923 100644
+index 063703e6e300d3aa0a25ce74305e65a642611318..e47c727ae61030ada5450dc6a70940feae87f259 100644
 --- a/packages/usa-combo-box/src/index.js
 +++ b/packages/usa-combo-box/src/index.js
-@@ -23,10 +23,10 @@
+@@ -20,16 +20,16 @@ const LIST_OPTION_FOCUSED_CLASS = `${LIST_OPTION_CLASS}--focused`;
+ const LIST_OPTION_SELECTED_CLASS = `${LIST_OPTION_CLASS}--selected`;
+ const STATUS_CLASS = `${COMBO_BOX_CLASS}__status`;
+ 
 -const COMBO_BOX = `.${COMBO_BOX_CLASS}`;
-+const COMBO_BOX = `.${COMBO_BOX_CLASS}:not([data-react-owned])`;
 -const SELECT = `.${SELECT_CLASS}`;
-+const SELECT = `${COMBO_BOX} .${SELECT_CLASS}`;
 -const INPUT = `.${INPUT_CLASS}`;
-+const INPUT = `${COMBO_BOX} .${INPUT_CLASS}`;
 -const CLEAR_INPUT_BUTTON = `.${CLEAR_INPUT_BUTTON_CLASS}`;
-+const CLEAR_INPUT_BUTTON = `${COMBO_BOX} .${CLEAR_INPUT_BUTTON_CLASS}`;
 -const TOGGLE_LIST_BUTTON = `.${TOGGLE_LIST_BUTTON_CLASS}`;
-+const TOGGLE_LIST_BUTTON = `${COMBO_BOX} .${TOGGLE_LIST_BUTTON_CLASS}`;
 -const LIST = `.${LIST_CLASS}`;
-+const LIST = `${COMBO_BOX} .${LIST_CLASS}`;
 -const LIST_OPTION = `.${LIST_OPTION_CLASS}`;
-+const LIST_OPTION = `${COMBO_BOX} .${LIST_OPTION_CLASS}`;
 -const LIST_OPTION_FOCUSED = `.${LIST_OPTION_FOCUSED_CLASS}`;
-+const LIST_OPTION_FOCUSED = `${COMBO_BOX} .${LIST_OPTION_FOCUSED_CLASS}`;
 -const LIST_OPTION_SELECTED = `.${LIST_OPTION_SELECTED_CLASS}`;
-+const LIST_OPTION_SELECTED = `${COMBO_BOX} .${LIST_OPTION_SELECTED_CLASS}`;
 -const STATUS = `.${STATUS_CLASS}`;
++const COMBO_BOX = `.${COMBO_BOX_CLASS}:not([data-react-owned])`;
++const SELECT = `${COMBO_BOX} .${SELECT_CLASS}`;
++const INPUT = `${COMBO_BOX} .${INPUT_CLASS}`;
++const CLEAR_INPUT_BUTTON = `${COMBO_BOX} .${CLEAR_INPUT_BUTTON_CLASS}`;
++const TOGGLE_LIST_BUTTON = `${COMBO_BOX} .${TOGGLE_LIST_BUTTON_CLASS}`;
++const LIST = `${COMBO_BOX} .${LIST_CLASS}`;
++const LIST_OPTION = `${COMBO_BOX} .${LIST_OPTION_CLASS}`;
++const LIST_OPTION_FOCUSED = `${COMBO_BOX} .${LIST_OPTION_FOCUSED_CLASS}`;
++const LIST_OPTION_SELECTED = `${COMBO_BOX} .${LIST_OPTION_SELECTED_CLASS}`;
 +const STATUS = `${COMBO_BOX} .${STATUS_CLASS}`;
+ 
+ const DEFAULT_FILTER = ".*{{query}}.*";
+ 
 @@ -207,7 +207,7 @@ const enhanceComboBox = (_comboBoxEl) => {
    selectLabel.setAttribute("id", listIdLabel);
    selectEl.setAttribute("aria-hidden", "true");
@@ -81,10 +85,13 @@ index dacdf97d3103613eadfb51702f15557900ff1838..f3a704ad0dd3fd63fdfb49696d4a1995
  
    if (selectedOption) {
 diff --git a/packages/usa-date-picker/src/index.js b/packages/usa-date-picker/src/index.js
-index 2888468a12d347736beaffd26fdf6c7bff8b11f8..7204323b8dce7e179066d4d700c8a42d9b31c459 100644
+index d15018513d85810461a947b7305adad74adee522..8cfc73f94b008b7695a44274fb2820b3b62b9d5c 100644
 --- a/packages/usa-date-picker/src/index.js
 +++ b/packages/usa-date-picker/src/index.js
-@@ -56,24 +56,24 @@
+@@ -53,30 +53,30 @@ const CALENDAR_CELL_CENTER_ITEMS_CLASS = `${CALENDAR_CELL_CLASS}--center-items`;
+ const CALENDAR_MONTH_LABEL_CLASS = `${DATE_PICKER_CALENDAR_CLASS}__month-label`;
+ const CALENDAR_DAY_OF_WEEK_CLASS = `${DATE_PICKER_CALENDAR_CLASS}__day-of-week`;
+ 
 -const DATE_PICKER = `.${DATE_PICKER_CLASS}`;
 -const DATE_PICKER_BUTTON = `.${DATE_PICKER_BUTTON_CLASS}`;
 -const DATE_PICKER_INTERNAL_INPUT = `.${DATE_PICKER_INTERNAL_INPUT_CLASS}`;
@@ -133,7 +140,10 @@ index 2888468a12d347736beaffd26fdf6c7bff8b11f8..7204323b8dce7e179066d4d700c8a42d
 +const CALENDAR_YEAR_PICKER = `${DATE_PICKER} .${CALENDAR_YEAR_PICKER_CLASS}`;
 +const CALENDAR_MONTH_FOCUSED = `${DATE_PICKER} .${CALENDAR_MONTH_FOCUSED_CLASS}`;
 +const CALENDAR_YEAR_FOCUSED = `${DATE_PICKER} .${CALENDAR_YEAR_FOCUSED_CLASS}`;
-@@ -935,7 +935,7 @@ const enhanceDatePicker = (el) => {
+ 
+ const VALIDATION_MESSAGE = "Please enter a valid date";
+ 
+@@ -936,7 +936,7 @@ const enhanceDatePicker = (el) => {
      Sanitizer.escapeHTML`
      <button type="button" class="${DATE_PICKER_BUTTON_CLASS}" aria-haspopup="true" aria-label="Toggle calendar"></button>
      <div class="${DATE_PICKER_CALENDAR_CLASS}" role="application" hidden></div>
@@ -143,23 +153,27 @@ index 2888468a12d347736beaffd26fdf6c7bff8b11f8..7204323b8dce7e179066d4d700c8a42d
  
    internalInputEl.setAttribute("aria-hidden", "true");
 diff --git a/packages/usa-date-range-picker/src/index.js b/packages/usa-date-range-picker/src/index.js
-index 7c2c8b38b31b96f4a6e14f4dd9a4d8d86a5e0bd1..7c2c8b38b31b96f4a6e14f4dd9a4d8d86a5e0bd1 100644
+index 566dde54e5fd09072e148d4722dd4f7ffbf0f564..341f954d45e309a6c3e9fc6bd98f0d941726bbf9 100644
 --- a/packages/usa-date-range-picker/src/index.js
 +++ b/packages/usa-date-range-picker/src/index.js
-@@ -16,4 +16,4 @@
--const DATE_PICKER = `.${DATE_PICKER_CLASS}`;
+@@ -14,9 +14,9 @@ const DATE_RANGE_PICKER_RANGE_START_CLASS = `${DATE_RANGE_PICKER_CLASS}__range-s
+ const DATE_RANGE_PICKER_RANGE_END_CLASS = `${DATE_RANGE_PICKER_CLASS}__range-end`;
+ 
+ const DATE_PICKER = `.${DATE_PICKER_CLASS}`;
 -const DATE_RANGE_PICKER = `.${DATE_RANGE_PICKER_CLASS}`;
 -const DATE_RANGE_PICKER_RANGE_START = `.${DATE_RANGE_PICKER_RANGE_START_CLASS}`;
 -const DATE_RANGE_PICKER_RANGE_END = `.${DATE_RANGE_PICKER_RANGE_END_CLASS}`;
-+const DATE_PICKER = `.${DATE_PICKER_CLASS}`;
 +const DATE_RANGE_PICKER = `.${DATE_RANGE_PICKER_CLASS}:not([data-react-owned])`;
 +const DATE_RANGE_PICKER_RANGE_START = `${DATE_RANGE_PICKER} .${DATE_RANGE_PICKER_RANGE_START_CLASS}`;
 +const DATE_RANGE_PICKER_RANGE_END = `${DATE_RANGE_PICKER} .${DATE_RANGE_PICKER_RANGE_END_CLASS}`;
+ 
+ const DEFAULT_MIN_DATE = "0000-01-01";
+ 
 diff --git a/packages/usa-file-input/src/index.js b/packages/usa-file-input/src/index.js
-index e7cd301373ff5af5dc8927ce35ee2cec33b95830..fca39f3723474a4d13216c3125861ec8fbce2490 100644
+index 655d4388019dafa6c963a12d8a4b7fe2ff79996f..b1859fa947f7a433d787d6ecc48e307cd80be4f9 100644
 --- a/packages/usa-file-input/src/index.js
 +++ b/packages/usa-file-input/src/index.js
-@@ -335,10 +335,10 @@ const addPreviewHeading = (fileInputEl, fileNames) => {
+@@ -394,10 +394,10 @@ const addPreviewHeading = (fileInputEl, fileNames) => {
    let previewHeadingText = "";
  
    if (fileNames.length === 1) {
@@ -173,7 +187,7 @@ index e7cd301373ff5af5dc8927ce35ee2cec33b95830..fca39f3723474a4d13216c3125861ec8
  
    // Hides null state content and sets preview heading
 diff --git a/packages/usa-header/src/index.js b/packages/usa-header/src/index.js
-index 6d45346c62ba2bcda4a8cbf1d461afeca1f2ac12..76d8da7e8fa0022a564e675b84fe1733e34754ac 100755
+index 202ff3ee7349debbf29264167d7b7f824c5ee5ca..342f63158336ee479258290b891e52474cdb9ce1 100755
 --- a/packages/usa-header/src/index.js
 +++ b/packages/usa-header/src/index.js
 @@ -26,7 +26,7 @@ const TOGGLES = [NAV, OVERLAY].join(", ");
@@ -185,7 +199,8 @@ index 6d45346c62ba2bcda4a8cbf1d461afeca1f2ac12..76d8da7e8fa0022a564e675b84fe1733
  const VISIBLE_CLASS = "is-visible";
  
  let navigation;
-@@ -109,5 +109,11 @@ const setSafariScrollPosition = (body) => {
+@@ -108,6 +108,12 @@ const setSafariScrollPosition = (body) => {
+ 
  const toggleNav = (active) => {
    const { body } = document;
 +  if (!navigation.focusTrap) {
@@ -198,7 +213,7 @@ index 6d45346c62ba2bcda4a8cbf1d461afeca1f2ac12..76d8da7e8fa0022a564e675b84fe1733
  
    setSafariScrollPosition(body);
 diff --git a/packages/usa-modal/src/index.js b/packages/usa-modal/src/index.js
-index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb921d991f8 100644
+index 4afbd12fc141a68910d49055b50dd29cdcf819a0..7030b18b074c9f14a697f92e37dd22039172e323 100644
 --- a/packages/usa-modal/src/index.js
 +++ b/packages/usa-modal/src/index.js
 @@ -20,8 +20,8 @@ const CLOSERS = `${CLOSE_BUTTON}, .${OVERLAY_CLASSNAME}:not([${FORCE_ACTION_ATTR
@@ -213,9 +228,12 @@ index 932096151b69d367c87b7f28be564d4a498dc0a2..5f6ca1c019d82826f85246e496eebbb9
  const HIDDEN_CLASS = "is-hidden";
  
 diff --git a/packages/usa-range/src/index.js b/packages/usa-range/src/index.js
+index 527d9974c32ce9d10319d0d6d113f57689148d33..491780afb1273eee22e07b7c89774624c6a01033 100644
 --- a/packages/usa-range/src/index.js
 +++ b/packages/usa-range/src/index.js
-@@ -6,4 +6,4 @@ const { prefix: PREFIX } = require("../../uswds-core/src/js/config");
+@@ -4,9 +4,9 @@ const behavior = require("../../uswds-core/src/js/utils/behavior");
+ const { prefix: PREFIX } = require("../../uswds-core/src/js/config");
+ 
  const RANGE_CLASSNAME = `${PREFIX}-range`;
 -const RANGE = `.${RANGE_CLASSNAME}`;
 -const RANGE_WRAPPER_CLASS = `${RANGE}__wrapper`;
@@ -223,6 +241,9 @@ diff --git a/packages/usa-range/src/index.js b/packages/usa-range/src/index.js
 +const RANGE = `.${RANGE_CLASSNAME}:not([data-react-owned])`;
 +const RANGE_WRAPPER_CLASS = `.${RANGE_CLASSNAME}__wrapper`;
 +const VALUE_WRAPPER_CLASS = `.${RANGE_CLASSNAME}__value`;
+ 
+ const RANGE_WRAPPER = `${RANGE_CLASSNAME}__wrapper`;
+ const VALUE_WRAPPER = `${RANGE_CLASSNAME}__value`;
 diff --git a/packages/usa-validation/src/index.js b/packages/usa-validation/src/index.js
 index 5c1bd48532558f825f5e86d3e02dbbe477f73a52..1d5136d0baa2ab6ef81aa95467c3ccc47bb7e9ce 100755
 --- a/packages/usa-validation/src/index.js
@@ -255,109 +276,3 @@ index 83152af0d5caef4f117da7d53aebdbbed20c9dc2..49423287799e65b1939cc293e6d6d6ff
  
  const uswds = require("./config");
  
-diff --git a/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss b/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss
-index d11385d25d71efee2016d1e33dcb5ff622f97b75..b14efbe2939201a54ed883bbb09790b5f72fd7c7 100644
---- a/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss
-+++ b/packages/uswds-core/src/styles/functions/units/rem-to-user-em.scss
-@@ -11,7 +11,7 @@ queries
- @use "sass:math";
- 
- @function rem-to-user-em($grid-in-rem) {
--  @if unit($grid-in-rem) != "rem" {
-+  @if math.unit($grid-in-rem) != "rem" {
-     @error 'This value must be in rem';
-   }
-   $rem-to-user-em: (math.div($grid-in-rem, 1rem)) * 1em;
-diff --git a/packages/uswds-core/src/styles/mixins/general/layout-grid.scss b/packages/uswds-core/src/styles/mixins/general/layout-grid.scss
-index 528a7e3d18ba7651b90b07e4a1ae258b499be9d1..528e069ed85fe0c3138471ef06ca39ca0ab56a56 100644
---- a/packages/uswds-core/src/styles/mixins/general/layout-grid.scss
-+++ b/packages/uswds-core/src/styles/mixins/general/layout-grid.scss
-@@ -1,5 +1,6 @@
- @use "sass:list";
- @use "sass:map";
-+@use "sass:string";
- @use "../layout-grid" as *;
- @use "../../functions" as *;
- @use "../../mixins/helpers" as *;
-@@ -29,7 +30,7 @@
-   }
- 
-   @include u-margin-x(
--    unquote("#{$neg-prefix}-#{calc-gap-offset($gap-mobile)}")
-+    string.unquote("#{$neg-prefix}-#{calc-gap-offset($gap-mobile)}")
-   );
- 
-   > * {
-@@ -39,7 +40,7 @@
- 
-   @include at-media("desktop") {
-     @include u-margin-x(
--      unquote("#{$neg-prefix}-#{calc-gap-offset($gap-desktop)}")
-+      string.unquote("#{$neg-prefix}-#{calc-gap-offset($gap-desktop)}")
-     );
- 
-     > * {
-@@ -51,7 +52,7 @@
- 
- @mixin grid-gap($props...) {
-   $props: unpack($props);
--  @if length($props) == 0 {
-+  @if list.length($props) == 0 {
-     @include grid-gap-responsive;
-   } @else {
-     $gap: smart-quote(list.nth($props, 1));
-@@ -69,10 +70,10 @@
-         $gap: map.get($system-column-gaps, $gap);
-       }
-       @include u-margin-x(
--        append-important(
--          $props,
--          unquote("#{$neg-prefix}-#{calc-gap-offset($gap)}")
--        )
-+append-important(
-+        $props,
-+        string.unquote("#{$neg-prefix}-#{calc-gap-offset($gap)}")
-+      )
-       );
-       > * {
-         @include this-border-box-sizing;
-@@ -86,7 +87,7 @@
-   $props: unpack($props);
-   @include this-border-box-sizing;
- 
--  @if length($props) == 0 {
-+  @if list.length($props) == 0 {
-     @include u-flex(fill);
-     @include u-width(auto);
-   } @else {
-@@ -107,7 +108,7 @@
-       @include u-maxw($maxw);
-       min-width: 1px; // IE 11
-     } @else if not map.has-key($system-layout-grid-widths, $col) {
--      @error '#{$col} is not a valid layout grid width. Valid width are #{map-keys($system-layout-grid-widths)}';
-+      @error '#{$col} is not a valid layout grid width. Valid width are #{map.keys($system-layout-grid-widths)}';
-     } @else {
-       $flex: append-important($props, auto);
-       $width: append-important(
-@@ -127,7 +128,7 @@
-     $width: append-important($props, 0);
-     @include u-margin-left(override, $width);
-   } @else if not map.has-key($system-layout-grid-widths, $offset) {
--    @error '#{$offset} is not a valid layout grid width. Valid width are #{map-keys($system-layout-grid-widths)}';
-+    @error '#{$offset} is not a valid layout grid width. Valid width are #{map.keys($system-layout-grid-widths)}';
-   } @else {
-     $width: append-important(
-       $props,
-diff --git a/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss b/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss
-index 066ee1809415be75adb7c66a394f03143c6cea00..bbec86a9dc5b3d2d08dd0b4ef5ad40dc03d0f67f 100644
---- a/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss
-+++ b/packages/uswds-core/src/styles/mixins/layout-grid/_grid-container.scss
-@@ -7,7 +7,7 @@
- @use "../../mixins/helpers" as *;
- 
- @mixin grid-container($props...) {
--  @if length($props) == 0 {
-+  @if list.length($props) == 0 {
-     @include u-margin-x(auto);
-     @include u-maxw($theme-grid-container-max-width);
-   } @else {

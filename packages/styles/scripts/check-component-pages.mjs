@@ -16,6 +16,32 @@
  *
  * There are two stages, because they need different inputs.
  *
+ * A page has one of three kinds, which decide its front matter and sections:
+ *   - `static`, a component: `styles-class` and `variants`, and the sections
+ *     When to use, Example, Variants, Composition, Guarantees and The consumer
+ *     owns. Everything below that is not marked otherwise applies to it.
+ *   - `utility`, a family of USWDS utility classes (slug `utilities-<uswds
+ *     slug>`): `uswds` and a non-empty `classes` list of unprefixed class
+ *     patterns, and the sections When to use, Example, Classes, Variants, Sass,
+ *     Settings, States, Guarantees and The consumer owns, in that order.
+ *   - `token`, a USWDS design token group (slug `tokens-<uswds path>`): `uswds`
+ *     and no `classes`, and the sections When to use, Example, Tokens, Sass,
+ *     Utilities, Settings, States, Guarantees and The consumer owns, in order.
+ * `utility` and `token` pages have no `styles-class` and no `variants` (both
+ * are rejected), because they describe unprefixed USWDS names rather than one
+ * `pathable-*` component with modifiers. The class of a variant, the variant
+ * rules, the "every modifier is a variant" rule and the custom property rule
+ * (`--name` in prose must be used by the component's rules) are therefore
+ * `static` only; a utility or token page that names a `--custom-property`
+ * fails, because USWDS emits none. The pixel baseline rule is `static` only
+ * too, by decision: a utility or token page has no component to draw, and its
+ * guarantees are facts about computed CSS or Sass output that a play function
+ * cites. Every other rule applies to all three kinds: the guarantees, the
+ * title and summary paragraph, no `usa-` anywhere, exactly one html example,
+ * and every class in an html example (fixtures included) being a class
+ * selector in the compiled CSS, so a utility class the package does not emit
+ * is reported as a defect.
+ *
  * Stage 1, `pnpm --filter @pathableai/styles check:component-pages`, needs the
  * built stylesheet (dist/styles.css). It proves:
  *   - every placeholder resolves: each fixture it names exists, package
@@ -28,12 +54,13 @@
  *     the markup examples (fixtures included) and every class named in prose
  *     is a class selector
  *     in the compiled CSS; a default variant has no modifier class; every
- *     modifier the CSS has for the class is a variant on the page;
+ *     modifier the CSS has for the class is a variant on the page (static);
  *   - the body's summary paragraph and Variants table agree with the front
  *     matter, and every token the page names is used by the component's rules;
  *   - every pixel citation names a met guarantee that exists, belongs to an
  *     entry on the rollout list (so the suite compares it) and has its images
- *     committed; a static component has at least one.
+ *     committed; a static component has at least one (utility and token pages
+ *     do not need one).
  * It does not look at play functions.
  *
  * Stage 2, `… check:component-pages:executed`, needs the records the Storybook
@@ -111,8 +138,75 @@ export const REQUIRED_SECTIONS = [
   'The consumer owns',
 ]
 
-/** Only static components have pages for now. */
-const KINDS = ['static']
+/** The fields of a utility page; it has no `styles-class` and no `variants`. */
+export const UTILITY_FIELDS = [
+  'name',
+  'slug',
+  'kind',
+  'summary',
+  'uswds',
+  'classes',
+  'guarantees',
+]
+/** The fields of a token page. */
+export const TOKEN_FIELDS = [
+  'name',
+  'slug',
+  'kind',
+  'summary',
+  'uswds',
+  'guarantees',
+]
+
+/** The sections of a utility page, in the order the body must have them. */
+export const UTILITY_SECTIONS = [
+  'When to use',
+  'Example',
+  'Classes',
+  'Variants',
+  'Sass',
+  'Settings',
+  'States',
+  'Guarantees',
+  'The consumer owns',
+]
+/** The sections of a token page, in order. */
+export const TOKEN_SECTIONS = [
+  'When to use',
+  'Example',
+  'Tokens',
+  'Sass',
+  'Utilities',
+  'Settings',
+  'States',
+  'Guarantees',
+  'The consumer owns',
+]
+
+const KINDS = ['static', 'utility', 'token']
+/** Where the page's `uswds` link must point, and how its slug starts. */
+const USWDS_KINDS = {
+  utility: {
+    prefix: 'https://designsystem.digital.gov/utilities/',
+    slug: 'utilities-',
+  },
+  token: {
+    prefix: 'https://designsystem.digital.gov/design-tokens/',
+    slug: 'tokens-',
+  },
+}
+
+/** Whether the page documents unprefixed USWDS names rather than one component. */
+const isUswdsPage = (page) => page.data.kind in USWDS_KINDS
+
+/** The front matter fields a page of this kind has (static when unknown). */
+const fieldsOf = (kind) =>
+  ({ utility: UTILITY_FIELDS, token: TOKEN_FIELDS })[kind] ?? REQUIRED_FIELDS
+
+/** The sections a page of this kind has (static when unknown). */
+const sectionsOf = (kind) =>
+  ({ utility: UTILITY_SECTIONS, token: TOKEN_SECTIONS })[kind] ??
+  REQUIRED_SECTIONS
 const STATUSES = ['met', 'unmet', 'unverified']
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -173,16 +267,18 @@ export const modifiersOf = (css, className) =>
 
 /** The custom properties the rules of a class and its modifiers use. */
 const tokensOf = (css, className) =>
-  new Set(
-    [...css.tokens]
-      .filter(
-        ([name]) =>
-          name === className ||
-          name.startsWith(`${className}--`) ||
-          name.startsWith(`${className}__`),
+  className === undefined
+    ? new Set()
+    : new Set(
+        [...css.tokens]
+          .filter(
+            ([name]) =>
+              name === className ||
+              name.startsWith(`${className}--`) ||
+              name.startsWith(`${className}__`),
+          )
+          .flatMap(([, used]) => [...used]),
       )
-      .flatMap(([, used]) => [...used]),
-  )
 
 // ---------------------------------------------------------------------------
 // Stage 1: the page against the compiled CSS and the pixel entries
@@ -202,16 +298,50 @@ const section = (body, heading) =>
     new RegExp(`^## ${heading}\\n([\\s\\S]*?)(?=^## |(?![\\s\\S]))`, 'mu'),
   )?.[1] ?? ''
 
+/** The `uswds` link, the slug prefix and, for a utility page, `classes`. */
+function checkUswdsFields(page, errors) {
+  const { data, slug } = page
+  const { prefix, slug: slugPrefix } = USWDS_KINDS[data.kind]
+  if (!slug.startsWith(slugPrefix)) {
+    errors.push(`a ${data.kind} page's slug must start with "${slugPrefix}"`)
+  }
+  if (data.uswds !== undefined) {
+    if (typeof data.uswds !== 'string' || !data.uswds.startsWith(prefix)) {
+      errors.push(
+        `"uswds" must be a ${prefix}… URL for a ${data.kind} page; received "${data.uswds}"`,
+      )
+    } else if (!data.uswds.endsWith('/') || data.uswds === prefix) {
+      errors.push(
+        `"uswds" must name one page under ${prefix} and end with "/"; received "${data.uswds}"`,
+      )
+    }
+  }
+  if (data.kind === 'utility' && Array.isArray(data.classes)) {
+    if (data.classes.length === 0) {
+      errors.push('"classes" must list at least one class pattern')
+    }
+    for (const pattern of data.classes) {
+      if (typeof pattern !== 'string' || pattern.trim() === '') {
+        errors.push('each entry of "classes" must be a non-empty string')
+      }
+    }
+  }
+}
+
 function checkFrontMatter(page, errors) {
   const { data, slug } = page
-  for (const field of REQUIRED_FIELDS) {
+  const fields = fieldsOf(data.kind)
+  for (const field of fields) {
     if (data[field] === undefined)
       errors.push(`missing front matter field "${field}"`)
   }
   for (const field of Object.keys(data)) {
-    if (!REQUIRED_FIELDS.includes(field)) {
-      errors.push(`unknown front matter field "${field}"`)
-    }
+    if (fields.includes(field)) continue
+    errors.push(
+      isUswdsPage(page) && ['styles-class', 'variants'].includes(field)
+        ? `a ${data.kind} page has no "${field}": it documents unprefixed USWDS names, not one component with modifiers`
+        : `unknown front matter field "${field}"`,
+    )
   }
   if (data.slug !== undefined && data.slug !== slug) {
     errors.push(`slug "${data.slug}" does not match the file name "${slug}.md"`)
@@ -221,11 +351,16 @@ function checkFrontMatter(page, errors) {
       `kind must be one of ${KINDS.join(', ')}; received "${data.kind}"`,
     )
   }
-  for (const field of ['variants', 'guarantees']) {
-    if (data[field] !== undefined && !Array.isArray(data[field])) {
+  for (const field of ['variants', 'classes', 'guarantees']) {
+    if (
+      fields.includes(field) &&
+      data[field] !== undefined &&
+      !Array.isArray(data[field])
+    ) {
       errors.push(`"${field}" must be a list`)
     }
   }
+  if (isUswdsPage(page)) checkUswdsFields(page, errors)
 
   const ids = new Set()
   for (const guarantee of list(data.guarantees)) {
@@ -268,8 +403,24 @@ function checkBody(page, errors) {
       )
     }
   }
-  for (const heading of REQUIRED_SECTIONS) {
+  const required = sectionsOf(data.kind)
+  for (const heading of required) {
     if (!headings.has(heading)) errors.push(`missing section "## ${heading}"`)
+  }
+  if (isUswdsPage(page)) {
+    // The sections of a utility or token page come in a fixed order, so every
+    // page reads the same way. (A static page's order is not checked.)
+    const found = [
+      ...body.replace(/^```[\s\S]*?^```$/gmu, '').matchAll(/^## (.+)$/gmu),
+    ]
+      .map((match) => match[1].trim())
+      .filter((heading) => required.includes(heading))
+    const expected = required.filter((heading) => found.includes(heading))
+    if (found.join('|') !== expected.join('|')) {
+      errors.push(
+        `the sections must come in this order: ${required.map((heading) => `"${heading}"`).join(', ')}`,
+      )
+    }
   }
   if (/\busa-/u.test(page.markdown)) {
     errors.push('consumer-facing pages must not mention usa-* classes')
@@ -397,11 +548,23 @@ function checkNames(page, css, errors) {
   }
   const used = tokensOf(css, page.data['styles-class'])
   for (const token of named(/`(--[a-z0-9-]+)`/gu)) {
-    if (!used.has(token)) {
+    if (isUswdsPage(page)) {
+      errors.push(
+        `the page names \`${token}\`, but USWDS emits no CSS custom properties; document the Sass token instead`,
+      )
+    } else if (!used.has(token)) {
       errors.push(
         `the page names \`${token}\`, which the component's rules do not use`,
       )
     }
+  }
+}
+
+/** A utility or token page shows every fixture of its folder under `## States`. */
+function checkStates(page, errors) {
+  const states = section(page.source ?? page.markdown, 'States')
+  if (!/^<!--\s*examples\s*-->$/mu.test(states)) {
+    errors.push('the "## States" section must hold "<!-- examples -->"')
   }
 }
 
@@ -462,11 +625,12 @@ export function checkPage(page, facts) {
   if (errors.length) return errors
 
   const cls = page.data['styles-class']
-  if (!facts.css.classes.has(cls)) {
+  if (!isUswdsPage(page) && !facts.css.classes.has(cls)) {
     errors.push(`styles-class "${cls}" has no rule in the compiled CSS`)
   }
   checkBody(page, errors)
-  checkVariants(page, facts.css, errors)
+  if (isUswdsPage(page)) checkStates(page, errors)
+  else checkVariants(page, facts.css, errors)
   checkNames(page, facts.css, errors)
 
   const covered = page.data.guarantees.some(
@@ -583,7 +747,8 @@ export function checkExecuted(pages, records, pixels) {
         pixelCitations(page, id, pixels).map((entry) => entry.id),
       ),
     )
-    if (covering.size === 0) continue
+    // Only a static page's picture has variants to show.
+    if (covering.size === 0 || page.data.kind !== 'static') continue
     const rendered = new Set(
       records
         .filter((record) => covering.has(record.story))

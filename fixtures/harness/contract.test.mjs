@@ -171,3 +171,26 @@ test('component folders hold only .html files, not subfolders or other files', (
     /dense\/: component folders hold only .* not subfolders/u,
   )
 })
+
+test('a utility or token page has no variants and its unprefixed classes pass', () => {
+  const utility = { data: { kind: 'utility', classes: ['margin-<value>'] } }
+  const fixtures = new Map([
+    [
+      'default.html',
+      '<div class="margin-2 tablet:padding-3 pathable-thing"></div>',
+    ],
+  ])
+  assert.deepEqual(checkFolder('utilities-spacing', fixtures, utility, css), [])
+})
+
+test('an unknown pathable class still fails in a utility folder', () => {
+  const utility = { data: { kind: 'utility' } }
+  const errors = checkFolder(
+    'utilities-spacing',
+    new Map([['a.html', '<div class="margin-2 pathable-bogus"></div>']]),
+    utility,
+    css,
+  )
+  assert.equal(errors.length, 1)
+  assert.match(errors[0], /\.pathable-bogus is not a class selector/u)
+})

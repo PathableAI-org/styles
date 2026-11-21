@@ -43,7 +43,7 @@ minimumReleaseAgeExclude:
   - '@next/swc-win32-x64-msvc@16.3.3'
   - next@16.3.3
 patchedDependencies:
-  '@uswds/uswds@3.13.0': patches/@uswds__uswds@3.13.0.patch
+  '@uswds/uswds@3.14.0': patches/@uswds__uswds@3.14.0.patch
 
 peerDependencyRules:
   allowedVersions:
