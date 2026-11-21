@@ -49,8 +49,8 @@ follows the reader's font size. See the
 
 Use something else when:
 
-- the size follows the text it sits beside: use `em` or `ch` spacing
-  (`margin-top-1em`, `padding-x-2ch`);
+- the size follows the text it sits beside: use `em` spacing
+  (`margin-top-1em`, `margin-x-2em`);
 - the size is a type size: use the [font size](tokens-typesetting-font-size.md)
   tokens.
 
@@ -105,7 +105,9 @@ class.
 
 Which tokens a class accepts depends on the property: padding takes `0` to `15`
 and the pixel and half steps; margin adds negatives, `auto` (on `margin-x` and
-`margin-y`) and `em` values; width, height and max-width add the named tokens.
+`margin-y`) and `em` values, and only `card`, `card-lg` and `mobile` among the
+named widths (`margin-x-card`); width, height and max-width take all the named
+tokens.
 `padding-card` does not exist, but `width-card` and `maxw-mobile` do.
 
 ## Sass

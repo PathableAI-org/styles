@@ -106,6 +106,10 @@ Fredoka, Nunito and Montserrat use `system-ui, sans-serif` after their name
 (`Nunito, 'Nunito', system-ui, sans-serif`), and the monospace stack is
 `Roboto Mono Web, Bitstream Vera Sans Mono, Consolas, Courier, monospace`.
 
+`font-family-cond` and the `-cond` size classes (Montserrat) exist because the
+brand sets `$theme-font-type-cond: 'montserrat'`; USWDS leaves it `false`, which
+would output no condensed classes.
+
 ### Size tokens at PathAble defaults
 
 Each size is a step on the USWDS system type scale. The class value is

@@ -17,10 +17,7 @@ classes:
 guarantees:
   - id: weights
     status: unverified
-    claim: text-light sets font-weight to 300, text-normal to normal, text-semibold to 600 and text-bold to 700.
-  - id: weights-not-output
-    status: unverified
-    claim: The stylesheet has no text-thin, text-medium or text-heavy rule, because those theme weights are false.
+    claim: text-light sets font-weight to 300, text-normal to normal, text-semibold to 600 (on by brand default) and text-bold to 700, and the stylesheet has no text-thin, text-medium or text-heavy rule.
   - id: font-style
     status: unverified
     claim: text-italic sets font-style to italic and text-no-italic sets it to normal.

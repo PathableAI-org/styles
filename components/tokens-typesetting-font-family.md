@@ -151,6 +151,10 @@ for the same text are on the [Text styles](utilities-text-styles.md) page.
 | `$theme-font-<type>-custom-stack`   | `false` for every type                       | `false`                    |
 | `$theme-font-<type>-custom-src`     | `false` for every type                       | `false`                    |
 
+`font-family-cond` and the `-cond` size classes (Montserrat) exist because the
+brand sets `$theme-font-type-cond: 'montserrat'`; USWDS leaves it `false`, which
+would output no condensed classes.
+
 `$theme-font-role-alt` points at `cond` because USWDS has one `alt` role and the
 brand's alternate heading face needs its own type to be selected independently
 of `sans`.
