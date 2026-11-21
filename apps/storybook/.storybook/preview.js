@@ -4,6 +4,14 @@ import '@pathableai/styles/js'
 /** @type { import('@storybook/html-vite').Preview } */
 const preview = {
   parameters: {
+    options: {
+      // The generated pages' sections, in the order they are read: what a
+      // consumer sets (tokens), what it applies (utilities), what it uses
+      // (components). Anything else follows, in file order.
+      storySort: {
+        order: ['Design tokens', 'Utilities', 'Component pages', 'Fixtures'],
+      },
+    },
     a11y: {
       element: '#storybook-root',
       config: {

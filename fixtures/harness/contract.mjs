@@ -13,9 +13,15 @@
  *     `no-actions.html`, or a component folder holds anything other than such
  *     files (a subfolder, `.htm`, `.HTML`), which the checks would skip;
  *   - a `pathable-*` class in a fixture is not a class selector in
- *     @pathableai/styles/dist/styles.css;
+ *     @pathableai/styles/dist/styles.css (a class without the prefix, such as
+ *     the USWDS utility `margin-x-2`, is not checked here: the component-page
+ *     check reads every class of a page's examples, fixtures included);
  *   - a non-default variant in the page's front matter has no fixture in the
- *     folder that uses its modifier class.
+ *     folder that uses its modifier class (a utility or token page has no
+ *     variants, so this does not apply to it).
+ *
+ * A folder is named after the slug of its page whatever the page's kind:
+ * component pages, `utilities-<uswds slug>` and `tokens-<uswds path>`.
  *
  * Classes are read by parsing each fixture: only `class` attributes of
  * elements count, not `data-class` or similar attributes, and not markup
@@ -140,6 +146,8 @@ export function checkFolder(folder, fixtures, page, css) {
     }
   }
 
+  // A utility or token page has no component class and no variants, so it has
+  // no variant fixtures to demand.
   const cls = page.data['styles-class']
   for (const variant of page.data.variants ?? []) {
     for (const value of variant?.values ?? []) {

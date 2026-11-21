@@ -60,30 +60,51 @@ export async function readPages(dir = pagesDir) {
   )
 }
 
-/** Renders the catalog index: one line per page, from its front matter. */
+/** The index sections, in order: the page kinds each lists and its heading. */
+const INDEX_GROUPS = [
+  { heading: 'Design tokens', kinds: ['token'] },
+  { heading: 'Utilities', kinds: ['utility'] },
+  { heading: 'Components', kinds: ['static'] },
+]
+
+/** One index line. A component names its class; a utility or token page has none. */
+const indexLine = ({ file, data }) =>
+  data['styles-class']
+    ? `- [${data.name}](${file}) (\`${data['styles-class']}\`, ${data.kind}): ${data.summary}`
+    : `- [${data.name}](${file}) (${data.kind}): ${data.summary}`
+
+/**
+ * Renders the catalog index: one line per page, from its front matter,
+ * grouped under Design tokens, Utilities and Components (a group with no page
+ * is left out).
+ */
 export function renderIndex(pages) {
-  const lines = [...pages]
-    .sort((a, b) => a.data.name.localeCompare(b.data.name))
-    .map(
-      ({ file, data }) =>
-        `- [${data.name}](${file}) (\`${data['styles-class']}\`, ${data.kind}): ${data.summary}`,
-    )
+  const groups = INDEX_GROUPS.flatMap(({ heading, kinds }) => {
+    const lines = pages
+      .filter(({ data }) => kinds.includes(data.kind))
+      .sort((a, b) => a.data.name.localeCompare(b.data.name))
+      .map(indexLine)
+    return lines.length > 0 ? [`## ${heading}`, '', ...lines, ''] : []
+  })
 
   return [
     '# Component pages',
     '',
-    'Each page describes one component: what it is for, a minimal example, its',
-    'variants, the tokens it uses, how to compose it, what it guarantees and',
-    'what you own. A guarantee marked `status: unmet` is expected behaviour the',
-    'component does not have yet: do not rely on it. One marked',
-    '`status: unverified` was read from the package source and no test checks it',
-    'yet.',
+    'Each page describes one part of the design system: a component, a family',
+    'of utility classes or a group of design tokens. It says what it is for, a',
+    'minimal example, its variants, the tokens or settings it uses, how to',
+    'compose it, what it guarantees and what you own. A guarantee marked',
+    '`status: unmet` is expected behaviour the component does not have yet: do',
+    'not rely on it. One marked `status: unverified` was read from the package',
+    'source and no test checks it yet.',
+    '',
+    'Utility and token pages describe USWDS names that carry no prefix, so',
+    'they are the same in @pathableai/styles as in USWDS.',
     '',
     'Components not listed here have no page yet. For those, use the package',
     'README and the stylesheet source under `src/`.',
     '',
-    ...lines,
-    '',
+    ...groups,
   ].join('\n')
 }
 

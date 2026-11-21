@@ -241,6 +241,21 @@ describe('component docs: Storybook', () => {
   })
 })
 
+describe('component docs: Storybook sections', () => {
+  it('puts each kind of page in its own section', () => {
+    const body = '<!-- example: loud -->\n'
+    const titleOf = (kind) =>
+      render(
+        { ...page(body), data: { name: 'Widget', kind } },
+        'storybook',
+        stylesOnly,
+      ).mdx.match(/<Meta title="([^"]*)"/u)[1]
+    assert.equal(titleOf('token'), 'Design tokens/Widget')
+    assert.equal(titleOf('utility'), 'Utilities/Widget')
+    assert.equal(titleOf('static'), 'Component pages/Widget')
+  })
+})
+
 describe('component docs: helpers', () => {
   it('reads a leading description comment from a fixture', () => {
     assert.deepEqual(

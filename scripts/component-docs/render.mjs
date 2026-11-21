@@ -236,6 +236,14 @@ function renderStories(page, sources) {
   return `${lines.join('\n')}\n`
 }
 
+/**
+ * The Storybook sidebar section of a page, by its kind: design tokens and
+ * utilities have their own sections, ahead of the component pages
+ * (.storybook/preview.js sorts them in that order).
+ */
+export const storybookSection = (kind) =>
+  ({ token: 'Design tokens', utility: 'Utilities' })[kind] ?? 'Component pages'
+
 /** The MDX page: the shared prose, with each example as a live preview. */
 function renderMdx(page, name, sources) {
   // Segment the whole page, so problems cite source line numbers, then drop
@@ -300,7 +308,7 @@ function renderMdx(page, name, sources) {
     "import { CodeTabs, PackageNote } from '../.storybook/component-docs-blocks'",
     `import * as Stories from './${page.slug}.stories'`,
     '',
-    `<Meta title=${literal(`Component pages/${name}`)} />`,
+    `<Meta title=${literal(`${storybookSection(page.data?.kind)}/${name}`)} />`,
     '',
     [...blocks(segments), ...markdown(frontMatterSection(page.markdown))].join(
       '\n\n',
