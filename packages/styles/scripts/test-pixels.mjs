@@ -168,6 +168,13 @@ const summary = [
 ]
 console.log(`${summary.join('\n')}\n`)
 
+// With no story on the rollout list, running the test-runner would select
+// every test file and compare nothing.
+if (ROLLOUT.length === 0 && values.component.length === 0) {
+  console.log('No pixel story is on the rollout list: nothing to compare.')
+  process.exit(0)
+}
+
 // A baseline no rollout capture compares is stale or belongs to a component
 // not on the rollout list; either way it would never be checked.
 if (!values.update) {

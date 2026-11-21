@@ -38,7 +38,8 @@ shared assertion disappears silently:
   single-open) that was retired when the shared-contract stories proved
   equivalent behavior. Its three scenarios map 1:1 to the shared capabilities
   below; panel association and focus are asserted inside the matching helpers.
-- `packages/styles/src/stories/components/Communication/Accordion.stories.ts` —
+- `packages/styles/src/stories/components/Communication/Accordion.stories.ts`
+  (removed when the hand-written styles stories were deleted) —
   the collapsed (`Default`) and initially-expanded (`InitiallyExpanded`)
   fixtures, matching the shared `accordion.default` and
   `accordion.first-expanded` fixtures, with `play` functions that exercise the

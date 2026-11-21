@@ -184,16 +184,12 @@ describe('lint-tokens undefined references', () => {
 })
 
 describe('lint-tokens scanned files and entry point', () => {
-  it('scans SCSS sources, TypeScript story files and story helpers', () => {
+  it('scans SCSS sources, and story files when src/stories exists', () => {
     const { scssFiles, storyFiles } = listScannedFiles()
     assert.ok(scssFiles.some((file) => basename(file) === '_spacing.scss'))
-    assert.ok(storyFiles.some((file) => file.endsWith('.stories.ts')))
-    assert.ok(
-      storyFiles.some(
-        (file) => !file.includes('.stories.') && /\.(js|ts)$/.test(file),
-      ),
-      'expected a story helper that is not itself a story file',
-    )
+    // The hand-written styles stories were removed, so no story file is
+    // scanned today; the scan stays for any added back.
+    assert.deepEqual(storyFiles, [])
   })
 
   it('runs and reports when invoked as a script', () => {

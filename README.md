@@ -17,12 +17,14 @@ Both published packages are versioned independently with
 
 ## Storybooks
 
-| App                                             | Shows                                    | Local port |
-| ----------------------------------------------- | ---------------------------------------- | ---------- |
-| [`apps/storybook`](apps/storybook/)             | `@pathableai/styles` components and docs | 6006       |
-| [`apps/storybook-react`](apps/storybook-react/) | `@pathableai/react` components           | 6007       |
+| App                                             | Shows                                             | Local port |
+| ----------------------------------------------- | ------------------------------------------------- | ---------- |
+| [`apps/storybook`](apps/storybook/)             | `@pathableai/styles` component pages and fixtures | 6006       |
+| [`apps/storybook-react`](apps/storybook-react/) | `@pathableai/react` components                    | 6007       |
 
-The styles Storybook is deployed to GitHub Pages from `main`.
+The styles Storybook shows the generated component pages and one story per
+HTML fixture, both built from `components/` and `fixtures/`; it has no
+hand-written stories. It is deployed to GitHub Pages from `main`.
 
 ## Getting started
 

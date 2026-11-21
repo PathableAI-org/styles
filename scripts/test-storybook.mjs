@@ -50,109 +50,12 @@ export const targets = {
     ],
     staticDirectory: 'apps/storybook/storybook-static',
     port: 6006,
-    capabilities: [
-      'accordion.keyboard-enter',
-      'accordion.keyboard-space',
-      'accordion.single-open',
-      'accordion.panel-association',
-      'accordion.panel-availability',
-      'accordion.focus-retention',
-      'segmented-control.single-selection',
-      'segmented-control.arrow-navigation',
-      'segmented-control.disabled-option-skip',
-      'segmented-control.vertical-navigation',
-      'segmented-control.multi-selection',
-      'segmented-control.multi-keyboard-toggle',
-      'segmented-control.static-single-option',
-      'checkbox.label',
-      'checkbox.entry',
-      'checkbox.disabled',
-      'checkbox.required',
-      'checkbox.invalid',
-      'checkbox.hint-error',
-    ],
-    fixtures: {
-      'accordion.default': 'components-communication-accordion--default',
-      'accordion.first-expanded':
-        'components-communication-accordion--initially-expanded',
-      'interaction-states.aggregate':
-        'interaction-controls-interaction-states--all-states',
-      'interaction-states.focus-within':
-        'interaction-controls-interaction-states--focus-within',
-      'interaction-states.loading':
-        'interaction-controls-interaction-states--loading-state',
-      'interaction-states.precedence':
-        'interaction-controls-interaction-states--state-precedence',
-      'interaction-states.content-pressure':
-        'interaction-controls-interaction-states--content-pressure',
-      'interaction-states.increased-text':
-        'interaction-controls-interaction-states--increased-text',
-      'interaction-states.default':
-        'interaction-controls-interaction-states--default',
-      'segmented-control.single-select':
-        'interaction-controls-segmentedcontrol--single-select',
-      'segmented-control.multi-select':
-        'interaction-controls-segmentedcontrol--multi-select',
-      'segmented-control.vertical':
-        'interaction-controls-segmentedcontrol--vertical',
-      'segmented-control.disabled-option':
-        'interaction-controls-segmentedcontrol--disabled-option',
-      'segmented-control.static-single-option':
-        'interaction-controls-segmentedcontrol--static-single-option',
-      'integration.toolbar': 'interaction-controls-integration--toolbar-panel',
-      'integration.status-row': 'interaction-controls-integration--status-row',
-      'integration.view-switcher':
-        'interaction-controls-integration--view-switcher',
-      'integration.full-composition':
-        'interaction-controls-integration--full-composition',
-      'integration.content-pressure':
-        'interaction-controls-integration--content-pressure',
-      'integration.default': 'interaction-controls-integration--default',
-      'icon-tile.shape': 'interaction-controls-icon-tile--square-and-circle',
-      'icon-tile.sizes': 'interaction-controls-icon-tile--size-variants',
-      'icon-tile.decorative':
-        'interaction-controls-icon-tile--decorative-with-status-text',
-      'icon-tile.meaningful':
-        'interaction-controls-icon-tile--meaningful-status-icon',
-      'icon-tile.statuses': 'interaction-controls-icon-tile--status-variants',
-      'icon-tile.inline-alignment':
-        'interaction-controls-icon-tile--inline-alignment',
-      'icon-tile.content-pressure':
-        'interaction-controls-icon-tile--inline-content-pressure',
-      'icon-tile.increased-text':
-        'interaction-controls-icon-tile--increased-text',
-      'icon-tile.custom-sizing':
-        'interaction-controls-icon-tile--custom-sizing',
-      'icon-tile.matrix': 'interaction-controls-icon-tile--all-variants',
-      'icon-tile.default': 'interaction-controls-icon-tile--default',
-      'checkbox.default': 'components-form-controls-checkbox--default',
-      'checkbox.disabled': 'components-form-controls-checkbox--disabled',
-      'checkbox.required': 'components-form-controls-checkbox--required',
-      'checkbox.invalid': 'components-form-controls-checkbox--invalid',
-      'checkbox.hint-error':
-        'components-form-controls-checkbox--with-hint-and-error',
-      'icon-button.appearances':
-        'interaction-controls-iconbutton--all-variants',
-      'icon-button.sizes': 'interaction-controls-iconbutton--all-sizes',
-      'icon-button.circle': 'interaction-controls-iconbutton--circle-shape',
-      'icon-button.surfaces':
-        'interaction-controls-iconbutton--on-different-surfaces',
-      'icon-button.disabled': 'interaction-controls-iconbutton--disabled',
-      'icon-button.loading': 'interaction-controls-iconbutton--loading',
-      'icon-button.content-pressure':
-        'interaction-controls-iconbutton--constrained-content',
-      'icon-button.default': 'interaction-controls-iconbutton--default',
-    },
-    filters: {
-      'components-communication-accordion': 'contract-accordion',
-      'interaction-controls-interaction-states': 'contract-interaction-states',
-      'interaction-controls-segmentedcontrol': 'contract-segmented-control',
-      'interaction-controls-icon-tile': 'contract-icon-tile',
-      'components-form-controls-checkbox': 'contract-checkbox',
-      'interaction-controls-iconbutton': 'contract-icon-button',
-      'interaction-controls-integration': 'contract-integration',
-    },
-    sharedContracts: true,
+    // The styles Storybook now shows only the generated component pages and
+    // fixture stories, which carry no shared behavior contracts.
+    capabilities: [],
+    fixtures: {},
+    filters: {},
+    sharedContracts: false,
   },
   react: {
     name: 'react',

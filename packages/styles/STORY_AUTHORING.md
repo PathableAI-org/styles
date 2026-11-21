@@ -3,6 +3,14 @@
 Use this checklist when creating or updating Storybook stories for
 `@pathableai/styles`. All items should be satisfied before opening a PR.
 
+The styles Storybook currently has no hand-written stories (the former
+`src/stories/` directory was removed). It shows the generated **Component
+pages** and one **Fixture** story per HTML fixture, written from `components/`
+and `fixtures/` by `scripts/component-docs` (see
+[`components/README.md`](../../components/README.md)). The items below apply to
+any hand-written story added again; the helpers they name, such as
+`guarantee`, were removed with the old stories and would have to be recreated.
+
 ## Token Rules
 
 - [ ] Use `--pathable-*` CSS custom properties instead of raw hex values.
@@ -50,7 +58,7 @@ Use this checklist when creating or updating Storybook stories for
 - [ ] When a component has a page under the repository's `components/`, wrap the
       assertions that prove one of its guarantees in
       `guarantee(step, '<page>/<guarantee-id>', async () => { … })` from
-      `src/stories/shared/guarantee.ts`. A failure names the guarantee.
+      `guarantee` (the helper lived in `src/stories/shared/guarantee.ts` and was removed). A failure names the guarantee.
 - [ ] For a guarantee the page marks `status: unmet`, use
       `guarantee.unmet(step, id, …)`: it passes while the assertions fail and
       fails once they pass, until the page and the call are changed to met.

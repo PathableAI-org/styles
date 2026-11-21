@@ -6,12 +6,14 @@ tests, and accessibility checks for both the styles and React packages.
 
 ## Current Storybooks
 
-| Implementation      | Story source                   | Storybook application   |
-| ------------------- | ------------------------------ | ----------------------- |
-| Styles and raw HTML | `packages/styles/src/stories/` | `apps/storybook/`       |
-| React               | `packages/react/src/stories/`  | `apps/storybook-react/` |
+| Implementation      | Story source                  | Storybook application   |
+| ------------------- | ----------------------------- | ----------------------- |
+| Styles and raw HTML | `apps/storybook/generated/`   | `apps/storybook/`       |
+| React               | `packages/react/src/stories/` | `apps/storybook-react/` |
 
-React story conventions are defined in
+The styles Storybook shows the generated component pages and fixture stories,
+written from `components/` and `fixtures/` by `scripts/component-docs`; it has
+no hand-written stories. React story conventions are defined in
 [`packages/react/STORYBOOK_STANDARD.md`](../../packages/react/STORYBOOK_STANDARD.md).
 The repository-level `AGENTS.md` also contains the required story checklist.
 
