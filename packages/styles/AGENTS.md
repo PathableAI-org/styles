@@ -2,6 +2,15 @@
 
 Use these rules when creating or editing PathAble UI, documentation, prototypes, design tokens, CSS, SCSS, or visual assets.
 
+> **Refactor in progress.** `@pathableai/styles` is becoming a thin wrapper
+> around USWDS that exposes `pathable-` names only, with unprefixed USWDS
+> tokens and utilities re-exported under the same names. See
+> [`docs/engineering/target-state.md`](../../docs/engineering/target-state.md),
+> which wins for the direction of the package. Sections below marked "current
+> implementation, being replaced" describe today's code, including `usa-`
+> dual-classing; follow them to work on that code, but do not copy the pattern
+> into new docs or fixtures.
+
 ## Required Source Of Truth
 
 Agents MUST use the tokens and rules from `@pathableai/styles`.
@@ -172,6 +181,8 @@ Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fail
 
 ## USWDS Token Usage
 
+> Current implementation, being replaced: consumer SCSS through `uswds-core` and the dual `--usa-*` custom properties are not part of the target contract. See [target state](../../docs/engineering/target-state.md).
+
 This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:
 
 - Agents MUST prefer `--pathable-*` custom properties (for example `var(--pathable-color-text)` or `var(--pathable-brand-pathable-blue)`) in component styles
@@ -191,6 +202,8 @@ $my-variable: uswds.color('primary'); // #00365c, PathAble Blue
 For CSS consumers, the compiled output contains resolved hex values via `--pathable-*` custom properties.
 
 ## USWDS Typography Token Usage
+
+> Current implementation, being replaced: the `--usa-font-*` namespace is not part of the target contract. See [target state](../../docs/engineering/target-state.md).
 
 This package wraps USWDS v3.x typography theme tokens. When creating or editing SCSS that references typography values:
 
@@ -231,6 +244,8 @@ Font files (`.woff2`) are bundled with the `@pathableai/styles` npm package. The
 Consuming projects do not need to manually place font files — they are distributed automatically with the package.
 
 ## USWDS Utility Wrappers Usage
+
+> Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes, and drops the `--usa-*` alternatives. See [target state](../../docs/engineering/target-state.md).
 
 This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as dual `--pathable-*` / `--usa-*` CSS custom properties.
 
@@ -285,6 +300,8 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 - Agents May use `--pathable-{module}-{value}` and `--usa-{module}-{value}` CSS custom properties as alternatives to the class-based utilities.
 
 ## USWDS Component Wrappers Usage
+
+> Current implementation, being replaced: the target is `pathable-*` selectors with no `@extend .usa-*`, and no `.usa-*` class on the DOM, including on JS-driven components and the Modal shell. See [target state](../../docs/engineering/target-state.md).
 
 This package provides `.pathable-{component}` CSS class wrappers for all USWDS components, organized into a package system. Each `.pathable-{component}` class resolves to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`.
 

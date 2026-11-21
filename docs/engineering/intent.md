@@ -44,6 +44,15 @@ Each stage consumes the one before it and must not redefine it:
 4. **Consumers** — applications that install `@pathableai/react` (and, where
    they need plain CSS, `@pathableai/styles`) from npm.
 
+The styles contract is being refactored back into a thin wrapper around USWDS
+that exposes `pathable-` names, ships compiled CSS and treats `fixtures/` as
+the canonical examples. The component pages and fixtures already describe that
+target, so any difference between them and the code is a defect in the code.
+The consumer docs and shipped agent guidance still describe the old model and
+are the next work.
+[Target state](target-state.md) owns the goal, the known divergences and the
+expected CI state while the code catches up.
+
 The two Storybooks are the executable catalog for stages 1 and 2; they are how
 this repository proves the contract before it ships.
 

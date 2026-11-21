@@ -9,11 +9,28 @@ you, and only when it is relevant; do not load every document up front. When an
 owning document and this file disagree, the owning document wins for its topic,
 and the constitution wins over both.
 
+## Current refactor: `@pathableai/styles` is becoming a thin USWDS wrapper
+
+The styles package is being refactored into a thin wrapper around USWDS that
+exposes `pathable-` names (no `usa-` in the public contract), re-exports
+unprefixed USWDS tokens and utilities under the same names, and ships compiled
+CSS. The component pages (`components/`) and `fixtures/` already describe that
+target, so a difference between them and the code is a defect in the code:
+never change them back to match today's SCSS. The consumer docs
+(`packages/styles/README.md`, `BRAND_RULES.md` and the React agent guidance)
+still describe the old `usa-` model and are the next work. CI is expected to be partly red while the code catches up.
+Read [`docs/engineering/target-state.md`](docs/engineering/target-state.md)
+before changing the styles package, its fixtures or component pages. Where
+`packages/styles/AGENTS.md` or `BRAND_RULES.md` describe `usa-` dual-classing,
+they describe the code being replaced, and `target-state.md` wins for the
+direction of the package (the constitution still wins overall).
+
 ## Where the rules live
 
 | When you are…                                                                                                                                                      | Read                                                                                                                                                  |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                                  |
+| Changing the direction of `@pathableai/styles`, or judging a red check, a fixture or a doc against the refactor                                                    | [`docs/engineering/target-state.md`](docs/engineering/target-state.md)                                                                                |
 | Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/intent.md`](docs/engineering/intent.md)                                                                                            |
 | Choosing a risk tier, branching, opening or merging a pull request                                                                                                 | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                |
 | Leading a delivery issue through specification, plan, implementation and its review and verification subagents, or choosing a role's model and effort              | [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md) and the `orchestrate-stack` skill                                            |

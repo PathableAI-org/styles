@@ -477,16 +477,34 @@ maintainer requires them in the ruleset on `main`, GitHub itself would merge a
 pull request with failing checks, and the gate is what stops an agent from
 doing so.
 
-Temporarily, for the component reset ([PR #607][reset-pr]), CI does not run
-the package lint (ESLint, stylelint, markdownlint, the token lint and the
-Prettier check) or the component-page checks (`check:component-pages` and
-`check:component-pages:executed`), because the component pages describe
-target `pathable-*` classes the SCSS does not have yet. Those jobs and steps
-are gated with `if: false` in the workflows and are skipped, so `CI result`
-and `Storybook result` still pass. The fixtures checks in `fixtures.yml`
-(html-validate, contract and axe) still run, and the contract and axe checks
-are expected to fail until the SCSS catches up. Re-enable the gated jobs and
-steps then.
+Temporarily, for the `@pathableai/styles` refactor described in
+[Target state](target-state.md) (it began with the component reset,
+[PR #607][reset-pr]), CI is expected to be partly red. The package lint
+(ESLint, stylelint, markdownlint, the token lint and the Prettier check) and
+the component-page checks (`check:component-pages` and
+`check:component-pages:executed`) are gated with `if: false` in the workflows
+and skipped, because the component pages describe target `pathable-*` classes
+the SCSS does not have yet. The fixtures checks in `fixtures.yml`
+(html-validate, contract and axe) still run, and the `Fixtures` workflow's
+contract step is expected to fail until the SCSS catches up; the axe step
+after it is then skipped.
+
+This does not contradict the gate's "none failed" rule, because the two
+checks it names cover different things:
+
+- GitHub's required checks are the aggregate jobs `CI result` and
+  `Storybook result`. They treat skipped jobs as passing and do not include
+  `fixtures.yml`, which has no aggregate job, so the red `Fixtures` run does not
+  stop GitHub from merging.
+- `pnpm merge:gate` reads every check run and commit status on the head, not
+  only those two. The red `Fixtures` run therefore makes it report a failed
+  check, and an agent cannot merge under [agent merge](#agent-merge) while it is
+  red. A person decides on the merge, as for any pull request the gate does not
+  approve.
+
+Report the red checks in the pull request's Evidence or Validation section.
+Re-enable the gated jobs and steps, and make the fixtures checks merge-gating,
+when the SCSS has caught up.
 
 [reset-pr]: https://github.com/PathableAI-org/styles/pull/607
 
