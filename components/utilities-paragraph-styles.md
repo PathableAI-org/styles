@@ -92,24 +92,28 @@ one set of values.
 | `5`  | `1.6`                                                   | `1.7`          |
 | `6`  | `1.8`                                                   | `1.8`          |
 
-The brand guide's line heights are `$theme-body-line-height: 5` (`line-height-body-5`,
-1.6), `$theme-heading-line-height: 3` (`line-height-heading-3`, 1.4) and
-`$theme-lead-line-height: 6` (`line-height-body-6`, 1.8).
+The brand guide's line heights are `line-height-body-5` (1.6) for body text,
+`line-height-heading-3` (1.4) for headings and `line-height-body-6` (1.8) for
+a lead paragraph.
+
+Some USWDS documentation lists 1.15 for step 2; the 3.14.0 source and the
+table above use 1.2.
 
 ### Measure tokens
 
-| Token  | `max-width` | Where USWDS uses it                                                       |
-| ------ | ----------- | ------------------------------------------------------------------------- |
-| `1`    | `44ex`      | Narrow measure (`$theme-text-measure-narrow`)                             |
-| `2`    | `60ex`      |                                                                           |
-| `3`    | `64ex`      |                                                                           |
-| `4`    | `68ex`      | Default measure (`$theme-text-measure`)                                   |
-| `5`    | `72ex`      |                                                                           |
-| `6`    | `88ex`      | Wide measure and lead (`$theme-text-measure-wide`, `$theme-lead-measure`) |
-| `none` | `none`      |                                                                           |
+| Token  | `max-width` | Used for              |
+| ------ | ----------- | --------------------- |
+| `1`    | `44ex`      | Narrow measure        |
+| `2`    | `60ex`      |                       |
+| `3`    | `64ex`      |                       |
+| `4`    | `68ex`      | Default measure       |
+| `5`    | `72ex`      |                       |
+| `6`    | `88ex`      | Wide measure and lead |
+| `none` | `none`      |                       |
 
 `ex` is the height of a lowercase x in the element's font, so the line length
-follows the element's own size.
+follows the element's own size. A USWDS comment lists `74ex` for token 5; the
+3.14.0 source compiles `72ex`.
 
 ### Indent tokens
 
@@ -131,67 +135,8 @@ The values these classes take are defined by the design tokens: [Line height](to
 The breakpoints are `min-width` media queries in `em`: `mobile-lg` 30em
 (480px), `tablet` 40em (640px) and `desktop` 64em (1024px). For example,
 `measure-1 desktop:measure-4` limits a block to 44ex on a phone and 68ex from
-1024px up. To change alignment at a breakpoint, enable `responsive` for
-`$text-align-settings`.
-
-## Sass
-
-`u-line-height()` takes a family and a step, `u-measure()` a measure token,
-`u-text-align()` an alignment and `u-text-indent()` an indent token; each sets
-one property. `u-text()` accepts the alignment tokens too, with the other
-tokens of [Text styles](utilities-text-styles.md). The function `line-height()`
-returns a value for any other property.
-
-```scss
-@use '@pathableai/styles' as *;
-
-.referral-summary {
-  @include u-line-height('body', 5);
-  @include u-measure(4);
-}
-
-.referral-summary__quote {
-  @include u-text-indent(2);
-  @include u-text-align('left');
-}
-
-.referral-summary__note {
-  line-height: line-height('body', 6);
-  max-width: 88ex;
-}
-```
-
-Write indent tokens as numbers (`2`, `-2`) or strings (`'05'`); quote half
-values so they stay strings.
-
-## Settings
-
-| Setting                                                                                                           | PathAble default               | What it does                                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `$theme-body-line-height`                                                                                         | `5`                            | The line height step of body text                                                                                       |
-| `$theme-heading-line-height`                                                                                      | `3`                            | The line height step of headings                                                                                        |
-| `$theme-lead-line-height`                                                                                         | `6`                            | The line height step of lead text                                                                                       |
-| `$theme-text-measure-narrow`, `$theme-text-measure`, `$theme-text-measure-wide`, `$theme-lead-measure`            | `1`, `4`, `6`, `6`             | The measure steps used by USWDS typography; USWDS defaults, not set by the brand guide                                  |
-| `$output-these-utilities`                                                                                         | `default` (every module)       | A list of module names to output; the modules of this page are `line-height`, `measure`, `text-align` and `text-indent` |
-| `$line-height-settings`, `$measure-settings`                                                                      | `responsive: true`, no states  | Which prefixes each module outputs                                                                                      |
-| `$text-align-settings`, `$text-indent-settings`                                                                   | `responsive: false`, no states | Which prefixes each module outputs                                                                                      |
-| `$line-height-palettes`, `$measure-palettes`, `$text-align-palettes`, `$text-indent-palettes`                     | The `default` palette of each  | The value sets                                                                                                          |
-| `$line-height-manual-values`, `$measure-manual-values`, `$text-align-manual-values`, `$text-indent-manual-values` | `()`                           | A map of extra tokens, such as `('prose': 72ch)` for `$measure-manual-values`, which outputs `measure-prose`            |
-| `$utilities-use-important`                                                                                        | `false`                        | Appends `!important` to every utility rule                                                                              |
-
-[Line height tokens](tokens-typesetting-line-height.md) and
-[measure tokens](tokens-typesetting-measure.md) describe the scales in more
-detail. Pass settings in the `with (...)` clause of the first `@use '@pathableai/styles'`
-in your build, for example:
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-text-measure: 5,
-  $text-align-settings: (
-    responsive: true,
-  )
-);
-```
+1024px up. The alignment classes have no breakpoint variants, so change
+alignment at a breakpoint with your own CSS.
 
 ## States
 
@@ -203,7 +148,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 `measure-<value>` sets `max-width` only. It does not centre the block or set a
 width, so a measure on a block inside a wider container leaves the block at the

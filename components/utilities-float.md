@@ -14,7 +14,7 @@ guarantees:
   - id: right
     claim: float-right sets float right.
   - id: none
-    claim: float-none sets float none, so an element inside a floated parent is not itself floated.
+    claim: float-none sets float none, and on an element that also has float-left it wins, because it comes later in the stylesheet, so the element is not floated.
   - id: not-responsive
     claim: The stylesheet contains no tablet:float-left, tablet:float-right or tablet:float-none class and no hover:float-left class.
 ---
@@ -57,53 +57,18 @@ Load the stylesheet once in the application; no JavaScript is needed:
 | ------------- | -------- | ----------------------- |
 | `float-<v>`   | `float`  | `none`, `left`, `right` |
 
+`float-none` is for an element that another rule floats, such as markup
+generated with `float-left` on every item where one item must not float. In the
+stylesheet it comes after `float-left`, so it wins over it on the same element;
+`float-right` comes after `float-none`, so it wins over `float-none`. Putting
+`float-none` on an element whose parent is floated does nothing, because a float
+does not make its children float.
+
 ## Variants
 
 - **Responsive.** None. `float-*` is output without `mobile-lg:`, `tablet:` or
   `desktop:` variants.
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants.
-
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-aside {
-  @include u-float('right');
-  @include u-width('card');
-}
-
-.plan-aside__reset {
-  @include u-float('none');
-}
-```
-
-The mixin is `u-float`; add `!important` as a final argument to output it for
-one use. To float only at a breakpoint, wrap the mixin in
-`@include at-media('tablet') { ... }`.
-
-## Settings
-
-The matching USWDS module is `float`. PathAble does not override it, so USWDS
-defaults apply:
-
-| Setting                      | Default                             | Effect                                                            |
-| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
-| `$output-these-utilities`    | `default` (every module)            | A list such as `('float', 'clearfix')` outputs only those modules |
-| `$float-settings`            | `output: true`, `responsive: false` | Set `responsive: true` to output breakpoint variants              |
-| `$utilities-use-important`   | `false`                             | `true` outputs every utility with `!important`                    |
-| `$theme-utility-breakpoints` | `mobile-lg`, `tablet`, `desktop` on | Which responsive prefixes exist when `responsive` is on           |
-
-The module also takes `active`, `focus`, `hover` and `visited` keys, all
-`false` here:
-
-```scss
-@use '@pathableai/styles' with (
-  $float-settings: (
-    responsive: true,
-  )
-);
-```
 
 ## States
 
@@ -115,7 +80,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 ## The consumer owns
 

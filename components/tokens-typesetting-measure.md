@@ -10,7 +10,7 @@ guarantees:
   - id: none-value
     claim: measure-none sets max-width to none.
   - id: default-measure
-    claim: measure(4) returns 68ex, which is the measure the typography mixins use for running text.
+    claim: measure-4 sets max-width to 68ex, the line length PathAble uses for running text.
   - id: max-width-only
     claim: A measure class sets only max-width and does not set width, margin or font size.
   - id: responsive-variants
@@ -46,42 +46,23 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: scale -->
 
-## Tokens
+## Values
 
-| Key    | Value at PathAble defaults | Role in the typography settings                      |
-| ------ | -------------------------- | ---------------------------------------------------- |
-| `1`    | 44ex                       | `$theme-text-measure-narrow`                         |
-| `2`    | 60ex                       |                                                      |
-| `3`    | 64ex                       |                                                      |
-| `4`    | 68ex                       | `$theme-text-measure`, the default for running text  |
-| `5`    | 72ex                       |                                                      |
-| `6`    | 88ex                       | `$theme-text-measure-wide` and `$theme-lead-measure` |
-| `none` | `none`                     | No limit                                             |
+| Key    | PathAble value | Use                              |
+| ------ | -------------- | -------------------------------- |
+| `1`    | 44ex           | Narrow text                      |
+| `2`    | 60ex           |                                  |
+| `3`    | 64ex           |                                  |
+| `4`    | 68ex           | The default for running text     |
+| `5`    | 72ex           |                                  |
+| `6`    | 88ex           | Wide text and the lead paragraph |
+| `none` | `none`         | No limit                         |
 
 Brand guide: silent. The values and the default measure are the USWDS defaults.
+The USWDS website lists 74ex for key `5`; USWDS 3.14.0 compiles 72ex, and that
+is the value on this page.
 The `ex` unit is the x-height of the element's own font, so the same key gives a
 slightly different pixel width in a different typeface or size.
-
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-summary__text {
-  max-width: measure(4); // 68ex
-}
-
-.plan-summary__intro {
-  @include u-measure(6); // max-width: 88ex
-}
-
-.plan-summary__wide {
-  @include u-measure('none');
-}
-```
-
-`measure($key)` returns the value; `u-measure($key)` sets `max-width`. Quote
-`'none'`.
 
 ## Utilities
 
@@ -93,26 +74,6 @@ slightly different pixel width in a different typeface or size.
 prefixes `mobile-lg:`, `tablet:` and `desktop:` also work, for example
 `desktop:measure-5`. Width utilities set `width` and `max-width` by spacing
 units and are separate.
-
-## Settings
-
-| Setting                      | PathAble default                            | USWDS default |
-| ---------------------------- | ------------------------------------------- | ------------- |
-| `$theme-text-measure-narrow` | `1`                                         | `1`           |
-| `$theme-text-measure`        | `4`                                         | `4`           |
-| `$theme-text-measure-wide`   | `6`                                         | `6`           |
-| `$theme-lead-measure`        | `6`                                         | `6`           |
-| `$measure-settings`          | `()` (output and responsive on; states off) | same          |
-
-`$theme-text-measure` is the measure the paragraph and list mixins apply to
-running text, and `$theme-lead-measure` the one for the lead paragraph.
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-text-measure: 4,
-  $theme-lead-measure: 6
-);
-```
 
 ## States
 

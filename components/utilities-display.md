@@ -97,69 +97,6 @@ The values these classes take are defined by the design tokens: [Spacing units](
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants are
   output for any class on this page.
 
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.status-badge {
-  @include u-position('absolute');
-  @include u-top(0);
-  @include u-right(0);
-  @include u-z(100);
-}
-
-.plan-panel {
-  @include u-display('none');
-  @include u-overflow-x('auto');
-  opacity: 0.5; // opacity has no mixin
-
-  @include at-media('tablet') {
-    @include u-display('block');
-  }
-}
-
-.plan-footer {
-  @include u-pin('bottom'); // also u-pin-bottom, u-pin-x, u-pin-all, u-pin-none
-}
-```
-
-Mixins (opacity has none): `u-display`, `u-overflow`, `u-overflow-x`, `u-overflow-y`,
-`u-position`, `u-top`, `u-right`, `u-bottom`, `u-left`, `u-pin`, `u-pin-all`,
-`u-pin-x`, `u-pin-y`, `u-pin-top`, `u-pin-bottom`, `u-pin-left`,
-`u-pin-right`, `u-pin-none` and `u-z`. Quote half values as strings
-(`u-top('05')`), write negatives as `-1` or `'neg-1'`, and add `!important`
-as a final argument to output it for one use.
-
-## Settings
-
-The matching USWDS modules are `display`, `opacity`, `overflow`, `position`,
-`top`, `right`, `bottom`, `left`, `pin` and `z-index`. PathAble does not
-override any of these settings, so USWDS defaults apply:
-
-| Setting                                                                                                                                                                         | Default                             | Effect                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------- |
-| `$output-these-utilities`                                                                                                                                                       | `default` (every module)            | A list of module names, such as `('display', 'position')`, outputs only those modules       |
-| `$display-settings`                                                                                                                                                             | `output: true`, `responsive: true`  | Responsive variants of the `display-*` classes                                              |
-| `$opacity-settings`, `$overflow-settings`, `$position-settings`, `$top-settings`, `$right-settings`, `$bottom-settings`, `$left-settings`, `$pin-settings`, `$z-index-settings` | `output: true`, `responsive: false` | Set `responsive: true` to output breakpoint variants for one module                         |
-| `$utilities-use-important`                                                                                                                                                      | `false`                             | `true` outputs every utility with `!important`                                              |
-| `$theme-utility-breakpoints`                                                                                                                                                    | `mobile-lg`, `tablet`, `desktop` on | Which responsive prefixes exist                                                             |
-| `$<module>-manual-values`                                                                                                                                                       | `()`                                | Adds a value to one module, such as `$z-index-manual-values: ('modal': 1000)` for `z-modal` |
-
-Every module also takes `active`, `focus`, `hover` and `visited` keys, all
-`false` here:
-
-```scss
-@use '@pathableai/styles' with (
-  $z-index-settings: (
-    responsive: true,
-  ),
-  $z-index-manual-values: (
-    'modal': 1000,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utilities. Copy the one
@@ -170,7 +107,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 ## The consumer owns
 

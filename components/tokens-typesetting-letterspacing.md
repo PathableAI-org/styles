@@ -11,8 +11,6 @@ guarantees:
     claim: text-ls-1, text-ls-2 and text-ls-3 set letter-spacing to 0.025em, 0.1em and 0.15em.
   - id: auto-value
     claim: text-ls-auto sets letter-spacing to initial.
-  - id: sass-keys
-    claim: "letter-spacing(-2) and letter-spacing('ls-neg-2') both return -0.02em, and letter-spacing('neg-2') is a Sass error."
   - id: not-responsive
     claim: 'The letter-spacing classes have no mobile-lg:, tablet: or desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
@@ -47,42 +45,20 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: scale -->
 
-## Tokens
+## Values
 
-| Class suffix | Sass key | Value at PathAble defaults | Notes                       |
-| ------------ | -------- | -------------------------- | --------------------------- |
-| `neg-3`      | `-3`     | -0.03em                    | Tightest                    |
-| `neg-2`      | `-2`     | -0.02em                    |                             |
-| `neg-1`      | `-1`     | -0.01em                    |                             |
-| `auto`       | `auto`   | `initial`                  | Resets to the browser value |
-| `1`          | `1`      | 0.025em                    |                             |
-| `2`          | `2`      | 0.1em                      | Uppercase labels            |
-| `3`          | `3`      | 0.15em                     | Widest                      |
+| Class suffix | PathAble value | Notes                       |
+| ------------ | -------------- | --------------------------- |
+| `neg-3`      | -0.03em        | Tightest                    |
+| `neg-2`      | -0.02em        |                             |
+| `neg-1`      | -0.01em        |                             |
+| `auto`       | `initial`      | Resets to the browser value |
+| `1`          | 0.025em        |                             |
+| `2`          | 0.1em          | Uppercase labels            |
+| `3`          | 0.15em         | Widest                      |
 
-The system also accepts the long keys `ls-neg-3`, `ls-neg-2`, `ls-neg-1`,
-`ls-auto`, `ls-1`, `ls-2` and `ls-3` in Sass. The negative keys are written
-`neg-2` in class names and `-2` (a negative number) in Sass functions.
-Brand guide: silent. The values are the USWDS defaults.
-
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.status-label {
-  text-transform: uppercase;
-  letter-spacing: letter-spacing(2); // 0.1em
-}
-
-.page-title {
-  @include u-text('ls-neg-1'); // letter-spacing: -0.01em
-}
-```
-
-`letter-spacing($key)` and `ls($key)` return the value. Use the number keys `-3`
-to `3` or `auto`, or the long keys such as `'ls-neg-2'`; the short class name
-`'neg-2'` is an error in the function. `u-text('ls-neg-2')` sets the property
-from a long key, as do the other `u-text` keys.
+The classes are `text-ls-neg-3` to `text-ls-3`. Brand guide: silent. The
+values are the USWDS defaults.
 
 ## Utilities
 
@@ -92,17 +68,6 @@ from a long key, as do the other `u-text` keys.
 
 `<key>` is `neg-3`, `neg-2`, `neg-1`, `auto`, `1`, `2` or `3`:
 `text-ls-2`, `text-ls-neg-1`. There are no responsive or state variants.
-
-## Settings
-
-No `$theme-*` setting changes these values; the seven tokens are fixed by
-USWDS and the brand uses the defaults. Only the module's output can be
-configured:
-
-| Setting                    | PathAble default                            | USWDS default |
-| -------------------------- | ------------------------------------------- | ------------- |
-| `$letter-spacing-settings` | `()` (output on; responsive and states off) | same          |
-| `$letter-spacing-palettes` | `('palette-letter-spacing-default')`        | same          |
 
 ## States
 

@@ -9,6 +9,8 @@ classes:
   - border-<side>
   - border-<width>
   - border-<side>-<width>
+  - border-width-<width>
+  - border-<side>-width-<width>
   - border-<style>
   - border-<token>
   - radius-<value>
@@ -20,6 +22,8 @@ guarantees:
     claim: border-1px sets border to 1px solid, border-2px to 2px solid, border-05 to 0.25rem solid, border-1 to 0.5rem solid and border-3 to 1.5rem solid, and border-0 sets border to 0 solid.
   - id: side-width
     claim: border-y-2px sets border-top and border-bottom to 2px solid, border-x-2px sets border-left and border-right to 2px solid, and border-left-05 sets border-left to 0.25rem solid.
+  - id: width-only
+    claim: border-width-2px sets border-width to 2px and nothing else, border-width-0 sets border-width to 0, border-top-width-05 sets border-top-width to 0.25rem, and border-x-width-1px sets border-left-width and border-right-width to 1px, so none of them sets a style or a colour.
   - id: style-classes
     claim: border-dashed sets border-style to dashed, border-dotted to dotted and border-solid to solid, and none of them sets a width or a colour.
   - id: color-classes
@@ -81,12 +85,17 @@ colour (`currentcolor`) unless a colour class is added.
 | `border-<side>`                                  | `border-<side>`                         | `1px solid`; side is `top`, `right`, `bottom`, `left`, `x` or `y` |
 | `border-<width>`                                 | `border`                                | Width token followed by `solid`                                   |
 | `border-<side>-<width>`                          | `border-<side>`                         | Width token followed by `solid`, for the same sides as above      |
+| `border-width-<width>`                           | `border-width`                          | Width token only: no style, no colour                             |
+| `border-<side>-width-<width>`                    | `border-<side>-width`                   | Width token only, for the same sides as above                     |
 | `border-solid`, `border-dashed`, `border-dotted` | `border-style`                          | `solid`, `dashed`, `dotted`                                       |
 | `border-<token>`                                 | `border-color`                          | A colour token, such as `primary`, `base` or `error`              |
 | `radius-<value>`                                 | `border-radius`                         | `0`, `sm`, `md`, `lg`, `pill`                                     |
 | `radius-<corner>-<value>`                        | Two `border-<corner>-radius` properties | Corner is `top`, `right`, `bottom` or `left`; value as above      |
 
-`x` is left and right, `y` is top and bottom.
+`x` is left and right, `y` is top and bottom. Use the width-only classes
+(`border-width-2px`, `border-bottom-width-05`) to change the width of a border
+that another class already styles, for example `border border-width-2px`.
+They are not output with the responsive or `hover:` prefixes.
 
 ### Width tokens
 
@@ -118,80 +127,23 @@ The colour classes use the same tokens and values as [Color](utilities-color.md)
 the theme tokens (`border-primary`, `border-base`, `border-accent-cool-dark`),
 the state tokens (`border-error`, `border-success`), `border-black`,
 `border-white`, `border-transparent`, and the basic and grayscale colours.
-The USWDS system palette (`border-red-50v`, `border-gray-cool-30`) is not
-output by default; see
-[System palette classes not output by default](utilities-color.md#system-palette-classes-not-output-by-default).
+The USWDS system palette classes such as `border-red-50v` and
+`border-gray-cool-30` are not part of PathAble's CSS; see
+[System palette classes not in PathAble's CSS](utilities-color.md#system-palette-classes-not-in-pathables-css).
 
 The values these classes take are defined by the design tokens: [Color tokens](tokens-color.md), [Spacing units](tokens-spacing-units.md) and [Shadow](tokens-shadow.md).
 
 ## Variants
 
-| Prefix                              | Output for                                                                                        | Not output for                                   |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `mobile-lg:`, `tablet:`, `desktop:` | Border shorthand and side classes, `border-<width>`, `border-<token>`, and every `radius-*` class | `border-solid`, `border-dashed`, `border-dotted` |
-| `hover:`                            | Border shorthand and side classes, `border-<width>`, `border-<token>`                             | `border-<style>` and every `radius-*` class      |
-| `focus:`, `active:`, `visited:`     | None                                                                                              | Every class                                      |
+| Prefix                              | Output for                                                                                        | Not output for                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `mobile-lg:`, `tablet:`, `desktop:` | Border shorthand and side classes, `border-<width>`, `border-<token>`, and every `radius-*` class | `border-width-*`, `border-solid`, `border-dashed`, `border-dotted` |
+| `hover:`                            | Border shorthand and side classes, `border-<width>`, `border-<token>`                             | `border-width-*`, `border-<style>` and every `radius-*` class      |
+| `focus:`, `active:`, `visited:`     | None                                                                                              | Every class                                                        |
 
 The breakpoints are `min-width` media queries in `em`: `mobile-lg` 30em
 (480px), `tablet` 40em (640px) and `desktop` 64em (1024px). For example,
 `border-1px tablet:border-2px` is 1px wide on a phone and 2px from 640px up.
-
-## Sass
-
-`u-border()` sets width, colour and style from the arguments, so one call can
-replace a group of classes. The side mixins (`u-border-top()`,
-`u-border-right()`, `u-border-bottom()`, `u-border-left()`, `u-border-x()` and
-`u-border-y()`) take the same arguments for one side or an axis.
-`u-border-width()`, `u-border-color()` and the side width mixins set one part.
-`u-radius()` and `u-radius-top()`, `u-radius-right()`, `u-radius-bottom()` and
-`u-radius-left()` set the radius. `radius()` returns a radius value for any
-other property.
-
-```scss
-@use '@pathableai/styles' as *;
-
-.referral-note {
-  @include u-border(1px, 'base');
-  @include u-border-left(0.5, 'accent-cool-dark');
-  @include u-radius('md');
-}
-
-.referral-note--urgent {
-  @include u-border-color('error');
-  border-width: 2px;
-  border-radius: radius('lg');
-}
-```
-
-Arguments are width tokens as numbers or strings (`1px`, `2px`, `0.5`, `'05'`),
-a colour token string, and a style string; `'dashed'` outputs a dashed
-border. Quote half values (`'05'`, `'105'`, `'205'`) so they stay strings.
-
-## Settings
-
-| Setting                                                                                           | PathAble default                                                                   | What it does                                                                                                                                |
-| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `$output-these-utilities`                                                                         | `default` (every module)                                                           | A list of module names to output; the modules of this page are `border`, `border-width`, `border-style`, `border-color` and `border-radius` |
-| `$border-settings`, `$border-color-settings`, `$border-radius-settings`                           | `responsive: true`; `hover: true` for border and border colour, `false` for radius | Which prefixes each module outputs                                                                                                          |
-| `$border-style-settings`, `$border-width-settings`                                                | `responsive: false`, `hover: false`                                                | Which prefixes the style and width modules output                                                                                           |
-| `$border-palettes`, `$border-radius-palettes`, `$border-style-palettes`, `$border-width-palettes` | The `default` palette of each                                                      | The value sets; add a palette or remove one to change which tokens have classes                                                             |
-| `$border-color-palettes`, `$global-color-palettes`                                                | `()` and `('palette-color-default')`                                               | The colour tokens that have a `border-<token>` class                                                                                        |
-| `$border-manual-values`, `$border-radius-manual-values`, `$border-color-manual-values`            | `()`                                                                               | A map of extra tokens                                                                                                                       |
-| `$theme-border-radius-sm`, `$theme-border-radius-md`, `$theme-border-radius-lg`                   | `2px`, `0.5` units (`0.25rem`), `1` unit (`0.5rem`)                                | The radius tokens; USWDS defaults, not set by the brand guide                                                                               |
-| `$utilities-use-important`                                                                        | `false`                                                                            | Appends `!important` to every utility rule                                                                                                  |
-| `$theme-utility-breakpoints`                                                                      | `mobile-lg`, `tablet` and `desktop` on                                             | Which responsive prefixes exist                                                                                                             |
-
-Pass settings in the `with (...)` clause of the first `@use '@pathableai/styles'`
-in your build, for example:
-
-```scss
-@use '@pathableai/styles' with (
-  $border-settings: (
-    hover: false,
-  ),
-  $theme-border-radius-md: 0.5
-);
-```
 
 ## States
 
@@ -203,7 +155,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 A colour or style class never draws a border on its own: it sets only
 `border-color` or `border-style`, and an element with no border style draws no

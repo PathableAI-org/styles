@@ -94,64 +94,6 @@ The values these classes take are defined by the design tokens: [Spacing units](
   responsive variants.
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants.
 
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.welcome-video {
-  @include add-aspect('16x9');
-  @include u-maxw('mobile-lg');
-}
-
-.plan-panel {
-  @include u-width('full');
-  @include u-minh('card');
-
-  @include at-media('tablet') {
-    @include u-width('mobile-lg');
-  }
-}
-
-.avatar {
-  @include u-circle(5);
-}
-```
-
-Mixins: `u-height`, `u-width`, `u-maxh`, `u-maxw`, `u-minh`, `u-minw`,
-`u-circle` and `u-square`; `add-aspect` has no `u-` prefix and takes the ratio
-as a string. Quote strings and half values (`u-width('05')`), and add
-`!important` as a final argument to output it for one use.
-
-## Settings
-
-The matching USWDS modules are `height`, `width`, `max-height`, `max-width`,
-`min-height`, `min-width`, `add-aspect`, `circle` and `square`. PathAble does
-not override any of these settings, so USWDS defaults apply:
-
-| Setting                                                                                                                                                                          | Default                             | Effect                                                                     |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------- |
-| `$output-these-utilities`                                                                                                                                                        | `default` (every module)            | A list such as `('width', 'max-width')` outputs only those modules         |
-| `$width-settings`                                                                                                                                                                | `output: true`, `responsive: true`  | Breakpoint variants of `width-*`                                           |
-| `$height-settings`, `$max-height-settings`, `$max-width-settings`, `$min-height-settings`, `$min-width-settings`, `$add-aspect-settings`, `$circle-settings`, `$square-settings` | `output: true`, `responsive: false` | Set `responsive: true` to output breakpoint variants                       |
-| `$<module>-manual-values`                                                                                                                                                        | `()`                                | Adds a value, such as `$width-manual-values: ('tab': 4ch)` for `width-tab` |
-| `$utilities-use-important`                                                                                                                                                       | `false`                             | `true` outputs every utility with `!important`                             |
-| `$theme-utility-breakpoints`                                                                                                                                                     | `mobile-lg`, `tablet`, `desktop` on | Which responsive prefixes exist                                            |
-
-Every module also takes `active`, `focus`, `hover` and `visited` keys, all
-`false` here:
-
-```scss
-@use '@pathableai/styles' with (
-  $width-manual-values: (
-    'tab': 4ch,
-  ),
-  $max-width-settings: (
-    responsive: true,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utilities. Copy the one
@@ -162,7 +104,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults. Lengths are the values the compiled
+states the CSS a class compiles to at PathAble defaults. Lengths are the values the compiled
 stylesheet outputs at a 16px root font size.
 
 ## The consumer owns

@@ -12,9 +12,7 @@ guarantees:
   - id: normal-keyword
     claim: text-normal sets font-weight to normal, and text-light sets font-weight to 300.
   - id: disabled-weights
-    claim: No class exists for text-thin, text-medium or text-heavy, because their settings are false.
-  - id: numeric-keys
-    claim: font-weight(600) and font-weight(700) return 600 and 700, because the numeric keys 100 to 900 are always valid in Sass.
+    claim: No class exists for text-thin, text-medium, text-heavy or any numeric weight such as text-500; PathAble outputs only text-light, text-normal, text-semibold and text-bold.
   - id: responsive-variants
     claim: 'Each font-weight class has mobile-lg:, tablet: and desktop: variants and no hover:, focus:, active: or visited: variants.'
 ---
@@ -22,8 +20,8 @@ guarantees:
 # Font weight
 
 Four font-weight tokens (light, normal, semibold, bold) matched to the brand's
-loaded font files. A weight is enabled by giving it a number in a setting; a
-weight set to `false` has no token and no class.
+loaded font files. A weight that PathAble does not output has no token and no
+class.
 
 ## When to use
 
@@ -48,45 +46,27 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: weights -->
 
-## Tokens
+## Values
 
-| Token      | Value at PathAble defaults | Setting                       | Font file loaded                     | Notes                                                 |
-| ---------- | -------------------------- | ----------------------------- | ------------------------------------ | ----------------------------------------------------- |
-| `thin`     | `false` (off)              | `$theme-font-weight-thin`     | none                                 | No class or token                                     |
-| `light`    | 300                        | `$theme-font-weight-light`    | Roboto Mono only                     | Brand faces have no 300 file; drawn from the nearest  |
-| `normal`   | the keyword `normal`       | `$theme-font-weight-normal`   | Fredoka, Nunito 400                  | Setting is 400, the weight of `@font-face` generation |
-| `medium`   | `false` (off)              | `$theme-font-weight-medium`   | none                                 | No class or token                                     |
-| `semibold` | 600                        | `$theme-font-weight-semibold` | Nunito 600                           | The brand's UI-label weight; USWDS default is off     |
-| `bold`     | 700                        | `$theme-font-weight-bold`     | Montserrat, Poppins, Roboto Mono 700 | Fredoka and Nunito have no 700 file                   |
-| `heavy`    | `false` (off)              | `$theme-font-weight-heavy`    | none                                 | No class or token                                     |
+| Token      | PathAble value       | USWDS default | Font file loaded                     | Notes                                                                |
+| ---------- | -------------------- | ------------- | ------------------------------------ | -------------------------------------------------------------------- |
+| `thin`     | not output           | not output    | none                                 | No class                                                             |
+| `light`    | 300                  | 300           | Roboto Mono only                     | Fredoka and Nunito have no 300 file: drawn from the nearest weight   |
+| `normal`   | the keyword `normal` | `normal`      | Fredoka, Nunito 400                  | The same as 400                                                      |
+| `medium`   | not output           | not output    | none                                 | No class                                                             |
+| `semibold` | 600                  | not output    | Nunito 600                           | PathAble outputs `text-semibold` at 600, the brand's UI-label weight |
+| `bold`     | 700                  | 700           | Montserrat, Poppins, Roboto Mono 700 | Fredoka and Nunito have no 700 file                                  |
+| `heavy`    | not output           | not output    | none                                 | No class                                                             |
 
-The numeric keys `100` to `900` are always valid as Sass arguments
-(`font-weight(600)`) but have no classes.
+Numeric weights such as 600 have no class of their own: write `text-semibold`.
 
 The brand guide specifies Fredoka Regular, Nunito Regular and SemiBold (600, a
-design-system addition for UI labels), and Montserrat and Poppins Bold. Other
-weights are drawn by the browser from the nearest loaded file. USWDS generates
-a `@font-face` rule only for the weights set to a number; the package declares
-its own rules for the brand files.
-
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-card__label {
-  @include u-text('semibold'); // font-weight: 600
-}
-
-.plan-card__total {
-  font-weight: font-weight('bold'); // 700
-}
-```
-
-`font-weight($key)` and `fw($key)` return the weight. `u-text(...)` and
-`u-font-weight(...)` set the property from a key, and `u-text` also accepts
-letter-spacing, colour and other text keys. A key whose setting is `false`
-is a Sass error.
+design-system addition for UI labels), and Montserrat and Poppins Bold. For any
+other weight and face, the browser uses the nearest loaded file and may
+synthesise the weight, which draws letterforms differently from a real weight.
+Use the class on a face that ships the file: `text-light`, `text-normal` and
+`text-bold` on Roboto Mono, `text-semibold` on Nunito, `text-bold` on
+Montserrat.
 
 ## Utilities
 
@@ -98,29 +78,6 @@ is a Sass error.
 The responsive prefixes `mobile-lg:`, `tablet:` and `desktop:` also work, for
 example `tablet:text-bold`. Colours share the `text-` prefix (`text-primary`);
 the value after it tells them apart.
-
-## Settings
-
-| Setting                       | PathAble default                            | USWDS default |
-| ----------------------------- | ------------------------------------------- | ------------- |
-| `$theme-font-weight-thin`     | `false`                                     | `false`       |
-| `$theme-font-weight-light`    | `300`                                       | `300`         |
-| `$theme-font-weight-normal`   | `400`                                       | `400`         |
-| `$theme-font-weight-medium`   | `false`                                     | `false`       |
-| `$theme-font-weight-semibold` | `600`                                       | `false`       |
-| `$theme-font-weight-bold`     | `700`                                       | `700`         |
-| `$theme-font-weight-heavy`    | `false`                                     | `false`       |
-| `$theme-generate-all-weights` | `false`                                     | `false`       |
-| `$font-weight-settings`       | `()` (output and responsive on; states off) | same          |
-
-`$theme-generate-all-weights` only affects the `@font-face` rules USWDS writes
-for its own faces.
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-font-weight-semibold: 600
-);
-```
 
 ## States
 
@@ -141,7 +98,8 @@ states behaviour of the package at PathAble defaults.
 - Not relying on weight alone to carry meaning; pair it with text, an icon or
   a position.
 - Not using `text-bold` on Fredoka or Nunito headings and labels expecting a
-  true bold: those faces have no 700 file, so the browser synthesises it. Use
-  `text-semibold` for Nunito emphasis.
-- Not enabling `thin`, `medium` or `heavy` without also shipping a font file
-  for that weight.
+  true bold: those faces have no 700 file, so the browser draws it from the
+  nearest loaded file and may synthesise it. Use `text-semibold` for Nunito
+  emphasis.
+- Not using `text-light` on Fredoka or Nunito expecting a lighter face: there
+  is no 300 file, so the text renders at the regular weight.

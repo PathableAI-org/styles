@@ -32,7 +32,9 @@ JavaScript.
 
 - Lift a one-off panel, popover container or sticky bar above the content
   behind it: `shadow-2` for a panel, `shadow-4` for a popover.
-- Raise a panel on hover with `hover:shadow-3`.
+- Raise an interactive panel, such as a link card, on hover with
+  `hover:shadow-3`. Put it on an element that responds to the pointer, not on
+  static text.
 - Remove a shadow that a component draws, with `shadow-none`.
 
 Use something else when:
@@ -69,8 +71,7 @@ Load the stylesheet once in the application; no JavaScript is needed:
 | `5`    | `0 1rem 2rem 0 rgba(0, 0, 0, 0.1)`      |
 
 The shadow values are USWDS defaults. The brand guide does not define
-elevation, and USWDS has no setting that changes the tokens; to use another
-shadow, write your own `box-shadow` in your own class.
+elevation.
 
 The values these classes take are defined by the design tokens: [Shadow](tokens-shadow.md).
 
@@ -78,56 +79,12 @@ The values these classes take are defined by the design tokens: [Shadow](tokens-
 
 | Prefix                              | Output     | Notes                                                        |
 | ----------------------------------- | ---------- | ------------------------------------------------------------ |
-| `mobile-lg:`, `tablet:`, `desktop:` | Not output | `$box-shadow-settings` has `responsive: false`               |
+| `mobile-lg:`, `tablet:`, `desktop:` | Not output | No responsive variant of a shadow class exists               |
 | `hover:`                            | Output     | `hover:shadow-1` to `hover:shadow-5` and `hover:shadow-none` |
-| `focus:`, `active:`, `visited:`     | Not output | Set the key to `true` in `$box-shadow-settings` to output it |
+| `focus:`, `active:`, `visited:`     | Not output | No `focus:`, `active:` or `visited:` variant exists          |
 
 A hover shadow gives no cue to keyboard or touch users, so it never carries
 meaning alone.
-
-## Sass
-
-`u-shadow()` sets `box-shadow` from a token. It takes one argument, a number
-or a string, and `!important` as a last argument.
-
-```scss
-@use '@pathableai/styles' as *;
-
-.referral-popover {
-  @include u-shadow(4);
-}
-
-.referral-card {
-  @include u-shadow(1);
-
-  &:hover {
-    @include u-shadow(3);
-  }
-}
-```
-
-## Settings
-
-| Setting                      | PathAble default                                                         | What it does                                                                                                 |
-| ---------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `$output-these-utilities`    | `default` (every module)                                                 | A list of module names to output; the module of this page is `box-shadow`                                    |
-| `$box-shadow-settings`       | `output: true`, `responsive: false`, `hover: true`, other states `false` | Which prefixes the module outputs                                                                            |
-| `$box-shadow-palettes`       | `('palette-box-shadow-default')`                                         | The value set; add a palette to change which tokens have classes                                             |
-| `$box-shadow-manual-values`  | `()`                                                                     | A map of extra tokens, such as `('inset': inset 0 2px 4px rgba(0, 0, 0, 0.1))`, which outputs `shadow-inset` |
-| `$utilities-use-important`   | `false`                                                                  | Appends `!important` to every utility rule                                                                   |
-| `$theme-utility-breakpoints` | `mobile-lg`, `tablet` and `desktop` on                                   | Which responsive prefixes exist                                                                              |
-
-Pass settings in the `with (...)` clause of the first `@use '@pathableai/styles'`
-in your build, for example:
-
-```scss
-@use '@pathableai/styles' with (
-  $box-shadow-settings: (
-    hover: false,
-  )
-  ;
-);
-```
 
 ## States
 
@@ -139,7 +96,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 A shadow is drawn outside the box and takes no space. It is clipped by an
 ancestor that has `overflow` set to anything other than `visible`.

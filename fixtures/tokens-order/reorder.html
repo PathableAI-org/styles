@@ -1,12 +1,14 @@
-<!-- description: Three panels written in reading order that display in a different order: order-first moves the notes panel ahead and order-last moves the summary panel behind. -->
+<!-- description: Three independent dashboard tiles written in one order that display in another: order-first moves the messages tile ahead and order-last moves the documents tile behind, and the markup order still sets reading and Tab order. -->
 <div class="display-flex">
   <div class="order-last flex-1 bg-base-lighter text-ink padding-2">
-    <code>order-last</code> Participant summary
+    <code>order-last</code> Documents
   </div>
-  <div class="flex-1 bg-primary-lighter text-ink padding-2">
-    Next appointment
-  </div>
+  <div class="flex-1 bg-primary-lighter text-ink padding-2">Appointments</div>
   <div class="order-first flex-1 bg-accent-cool-lighter text-ink padding-2">
-    <code>order-first</code> Case notes
+    <code>order-first</code> Messages
   </div>
 </div>
+<p class="font-body-2xs margin-top-1">
+  Source order is Documents, Appointments, Messages. Screen readers and the Tab
+  key follow the source order, not the visual order.
+</p>

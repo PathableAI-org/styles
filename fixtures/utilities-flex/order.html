@@ -1,5 +1,9 @@
-<!-- description: Two items whose visual order is reversed with `order-last` and `order-first`. The source order is unchanged, so keyboard and screen reader order stays logical. -->
+<!-- description: Two independent items of equal priority whose drawn order is swapped with `order-last` and `order-first`. Screen readers and keyboard focus still follow the source order, office hours first, so only items that do not depend on each other should be reordered. -->
 <div class="display-flex flex-wrap">
-  <p class="order-last margin-0 margin-right-2">Appointment notes</p>
-  <p class="order-first margin-0 margin-right-2">Appointment time: 10:30 AM</p>
+  <p class="order-last margin-0 margin-right-2">
+    Office hours: Monday to Friday, 9:00 AM to 5:00 PM
+  </p>
+  <p class="order-first margin-0 margin-right-2">
+    Office address: 12 Harbor Street
+  </p>
 </div>

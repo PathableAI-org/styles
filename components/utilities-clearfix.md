@@ -20,8 +20,7 @@ guarantees:
 # Clearfix
 
 A utility class that makes a container grow to contain its floated children.
-The class name is `clearfix`, unprefixed, and the matching Sass mixin is also
-`clearfix`, with no `u-` prefix.
+The class name is `clearfix`, unprefixed.
 
 ## When to use
 
@@ -57,41 +56,6 @@ Load the stylesheet once in the application; no JavaScript is needed:
   `desktop:` variants.
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants.
 
-## Sass
-
-`clearfix` is a mixin without the `u-` prefix. It writes the `::after` rule for
-you, so include it at the top level of the selector:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-header {
-  @include clearfix;
-}
-```
-
-## Settings
-
-The matching USWDS module is `clearfix`. PathAble does not override it, so
-USWDS defaults apply:
-
-| Setting                    | Default                             | Effect                                                            |
-| -------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
-| `$output-these-utilities`  | `default` (every module)            | A list such as `('float', 'clearfix')` outputs only those modules |
-| `$clearfix-settings`       | `output: true`, `responsive: false` | Set `output: false` to omit the class                             |
-| `$utilities-use-important` | `false`                             | `true` outputs every utility with `!important`                    |
-
-The module also takes `active`, `focus`, `hover` and `visited` keys, all
-`false` here:
-
-```scss
-@use '@pathableai/styles' with (
-  $clearfix-settings: (
-    output: false,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utility. Copy the one closest
@@ -102,7 +66,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 ## The consumer owns
 

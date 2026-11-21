@@ -6,15 +6,13 @@ summary: The fixed USWDS colour palette of 25 families with numbered grades and 
 uswds: https://designsystem.digital.gov/design-tokens/color/system-tokens/
 guarantees:
   - id: system-values
-    claim: color('red-50v') resolves to #e52207, color('blue-50v') to #0076d6 and color('gray-cool-60') to #565c65, the same values as in USWDS, because PathAble does not change system tokens.
+    claim: The classes bg-red and bg-blue set background-color to #e52207 and #0076d6, the USWDS values of the system tokens red-50v and blue-50v, because PathAble does not change system tokens.
   - id: default-grayscale
     claim: The classes bg-gray-5, bg-gray-10, bg-gray-30, bg-gray-50, bg-gray-70 and bg-gray-90 set background-color to #f0f0f0, #e6e6e6, #adadad, #757575, #454545 and #1b1b1b.
   - id: basic-aliases
     claim: The classes bg-red, bg-orange, bg-gold, bg-yellow, bg-green, bg-mint, bg-cyan, bg-blue, bg-indigo, bg-violet and bg-magenta set background-color to #e52207, #e66f0e, #ffbe2e, #fee685, #538200, #04c585, #009ec1, #0076d6, #676cc8, #8168b3 and #d72d79.
   - id: grades-not-classes
-    claim: The default stylesheet has no class for a numbered system token, so bg-red-50v and bg-gray-cool-60 do not exist until 'palette-color-system' is added to $global-color-palettes.
-  - id: basic-not-sass
-    claim: color('red') is a Sass compile error, because the basic names are class aliases and not tokens.
+    claim: The compiled CSS has no class for a numbered system token, so bg-red-50v and bg-gray-cool-60 do not exist.
   - id: global-tokens
     claim: The classes bg-black, bg-white and bg-transparent set background-color to black, white and transparent.
   - id: text-pairs
@@ -32,10 +30,11 @@ marks the more saturated vivid variant. See the
 
 ## When to use
 
-- Reading a colour the brand does not define, such as a chart series colour or
-  a status the theme tokens do not cover.
-- Setting a theme grade to a neutral system colour, as the theme does for
-  `base-dark` (`'gray-cool-60'`).
+- Looking up the value of a colour the brand does not define, such as a chart
+  series colour or a status the theme tokens do not cover, to write your own
+  rule with it.
+- Finding the hex value behind a theme grade that is a neutral system colour,
+  such as `base-dark` (`gray-cool-60`, `#565c65`).
 - Picking two grades of one family for a text and background pair: a grade
   difference of 50 or more is expected to reach 4.5:1, 40 or more 3:1.
 
@@ -55,21 +54,21 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: grayscale -->
 
-## Tokens
+## Values
 
-System tokens are not changed by the PathAble theme; the values are those of
-USWDS 3.14.0.
+PathAble does not change system tokens; the values are those of USWDS 3.14.0.
+Only the global, grayscale and basic tokens have classes in PathAble's CSS.
 
-| Group                | Tokens                                                                                                                                                                                                                                                        | In `color()` | Class suffix by default                   |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------- |
-| Chromatic families   | `red-cool`, `red`, `red-warm`, `orange-warm`, `orange`, `gold`, `yellow`, `green-warm`, `green`, `green-cool`, `mint`, `mint-cool`, `cyan`, `blue-cool`, `blue`, `blue-warm`, `indigo-cool`, `indigo`, `indigo-warm`, `violet`, `violet-warm`, `magenta` (22) | Yes          | No                                        |
-| Gray families        | `gray-cool`, `gray`, `gray-warm` (3)                                                                                                                                                                                                                          | Yes          | No, except the six grayscale tokens below |
-| Grades               | `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90` on every family, as `<family>-<grade>`, for example `blue-cool-60`; gray families also have `1` to `4`, and `gray` also has `100`                                                                   | Yes          | No                                        |
-| Vivid grades         | `5v` to `80v` on the 22 chromatic families, as `<family>-<grade>v`, for example `red-50v`; there is no `90v`, and the gray families have no vivid grades                                                                                                      | Yes          | No                                        |
-| Transparent families | `black-transparent-<grade>`, `white-transparent-<grade>`                                                                                                                                                                                                      | Yes          | No                                        |
-| Global               | `black`, `white`, `transparent`                                                                                                                                                                                                                               | Yes          | Yes                                       |
-| Grayscale            | `gray-5`, `gray-10`, `gray-30`, `gray-50`, `gray-70`, `gray-90`                                                                                                                                                                                               | Yes          | Yes                                       |
-| Basic                | `red`, `orange`, `gold`, `yellow`, `green`, `mint`, `cyan`, `blue`, `indigo`, `violet`, `magenta`                                                                                                                                                             | No           | Yes                                       |
+| Group                | Tokens                                                                                                                                                                                                                                                        | In PathAble's CSS                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Chromatic families   | `red-cool`, `red`, `red-warm`, `orange-warm`, `orange`, `gold`, `yellow`, `green-warm`, `green`, `green-cool`, `mint`, `mint-cool`, `cyan`, `blue-cool`, `blue`, `blue-warm`, `indigo-cool`, `indigo`, `indigo-warm`, `violet`, `violet-warm`, `magenta` (22) | No                                        |
+| Gray families        | `gray-cool`, `gray`, `gray-warm` (3)                                                                                                                                                                                                                          | No, except the six grayscale tokens below |
+| Grades               | `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90` on every family, as `<family>-<grade>`, for example `blue-cool-60`; gray families also have `1` to `4`, and `gray` also has `100`                                                                   | No                                        |
+| Vivid grades         | `5v` to `80v` on the 22 chromatic families, as `<family>-<grade>v`, for example `red-50v`; there is no `90v`, and the gray families have no vivid grades                                                                                                      | No                                        |
+| Transparent families | `black-transparent-<grade>`, `white-transparent-<grade>`                                                                                                                                                                                                      | No                                        |
+| Global               | `black`, `white`, `transparent`                                                                                                                                                                                                                               | Yes                                       |
+| Grayscale            | `gray-5`, `gray-10`, `gray-30`, `gray-50`, `gray-70`, `gray-90`                                                                                                                                                                                               | Yes                                       |
+| Basic                | `red`, `orange`, `gold`, `yellow`, `green`, `mint`, `cyan`, `blue`, `indigo`, `violet`, `magenta`                                                                                                                                                             | Yes                                       |
 
 The six grayscale tokens and their values:
 
@@ -104,57 +103,18 @@ background, two grades of one family that differ by 40 or more give at least
 to system tokens only; the theme and state tokens set to brand hex values do
 not follow it, so check the ratio.
 
-## Sass
-
-`color()` reads any system token by its full name:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.chart-series-1 {
-  @include u-bg('blue-50v');
-  border-color: color('gray-cool-60');
-}
-```
-
-The basic names are not tokens in Sass: `color('red')` is an error, so write
-`color('red-50v')`.
-
 ## Utilities
 
-The default stylesheet has `bg-`, `text-`, `border-`, `outline-` and
-`underline-` classes for the grayscale, basic and global tokens only
-(`bg-gray-30`, `text-blue`, `border-black`). To get a class for every system
-token, add the system palette:
-
-```scss
-@use '@pathableai/styles' with (
-  $global-color-palettes: (
-    'palette-color-default',
-    'palette-color-system',
-  )
-);
-```
+PathAble's CSS has `bg-`, `text-`, `border-`, `outline-` and `underline-`
+classes for the grayscale, basic and global tokens only (`bg-gray-30`,
+`text-blue`, `border-black`). The numbered system classes, such as
+`bg-red-50v` and `text-gray-cool-60`, are not part of PathAble's CSS; use the
+value in the tables above in your own rule when a design needs one.
 
 The classes are documented in [Color](utilities-color.md),
 [Border](utilities-border.md), [Outline](utilities-outline.md) and
-[Text styles](utilities-text-styles.md). Each accepts the `hover:` prefix.
-Adding the system palette multiplies the number of colour classes, so add it
-only when a design needs it, or add a single palette for one utility, for
-example `$background-color-palettes: ('palette-color-system')`.
-
-## Settings
-
-System tokens have no settings. The settings that choose which system token a
-theme or state grade uses are on the
-[theme tokens](tokens-color-theme-tokens.md) and
-[state tokens](tokens-color-state-tokens.md) pages, and the palettes that
-choose which tokens become classes are:
-
-| Setting                      | PathAble default            | Controls                                                     |
-| ---------------------------- | --------------------------- | ------------------------------------------------------------ |
-| `$global-color-palettes`     | `('palette-color-default')` | Palettes added to `bg-`, `border-`, `text-` and `underline-` |
-| `$background-color-palettes` | `()`                        | Palettes added to `bg-` only                                 |
+[Text styles](utilities-text-styles.md). The `bg-`, `text-`, `border-` and
+`underline-` classes accept the `hover:` prefix; `outline-` classes do not.
 
 ## States
 

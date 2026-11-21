@@ -20,9 +20,7 @@ guarantees:
 # List reset
 
 A utility class that removes a list's bullets or numbers, indent and outer top
-and bottom margin. The class name is `add-list-reset`, unprefixed, and the
-matching Sass mixin is also `add-list-reset` (`list-reset` is an alias), with
-no `u-` prefix. The component modifier for an unstyled text list is
+and bottom margin. The class name is `add-list-reset`, unprefixed. The component modifier for an unstyled text list is
 `pathable-list--unstyled`, described on the [List](list.md) page; this utility
 is the general reset for any list.
 
@@ -61,48 +59,6 @@ Load the stylesheet once in the application; no JavaScript is needed:
   `tablet:` or `desktop:` variants.
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants.
 
-## Sass
-
-`add-list-reset` is a mixin without the `u-` prefix. Include it in a selector
-for your own list:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.workshop-list {
-  @include add-list-reset;
-  @include u-display('flex');
-  @include u-flex('wrap');
-}
-
-.workshop-list__item {
-  @include u-margin-right(3);
-}
-```
-
-Add `!important` as an argument (`@include add-list-reset(!important);`) to
-output every declaration with `!important`. The mixin writes `list-style-type:
-none`; the compiled class writes the `list-style` shorthand.
-
-## Settings
-
-The matching USWDS module is `add-list-reset`. PathAble does not override it,
-so USWDS defaults apply:
-
-| Setting                    | Default                             | Effect                                                                  |
-| -------------------------- | ----------------------------------- | ----------------------------------------------------------------------- |
-| `$output-these-utilities`  | `default` (every module)            | A list such as `('add-list-reset', 'float')` outputs only those modules |
-| `$add-list-reset-settings` | `output: true`, `responsive: false` | Set `output: false` to omit the class                                   |
-| `$utilities-use-important` | `false`                             | `true` outputs every utility with `!important`                          |
-
-```scss
-@use '@pathableai/styles' with (
-  $add-list-reset-settings: (
-    output: false,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utility. Copy the one closest
@@ -113,7 +69,7 @@ to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 ## The consumer owns
 

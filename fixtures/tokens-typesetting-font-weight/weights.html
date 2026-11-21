@@ -1,13 +1,17 @@
-<!-- description: The four enabled weights (light, normal, semibold and bold) in the body role, each line naming its class. -->
-<p class="font-body-md text-light margin-y-1">
-  text-light: Interview at 10:30 AM
+<!-- description: The four weight classes, each on a face that ships a real file for it: light, normal and bold on Roboto Mono (300, 400, 700) and semibold on Nunito (600). Nunito and Fredoka have no 300 or 700 file, so a weight class on them draws the nearest loaded file or a synthesised weight. -->
+<p class="font-family-code font-code-md text-light margin-y-1">
+  text-light, Roboto Mono 300: Interview at 10:30 AM
 </p>
-<p class="font-body-md text-normal margin-y-1">
-  text-normal: Interview at 10:30 AM
+<p class="font-family-code font-code-md text-normal margin-y-1">
+  text-normal, Roboto Mono 400: Interview at 10:30 AM
 </p>
-<p class="font-body-md text-semibold margin-y-1">
-  text-semibold: Interview at 10:30 AM
+<p class="font-family-body font-body-md text-semibold margin-y-1">
+  text-semibold, Nunito 600: Interview at 10:30 AM
 </p>
-<p class="font-body-md text-bold margin-y-1">
-  text-bold: Interview at 10:30 AM
+<p class="font-family-code font-code-md text-bold margin-y-1">
+  text-bold, Roboto Mono 700: Interview at 10:30 AM
+</p>
+<p class="font-family-body font-body-2xs margin-y-1">
+  Nunito ships only 400 and 600, so text-light on Nunito renders at 400 and
+  text-bold on Nunito is drawn from the 600 file or synthesised by the browser.
 </p>

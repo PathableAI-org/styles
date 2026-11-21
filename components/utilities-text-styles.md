@@ -95,22 +95,23 @@ well. The word after the prefix decides which property is set.
 
 ### Weights at PathAble defaults
 
-The theme sets only the weights the brand guide uses; a weight that is `false`
-has no class.
+PathAble outputs only the weights the brand guide uses.
 
-| Class           | `$theme-font-weight-*` | Output                |
-| --------------- | ---------------------- | --------------------- |
-| `text-light`    | `300`                  | `font-weight: 300`    |
-| `text-normal`   | keyword `normal`       | `font-weight: normal` |
-| `text-semibold` | `600`                  | `font-weight: 600`    |
-| `text-bold`     | `700`                  | `font-weight: 700`    |
-| `text-thin`     | `false`                | Not output            |
-| `text-medium`   | `false`                | Not output            |
-| `text-heavy`    | `false`                | Not output            |
+| Class           | Output                | Notes                                                    |
+| --------------- | --------------------- | -------------------------------------------------------- |
+| `text-light`    | `font-weight: 300`    |                                                          |
+| `text-normal`   | `font-weight: normal` |                                                          |
+| `text-semibold` | `font-weight: 600`    | PathAble brand choice: Nunito SemiBold labels interfaces |
+| `text-bold`     | `font-weight: 700`    |                                                          |
 
-Nunito SemiBold (600) is the brand's weight for interface labels, so
-`$theme-font-weight-semibold` is `600` by default (USWDS leaves it `false`) and
-`text-semibold` is output. See [Font weight](tokens-typesetting-font-weight.md).
+`text-thin`, `text-medium` and `text-heavy` are not in PathAble's CSS.
+PathAble outputs `text-semibold`, which a stock USWDS stylesheet does not. See
+[Font weight](tokens-typesetting-font-weight.md).
+
+The package ships Nunito Regular (400) and SemiBold (600) only. The classes ask
+for 300 and 700, but no Nunito file has those weights, so the browser draws
+`text-light` and `text-bold` with the nearest file it has: `text-light` looks
+like Regular and `text-bold` looks like SemiBold.
 
 ### Letter spacing tokens
 
@@ -129,8 +130,9 @@ Nunito SemiBold (600) is the brand's weight for interface labels, so
 `underline-<token>` takes the colour tokens of [Color](utilities-color.md): the
 theme tokens (`underline-primary`, `underline-accent-cool-dark`), the state
 tokens, `black`, `white`, `transparent`, and the basic and grayscale colours.
-The USWDS system palette (`underline-red-50v`) is not output by default; see
-[System palette classes not output by default](utilities-color.md#system-palette-classes-not-output-by-default).
+The USWDS system palette classes such as `underline-red-50v` are not part of
+PathAble's CSS; see
+[System palette classes not in PathAble's CSS](utilities-color.md#system-palette-classes-not-in-pathables-css).
 
 The values these classes take are defined by the design tokens: [Font weight](tokens-typesetting-font-weight.md), [Letter spacing](tokens-typesetting-letterspacing.md) and [Color tokens](tokens-color.md).
 
@@ -146,66 +148,6 @@ The breakpoints are `min-width` media queries in `em`: `mobile-lg` 30em
 (480px), `tablet` 40em (640px) and `desktop` 64em (1024px). For example,
 `text-normal tablet:text-bold` is normal on a phone and bold from 640px up.
 
-## Sass
-
-`u-text()` sets any of the weight, style, letter spacing, numeral style,
-decoration, case, vertical alignment and white space tokens above and, for a
-colour token, the text colour. It takes several arguments in one call.
-`u-underline()` sets the decoration colour, and `u-font-weight()`,
-`u-text-decoration()`, `u-vertical-align()` and `u-white-space()` set one
-property each.
-
-```scss
-@use '@pathableai/styles' as *;
-
-.referral-label {
-  @include u-text('bold', 'uppercase', 'ls-2', 'primary');
-}
-
-.referral-link {
-  @include u-text('underline');
-  @include u-underline('primary-vivid');
-
-  &:hover {
-    @include u-text('no-underline');
-  }
-}
-
-.referral-count {
-  @include u-text('tabular', 'no-wrap');
-}
-```
-
-Letter spacing tokens are written with the prefix, as `'ls-2'` and
-`'ls-neg-1'`. Quote tokens with single quotes. Add `!important` as the last
-argument to output `!important`.
-
-## Settings
-
-| Setting                                                                                                                                                                                                            | PathAble default                                      | What it does                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `$theme-font-weight-thin`, `-light`, `-normal`, `-medium`, `-semibold`, `-bold`, `-heavy`                                                                                                                          | `false`, `300`, `400`, `false`, `600`, `700`, `false` | The weights that have a class; a number turns a class on, `false` turns it off                                                                                                                                           |
-| `$theme-generate-all-weights`                                                                                                                                                                                      | `false`                                               | When `true`, outputs every weight from 100 to 900 as a class                                                                                                                                                             |
-| `$output-these-utilities`                                                                                                                                                                                          | `default` (every module)                              | A list of module names to output; this page's modules are `font-style`, `font-weight`, `font-feature`, `letter-spacing`, `text-decoration`, `text-decoration-color`, `text-transform`, `vertical-align` and `whitespace` |
-| `$font-weight-settings`                                                                                                                                                                                            | `responsive: true`, no states                         | Which prefixes the weight module outputs                                                                                                                                                                                 |
-| `$text-decoration-settings`, `$text-decoration-color-settings`                                                                                                                                                     | `responsive: false`, `hover: true`                    | Which prefixes the decoration modules output                                                                                                                                                                             |
-| `$font-style-settings`, `$font-feature-settings`, `$letter-spacing-settings`, `$text-transform-settings`, `$vertical-align-settings`, `$whitespace-settings`                                                       | `responsive: false`, no states                        | Which prefixes each module outputs                                                                                                                                                                                       |
-| `$font-style-palettes`, `$font-weight-palettes`, `$font-feature-palettes`, `$letter-spacing-palettes`, `$text-decoration-palettes`, `$text-transform-palettes`, `$vertical-align-palettes`, `$whitespace-palettes` | The `default` palette of each                         | The value sets                                                                                                                                                                                                           |
-| `$global-color-palettes`, `$text-decoration-color-palettes`                                                                                                                                                        | `('palette-color-default')`, `()`                     | The colour tokens that have an `underline-<token>` class                                                                                                                                                                 |
-| `$utilities-use-important`                                                                                                                                                                                         | `false`                                               | Appends `!important` to every utility rule                                                                                                                                                                               |
-
-Pass settings in the `with (...)` clause of the first `@use '@pathableai/styles'`
-in your build, for example:
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-font-weight-light: false,
-  $text-decoration-settings: (
-    hover: false,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utilities. Copy the one
@@ -216,7 +158,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 Where two classes on one element set the same property, the one later in the
 stylesheet wins, not the one later in the `class` attribute.
@@ -225,7 +167,7 @@ stylesheet wins, not the one later in the `class` attribute.
 
 - Loading the weights. `text-light`, `text-semibold` and `text-bold` ask for weights
   300, 600 and 700; the application loads font files that have them, or the browser
-  synthesises a weight.
+  draws the nearest weight it has.
 - Meaning. Bold, italic and underline carry no meaning for assistive
   technology; use `<strong>`, `<em>` and a text description where meaning
   matters.

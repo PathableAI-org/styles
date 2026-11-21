@@ -50,47 +50,24 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: scale -->
 
-## Tokens
+## Values
 
 The keys are the numbers `1` to `6`. Each has a nominal system value; the value
 you get is that number divided by the ratio of the base optical size (362px) to
 the typeface's, rounded to one decimal.
 
-| Key | System value | body, heading, alt, ui | code (Roboto Mono) | Typical use                     |
-| --- | ------------ | ---------------------- | ------------------ | ------------------------------- |
-| `1` | 1            | 1                      | 1                  | One line: labels, badges        |
-| `2` | 1.2          | 1.2                    | 1.3                | Large display text              |
-| `3` | 1.35         | 1.4                    | 1.4                | Headings (PathAble heading)     |
-| `4` | 1.5          | 1.5                    | 1.6                | Compact running text            |
-| `5` | 1.62         | 1.6                    | 1.7                | Body text (PathAble body)       |
-| `6` | 1.75         | 1.8                    | 1.8                | Lead paragraph, relaxed reading |
+| Key | System value | PathAble: body, heading, alt, ui | PathAble: code (Roboto Mono) | Typical use                     |
+| --- | ------------ | -------------------------------- | ---------------------------- | ------------------------------- |
+| `1` | 1            | 1                                | 1                            | One line: labels, badges        |
+| `2` | 1.2          | 1.2                              | 1.3                          | Large display text              |
+| `3` | 1.35         | 1.4                              | 1.4                          | Headings (PathAble heading)     |
+| `4` | 1.5          | 1.5                              | 1.6                          | Compact running text            |
+| `5` | 1.62         | 1.6                              | 1.7                          | Body text (PathAble body)       |
+| `6` | 1.75         | 1.8                              | 1.8                          | Lead paragraph, relaxed reading |
 
 The four brand typefaces declare the same optical size, so they share one
-column. The system value of key `2` is 1.2; the USWDS website's 1.15 is wrong
-for the installed version.
-
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-card__title {
-  line-height: line-height('heading', 3); // 1.4
-}
-
-.plan-card__summary {
-  @include u-line-height('body', 5); // 1.6
-}
-
-.plan-card__headline {
-  @include typeset('heading', 'xl', 3); // family, size and line height
-}
-```
-
-`line-height($family, $key)` and `lh($family, $key)` are the same function and
-take exactly two arguments; a family with no optical size is an error. The mixin
-`u-line-height($family, $key)` sets the property; `typeset($family, $size,
-$line-height)` sets family, size and line height together.
+column. The USWDS website lists 1.15 for key `2`; USWDS 3.14.0 compiles 1.2,
+and that is the value on this page.
 
 ## Utilities
 
@@ -102,25 +79,6 @@ $line-height)` sets family, size and line height together.
 `alt`, and `<key>` is `1` to `6`: `line-height-body-5`, `line-height-heading-3`.
 The responsive prefixes `mobile-lg:`, `tablet:` and `desktop:` also work, for
 example `tablet:line-height-heading-2`.
-
-## Settings
-
-| Setting                      | PathAble default                            | USWDS default |
-| ---------------------------- | ------------------------------------------- | ------------- |
-| `$theme-body-line-height`    | `5`                                         | `5`           |
-| `$theme-heading-line-height` | `3`                                         | `2`           |
-| `$theme-lead-line-height`    | `6`                                         | `6`           |
-| `$line-height-settings`      | `()` (output and responsive on; states off) | same          |
-
-`$theme-input-line-height` and the other component line-height settings keep
-their USWDS defaults.
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-heading-line-height: 3,
-  $theme-body-line-height: 5
-);
-```
 
 ## States
 

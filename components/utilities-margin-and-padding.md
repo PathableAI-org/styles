@@ -92,61 +92,6 @@ The values these classes take are defined by the design tokens: [Spacing units](
   padding class: `padding-2 tablet:padding-4`, `margin-x-0 desktop:margin-x-auto`.
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants.
 
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-panel {
-  @include u-padding(2);
-  @include u-margin-bottom(3);
-  @include u-margin-x('auto');
-
-  @include at-media('tablet') {
-    @include u-padding(4);
-  }
-}
-
-.plan-panel__title {
-  @include u-margin-top('neg-1'); // or -1
-  @include u-padding-y('105');
-}
-```
-
-Mixins: `u-margin`, `u-margin-x`, `u-margin-y`, `u-margin-top`,
-`u-margin-right`, `u-margin-bottom`, `u-margin-left`, and the same set with
-`u-padding`. Quote half values (`'05'`, `'105'`, `'205'`) as strings, pass
-other numbers unquoted, and add `!important` as a final argument to output it
-for one use.
-
-## Settings
-
-The matching USWDS modules are `margin` (which includes the horizontal and
-vertical variants) and `padding`. PathAble does not override any of these
-settings, so USWDS defaults apply:
-
-| Setting                                           | Default                             | Effect                                                                                   |
-| ------------------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------- |
-| `$output-these-utilities`                         | `default` (every module)            | A list such as `('margin', 'padding')` outputs only those modules                        |
-| `$margin-settings`, `$padding-settings`           | `output: true`, `responsive: true`  | Set `responsive: false` to drop the breakpoint variants                                  |
-| `$margin-manual-values`, `$padding-manual-values` | `()`                                | Adds a value, such as `$padding-manual-values: ('gutter': 1.25rem)` for `padding-gutter` |
-| `$utilities-use-important`                        | `false`                             | `true` outputs every utility with `!important`                                           |
-| `$theme-utility-breakpoints`                      | `mobile-lg`, `tablet`, `desktop` on | Which responsive prefixes exist                                                          |
-
-Every module also takes `active`, `focus`, `hover` and `visited` keys, all
-`false` here:
-
-```scss
-@use '@pathableai/styles' with (
-  $margin-settings: (
-    responsive: false,
-  ),
-  $padding-manual-values: (
-    'gutter': 1.25rem,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utilities. Copy the one
@@ -157,7 +102,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults. Lengths are the values the compiled
+states the CSS a class compiles to at PathAble defaults. Lengths are the values the compiled
 stylesheet outputs at a 16px root font size.
 
 ## The consumer owns

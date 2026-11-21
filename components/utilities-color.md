@@ -48,9 +48,8 @@ Use something else when:
 
 - the element is a component that already has a colour, such as a button, an
   alert or a tag: use the component's own class and variant;
-- the colour has to change with a theme or with the user's contrast setting:
-  put the colour in your own class that reads the theme, instead of fixing it
-  in markup;
+- the colour has to follow a theme or the user's contrast setting: these
+  classes output fixed values and do not change at run time;
 - the border or outline needs a colour: use the colour utilities of
   [Border](utilities-border.md) and [Outline](utilities-outline.md).
 
@@ -82,9 +81,9 @@ no token is shared between them.
 
 ### Theme colour tokens at PathAble defaults
 
-The brand hex values come from the PathAble brand guide and are set as USWDS
-theme colour settings. A token that is not in the guide has the USWDS default
-value, marked "USWDS default".
+The brand hex values come from the PathAble brand guide: PathAble outputs
+these tokens at the brand values below. A token that is not in the guide has
+the USWDS default value, marked "USWDS default".
 
 | Family        | Token                                         | Value at PathAble defaults                       |
 | ------------- | --------------------------------------------- | ------------------------------------------------ |
@@ -106,8 +105,8 @@ value, marked "USWDS default".
 | `accent-warm` | `accent-warm-dark`, `accent-warm-darker`      | `#4a5924`, `#354019`                             |
 
 The `primary`, `secondary`, `accent-cool` and `accent-warm` families have no
-`-lightest` or `-darkest` grade (both settings are `false`), and `accent-warm`
-and `accent-cool` have no `-vivid` grade, so those classes do not exist.
+`-lightest` or `-darkest` grade, and `accent-warm` and `accent-cool` have no
+`-vivid` grade, so those classes are not in the CSS.
 
 ### State colour tokens at PathAble defaults
 
@@ -140,11 +139,11 @@ status colours, for status only; see
 These are USWDS defaults. None is a brand colour, and the brand guide asks for
 no colour outside its palette, so prefer a theme token.
 
-### System palette classes not output by default
+### System palette classes not in PathAble's CSS
 
-Only the `default` colour palette is output: the tokens in the three tables
-above. The rest of the USWDS system colour palette has no class, for example
-`bg-red-50v`, `bg-blue-60v`, `text-blue-60v`, `bg-gray-20`, `bg-gray-cool-30`,
+Only the tokens in the three tables above have a class. The rest of the USWDS
+system colour palette is not part of PathAble's CSS, for example `bg-red-50v`,
+`bg-blue-60v`, `text-blue-60v`, `bg-gray-20`, `bg-gray-cool-30`,
 `bg-gray-warm-10`, `bg-gold-20v` and `bg-black-transparent-50`. That is every
 graded family (`red-cool`, `red`, `red-warm`, `orange-warm`, `orange`, `gold`,
 `yellow`, `green-warm`, `green`, `green-cool`, `mint`, `mint-cool`, `cyan`,
@@ -152,84 +151,21 @@ graded family (`red-cool`, `red`, `red-warm`, `orange-warm`, `orange`, `gold`,
 `violet`, `violet-warm`, `magenta`), the grades of `gray-cool` and
 `gray-warm`, the grays `gray-1` to `gray-4`, `gray-20`, `gray-40`, `gray-60`,
 `gray-80` and `gray-100`, and `black-transparent-*` and `white-transparent-*`.
-Output them with `$global-color-palettes` or a module palette (see
-[Settings](#settings)); that adds a class for every token to every module that
-reads the palette, which makes the stylesheet much larger.
+Pick the nearest theme token instead.
 
 The values these classes take are defined by the design tokens: [Color tokens](tokens-color.md), [Theme color tokens](tokens-color-theme-tokens.md), [State color tokens](tokens-color-state-tokens.md) and [System color tokens](tokens-color-system-tokens.md).
 
 ## Variants
 
-| Prefix                              | `bg-<token>`, `text-<token>` | Notes                                                                       |
-| ----------------------------------- | ---------------------------- | --------------------------------------------------------------------------- |
-| `mobile-lg:`, `tablet:`, `desktop:` | Not output                   | `$color-settings` and `$background-color-settings` have `responsive: false` |
-| `hover:`                            | Output                       | `hover:bg-primary-vivid`, `hover:text-primary`: the rule ends in `:hover`   |
-| `focus:`, `active:`, `visited:`     | Not output                   | Set the key to `true` in the module settings to output it                   |
+| Prefix                              | `bg-<token>`, `text-<token>` | Notes                                                                     |
+| ----------------------------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `mobile-lg:`, `tablet:`, `desktop:` | Not output                   | No responsive variant of a colour class exists                            |
+| `hover:`                            | Output                       | `hover:bg-primary-vivid`, `hover:text-primary`: the rule ends in `:hover` |
+| `focus:`, `active:`, `visited:`     | Not output                   | No `focus:`, `active:` or `visited:` variant of a colour class exists     |
 
 The breakpoints are `min-width` media queries in `em`: `mobile-lg` 30em
 (480px), `tablet` 40em (640px) and `desktop` 64em (1024px). A hover rule gives
 no cue to keyboard or touch users, so it never carries meaning alone.
-
-## Sass
-
-`u-bg()` sets `background-color` and `u-text()` sets `color` from a theme or
-other colour token. `u-bg()` and `u-color()` take a token string; both accept
-more than one argument and `!important`. `color()` returns the value of a
-token for any other property.
-
-```scss
-@use '@pathableai/styles' as *;
-
-.support-plan-summary {
-  @include u-bg('primary-lighter');
-  @include u-text('primary-dark');
-
-  &:hover {
-    @include u-bg('primary-light');
-  }
-}
-
-.support-plan-summary__rule {
-  border-color: color('primary-vivid');
-}
-```
-
-`u-text()` also accepts the text style tokens of
-[Text styles](utilities-text-styles.md), so
-`u-text('primary', 'bold')` sets a colour and a weight in one call. Quote
-tokens with single quotes. A token that is not output as a class is still
-valid in a mixin or in `color()`, because the Sass colour functions read the
-full system palette.
-
-## Settings
-
-| Setting                                                   | PathAble default                                                         | What it does                                                                                                     |
-| --------------------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `$theme-color-<family>-<grade>`                           | The brand values in the tables above                                     | The value of each theme colour token; set to a hex value or a system token name, or to `false` to remove a grade |
-| `$output-these-utilities`                                 | `default` (every module)                                                 | A list of module names to output; `background-color` and `color` are the modules of this page                    |
-| `$global-color-palettes`                                  | `('palette-color-default')`                                              | The palettes added to `background-color`, `border-color`, `color` and `text-decoration-color`                    |
-| `$background-color-palettes`, `$color-palettes`           | `()`                                                                     | Palettes added to only that module, for example `('palette-color-system')`                                       |
-| `$background-color-manual-values`, `$color-manual-values` | `()`                                                                     | A map of extra tokens, such as `('region-banner': #eef0f4)`, which outputs `bg-region-banner`                    |
-| `$background-color-settings`, `$color-settings`           | `output: true`, `responsive: false`, `hover: true`, other states `false` | Set `responsive`, `hover`, `focus`, `active` and `visited` per module                                            |
-| `$utilities-use-important`                                | `false`                                                                  | Appends `!important` to every utility rule, responsive and state rules included                                  |
-| `$theme-utility-breakpoints`                              | `mobile-lg`, `tablet` and `desktop` on                                   | Which responsive prefixes exist                                                                                  |
-
-The palette names are `palette-color-default`, `palette-color-basic`,
-`palette-color-grayscale`, `palette-color-theme`, `palette-color-state` and
-`palette-color-system`. Pass settings in the `with (...)` clause of the first
-`@use '@pathableai/styles'`:
-
-```scss
-@use '@pathableai/styles' with (
-  $global-color-palettes: (
-    'palette-color-default',
-    'palette-color-system',
-  ),
-  $color-settings: (
-    hover: false,
-  )
-);
-```
 
 ## States
 
@@ -241,7 +177,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 The contrast ratios are those of the token values, computed with the WCAG
 formula. Text of 18pt, or bold 14pt, needs 3:1 and smaller text needs 4.5:1.
@@ -272,5 +208,3 @@ On `bg-secondary` and `bg-accent-cool` use `text-primary-darker` (6.12:1 and
   component, and a colour class on top can hide a focus indicator or a state.
 - Surfaces nested inside a coloured surface, which do not reset the text colour
   for you: set the text colour on the surface or on each child.
-- Any palette added with the Settings above, and the larger stylesheet it
-  produces.

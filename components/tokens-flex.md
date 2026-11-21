@@ -2,28 +2,25 @@
 name: Flex
 slug: tokens-flex
 kind: token
-summary: 'The flex shorthand tokens 1 to 12, fill and auto, which size a flex item as a proportion of its row through the `flex-<token>` classes and the `flex()` function.'
+summary: 'The flex shorthand tokens 1 to 12, fill and auto, which size a flex item as a proportion of its row through the `flex-<token>` classes.'
 uswds: https://designsystem.digital.gov/design-tokens/flex/
 guarantees:
   - id: numeric-tokens
-    claim: flex(1) resolves to "1 1 0%", flex(2) to "2 1 0%" and flex(12) to "12 1 0%", and the classes flex-1, flex-2 and flex-12 set flex to those values.
+    claim: The classes flex-1, flex-2 and flex-12 set flex to "1 1 0%", "2 1 0%" and "12 1 0%".
   - id: fill
-    claim: flex('fill') resolves to "1 1 0%" and the class flex-fill sets flex to "1 1 0%".
+    claim: The class flex-fill sets flex to "1 1 0%".
   - id: auto
-    claim: flex('auto') resolves to "0 1 auto" and the class flex-auto sets flex to "0 1 auto".
+    claim: The class flex-auto sets flex to "0 1 auto".
   - id: twelve-tokens
     claim: The classes flex-1 to flex-12, flex-fill and flex-auto all exist, and flex-13 does not.
   - id: no-variants
     claim: No responsive or state prefix is emitted for the flex-<token> classes, so tablet:flex-1 and hover:flex-1 do not exist.
-  - id: invalid-token
-    claim: flex(13) is a Sass compile error.
 ---
 
 # Flex
 
 The flex shorthand tokens 1 to 12, fill and auto, which size a flex item as a
-proportion of its row through the `flex-<token>` classes and the `flex()`
-function. Each token is a value of the CSS `flex` shorthand: a grow factor, a
+proportion of its row through the `flex-<token>` classes. Each token is a value of the CSS `flex` shorthand: a grow factor, a
 shrink factor of 1 and a basis. Put the token on the children of a flex
 container. See the [USWDS flex tokens](https://designsystem.digital.gov/design-tokens/flex/).
 
@@ -51,16 +48,16 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: proportions -->
 
-## Tokens
+## Values
 
-| Token       | Class                 | Value (`flex`)        | Notes                                       |
-| ----------- | --------------------- | --------------------- | ------------------------------------------- |
-| `1`         | `flex-1`              | `1 1 0%`              | Grow 1                                      |
-| `2`         | `flex-2`              | `2 1 0%`              | Grow 2                                      |
-| `3` to `11` | `flex-3` to `flex-11` | `3 1 0%` to `11 1 0%` | Grow equals the token                       |
-| `12`        | `flex-12`             | `12 1 0%`             | Grow 12                                     |
-| `'fill'`    | `flex-fill`           | `1 1 0%`              | Same value as `flex-1`                      |
-| `'auto'`    | `flex-auto`           | `0 1 auto`            | Sized by content; shrinks but does not grow |
+| Token       | Class                 | PathAble value (`flex`) | Notes                                       |
+| ----------- | --------------------- | ----------------------- | ------------------------------------------- |
+| `1`         | `flex-1`              | `1 1 0%`                | Grow 1                                      |
+| `2`         | `flex-2`              | `2 1 0%`                | Grow 2                                      |
+| `3` to `11` | `flex-3` to `flex-11` | `3 1 0%` to `11 1 0%`   | Grow equals the token                       |
+| `12`        | `flex-12`             | `12 1 0%`               | Grow 12                                     |
+| `fill`      | `flex-fill`           | `1 1 0%`                | Same value as `flex-1`                      |
+| `auto`      | `flex-auto`           | `0 1 auto`              | Sized by content; shrinks but does not grow |
 
 All numeric tokens use a basis of `0%`, so the width of an item comes only
 from the share it has of the free space, not from its content. Items in one
@@ -68,59 +65,14 @@ row with tokens 1, 2 and 1 take one quarter, one half and one quarter of the
 row. The numbers are proportions, not a count of columns: `flex-6` next to
 `flex-6` is a 50/50 split, and `flex-1` next to `flex-1` is the same.
 
-## Sass
-
-`flex()` returns the shorthand value and `u-flex()` sets the `flex` property:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-row {
-  display: flex;
-}
-
-.plan-row__label {
-  @include u-flex('auto');
-}
-
-.plan-row__body {
-  @include u-flex('fill');
-}
-
-.plan-row__aside {
-  flex: flex(2);
-}
-```
-
-`u-flex()` also takes the flex-direction, wrap, alignment and justify values
-(`u-flex('row')`, `u-flex('no-wrap')`, `u-flex('align-center')`), which are not
-tokens of this page. `flex(13)` is a compile error.
-
 ## Utilities
 
 `flex-<token>` is documented on [Flex](utilities-flex.md), together with the
 container classes (`flex-row`, `flex-column`, `flex-wrap`, `flex-justify-*`,
 `flex-align-*`). Add `display-flex` to the container; see
 [Display](utilities-display.md). No `mobile-lg:`, `tablet:` or `desktop:` prefix
-and no `hover:`, `focus:`, `active:` or `visited:` prefix exists for these classes
-by default. To add the responsive prefixes, see Settings.
-
-## Settings
-
-| Setting                   | PathAble default                                   | Controls                                      |
-| ------------------------- | -------------------------------------------------- | --------------------------------------------- |
-| `$flex-settings`          | `()`, giving output on, responsive off, states off | Which variants the `flex-<token>` classes get |
-| `$flex-palettes`          | `('palette-flex-default')`                         | Which tokens become classes                   |
-| `$flex-manual-values`     | `()`                                               | Extra class values beyond the palette         |
-| `$output-these-utilities` | `default` (every utility module)                   | Which utility modules are emitted             |
-
-```scss
-@use '@pathableai/styles' with (
-  $flex-settings: (
-    responsive: true,
-  )
-);
-```
+and no `hover:`, `focus:`, `active:` or `visited:` prefix exists for these
+classes.
 
 ## States
 

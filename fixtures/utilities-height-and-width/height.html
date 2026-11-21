@@ -1,10 +1,21 @@
-<!-- description: A box with a fixed height, a box with a minimum height that grows with its content, and a box with a maximum height. -->
+<!-- description: A box with a fixed height, a box with a minimum height that grows with its content, and a box with a maximum height whose longer content scrolls. -->
 <div class="height-card">
   <p>Interview preparation workshop notes</p>
 </div>
 <div class="minh-card">
   <p>Appointment summary with space for the case worker's notes.</p>
 </div>
-<div class="maxh-card">
-  <p>Reminders for your next review.</p>
-</div>
+<section
+  class="maxh-card overflow-y-auto"
+  tabindex="0"
+  aria-label="Reminders for your next review"
+>
+  <p>Bring your photo identification.</p>
+  <p>Bring your most recent support plan.</p>
+  <p>Write down two questions for your case worker.</p>
+  <p>Arrive ten minutes before your appointment.</p>
+  <p>Check the room number on your reminder email.</p>
+  <p>Tell reception if you need an interpreter.</p>
+  <p>Ask about transport passes before you leave.</p>
+  <p>Book your next appointment at the front desk.</p>
+</section>

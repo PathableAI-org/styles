@@ -16,7 +16,7 @@ guarantees:
   - id: disabled-grades
     claim: The classes bg-disabled-lighter, bg-disabled-light, bg-disabled, bg-disabled-dark and bg-disabled-darker set background-color to #c9c9c9, #919191, #757575, #454545 and #1b1b1b.
   - id: emergency-tokens
-    claim: Only two emergency tokens exist, and bg-emergency and bg-emergency-dark set background-color to #9c3d10 and #332d29.
+    claim: Only two emergency classes exist, and bg-emergency and bg-emergency-dark set background-color to #9c3d10 and #332d29.
   - id: text-pairs
     claim: Every swatch in the states of this page pairs its background with a text colour that has a contrast ratio of at least 4.5:1.
 ---
@@ -54,13 +54,13 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: error -->
 
-## Tokens
+## Values
 
 The source column uses **Brand** for a brand-guide or design-system functional
 colour, **Derived** for a tint or shade of one, and **USWDS default** for a
 value the PathAble theme leaves alone.
 
-| Token              | Value                        | Source        | Notes                                                       |
+| Token              | PathAble value               | Source        | Notes                                                       |
 | ------------------ | ---------------------------- | ------------- | ----------------------------------------------------------- |
 | `error-lighter`    | `#fcebec`                    | Derived       | Danger at 10% over white                                    |
 | `error-light`      | `#f39268` (`red-warm-30v`)   | USWDS default |                                                             |
@@ -93,60 +93,14 @@ value the PathAble theme leaves alone.
 The brand guide defines no red or amber: danger and amber are functional
 colours added by the design system, for status only.
 
-## Sass
-
-```scss
-@use '@pathableai/styles' as *;
-
-.field-error {
-  @include u-bg('error-lighter');
-  @include u-border-color('error');
-  @include u-text('ink');
-  border-left-width: units(1);
-  border-left-style: solid;
-}
-```
-
-`color('error-dark')` and the other state names are valid anywhere `color()`
-is. See [Color](tokens-color.md#sass).
-
 ## Utilities
 
 State tokens are suffixes of the same colour classes as the theme tokens:
 `bg-error`, `text-error-dark`, `border-warning`, `outline-info`,
 `underline-success`. See [Color](utilities-color.md),
 [Border](utilities-border.md), [Outline](utilities-outline.md) and
-[Text styles](utilities-text-styles.md). Each accepts the `hover:` prefix.
-
-## Settings
-
-The PathAble theme sets the base, dark and lighter grades of four families and
-leaves the rest at the USWDS defaults.
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-color-error-lighter: #fcebec,
-  $theme-color-error: #dc3545,
-  $theme-color-error-dark: #a52834,
-  $theme-color-warning-lighter: #fef6e9,
-  $theme-color-warning: #f5a623,
-  $theme-color-warning-dark: #c4851c,
-  $theme-color-success-lighter: #e8f7f4,
-  $theme-color-success: #1cae96,
-  $theme-color-success-dark: #0d7a63,
-  $theme-color-info-lighter: #edf5fd,
-  $theme-color-info: #4899e8,
-  $theme-color-info-dark: #015a76
-);
-```
-
-Not set, so at the USWDS default: `error-light` (`'red-warm-30v'`),
-`error-darker` (`'red-70'`), `warning-light` (`'yellow-10v'`), `warning-darker`
-(`'gold-50v'`), `success-light` (`'green-cool-20v'`), `success-darker`
-(`'green-cool-60v'`), `info-light` (`'cyan-20'`), `info-darker`
-(`'blue-cool-60'`), all five `disabled` grades (`'gray-20'`, `'gray-40'`,
-`'gray-50'`, `'gray-70'`, `'gray-90'`), `$theme-color-emergency`
-(`'red-warm-60v'`) and `$theme-color-emergency-dark` (`'red-warm-80'`).
+[Text styles](utilities-text-styles.md). The `bg-`, `text-`, `border-` and
+`underline-` classes accept the `hover:` prefix; `outline-` classes do not.
 
 ## States
 

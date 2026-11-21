@@ -2,17 +2,15 @@
 name: Order
 slug: tokens-order
 kind: token
-summary: 'The order tokens first, last, initial and 0 to 11, which change the visual position of a flex or grid item without changing the markup, through the `order-<token>` classes and the `order()` function.'
+summary: 'The order tokens first, last, initial and 0 to 11, which change the visual position of a flex or grid item without changing the markup, through the `order-<token>` classes.'
 uswds: https://designsystem.digital.gov/design-tokens/order/
 guarantees:
   - id: keywords
-    claim: order('first') resolves to -1, order('last') to 999 and order('initial') to initial, and the classes order-first, order-last and order-initial set order to those values.
+    claim: The classes order-first, order-last and order-initial set order to -1, 999 and initial.
   - id: numbers
-    claim: order(0) resolves to 0 and order(11) to 11, the classes order-0 to order-11 set order to the token, and order-12 does not exist.
+    claim: The classes order-0 to order-11 set order to the token number, and order-12 does not exist.
   - id: responsive-variants
     claim: The classes mobile-lg:order-first, tablet:order-first and desktop:order-last exist and set order inside a min-width media query, and no state prefix such as hover:order-1 exists.
-  - id: invalid-token
-    claim: order(12) is a Sass compile error.
   - id: dom-unchanged
     claim: An order class changes only the visual order of siblings in a flex or grid container and does not change their order in the document, so reading and keyboard order follow the markup.
 ---
@@ -21,7 +19,7 @@ guarantees:
 
 The order tokens first, last, initial and 0 to 11, which change the visual
 position of a flex or grid item without changing the markup, through the
-`order-<token>` classes and the `order()` function. Items are laid out by
+`order-<token>` classes. Items are laid out by
 ascending `order`, and items with the same value keep their markup order. See
 the [USWDS order tokens](https://designsystem.digital.gov/design-tokens/order/).
 
@@ -48,62 +46,27 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- example: reorder -->
 
-## Tokens
+## Values
 
-| Token       | Class                   | Value       | Notes                                              |
-| ----------- | ----------------------- | ----------- | -------------------------------------------------- |
-| `'first'`   | `order-first`           | `-1`        | Before every item whose order is 0 or more         |
-| `'last'`    | `order-last`            | `999`       | After every item whose order is 998 or less        |
-| `'initial'` | `order-initial`         | `initial`   | Resets to the CSS initial value, which is 0        |
-| `0`         | `order-0`               | `0`         | The value an item has when no class is set         |
-| `1` to `11` | `order-1` to `order-11` | `1` to `11` | Ascending position, after items with a lower value |
+| Token       | Class                   | PathAble value | Notes                                              |
+| ----------- | ----------------------- | -------------- | -------------------------------------------------- |
+| `first`     | `order-first`           | `-1`           | Before every item whose order is 0 or more         |
+| `last`      | `order-last`            | `999`          | After every item whose order is 998 or less        |
+| `initial`   | `order-initial`         | `initial`      | Resets to the CSS initial value, which is 0        |
+| `0`         | `order-0`               | `0`            | The value an item has when no class is set         |
+| `1` to `11` | `order-1` to `order-11` | `1` to `11`    | Ascending position, after items with a lower value |
 
 Only items with an order class move. An item with no class has order 0 and
 keeps its place among the other items at 0. `order-first` is below 0, so an
 item with it comes before the unclassed items.
-
-## Sass
-
-`order()` returns the value and `u-order()` sets the `order` property:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.contact-panel {
-  @include u-order('last');
-
-  @include at-media('tablet') {
-    @include u-order('first');
-  }
-}
-```
-
-`order(12)` is a compile error.
 
 ## Utilities
 
 `order-<token>` is documented on [Flex](utilities-flex.md). It has responsive
 variants: `mobile-lg:order-<token>`, `tablet:order-<token>` and
 `desktop:order-<token>`, applying from that breakpoint up. No `hover:`,
-`focus:`, `active:` or `visited:` prefix exists for it by default. The container
+`focus:`, `active:` or `visited:` prefix exists for it. The container
 needs `display-flex` ([Display](utilities-display.md)) or a grid.
-
-## Settings
-
-| Setting                      | PathAble default                                    | Controls                                       |
-| ---------------------------- | --------------------------------------------------- | ---------------------------------------------- |
-| `$order-settings`            | `()`, giving output on, responsive on, states off   | Which variants the `order-<token>` classes get |
-| `$order-palettes`            | `('palette-order-default')`                         | Which tokens become classes                    |
-| `$order-manual-values`       | `()`                                                | Extra class values                             |
-| `$theme-utility-breakpoints` | `mobile-lg`, `tablet`, `desktop` on (USWDS default) | Which breakpoints get a prefix                 |
-
-```scss
-@use '@pathableai/styles' with (
-  $order-settings: (
-    responsive: false,
-  )
-);
-```
 
 ## States
 

@@ -30,7 +30,7 @@ guarantees:
   - id: offset
     claim: grid-offset-3 sets margin-left to 25%, and grid-offset-none sets margin-left to 0.
   - id: responsive
-    claim: tablet:grid-col-4 sets a width of 33.3333333333% only from a viewport width of 40em (640px),.
+    claim: tablet:grid-col-4 sets a width of 33.3333333333% only from a viewport width of 40em (640px).
 ---
 
 # Layout grid
@@ -111,67 +111,6 @@ column a full width first, then a narrower one at a breakpoint:
 `grid-col-12 tablet:grid-col-6`. A bare `tablet:grid-col-6` leaves the column
 as wide as its content below the tablet breakpoint.
 
-## Sass
-
-The layout grid mixins carry no `u-` prefix. Use them to apply grid behaviour
-to your own selectors:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.application-page {
-  @include grid-container; // or grid-container('tablet')
-}
-
-.application-row {
-  @include grid-row;
-  @include grid-gap(
-    2
-  ); // or grid-gap('lg'), or no argument for the responsive gap
-}
-
-.application-main {
-  @include grid-col(8); // or grid-col('auto'), grid-col('fill'), or no argument
-}
-
-.application-aside {
-  @include grid-col(4);
-  @include grid-offset(2); // or grid-offset('none')
-}
-```
-
-Add `!important` as a final argument, such as
-`@include grid-col(6, !important);`, to output `!important` for one use. A
-column or offset mixin outside a media query is mobile first; wrap it in
-`@include at-media('tablet') { ... }` for a breakpoint.
-
-## Settings
-
-The layout grid is not a utilities module, so `$output-these-utilities` and the
-`$<module>-settings` maps do not control it. These settings do, at USWDS
-defaults, which the PathAble brand does not override:
-
-| Setting                              | Default                             | Effect                                                                                |
-| ------------------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------- |
-| `$theme-grid-container-max-width`    | `'desktop'`                         | `max-width` of `grid-container` (64rem)                                               |
-| `$theme-site-margins-width`          | `4`                                 | Container side padding from `$theme-site-margins-breakpoint`, in spacing units (2rem) |
-| `$theme-site-margins-mobile-width`   | `2`                                 | Container side padding below that breakpoint (1rem)                                   |
-| `$theme-site-margins-breakpoint`     | `'desktop'`                         | Where the container switches from the mobile to the wider padding                     |
-| `$theme-column-gap-mobile`           | `2`                                 | Gutter of a bare `grid-gap` below 64em (16px)                                         |
-| `$theme-column-gap-desktop`          | `4`                                 | Gutter of a bare `grid-gap` from 64em (32px)                                          |
-| `$theme-column-gap-sm`, `-md`, `-lg` | `2px`, `2`, `3`                     | Gutters of `grid-gap-sm`, `grid-gap-md` and `grid-gap-lg`                             |
-| `$theme-layout-grid-use-important`   | `false`                             | Output the grid classes with `!important`                                             |
-| `$theme-utility-breakpoints`         | `mobile-lg`, `tablet`, `desktop` on | Which breakpoint prefixes the responsive grid classes get                             |
-
-Set them in the `with (...)` clause of `@use '@pathableai/styles'`:
-
-```scss
-@use '@pathableai/styles' with (
-  $theme-grid-container-max-width: 'desktop-lg',
-  $theme-column-gap-lg: 4
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the grid. Copy the one closest to
@@ -182,7 +121,7 @@ what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults. The widths are the values the compiled
+states the CSS a class compiles to at PathAble defaults. The widths are the values the compiled
 stylesheet outputs at a 16px root font size.
 
 ## The consumer owns

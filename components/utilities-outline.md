@@ -85,9 +85,9 @@ The colour classes use the same tokens and values as
 `outline-accent-cool`, `outline-base-dark`), the state tokens
 (`outline-error`, `outline-success-dark`), `outline-black`, `outline-white`,
 `outline-transparent`, and the basic and grayscale colours. The USWDS system
-palette (`outline-red-50v`, `outline-gray-cool-30`) is not output by default;
-see
-[System palette classes not output by default](utilities-color.md#system-palette-classes-not-output-by-default).
+palette classes such as `outline-red-50v` and `outline-gray-cool-30` are not
+part of PathAble's CSS; see
+[System palette classes not in PathAble's CSS](utilities-color.md#system-palette-classes-not-in-pathables-css).
 
 The values these classes take are defined by the design tokens: [Spacing units](tokens-spacing-units.md) and [Color tokens](tokens-color.md).
 
@@ -98,56 +98,8 @@ The values these classes take are defined by the design tokens: [Spacing units](
 | `mobile-lg:`, `tablet:`, `desktop:`       | Not output |
 | `hover:`, `focus:`, `active:`, `visited:` | Not output |
 
-`$outline-settings` and `$outline-color-settings` have `responsive: false` and
-every state `false`. Set a key to `true` to output that prefix for the module.
-
-## Sass
-
-`u-outline()` sets the outline width and colour from its arguments. It sets
-`outline-width` and `outline-style: solid` for a width and `outline-color` for
-a colour token, and takes both in one call. `u-outline-color()` sets only the
-colour.
-
-```scss
-@use '@pathableai/styles' as *;
-
-.support-plan-row--updated {
-  @include u-outline(2px, 'accent-cool');
-}
-
-.support-plan-row--archived {
-  @include u-outline-color('base-dark');
-  outline-offset: 2px;
-}
-```
-
-Quote half values (`'05'`) so they stay strings. Add `!important` as the last
-argument to output `!important`. Offset is not a utility; set `outline-offset`
-in your own rule.
-
-## Settings
-
-| Setting                                                  | PathAble default                                         | What it does                                                                                 |
-| -------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `$output-these-utilities`                                | `default` (every module)                                 | A list of module names to output; the modules of this page are `outline` and `outline-color` |
-| `$outline-settings`, `$outline-color-settings`           | `output: true`, `responsive: false`, every state `false` | Which prefixes each module outputs                                                           |
-| `$outline-palettes`                                      | `('palette-outline-default')`                            | The width tokens                                                                             |
-| `$outline-color-palettes`                                | `('palette-outline-color-default')`                      | The colour tokens of the module, added to those of `$global-color-palettes`                  |
-| `$global-color-palettes`                                 | `('palette-color-default')`                              | The colour palettes shared by the colour modules; see [Color](utilities-color.md#settings)   |
-| `$outline-manual-values`, `$outline-color-manual-values` | `()`                                                     | A map of extra tokens                                                                        |
-| `$utilities-use-important`                               | `false`                                                  | Appends `!important` to every utility rule                                                   |
-
-Pass settings in the `with (...)` clause of the first `@use '@pathableai/styles'`
-in your build, for example:
-
-```scss
-@use '@pathableai/styles' with (
-  $outline-settings: (
-    hover: true,
-  )
-  ;
-);
-```
+No outline class has a responsive or a state variant: there is no
+`tablet:outline-2px` and no `hover:outline-primary`.
 
 ## States
 
@@ -159,7 +111,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 The classes never move the layout: an outline is drawn outside the border box
 and is not part of the element's size. It can be clipped by an ancestor that

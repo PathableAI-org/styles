@@ -92,58 +92,6 @@ The values these classes take are defined by the design tokens: [Flex](tokens-fl
   `tablet:display-none` and `tablet:display-flex` to switch layouts.
 - **State.** None. No `hover:`, `focus:`, `active:` or `visited:` variants.
 
-## Sass
-
-`u-flex` takes any flex value, written as the class name without the `flex-`
-prefix (`row`, `wrap`, `fill`, `align-center`, `align-self-end`,
-`justify-center`), and picks the property from the name:
-
-```scss
-@use '@pathableai/styles' as *;
-
-.plan-summary {
-  @include u-display('flex');
-  @include u-flex('row', 'wrap', 'align-center', 'justify-center');
-}
-
-.plan-summary__status {
-  @include u-flex('fill', 'align-self-end');
-  @include u-order('last');
-}
-```
-
-Mixins: `u-flex`, `u-flex-direction`, `u-align-items`, `u-align-self`,
-`u-justify-content` and `u-order`. The per-property mixins other than
-`u-order` take the same names as `u-flex` (`u-align-items('align-center')`,
-`u-justify-content('justify-center')`, `u-flex-direction('column')`), so
-prefer `u-flex` for everything except order. Add `!important` as a final
-argument to output it for one use.
-
-## Settings
-
-The matching USWDS modules are `flex`, `flex-direction`, `flex-wrap`,
-`align-items`, `align-self`, `justify-content` and `order`. PathAble does not
-override any of these settings, so USWDS defaults apply:
-
-| Setting                                                                                                              | Default                             | Effect                                                        |
-| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------- |
-| `$output-these-utilities`                                                                                            | `default` (every module)            | A list such as `('flex', 'order')` outputs only those modules |
-| `$justify-content-settings`, `$order-settings`                                                                       | `output: true`, `responsive: true`  | Breakpoint variants of `flex-justify-*` and `order-*`         |
-| `$flex-settings`, `$flex-direction-settings`, `$flex-wrap-settings`, `$align-items-settings`, `$align-self-settings` | `output: true`, `responsive: false` | Set `responsive: true` to output breakpoint variants          |
-| `$utilities-use-important`                                                                                           | `false`                             | `true` outputs every utility with `!important`                |
-| `$theme-utility-breakpoints`                                                                                         | `mobile-lg`, `tablet`, `desktop` on | Which responsive prefixes exist                               |
-
-Every module also takes `active`, `focus`, `hover` and `visited` keys, all
-`false` here:
-
-```scss
-@use '@pathableai/styles' with (
-  $flex-direction-settings: (
-    responsive: true,
-  )
-);
-```
-
 ## States
 
 Each state is complete markup for one use of the utilities. Copy the one
@@ -154,7 +102,7 @@ closest to what you need.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-states behaviour of the package at PathAble defaults.
+states the CSS a class compiles to at PathAble defaults.
 
 ## The consumer owns
 
