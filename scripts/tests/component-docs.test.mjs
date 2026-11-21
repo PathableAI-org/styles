@@ -376,9 +376,22 @@ describe('component docs: states React does not offer', () => {
 
 describe('component docs: the React fixture manifest', () => {
   it('reads each folder with its component and states not offered', async () => {
-    const coverage = await readCoverage()
-    assert.equal(coverage.get('sr-only')?.component, 'SrOnly')
-    assert.deepEqual(coverage.get('sr-only')?.notOffered, {})
+    // The real manifest maps no folder yet.
+    assert.equal((await readCoverage()).size, 0)
+
+    const dir = mkdtempSync(join(tmpdir(), 'manifest-'))
+    try {
+      const manifest = join(dir, 'fixture-manifest.mjs')
+      writeFileSync(
+        manifest,
+        "export const fixtureManifest = { widget: { component: 'Widget' } }\n",
+      )
+      const coverage = await readCoverage(manifest)
+      assert.equal(coverage.get('widget')?.component, 'Widget')
+      assert.deepEqual(coverage.get('widget')?.notOffered, {})
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })
 

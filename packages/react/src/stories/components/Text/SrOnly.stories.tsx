@@ -1,9 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { useId } from 'react'
 import { expect, within } from 'storybook/test'
 
 import { SrOnly } from '../../../components/SrOnly/SrOnly'
-import headingExample from '../../../components/SrOnly/examples/heading'
-import inlineExample from '../../../components/SrOnly/examples/inline'
+
+const inlineExample = (
+  <a href="/participants/42/edit">
+    Edit<SrOnly> Jordan Lee&apos;s profile</SrOnly>
+  </a>
+)
+
+function UpcomingSessions() {
+  const titleId = useId()
+  return (
+    <section aria-labelledby={titleId}>
+      <SrOnly as="h2" id={titleId}>
+        Upcoming sessions
+      </SrOnly>
+      <p>Three sessions are booked for this week.</p>
+    </section>
+  )
+}
+
+const headingExample = <UpcomingSessions />
 
 const meta = {
   title: 'Components/SrOnly',

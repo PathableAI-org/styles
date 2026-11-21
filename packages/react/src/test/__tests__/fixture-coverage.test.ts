@@ -50,6 +50,12 @@ describe('fixture coverage', () => {
       `Not a failure. Fixture folders not mapped to a React component yet: ${unmappedFolders.join(', ') || 'none'}. React components with no fixture folder mapped yet: ${unmappedComponents.join(', ')}.`,
     )
     expect(errors).toEqual([])
+    // The manifest maps no folder yet, so every folder on disk is unmapped.
+    expect(Object.keys(fixtureManifest)).toEqual([])
+    expect(unmappedFolders.length).toBeGreaterThan(0)
+    expect(unmappedFolders).toEqual([
+      ...new Set(fixtures.map((fixture) => fixture.split('/')[0])),
+    ])
   })
 })
 

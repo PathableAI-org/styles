@@ -16,6 +16,4 @@ export interface FixtureFolderMapping {
   notOffered?: Record<string, string>
 }
 
-export const fixtureManifest: Record<string, FixtureFolderMapping> = {
-  'sr-only': { component: 'SrOnly' },
-}
+export const fixtureManifest: Record<string, FixtureFolderMapping> = {}

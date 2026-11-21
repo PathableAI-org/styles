@@ -77,15 +77,15 @@ test('html-validate rejects directive comments without brackets', async () => {
 
 test('the contract check fails a folder missing a variant fixture', async () => {
   fixture(
-    'activity-list',
-    'flat.html',
-    '<ul class="pathable-activity-list pathable-activity-row__bogus"></ul>\n',
+    'tag',
+    'default.html',
+    '<span class="pathable-tag pathable-tag__bogus">Text</span>\n',
   )
-  const errors = await checkFolders(['activity-list'], root)
+  const errors = await checkFolders(['tag'], root)
   assert.ok(
     errors.some((error) => /__bogus is not a class selector/u.test(error)),
   )
-  assert.ok(errors.some((error) => /density=compact/u.test(error)))
+  assert.ok(errors.some((error) => /size=big/u.test(error)))
 })
 
 test('the contract check fails files the other checks would skip', async () => {

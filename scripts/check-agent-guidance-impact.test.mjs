@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import {
@@ -121,5 +123,18 @@ test('counts an edited source page as a guidance update only when it builds Reac
 })
 
 test('reads the React pages from the fixture manifest', async () => {
-  assert.ok((await readReactPages()).has('sr-only'))
+  // The real manifest maps no folder yet, so it has no React pages.
+  assert.deepEqual([...(await readReactPages())], [])
+
+  const dir = mkdtempSync(join(tmpdir(), 'manifest-'))
+  try {
+    const manifest = join(dir, 'fixture-manifest.mjs')
+    writeFileSync(
+      manifest,
+      "export const fixtureManifest = { button: { component: 'Button' } }\n",
+    )
+    assert.deepEqual([...(await readReactPages(manifest))], ['button'])
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
 })
