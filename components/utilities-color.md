@@ -206,5 +206,10 @@ On `bg-secondary` and `bg-accent-cool` use `text-primary-darker` (6.12:1 and
 - Whether `text-<token>` and `bg-<token>` suit the element. A heading, a
   link, a button and a form control each take their colour from their
   component, and a colour class on top can hide a focus indicator or a state.
+- The focus ring on a coloured background. Unprefixed `bg-*` classes are
+  unchanged USWDS output and do not change the focus ring colour, so a
+  control placed directly on one can keep a ring that does not contrast with
+  it. Put such a control on the `pathable-bg-*` equivalent, which sets a
+  contrasting ring.
 - Surfaces nested inside a coloured surface, which do not reset the text colour
   for you: set the text colour on the surface or on each child.
