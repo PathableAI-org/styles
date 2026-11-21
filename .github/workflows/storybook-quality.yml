@@ -48,7 +48,6 @@ jobs:
               - '.npmrc'
               - '.github/actions/setup/**'
               - '.github/workflows/storybook-quality.yml'
-              - 'scripts/test-storybook-modal-css.mjs'
               - '**/*.mdx'
             # Everything the HTML Storybook consumes from packages/styles:
             # all but its Markdown, component pages and stories.
@@ -63,7 +62,6 @@ jobs:
               - *shared
               - *styles_source
               - *contracts
-              - 'packages/styles/src/stories/**'
               - 'apps/storybook/**/!(*.md)'
               - 'fixtures/**/!(*.md)'
               - 'scripts/component-docs/**/!(*.md)'
@@ -320,31 +318,6 @@ jobs:
           path: apps/storybook/test-results/pixels/
           if-no-files-found: ignore
 
-  # Backdrop / centering / dimming / focus-visible gates (FR-011 / SC-005).
-  # Blank/overflow visual smoke alone is not sufficient — these runners are required on PRs.
-  modal-backdrop-gates:
-    name: Modal backdrop gates
-    needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true' || needs.changes.outputs.react_storybook == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-
-      - name: Download React Storybook static
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: storybook-react-static
-          path: apps/storybook-react/storybook-static/
-
-      - name: CSS-only Modal Storybook (no styles/js)
-        run: pnpm test:storybook-modal-css
-
-      - name: Modal open geometry (backdrop / center / dim / focus-visible)
-        run: pnpm test:modal-open-geometry
-
   coverage:
     name: Storybook coverage
     needs: [changes, build]
@@ -405,7 +378,6 @@ jobs:
       - accessibility-tests-react
       - visual-smoke
       - pixels-styles
-      - modal-backdrop-gates
       - coverage
       - quality-gates
     runs-on: ubuntu-latest

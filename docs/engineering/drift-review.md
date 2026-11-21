@@ -239,7 +239,6 @@ lifecycle and the accessibility exceptions.
   - `apps/storybook-react`
   - `packages/storybook-contracts`
   - `scripts/test-storybook.mjs`
-  - `scripts/test-storybook-modal-css.mjs`
   - `scripts/accessibility-exceptions.mjs`
   - `scripts/storybook-evidence-report.mjs`
   - `scripts/check-react-server-compatibility.mjs`
