@@ -1,16 +1,26 @@
-<!-- description: The segmented target: three closely related actions joined into one strip. The modifier and item classes are not in the stylesheet yet, so today the buttons render separately. -->
-<ul
-  class="pathable-button-group pathable-button-group--segmented"
-  role="list"
-  aria-label="Caseload report"
->
+<!-- description: A segmented group used as a view switch. The current view is the filled button and the alternatives are outline buttons. -->
+<ul class="pathable-button-group pathable-button-group--segmented">
   <li class="pathable-button-group__item">
-    <button type="button" class="pathable-button">Download PDF</button>
+    <button type="button" class="pathable-button" aria-pressed="true">
+      List
+    </button>
   </li>
   <li class="pathable-button-group__item">
-    <button type="button" class="pathable-button">Export CSV</button>
+    <button
+      type="button"
+      class="pathable-button pathable-button--outline"
+      aria-pressed="false"
+    >
+      Board
+    </button>
   </li>
   <li class="pathable-button-group__item">
-    <button type="button" class="pathable-button">Print report</button>
+    <button
+      type="button"
+      class="pathable-button pathable-button--outline"
+      aria-pressed="false"
+    >
+      Calendar
+    </button>
   </li>
 </ul>

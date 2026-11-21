@@ -10,36 +10,28 @@ variants:
     values: [big, default, small]
 guarantees:
   - id: row-layout
-    status: unverified
-    claim: A pathable-search element that has role="search" lays its children out in one flex row, so the field and the button sit side by side; without that role the form is not a flex container.
+    claim: A pathable-search form that has role="search" lays its children out in one flex row, so the field and the button sit side by side.
   - id: control-height
-    status: unverified
     claim: By default the field and the submit button are 2rem (32 px at a 16 px root) tall, the field text is 0.93rem, and the submit button has no margin.
   - id: joined-edges
-    status: unverified
     claim: The search field has no right border and square right corners, and the submit button has square left corners, so the two read as one control.
   - id: submit-width
-    status: unverified
-    claim: Below a viewport width of 480 px the submit button is 3rem (48 px) wide with no padding; from 480 px it is as wide as its content plus 1rem (16 px) of padding on each side.
+    claim: Below a viewport width of 480 px the submit button shows only its icon, 3rem (48 px) wide with no padding, and its text stays available to assistive technology; from 480 px the submit text is visible, the icon is hidden and the button is as wide as its content plus 1rem (16 px) of padding on each side.
   - id: touch-target
-    status: unverified
     claim: At a viewport width of 639.84 px or narrower, or on a coarse pointer, the field and the submit button inside the search are at least 2.75rem (44 px) tall and the button is at least 2.75rem wide.
   - id: big-size
-    status: unverified
     claim: With the big modifier, from a viewport width of 480 px the field and the submit button are 3rem (48 px) tall, the field text is 0.99rem, the button text is 1.49rem and the button has 2rem (32 px) of padding on each side; below 480 px the big search matches the default.
   - id: small-size
-    status: unverified
-    claim: With the small modifier the submit button has 0.75rem (12 px) of padding on each side and is at least 3rem (48 px) wide, whatever its content.
+    claim: With the small modifier the submit button shows only its icon at every width, with 0.75rem (12 px) of padding on each side and a width of at least 3rem (48 px).
   - id: scoped-input-rules
-    status: unmet
-    claim: An input of type search outside a pathable-search keeps the pathable-input look, which is 2.5rem tall with 0.5rem of padding and a 1 px border on all four sides; today the search rules reach it too and make it 2rem tall with no right border.
+    claim: An input of type search outside a pathable-search form keeps the pathable-input look, which is 2.5rem tall with 0.5rem of padding and a 1 px border on all four sides.
 ---
 
 # Search
 
 A site or section search form that joins a text field and a submit button in
 one row, in a default, big or small size. Put the class on a `<form>` that has
-`role="search"`. The form works without JavaScript: the browser submits it.
+`role="search"`, inside a `<section>` that names it. The form works without JavaScript: the browser submits it.
 
 ## When to use
 
@@ -74,8 +66,8 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 ## States
 
-Each state is complete markup for one size of the search. Copy the one closest
-to what you need.
+Each state is complete markup for one size of the search, and one with a
+longer, translated submit label. Copy the one closest to what you need.
 
 <!-- examples -->
 
@@ -83,11 +75,11 @@ to what you need.
 
 Add at most one size modifier to `pathable-search`.
 
-| Axis | Value     | Class                    | What it is for                                                     |
-| ---- | --------- | ------------------------ | ------------------------------------------------------------------ |
-| size | `big`     | `pathable-search--big`   | A prominent search; 48 px tall controls from 480 px wide           |
-| size | `default` | none                     | A search in a page or panel; 32 px tall controls                   |
-| size | `small`   | `pathable-search--small` | A compact search for a toolbar or header; a narrower submit button |
+| Axis | Value     | Class                    | What it is for                                                                |
+| ---- | --------- | ------------------------ | ----------------------------------------------------------------------------- |
+| size | `big`     | `pathable-search--big`   | A prominent search; 48 px tall controls from 480 px wide, visible submit text |
+| size | `default` | none                     | A search in a page or panel; 32 px tall controls, visible submit text         |
+| size | `small`   | `pathable-search--small` | A compact search for a toolbar or header; an icon-only submit button          |
 
 ## Tokens
 
@@ -96,48 +88,46 @@ not custom properties, so a theme does not change them.
 
 ## Composition
 
-- The form is the block: `<form class="pathable-search" role="search">`.
-  The role is needed twice: it makes the form a search landmark, and the
-  row layout is applied to a `pathable-search` that has it.
-- Inside the form, in this order: a `<label>` with `pathable-sr-only`, a
-  `<input type="search">` with `pathable-input`, and a
-  `<button type="submit">` with `pathable-button`. The component has no
-  element classes.
-- The submit button holds an inline SVG with `pathable-icon` and
-  `aria-hidden="true"`, followed by its name in a `pathable-sr-only` span. The
-  icon is 1em, so it grows with the button text in the big size. Keep visible
-  button text out of this button: below 480 px the button is a fixed 3rem
-  wide, and a word such as "Search" does not fit.
+- `<section aria-label>`: the wrapper that names the search region, such as
+  "Participant search".
+- `pathable-search`: the block, a `<form class="pathable-search" role="search">`
+  inside the section. The role makes the form a search landmark.
+- Inside the form, in this order: a `<label>` with `pathable-sr-only` whose
+  `for` matches the field's `id`, an `<input type="search">` with
+  `pathable-input` and a `name`, and a `<button type="submit">` with
+  `pathable-button`.
+- `pathable-search__submit-text`: the `<span>` in the button that holds the
+  visible word "Search" in the default and big sizes. Below 480 px it is
+  visually hidden and the icon shows instead. The small size has no submit
+  text element; its button holds a visually hidden `pathable-sr-only` span with
+  the name.
+- `pathable-search__submit-icon`: the `<svg class="pathable-icon">` in the
+  button, with `aria-hidden="true"`, that references the sprite with
+  `<use href="/assets/img/sprite.svg#search">`.
+- The submit text is the visible label and may be longer or translated, as in
+  the `long-label` example; the button is as wide as its text from 480 px.
 - The search field is a `pathable-input`, so it is at most 30rem wide and
   takes the remaining width of the row.
-- Known caveat: the search styles include rules on every
-  `input[type="search"]`, with no `pathable-search` ahead of them. They
-  apply to any input of type search on the page, such as a
-  `pathable-input` outside a search form: it becomes 2rem tall, loses its right
-  border and its right corners, and its padding changes. Do not use
-  `type="search"` outside a `pathable-search` until `scoped-input-rules` is met;
-  use `type="text"` with `inputmode="search"` there.
+- Use `type="search"` only inside a `pathable-search`; elsewhere use
+  `type="text"` with `inputmode="search"`.
 - At a viewport 639.84 px wide or narrower, or on a coarse pointer, the field
   and the button grow to 44 px tall so that they are easy to tap.
 
 ## Guarantees
 
-The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source and no test checks it yet.
-
-The pixel figures assume a 16 px root font size, and the breakpoints follow
-the viewport.
+The guarantees are the list in the front matter at the top of this page. The
+pixel figures assume a 16 px root font size, and the breakpoints follow the
+viewport.
 
 ## The consumer owns
 
-- The landmark name: an `aria-label` on the form that says what is searched,
-  such as "Search participants", and that differs from any other search
-  landmark on the page.
+- The landmark name: an `aria-label` on the wrapping `<section>` that says
+  what is searched, such as "Participant search", and that differs from any
+  other search landmark on the page.
 - The field's name: a `<label>` whose `for` matches the field's `id`, hidden
-  with `pathable-sr-only` because the button shows the purpose.
-- The button's name, in a `pathable-sr-only` span, and `type="submit"`.
+  with `pathable-sr-only`.
+- The button's text, in the page's language, and `type="submit"`. In the small
+  size, the name goes in a `pathable-sr-only` span.
 - The form's `action`, `method` and the field's `name`, and what the
   server does with the query.
 - Not using `pathable-search` for filters or for a form with other fields.

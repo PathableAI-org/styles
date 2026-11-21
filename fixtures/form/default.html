@@ -1,43 +1,64 @@
-<!-- description: A participant intake form with a text field and hint, a set of radios in a fieldset, and a submit button. -->
+<!-- description: A participant intake form. A note at the start explains the required marker, each required label ends with the visible marker, and the optional field says so in its label. -->
 <form class="pathable-form" action="/participants" method="post">
-  <div class="pathable-form-group">
-    <label class="pathable-label" for="form-default-name">
-      Participant name <abbr title="required">*</abbr>
-    </label>
-    <span class="pathable-hint" id="form-default-name-hint">
-      Use the name on the participant's identification.
-    </span>
-    <input
-      class="pathable-input"
-      id="form-default-name"
-      name="name"
-      type="text"
-      required
-      aria-describedby="form-default-name-hint"
-    />
-  </div>
-  <div class="pathable-form-group">
-    <fieldset class="pathable-fieldset">
-      <legend class="pathable-legend">Preferred contact method</legend>
-      <label class="pathable-radio">
-        <input
-          class="pathable-radio__input"
-          type="radio"
-          name="contact"
-          value="email"
-        />
-        <span class="pathable-radio__label">Email</span>
-      </label>
-      <label class="pathable-radio">
-        <input
-          class="pathable-radio__input"
-          type="radio"
-          name="contact"
-          value="phone"
-        />
-        <span class="pathable-radio__label">Phone</span>
-      </label>
-    </fieldset>
-  </div>
+  <p>
+    Required fields are marked with an asterisk (<abbr
+      title="required"
+      class="pathable-hint pathable-hint--required"
+      >*</abbr
+    >).
+  </p>
+  <label class="pathable-label" for="form-default-name">
+    Participant name
+    <abbr title="required" class="pathable-hint pathable-hint--required"
+      >*</abbr
+    >
+  </label>
+  <span class="pathable-hint" id="form-default-name-hint">
+    Use the name on the participant's identification.
+  </span>
+  <input
+    class="pathable-input"
+    id="form-default-name"
+    name="name"
+    type="text"
+    required
+    aria-describedby="form-default-name-hint"
+  />
+  <label class="pathable-label" for="form-default-nickname">
+    Preferred name (optional)
+  </label>
+  <input
+    class="pathable-input"
+    id="form-default-nickname"
+    name="nickname"
+    type="text"
+  />
+  <fieldset class="pathable-fieldset">
+    <legend class="pathable-legend">Preferred contact method</legend>
+    <div class="pathable-radio">
+      <input
+        class="pathable-radio__input"
+        id="form-default-contact-email"
+        type="radio"
+        name="contact"
+        value="email"
+      />
+      <label class="pathable-radio__label" for="form-default-contact-email"
+        >Email</label
+      >
+    </div>
+    <div class="pathable-radio">
+      <input
+        class="pathable-radio__input"
+        id="form-default-contact-phone"
+        type="radio"
+        name="contact"
+        value="phone"
+      />
+      <label class="pathable-radio__label" for="form-default-contact-phone"
+        >Phone</label
+      >
+    </div>
+  </fieldset>
   <button type="submit" class="pathable-button">Save intake</button>
 </form>

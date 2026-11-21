@@ -23,8 +23,7 @@ Edit only the source pages here. Never edit built output.
 
 ## What a page contains
 
-The front matter fields, the required sections and what each guarantee status
-means are checked by
+The front matter fields and the required sections are checked by
 [`check-component-pages.mjs`](../packages/styles/scripts/check-component-pages.mjs),
 whose header lists every rule. Run it after building styles:
 
@@ -35,6 +34,90 @@ pnpm --filter @pathableai/styles check:component-pages
 
 How tests cite a page's guarantees is in
 [`STORY_AUTHORING.md`](../packages/styles/STORY_AUTHORING.md#component-page-guarantees).
+
+## What a page describes
+
+A page describes the contract the component should have, stated as if it
+already held. It has no `status:` on its guarantees and no language about what
+the stylesheet does or does not do yet ("today", "not yet", "has no effect").
+Where the implementation falls short of a page, the gap is tracked in an
+issue, and the page stays as written. A guarantee has only an `id` and a
+`claim`.
+
+The front matter `name:` is the human name of the matching USWDS component
+(`Button group`, `Icon list`, `Input prefix/suffix`), and the page's `# H1`
+repeats it. The slug and file name stay in kebab case.
+
+### Writing an example
+
+Every example follows the USWDS example for the same component:
+
+1. Start from the current USWDS example markup and its complete class list.
+2. Rename the prefix to `pathable-`, so the current-item class is
+   `pathable-current`. Page text never names the USWDS prefix.
+3. Use PathAble brand values wherever a theme value is involved.
+4. Use realistic PathAble product content, not placeholder text.
+5. Do not change the tags, the child hierarchy, the element classes, where a
+   modifier sits or the ARIA relationships.
+6. Icons inside a component reference the sprite with `<use>`, as USWDS does,
+   and are not drawn with inline paths.
+
+USWDS version reviewed for parity: 3.13.0 (package lock).
+
+## Catalog scope
+
+Every component in the USWDS component overview is classified here. Included
+components are static: their defining behaviour needs no JavaScript.
+
+| USWDS component     | Scope                                                                     |
+| ------------------- | ------------------------------------------------------------------------- |
+| Accordion           | Excluded: defining behaviour needs JavaScript                             |
+| Alert               | Included (`alert`)                                                        |
+| Banner              | Excluded: defining behaviour needs JavaScript                             |
+| Breadcrumb          | Included (`breadcrumb`)                                                   |
+| Button              | Included (`button`)                                                       |
+| Button group        | Included (`button-group`)                                                 |
+| Card                | Included (`card`)                                                         |
+| Character count     | Excluded: defining behaviour needs JavaScript                             |
+| Checkbox            | Included (`checkbox`)                                                     |
+| Collection          | Included (`collection`)                                                   |
+| Combo box           | Excluded: defining behaviour needs JavaScript                             |
+| Data visualizations | Omitted: USWDS gives guidance, not component markup                       |
+| Date picker         | Excluded: defining behaviour needs JavaScript                             |
+| Date range picker   | Excluded: defining behaviour needs JavaScript                             |
+| File input          | Excluded: defining behaviour needs JavaScript                             |
+| Footer              | Included (`footer`)                                                       |
+| Form                | Included (`form`)                                                         |
+| Header              | Excluded: defining behaviour needs JavaScript                             |
+| Icon                | Included (`icon`)                                                         |
+| Icon list           | Included (`icon-list`)                                                    |
+| Identifier          | Omitted: a federal identity component that does not apply to PathAble     |
+| In-page navigation  | Excluded: defining behaviour needs JavaScript                             |
+| Input mask          | Excluded: defining behaviour needs JavaScript                             |
+| Input prefix/suffix | Included (`input-prefix-suffix`)                                          |
+| Language selector   | Excluded: defining behaviour needs JavaScript                             |
+| Link                | Included (`link`)                                                         |
+| List                | Included (`list`)                                                         |
+| Memorable date      | Included (`memorable-date`)                                               |
+| Modal               | Excluded: defining behaviour needs JavaScript                             |
+| Pagination          | Included (`pagination`)                                                   |
+| Process list        | Included (`process-list`)                                                 |
+| Prose               | Included (`prose`)                                                        |
+| Radio buttons       | Included (`radio`)                                                        |
+| Range slider        | Excluded: defining behaviour needs JavaScript                             |
+| Search              | Included (`search`)                                                       |
+| Select              | Included (`select`)                                                       |
+| Side navigation     | Included (`side-navigation`)                                              |
+| Site alert          | Included (`site-alert`)                                                   |
+| Step indicator      | Included (`step-indicator`)                                               |
+| Summary box         | Included (`summary-box`)                                                  |
+| Table               | Included (`table`)                                                        |
+| Tag                 | Included (`tag`)                                                          |
+| Text input          | Included (`text-input`, which also covers the textarea)                   |
+| Time picker         | Excluded: defining behaviour needs JavaScript                             |
+| Tooltip             | Excluded: defining behaviour needs JavaScript                             |
+| Typography          | Foundation, not a component: tokens and the prose and list pages cover it |
+| Validation          | Excluded: defining behaviour needs JavaScript                             |
 
 ## Examples from fixtures
 
@@ -106,7 +189,7 @@ The styles Storybook shows each page that has a fixture folder under
 **Component pages**, with one live preview per example rendered with
 `styles.css`, and **HTML** and **React** tabs beneath it showing the fixture
 and the example module verbatim (only **HTML** when the React package does not
-cover the component). Package blocks are shown labelled with their package,
-and the front matter is shown as YAML at the end. Each fixture is also a story
+cover the component). Package blocks are shown labelled with their package.
+The front matter is not shown. Each fixture is also a story
 under **Fixtures**, which the Storybook test-runner checks with axe. The pages
 publish to GitHub Pages with the rest of the Storybook.

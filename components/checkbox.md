@@ -10,37 +10,26 @@ variants:
     values: [default, tile]
 guarantees:
   - id: input-hidden
-    status: unverified
     claim: The native input is moved off-screen (position absolute, 999em to the left) but stays in the tab order, and the label draws the visible control.
   - id: box
-    status: unverified
     claim: The unchecked box is a 1.25rem (20 px at a 16 px root) square with 2 px rounded corners, a white fill and a 2 px outline in #00365c, drawn 2rem (32 px) to the left of the label text.
   - id: label-layout
-    status: unverified
     claim: The label is inline-block with a 0.75rem (12 px) top margin and 2rem (32 px) of left padding, in normal weight, and shows a pointer cursor.
   - id: checked
-    status: unverified
     claim: A checked box is filled #015a76 with a 2 px #015a76 outline and a check mark centred in it.
   - id: indeterminate
-    status: unverified
     claim: An input with the data-indeterminate attribute, or whose indeterminate property is true, shows a box filled #015a76 with a dash centred in it.
   - id: disabled
-    status: unverified
     claim: A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white box with a 2 px #757575 outline, and a checked or indeterminate one fills the box #757575.
   - id: focus-ring
-    status: unverified
     claim: When the input has focus, the box shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it.
   - id: root-block
-    status: unverified
     claim: The root is display block, so each checkbox starts on its own line, unless the element is a bare input or has the hidden attribute.
   - id: description
-    status: unverified
     claim: A label description is a block inside the label, 0.87rem (13.9 px at a 16 px root) with a 0.5rem (8 px) top margin.
   - id: tile
-    status: unmet
-    claim: With pathable-checkbox--tile on the root, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the check box drawn inside the start padding.
+    claim: With pathable-checkbox__input--tile on the input, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the check box drawn inside the start padding.
   - id: tile-checked
-    status: unmet
     claim: A checked or indeterminate tile has a #015a76 border and a background of #015a76 at 10 percent opacity; a disabled tile has a lighter border and a white background.
 ---
 
@@ -56,12 +45,13 @@ semantics, so the control works with no JavaScript.
 
 - A set of choices where a person can pick any number, such as the supports a
   participant needs or the documents on file.
-- A single yes or no answer that is submitted with a form, such as agreeing to
+- A single proposition that a person accepts or declines, such as agreeing to
   appointment reminders.
 
 Use something else when:
 
-- the choices exclude each other: use `pathable-radio`;
+- the choices exclude each other, or the question is yes or no: use two
+  `pathable-radio` choices;
 - a setting takes effect the moment it changes: use a switch, which this
   package does not provide;
 - the list has dozens of options to filter: use
@@ -96,16 +86,13 @@ Updating the group's other choices is also the application's job.
 
 ## Variants
 
-Add at most one modifier class from each axis to `pathable-checkbox`.
+Add at most one modifier class from each axis. The tile modifier goes on each
+`pathable-checkbox__input`, not on the wrapper.
 
-| Axis  | Value     | Class                     | What it is for                                        |
-| ----- | --------- | ------------------------- | ----------------------------------------------------- |
-| style | `default` | none                      | A box beside the label text                           |
-| style | `tile`    | `pathable-checkbox--tile` | The choice in a bordered box with a larger tap target |
-
-The tile modifier is not in the stylesheet yet: today the class has no
-effect, and the choice looks like the default. Do not rely on it until the
-`tile` guarantees are no longer marked unmet.
+| Axis  | Value     | Class                            | What it is for                                        |
+| ----- | --------- | -------------------------------- | ----------------------------------------------------- |
+| style | `default` | none                             | A box beside the label text                           |
+| style | `tile`    | `pathable-checkbox__input--tile` | The choice in a bordered box with a larger tap target |
 
 ## Composition
 
@@ -116,6 +103,8 @@ effect, and the choice looks like the default. Do not rely on it until the
   root, so the root adds only the block layout.
 - `pathable-checkbox__input`: the native `<input type="checkbox">`. It is
   hidden from sight and stays focusable.
+- `pathable-checkbox__input--tile`: add it to the input of every choice in a
+  group that uses tiles.
 - `pathable-checkbox__label`: the `<label>`. It must follow the input as its
   next sibling, because the box, the check mark and the focus ring are drawn on
   the label from the input's state. Connect them with `for` and a matching
@@ -132,13 +121,7 @@ effect, and the choice looks like the default. Do not rely on it until the
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. Each
-is expected behaviour. One marked `status: unmet` is behaviour the component
-does not have yet: do not rely on it. One marked `status: unverified` was read
-from the package source, and no test checks it yet.
-
-The tile guarantees are unmet. The tile is a larger, bordered tap target that a
-touch-first application would use, and the class is planned but has no rules
-in the stylesheet yet.
+is expected behaviour.
 
 The pixel and colour figures on this page are those of the default theme.
 

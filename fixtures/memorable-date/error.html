@@ -1,0 +1,73 @@
+<!-- description: A memorable date with an error. The group carries the error modifier, the message sits between the hint and the controls, and each control is marked invalid and references both the hint and the message. -->
+<div class="pathable-form-group pathable-form-group--error">
+  <fieldset class="pathable-fieldset">
+    <legend class="pathable-legend">Program start date</legend>
+    <span class="pathable-hint" id="memorable-date-error-hint"
+      >For example: January 19 2026</span
+    >
+    <span class="pathable-error-message" id="memorable-date-error-message">
+      Enter a start date that is today or later.
+    </span>
+    <div class="pathable-memorable-date">
+      <div
+        class="pathable-form-group pathable-form-group--month pathable-form-group--select"
+      >
+        <label class="pathable-label" for="memorable-date-error-month"
+          >Month</label
+        >
+        <select
+          class="pathable-select pathable-input--error"
+          id="memorable-date-error-month"
+          name="start_date_month"
+          aria-invalid="true"
+          aria-describedby="memorable-date-error-hint memorable-date-error-message"
+        >
+          <option value>- Select -</option>
+          <option value="1" selected>January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+      </div>
+      <div class="pathable-form-group pathable-form-group--day">
+        <label class="pathable-label" for="memorable-date-error-day">Day</label>
+        <input
+          class="pathable-input pathable-input--error"
+          aria-invalid="true"
+          aria-describedby="memorable-date-error-hint memorable-date-error-message"
+          id="memorable-date-error-day"
+          name="start_date_day"
+          maxlength="2"
+          pattern="[0-9]*"
+          inputmode="numeric"
+          value="19"
+        />
+      </div>
+      <div class="pathable-form-group pathable-form-group--year">
+        <label class="pathable-label" for="memorable-date-error-year"
+          >Year</label
+        >
+        <input
+          class="pathable-input pathable-input--error"
+          aria-invalid="true"
+          aria-describedby="memorable-date-error-hint memorable-date-error-message"
+          id="memorable-date-error-year"
+          name="start_date_year"
+          minlength="4"
+          maxlength="4"
+          pattern="[0-9]*"
+          inputmode="numeric"
+          value="2025"
+        />
+      </div>
+    </div>
+  </fieldset>
+</div>

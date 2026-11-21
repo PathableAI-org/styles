@@ -1,0 +1,20 @@
+<!-- description: A select in a form group with a hint between the label and the control, linked to the select by aria-describedby. -->
+<div class="pathable-form-group">
+  <label class="pathable-label" for="select-with-hint-format"
+    >Preferred session format</label
+  >
+  <span class="pathable-hint" id="select-with-hint-hint"
+    >You can change this later in your profile.</span
+  >
+  <select
+    class="pathable-select"
+    id="select-with-hint-format"
+    name="format"
+    aria-describedby="select-with-hint-hint"
+  >
+    <option value>- Select -</option>
+    <option value="in-person">In person</option>
+    <option value="online">Online</option>
+    <option value="hybrid">Hybrid</option>
+  </select>
+</div>

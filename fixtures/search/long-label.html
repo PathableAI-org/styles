@@ -1,0 +1,25 @@
+<!-- description: A search with a longer, translated submit label, which shows how the button grows with its text. -->
+<section lang="es" aria-label="Búsqueda de recursos">
+  <form class="pathable-search" role="search">
+    <label class="pathable-sr-only" for="search-long-label-query"
+      >Buscar recursos</label
+    >
+    <input
+      class="pathable-input"
+      id="search-long-label-query"
+      type="search"
+      name="search"
+    />
+    <button class="pathable-button" type="submit">
+      <span class="pathable-search__submit-text">Buscar en recursos</span>
+      <svg
+        class="pathable-icon pathable-search__submit-icon"
+        aria-hidden="true"
+        focusable="false"
+        role="img"
+      >
+        <use href="/assets/img/sprite.svg#search"></use>
+      </svg>
+    </button>
+  </form>
+</section>

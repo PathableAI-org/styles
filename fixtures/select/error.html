@@ -1,0 +1,24 @@
+<!-- description: A select with an error. The group, label and select carry the error modifiers, the message is in the group, and the select references it and is marked invalid. -->
+<div class="pathable-form-group pathable-form-group--error">
+  <label
+    class="pathable-label pathable-label--error"
+    for="select-error-training"
+  >
+    Training provider
+  </label>
+  <span class="pathable-error-message" id="select-error-training-error">
+    Choose a training provider to continue.
+  </span>
+  <select
+    class="pathable-select pathable-input--error"
+    id="select-error-training"
+    name="provider"
+    aria-invalid="true"
+    aria-describedby="select-error-training-error"
+  >
+    <option value>- Select -</option>
+    <option value="community-college">Riverside Community College</option>
+    <option value="trade-school">Northside Trade School</option>
+    <option value="online-academy">Open Skills Online Academy</option>
+  </select>
+</div>

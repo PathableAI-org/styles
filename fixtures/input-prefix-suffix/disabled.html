@@ -1,5 +1,5 @@
 <!-- description: A disabled input. The affix is dimmed with the input and the group border changes in high-contrast mode. -->
-<div class="pathable-form-group">
+<form class="pathable-form">
   <label class="pathable-label" for="input-prefix-suffix-disabled-wage"
     >Hourly wage, in dollars</label
   >
@@ -15,8 +15,6 @@
       disabled
     />
   </div>
-</div>
-<div class="pathable-form-group">
   <label class="pathable-label" for="input-prefix-suffix-disabled-hours"
     >Hours worked this week</label
   >
@@ -27,9 +25,10 @@
       name="hoursWorked"
       type="text"
       inputmode="numeric"
+      pattern="[0-9]*"
       value="32"
       disabled
     />
     <div class="pathable-input-suffix" aria-hidden="true">hrs.</div>
   </div>
-</div>
+</form>

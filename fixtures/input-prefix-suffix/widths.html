@@ -1,12 +1,26 @@
-<!-- description: Width modifiers on the group, to size a field to the value it holds. Each group is capped at the width its modifier names. -->
-<div class="pathable-form-group">
-  <label class="pathable-label" for="input-prefix-suffix-widths-hours"
+<!-- description: Width modifiers on the group, to size a field to the value it holds. Each group is capped at the width its modifier names, from 2xs to 2xl. -->
+<form class="pathable-form">
+  <label class="pathable-label" for="input-prefix-suffix-widths-2xs"
+    >Days per week</label
+  >
+  <div class="pathable-input-group pathable-input-group--2xs">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-2xs"
+      name="daysPerWeek"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">days</div>
+  </div>
+  <label class="pathable-label" for="input-prefix-suffix-widths-xs"
     >Hours in the work placement</label
   >
   <div class="pathable-input-group pathable-input-group--xs">
     <input
       class="pathable-input"
-      id="input-prefix-suffix-widths-hours"
+      id="input-prefix-suffix-widths-xs"
       name="placementHours"
       type="text"
       inputmode="numeric"
@@ -14,15 +28,13 @@
     />
     <div class="pathable-input-suffix" aria-hidden="true">hrs.</div>
   </div>
-</div>
-<div class="pathable-form-group">
-  <label class="pathable-label" for="input-prefix-suffix-widths-weight"
+  <label class="pathable-label" for="input-prefix-suffix-widths-sm"
     >Participant weight, in pounds</label
   >
   <div class="pathable-input-group pathable-input-group--sm">
     <input
       class="pathable-input"
-      id="input-prefix-suffix-widths-weight"
+      id="input-prefix-suffix-widths-sm"
       name="weight"
       type="text"
       inputmode="numeric"
@@ -30,45 +42,67 @@
     />
     <div class="pathable-input-suffix" aria-hidden="true">lbs.</div>
   </div>
-</div>
-<div class="pathable-form-group">
-  <label class="pathable-label" for="input-prefix-suffix-widths-stipend"
+  <label class="pathable-label" for="input-prefix-suffix-widths-md"
     >Monthly transportation stipend, in dollars</label
   >
   <div class="pathable-input-group pathable-input-group--md">
     <div class="pathable-input-prefix" aria-hidden="true">$</div>
     <input
       class="pathable-input"
-      id="input-prefix-suffix-widths-stipend"
+      id="input-prefix-suffix-widths-md"
       name="stipend"
       type="text"
       inputmode="decimal"
     />
   </div>
-</div>
-<div class="pathable-form-group">
-  <label class="pathable-label" for="input-prefix-suffix-widths-case-phone"
+  <label class="pathable-label" for="input-prefix-suffix-widths-lg"
     >Case worker phone number</label
   >
   <div class="pathable-input-group pathable-input-group--lg">
     <div class="pathable-input-prefix" aria-hidden="true">
       <svg
         class="pathable-icon"
-        viewBox="0 0 24 24"
         aria-hidden="true"
+        role="img"
         focusable="false"
       >
-        <path
-          d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
-        />
+        <use href="/assets/img/sprite.svg#phone"></use>
       </svg>
     </div>
     <input
       class="pathable-input"
-      id="input-prefix-suffix-widths-case-phone"
+      id="input-prefix-suffix-widths-lg"
       name="caseWorkerPhone"
       type="tel"
       autocomplete="tel"
     />
   </div>
-</div>
+  <label class="pathable-label" for="input-prefix-suffix-widths-xl"
+    >Distance to placement, in miles</label
+  >
+  <div class="pathable-input-group pathable-input-group--xl">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-xl"
+      name="distance"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">mi.</div>
+  </div>
+  <label class="pathable-label" for="input-prefix-suffix-widths-2xl"
+    >Total hours across all placements</label
+  >
+  <div class="pathable-input-group pathable-input-group--2xl">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-widths-2xl"
+      name="totalHours"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">hrs.</div>
+  </div>
+</form>

@@ -1,0 +1,30 @@
+<!-- description: The small and medium width modifiers, which are aliases of sm and md. -->
+<form class="pathable-form">
+  <label class="pathable-label" for="input-prefix-suffix-aliases-small"
+    >Participant weight, in pounds</label
+  >
+  <div class="pathable-input-group pathable-input-group--small">
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-aliases-small"
+      name="weightSmall"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+    <div class="pathable-input-suffix" aria-hidden="true">lbs.</div>
+  </div>
+  <label class="pathable-label" for="input-prefix-suffix-aliases-medium"
+    >Monthly transportation stipend, in dollars</label
+  >
+  <div class="pathable-input-group pathable-input-group--medium">
+    <div class="pathable-input-prefix" aria-hidden="true">$</div>
+    <input
+      class="pathable-input"
+      id="input-prefix-suffix-aliases-medium"
+      name="stipendMedium"
+      type="text"
+      inputmode="decimal"
+    />
+  </div>
+</form>

@@ -1,6 +1,6 @@
-<!-- description: The wrap modifier, for trails with long page names that should wrap onto more lines instead of being cut off with an ellipsis. -->
+<!-- description: The truncate modifier, for a single-line trail whose overflow is cut off with an ellipsis instead of wrapping. -->
 <nav
-  class="pathable-breadcrumb pathable-breadcrumb--wrap"
+  class="pathable-breadcrumb pathable-breadcrumb--truncate"
   aria-label="Breadcrumb"
 >
   <ol class="pathable-breadcrumb__list">
@@ -17,9 +17,14 @@
         ><span>Childcare assistance programs for working parents</span></a
       >
     </li>
-    <li class="pathable-breadcrumb__list-item" aria-current="page">
-      Eligibility review for participants enrolled in the summer employment
-      training program
+    <li
+      class="pathable-breadcrumb__list-item pathable-current"
+      aria-current="page"
+    >
+      <span
+        >Eligibility review for participants enrolled in the summer employment
+        training program</span
+      >
     </li>
   </ol>
 </nav>

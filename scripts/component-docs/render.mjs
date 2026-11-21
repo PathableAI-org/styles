@@ -85,17 +85,6 @@ const FRONT_MATTER = /^---\n([\s\S]*?)\n---\n/u
 const stripFrontMatter = (markdown) => markdown.replace(FRONT_MATTER, '')
 
 /**
- * The Storybook page has no front matter, which the page's Guarantees section
- * refers to, so it ends with the front matter shown as YAML.
- */
-const frontMatterSection = (markdown) => {
-  const yaml = markdown.match(FRONT_MATTER)?.[1]
-  return yaml
-    ? `## Front matter\n\nThe front matter of the source page, with the guarantees:\n\n${fence('yaml', yaml)}`
-    : ''
-}
-
-/**
  * Resolves the states a placeholder names against the sources, collecting
  * problems instead of stopping at the first.
  */
@@ -239,7 +228,7 @@ function renderStories(page, sources) {
 /** The MDX page: the shared prose, with each example as a live preview. */
 function renderMdx(page, name, sources) {
   // Segment the whole page, so problems cite source line numbers, then drop
-  // the front matter from the first segment; it is shown at the end instead.
+  // the front matter from the first segment; the page does not show it.
   const segments = segment(page.markdown)
   if (segments[0]?.type === 'markdown') {
     segments[0] = { ...segments[0], text: stripFrontMatter(segments[0].text) }
@@ -302,9 +291,7 @@ function renderMdx(page, name, sources) {
     '',
     `<Meta title=${literal(`Component pages/${name}`)} />`,
     '',
-    [...blocks(segments), ...markdown(frontMatterSection(page.markdown))].join(
-      '\n\n',
-    ),
+    blocks(segments).join('\n\n'),
     '',
   ].join('\n')
 }
