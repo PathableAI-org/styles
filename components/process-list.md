@@ -7,10 +7,10 @@ styles-class: pathable-process-list
 variants: []
 guarantees:
   - id: numbered-marker
-    status: unmet
+    status: unverified
     claim: Each item shows its position in the list, starting at 1, as a number centred in a white circle 2.5rem across overall, including its 0.25rem PathAble Blue border.
   - id: connector
-    status: unmet
+    status: unverified
     claim: Every item but the last has a 0.5rem left border in lighter PathAble Blue that runs from its marker to the next, centred under the markers, and the last item's border is transparent.
   - id: item-spacing
     status: unverified
@@ -19,14 +19,14 @@ guarantees:
     status: unverified
     claim: The list shows no browser bullets or numbers, its padding is 20px at the top and none on the right or bottom, and its left padding is 1rem.
   - id: inside-prose
-    status: unmet
+    status: unverified
     claim: A list that is a direct child of pathable-prose renders the same as one outside it, with the same list padding, item spacing, markers and connector line.
   - id: heading-style
     status: unverified
-    claim: The heading is 1.49rem, PathAble Blue, with no margin, and the element after it has a 0.25rem top margin.
+    claim: The heading is 1.49rem, PathAble Blue (#00365c), with no margin, and the element after it has a 0.25rem top margin.
   - id: heading-typeface
-    status: unmet
-    claim: The heading is set in the brand heading typeface, Fredoka Regular.
+    status: unverified
+    claim: The heading is set in the brand heading typeface at normal weight, Fredoka Regular, through --pathable-font-heading and --pathable-font-weight-normal.
 ---
 
 # ProcessList
@@ -57,32 +57,43 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
-```html
-<ol class="pathable-process-list">
-  <li class="pathable-process-list__item">
-    <h3 class="pathable-process-list__heading">Tell us what you need</h3>
-    <p>Describe the adjustment and how it helps you at work.</p>
-  </li>
-  <li class="pathable-process-list__item">
-    <h3 class="pathable-process-list__heading">Meet your coordinator</h3>
-    <p>We agree the details with you and your employer.</p>
-  </li>
-  <li class="pathable-process-list__item">
-    <h3 class="pathable-process-list__heading">Start using it</h3>
-    <p>We check in after four weeks to see how it is going.</p>
-  </li>
-</ol>
-```
+<!-- example: default -->
+
+## States
+
+Each state is complete markup for one use of the list. Copy the one closest to
+what you need.
+
+<!-- examples -->
 
 ## Variants
 
-`pathable-process-list` has no modifier classes.
+`pathable-process-list` has no modifier classes. The states above differ only
+in what goes inside each item:
+
+- With description text: a heading followed by a `<p>`, a `<ul>` or both.
+- Without description text: a heading alone. The item keeps its 2rem of bottom
+  padding, so steps with no description are spaced the same way.
+- Heading level: `<h2>`, `<h3>`, `<h4>` and so on look the same, because the
+  class sets the size. Put the class on a real heading element, not on a
+  `<p>`, so the steps are listed by heading navigation. A step title on a `<p>`
+  is a visual heading only.
+
+The list has no variant for a larger heading or larger description text. Keep
+the type sizes the stylesheet sets.
 
 ## Tokens
 
-None. The marker, line and heading colours are fixed PathAble Blue (`#00365c`)
-and its lighter grade (`#e6ebef`) in the stylesheet, not theme tokens, so a theme
-does not change them.
+| What                | Token                           |
+| ------------------- | ------------------------------- |
+| Heading typeface    | `--pathable-font-heading`       |
+| Heading font weight | `--pathable-font-weight-normal` |
+
+The marker, the connector line and the heading colour are not custom
+properties. They are compiled into the stylesheet from the theme's colour
+settings: PathAble Blue (`#00365c`) for the marker ring, the numeral and the
+heading, and its lightest grade (`#e6ebef`) for the line. A theme that
+overrides custom properties does not change them.
 
 ## Composition
 
@@ -90,13 +101,14 @@ does not change them.
   the line are drawn on the item; an `<li>` without the class gets none of
   them and does not advance the count.
 - `pathable-process-list__heading` goes on a heading element at the top of each
-  item. Choose the level that fits the page outline.
+  item. Choose the level that fits the page outline. It also works on a `<p>`
+  for a step title that is not a heading, but prefer a heading element.
 - Put the step's description in ordinary elements after the heading, such as a
   `<p>` or a `<ul>`. A `<ul>` inside an item gets disc bullets and 0.25rem
   between its items. The first and last child of an item have no outer margin.
 - The markers are placed against the list's left edge. Do not add left padding
   to the list, or the markers and the line come apart. Even without it, the
-  line runs 4px left of the circles' centre today.
+  line sits through the circles' centre.
 - The list's text is Nunito at 0.99rem with a line height of 1.6; the marker
   numbers are 1.49rem.
 
@@ -107,18 +119,16 @@ is expected behaviour. One marked `status: unmet` is behaviour the component
 does not have yet: do not rely on it. One marked `status: unverified` was read
 from the package source and no test checks it yet.
 
-Today the circle's 0.25rem border is added outside its 2.5rem width, so the
-marker is 3rem across and the line runs 4px left of its centre: `numbered-marker`
-and `connector` are unmet.
+Every guarantee here is `unverified`: the stylesheet implements each one, and
+no test checks it yet. The marker is sized as border-box so its 0.25rem border
+sits inside the 2.5rem, which centres the connector line on it; a list directly
+inside `pathable-prose` is given the same rules as one outside it; and the
+heading takes the Fredoka Regular typeface. The pixel figures are those of the
+default theme.
 
-Today a list placed directly inside `pathable-prose` takes the prose list
-spacing, including a 3ch left padding instead of 1rem, which moves the line
-further right of the markers, and a 0.25em bottom margin on each item but the
-last, so `inside-prose` is unmet. Until the fix lands, wrapping the list in
-another element inside the prose avoids those rules.
-
-The heading is set in Nunito, the body typeface, at weight 700. The brand rules
-give Fredoka Regular for headings, so `heading-typeface` is unmet.
+The package does not provide a variant for a numbered list with a body-text
+column (`pathable-process-list__body`); steps put their description directly in
+the item.
 
 ## The consumer owns
 

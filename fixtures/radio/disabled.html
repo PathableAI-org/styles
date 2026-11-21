@@ -1,0 +1,46 @@
+<!-- description: Disabled choices, one of them selected, and a choice marked aria-disabled, which keeps focus and is announced as disabled. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">
+    Where will the next appointment take place?
+  </legend>
+  <div class="pathable-radio">
+    <input
+      class="pathable-radio__input"
+      id="radio-disabled-office"
+      type="radio"
+      name="radio-disabled-location"
+      value="office"
+      checked
+      disabled
+    />
+    <label class="pathable-radio__label" for="radio-disabled-office"
+      >Downtown office</label
+    >
+  </div>
+  <div class="pathable-radio">
+    <input
+      class="pathable-radio__input"
+      id="radio-disabled-home"
+      type="radio"
+      name="radio-disabled-location"
+      value="home"
+      disabled
+    />
+    <label class="pathable-radio__label" for="radio-disabled-home"
+      >Home visit</label
+    >
+  </div>
+  <div class="pathable-radio">
+    <input
+      class="pathable-radio__input"
+      id="radio-disabled-video"
+      type="radio"
+      name="radio-disabled-location"
+      value="video"
+      aria-disabled="true"
+    />
+    <label class="pathable-radio__label" for="radio-disabled-video"
+      >Video call</label
+    >
+  </div>
+</fieldset>

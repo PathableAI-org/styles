@@ -1,0 +1,44 @@
+<!-- description: A choice in the indeterminate state, drawn from the data-indeterminate attribute. The application sets the input's indeterminate property in script so assistive technology reports a mixed state. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">Which intake documents are on file?</legend>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-indeterminate-all"
+      type="checkbox"
+      name="intake-documents"
+      value="all"
+      data-indeterminate
+    />
+    <label class="pathable-checkbox__label" for="checkbox-indeterminate-all"
+      >All intake documents</label
+    >
+  </div>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-indeterminate-identification"
+      type="checkbox"
+      name="intake-documents"
+      value="identification"
+      checked
+    />
+    <label
+      class="pathable-checkbox__label"
+      for="checkbox-indeterminate-identification"
+      >Photo identification</label
+    >
+  </div>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-indeterminate-income"
+      type="checkbox"
+      name="intake-documents"
+      value="income"
+    />
+    <label class="pathable-checkbox__label" for="checkbox-indeterminate-income"
+      >Proof of income</label
+    >
+  </div>
+</fieldset>

@@ -4,7 +4,10 @@ slug: list
 kind: static
 summary: Vertical spacing, indent and line length for a plain bulleted or numbered list of text.
 styles-class: pathable-list
-variants: []
+variants:
+  - axis: marker
+    default: default
+    values: [default, unstyled]
 guarantees:
   - id: block-spacing
     status: unverified
@@ -21,6 +24,9 @@ guarantees:
   - id: nested-list
     status: unverified
     claim: A list nested inside an item of the list has a top margin of 0.25em.
+  - id: unstyled-markers
+    status: unmet
+    claim: With the unstyled modifier, the list has no bullets or numbers, no left padding and no top or bottom margin, and its items have no bottom margin and no width limit. The class pathable-list--unstyled is not in the stylesheet yet.
 ---
 
 # List
@@ -28,7 +34,7 @@ guarantees:
 Vertical spacing, indent and line length for a plain bulleted or numbered list
 of text. Put the class on a `<ul>` or an `<ol>`. The class sets no font, no
 colour and no marker style; the list keeps the browser's bullets or numbers and
-the text styles it inherits.
+the text styles it inherits. The unstyled modifier takes the markers away.
 
 ## When to use
 
@@ -52,18 +58,29 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
-```html
-<ul class="pathable-list">
-  <li>Photo identification</li>
-  <li>Your most recent support plan</li>
-  <li>Any letters from your employer about adjustments</li>
-</ul>
-```
+<!-- example: unordered -->
+
+## States
+
+Each state is complete markup for one use of the list. Copy the one closest to
+what you need.
+
+<!-- examples -->
 
 ## Variants
 
-`pathable-list` has no modifier classes. The same class works on `<ul>` and
-`<ol>`; the element decides whether items are bulleted or numbered.
+Add at most one modifier class to `pathable-list`. The same class works on
+`<ul>` and `<ol>`; the element decides whether items are bulleted or numbered,
+so bulleted and numbered lists are not variants.
+
+| Axis   | Value      | Class                     | What it is for                                                                   |
+| ------ | ---------- | ------------------------- | -------------------------------------------------------------------------------- |
+| marker | `default`  | none                      | The browser's bullets or numbers, a 3ch indent and spacing around the list       |
+| marker | `unstyled` | `pathable-list--unstyled` | No markers, no indent and no outer margin, for items that read as separate lines |
+
+`pathable-list--unstyled` is not in the stylesheet yet (see the
+`unstyled-markers` guarantee). It is the target: until it ships, the class
+does nothing and the list looks like the default.
 
 ## Tokens
 
@@ -95,7 +112,8 @@ as wide as its container.
 - Choosing `<ol>` when order matters and `<ul>` when it does not; screen
   readers announce the list type and the number of items.
 - Keeping each item short, and writing items in parallel form.
-- Removing the bullets, if a design needs no markers: the package has no class
-  for an unmarked list.
+- List semantics for an unstyled list: some browsers stop announcing a list
+  whose items draw no markers, so give an unstyled `<ul>` `role="list"` and a
+  name, as the unstyled state does.
 - Layout around the list: the width of its container and the spacing between
   the list and the content around it.

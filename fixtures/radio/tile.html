@@ -1,0 +1,47 @@
+<!-- description: The tile modifier, for a larger tap target. Each choice sits in a bordered box and may carry a description. The modifier is not in the stylesheet yet. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">
+    Which service plan fits the participant?
+  </legend>
+  <div class="pathable-radio pathable-radio--tile">
+    <input
+      class="pathable-radio__input"
+      id="radio-tile-standard"
+      type="radio"
+      name="radio-tile-plan"
+      value="standard"
+      checked
+    />
+    <label class="pathable-radio__label" for="radio-tile-standard">
+      Standard plan
+      <span class="pathable-radio__label-description"
+        >One check-in each month with a case worker.</span
+      >
+    </label>
+  </div>
+  <div class="pathable-radio pathable-radio--tile">
+    <input
+      class="pathable-radio__input"
+      id="radio-tile-intensive"
+      type="radio"
+      name="radio-tile-plan"
+      value="intensive"
+    />
+    <label class="pathable-radio__label" for="radio-tile-intensive"
+      >Intensive plan</label
+    >
+  </div>
+  <div class="pathable-radio pathable-radio--tile">
+    <input
+      class="pathable-radio__input"
+      id="radio-tile-self-directed"
+      type="radio"
+      name="radio-tile-plan"
+      value="self-directed"
+      disabled
+    />
+    <label class="pathable-radio__label" for="radio-tile-self-directed"
+      >Self-directed plan</label
+    >
+  </div>
+</fieldset>

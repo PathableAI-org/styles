@@ -1,0 +1,47 @@
+<!-- description: The tile modifier, for a larger tap target. Each choice sits in a bordered box and may carry a description. The modifier is not in the stylesheet yet. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">
+    Which appointment reminders should we send?
+  </legend>
+  <div class="pathable-checkbox pathable-checkbox--tile">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-tile-text"
+      type="checkbox"
+      name="reminders"
+      value="text"
+      checked
+    />
+    <label class="pathable-checkbox__label" for="checkbox-tile-text">
+      Text message
+      <span class="pathable-checkbox__label-description"
+        >Sent the day before each appointment.</span
+      >
+    </label>
+  </div>
+  <div class="pathable-checkbox pathable-checkbox--tile">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-tile-email"
+      type="checkbox"
+      name="reminders"
+      value="email"
+    />
+    <label class="pathable-checkbox__label" for="checkbox-tile-email"
+      >Email</label
+    >
+  </div>
+  <div class="pathable-checkbox pathable-checkbox--tile">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-tile-phone"
+      type="checkbox"
+      name="reminders"
+      value="phone"
+      disabled
+    />
+    <label class="pathable-checkbox__label" for="checkbox-tile-phone"
+      >Phone call</label
+    >
+  </div>
+</fieldset>

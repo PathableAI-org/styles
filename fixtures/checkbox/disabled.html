@@ -1,0 +1,46 @@
+<!-- description: Disabled choices, checked and unchecked, and a choice marked aria-disabled, which keeps focus and is announced as disabled. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">
+    Which benefits has the participant applied for?
+  </legend>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-disabled-snap"
+      type="checkbox"
+      name="benefits"
+      value="snap"
+      checked
+      disabled
+    />
+    <label class="pathable-checkbox__label" for="checkbox-disabled-snap"
+      >Food assistance</label
+    >
+  </div>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-disabled-housing"
+      type="checkbox"
+      name="benefits"
+      value="housing"
+      disabled
+    />
+    <label class="pathable-checkbox__label" for="checkbox-disabled-housing"
+      >Housing assistance</label
+    >
+  </div>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input"
+      id="checkbox-disabled-medicaid"
+      type="checkbox"
+      name="benefits"
+      value="medicaid"
+      aria-disabled="true"
+    />
+    <label class="pathable-checkbox__label" for="checkbox-disabled-medicaid"
+      >Health coverage</label
+    >
+  </div>
+</fieldset>

@@ -4,7 +4,10 @@ slug: icon
 kind: static
 summary: An inline SVG icon sized to the current font size and painted in the current text colour.
 styles-class: pathable-icon
-variants: []
+variants:
+  - axis: size
+    default: default
+    values: [size-3, size-4, size-5, size-6, size-7, size-8, size-9]
 guarantees:
   - id: em-size
     status: unverified
@@ -21,6 +24,9 @@ guarantees:
   - id: in-tile
     status: unverified
     claim: Inside a pathable-icon-tile the tile's icon size replaces the 1em size, and the icon stays centred in the tile.
+  - id: size-modifiers
+    status: unmet
+    claim: The classes pathable-icon--size-3 to pathable-icon--size-9 are not in the stylesheet yet. When they are, they make the icon a square of 24, 32, 40, 48, 56, 64 and 72 px, whatever the font size around it.
 ---
 
 # Icon
@@ -52,27 +58,34 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
-```html
-<p>
-  <svg
-    class="pathable-icon"
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <path
-      d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-    />
-    <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-  </svg>
-  Appointment at 2:00 PM
-</p>
-```
+<!-- example: default -->
+
+## States
+
+Each state is complete markup for one use of the icon. Copy the one closest to
+what you need.
+
+<!-- examples -->
 
 ## Variants
 
-The component has no modifiers. Change the size with `font-size` on the icon
-or its parent, and the colour with `color`.
+The default icon is 1em square. Change its size with `font-size` on the icon
+or its parent, and its colour with `color`. The size modifiers are for an icon
+that should keep a fixed size whatever the text around it does.
+
+| Axis | Value     | Class                   | What it is for                      |
+| ---- | --------- | ----------------------- | ----------------------------------- |
+| size | `default` | none                    | 1em square, the font size around it |
+| size | `size-3`  | `pathable-icon--size-3` | 24 px square                        |
+| size | `size-4`  | `pathable-icon--size-4` | 32 px square                        |
+| size | `size-5`  | `pathable-icon--size-5` | 40 px square                        |
+| size | `size-6`  | `pathable-icon--size-6` | 48 px square                        |
+| size | `size-7`  | `pathable-icon--size-7` | 56 px square                        |
+| size | `size-8`  | `pathable-icon--size-8` | 64 px square                        |
+| size | `size-9`  | `pathable-icon--size-9` | 72 px square                        |
+
+The size modifiers are not in the stylesheet yet; see the `size-modifiers`
+guarantee. Until they are, set `font-size` on the icon.
 
 ## Tokens
 
@@ -111,5 +124,9 @@ that does not fill its own view box looks smaller.
   `aria-label` or `aria-labelledby`.
 - The colour contrast of the icon against its background, which is that of
   the text colour it inherits.
-- The icon artwork.
+- The icon artwork. The package ships no icon set. The examples draw each
+  icon as inline `<path>` data, copied from the USWDS icon files. An
+  application can instead keep its own SVG sprite and point `<use href>` at
+  it from inside the `<svg>`; the sprite file and the URL it is served from
+  belong to the application too.
 - Layout around the icon: spacing and alignment with text.

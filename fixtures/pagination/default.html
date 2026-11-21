@@ -1,0 +1,67 @@
+<!-- description: The middle of a long range: the first page, the pages either side of the current page 10 and the last page, with overflow marks where pages are left out, and previous and next links. -->
+<nav class="pathable-pagination" aria-label="Participant list pages">
+  <ul class="pathable-pagination__list" role="list">
+    <li class="pathable-pagination__item pathable-pagination__arrow">
+      <a
+        class="pathable-pagination__link pathable-pagination__previous-page"
+        href="/participants?page=9"
+        ><svg
+          class="pathable-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></svg
+        ><span>Previous<span class="pathable-sr-only"> page</span></span></a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=1"
+        ><span class="pathable-sr-only">Page </span>1</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__overflow">
+      <span aria-hidden="true">…</span>
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=9"
+        ><span class="pathable-sr-only">Page </span>9</a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a
+        class="pathable-pagination__link pathable-current"
+        href="/participants?page=10"
+        aria-current="page"
+        ><span class="pathable-sr-only">Page </span>10</a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=11"
+        ><span class="pathable-sr-only">Page </span>11</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__overflow">
+      <span aria-hidden="true">…</span>
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=24"
+        ><span class="pathable-sr-only">Last page, page </span>24</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__arrow">
+      <a
+        class="pathable-pagination__link pathable-pagination__next-page"
+        href="/participants?page=11"
+        ><span>Next<span class="pathable-sr-only"> page</span></span
+        ><svg
+          class="pathable-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z" /></svg
+      ></a>
+    </li>
+  </ul>
+</nav>

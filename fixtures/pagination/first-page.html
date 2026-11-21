@@ -1,0 +1,55 @@
+<!-- description: The first page of eight: no previous link, and the current page is marked. -->
+<nav class="pathable-pagination" aria-label="Participant list pages">
+  <ul class="pathable-pagination__list" role="list">
+    <li class="pathable-pagination__item">
+      <a
+        class="pathable-pagination__link pathable-current"
+        href="/participants?page=1"
+        aria-current="page"
+        ><span class="pathable-sr-only">Page </span>1</a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=2"
+        ><span class="pathable-sr-only">Page </span>2</a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=3"
+        ><span class="pathable-sr-only">Page </span>3</a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=4"
+        ><span class="pathable-sr-only">Page </span>4</a
+      >
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=5"
+        ><span class="pathable-sr-only">Page </span>5</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__overflow">
+      <span aria-hidden="true">…</span>
+    </li>
+    <li class="pathable-pagination__item">
+      <a class="pathable-pagination__link" href="/participants?page=8"
+        ><span class="pathable-sr-only">Last page, page </span>8</a
+      >
+    </li>
+    <li class="pathable-pagination__item pathable-pagination__arrow">
+      <a
+        class="pathable-pagination__link pathable-pagination__next-page"
+        href="/participants?page=2"
+        ><span>Next<span class="pathable-sr-only"> page</span></span
+        ><svg
+          class="pathable-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z" /></svg
+      ></a>
+    </li>
+  </ul>
+</nav>

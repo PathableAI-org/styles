@@ -1,0 +1,43 @@
+<!-- description: A group of mutually exclusive choices in a fieldset with a legend. The radios share one name; one choice carries a description. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">
+    How should the case worker contact the participant?
+  </legend>
+  <div class="pathable-radio">
+    <input
+      class="pathable-radio__input"
+      id="radio-default-phone"
+      type="radio"
+      name="radio-default-contact"
+      value="phone"
+    />
+    <label class="pathable-radio__label" for="radio-default-phone"
+      >Phone call</label
+    >
+  </div>
+  <div class="pathable-radio">
+    <input
+      class="pathable-radio__input"
+      id="radio-default-text"
+      type="radio"
+      name="radio-default-contact"
+      value="text"
+    />
+    <label class="pathable-radio__label" for="radio-default-text">
+      Text message
+      <span class="pathable-radio__label-description"
+        >Messages are sent between 9 AM and 6 PM.</span
+      >
+    </label>
+  </div>
+  <div class="pathable-radio">
+    <input
+      class="pathable-radio__input"
+      id="radio-default-email"
+      type="radio"
+      name="radio-default-contact"
+      value="email"
+    />
+    <label class="pathable-radio__label" for="radio-default-email">Email</label>
+  </div>
+</fieldset>
