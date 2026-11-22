@@ -5,7 +5,10 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
+@use 'sass:map';
 @use 'uswds-core' as *;
+@use '../utilities-config' as uc;
+@use 'uswds-utilities/src/styles/rules/width' as uswds-width;
 
 @use 'usa-button-group/src/styles';
 
@@ -93,22 +96,58 @@
   }
 }
 
-// Below mobile-lg the segmented buttons are 2px wider than their items and
-// overlap by 3px, so two 2px borders draw a 3px divider. Overlap by the border
-// width instead, keeping the strip's outer edges where they are. Outline
-// buttons draw their border as an inset shadow, so the same overlap made the
-// divider between two outline segments 3px wide in every colour mode.
+// Below mobile-lg USWDS makes each segmented button 2px wider than its item
+// and pulls it back with negative margins, which overlaps neighbours by 3px,
+// so two 2px borders draw a 3px divider. Outline buttons draw their border as
+// an inset shadow, so this showed in every colour mode. Move the second and
+// third items 1px right instead: the overlap becomes the border width and the
+// strip's outer edges stay where they are. Only margins change, so a width
+// class on a button is not affected by this rule.
 @include at-media-max('mobile-lg') {
   .pathable-button-group--segmented
-    .pathable-button-group__item:where(:not(:first-child):not(:last-child))
-    > .pathable-button {
-    margin-left: 0;
+    .pathable-button-group__item:where(:not(:first-child)) {
+    margin-left: 1px;
   }
+}
 
+// USWDS sets the width of a segmented button with rules as specific as
+// `.usa-button-group--segmented .usa-button-group__item:last-child >
+// .usa-button`, which beat a width class such as `width-auto` or
+// `pathable-width-auto`. Repeat each width class for a button in a segmented
+// item, after those rules, as pathable-button.scss does for the plain button,
+// so the class wins at every viewport width. The unprefixed `width-*`
+// utilities have no responsive variants; the `pathable-width-*` ones do.
+@each $width-name,
+  $width-value in map.get(map.get(uswds-width.$u-width, 'width'), 'values')
+{
   .pathable-button-group--segmented
-    .pathable-button-group__item:last-child
-    > .pathable-button {
-    margin-left: 0;
-    width: 100%;
+    .pathable-button-group__item
+    > .pathable-button.width-#{$width-name} {
+    width: $width-value;
+  }
+}
+
+@each $width-name,
+  $width-value in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
+{
+  .pathable-button-group--segmented
+    .pathable-button-group__item
+    > .pathable-button.pathable-width-#{$width-name} {
+    width: $width-value;
+  }
+}
+
+@each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
+  @media (min-width: $bp-width) {
+    @each $width-name,
+      $width-value
+        in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
+    {
+      .pathable-button-group--segmented
+        .pathable-button-group__item
+        > .pathable-button.#{$bp-name}\:pathable-width-#{$width-name} {
+        width: $width-value;
+      }
+    }
   }
 }
