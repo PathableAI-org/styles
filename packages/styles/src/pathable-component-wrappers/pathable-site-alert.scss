@@ -26,11 +26,3 @@
 .pathable-site-alert--slim {
   @extend .usa-site-alert--slim;
 }
-
-// The nested alert sets a PathAble Blue focus ring for its light surface
-// (pathable-alert.scss). In the emergency site alert its surface is the
-// emergency red, where PathAble Blue is 1.8:1, so it takes the white ring the
-// emergency alert uses (6.8:1).
-.pathable-site-alert--emergency .pathable-alert {
-  --pathable-surface-focus-ring: var(--pathable-color-status-danger-text);
-}
