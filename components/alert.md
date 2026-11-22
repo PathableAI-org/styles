@@ -43,9 +43,10 @@ guarantees:
 
 A block-level message with a coloured left bar, an optional status icon, an
 optional heading and a short text, for information that belongs to the content
-around it. Put the class on a `<div>` that holds one `pathable-alert__body`. It
-adds no role, no live region and no dismiss control; the role comes from
-how the alert is announced, as set out under Announcing an alert.
+around it. Put the class on a `<div>`, or a `<section>` for a named region,
+that holds one `pathable-alert__body`. It adds no role, no live region and no
+dismiss control; the role comes from how the alert is announced, as set out
+under Announcing an alert.
 
 ## When to use
 
@@ -106,8 +107,8 @@ Info is the default status; the examples also carry
 
 An alert is one of three kinds, by how a screen reader meets it:
 
-- A static named region: the alert is in the page when it loads. Give it
-  `role="region"` and an `aria-label` so it is a landmark with a name.
+- A static named region: the alert is in the page when it loads. Make it a
+  `<section>` with an `aria-label`, so it is a region landmark with a name.
 - An advisory alert: the application adds it after load for news that can
   wait, such as a saved change. Give it `role="status"`, which is read when
   the reader is next idle.
