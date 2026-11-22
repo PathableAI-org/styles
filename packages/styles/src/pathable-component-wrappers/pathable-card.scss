@@ -55,38 +55,6 @@
 }
 
 .pathable-card-group {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-left: 0;
-}
-
-:where(.pathable-prose) > :is(ul, ol).pathable-card-group > li.pathable-card {
-  max-width: none;
-  margin-bottom: units($theme-card-margin-bottom + 1);
-
-  @include at-media('tablet') {
-    margin-bottom: units($theme-card-margin-bottom);
-  }
-}
-
-// A lone button directly in the footer loses its right margin, as USWDS does
-// for `.usa-card__footer .usa-button:only-of-type`. That rule is not extended
-// here: `@extend .usa-button` would also match every button inside a button
-// group in the footer and a link next to a button, and its descendant selector
-// ties the segmented group's joint overlap. A direct, only child is what is
-// meant. The selector is (0,1,0) and comes after the button rules, so it wins
-// on order and a margin utility still beats it.
-:where(.pathable-card__footer)
-  > :is(
-    .pathable-button,
-    .pathable-button--primary,
-    .pathable-button--continue,
-    .pathable-button--destructive
-  ):where(:only-child) {
-  margin-right: 0;
-}
-
-.pathable-card-group {
   @extend .usa-card-group;
 
   // USWDS pulls the group out by half the card gap and gives each container
