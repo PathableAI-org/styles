@@ -217,6 +217,30 @@
   @extend .usa-card__footer--exdent;
 }
 
+// A button in a card part is never wider than the part's content box, and its
+// label wraps to fit. A flag card's 15rem media column does not shrink with the
+// text, so at a large text size the text column can be narrower than a button's
+// label and the button would run under the media or past the card border. The
+// selector is (0,1,0); the exdent rule below (0,2,0) sets its own max-width,
+// and a max-width utility on the button still wins on order.
+:where(
+    .pathable-card__header,
+    .pathable-card__body,
+    .pathable-card__footer,
+    .pathable-card__header--exdent,
+    .pathable-card__body--exdent,
+    .pathable-card__footer--exdent
+  )
+  > :is(
+    .pathable-button,
+    .pathable-button--primary,
+    .pathable-button--continue,
+    .pathable-button--destructive
+  ) {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 // USWDS gives every direct child of an exdent part 2px of side padding, which
 // keeps text in line with the other parts. A button has padding of its own that
 // this would replace, so its own side padding is declared again (1.25rem; 1.5rem
