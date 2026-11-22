@@ -189,8 +189,9 @@
 // label wraps to fit. A flag card's 15rem media column does not shrink with the
 // text, so at a large text size the text column can be narrower than a button's
 // label and the button would run under the media or past the card border. The
-// selector is (0,1,0); the exdent rule below (0,2,0) sets its own max-width,
-// and a max-width utility on the button still wins on order.
+// selector is (0,1,0), so in the usual order a max-width utility on the button
+// wins; in an exdent part the (0,2,0) rule below sets its own max-width and a
+// max-width utility does not apply.
 :where(
     .pathable-card__header,
     .pathable-card__body,
@@ -206,7 +207,7 @@
     .pathable-button--destructive
   ) {
   max-width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 // USWDS gives every direct child of an exdent part 2px of side padding, which
@@ -219,7 +220,10 @@
 // (0,1,0) padding rules in any order the wrappers are forwarded, and the
 // --big and --unstyled rules follow the first in this file. --primary,
 // --continue and --destructive each render a whole button without
-// .pathable-button, so they are listed too.
+// .pathable-button, so they are listed too. Because of that specificity a
+// utility for side padding, left margin or max-width does not apply to a
+// button directly in an exdent part, as the lone footer button rule above beats
+// margin utilities.
 $-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
 $-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
 
