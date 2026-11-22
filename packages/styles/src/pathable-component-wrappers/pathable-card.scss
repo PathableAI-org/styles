@@ -9,6 +9,10 @@
 
 @use 'usa-card/src/styles';
 
+.pathable-card-group {
+  @extend .usa-card-group;
+}
+
 .pathable-card {
   @extend .usa-card;
 }
@@ -31,6 +35,12 @@
 
 .pathable-card__footer {
   @extend .usa-card__footer;
+}
+
+.pathable-card__footer .pathable-button:only-of-type {
+  // pathable-button.scss is not in this file's module graph, so USWDS's
+  // `.usa-card__footer .usa-button:only-of-type` does not reach it.
+  margin-right: 0;
 }
 
 .pathable-card__heading {
@@ -96,8 +106,28 @@
   }
 }
 
+.pathable-card__img {
+  @extend .usa-card__img;
+}
+
+.pathable-card__media--inset {
+  @extend .usa-card__media--inset;
+}
+
 .pathable-card__media--exdent {
   @extend .usa-card__media--exdent;
+}
+
+.pathable-card__header--exdent {
+  @extend .usa-card__header--exdent;
+}
+
+.pathable-card__body--exdent {
+  @extend .usa-card__body--exdent;
+}
+
+.pathable-card__footer--exdent {
+  @extend .usa-card__footer--exdent;
 }
 
 .pathable-card--media {
@@ -106,6 +136,10 @@
 
 .pathable-card--flag {
   @extend .usa-card--flag;
+}
+
+.pathable-card--media-right {
+  @extend .usa-card--media-right;
 }
 
 .pathable-card--header-first {
