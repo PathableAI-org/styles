@@ -12,6 +12,11 @@
 
 .pathable-alert {
   @extend .usa-alert;
+
+  // Bright Blue Brooks is 2.7:1 on the info tint and 2.8:1 on the plain alert
+  // surface, under the 3:1 a focus outline needs. The on-accent dark blue is
+  // over 15:1 on both. The status alerts below set their own ring.
+  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
 }
 
 .pathable-alert__body {
@@ -21,6 +26,11 @@
   // USWDS normally sets on every element. The bundle does not, so a one-line
   // alert grew 32 px taller than its icon needs.
   box-sizing: border-box;
+
+  // A long word in the heading, enlarged by browser text zoom on a narrow
+  // screen, wraps instead of running out of the alert, where white text on
+  // the emergency and error alerts would land on the page behind.
+  overflow-wrap: break-word;
 }
 
 .pathable-alert__heading {
@@ -122,4 +132,13 @@ $-status-fills: (
 .pathable-alert--emergency .pathable-alert__body .pathable-link,
 .pathable-alert--emergency .pathable-alert__body .pathable-link:visited {
   color: inherit;
+}
+
+// Forced colours drop the icon's mask fill, which leaves the icon blank and
+// its indent empty. Draw it in the text colour of the forced palette.
+@media (forced-colors: active) {
+  .pathable-alert .pathable-alert__body::before {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
 }

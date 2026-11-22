@@ -138,19 +138,3 @@ $-surface-focus-ring-controls: '.pathable-button, .pathable-button--primary, .pa
 .hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
   --pathable-surface-focus-ring: var(--pathable-color-surface);
 }
-
-// The success, warning, error and emergency alerts set a ring of their own in
-// pathable-alert.scss. Every other alert (info, plain, slim) sets none, so
-// inside the teal container it would inherit the white ring on its light tint
-// (1.0:1).
-:where(.pathable-bg-link)
-  :where(
-    .pathable-alert:not(
-      .pathable-alert--success,
-      .pathable-alert--warning,
-      .pathable-alert--error,
-      .pathable-alert--emergency
-    )
-  ) {
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
-}
