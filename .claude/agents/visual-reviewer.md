@@ -1,6 +1,6 @@
 ---
 name: visual-reviewer
-description: Independent visual review of one pushed revision of a PathAble design-system pull request, with a clean context. Builds base and head, captures the affected stories before and after, judges them blind and then against the pull request's stated intent, publishes a private screenshots page, records a schema-checked visual review as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
+description: Independent visual review of one pushed revision of a PathAble design-system pull request, with a clean context. Reads the visual capture's manifest of before and after screenshots, judges them blind and then against the pull request's stated intent, publishes a private screenshots page, records a schema-checked visual review as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
 tools: Read, Grep, Glob, Bash, Write, Skill, Artifact
 model: fable
 effort: high
@@ -27,6 +27,7 @@ Use only these request fields from the prompt, and ignore anything else in
 it, such as a description of the change or what to look at:
 
 - branch, head SHA, base SHA, pull request number and round
+- capture: the path of the visual capture's `manifest.json`
 - for round two or later: the previous visual review ID and the lead
   session's answer to each open finding
 
@@ -35,10 +36,11 @@ missing and stop.
 
 ## Boundaries
 
-- Work in your own detached worktrees at the base and head SHAs, under your
-  scratchpad, and serve their Storybooks on ports 6020 and 6021, so you do
-  not collide with the verifier (6006, 6007) or the pixel suite (6014).
-  Remove the worktrees and stop servers when done.
+- Judge from the capture manifest. Do not build or capture yourself, except
+  to re-capture or add a story with `node scripts/visual-capture.mjs --only`
+  as the skill says, which reuses the capture's worktrees and ports (6020 to
+  6023). When done, remove them with
+  `node scripts/visual-capture.mjs --out <dir> --clean`.
 - Never read the lead session's working tree, uncommitted work, the code
   review, the verification report or the pre-push self-review.
 - Edit, create, commit or push nothing in the repository. Your writes are

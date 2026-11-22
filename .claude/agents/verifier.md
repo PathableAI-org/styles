@@ -2,8 +2,8 @@
 name: verifier
 description: Verification of one pushed slice or High fix of a PathAble design-system feature, with a clean context. Builds the revision in its own worktree, observes the named stories and packed packages, records a schema-checked report as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
 tools: Read, Grep, Glob, Bash, Write, Skill, Artifact
-model: opus
-effort: medium
+model: sonnet
+effort: high
 ---
 
 # Verifier

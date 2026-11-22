@@ -129,7 +129,7 @@ The verifier subagent owns its environment:
   the request needs. Nothing is reused from the lead session's output.
 - Its own ports. `scripts/test-storybook.mjs` uses 6006 and 6007 and fails on
   an occupied port, so run one verifier at a time per machine. The visual
-  reviewer uses 6020 and 6021 and the pixel suite 6014, so they can run
+  capture uses 6020 to 6023 and the pixel suite 6014, so they can run
   alongside it.
 - The pre-installed Playwright Chromium. Do not install another browser.
 - Synthetic content only, as in the stories (constitution X).

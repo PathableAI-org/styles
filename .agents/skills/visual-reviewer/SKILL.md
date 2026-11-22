@@ -45,9 +45,10 @@ describes.
 ## Inputs
 
 From the request: branch, head SHA, base SHA, pull request number and round,
-and for round two or later the previous visual review ID and the
-lead session's answer to each open finding. If a SHA is missing or
-not in the repository, reply with what is missing instead of guessing.
+the capture manifest's path, and for round two or later the previous visual
+review ID and the lead session's answer to each open finding. If a SHA or the
+manifest is missing, or a SHA is not in the repository, reply with what is
+missing instead of guessing.
 
 Until step 5 below, read nothing the pull request says about itself: not its
 title, body, commit messages or changeset. Use only the list of changed
@@ -59,45 +60,40 @@ git diff --name-status <base>..<head>
 
 ## Procedure
 
-1. **Worktrees and builds.** Create two detached worktrees you own, one at
-   the base SHA and one at the head SHA. In each run
-   `pnpm install --frozen-lockfile`, `pnpm build` and `pnpm build:docs`, and
-   `pnpm build:docs-react` when a React path or React story changed. Serve
-   the base Storybook on port 6020 and the head Storybook on 6021.
-2. **Choose stories.** Apply the rules in
-   [What it captures](../../../docs/engineering/visual-review.md#what-it-captures).
-   Story IDs come from each built Storybook's `index.json`; the canonical and
-   rollout lists come from `packages/styles/scripts/quality-gates.mjs` and
-   `packages/styles/scripts/test-pixels.mjs` at the head SHA. Write each
-   chosen story, its viewports and conditions, the reason, and its theme into
-   your draft `captures`: `default` unless the story applies another theme
-   (a `ThemeProvider` with overrides, a consumer theme example, a dark or
-   high-contrast candidate), then `other`. Every changed story gets the
-   `focus` and `text-200` conditions.
-3. **Capture.**
-   - Changed baselines: `git show <base>:<path>` and `git show <head>:<path>`
-     for each PNG under `visual-baselines/` the diff touches.
-   - Pixel suite: start `dockerd` as that document describes, then run
-     `pnpm test:pixels-styles` in the head worktree in the background, and
-     collect any diff images it writes under
-     `apps/storybook/test-results/pixels/`.
-   - Other stories: write a small Playwright script in your scratchpad, using
-     the pre-installed `require('playwright')` with
-     `deviceScaleFactor: 1`. For each story, viewport and condition, open
-     `iframe.html?id=<story>&viewMode=story` in both Storybooks, wait for
-     `document.fonts.ready`, disable animations and transitions and hide the
-     caret, press Tab for the `focus` condition, emulate `forced-colors` or
-     `reduced-motion` or set the root font size to 200 % for those
-     conditions, and take a full-page screenshot.
-   - Contrast: in each changed story at the head, read every visible text
-     element's and focus indicator's computed colour and the effective
-     background behind it, and compute the WCAG contrast ratio and whether
-     the text is large (18 pt, or 14 pt bold). Sample pixels only for text
-     over an image or gradient, and say so in `verification`.
-   - Compare each base and head pair with `pixelmatch` and `pngjs` from the
-     workspace's `node_modules`, at threshold `0.1` and `includeAA: false`,
-     and record the number of differing pixels. Write a difference image for
-     every pair that differs. A pair whose sizes differ is a difference.
+1. **Check the manifest.** Read the capture manifest. Its `baseSha` and
+   `headSha` must equal the request's SHAs; if they do not, reply with the
+   mismatch and stop. Every path in it is relative to the manifest's
+   directory. An entry in `errors` for a head build is itself a blocking
+   finding (the head does not build); an error in a single capture means
+   re-capture it in step 3.
+2. **Check the story choice.** The script applied the rules in
+   [What it captures](../../../docs/engineering/visual-review.md#what-it-captures)
+   from the changed paths, by component name. Compare its `stories` with
+   `git diff --name-status <base>..<head>`. When a story the rules call for
+   is missing, add it in step 3. Write each story, its viewports and
+   conditions, the reason, and its theme into your draft `captures`:
+   `default` unless the story applies another theme (a `ThemeProvider` with
+   overrides, a consumer theme example, a dark or high-contrast candidate),
+   then `other`.
+3. **Fill gaps.** To add a story or re-capture one, run
+   `node scripts/visual-capture.mjs --base <base> --head <head> --out <dir> --only --story <id>`
+   (`react:<id>` for a React story), with `<dir>` the manifest's directory.
+   It reuses the built worktrees and writes a `recapture-<n>.json` beside the
+   manifest. What the manifest gives you:
+   - `pairs`: base, head and difference images per story, viewport and
+     condition, with `differingPixels` at the pixel suite's threshold and
+     `sizeMismatch`. A pair whose sizes differ is a difference. The count
+     includes anti-aliased edge pixels, which the pixel suite leaves out.
+   - `pairs[].contrast` at the head: text rows grouped by colour pair, with
+     the ratio, whether the text is large, and the AA minimum, and the focus
+     indicator under the `focus` condition. A row marked `needsSample` has an
+     image or gradient behind it, or a colour computed styles cannot give:
+     sample its pixels from the head capture yourself and say so in
+     `verification`.
+   - `baselines`: each changed PNG under `visual-baselines/` at base and head,
+     with a difference image.
+   - `pixels`: the pixel suite's status at the head, its log and its diff
+     images.
 4. **Blind pass.** Look at every differing pair, and at every head capture of
    a story the pull request changed, even when it did not differ. Write down
    each visible difference and each visible defect, as
@@ -118,13 +114,13 @@ git diff --name-status <base>..<head>
    lead session's answer to an earlier finding asks for something that fails
    Section 508, add a `section 508 conflict` escalation to the
    `section-508` finding.
-6. **Verify candidates.** Re-capture each candidate once to rule out
-   flakiness, and check whether the base already showed it. A defect or
+6. **Verify candidates.** Re-capture each candidate once, as in step 3, to
+   rule out flakiness, and check whether the base already showed it. A defect or
    Section 508 failure present at the base in a story the pull request does
    not change is not a finding: file a bug issue for it. Drop what you cannot
    confirm. Rank by severity, `section-508` first, and keep at most ten.
-7. **Repeat rounds.** For round two or later, capture the new head against
-   the same base, then close each earlier finding as `fixed`, `justified` or
+7. **Repeat rounds.** For round two or later, the lead sends a new manifest
+   for the new head against the same base. Close each earlier finding as `fixed`, `justified` or
    `withdrawn`, and carry forward with the same ID any you still hold. Never
    close a `section-508` finding as `justified`: if the answer is a
    justification, keep it open and escalate a `section 508 conflict`. Raise
@@ -138,7 +134,8 @@ git diff --name-status <base>..<head>
    `pnpm visual:record <file>` from the head worktree. If posting the comment
    fails, say so in your reply and retry with
    `pnpm notes:publish visual <sha> --pr <n>`.
-10. **Clean up.** Stop the Storybook servers and remove both worktrees.
+10. **Clean up.** Remove the capture's worktrees with
+    `node scripts/visual-capture.mjs --out <dir> --clean`.
 
 ## Visual review shape
 

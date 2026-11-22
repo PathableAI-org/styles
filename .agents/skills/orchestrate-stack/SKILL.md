@@ -15,11 +15,20 @@ skill supplies the procedure.
 
 ## Boundaries
 
-- You are the only writer of the issue's branches. Subagents never edit them.
-- Start every independent role from its `.claude/agents/` definition with the
-  Agent tool, never as a fork and never as a general-purpose agent. Pass only
-  the request fields under [Requests](#requests). Never describe the change,
-  its intent, what to check, or another subagent's findings.
+- You are the only one who commits to or pushes the issue's branches. The
+  `implementer` edits your working tree for one task at a time while you wait
+  on it, and never commits; no other subagent edits it.
+- Start every role from its `.claude/agents/` definition with the Agent tool,
+  never as a fork and never as a general-purpose agent. Give independent
+  roles (the reviewers, the verifier and the visual capture) only the request
+  fields under [Requests](#requests). Never describe the change, its intent,
+  what to check, or another subagent's findings to them. The `implementer` is
+  not independent and gets the full [brief](#implementer-brief).
+- Leave each subagent at its definition's model and effort, except for a
+  step-up that
+  [Stepping up](../../../docs/engineering/orchestration.md#stepping-up)
+  allows, which you pass with the Agent tool's `model` and `effort`
+  parameters. Never step a role down, and never step up a reviewer.
 - Keep pre-push self-review findings out of every request and the pull
   request body. Keep Copilot's comments out of every request.
 - Read results from the notes (`pnpm review:show`, `pnpm verify:show`,
@@ -122,8 +131,13 @@ For each slice or single pull request, on its
 or a `<type>/<slug>` branch:
 
 1. **Build.** On the first implementation branch, run `speckit-tasks`. Implement
-   only the current scope, source first. Commit Conventional Commits, add the
-   changeset, and run the
+   only the current scope, source first. For each task that is clearly scoped
+   as
+   [Delegating implementation](../../../docs/engineering/orchestration.md#delegating-implementation)
+   defines, you may start the `implementer` with its [brief](#implementer-brief)
+   instead of writing it yourself; keep the rest. Read its reply and
+   `git diff`, and keep, fix or discard the change. Commit Conventional
+   Commits, add the changeset, and run the
    [Before committing](../../../AGENTS.md#before-committing) checks.
 2. **Self-review.** `git fetch origin <base>`, then run the
    `pre-push-reviewer` subagent with only the base branch. Fix what you
@@ -136,16 +150,23 @@ or a `<type>/<slug>` branch:
    SHA, each with its [request](#requests):
    - `code-reviewer`, always
    - `verifier`, for a slice or a High fix
-   - `visual-reviewer`, for visual-only styles work at any tier, and for
+   - `visual-capture`, for visual-only styles work at any tier, and for
      agent-merge work whose changed files
      (`gh api --paginate repos/{owner}/{repo}/pulls/<n>/files --jq '.[].filename'`)
      include a
-     [rendering path](../../../docs/engineering/visual-review.md#when-a-visual-review-runs)
+     [rendering path](../../../docs/engineering/visual-review.md#when-a-visual-review-runs).
+     When it finishes, start the `visual-reviewer` with the manifest path
+     from its reply.
 
    End your turn.
 5. **Read.** As each finishes, read its record from the notes. Answer every
    finding, advisory ones included: fix it, or write a justification you will
-   pass in the next request. A visual `tier` finding means the work is
+   pass in the next request. When a finding or a failed claim lands in code
+   the implementer wrote, or the verifier or the visual capture fails a run,
+   name the cause (the brief, too little done, or too little known) and take
+   the step
+   [Stepping up](../../../docs/engineering/orchestration.md#stepping-up)
+   gives for it. Write the step in your round summary. A visual `tier` finding means the work is
    Standard: raise the label and the Tier section first. A blocking finding
    closed as `justified` goes in Decisions for the reviewer. Start a new round
    from step 1 until no record has an open blocking finding, claim or
@@ -193,8 +214,34 @@ answers: <for each open finding ID, the fixing commit or the justification, or n
 ```
 
 The `pre-push-reviewer` gets only `base: <branch>`. The verifier also gets
-`run instructions changed: <what, or none>`. Keep every subagent of a round on
-the same SHA.
+`run instructions changed: <what, or none>`. The visual reviewer also gets
+`capture: <manifest path>`. Keep every subagent of a round on the same SHA.
+
+The `visual-capture` gets only these, with a new output directory under your
+scratchpad for each round:
+
+```text
+base: <40-char base SHA>
+head: <pushed 40-char SHA>
+out: <scratchpad>/visual-capture/<pr>-round-<n>
+```
+
+### Implementer brief
+
+The implementer gets a full brief, because it builds what you decided rather
+than checking it. Write each field; a brief that leaves scope open is the
+most common reason a delegated task fails.
+
+```text
+branch: <the branch checked out in your working tree>
+task: <what to build, in a few sentences, with the tasks.md ID if any>
+files: <each file to change or add>
+constraints: <the rules that apply: owning documents, contracts, names, tokens, what must not change>
+checks: <each command to run before replying>
+```
+
+Run one implementer at a time and do not edit the working tree until it
+replies.
 
 ## Release
 

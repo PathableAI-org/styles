@@ -68,18 +68,33 @@ content beyond what it needs to pick stories and confirm a finding's cause.
 
 ## What it captures
 
-The reviewer builds both SHAs in its own detached worktrees (`pnpm install
---frozen-lockfile`, `pnpm build`, then `pnpm build:docs` and, when React
-stories are affected, the React Storybook build).
+Capturing is mechanical and judging is not, so they are split. The
+[`visual-capture`](../../.claude/agents/visual-capture.md) subagent, on a
+small model, runs
+[`scripts/visual-capture.mjs`](../../scripts/visual-capture.mjs) for the base
+and head SHAs. The script does everything in the list below except naming
+themes, and writes a manifest of image paths and numbers. The visual reviewer
+starts with that manifest, checks its SHAs and its story choice, and judges.
+It runs the same script with `--only` to add a story the choice missed or to
+re-capture a candidate finding, and removes the worktrees with `--clean`
+when done.
+
+The script builds both SHAs in detached worktrees under its output directory
+(`pnpm install --frozen-lockfile`, `pnpm build`, then `pnpm build:docs` and,
+when a React path changed, the React Storybook build), with build output in
+log files, and serves them on ports 6020 to 6023.
 
 1. **Choose stories.** Every story in a stories file the pull request changes,
-   every canonical story of a component whose styles, React source or story
-   file changed, and every rollout story in the pixel suite whose component
+   every story of a component whose page, fixtures, styles or React source
+   changed, and every rollout story in the pixel suite whose component
    is touched. A change to a shared token, a base partial or a dependency
    affects every component: capture the full pixel rollout list and the
-   canonical stories in `CANONICAL_STORIES` instead. Name each chosen story,
-   why, and its [theme](#the-default-theme-and-the-brand-book) in the
-   review's `captures`.
+   canonical stories in `CANONICAL_STORIES` instead, or, while both lists are
+   empty, the first story of each stories file. The script matches stories to
+   changed files by component name; the reviewer adds any story it missed. The
+   reviewer names each chosen story, why, and its
+   [theme](#the-default-theme-and-the-brand-book) in the review's
+   `captures`.
 2. **Changed baselines.** For each PNG the pull request adds, changes or
    removes under `visual-baselines/`, take the base and head versions from
    Git and put them side by side with a difference image.
@@ -91,17 +106,19 @@ stories are affected, the React Storybook build).
 4. **Stories without baselines.** Capture each remaining chosen story with the
    pre-installed Playwright Chromium at the base and head SHAs, at the
    story's viewports (375, 768 and 1280 px, as its `mode` sets), full page,
-   with animations disabled, after fonts load. Compare each pair with
-   pixelmatch at the pixel suite's threshold and produce a difference image.
+   with animations disabled, after fonts load. Compare each pair by YIQ
+   colour distance at the pixel suite's threshold and produce a difference
+   image.
 5. **Conditions.** Capture every story the pull request changes with keyboard
    focus on its first interactive control and at 200 % text size, because
    Section 508 needs both. When the change touches colour, motion or
    forced-colors styles, also capture the affected stories under emulated
    `forced-colors: active` or `prefers-reduced-motion: reduce`.
-6. **Measurements.** For every text and focus indicator in a changed story,
-   read the foreground and background colours from the page's computed
-   styles, falling back to sampled pixels only for text over an image or
-   gradient, and compute the contrast ratio.
+6. **Measurements.** For every text and focus indicator in a chosen story at
+   the head, read the foreground and background colours from the page's
+   computed styles and compute the contrast ratio. The script marks text over
+   an image or gradient `needsSample`, and the reviewer samples its pixels
+   from the capture.
 
 Captures are evidence for the review, not committed baselines. They are never
 committed and never copied into `visual-baselines/`.
@@ -319,6 +336,9 @@ private screenshots page, and bug issues for unrelated defects.
 
 - Captures are Chromium only. `forced-colors` and reduced motion are
   emulated.
+- The capture's pixel counts include anti-aliased edge pixels, which the
+  pixel suite leaves out. Base and head render in the same browser, so edges
+  differ only where content moved.
 - The reviewer judges stories. A rendering change that no story shows is
   invisible to it, which is why `missing` is a category: it reports an
   affected state without a story rather than passing it.
