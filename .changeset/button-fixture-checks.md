@@ -12,7 +12,8 @@ Buttons inside a `pathable-button-group` now get the group's rules for a
 focus layering. An outline button in a segmented group no longer draws a
 separator line on its right edge. The separator of a disabled button in a
 segmented group is drawn in the surface colour (white by default), as USWDS
-does.
+does. Below 480px the divider between two outline segments is 2px wide, the
+same as the outer border, and in forced colours every divider is a single line.
 
 A `pathable-icon` inside a `pathable-button` no longer shrinks when the label is
 long.

@@ -94,9 +94,11 @@
 }
 
 // Below mobile-lg the segmented buttons are 2px wider than their items and
-// overlap by 3px, which would draw a 3px divider from two 2px borders. Overlap
-// by the border width instead, keeping the strip's outer edges where they are.
-@media (forced-colors: active) and (max-width: 29.99em) {
+// overlap by 3px, so two 2px borders draw a 3px divider. Overlap by the border
+// width instead, keeping the strip's outer edges where they are. Outline
+// buttons draw their border as an inset shadow, so the same overlap made the
+// divider between two outline segments 3px wide in every colour mode.
+@include at-media-max('mobile-lg') {
   .pathable-button-group--segmented
     .pathable-button-group__item:where(:not(:first-child):not(:last-child))
     > .pathable-button {
