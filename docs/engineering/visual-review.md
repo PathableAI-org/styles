@@ -90,8 +90,13 @@ log files, and serves them on ports 6020 to 6023.
    is touched. A change to a shared token, a base partial or a dependency
    affects every component: capture the full pixel rollout list and the
    canonical stories in `CANONICAL_STORIES` instead, or, while both lists are
-   empty, the first story of each stories file. The script matches stories to
-   changed files by component name; the reviewer adds any story it missed. The
+   empty, the first story of each stories file. A shared React change (the
+   theming source, the React Storybook configuration, the React package's
+   dependencies or the lockfile) samples the first story of each React stories
+   file. The script matches stories to changed files by component name, and
+   records a story missing from the index, or one that does not render, as a
+   capture error rather than a screenshot; the reviewer adds any story it
+   missed. The
    reviewer names each chosen story, why, and its
    [theme](#the-default-theme-and-the-brand-book) in the review's
    `captures`.

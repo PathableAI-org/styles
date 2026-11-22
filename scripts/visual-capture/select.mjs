@@ -18,24 +18,36 @@ const loose = (slug) => slug.replace(/-/g, '')
 const STYLES_SRC = 'packages/styles/src/'
 const WRAPPERS = `${STYLES_SRC}pathable-component-wrappers/`
 const REACT_COMPONENTS = 'packages/react/src/components/'
+const REACT_THEME = 'packages/react/src/theme/'
 
 /**
- * Paths whose change affects every component: shared tokens and base
- * partials, the stylesheet entry points, the shared wrapper partials, the
- * Storybook configuration, and dependencies.
+ * The Storybooks a shared path affects as a whole, `[]` for a path that is
+ * not shared: shared tokens and base partials, the stylesheet entry points,
+ * the shared wrapper partials, the React theming source, each Storybook's
+ * configuration, and dependencies.
  */
-export function isSharedPath(path) {
-  if (path === 'pnpm-lock.yaml') return true
-  if (/^packages\/(styles|react)\/package\.json$/.test(path)) return true
-  if (/^apps\/storybook(-react)?\/\.storybook\//.test(path)) return true
+export function sharedWorkspaces(path) {
+  if (path === 'pnpm-lock.yaml') return ['styles', 'react']
+  if (path === 'packages/styles/package.json') return ['styles']
+  if (path === 'packages/react/package.json') return ['react']
+  if (path.startsWith('apps/storybook/.storybook/')) return ['styles']
+  if (path.startsWith('apps/storybook-react/.storybook/')) return ['react']
+  if (path.startsWith(REACT_THEME)) return ['react']
   if (path.startsWith(WRAPPERS)) {
     return /\/_[^/]+\.scss$/.test(path) || path.endsWith('/pathable-all.scss')
+      ? ['styles']
+      : []
   }
   if (path.startsWith(STYLES_SRC)) {
     const rest = path.slice(STYLES_SRC.length)
-    return !rest.includes('/') && rest.endsWith('.scss')
+    return !rest.includes('/') && rest.endsWith('.scss') ? ['styles'] : []
   }
-  return false
+  return []
+}
+
+/** Whether a path affects every component of a Storybook. */
+export function isSharedPath(path) {
+  return sharedWorkspaces(path).length > 0
 }
 
 /**
@@ -57,6 +69,10 @@ export function componentSlug(path) {
     const folder = path.slice(REACT_COMPONENTS.length).split('/')[0]
     if (folder && !folder.includes('.')) return kebab(folder)
   }
+  // A component in the theming source, such as ThemeProvider.tsx, has its
+  // own stories; the rest of the folder is covered as a shared path.
+  match = /^([A-Z][A-Za-z0-9]*)\.tsx$/.exec(path.slice(REACT_THEME.length))
+  if (path.startsWith(REACT_THEME) && match) return kebab(match[1])
   return null
 }
 
@@ -165,30 +181,42 @@ export function chooseStories({
     }
   }
 
-  if (shared.length > 0) {
-    const reason = `Shared path changed (${shared[0]}${shared.length > 1 ? ', …' : ''}).`
-    const listed = [...canonical, ...rolloutIds]
-      .map(({ id }) => byId.get(id))
-      .filter(Boolean)
-    // With no canonical or rollout story in this Storybook (as while the
-    // lists are rebuilt), fall back to the first story of each stories file.
-    const firstOfEachFile = styles.filter(
+  for (const [workspace, entries] of workspaces) {
+    const paths = shared.filter((path) =>
+      sharedWorkspaces(path).includes(workspace),
+    )
+    if (paths.length === 0) continue
+    const reason = `Shared path changed (${paths[0]}${paths.length > 1 ? ', …' : ''}).`
+    const stories = entries.filter((entry) => entry.type === 'story')
+    const listed =
+      workspace === 'styles'
+        ? [...canonical, ...rolloutIds]
+            .map(({ id }) => byId.get(id))
+            .filter(Boolean)
+        : []
+    // With no canonical or rollout story in this Storybook (the React one has
+    // none, and the styles lists are empty while they are rebuilt), fall back
+    // to the first story of each stories file.
+    const firstOfEachFile = stories.filter(
       (entry, index) =>
-        styles.findIndex((other) => other.importPath === entry.importPath) ===
+        stories.findIndex((other) => other.importPath === entry.importPath) ===
         index,
     )
     const sample = listed.length > 0 ? listed : firstOfEachFile
     const sampleReason =
       listed.length > 0 ? reason : `${reason} First story of its file.`
-    for (const entry of sample) add('styles', entry, sampleReason, false)
+    for (const entry of sample) add(workspace, entry, sampleReason, false)
   }
 
   for (const request of extra) {
     const [workspace, id] = request.startsWith('react:')
       ? ['react', request.slice('react:'.length)]
       : ['styles', request]
-    const entry = (indexes[workspace] ?? []).find((item) => item.id === id)
+    const entry = (indexes[workspace] ?? []).find(
+      (item) => item.id === id && item.type === 'story',
+    )
     add(workspace, entry ?? { id }, 'Asked for explicitly.', true)
+    if (!entry) chosen.get(`${workspace}:${id}`).inIndex = false
   }
 
   return [...chosen.values()].sort((a, b) =>
@@ -225,9 +253,13 @@ export function viewportsForMode(mode) {
     : ['mobile', 'tablet', 'desktop']
 }
 
-/** The conditions to capture a story under. */
+/**
+ * The conditions to capture a story under. Every chosen story is affected by
+ * the change, so each gets the diff's media conditions; a story the pull
+ * request changes also gets `focus` and `text-200`.
+ */
 export function conditionsForStory(story, diffConditions) {
   return story.changed
     ? ['default', 'focus', 'text-200', ...diffConditions]
-    : ['default']
+    : ['default', ...diffConditions]
 }

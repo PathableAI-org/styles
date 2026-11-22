@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { describe, it } from 'node:test'
+import { after, before, describe, it } from 'node:test'
+import { chromium } from 'playwright'
 
 import {
   collectContrast,
@@ -16,6 +17,7 @@ import {
   conditionsForStory,
   isSharedPath,
   kebab,
+  sharedWorkspaces,
   viewportsForMode,
 } from '../visual-capture/select.mjs'
 
@@ -48,6 +50,16 @@ const reactIndex = [
     'Basic/Link',
     '../../packages/react/src/stories/components/Basic/Link.stories.tsx',
   ),
+  story(
+    'basic-link--external',
+    'Basic/Link',
+    '../../packages/react/src/stories/components/Basic/Link.stories.tsx',
+  ),
+  story(
+    'components-themeprovider--default',
+    'Components/ThemeProvider',
+    '../../packages/react/src/stories/components/ThemeProvider.stories.tsx',
+  ),
 ]
 
 describe('componentSlug', () => {
@@ -64,9 +76,14 @@ describe('componentSlug', () => {
       componentSlug('packages/react/src/components/IconButton/IconButton.tsx'),
       'icon-button',
     )
+    assert.equal(
+      componentSlug('packages/react/src/theme/ThemeProvider.tsx'),
+      'theme-provider',
+    )
   })
 
   it('ignores paths that name no component', () => {
+    assert.equal(componentSlug('packages/react/src/theme/createTheme.ts'), null)
     assert.equal(componentSlug('components/README.md'), null)
     assert.equal(componentSlug('fixtures/harness/index.mjs'), null)
     assert.equal(
@@ -102,6 +119,21 @@ describe('isSharedPath', () => {
     )
     assert.equal(isSharedPath('packages/styles/src/js/accordion.js'), false)
   })
+
+  it('names the Storybooks each shared path affects', () => {
+    assert.deepEqual(sharedWorkspaces('pnpm-lock.yaml'), ['styles', 'react'])
+    assert.deepEqual(sharedWorkspaces('packages/styles/src/_colors.scss'), [
+      'styles',
+    ])
+    assert.deepEqual(
+      sharedWorkspaces('apps/storybook-react/.storybook/preview.js'),
+      ['react'],
+    )
+    assert.deepEqual(
+      sharedWorkspaces('packages/react/src/theme/createTheme.ts'),
+      ['react'],
+    )
+  })
 })
 
 describe('chooseStories', () => {
@@ -131,7 +163,11 @@ describe('chooseStories', () => {
     })
     assert.deepEqual(
       chosen.map((item) => `${item.workspace}:${item.id}`),
-      ['react:basic-iconbutton--default', 'react:basic-link--default'],
+      [
+        'react:basic-iconbutton--default',
+        'react:basic-link--default',
+        'react:basic-link--external',
+      ],
     )
   })
 
@@ -164,18 +200,45 @@ describe('chooseStories', () => {
     assert.match(chosen[0].reasons[0], /First story of its file/)
   })
 
-  it('adds stories asked for explicitly, including unknown ones', () => {
+  it('samples the React Storybook for a shared React change', () => {
+    const chosen = chooseStories({
+      changedPaths: ['apps/storybook-react/.storybook/preview.js'],
+      indexes: { styles: stylesIndex, react: reactIndex },
+    })
+    assert.deepEqual(
+      chosen.map((item) => `${item.workspace}:${item.id}`),
+      [
+        'react:basic-iconbutton--default',
+        'react:basic-link--default',
+        'react:components-themeprovider--default',
+      ],
+    )
+  })
+
+  it('chooses the ThemeProvider stories when the provider changes', () => {
+    const chosen = chooseStories({
+      changedPaths: ['packages/react/src/theme/ThemeProvider.tsx'],
+      indexes: { styles: stylesIndex, react: reactIndex },
+    })
+    const provider = chosen.find(
+      (item) => item.id === 'components-themeprovider--default',
+    )
+    assert.equal(provider.changed, true)
+    assert.equal(chosen.length, 3)
+  })
+
+  it('adds stories asked for explicitly and flags unknown ones', () => {
     const chosen = chooseStories({
       changedPaths: [],
       indexes: { styles: stylesIndex, react: reactIndex },
       extra: ['alert--info', 'react:basic-link--default', 'missing--story'],
     })
     assert.deepEqual(
-      chosen.map((item) => `${item.workspace}:${item.id}`),
+      chosen.map((item) => [`${item.workspace}:${item.id}`, item.inIndex]),
       [
-        'react:basic-link--default',
-        'styles:alert--info',
-        'styles:missing--story',
+        ['react:basic-link--default', undefined],
+        ['styles:alert--info', undefined],
+        ['styles:missing--story', false],
       ],
     )
   })
@@ -190,7 +253,7 @@ describe('conditions and viewports', () => {
     assert.deepEqual(conditionsForDiff('+  margin: 0;'), [])
   })
 
-  it('gives changed stories focus and 200% text, and others only the default', () => {
+  it('gives every story the diff conditions, and changed ones focus and 200% text', () => {
     assert.deepEqual(conditionsForStory({ changed: true }, ['forced-colors']), [
       'default',
       'focus',
@@ -199,7 +262,7 @@ describe('conditions and viewports', () => {
     ])
     assert.deepEqual(
       conditionsForStory({ changed: false }, ['forced-colors']),
-      ['default'],
+      ['default', 'forced-colors'],
     )
   })
 
@@ -243,6 +306,51 @@ describe('contrast maths', () => {
   it('injects into a page as self-contained source', () => {
     assert.equal(typeof collectContrast.toString(), 'string')
     assert.match(collectContrast.toString(), /^function collectContrast\(\)/)
+  })
+})
+
+describe('collectContrast in a page', () => {
+  let browser
+  let page
+  before(async () => {
+    browser = await chromium.launch()
+    page = await browser.newPage()
+  })
+  after(async () => {
+    await browser?.close()
+  })
+
+  const collect = async (html) => {
+    await page.setContent(`<body style="background:#fff">${html}</body>`)
+    await page.addScriptTag({
+      content: `globalThis.__collect = ${collectContrast.toString()}`,
+    })
+    return page.evaluate(() => globalThis.__collect())
+  }
+
+  it('marks text under element or ancestor opacity for sampling', async () => {
+    const own = await collect('<p style="color:#000;opacity:0.2">Faded</p>')
+    assert.equal(own[0].ratio, 21)
+    assert.equal(own[0].needsSample, true)
+    const ancestor = await collect(
+      '<div style="opacity:0.5"><div style="background:#fff"><p style="color:#000">Faded</p></div></div>',
+    )
+    assert.equal(ancestor[0].needsSample, true)
+    const plain = await collect('<p style="color:#000">Plain</p>')
+    assert.equal(plain[0].needsSample, false)
+  })
+
+  it('measures form-control values and placeholders', async () => {
+    const rows = await collect(
+      '<input value="Read only" readonly style="color:#000;background:#fff">' +
+        '<input placeholder="Search" style="background:#fff">' +
+        '<style>input::placeholder{color:#767676}</style>',
+    )
+    const value = rows.find((row) => row.example.text === 'Read only')
+    const placeholder = rows.find((row) => row.kind === 'placeholder')
+    assert.equal(value.ratio, 21)
+    assert.equal(placeholder.foreground, '#767676')
+    assert.equal(placeholder.ratio, 4.54)
   })
 })
 

@@ -107,11 +107,12 @@ export function minimumRatio(large) {
 }
 
 /**
- * Collect text and focus-indicator contrast in the current page. Groups text
- * by colour pair and size class, so a page of identical labels is one row.
- * Marks a row `needsSample` when its background is an image or gradient, or a
- * colour is not in `rgb()` form, because computed styles cannot give the
- * colour behind the text then.
+ * Collect text and focus-indicator contrast in the current page, including
+ * form-control values and placeholders. Groups text by colour pair and size
+ * class, so a page of identical labels is one row. Marks a row `needsSample`
+ * when its background is an image or gradient, a colour is not in `rgb()`
+ * form, or the element or an ancestor has opacity below 1, because computed
+ * styles cannot give the rendered colours then.
  */
 export function collectContrast() {
   const doc = globalThis.document
@@ -169,6 +170,15 @@ export function collectContrast() {
     for (const layer of layers.reverse()) result = blend(layer, result)
     return { colour: result, needsSample }
   }
+  // The product of the element's and its ancestors' opacity. Group opacity
+  // fades text and background together, which computed colours do not show.
+  const opacity = (element) => {
+    let product = 1
+    for (let node = element; node; node = node.parentElement) {
+      product *= Number(getStyle(node).opacity)
+    }
+    return product
+  }
   const visible = (element) => {
     const style = getStyle(element)
     const box = element.getBoundingClientRect()
@@ -177,42 +187,79 @@ export function collectContrast() {
       box.height > 0 &&
       style.visibility !== 'hidden' &&
       style.display !== 'none' &&
-      Number(style.opacity) > 0
+      opacity(element) > 0
     )
+  }
+  // Text a form control renders that is not a text node: its value, the
+  // selected option, or its placeholder when it is empty.
+  const TEXT_INPUTS =
+    /^(text|search|email|url|tel|password|number|date|time|datetime-local|month|week)$/
+  const controlText = (element) => {
+    const tag = element.tagName
+    if (tag === 'SELECT') {
+      const text = element.selectedOptions[0]?.textContent.trim()
+      return text ? { text, pseudo: null } : null
+    }
+    const textLike =
+      tag === 'TEXTAREA' || (tag === 'INPUT' && TEXT_INPUTS.test(element.type))
+    if (!textLike) return null
+    if (element.value) return { text: element.value, pseudo: null }
+    if (element.placeholder) {
+      return { text: element.placeholder, pseudo: '::placeholder' }
+    }
+    return null
   }
 
   const rows = new Map()
-  for (const element of doc.body.querySelectorAll('*')) {
-    const ownText = [...element.childNodes]
-      .filter((node) => node.nodeType === 3)
-      .map((node) => node.textContent.trim())
-      .join(' ')
-      .trim()
-    if (!ownText || !visible(element)) continue
+  const measure = (element, text, colourValue, kind) => {
     const style = getStyle(element)
     const background = backgroundBehind(element)
-    const parsed = parse(style.color)
+    const translucent = opacity(element) < 1
+    const parsed = parse(colourValue)
     const foreground = parsed ? blend(parsed, background.colour) : null
     const size = parseFloat(style.fontSize)
     const weight = Number(style.fontWeight) || 400
     const large = size >= 24 || (size >= 18.66 && weight >= 700)
     const key = foreground
-      ? `${hex(foreground)}|${hex(background.colour)}|${large}`
-      : `unparsed|${style.color}|${large}`
+      ? `${kind}|${hex(foreground)}|${hex(background.colour)}|${large}|${translucent}`
+      : `${kind}|unparsed|${colourValue}|${large}`
     const row = rows.get(key) ?? {
-      kind: 'text',
-      foreground: foreground ? hex(foreground) : style.color,
+      kind,
+      foreground: foreground ? hex(foreground) : colourValue,
       background: hex(background.colour),
       ratio: foreground ? ratio(foreground, background.colour) : null,
       large,
       minimum: large ? 3 : 4.5,
-      needsSample: background.needsSample || !foreground,
+      needsSample: background.needsSample || !foreground || translucent,
       count: 0,
-      example: { element: describe(element), text: ownText.slice(0, 40) },
+      example: { element: describe(element), text: text.slice(0, 40) },
     }
     row.count++
     row.needsSample ||= background.needsSample
     rows.set(key, row)
+  }
+
+  for (const element of doc.body.querySelectorAll('*')) {
+    if (!visible(element)) continue
+    const control = controlText(element)
+    if (control) {
+      const colour = control.pseudo
+        ? globalThis.getComputedStyle(element, control.pseudo).color
+        : getStyle(element).color
+      measure(
+        element,
+        control.text,
+        colour,
+        control.pseudo ? 'placeholder' : 'text',
+      )
+      continue
+    }
+    const ownText = [...element.childNodes]
+      .filter((node) => node.nodeType === 3)
+      .map((node) => node.textContent.trim())
+      .join(' ')
+      .trim()
+    if (ownText) measure(element, ownText, getStyle(element).color, 'text')
   }
 
   const focused = doc.activeElement
@@ -231,7 +278,7 @@ export function collectContrast() {
         background: hex(background.colour),
         ratio: ratio(colour, background.colour),
         minimum: 3,
-        needsSample: background.needsSample,
+        needsSample: background.needsSample || opacity(focused) < 1,
       })
     } else {
       focus.push({

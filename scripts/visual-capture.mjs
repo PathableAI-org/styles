@@ -106,15 +106,21 @@ function run(command, commandArgs, { cwd = ROOT, log } = {}) {
       env: { ...process.env, CI: '1' },
     })
     let stdout = ''
-    if (log) {
-      const stream = createWriteStream(log)
-      child.stdout.pipe(stream)
-      child.stderr.pipe(stream)
+    // Both pipes share one log stream, so neither may end it: the stream ends
+    // when the child closes, and the promise resolves once it has flushed.
+    const stream = log ? createWriteStream(log) : null
+    if (stream) {
+      child.stdout.pipe(stream, { end: false })
+      child.stderr.pipe(stream, { end: false })
     } else {
       child.stdout.on('data', (chunk) => (stdout += chunk))
     }
-    child.on('close', (code) => resolvePromise({ code: code ?? 1, stdout }))
-    child.on('error', () => resolvePromise({ code: 1, stdout }))
+    const finish = (code) => {
+      if (!stream) return resolvePromise({ code, stdout })
+      stream.end(() => resolvePromise({ code, stdout }))
+    }
+    child.on('close', (code) => finish(code ?? 1))
+    child.on('error', () => finish(1))
   })
 }
 
@@ -358,6 +364,18 @@ async function capture({ side, story, viewport, condition, file }) {
   try {
     const url = `${urls[side][story.workspace]}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story`
     await page.goto(url, { waitUntil: 'networkidle', timeout: 60_000 })
+    // A loaded iframe does not mean the story rendered: check the root for
+    // content and for Storybook's failure messages, as the quality gates do.
+    const rendered = await page.evaluate(() => {
+      const root = globalThis.document.getElementById('storybook-root')
+      const html = root?.innerHTML.trim() ?? ''
+      return (
+        html !== '' &&
+        !html.includes('The component failed to render properly') &&
+        !html.includes('Sorry, but you either have no stories')
+      )
+    })
+    if (!rendered) throw new Error('the story did not render')
     await page.addStyleTag({ content: STILL })
     if (condition === 'text-200') {
       await page.evaluate(() => {
@@ -498,6 +516,9 @@ const pairs = await mapLimit(plan, async (item) => {
     story: story.id,
     viewport,
     condition,
+  }
+  if (story.inIndex === false) {
+    return { ...pair, status: 'error', error: 'not in the head story index' }
   }
   const headFile = fileFor('head', item)
   const head = await capture({ side: 'head', ...item, file: headFile })
