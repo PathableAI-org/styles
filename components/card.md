@@ -146,10 +146,14 @@ the default theme.
   as one with `width-auto` or in a shrink-to-fit parent, is 30rem wide, or the
   viewport width if that is less. A width or max-width class still sets another
   width.
+- From a 40em viewport, a flag card is an unnamed inline-size query container.
+  Container queries and `cqi` or `cqw` units written inside it resolve against
+  the card.
 - Some utilities do not apply: a margin-right utility on a lone button in a
   card footer; side padding, left margin and max-width utilities on a button
-  directly in an exdent part; and max-width and margin-bottom utilities on a
-  card in a card group placed directly in `pathable-prose`.
+  directly in an exdent part; margin-top, margin-bottom and padding-left
+  utilities on a card group placed directly in `pathable-prose`; and max-width
+  and margin-bottom utilities on a card in that group.
 
 ## Guarantees
 
