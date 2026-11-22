@@ -25,6 +25,13 @@
 
 .pathable-button-group__item {
   @extend .usa-button-group__item;
+
+  // USWDS gives each item 0.25rem of margin on every side. Keep the side
+  // margins, which space the items 8px apart in a row, and drop the top and
+  // bottom ones so the group's 0.5rem row gap is the whole vertical space
+  // between stacked buttons and between wrapped rows.
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .pathable-button-group--segmented {
@@ -37,8 +44,9 @@
   }
 }
 
-// The group's rules style `.usa-button` and three of its modifiers inside an
-// item: reset margins and square corners, and draw the segmented separators.
+// The group's rules style `.usa-button` and four of its modifiers (secondary,
+// accent-cool, base and outline) inside an item: reset margins and square
+// corners, and draw or hide the segmented separators.
 // `@extend` only reaches rules in the modules a stylesheet loads, so the
 // button wrapper's own extends do not reach this module. Repeat them here so
 // the same rules apply to `.pathable-button` and its modifiers.
@@ -56,4 +64,19 @@
 
 .pathable-button--base {
   @extend .usa-button--base;
+}
+
+.pathable-button--outline {
+  @extend .usa-button--outline;
+}
+
+// USWDS paints the separator of a disabled button in the page background
+// colour with `[class*="usa-button"]` selectors, which `@extend` cannot
+// rewrite. Repeat the rule for `pathable-button`.
+.pathable-button-group--segmented
+  .pathable-button-group__item:where(:not(:last-child)) {
+  [class*='pathable-button']:disabled::before,
+  [class*='pathable-button'][aria-disabled='true']::before {
+    border-right-color: var(--pathable-color-surface);
+  }
 }
