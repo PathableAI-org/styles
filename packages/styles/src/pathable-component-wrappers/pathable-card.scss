@@ -9,18 +9,47 @@
 
 @use 'usa-card/src/styles';
 
-// The framework scopes its card group and card overrides to .usa-prose. Make
-// the same scope apply to .pathable-prose so cards render the same inside it.
-.pathable-prose {
-  @extend .usa-prose;
+// Inside .pathable-prose, a list that is a direct child gets the prose list
+// rules (`.pathable-prose > ul`, `> ul li`, `> ul li:last-child`), which would
+// give the card group list padding and margins and its cards a 68ex cap and no
+// bottom margin. `@extend .usa-prose` is not used: it would add
+// `.pathable-prose .pathable-card` (0,2,0) and `.pathable-prose
+// .pathable-card-group` (0,3,0) rules that beat spacing and width utilities
+// anywhere under prose. These resets are the lowest specificity that still
+// beats the prose rules: (0,1,1) ties `.pathable-prose > ul` and wins on order,
+// and (0,2,2) ties `.pathable-prose > ul li:last-child` and wins on order.
+// A utility (0,1,0) on a group or card that is a direct child of prose loses
+// to the prose rules, as it does on any other list there.
+:where(.pathable-prose) > :is(ul, ol).pathable-card-group {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
 }
 
-// The footer rule `.usa-card__footer .usa-button:only-of-type` styles
-// `.usa-button`. `@extend` only reaches rules in the modules a stylesheet
-// loads, so the button wrapper's own extend does not reach this module. Repeat
-// it here so the rule also applies to `.pathable-button`.
-.pathable-button {
-  @extend .usa-button;
+:where(.pathable-prose) > :is(ul, ol).pathable-card-group > li.pathable-card {
+  max-width: none;
+  margin-bottom: units($theme-card-margin-bottom + 1);
+
+  @include at-media('tablet') {
+    margin-bottom: units($theme-card-margin-bottom);
+  }
+}
+
+// A lone button directly in the footer loses its right margin, as USWDS does
+// for `.usa-card__footer .usa-button:only-of-type`. That rule is not extended
+// here: `@extend .usa-button` would also match every button inside a button
+// group in the footer and a link next to a button, and its descendant selector
+// ties the segmented group's joint overlap. A direct, only child is what is
+// meant. The selector is (0,1,0) and comes after the button rules, so it wins
+// on order and a margin utility still beats it.
+:where(.pathable-card__footer)
+  > :is(
+    .pathable-button,
+    .pathable-button--primary,
+    .pathable-button--continue,
+    .pathable-button--destructive
+  ):where(:only-child) {
+  margin-right: 0;
 }
 
 .pathable-card-group {
@@ -155,39 +184,31 @@
 }
 
 // USWDS gives every direct child of an exdent part 2px of side padding, which
-// keeps text in line with the other parts. A button has padding of its own and
-// would lose it, so it keeps that padding and takes the 2px as an inset
-// instead: a margin on the left and a width capped by the same 4px.
-// :where() keeps the scope at no specificity; the rules come after the button
-// and USWDS rules and so win on order.
-:where(
-    .pathable-card__header--exdent,
-    .pathable-card__body--exdent,
-    .pathable-card__footer--exdent
-  )
-  > .pathable-button {
+// keeps text in line with the other parts. A button has padding of its own that
+// this would replace, so its own side padding is declared again (1.25rem; 1.5rem
+// for --big; none for --unstyled) and the 2px becomes an inset instead: a left
+// margin of the border width, and a max-width reduced by twice that, so a
+// full-width button still ends 2px inside the part. :where() on the part and
+// the :is() list keeps the selectors at (0,1,0); the rules come after the
+// button and USWDS rules and so win on order. --primary, --continue and
+// --destructive each render a whole button without .pathable-button, so they
+// are listed too.
+$-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
+$-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
+
+:where(#{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
   max-width: calc(100% - #{units($theme-card-border-width) * 2});
   margin-left: units($theme-card-border-width);
   padding-left: units(2.5);
   padding-right: units(2.5);
 }
 
-:where(
-    .pathable-card__header--exdent,
-    .pathable-card__body--exdent,
-    .pathable-card__footer--exdent
-  )
-  > .pathable-button--big {
+:where(#{$-card-exdent-parts}) > .pathable-button--big {
   padding-left: units(3);
   padding-right: units(3);
 }
 
-:where(
-    .pathable-card__header--exdent,
-    .pathable-card__body--exdent,
-    .pathable-card__footer--exdent
-  )
-  > .pathable-button--unstyled {
+:where(#{$-card-exdent-parts}) > .pathable-button--unstyled {
   padding-left: 0;
   padding-right: 0;
 }
