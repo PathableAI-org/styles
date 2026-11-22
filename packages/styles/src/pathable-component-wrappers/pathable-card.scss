@@ -9,18 +9,26 @@
 
 @use 'usa-card/src/styles';
 
+// Selector lists used by several rules below. --primary, --continue and
+// --destructive each render a whole button without .pathable-button, so they
+// are listed with it.
+$-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
+$-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
+$-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__footer';
+
 // Inside .pathable-prose, a list that is a direct child gets the prose list
 // rules (`.pathable-prose > ul`, `> ul li`, `> ul li:last-child`), which would
 // give the card group list padding and margins and its cards a 68ex cap and no
 // bottom margin. `@extend .usa-prose` is not used: it would add
-// `.pathable-prose .pathable-card` (0,2,0) and `.pathable-prose
-// .pathable-card-group` (0,3,0) rules that beat spacing and width utilities
-// anywhere under prose. These resets win on specificity, not source order, so
+// `.pathable-prose .pathable-card-group` (0,2,0) and `.pathable-prose
+// .pathable-card:last-child` (0,3,0) rules that beat spacing and width
+// utilities anywhere under prose. These resets win on specificity, not source order, so
 // they hold in any order a consumer forwards the wrappers (this file does not
 // load the prose module): the group's (0,2,1) beats `.pathable-prose > ul`
 // (0,1,1), and the card's (0,3,2) beats `.pathable-prose > ul li:last-child`
 // (0,2,2), the strongest prose list rule. A utility (0,1,0) on a group or card
-// that is a direct child of prose loses, as it does on any other list there.
+// that is a direct child of prose loses, as it does on any other list there:
+// a card in such a group ignores max-width and margin-bottom utilities.
 .pathable-prose > :is(ul, ol).pathable-card-group {
   margin-top: 0;
   margin-bottom: 0;
@@ -43,14 +51,9 @@
 // ties the segmented group's joint overlap. A direct, only child is what is
 // meant. The selector is (0,3,0), so it beats `.pathable-button` (0,1,0) in
 // any order the wrappers are forwarded (this file does not load the button
-// module); like USWDS's own (0,3,0) rule, it also beats a margin utility.
-.pathable-card__footer
-  > :is(
-    .pathable-button,
-    .pathable-button--primary,
-    .pathable-button--continue,
-    .pathable-button--destructive
-  ):only-child {
+// module); like USWDS's own (0,3,0) rule, it also beats a margin-right
+// utility on that button.
+.pathable-card__footer > :is(#{$-card-buttons}):only-child {
   margin-right: 0;
 }
 
@@ -186,28 +189,17 @@
 }
 
 // A button in a card part is never wider than the part's content box, and its
-// label wraps to fit. A flag card's 15rem media column does not shrink with the
+// label wraps to fit: `overflow-wrap: anywhere` lets the label shrink below its
+// longest word, so a word breaks inside only when it alone is wider than the
+// button's content box. A flag card's 15rem media column does not shrink with the
 // text, so at a large text size the text column can be narrower than a button's
 // label and the button would run under the media or past the card border. The
 // selector is (0,1,0), so in the usual order a max-width utility on the button
 // wins; in an exdent part the (0,2,0) rule below sets its own max-width and a
 // max-width utility does not apply.
-:where(
-    .pathable-card__header,
-    .pathable-card__body,
-    .pathable-card__footer,
-    .pathable-card__header--exdent,
-    .pathable-card__body--exdent,
-    .pathable-card__footer--exdent
-  )
-  > :is(
-    .pathable-button,
-    .pathable-button--primary,
-    .pathable-button--continue,
-    .pathable-button--destructive
-  ) {
+:where(#{$-card-parts}, #{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
   max-width: 100%;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 // USWDS gives every direct child of an exdent part 2px of side padding, which
@@ -218,14 +210,10 @@
 // full-width button still ends 2px inside the part. The selectors are (0,2,0),
 // which beats both USWDS's `.usa-card__footer--exdent > *` and the button's own
 // (0,1,0) padding rules in any order the wrappers are forwarded, and the
-// --big and --unstyled rules follow the first in this file. --primary,
-// --continue and --destructive each render a whole button without
-// .pathable-button, so they are listed too. Because of that specificity a
-// utility for side padding, left margin or max-width does not apply to a
-// button directly in an exdent part, as the lone footer button rule above beats
-// margin utilities.
-$-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
-$-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
+// --big and --unstyled rules follow the first in this file. Because of that
+// specificity a utility for side padding, left margin or max-width does not
+// apply to a button directly in an exdent part, as the lone footer button rule
+// above beats a margin-right utility.
 
 :is(#{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
   max-width: calc(100% - #{units($theme-card-border-width) * 2});
