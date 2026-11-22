@@ -2,6 +2,9 @@
  * Copies each USWDS image referenced by compiled CSS to the package-root path
  * that `dist/styles.css` resolves through `../img/...`.
  *
+ * It also copies the icon sprite (`img/sprite.svg`), which markup references
+ * through `<use>`.
+ *
  * The `dist/img` mirror remains available for the existing Storybook asset
  * copier and other distribution-path consumers.
  */
@@ -39,7 +42,9 @@ if (!existsSync(stylesheetPath)) {
 }
 
 const css = readFileSync(stylesheetPath, 'utf8')
-const imagePaths = new Set()
+// The icon sprite is not referenced from CSS: components point an inline
+// `<use href>` at it, so it ships with the stylesheet's other images.
+const imagePaths = new Set(['sprite.svg'])
 const urlPattern = /url\(\s*(['"]?)(.*?)\1\s*\)/gu
 
 for (const match of css.matchAll(urlPattern)) {

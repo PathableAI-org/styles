@@ -2,7 +2,7 @@
 
 This document owns the direction and current scope of the
 `@pathableai/styles` refactor. It is current-state documentation, reviewed on
-2026-11-22 with `main` at `094789ac`. Update it as the refactor progresses and
+2026-11-22 with `main` at `28cc03eb`. Update it as the refactor progresses and
 remove transitional statements when they stop being true.
 
 The [constitution](../../.specify/memory/constitution.md) wins where it states
@@ -90,8 +90,9 @@ catalog. Their existing source does not make them part of the target.
 
 The design-token and utility documentation and fixture slices are in place.
 Current implementation work is bringing the documented static components into
-conformance with their pages and fixtures through small component slices. The
-alert slice is in place; the remaining catalog is still being completed.
+conformance with their pages and fixtures through small component slices.
+Alert, breadcrumb, button and button group are in place; the remaining catalog
+is still being completed.
 
 ## USWDS deviation policy
 

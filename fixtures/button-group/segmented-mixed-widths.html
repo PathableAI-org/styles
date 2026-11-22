@@ -1,0 +1,26 @@
+<!-- description: A segmented task filter where the last two buttons have width-auto and keep the width of their labels. Below 480 px, while the labels fit, the first button, with no width class, takes the rest of the strip. From 480 px every button is as wide as its label. -->
+<ul class="pathable-button-group pathable-button-group--segmented">
+  <li class="pathable-button-group__item">
+    <button type="button" class="pathable-button" aria-pressed="true">
+      All tasks
+    </button>
+  </li>
+  <li class="pathable-button-group__item">
+    <button
+      type="button"
+      class="pathable-button pathable-button--outline width-auto"
+      aria-pressed="false"
+    >
+      Due today
+    </button>
+  </li>
+  <li class="pathable-button-group__item">
+    <button
+      type="button"
+      class="pathable-button pathable-button--outline width-auto"
+      aria-pressed="false"
+    >
+      Overdue
+    </button>
+  </li>
+</ul>

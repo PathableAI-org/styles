@@ -12,9 +12,9 @@ guarantees:
   - id: wrapping
     claim: From a viewport width of 480 px the trail wraps onto further lines when it is wider than its container, each item but the last is followed by a chevron separator, and lines are 1.5 times the font size apart.
   - id: narrow-parent-link
-    claim: Below a viewport width of 480 px only the parent link, the item before the current page, is shown, with a back arrow before it; the other items are hidden from view and stay in the page for screen readers.
+    claim: Below a viewport width of 480 px only the parent link, the item before the current page, is shown, with a back arrow before it; the other items are hidden from view and stay in the page for screen readers, and one whose link has focus is shown while it has focus.
   - id: link-style
-    claim: Each link is in the theme link colour with no underline on the link itself, the underline is drawn under its text only, and the link changes to the darker hover colour on hover.
+    claim: Each link is in the theme link colour and underlined under its text only, not under its padding or the separators, and the link changes to the darker hover colour on hover.
   - id: spacing
     claim: From a viewport width of 480 px the trail has 16 px of padding above and below and none at the sides, and its list has 4 px of padding with a matching negative margin so a focus ring on the first link is not clipped.
   - id: truncate
@@ -77,8 +77,8 @@ Add the modifier class to `pathable-breadcrumb`.
 - `pathable-breadcrumb__list-item`: one `<li>` per level, in order from the
   top to the current page.
 - `pathable-breadcrumb__link`: the `<a>` in every item except the last. Put
-  the link text in a `<span>` inside the link: the underline is drawn under
-  the span so it does not run past the text.
+  the link text in a `<span>` inside the link: it keeps the underline from
+  running past the text.
 - The last item is `<li class="pathable-breadcrumb__list-item pathable-current"
 aria-current="page">` and holds the current page's name in a `<span>`, not a
   link.

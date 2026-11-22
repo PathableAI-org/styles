@@ -100,6 +100,15 @@ are not custom properties and do not change with the theme.
   a larger default font size moves it.
 - A segmented group joins its buttons into one strip. Use one filled button for
   the current view and `pathable-button--outline` for the others.
+- A width class on a button, such as `width-auto`, wins over the group's own
+  width at every viewport width, so in a segmented group the buttons can keep
+  the width of their labels on a phone instead of filling it. Below 480 px
+  the item then takes the width of its button, so the strip stays joined and
+  can end before the group's right edge, and a button with no width class in
+  the same group takes the rest of the strip. When the labels do not fit, the
+  items shrink and the labels wrap, as they do without a width class. From
+  480 px the strip is as wide as its content. `width-full` keeps a segmented
+  button at its share of the strip, as when it has no width class.
 - On a `<ul>` in right-to-left text, remove the list's right padding
   yourself: the group only clears the left padding.
 

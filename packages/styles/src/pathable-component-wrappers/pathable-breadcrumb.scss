@@ -11,6 +11,47 @@
 
 .pathable-breadcrumb {
   @extend .usa-breadcrumb;
+
+  // The links' focus outline is drawn on this white background, whatever
+  // surface the trail sits in. A light ring set by a surface behind it, such as
+  // the white one of pathable-bg-link, would be 1.0:1 here, so this resets it,
+  // as every light container does (see _utilities.scss).
+  --pathable-surface-focus-ring: initial;
+}
+
+.pathable-breadcrumb--truncate {
+  @extend .usa-breadcrumb--truncate;
+
+  // The list clips the trail at its padding box, which its negative side
+  // margins put 4px outside the nav on each side. Cut text then reaches past
+  // the nav, the only box with a background, and axe cannot work out the
+  // colour behind it. The list paints the nav's own background over its
+  // content box, which is the nav's width, so the text sits on a box that
+  // holds it. The result is pixel for pixel the same as without it.
+  .pathable-breadcrumb__list {
+    @include at-media($theme-breadcrumb-min-width) {
+      background-color: inherit;
+      background-clip: content-box;
+    }
+  }
+
+  @include at-media($theme-breadcrumb-min-width) {
+    // The items are inline here, so the list is the links' text block and
+    // holds more text outside the links than in them. axe's link-in-text-block
+    // rule then takes the links for links in running text and needs them to
+    // look different from it. USWDS underlines the span in the link, not the
+    // link, which axe does not see; it can only compare colours, and cannot
+    // decide that against the nav's background. The link carries the underline
+    // instead, over the same text in the same colour, so it renders as before;
+    // the span would draw it a second time. The separators are outside the link and stay plain.
+    .pathable-breadcrumb__link {
+      text-decoration: underline;
+
+      span {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .pathable-breadcrumb__list {
@@ -19,8 +60,38 @@
 
 .pathable-breadcrumb__list-item {
   @extend .usa-breadcrumb__list-item;
+
+  // The parent link is an inline-block taller than the line of its inline
+  // item, so the item's box overlaps the link and axe cannot decide the
+  // link's contrast. A block item has the link's own box.
+  @include at-media-max($theme-breadcrumb-min-width) {
+    &:nth-last-child(2) {
+      display: block;
+    }
+
+    // The other items are moved off screen but stay in the tab order, so
+    // screen readers keep the whole trail. An item whose link has focus comes
+    // back into the line, above the parent link, so the focus can be seen.
+    &:focus-within {
+      position: static;
+    }
+  }
 }
 
 .pathable-breadcrumb__link {
   @extend .usa-breadcrumb__link;
+}
+
+// The full USWDS build draws its focus outline on every link from its element
+// styles (uswds-elements), which this package does not load, so the link draws
+// it here. It is drawn on the breadcrumb's own white background, so it takes
+// the ring colour the breadcrumb resets to. The list's 4px padding is the
+// outline's width, so the outline on the first link fits inside it.
+.pathable-breadcrumb__link:focus {
+  @include focus-outline;
+
+  outline-color: var(
+    --pathable-surface-focus-ring,
+    var(--pathable-color-focus-ring)
+  );
 }

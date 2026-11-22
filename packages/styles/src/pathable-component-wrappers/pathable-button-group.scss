@@ -5,7 +5,12 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
 @use 'uswds-core' as *;
+@use '../utilities-config' as uc;
+@use 'uswds-utilities/src/styles/rules/width' as uswds-width;
 
 @use 'usa-button-group/src/styles';
 
@@ -20,5 +25,214 @@
   // The row wraps instead of running past the container.
   @include at-media('mobile-lg') {
     flex-wrap: wrap;
+  }
+}
+
+.pathable-button-group__item {
+  @extend .usa-button-group__item;
+
+  // USWDS gives each item 0.25rem of margin on every side. Keep the side
+  // margins, which space the items 8px apart in a row, and drop the top and
+  // bottom ones so the group's 0.5rem row gap is the whole vertical space
+  // between stacked buttons and between wrapped rows.
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.pathable-button-group--segmented {
+  @extend .usa-button-group--segmented;
+
+  // The segmented strip never wraps, even from mobile-lg where the plain
+  // group does; this rule follows the group's wrapping rule above.
+  @include at-media('mobile-lg') {
+    flex-wrap: nowrap;
+  }
+
+  // Below mobile-lg USWDS spreads the items with `space-between`. Start them
+  // at the group's left edge instead, as USWDS does from mobile-lg, so a strip
+  // of buttons narrowed by width classes stays joined. Items that fill the
+  // group leave no free space, so their geometry does not change.
+  justify-content: flex-start;
+}
+
+// The group's rules style `.usa-button` and four of its modifiers (secondary,
+// accent-cool, base and outline) inside an item: reset margins and square
+// corners, and draw or hide the segmented separators.
+// `@extend` only reaches rules in the modules a stylesheet loads, so the
+// button wrapper's own extends do not reach this module. Repeat them here so
+// the same rules apply to `.pathable-button` and its modifiers.
+.pathable-button {
+  @extend .usa-button;
+}
+
+.pathable-button--secondary {
+  @extend .usa-button--secondary;
+}
+
+.pathable-button--accent-cool {
+  @extend .usa-button--accent-cool;
+}
+
+.pathable-button--base {
+  @extend .usa-button--base;
+}
+
+.pathable-button--outline {
+  @extend .usa-button--outline;
+}
+
+// USWDS paints the separator of a disabled button white (here the surface
+// token, `--pathable-color-surface`) with `[class*="usa-button"]` selectors,
+// which `@extend` cannot rewrite. Repeat the rule for `pathable-button`.
+.pathable-button-group--segmented
+  .pathable-button-group__item:where(:not(:last-child)) {
+  [class*='pathable-button']:disabled::before,
+  [class*='pathable-button'][aria-disabled='true']::before {
+    border-right-color: var(--pathable-color-surface);
+  }
+}
+
+// In forced colours the buttons' own borders are drawn, and the segmented
+// buttons overlap by their border width, so the two borders at each joint
+// already form the divider. Drawing the separator as well made some dividers
+// double.
+@media (forced-colors: active) {
+  .pathable-button-group--segmented
+    .pathable-button-group__item
+    .pathable-button::before {
+    display: none;
+  }
+}
+
+// The width classes that set a segmented button's own width. `width-full`
+// is left out: on a segmented button it means "fill your share of the strip",
+// which is what the group's own widths below already do, so the strip stays
+// joined. A 100% width would drop the overlap at the joints: below mobile-lg
+// the button would be no wider than its item, and from mobile-lg the item is
+// as wide as its button less the button's negative margins, so the button
+// would be 1px or 2px too narrow.
+$-own-width-classes: ();
+
+@each $width-name
+  in map.keys(map.get(map.get(uswds-width.$u-width, 'width'), 'values'))
+{
+  @if $width-name != 'full' {
+    $-own-width-classes: list.append(
+      $-own-width-classes,
+      '.width-#{$width-name}',
+      $separator: comma
+    );
+  }
+}
+
+@each $width-name
+  in map.keys(map.get(map.get(uc.$pathable-utilities, 'width'), 'values'))
+{
+  @if $width-name != 'full' {
+    $-own-width-classes: list.append(
+      $-own-width-classes,
+      '.pathable-width-#{$width-name}',
+      $separator: comma
+    );
+  }
+}
+
+$-half-stroke: math.div(units($theme-button-stroke-width), 2);
+
+// Below mobile-lg USWDS makes each segmented button 2px wider than its item
+// and pulls it back with negative margins: none on the first button, 1px on
+// each side of a middle one and 2px on the left of the last. Neighbours then
+// overlap by 3px or 4px at the first and last joints, and two borders draw a
+// divider wider than the outer border. Correct it on the buttons, so the
+// items keep touching with no gap: every button but the first is pulled 1px
+// left, and the first and last, which each have one neighbour, are 1px wider
+// than their item instead of 2px. Every joint then overlaps by the 2px border
+// width for any number of items, and the strip's outer edges are flush with
+// the group. The width rules have the specificity of the USWDS rules they
+// replace, and come before the width classes below, so a width class wins.
+@include at-media-max('mobile-lg') {
+  .pathable-button-group--segmented
+    .pathable-button-group__item:first-child
+    > .pathable-button {
+    width: calc(100% + #{$-half-stroke});
+  }
+
+  .pathable-button-group--segmented
+    .pathable-button-group__item:last-child
+    > .pathable-button {
+    margin-left: -$-half-stroke;
+    width: calc(100% + #{$-half-stroke});
+  }
+
+  // USWDS sizes each item as `width: 100%` and lets them shrink to equal
+  // shares. Grow them from zero instead: with no width class the shares are
+  // the same, and an item sized by its button (below) keeps its width while
+  // the others share the rest, rather than all shrinking in step with it.
+  .pathable-button-group--segmented .pathable-button-group__item {
+    flex: 1 1 0;
+  }
+
+  // An item whose button has its own width takes the width of that button
+  // instead of a share of the group. It can still shrink when the labels do
+  // not fit, and the button, as wide as its content, shrinks with it, so the
+  // label wraps instead of the strip running past the group. Its button's
+  // negative margins narrow the item, so the button still overhangs into the
+  // next item by 1px and the joint still overlaps by 2px. `:where()` keeps
+  // the specificity of the item rule above, which this one follows.
+  .pathable-button-group--segmented
+    .pathable-button-group__item:where(
+      :has(> .pathable-button:is(#{$-own-width-classes}))
+    ) {
+    flex: 0 1 auto;
+    width: auto;
+  }
+}
+
+// USWDS sets the width of a segmented button with rules as specific as
+// `.usa-button-group--segmented .usa-button-group__item:last-child >
+// .usa-button`, which beat a width class such as `width-auto` or
+// `pathable-width-auto`. Repeat each width class for a button in a segmented
+// item, after those rules, as pathable-button.scss does for the plain button,
+// so the class wins at every viewport width. `width-full` is not repeated, as
+// explained above. The unprefixed `width-*` utilities have no responsive
+// variants; the `pathable-width-*` ones do.
+@each $width-name,
+  $width-value in map.get(map.get(uswds-width.$u-width, 'width'), 'values')
+{
+  @if $width-name != 'full' {
+    .pathable-button-group--segmented
+      .pathable-button-group__item
+      > .pathable-button.width-#{$width-name} {
+      width: $width-value;
+    }
+  }
+}
+
+@each $width-name,
+  $width-value in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
+{
+  @if $width-name != 'full' {
+    .pathable-button-group--segmented
+      .pathable-button-group__item
+      > .pathable-button.pathable-width-#{$width-name} {
+      width: $width-value;
+    }
+  }
+}
+
+@each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
+  @media (min-width: $bp-width) {
+    @each $width-name,
+      $width-value
+        in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
+    {
+      @if $width-name != 'full' {
+        .pathable-button-group--segmented
+          .pathable-button-group__item
+          > .pathable-button.#{$bp-name}\:pathable-width-#{$width-name} {
+          width: $width-value;
+        }
+      }
+    }
   }
 }
