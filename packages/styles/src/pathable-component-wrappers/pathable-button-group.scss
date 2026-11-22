@@ -70,9 +70,9 @@
   @extend .usa-button--outline;
 }
 
-// USWDS paints the separator of a disabled button in the page background
-// colour with `[class*="usa-button"]` selectors, which `@extend` cannot
-// rewrite. Repeat the rule for `pathable-button`.
+// USWDS paints the separator of a disabled button white (here the surface
+// token, `--pathable-color-surface`) with `[class*="usa-button"]` selectors,
+// which `@extend` cannot rewrite. Repeat the rule for `pathable-button`.
 .pathable-button-group--segmented
   .pathable-button-group__item:where(:not(:last-child)) {
   [class*='pathable-button']:disabled::before,

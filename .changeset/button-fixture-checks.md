@@ -11,7 +11,8 @@ Buttons inside a `pathable-button-group` now get the group's rules for a
 `usa-button`: square inner corners in a segmented group, and the hover and
 focus layering. An outline button in a segmented group no longer draws a
 separator line on its right edge. The separator of a disabled button in a
-segmented group is drawn in the page background colour, as USWDS does.
+segmented group is drawn in the surface colour (white by default), as USWDS
+does.
 
 A `pathable-icon` inside a `pathable-button` no longer shrinks when the label is
 long.
