@@ -9,6 +9,20 @@
 
 @use 'usa-card/src/styles';
 
+// The framework scopes its card group and card overrides to .usa-prose. Make
+// the same scope apply to .pathable-prose so cards render the same inside it.
+.pathable-prose {
+  @extend .usa-prose;
+}
+
+// The footer rule `.usa-card__footer .usa-button:only-of-type` styles
+// `.usa-button`. `@extend` only reaches rules in the modules a stylesheet
+// loads, so the button wrapper's own extend does not reach this module. Repeat
+// it here so the rule also applies to `.pathable-button`.
+.pathable-button {
+  @extend .usa-button;
+}
+
 .pathable-card-group {
   @extend .usa-card-group;
 }
@@ -35,12 +49,6 @@
 
 .pathable-card__footer {
   @extend .usa-card__footer;
-}
-
-.pathable-card__footer .pathable-button:only-of-type {
-  // pathable-button.scss is not in this file's module graph, so USWDS's
-  // `.usa-card__footer .usa-button:only-of-type` does not reach it.
-  margin-right: 0;
 }
 
 .pathable-card__heading {
