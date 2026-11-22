@@ -142,6 +142,10 @@ the default theme.
 - A flag or media-right card needs room for its 15rem column beside the text.
   It stacks like a card with media when it is narrower than 30rem, even from a
   40em viewport.
+- From a 40em viewport, a flag card whose width comes from its content, such
+  as one with `width-auto` or in a shrink-to-fit parent, is 30rem wide, or the
+  viewport width if that is less. A width or max-width class still sets another
+  width.
 - Some utilities do not apply: a margin-right utility on a lone button in a
   card footer; side padding, left margin and max-width utilities on a button
   directly in an exdent part; and max-width and margin-bottom utilities on a

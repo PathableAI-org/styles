@@ -90,17 +90,6 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   min-width: 0;
 }
 
-// A flag card has inline-size containment (below), so a width that would come
-// from its content (`width-auto`, a column-auto class, an inline-block, float
-// or table-cell parent) would be 0. It fills its parent, and its intrinsic
-// inline size is the flag threshold's width, so a content-sized card is that
-// wide, and a width or max-width utility still wins over it.
-:where(.pathable-card--flag) {
-  width: 100%;
-  min-width: 0;
-  contain-intrinsic-inline-size: $-card-flag-container-min;
-}
-
 .pathable-card__container {
   @extend .usa-card__container;
 
@@ -196,21 +185,29 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   }
 }
 
-// A flag card is a size container so the rules above and below can ask how wide
-// it is. Inline-size containment means its width never comes from its content:
-// it fills its parent, as a block does, or takes the width a group or a width
-// class gives it.
-.pathable-card--flag {
-  container-type: inline-size;
+// From the flag breakpoint, a flag card is a size container so the rules above
+// and below can ask how wide it is. Inline-size containment means its width
+// never comes from its content, so its intrinsic width is set: the flag
+// threshold, capped at the viewport width. A card in a group or a block fills
+// its parent as before; a content-sized one (a flex item, a `width-auto` or
+// column-auto card, an inline-block, float or table-cell parent) is that wide,
+// and a width or max-width utility still wins. Below the breakpoint a flag card
+// has no containment and is sized as any other card.
+@include at-media($theme-card-flag-min-width) {
+  .pathable-card--flag {
+    container-type: inline-size;
+    contain-intrinsic-inline-size: min(#{$-card-flag-container-min}, 100vw);
+  }
 }
 
 // USWDS gives a card's only child the perimeter padding, except in a flag card,
 // and it can only name that exception by extending `.usa-card--flag`, which
 // would also bring in its column layout. So a flag card's only child gets back
-// the padding it would have without that rule: its own part padding (a header
-// or body already has the perimeter), none for other children, and the inset
-// media's padding in the stacked and the column layout. These win on
-// specificity (0,5,0 and up) against the (0,4,0) rule.
+// the padding it would have without that rule: its own part padding (a lone
+// header or body has the perimeter all round, less the header-first spacing
+// below), none for other children, and the inset media's padding in the stacked
+// and the column layout. These win on specificity (0,5,0 and up) against the
+// (0,4,0) rule.
 .pathable-card.pathable-card--flag
   .pathable-card__container
   > :only-child:not(
@@ -234,6 +231,18 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   > .pathable-card__media--inset:only-child {
   padding: units($theme-card-padding-perimeter)
     units($theme-card-padding-perimeter) 0;
+}
+
+.pathable-card--header-first.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__header:only-child {
+  padding-bottom: units($theme-card-padding-y);
+}
+
+.pathable-card--header-first.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__body:only-child {
+  padding-top: units($theme-card-padding-y);
 }
 
 .pathable-card--header-first.pathable-card--flag
@@ -341,6 +350,18 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
       padding: units($theme-card-padding-perimeter) 0
         units($theme-card-padding-perimeter)
         units($theme-card-padding-perimeter);
+    }
+
+    .pathable-card--header-first.pathable-card--flag
+      .pathable-card__container
+      > .pathable-card__header:only-child {
+      padding-bottom: units($theme-card-padding-y) * 0.5;
+    }
+
+    .pathable-card--header-first.pathable-card--flag
+      .pathable-card__container
+      > .pathable-card__body:only-child {
+      padding-top: units($theme-card-padding-y) * 0.5;
     }
 
     .pathable-card.pathable-card--flag.pathable-card--media-right
