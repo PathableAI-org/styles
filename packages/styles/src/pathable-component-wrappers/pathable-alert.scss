@@ -14,9 +14,11 @@
   @extend .usa-alert;
 
   // Bright Blue Brooks is 2.7:1 on the info tint and 2.8:1 on the plain alert
-  // surface, under the 3:1 a focus outline needs. The on-accent dark blue is
-  // over 15:1 on both. The status alerts below set their own ring.
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
+  // surface, under the 3:1 a focus outline needs. The ring takes the alert's
+  // own ink, PathAble Blue (about 11:1 on both). Like the surfaces, it is
+  // compiled rather than read from a theme token, so a theme cannot make it
+  // vanish against them. The status alerts below set their own ring.
+  --pathable-surface-focus-ring: #{color('ink')};
 }
 
 .pathable-alert__body {

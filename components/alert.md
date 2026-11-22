@@ -37,6 +37,12 @@ guarantees:
     claim: A link inside an alert is set in a colour that has at least 4.5:1 contrast on that alert's background.
   - id: no-icon
     claim: With the no-icon modifier the icon is hidden, the body has no minimum height and the heading and text have no indent.
+  - id: focus-ring
+    claim: A focus outline inside an alert has at least 3:1 contrast on that alert's surface; on the info and plain alerts it is PathAble Blue (#00365c).
+  - id: long-words
+    claim: A word too long for the body, such as a heading word under browser text zoom on a narrow screen, wraps inside the alert instead of running out of it.
+  - id: forced-colors
+    claim: In forced-colours mode the status icon is drawn in the forced text colour, so it still shows next to the heading and text.
 ---
 
 # Alert
@@ -129,6 +135,7 @@ soon". Colour and the icon are never the only cue.
 | Error background and text             | `--pathable-color-status-danger-bg`, `--pathable-color-status-danger-text`   |
 | Focus ring on success, warning, error | `--pathable-color-on-accent`                                                 |
 | Focus ring on emergency               | `--pathable-color-status-danger-text`                                        |
+| Focus ring on info and plain alerts   | none: PathAble Blue from the theme's colour palette                          |
 
 The pixel figures on this page are those of the default theme. The info and
 emergency colours come from the theme's colour palette, not from a PathAble

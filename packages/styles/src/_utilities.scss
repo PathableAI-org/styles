@@ -80,9 +80,8 @@
 // inherit into light containers nested in the teal one, where it is 1.0:1, so
 // the pathable-bg-surface utility and every light component container reset
 // --pathable-surface-focus-ring themselves (a new light container needs the
-// same reset). The Jade, Silver and danger utilities and the success, warning,
-// error and emergency alerts set a ring of their own, so they hold inside the
-// teal container too. The hover variants of the utilities set the ring the
+// same reset). The Jade, Silver and danger utilities and every alert set a
+// ring of their own, so they hold inside the teal container too. The hover variants of the utilities set the ring the
 // same way, for a container that changes under the pointer while a control in
 // it has focus. The focus variants do not: :focus matches only the focused
 // control. The shared state-focus controls are left out, because their ring is
