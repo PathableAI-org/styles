@@ -40,11 +40,11 @@ guarantees:
   - id: exdent-parts
     claim: The exdent modifiers on the header, body and footer give the part a negative 2 px margin on its left and right, so it covers the container border, and keep the content in line with the other parts.
   - id: flag-layout
-    claim: With the flag modifier, from a 40em viewport the media is a 15rem column on the left that fills the card's height with overflow clipped, and the header, body and footer have a 15rem left margin; below 40em a flag card stacks like a card with media.
+    claim: With the flag modifier, from a 40em viewport and when the card is at least 30rem wide, enough for the 15rem column and a 15rem text column, the media is a 15rem column on the left that fills the card's height with overflow clipped, and the header, body and footer have a 15rem left margin; otherwise a flag card stacks like a card with media.
   - id: flag-image-fill
-    claim: In a flag card the image fills the 15rem column and is cropped to cover it, whatever the image's ratio.
+    claim: In a flag card whose media is a 15rem column, the image fills the column and is cropped to cover it, whatever the image's ratio.
   - id: media-right
-    claim: A flag card with the media-right modifier has the 15rem media column on the right and the 15rem margin on the right of the header, body and footer.
+    claim: A flag card with the media-right modifier whose media is a 15rem column has that column on the right and the 15rem margin on the right of the header, body and footer.
 ---
 
 # Card
@@ -96,14 +96,14 @@ to what you need.
 
 Add at most one modifier class from each axis to `pathable-card`.
 
-| Axis       | Value          | Class                         | What it is for                                                   |
-| ---------- | -------------- | ----------------------------- | ---------------------------------------------------------------- |
-| layout     | `default`      | none                          | Parts stacked in one column, with any image across the top       |
-| layout     | `flag`         | `pathable-card--flag`         | The image in a 15rem column beside the text from a 40em viewport |
-| header     | `default`      | none                          | The image first, above the heading                               |
-| header     | `header-first` | `pathable-card--header-first` | The heading first, above the image                               |
-| media-side | `default`      | none                          | The flag image on the left                                       |
-| media-side | `media-right`  | `pathable-card--media-right`  | The flag image on the right                                      |
+| Axis       | Value          | Class                         | What it is for                                                                                   |
+| ---------- | -------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| layout     | `default`      | none                          | Parts stacked in one column, with any image across the top                                       |
+| layout     | `flag`         | `pathable-card--flag`         | The image in a 15rem column beside the text, from a 40em viewport and a card at least 30rem wide |
+| header     | `default`      | none                          | The image first, above the heading                                                               |
+| header     | `header-first` | `pathable-card--header-first` | The heading first, above the image                                                               |
+| media-side | `default`      | none                          | The flag image on the left                                                                       |
+| media-side | `media-right`  | `pathable-card--media-right`  | The flag image on the right                                                                      |
 
 The media-side modifier is for a flag card. The media and the parts also take
 element modifiers, set on the element and not on the card:

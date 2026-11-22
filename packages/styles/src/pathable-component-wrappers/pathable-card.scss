@@ -14,6 +14,13 @@
 // are listed with it.
 $-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
 $-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
+$-card-flag-image-width: units($theme-card-flag-image-width);
+$-card-inner-radius: calc(
+  #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+);
+// The least card width, in rem, at which the flag layout applies: the 15rem
+// media column plus 15rem for the text column.
+$-card-flag-container-min: 30rem;
 $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__footer';
 
 // Inside .pathable-prose, a list that is a direct child gets the prose list
@@ -76,7 +83,10 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 // fills the group instead, as it did before the group extended USWDS's. The
 // zero-specificity :where() lets a width or column utility on the card win,
 // and min-width: 0 lets a long word wrap inside the card rather than widen it.
-:where(.pathable-card-group) > :where(.pathable-card) {
+// A flag card has inline-size containment (below), so its width cannot come
+// from its content and it fills its parent whatever the parent is.
+:where(.pathable-card-group) > :where(.pathable-card),
+:where(.pathable-card--flag) {
   width: 100%;
   min-width: 0;
 }
@@ -158,9 +168,181 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   );
 }
 
+// The flag layout needs room: a 15rem media column plus a text column. Below
+// the flag breakpoint, or when the card itself is narrower than
+// $-card-flag-container-min (in rem, so it grows with the root text size), a
+// flag card stacks like a card with media and its media is sized like any
+// other card's. The flag rules below are written with `pathable-` selectors
+// instead of extending USWDS's `.usa-card--flag`, because USWDS applies those
+// from the breakpoint whatever the card's width.
 @include at-media-max($theme-card-flag-min-width) {
   .pathable-card--flag .pathable-card__media {
     @include pathable-card-media-fit;
+  }
+}
+
+@include at-media($theme-card-flag-min-width) {
+  @container (width < #{$-card-flag-container-min}) {
+    .pathable-card--flag .pathable-card__media {
+      @include pathable-card-media-fit;
+    }
+  }
+}
+
+// A flag card is a size container so the rules above and below can ask how wide
+// it is. Inline-size containment means its width never comes from its content:
+// it fills its parent, as a block does, or takes the width a group or a width
+// class gives it.
+.pathable-card--flag {
+  container-type: inline-size;
+}
+
+// USWDS gives a card's only child the perimeter padding, except in a flag card,
+// and it can only name that exception by extending `.usa-card--flag`, which
+// would also bring in its column layout. So a flag card's only child gets back
+// the padding it would have without that rule: its own part padding (a header
+// or body already has the perimeter), none for other children, and the inset
+// media's padding in the stacked and the column layout. These win on
+// specificity (0,5,0 and up) against the (0,4,0) rule.
+.pathable-card.pathable-card--flag
+  .pathable-card__container
+  > :only-child:not(
+    .pathable-card__header,
+    .pathable-card__body,
+    .pathable-card__footer,
+    .pathable-card__media--inset
+  ) {
+  padding: 0;
+}
+
+.pathable-card.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__footer:only-child {
+  padding: units($theme-card-padding-y) * 0.5
+    units($theme-card-padding-perimeter) units($theme-card-padding-perimeter);
+}
+
+.pathable-card.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__media--inset:only-child {
+  padding: units($theme-card-padding-perimeter)
+    units($theme-card-padding-perimeter) 0;
+}
+
+.pathable-card--header-first.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__media--inset:only-child {
+  padding-top: 0;
+}
+
+@include at-media($theme-card-flag-min-width) {
+  @container (width >= #{$-card-flag-container-min}) {
+    .pathable-card--flag {
+      .pathable-card__media {
+        display: flex;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: $-card-flag-image-width;
+        overflow: hidden;
+      }
+
+      .pathable-card__img {
+        border-radius: 0;
+        border-top-left-radius: $-card-inner-radius;
+        border-bottom-left-radius: $-card-inner-radius;
+      }
+
+      .pathable-card__header,
+      .pathable-card__body,
+      .pathable-card__footer {
+        margin-left: $-card-flag-image-width;
+      }
+
+      .pathable-card__media--exdent {
+        margin: units($theme-card-border-width) * -1;
+
+        .pathable-card__img {
+          border-top-left-radius: radius($theme-card-border-radius);
+          border-bottom-left-radius: radius($theme-card-border-radius);
+        }
+      }
+
+      .pathable-card__media--inset {
+        padding-right: 0;
+        padding-bottom: units($theme-card-padding-perimeter);
+
+        .pathable-card__img {
+          border-radius: 0;
+        }
+      }
+
+      &.pathable-card--header-first {
+        .pathable-card__header {
+          padding-bottom: units($theme-card-padding-y) * 0.5;
+        }
+
+        .pathable-card__body {
+          padding-top: units($theme-card-padding-y) * 0.5;
+        }
+
+        .pathable-card__media--inset {
+          padding-top: units($theme-card-padding-perimeter);
+        }
+      }
+
+      &.pathable-card--media-right {
+        .pathable-card__media {
+          right: 0;
+          left: auto;
+        }
+
+        .pathable-card__media--inset {
+          padding-right: units($theme-card-padding-perimeter);
+          padding-left: 0;
+
+          .pathable-card__img {
+            border-radius: 0;
+          }
+        }
+
+        .pathable-card__img {
+          border-radius: 0;
+          border-top-right-radius: radius($theme-card-border-radius);
+          border-bottom-right-radius: radius($theme-card-border-radius);
+        }
+
+        .pathable-card__header,
+        .pathable-card__body,
+        .pathable-card__footer {
+          margin-right: $-card-flag-image-width;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// The same, for a flag card's only child when it is inset media in the column
+// layout: padding on all sides but the one beside the text.
+@include at-media($theme-card-flag-min-width) {
+  @container (width >= #{$-card-flag-container-min}) {
+    .pathable-card.pathable-card--flag
+      .pathable-card__container
+      > .pathable-card__media--inset.pathable-card__media:only-child {
+      padding: units($theme-card-padding-perimeter) 0
+        units($theme-card-padding-perimeter)
+        units($theme-card-padding-perimeter);
+    }
+
+    .pathable-card.pathable-card--flag.pathable-card--media-right
+      .pathable-card__container
+      > .pathable-card__media--inset:only-child {
+      padding: units($theme-card-padding-perimeter)
+        units($theme-card-padding-perimeter)
+        units($theme-card-padding-perimeter) 0;
+    }
   }
 }
 
@@ -191,12 +373,12 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 // A button in a card part is never wider than the part's content box, and its
 // label wraps to fit: `overflow-wrap: anywhere` lets the label shrink below its
 // longest word, so a word breaks inside only when it alone is wider than the
-// button's content box. A flag card's 15rem media column does not shrink with the
-// text, so at a large text size the text column can be narrower than a button's
-// label and the button would run under the media or past the card border. The
-// selector is (0,1,0), so in the usual order a max-width utility on the button
-// wins; in an exdent part the (0,2,0) rule below sets its own max-width and a
-// max-width utility does not apply.
+// button's content box. Stacking a narrow flag card keeps the button clear of
+// the media column, but at a large text size on a very narrow screen (320px at
+// 200%) a long word is still wider than the part, and without this the label
+// would run out of the button. The selector is (0,1,0), so in the usual order a
+// max-width utility on the button wins; in an exdent part the (0,2,0) rule
+// below sets its own max-width and a max-width utility does not apply.
 :where(#{$-card-parts}, #{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
   max-width: 100%;
   overflow-wrap: anywhere;
@@ -234,14 +416,6 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 
 .pathable-card--media {
   @extend .usa-card;
-}
-
-.pathable-card--flag {
-  @extend .usa-card--flag;
-}
-
-.pathable-card--media-right {
-  @extend .usa-card--media-right;
 }
 
 .pathable-card--header-first {
