@@ -12,53 +12,113 @@
 
 .pathable-alert {
   @extend .usa-alert;
+
+  // Bright Blue Brooks is 2.7:1 on the info tint and 2.8:1 on the plain alert
+  // surface, under the 3:1 a focus outline needs. The ring takes the alert's
+  // own ink, PathAble Blue (about 11:1 on both). Like the surfaces, it is
+  // compiled rather than read from a theme token, so a theme cannot make it
+  // vanish against them. The status alerts below set their own ring.
+  --pathable-surface-focus-ring: #{color('ink')};
+}
+
+.pathable-alert__body {
+  @extend .usa-alert__body;
+
+  // usa-alert sizes the body's minimum height for border-box sizing, which
+  // USWDS normally sets on every element. The bundle does not, so a one-line
+  // alert grew 32 px taller than its icon needs.
+  box-sizing: border-box;
+
+  // A long word in the heading, enlarged by browser text zoom on a narrow
+  // screen, wraps instead of running out of the alert, where white text on
+  // the emergency and error alerts would land on the page behind.
+  overflow-wrap: break-word;
+}
+
+.pathable-alert__heading {
+  @extend .usa-alert__heading;
+}
+
+.pathable-alert__text {
+  @extend .usa-alert__text;
 }
 
 .pathable-alert--info {
   @extend .usa-alert--info;
 }
 
-.pathable-alert--success {
-  @extend .usa-alert--success;
-  // The success, warning and error alerts have Jade, amber and danger red
-  // backgrounds, where Bright Blue Brooks is under 3:1. The on-accent dark blue
-  // is 6.3:1, 8.4:1 and 3.9:1 on them, and stays visible on the light
-  // containers nested inside.
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
-  background-color: var(--pathable-color-status-success-bg);
-  color: var(--pathable-color-status-success-text);
+.pathable-alert--slim {
+  @extend .usa-alert--slim;
 }
 
-.pathable-alert--success .pathable-alert__body,
-.pathable-alert--success .pathable-alert__heading,
-.pathable-alert--success .pathable-alert__text {
-  color: var(--pathable-color-status-success-text);
+.pathable-alert--no-icon {
+  @extend .usa-alert--no-icon;
 }
 
-.pathable-alert--warning {
-  @extend .usa-alert--warning;
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
-  background-color: var(--pathable-color-status-warning-bg);
-  color: var(--pathable-color-status-warning-text);
+// usa-alert draws the status icon as a `position: absolute` `::before` on the
+// body. axe cannot tell what is behind text whose ancestor has an absolutely
+// positioned pseudo-element larger than a quarter of the text's own box, so a
+// short lead-in such as "Warning:" or a link left colour contrast undecided.
+// Keep the icon out of absolute positioning: it is a flex item of the body, in
+// the normal flow, and its negative bottom margin gives back its height, so
+// the content starts at the top of the body beside it. `position: relative`
+// only shifts it by usa-alert's optical adjustments, measured from the body's
+// content box rather than its border box. `margin-right: auto` keeps it on the
+// left, where usa-alert's physical `margin-left` indents the text, in a
+// right-to-left context too.
+.pathable-alert .pathable-alert__body::before {
+  position: relative;
+  top: calc(units($theme-alert-icon-size) / -6);
+  left: $alert-icon-optical-adjust-left;
+  flex: none;
+  margin-right: auto;
+  margin-bottom: calc(units($theme-alert-icon-size) * -1);
 }
 
-.pathable-alert--warning .pathable-alert__body,
-.pathable-alert--warning .pathable-alert__heading,
-.pathable-alert--warning .pathable-alert__text {
-  color: var(--pathable-color-status-warning-text);
+.pathable-alert--slim .pathable-alert__body::before {
+  top: 0;
+  left: $alert-slim-icon-optical-adjust-left;
+  margin-bottom: calc(units($alert-slim-icon-size) * -1);
 }
 
-.pathable-alert--error {
-  @extend .usa-alert--error;
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
-  background-color: var(--pathable-color-status-danger-bg);
-  color: var(--pathable-color-status-danger-text);
-}
+// The success, warning and error alerts fill the whole alert, body included,
+// with the PathAble status colour, where usa-alert uses a pale tint. Text,
+// icon and links all take the status text colour, which has at least 4.5:1 on
+// the fill. Bright Blue Brooks is under 3:1 on these fills, so the focus ring
+// is the on-accent dark blue (6.3:1, 8.4:1 and 3.9:1), which also stays
+// visible on light containers nested inside.
+$-status-fills: (
+  success: 'success',
+  warning: 'warning',
+  error: 'danger',
+);
 
-.pathable-alert--error .pathable-alert__body,
-.pathable-alert--error .pathable-alert__heading,
-.pathable-alert--error .pathable-alert__text {
-  color: var(--pathable-color-status-danger-text);
+@each $name, $token in $-status-fills {
+  .pathable-alert--#{$name} {
+    @extend .usa-alert--#{$name};
+
+    --pathable-surface-focus-ring: var(--pathable-color-on-accent);
+    background-color: var(--pathable-color-status-#{$token}-bg);
+    color: var(--pathable-color-status-#{$token}-text);
+  }
+
+  .pathable-alert--#{$name} .pathable-alert__body {
+    background-color: var(--pathable-color-status-#{$token}-bg);
+  }
+
+  .pathable-alert--#{$name} .pathable-alert__body,
+  .pathable-alert--#{$name} .pathable-alert__heading,
+  .pathable-alert--#{$name} .pathable-alert__text,
+  .pathable-alert--#{$name} .pathable-alert__body .pathable-link,
+  .pathable-alert--#{$name} .pathable-alert__body .pathable-link:visited {
+    color: var(--pathable-color-status-#{$token}-text);
+  }
+
+  @supports (mask: url('')) {
+    .pathable-alert--#{$name} .pathable-alert__body::before {
+      background-color: var(--pathable-color-status-#{$token}-text);
+    }
+  }
 }
 
 .pathable-alert--emergency {
@@ -69,10 +129,18 @@
   --pathable-surface-focus-ring: var(--pathable-color-status-danger-text);
 }
 
-.pathable-alert--slim {
-  @extend .usa-alert--slim;
+// A link takes the alert's white text colour, as usa-alert does for its own
+// links; the Tech Teal link colour is under 2:1 on the emergency red.
+.pathable-alert--emergency .pathable-alert__body .pathable-link,
+.pathable-alert--emergency .pathable-alert__body .pathable-link:visited {
+  color: inherit;
 }
 
-.pathable-alert__body {
-  @extend .usa-alert__body;
+// Forced colours drop the icon's mask fill, which leaves the icon blank and
+// its indent empty. Draw it in the text colour of the forced palette.
+@media (forced-colors: active) {
+  .pathable-alert .pathable-alert__body::before {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
 }

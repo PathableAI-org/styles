@@ -47,6 +47,7 @@ permissions:
 # catches up, and then the list and the filtering step below go away.
 env:
   REENABLED_FOLDERS: >-
+    alert
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens
