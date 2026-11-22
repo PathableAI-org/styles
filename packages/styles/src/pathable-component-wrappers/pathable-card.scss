@@ -25,10 +25,26 @@
 
 .pathable-card-group {
   @extend .usa-card-group;
+
+  // USWDS pulls the group out by half the card gap and gives each container
+  // the same margin back. The page promises a group with no margin, so the
+  // group sits on its parent's edges (and cannot scroll the page sideways);
+  // the container's own 0.5rem margin stays.
+  margin-inline: 0;
 }
 
 .pathable-card {
   @extend .usa-card;
+}
+
+// USWDS lays a card group out as a flex row from the tablet breakpoint, and a
+// card in it shrinks to its content. A card with no width or column class
+// fills the group instead, as it did before the group extended USWDS's. The
+// zero-specificity :where() lets a width or column utility on the card win,
+// and min-width: 0 lets a long word wrap inside the card rather than widen it.
+:where(.pathable-card-group) > :where(.pathable-card) {
+  width: 100%;
+  min-width: 0;
 }
 
 .pathable-card__container {
@@ -136,6 +152,44 @@
 
 .pathable-card__footer--exdent {
   @extend .usa-card__footer--exdent;
+}
+
+// USWDS gives every direct child of an exdent part 2px of side padding, which
+// keeps text in line with the other parts. A button has padding of its own and
+// would lose it, so it keeps that padding and takes the 2px as an inset
+// instead: a margin on the left and a width capped by the same 4px.
+// :where() keeps the scope at no specificity; the rules come after the button
+// and USWDS rules and so win on order.
+:where(
+    .pathable-card__header--exdent,
+    .pathable-card__body--exdent,
+    .pathable-card__footer--exdent
+  )
+  > .pathable-button {
+  max-width: calc(100% - #{units($theme-card-border-width) * 2});
+  margin-left: units($theme-card-border-width);
+  padding-left: units(2.5);
+  padding-right: units(2.5);
+}
+
+:where(
+    .pathable-card__header--exdent,
+    .pathable-card__body--exdent,
+    .pathable-card__footer--exdent
+  )
+  > .pathable-button--big {
+  padding-left: units(3);
+  padding-right: units(3);
+}
+
+:where(
+    .pathable-card__header--exdent,
+    .pathable-card__body--exdent,
+    .pathable-card__footer--exdent
+  )
+  > .pathable-button--unstyled {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .pathable-card--media {
