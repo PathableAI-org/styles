@@ -40,7 +40,7 @@ guarantees:
   - id: exdent-parts
     claim: The exdent modifiers on the header, body and footer give the part a negative 2 px margin on its left and right, so it covers the container border, and keep the content in line with the other parts.
   - id: flag-layout
-    claim: With the flag modifier, from a 40em viewport and when the card is at least 30rem wide, enough for the 15rem column and a 15rem text column, the media is a 15rem column on the left that fills the card's height with overflow clipped, and the header, body and footer have a 15rem left margin; otherwise a flag card stacks like a card with media.
+    claim: With the flag modifier, from a 40em viewport and when the card is at least 30rem wide, which leaves room for the 15rem column beside a text column, the media is a 15rem column on the left that fills the card's height with overflow clipped, and the header, body and footer have a 15rem left margin; otherwise a flag card stacks like a card with media.
   - id: flag-image-fill
     claim: In a flag card whose media is a 15rem column, the image fills the column and is cropped to cover it, whatever the image's ratio.
   - id: media-right
@@ -136,6 +136,16 @@ the default theme.
 - `pathable-card__footer`: the action, such as a `pathable-button` or a
   `pathable-link`. A card has one primary action.
 - To lay several cards out, put them in one card group, as in the list state.
+- Cards in a card group fill its width, one per row, unless a width or column
+  class sets another width. Use column classes, such as `tablet:grid-col-6`,
+  to lay cards out in a row.
+- A flag or media-right card needs room for its 15rem column beside the text.
+  It stacks like a card with media when it is narrower than 30rem, even from a
+  40em viewport.
+- Some utilities do not apply: a margin-right utility on a lone button in a
+  card footer; side padding, left margin and max-width utilities on a button
+  directly in an exdent part; and max-width and margin-bottom utilities on a
+  card in a card group placed directly in `pathable-prose`.
 
 ## Guarantees
 

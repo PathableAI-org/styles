@@ -18,9 +18,11 @@ $-card-flag-image-width: units($theme-card-flag-image-width);
 $-card-inner-radius: calc(
   #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
 );
-// The least card width, in rem, at which the flag layout applies: the 15rem
-// media column plus 15rem for the text column.
-$-card-flag-container-min: 30rem;
+// The least card width, in rem, at which the flag layout applies: twice the
+// media column's width, so the column sits beside a text column. The parts are
+// inside the container's margins, border and padding, so the text column is a
+// little narrower than the column itself.
+$-card-flag-container-min: $-card-flag-image-width * 2;
 $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__footer';
 
 // Inside .pathable-prose, a list that is a direct child gets the prose list
@@ -83,12 +85,20 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 // fills the group instead, as it did before the group extended USWDS's. The
 // zero-specificity :where() lets a width or column utility on the card win,
 // and min-width: 0 lets a long word wrap inside the card rather than widen it.
-// A flag card has inline-size containment (below), so its width cannot come
-// from its content and it fills its parent whatever the parent is.
-:where(.pathable-card-group) > :where(.pathable-card),
+:where(.pathable-card-group) > :where(.pathable-card) {
+  width: 100%;
+  min-width: 0;
+}
+
+// A flag card has inline-size containment (below), so a width that would come
+// from its content (`width-auto`, a column-auto class, an inline-block, float
+// or table-cell parent) would be 0. It fills its parent, and its intrinsic
+// inline size is the flag threshold's width, so a content-sized card is that
+// wide, and a width or max-width utility still wins over it.
 :where(.pathable-card--flag) {
   width: 100%;
   min-width: 0;
+  contain-intrinsic-inline-size: $-card-flag-container-min;
 }
 
 .pathable-card__container {
@@ -132,9 +142,10 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 }
 
 // Media scales to the card width at every viewport instead of keeping an
-// intrinsic width attribute that overflows narrow cards. USWDS crops flag card
-// media to a fixed column from the tablet breakpoint up, so flag cards keep
-// that behaviour there and are sized like any other card below it.
+// intrinsic width attribute that overflows narrow cards. A flag card crops its
+// media to a fixed column from the tablet breakpoint up while the card is wide
+// enough for it (see the flag rules below); a narrower flag card, or one below
+// the breakpoint, is sized like any other card.
 @mixin pathable-card-media-fit {
   > img,
   > svg,
@@ -160,12 +171,8 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   > .pathable-card__container
   > .pathable-card__media {
   overflow: hidden;
-  border-start-start-radius: calc(
-    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
-  );
-  border-start-end-radius: calc(
-    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
-  );
+  border-start-start-radius: $-card-inner-radius;
+  border-start-end-radius: $-card-inner-radius;
 }
 
 // The flag layout needs room: a 15rem media column plus a text column. Below
