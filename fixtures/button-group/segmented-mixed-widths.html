@@ -1,0 +1,26 @@
+<!-- description: A segmented task filter where the last two buttons keep the width of their labels and the first, with no width class, takes the rest of the strip. On a narrow phone the labels do not fit on one line, so the buttons shrink and the labels wrap instead of the strip running past the group. -->
+<ul class="pathable-button-group pathable-button-group--segmented">
+  <li class="pathable-button-group__item">
+    <button type="button" class="pathable-button" aria-pressed="true">
+      All tasks
+    </button>
+  </li>
+  <li class="pathable-button-group__item">
+    <button
+      type="button"
+      class="pathable-button pathable-button--outline width-auto"
+      aria-pressed="false"
+    >
+      Due this week
+    </button>
+  </li>
+  <li class="pathable-button-group__item">
+    <button
+      type="button"
+      class="pathable-button pathable-button--outline width-auto"
+      aria-pressed="false"
+    >
+      Waiting on me
+    </button>
+  </li>
+</ul>
