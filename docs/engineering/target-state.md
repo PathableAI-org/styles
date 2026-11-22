@@ -131,7 +131,7 @@ acceptable:
   skipped;
 - the jobs and steps gated `if: false` (package lint and the component-page
   checks in CI), except that the `stylelint` job runs again on changed SCSS
-  files, and the `Fixtures` job runs for the `alert`, `breadcrumb`, `tokens-*` and `utilities-*` folders only (the other
+  files, and the `Fixtures` job runs for the `alert`, `breadcrumb`, `button`, `button-group`, `tokens-*` and `utilities-*` folders only (the other
   folders stay unchecked until the SCSS catches up);
 - `check:component-pages`, which fails by design when run locally.
 

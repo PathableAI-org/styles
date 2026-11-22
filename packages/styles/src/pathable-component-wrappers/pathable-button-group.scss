@@ -22,3 +22,38 @@
     flex-wrap: wrap;
   }
 }
+
+.pathable-button-group__item {
+  @extend .usa-button-group__item;
+}
+
+.pathable-button-group--segmented {
+  @extend .usa-button-group--segmented;
+
+  // The segmented strip never wraps, even from mobile-lg where the plain
+  // group does; this rule follows the group's wrapping rule above.
+  @include at-media('mobile-lg') {
+    flex-wrap: nowrap;
+  }
+}
+
+// The group's rules style `.usa-button` and three of its modifiers inside an
+// item: reset margins and square corners, and draw the segmented separators.
+// `@extend` only reaches rules in the modules a stylesheet loads, so the
+// button wrapper's own extends do not reach this module. Repeat them here so
+// the same rules apply to `.pathable-button` and its modifiers.
+.pathable-button {
+  @extend .usa-button;
+}
+
+.pathable-button--secondary {
+  @extend .usa-button--secondary;
+}
+
+.pathable-button--accent-cool {
+  @extend .usa-button--accent-cool;
+}
+
+.pathable-button--base {
+  @extend .usa-button--base;
+}

@@ -20,6 +20,13 @@
   color: var(--pathable-color-action-primary-text);
 }
 
+// USWDS keeps an icon inside a button from shrinking with `.usa-button
+// .usa-icon`. The icon wrapper's own @extend does not reach this module's
+// rules, so repeat it here for `.pathable-icon`.
+.pathable-icon {
+  @extend .usa-icon;
+}
+
 // USWDS sets `width: auto` on buttons from mobile-lg (30em) up. That rule and
 // the width utilities have one class of specificity, so the button rule won
 // wherever it compiled later and `width="full"` stopped filling the container.

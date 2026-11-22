@@ -49,6 +49,8 @@ env:
   REENABLED_FOLDERS: >-
     alert
     breadcrumb
+    button
+    button-group
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens

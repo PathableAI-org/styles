@@ -158,7 +158,8 @@ const CONTENT_TYPES = {
 }
 
 /**
- * Serves page.html at / and everything else from the styles package root.
+ * Serves page.html at / and everything else from the styles package root,
+ * except that /assets/ is the package's dist folder.
  * Paths that are not found are added to `missing`.
  */
 async function serve(context, packageDir, missing) {
@@ -169,7 +170,13 @@ async function serve(context, packageDir, missing) {
       await route.fulfill({ body: pageHtml, contentType: 'text/html' })
       return
     }
-    const file = normalize(join(packageDir, decodeURIComponent(pathname)))
+    // Fixtures reference the sprite at /assets/img/sprite.svg, where an
+    // application serves the package's dist folder.
+    const served = decodeURIComponent(pathname).replace(
+      /^\/assets\//u,
+      '/dist/',
+    )
+    const file = normalize(join(packageDir, served))
     if (!file.startsWith(packageDir)) {
       await route.fulfill({ status: 403 })
       return
