@@ -164,16 +164,26 @@ $-half-stroke: math.div(units($theme-button-stroke-width), 2);
     width: calc(100% + #{$-half-stroke});
   }
 
+  // USWDS sizes each item as `width: 100%` and lets them shrink to equal
+  // shares. Grow them from zero instead: with no width class the shares are
+  // the same, and an item sized by its button (below) keeps its width while
+  // the others share the rest, rather than all shrinking in step with it.
+  .pathable-button-group--segmented .pathable-button-group__item {
+    flex: 1 1 0;
+  }
+
   // An item whose button has its own width takes the width of that button
-  // instead of a share of the group, and keeps it. Its button's negative
-  // margins narrow the item, so the button still overhangs into the next item
-  // by 1px and the joint still overlaps by 2px. `:where()` keeps the
-  // specificity of the USWDS item rule it overrides.
+  // instead of a share of the group. It can still shrink when the labels do
+  // not fit, and the button, as wide as its content, shrinks with it, so the
+  // label wraps instead of the strip running past the group. Its button's
+  // negative margins narrow the item, so the button still overhangs into the
+  // next item by 1px and the joint still overlaps by 2px. `:where()` keeps
+  // the specificity of the item rule above, which this one follows.
   .pathable-button-group--segmented
     .pathable-button-group__item:where(
       :has(> .pathable-button:is(#{$-own-width-classes}))
     ) {
-    flex: none;
+    flex: 0 1 auto;
     width: auto;
   }
 }

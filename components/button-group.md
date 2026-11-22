@@ -104,8 +104,9 @@ are not custom properties and do not change with the theme.
   width at every viewport width, so in a segmented group the buttons can keep
   the width of their labels on a phone instead of filling it. The item then
   takes the width of its button, so the strip stays joined and can end before
-  the group's right edge. `width-full` keeps a segmented button at its share
-  of the strip, as when it has no width class.
+  the group's right edge. When the labels do not fit, the items shrink and the
+  labels wrap, as they do without a width class. `width-full` keeps a
+  segmented button at its share of the strip, as when it has no width class.
 - On a `<ul>` in right-to-left text, remove the list's right padding
   yourself: the group only clears the left padding.
 
