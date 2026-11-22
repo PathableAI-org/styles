@@ -10,9 +10,6 @@
 @use 'usa-icon';
 @use 'usa-alert/src/styles';
 
-// The slim icon size, as usa-alert's alert-status-styles mixin sets it.
-$-slim-icon-size: 3;
-
 .pathable-alert {
   @extend .usa-alert;
 }
@@ -46,27 +43,30 @@ $-slim-icon-size: 3;
   @extend .usa-alert--no-icon;
 }
 
-// usa-alert draws the status icon as an absolutely positioned `::before` on
-// the body. axe cannot tell what is behind text whose ancestor has a
+// usa-alert draws the status icon as a `position: absolute` `::before` on the
+// body. axe cannot tell what is behind text whose ancestor has an absolutely
 // positioned pseudo-element larger than a quarter of the text's own box, so a
 // short lead-in such as "Warning:" or a link left colour contrast undecided.
-// The icon stays a flex item of the body instead: it is in the normal flow,
-// and its negative bottom margin gives back its height, so the content starts
-// at the top of the body beside it. `top` and `left` carry usa-alert's optical
-// adjustments, measured from the body's content box rather than its border
-// box.
+// Keep the icon out of absolute positioning: it is a flex item of the body, in
+// the normal flow, and its negative bottom margin gives back its height, so
+// the content starts at the top of the body beside it. `position: relative`
+// only shifts it by usa-alert's optical adjustments, measured from the body's
+// content box rather than its border box. `margin-right: auto` keeps it on the
+// left, where usa-alert's physical `margin-left` indents the text, in a
+// right-to-left context too.
 .pathable-alert .pathable-alert__body::before {
   position: relative;
   top: calc(units($theme-alert-icon-size) / -6);
-  left: calc(units($theme-alert-icon-size) / -12);
+  left: $alert-icon-optical-adjust-left;
   flex: none;
+  margin-right: auto;
   margin-bottom: calc(units($theme-alert-icon-size) * -1);
 }
 
 .pathable-alert--slim .pathable-alert__body::before {
   top: 0;
-  left: calc(units($-slim-icon-size) / -12);
-  margin-bottom: calc(units($-slim-icon-size) * -1);
+  left: $alert-slim-icon-optical-adjust-left;
+  margin-bottom: calc(units($alert-slim-icon-size) * -1);
 }
 
 // The success, warning and error alerts fill the whole alert, body included,
@@ -117,9 +117,9 @@ $-status-fills: (
   --pathable-surface-focus-ring: var(--pathable-color-status-danger-text);
 }
 
-// A link takes the white text colour, as usa-alert does for its own links;
-// the Tech Teal link colour is under 2:1 on the emergency red.
+// A link takes the alert's white text colour, as usa-alert does for its own
+// links; the Tech Teal link colour is under 2:1 on the emergency red.
 .pathable-alert--emergency .pathable-alert__body .pathable-link,
 .pathable-alert--emergency .pathable-alert__body .pathable-link:visited {
-  color: var(--pathable-color-status-danger-text);
+  color: inherit;
 }
