@@ -80,3 +80,33 @@
     border-right-color: var(--pathable-color-surface);
   }
 }
+
+// In forced colours the buttons' own borders are drawn, and the segmented
+// buttons overlap by their border width, so the two borders at each joint
+// already form the divider. Drawing the separator as well made some dividers
+// double.
+@media (forced-colors: active) {
+  .pathable-button-group--segmented
+    .pathable-button-group__item
+    .pathable-button::before {
+    display: none;
+  }
+}
+
+// Below mobile-lg the segmented buttons are 2px wider than their items and
+// overlap by 3px, which would draw a 3px divider from two 2px borders. Overlap
+// by the border width instead, keeping the strip's outer edges where they are.
+@media (forced-colors: active) and (max-width: 29.99em) {
+  .pathable-button-group--segmented
+    .pathable-button-group__item:where(:not(:first-child):not(:last-child))
+    > .pathable-button {
+    margin-left: 0;
+  }
+
+  .pathable-button-group--segmented
+    .pathable-button-group__item:last-child
+    > .pathable-button {
+    margin-left: 0;
+    width: 100%;
+  }
+}
