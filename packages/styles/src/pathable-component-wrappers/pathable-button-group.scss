@@ -97,15 +97,32 @@
 }
 
 // Below mobile-lg USWDS makes each segmented button 2px wider than its item
-// and pulls it back with negative margins, which overlaps neighbours by 3px,
-// so two 2px borders draw a 3px divider. Outline buttons draw their border as
-// an inset shadow, so this showed in every colour mode. Move the second and
-// third items 1px right instead: the overlap becomes the border width and the
-// strip's outer edges stay where they are. Only margins change, so a width
-// class on a button is not affected by this rule.
+// and pulls it back with negative margins that depend on its position: none on
+// the first button, 1px on a middle one and 2px on the last. Neighbours then
+// overlap by 2px plus the difference of those margins, so a joint is 2px, 3px
+// or more depending on the count, and two 2px borders draw a divider wider than
+// the outer border. Outline buttons draw their border as an inset shadow, so
+// this showed in every colour mode. Give each item the margin that cancels the
+// difference at its joint, so every joint overlaps by exactly the 2px border
+// width for any number of items and the last button still ends at the edge of
+// the group. Only margins change, so a width class on a button is not
+// affected by this rule.
 @include at-media-max('mobile-lg') {
+  // The first joint: the previous button has no margin and this one 1px.
   .pathable-button-group--segmented
-    .pathable-button-group__item:where(:not(:first-child)) {
+    .pathable-button-group__item:nth-child(2):not(:last-child) {
+    margin-left: 1px;
+  }
+
+  // Joint into the last button: the last button has 2px, so a middle one
+  // before it (1px) needs 1px, and the first button (none) needs 2px.
+  .pathable-button-group--segmented
+    .pathable-button-group__item:last-child:nth-child(2) {
+    margin-left: 2px;
+  }
+
+  .pathable-button-group--segmented
+    .pathable-button-group__item:last-child:nth-child(n + 3) {
     margin-left: 1px;
   }
 }

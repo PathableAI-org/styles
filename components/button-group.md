@@ -100,6 +100,9 @@ are not custom properties and do not change with the theme.
   a larger default font size moves it.
 - A segmented group joins its buttons into one strip. Use one filled button for
   the current view and `pathable-button--outline` for the others.
+- A width class on a button, such as `width-auto`, wins over the group's own
+  width at every viewport width, so in a segmented group the buttons can keep
+  the width of their labels on a phone instead of filling it.
 - On a `<ul>` in right-to-left text, remove the list's right padding
   yourself: the group only clears the left padding.
 
