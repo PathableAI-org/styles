@@ -2,4 +2,6 @@
 '@pathableai/styles': minor
 ---
 
-Add the `pathable-card-group`, `pathable-card__img`, `pathable-card--media-right`, `pathable-card__media--inset` and `pathable-card__{header,body,footer}--exdent` classes, the wrappers for their USWDS `usa-card` counterparts. Cards and card groups inside `pathable-prose` now keep their own list reset and spacing, and a `pathable-button` that is the only one of its element type in a card footer loses its right margin, as `usa-button` does.
+Add the `pathable-card-group`, `pathable-card__img`, `pathable-card--media-right`, `pathable-card__media--inset` and `pathable-card__{header,body,footer}--exdent` classes, the wrappers for their USWDS `usa-card` counterparts.
+
+Unlike `usa-card-group`, a `pathable-card-group` has no side margins, and a card in it fills the group at every width unless it has its own width or column class. A button that is a direct child of an exdent part keeps its padding and lines up with the text. A lone button that is a direct child of a card footer loses its right margin. A card group that is a direct child of `pathable-prose` keeps its own list reset and card spacing.

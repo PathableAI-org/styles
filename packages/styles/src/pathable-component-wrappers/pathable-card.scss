@@ -15,12 +15,46 @@
 // bottom margin. `@extend .usa-prose` is not used: it would add
 // `.pathable-prose .pathable-card` (0,2,0) and `.pathable-prose
 // .pathable-card-group` (0,3,0) rules that beat spacing and width utilities
-// anywhere under prose. These resets are the lowest specificity that still
-// beats the prose rules: (0,1,1) ties `.pathable-prose > ul` and wins on order,
-// and (0,2,2) ties `.pathable-prose > ul li:last-child` and wins on order.
-// A utility (0,1,0) on a group or card that is a direct child of prose loses
-// to the prose rules, as it does on any other list there.
-:where(.pathable-prose) > :is(ul, ol).pathable-card-group {
+// anywhere under prose. These resets win on specificity, not source order, so
+// they hold in any order a consumer forwards the wrappers (this file does not
+// load the prose module): the group's (0,2,1) beats `.pathable-prose > ul`
+// (0,1,1), and the card's (0,3,2) beats `.pathable-prose > ul li:last-child`
+// (0,2,2), the strongest prose list rule. A utility (0,1,0) on a group or card
+// that is a direct child of prose loses, as it does on any other list there.
+.pathable-prose > :is(ul, ol).pathable-card-group {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.pathable-prose > :is(ul, ol).pathable-card-group > li.pathable-card {
+  max-width: none;
+  margin-bottom: units($theme-card-margin-bottom + 1);
+
+  @include at-media('tablet') {
+    margin-bottom: units($theme-card-margin-bottom);
+  }
+}
+
+// A lone button directly in the footer loses its right margin, as USWDS does
+// for `.usa-card__footer .usa-button:only-of-type`. That rule is not extended
+// here: `@extend .usa-button` would also match every button inside a button
+// group in the footer and a link next to a button, and its descendant selector
+// ties the segmented group's joint overlap. A direct, only child is what is
+// meant. The selector is (0,3,0), so it beats `.pathable-button` (0,1,0) in
+// any order the wrappers are forwarded (this file does not load the button
+// module); like USWDS's own (0,3,0) rule, it also beats a margin utility.
+.pathable-card__footer
+  > :is(
+    .pathable-button,
+    .pathable-button--primary,
+    .pathable-button--continue,
+    .pathable-button--destructive
+  ):only-child {
+  margin-right: 0;
+}
+
+.pathable-card-group {
   margin-top: 0;
   margin-bottom: 0;
   padding-left: 0;
@@ -188,27 +222,28 @@
 // this would replace, so its own side padding is declared again (1.25rem; 1.5rem
 // for --big; none for --unstyled) and the 2px becomes an inset instead: a left
 // margin of the border width, and a max-width reduced by twice that, so a
-// full-width button still ends 2px inside the part. :where() on the part and
-// the :is() list keeps the selectors at (0,1,0); the rules come after the
-// button and USWDS rules and so win on order. --primary, --continue and
-// --destructive each render a whole button without .pathable-button, so they
-// are listed too.
+// full-width button still ends 2px inside the part. The selectors are (0,2,0),
+// which beats both USWDS's `.usa-card__footer--exdent > *` and the button's own
+// (0,1,0) padding rules in any order the wrappers are forwarded, and the
+// --big and --unstyled rules follow the first in this file. --primary,
+// --continue and --destructive each render a whole button without
+// .pathable-button, so they are listed too.
 $-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
 $-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
 
-:where(#{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
+:is(#{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
   max-width: calc(100% - #{units($theme-card-border-width) * 2});
   margin-left: units($theme-card-border-width);
   padding-left: units(2.5);
   padding-right: units(2.5);
 }
 
-:where(#{$-card-exdent-parts}) > .pathable-button--big {
+:is(#{$-card-exdent-parts}) > .pathable-button--big {
   padding-left: units(3);
   padding-right: units(3);
 }
 
-:where(#{$-card-exdent-parts}) > .pathable-button--unstyled {
+:is(#{$-card-exdent-parts}) > .pathable-button--unstyled {
   padding-left: 0;
   padding-right: 0;
 }
