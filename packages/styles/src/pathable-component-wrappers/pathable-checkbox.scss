@@ -10,7 +10,8 @@
 @use 'usa-checkbox/src/styles';
 
 // No base .usa-checkbox class exists in USWDS source.
-// Only .usa-checkbox__input, .usa-checkbox__label, and .usa-checkbox__label-description are defined.
+// Only .usa-checkbox__input, .usa-checkbox__input--tile, .usa-checkbox__label,
+// and .usa-checkbox__label-description are defined.
 
 // The root wraps the input and its label (a <label> in the stories and the
 // React Checkbox). Block layout puts the control on its own line, so it does
@@ -43,4 +44,21 @@
 // `@extend` rewrites each of them for `.pathable-checkbox__input--tile`.
 .pathable-checkbox__input--tile {
   @extend .usa-checkbox__input--tile;
+}
+
+// A checked or indeterminate tile tints its label with rgba(1, 90, 118, 0.1),
+// about #e6eef1 over white. The focus ring sits on that tint, where Bright
+// Blue Brooks is 2.55:1, under the 3:1 a focus indicator needs. On these tiles
+// the ring takes the PathAble ink (10.6:1 on the tint and 12.5:1 on white).
+// Like the tint, it is compiled rather than read from a theme token. Width,
+// style and offset stay as usa-checkbox sets them. A disabled tile is white,
+// not tinted, and keeps the default ring. The selector is more specific than
+// usa-checkbox's `:focus` rule, so it wins whatever the source order.
+.pathable-checkbox__input--tile:is(
+    :checked,
+    :indeterminate,
+    [data-indeterminate]
+  ):not(:disabled, [aria-disabled='true']):focus
+  + [class*='__label']::before {
+  outline-color: #{color('ink')};
 }
