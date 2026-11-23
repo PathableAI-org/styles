@@ -1,23 +1,32 @@
 # Component pages
 
-One Markdown page per component, named after its slug (`button.md`).
-A page is the product specification of the component: what it is for, an
-example, its variants, its tokens, how to compose it, what it guarantees and
-what the consumer owns. These are the source pages; every published copy is
-built from them:
+One Markdown page per component, named after its slug (`button.md`). A page is
+the product specification of the component: what it is for, an example, its
+variants, its tokens, how to compose it, what it guarantees and what the
+consumer owns. Together with the exact HTML in `fixtures/`, these pages are the
+shared source for human product documentation and version-matched consumer
+agent guidance; neither output maintains its own component semantics or
+snippet. Every published copy is built from them:
 
-| Reader                      | Built output                                                                                                                         | Examples                                 | Committed |
+| Audience or retained target | Built output                                                                                                                         | Examples                                 | Committed |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- | --------- |
-| `@pathableai/styles` on npm | `packages/styles/components/<slug>.md` and `index.md`                                                                                | HTML (fixtures)                          | No        |
-| `@pathableai/react` on npm  | `packages/react/agent-guidance/pathable-react/references/components/<Name>.md`                                                       | JSX (examples)                           | Yes       |
+| Styles consumer agents      | `packages/styles/components/<slug>.md` and `index.md`, shipped in `@pathableai/styles`                                               | HTML (fixtures)                          | No        |
 | People, on GitHub Pages     | The styles Storybook's **Design tokens**, **Utilities**, **Settings** and **Component pages** sections (`apps/storybook/generated/`) | Live, with tabs; none on a settings page | No        |
+| Retained React guidance     | `packages/react/agent-guidance/pathable-react/references/components/<Name>.md`                                                       | JSX (examples)                           | Yes       |
 
 The generator is [`scripts/component-docs/`](../scripts/component-docs/). The
-styles `build` writes the styles pages, the Storybook `storybook` and
-`build-storybook` scripts write the Storybook pages, and
-`node scripts/component-docs/cli.mjs react` writes the React pages, which are
-committed because the React agent guidance checks and reviews read them from
-the repository. `pnpm check:agent-guidance` fails when they are out of date.
+styles `build` writes the installed styles pages, and the Storybook
+`storybook` and `build-storybook` scripts write the human product pages. A
+future styles consumer-guidance entry point will route agents to the installed
+pages and add package-wide selection and bug-reporting guidance; do not create
+a second component-prose source for it.
+
+`node scripts/component-docs/cli.mjs react` still writes the retained React
+pages, which are committed because existing checks read them.
+`pnpm check:agent-guidance` fails when they are out of date. When a styles page
+or fixture change requires a mechanical regeneration, make that update without
+expanding or redesigning the React API. Stop and ask if generation requires a
+semantic React decision.
 
 Edit only the source pages here. Never edit built output.
 

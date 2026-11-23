@@ -5,7 +5,11 @@ title: ''
 labels: bug
 ---
 
-<!-- Add exactly one package label: package:styles or package:react. A defect that affects both packages is two issues, one per package, each linking the other. A defect in neither package, such as repository tooling, carries neither label. -->
+<!-- Add exactly one package label: package:styles or package:react. A defect that affects both packages is two issues, one per package, each linking the other. A defect in neither package, such as repository tooling, carries neither label. For a component defect, also identify the component below and apply the repository's component label when one exists; do not invent a new label. -->
+
+## Package and component
+
+<!-- Name the package and released version or base SHA. For a component defect, give the component-page slug, such as button or summary-box. For a non-component styles defect, use tokens, utilities, packaging or documentation. -->
 
 ## Observed
 
@@ -19,7 +23,7 @@ labels: bug
 
 ## How to reproduce
 
-<!-- Steps, and the SHA or released package version where it was seen. -->
+<!-- Search existing issues first. Give minimal steps and canonical fixture-based markup where possible. Include no credentials, private data or sensitive content. -->
 
 ## Proposed risk tier
 

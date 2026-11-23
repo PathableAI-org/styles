@@ -1,60 +1,114 @@
 # Repository intent
 
-This document says why this repository exists, who it serves, and how a
-consumer's need becomes a released change. It owns intent and flow only. The
-rules that govern the work live in the
-[constitution](../../.specify/memory/constitution.md), and the process weight a
+This document says why this repository exists, what it currently produces, who
+those products serve, and how a consumer's need becomes a released change. It
+owns intent and flow only. The rules that govern the work live in the
+[constitution](../../.specify/memory/constitution.md), the current refactor
+boundary lives in [Target state](target-state.md), and the process weight a
 change needs lives in the [Git workflow](git-workflow.md).
 
 ## Why it exists
 
-PathAble applications should look, read and behave as one product, and they
-should be accessible without each team rebuilding the same controls. This
-repository is where that shared design is defined once, verified once, and
-shipped as packages that applications install rather than copy.
+PathAble applications should look and read as one product, and their shared UI
+should begin from accessible markup and styles without each application
+rebuilding the same foundation. This repository defines that shared design,
+checks it, and publishes artifacts that applications install rather than copy.
 
 ## Who it serves
 
-- **Consuming applications.** Product repositories that install the published
-  packages, such as Pre-ETS (`pathableai-org/pre-ets`), and future PathAble
-  apps.
-- **Coding agents in those applications.** They build UI from the consumer
-  guidance shipped inside `@pathableai/react`, not from this repository's
-  source.
-- **Design.** The Figma design system is a source of names, values and intent;
-  this repository turns it into reviewable code (constitution principle IX).
-- **Contributors and agents working here.** They are routed by
-  [`AGENTS.md`](../../AGENTS.md).
+- **People building with the design system.** They use the human product
+  documentation to understand the supported catalog, see it rendered and copy
+  canonical HTML.
+- **Applications consuming `@pathableai/styles`.** They import the compiled CSS
+  and assets rather than configuring USWDS or copying repository source.
+- **Coding agents in consuming applications.** They read consumer agent
+  guidance from the installed npm version, not contributor instructions from
+  this repository.
+- **Design and maintainers.** Design supplies brand names, values and intent;
+  contributors and their agents turn them into reviewable, tested and
+  releasable package contracts.
 
-## The pipeline
+## Documentation terms
 
-Each stage consumes the one before it and must not redefine it:
+Use these names consistently:
 
-1. **Styles contract** — `packages/styles`, published as `@pathableai/styles`.
-   Tokens, CSS custom properties, `.pathable-*` component and utility classes,
-   fonts, icons and small JavaScript helpers. This is the source of truth
-   (principles I and II).
-2. **React adapter** — `packages/react`, published as `@pathableai/react`.
-   Framework-native components that map onto the styles contract, with
-   semantic and visual parity (principles IV and V).
-3. **Consumer agent guidance** —
-   [`packages/react/agent-guidance/pathable-react/`](../../packages/react/agent-guidance/pathable-react/),
-   shipped in the `@pathableai/react` tarball. Consuming repositories route
-   their UI work to the installed copy, so it is part of the published contract.
-4. **Consumers** — applications that install `@pathableai/react` (and, where
-   they need plain CSS, `@pathableai/styles`) from npm.
+- **Human product documentation** is the styles Storybook published at
+  `https://pathableai-org.github.io/styles/`. It explains when to use each
+  supported component and shows rendered examples with copyable HTML.
+- **Consumer agent guidance** is human-readable, auditable Markdown shipped in
+  the installed npm package. It helps agents choose and compose the installed
+  version's components, tokens and utilities.
+- **Contributor agent guidance** is repository-local material for changing this
+  project: `AGENTS.md`, engineering documents, skills and role instructions.
 
-The styles contract is being refactored back into a thin wrapper around USWDS
-that exposes `pathable-` names, ships compiled CSS and treats `fixtures/` as
-the canonical examples. The component pages and fixtures already describe that
-target, so any difference between them and the code is a defect in the code.
-The consumer docs and shipped agent guidance still describe the old model and
-are the next work.
-[Target state](target-state.md) owns the goal, the known divergences and the
-expected CI state while the code catches up.
+Do not use the unqualified phrase "agent-facing docs" when the audience could
+be either consumers or contributors.
 
-The two Storybooks are the executable catalog for stages 1 and 2; they are how
-this repository proves the contract before it ships.
+## Current deliverables
+
+The active `@pathableai/styles` work produces three deliverables from shared
+sources:
+
+1. **Human product documentation.** The styles Storybook is the visual catalog
+   hosted on GitHub Pages. It contains semantic guidance, rendered examples and
+   the canonical snippets.
+2. **Compiled CSS.** The `@pathableai/styles` npm package starts from USWDS,
+   applies PathAble brand settings and narrowly justified fixes, and exposes
+   the supported static component, token and utility contract without requiring
+   a consuming project to configure USWDS.
+3. **Consumer agent guidance.** The same npm package already contains generated
+   component prose and examples. The target adds a dedicated routing entry point
+   plus package-wide selection and bug-reporting guidance. Shipping all of it
+   with the CSS keeps the guidance tied to the installed version instead of the
+   rolling website.
+
+The shared sources are:
+
+- [`components/`](../../components/README.md), whose pages are the product
+  specifications: purpose, variants, composition, guarantees and consumer
+  responsibilities;
+- [`fixtures/`](../../fixtures/README.md), whose HTML is the canonical example
+  markup used by documentation snippets, rendered examples, accessibility
+  checks and CSS-contract checks; and
+- `packages/styles/src/`, whose SCSS and assets produce the installed CSS.
+
+Generated human or consumer documentation must not create a second semantic or
+markup source. Target-specific navigation and framing may differ, but component
+meaning comes from the page and example HTML comes from the fixture.
+
+## Current scope boundary
+
+The supported component catalog currently covers components whose defining
+behavior needs no design-system JavaScript. Native HTML controls remain in
+scope; a component that requires package JavaScript to provide its defining
+behavior does not. The exact catalog is owned by
+[`components/README.md`](../../components/README.md#catalog-scope).
+
+`packages/react/`, the React Storybook and React consumer guidance,
+`packages/styles/src/js/`, the styles package's existing JavaScript exports,
+and legacy custom or JavaScript-dependent wrappers remain in the repository.
+They are retained to avoid accidental breaking changes but are not current
+refactor targets. Their presence is not permission to broaden static component
+work, modernize them opportunistically or delete them. Shared generators and
+existing checks may still require mechanical output updates.
+
+The current package layout is hybrid: generated component Markdown already
+ships in `@pathableai/styles`, while the dedicated routing and package-wide
+consumer guidance still lives under the React package. The target is dedicated
+styles consumer guidance in `@pathableai/styles`; React guidance is not a
+substitute for it.
+
+## Bug reporting intent
+
+Consumer agents and contributor agents should describe a styles defect the
+same way. They search existing issues, confirm the problem against a released
+package version or base SHA, use the repository's
+[bug template](../../.github/ISSUE_TEMPLATE/bug.md), name the broken component
+page guarantee when one exists, and keep unrelated defects out of the current
+change. A styles bug carries `bug` and `package:styles`; a component defect also
+identifies its component slug so it can receive the component label the
+repository defines. The exact label automation and downstream submission flow
+remain product work rather than something an agent invents ad hoc.
 
 ## How a consumer need flows
 
@@ -72,11 +126,11 @@ in other PathAble repositories.
    (blocking modal) are examples: each describes current behaviour in a named
    release, the consumer's use case, and what "done" looks like.
 2. **Land it source-first.** New visual behaviour, classes, tokens and assets
-   land in `packages/styles` before the adapter exposes them (the
-   constitution's "Source-first sequencing"). A change that only adds React
-   ergonomics over an existing styles contract, such as #262, can land in
-   `packages/react` alone; the issue's Contract impact section says which case
-   applies.
+   land in `packages/styles` (the constitution's "Source-first sequencing").
+   React is deferred during the current refactor and changes only when an issue
+   explicitly puts it in scope. In that separate scope, an adapter change still
+   begins from the existing styles contract; a change that only adds React
+   ergonomics over that contract can land in `packages/react` alone.
 3. **Record the release.** A pull request that changes a published package's
    code carries a changeset ([`.changeset/README.md`](../../.changeset/README.md)).
 4. **Release it.** On `main`, [`publish.yml`](../../.github/workflows/publish.yml)
@@ -114,7 +168,8 @@ adoption in the consumer repository is tracked there, not here.
 | Topic                                                       | Owner                                                                                                |
 | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | Principles, packaging, release and quality gates            | [Constitution](../../.specify/memory/constitution.md)                                                |
+| Current styles product and consumer-guidance direction      | [Target state](target-state.md) and [`components/README.md`](../../components/README.md)             |
 | Risk tiers, branches, pull requests and merging             | [Git workflow](git-workflow.md)                                                                      |
 | Changesets and version bumps                                | [`.changeset/README.md`](../../.changeset/README.md)                                                 |
-| When a React change must update the consumer agent guidance | [React agent guidance instructions](../../.github/instructions/react-agent-guidance.instructions.md) |
+| When an explicitly scoped React change updates its guidance | [React agent guidance instructions](../../.github/instructions/react-agent-guidance.instructions.md) |
 | Spec Kit templates, presets and the upgrade workflow        | [Spec Kit](spec-kit.md)                                                                              |

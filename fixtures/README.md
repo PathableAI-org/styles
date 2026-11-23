@@ -3,10 +3,17 @@
 Canonical HTML for each static `@pathableai/styles` component, one file per
 state. A fixture is the reference markup a consuming application copies, so it
 shows classes, structure and ARIA exactly as a well-built client application
-should write them. The fixtures are checked on their own here,
-`@pathableai/react` components are held to them by React fixture tests, the
-styles Storybook renders one story per fixture, and a converted component page
-takes its examples from them (see [`components/README.md`](../components/README.md)).
+should write them. The same fixture bytes provide the copyable snippet and
+rendered example in the human product documentation, the HTML example in the
+version-matched styles consumer agent guidance, and the input to the HTML,
+accessibility and compiled-CSS contract checks. Do not maintain a second copy
+for either documentation audience.
+
+The retained `@pathableai/react` components are also held to fixtures by React
+fixture tests, and the existing generator may require a mechanical React
+example update even though React is not a current refactor target. A converted
+component page takes its examples from the fixtures; see
+[`components/README.md`](../components/README.md).
 
 How the checks run, locally and in CI, is in
 [docs/testing/fixtures.md](../docs/testing/fixtures.md).

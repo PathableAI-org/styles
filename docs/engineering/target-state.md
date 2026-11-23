@@ -1,217 +1,209 @@
-# Target state of `@pathableai/styles`
+# Current target of `@pathableai/styles`
 
-This document owns the direction of the `@pathableai/styles` refactor: where
-the package is going, how far the code is from it, and what CI is expected to
-show on the way. It is current-state documentation, written as of 2026-11-21
-with `main` at `b643e6e`. Update it as the refactor progresses; delete the
-sections that stop being true.
+This document owns the direction and current scope of the
+`@pathableai/styles` refactor. It is current-state documentation, reviewed on
+2026-11-22 with `main` at `28cc03eb`. Update it as the refactor progresses and
+remove transitional statements when they stop being true.
 
-The [constitution](../../.specify/memory/constitution.md) wins over this
-document and does not yet state the target. Amending it is a separate human
-decision. Where a package document describes the old model, this document wins
-for the direction of the styles package.
+The [constitution](../../.specify/memory/constitution.md) wins where it states
+a repository-wide rule, but it predates this narrower refactor target. Where a
+package document describes the old `usa-` model, JavaScript components or
+React as the current delivery path, this document owns the current direction.
 
-## Goal
+## Three deliverables
 
-The target, set by the owner. Treat each bullet as normative for the finished
-state.
+The refactor is working toward three `@pathableai/styles` products:
 
-`@pathableai/styles` returns to its roots: a thin wrapper around USWDS that
-encapsulates that dependency. Consumers get the same components, with the
-`usa-` prefix replaced by `pathable-` and the default settings matching the
-PathAble brand guide.
+### Human product documentation
 
-- The package MUST expose every USWDS component under the `pathable-` prefix
-  (`pathable-button`, `pathable-alert__body`). No `usa-` class is part of the
-  public contract.
-- USWDS design tokens and utility classes that have no `usa-` prefix MUST be
-  re-exported under the same name: `grid-container`, `margin-top-2`,
-  `text-bold`. They are not renamed to `pathable-margin-top-2`.
-- Documentation MAY refer to USWDS. A consuming CSS project MUST NOT need USWDS
-  naming conventions, and MUST NOT need to install or configure USWDS. It uses
-  `pathable-` names.
-- The npm package MUST ship compiled CSS and be reasonably bundler friendly.
-  An application can pull in the whole bundle or only what it needs, such as
-  individual components.
-- Default settings MUST match the PathAble brand guide. An unconfigured
-  component looks like PathAble.
-- [`fixtures/`](../../fixtures/README.md) holds the canonical examples of the
-  CSS used in HTML with the default settings. Today they power the
-  documentation. Eventually they become the foundation for accessibility and
-  HTML linting.
-- The immediate goal is documentation first: the human-facing and agent-facing
-  documentation MUST represent the target correctly. Agent-facing means agents
-  that consume the package, through the shipped docs and
-  [`packages/react/agent-guidance/`](../../packages/react/agent-guidance/pathable-react/).
-- The refactor MUST leave the repository simpler than it found it.
+The styles Storybook published at `https://pathableai-org.github.io/styles/`
+explains each supported component, shows its meaningful states, and provides
+copyable HTML. It also documents the design tokens, utility classes and fixed
+USWDS build settings the package exposes.
 
-## What counts as a defect
+The website is a rolling view built from the repository. It must identify the
+version or revision it represents rather than implying that it necessarily
+matches every installed npm version.
 
-The docs and fixtures describe the target. Any difference between them and the
-code is a defect in the code.
+### Compiled CSS
 
-- Do not change a fixture, a component page in `components/`, or a documented
-  class name back toward what the SCSS does today.
-- Fix the SCSS, build or React code instead, or leave it for the catch-up step
-  below and say so in the pull request.
-- If a fixture looks wrong against the target, that is a question for the
-  owner; see [Open questions](#open-questions).
+The npm package is a thin wrapper around USWDS for the supported static
+catalog. It encapsulates USWDS configuration, applies PathAble brand defaults
+and makes only narrow, evidenced deviations. A normal consumer installs the
+package and imports compiled CSS; it does not install or configure USWDS.
 
-## Current state
+The target contract is:
 
-As of 2026-11-21, `main` at `b643e6e`:
+- supported component selectors use `pathable-` names with no `usa-` class
+  required in consumer markup;
+- USWDS design tokens and utility classes that are already unprefixed keep
+  their USWDS names, such as `grid-container`, `margin-top-2` and `text-bold`;
+- the default rendering encodes the PathAble brand; and
+- no supported component requires design-system JavaScript for its defining
+  behavior.
 
-- **Dependency.** `packages/styles/package.json` declares `@uswds/uswds`
-  `^3.0.0`. The lockfile resolves 3.13.0, and
-  `patches/@uswds__uswds@3.13.0.patch` pins that version. The patch mostly
-  changes JavaScript (JS class strings and `prefix: "pathable"`). It also
-  changes three `uswds-core` SCSS files (`rem-to-user-em.scss`,
-  `layout-grid.scss` and `_grid-container.scss`) to module-qualified Sass
-  built-ins. It renames no selectors.
-- **Prefix is a hybrid.** `packages/styles/src/pathable-component-wrappers/`
-  holds 129 `.scss` files. About 68 of them `@use 'usa-…'` and about 63
-  `@extend .usa-…` (62 do both), so the compiled CSS holds `.usa-*` beside
-  `.pathable-*`. The rest are PathAble components with no USWDS counterpart, plus
-  index and mixin helpers; examples are activity-list, app-shell, bento-grid,
-  toast and wizard. No count of those custom components has been verified.
-- **Custom properties** are emitted twice, as `--pathable-*` and `--usa-*`.
-- **Utilities** are generated as `.pathable-*` classes (for example
-  `pathable-margin-top-2`), not as USWDS same-name utilities.
-- **JavaScript** components (modal, combo-box, validation and others) require
-  `.usa-*` on the DOM, and `pathable-init.ts` adds `usa-js-loading`.
-  `@pathableai/react` still emits some `usa-*` classes.
-- **Brand defaults.** `src/_uswds-theme.scss` passes brand values into
-  `@use 'uswds-core' with (...)`. This already matches the target.
-- **Package shape.** Exports are `.` (`dist/styles.css`), `./components`,
-  `./utilities`, `./theme` (`theme-default.css`), `./js`, `./js/init`,
-  `./dist/*` and `./src/*`. There is no per-component compiled CSS; selective
-  use works only through the SCSS sources.
-- **Fixtures** (`fixtures/`): 26 folders in `folders.json`, covering the USWDS
-  static components from alert to text-input, with 116 HTML fragments.
-  They contain no `usa-` classes and are the target markup. The harness in
-  `fixtures/harness/` runs html-validate, a contract check against
-  `dist/styles.css`, and axe.
-- **Component pages.** The 26 pages in `components/<slug>.md` are the single
-  source. `scripts/component-docs/` renders them into the styles package, the
-  committed React agent guidance and Storybook.
-- **Trajectory.** [#593](https://github.com/PathableAI-org/styles/pull/593)
-  (ActivityList fixtures), then
-  [#597](https://github.com/PathableAI-org/styles/pull/597),
-  [#599](https://github.com/PathableAI-org/styles/pull/599) and
-  [#601](https://github.com/PathableAI-org/styles/pull/601) (component pages
-  from one source), then
-  [#607](https://github.com/PathableAI-org/styles/pull/607) (baseline pages and
-  fixtures for the USWDS static components, merged with Fixtures red on
-  purpose).
+### Consumer agent guidance
 
-## Known divergences
+The completed guidance will be human-readable Markdown in the same
+`@pathableai/styles` npm package as the CSS. It will tell agents in consuming
+repositories how to choose components by semantic intent, copy canonical
+markup, compose supported variants, preserve accessibility and report defects.
+Installing it with the package will tie it to that CSS version rather than the
+rolling website. Generated component Markdown already ships; the dedicated
+routing entry point and package-wide selection and bug-reporting guidance do
+not.
 
-| Area                        | Target                                                  | Today                                                                       | Where                                                                                      |
-| --------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Component selectors         | `pathable-*` only                                       | `.pathable-*` extends `.usa-*`; both are in the CSS                         | `packages/styles/src/pathable-component-wrappers/`                                         |
-| Class names fixtures expect | Every class in `fixtures/` exists in the CSS            | 98 contract problems, such as `.pathable-input--2xl` missing                | `fixtures/`, `dist/styles.css`                                                             |
-| Utilities and tokens        | USWDS names re-exported unchanged (`margin-top-2`)      | `pathable-margin-top-2` generated; no same-name utilities                   | `packages/styles/src/`                                                                     |
-| Custom properties           | One namespace consumers need                            | Dual `--pathable-*` and `--usa-*`                                           | `packages/styles/src/`                                                                     |
-| JavaScript and DOM          | No `usa-*` needed on the DOM                            | JS selects `.usa-*`; `pathable-init.ts` adds `usa-js-loading`               | `packages/styles/src/`, `patches/`                                                         |
-| React                       | Emits `pathable-*` only                                 | About 19 `.tsx` files still emit some `usa-*` classes                       | `packages/react/`                                                                          |
-| Entry points                | Whole bundle or single components as compiled CSS       | One bundle plus SCSS sources                                                | `packages/styles/package.json`                                                             |
-| Consumer setup              | Install the package, import CSS                         | README asks consumers to install `@uswds/uswds` and sass and `@use 'uswds'` | `packages/styles/README.md`                                                                |
-| Consumer docs               | Describe the target                                     | Describe dual-classing, `usa-` mapping, `--usa-*` alternatives              | `packages/styles/AGENTS.md`, `packages/styles/BRAND_RULES.md`, `packages/styles/README.md` |
-| Shipped agent guidance      | No `usa-*` classes or "USWDS JavaScript bundle" wording | `SKILL.md` mentions `usa-*` classes; `server-and-client.md` mentions USWDS  | `packages/react/agent-guidance/pathable-react/`                                            |
-| Component pages             | Describe the target and match the code                  | Describe the target; `check:component-pages` fails by design                | `components/`, `scripts/component-docs/`                                                   |
+This is **consumer agent guidance**. Repository-local `AGENTS.md`, engineering
+documents, skills and role instructions are **contributor agent guidance**.
+Agents must not use the ambiguous phrase "agent-facing docs" when the audience
+is not otherwise clear.
 
-## Expected CI state during the refactor
+## Shared sources
 
-CI is expected to be partly red while the target is captured in the published
-docs and fixtures. The owner's bar is that the published GitHub Pages site
-correctly describes the goal; while it does, these expected reds are
-acceptable:
+The outputs above derive from three owning sources:
 
-- the `Fixtures` workflow's contract step, and the axe step it causes to be
-  skipped;
-- the jobs and steps gated `if: false` (package lint and the component-page
-  checks in CI), except that the `stylelint` job runs again on changed SCSS
-  files, and the `Fixtures` job runs for the `alert`, `breadcrumb`, `button`, `button-group`, `card`, `tokens-*` and `utilities-*` folders only (the other
-  folders stay unchecked until the SCSS catches up);
-- `check:component-pages`, which fails by design when run locally.
+- [`components/`](../../components/README.md) holds the product specification
+  for each component, token family and utility family. A component page owns
+  purpose, variants, composition, guarantees and consumer responsibilities.
+- [`fixtures/`](../../fixtures/README.md) holds the canonical HTML snippets.
+  The same fixture is rendered in Storybook, embedded in human and consumer
+  documentation, checked against compiled CSS, and exercised by HTML and
+  accessibility tooling.
+- `packages/styles/src/` holds the SCSS and assets that produce the installed
+  CSS.
 
-Nothing else is excused. A new failure that a change introduces is not
-acceptable, and suppressing or loosening a check is never allowed.
+Generated outputs may add navigation or presentation for their audience, but
+they must not copy and independently maintain component semantics or example
+markup.
 
-What publishes to Pages:
-[`docs-deploy.yml`](../../.github/workflows/docs-deploy.yml) runs on every push
-to `main`. It builds the styles package, then the main Storybook (which holds
-the component pages), then the React Storybook, and uploads
-`apps/storybook/storybook-static` with the React Storybook copied to `/react`.
-The build job also runs the Storybook coverage check, the Storybook
-accessibility tests and the visual smoke tests, and the deploy job needs the
-build job. If one of those steps fails, nothing is deployed. The token lint
-step in that workflow is gated `if: false`.
+## Supported component scope
 
-State on `main` at `b643e6e`:
+The current catalog is the static set classified in
+[`components/README.md`](../../components/README.md#catalog-scope). "Static"
+means that the component's defining behavior does not require JavaScript from
+the design-system package. Native interactive HTML controls such as buttons,
+checkboxes and selects remain in scope.
 
-- The only red job is the `Fixtures` workflow
-  ([`fixtures.yml`](../../.github/workflows/fixtures.yml)), step
-  `Contract (selected folders)`: `26 folder(s) checked; 98 problem(s)`, for
-  example `.pathable-input--2xl is not a class selector in dist/styles.css`.
-  It is deterministic: the fixtures name target `pathable-*` classes the SCSS
-  does not have yet. The axe step after it is skipped, so it never runs.
-- The `html-validate (every fixture)` step and the `React fixture tests` job
-  passed on that run (Fixtures run 43, push of `b643e6e`).
-- `fixtures.yml` has no aggregate job, so GitHub's required checks (`CI result`
-  and `Storybook result`) do not include it. `pnpm merge:gate` is stricter: it
-  reads every check run on the head, so a red Fixtures run blocks agent merge
-  and a person has to merge; see
-  [Git workflow](git-workflow.md#the-merge-gate).
-- The package lint (ESLint, markdownlint, token lint, Prettier) and the
-  component-page checks are gated `if: false` in the workflows and skipped;
-  stylelint runs again on changed SCSS files.
-  `check:component-pages` fails by design when run locally.
-- `ci-full.yml` and `storybook-quality.yml` run on pull requests and on `workflow_dispatch`, not on pushes to `main`.
+Accordion, combo box, date picker, modal, tooltip and the other components
+whose defining behavior needs package JavaScript are outside the current
+catalog. Their existing source does not make them part of the target.
 
-What agents do:
+The design-token and utility documentation and fixture slices are in place.
+Current implementation work is bringing the documented static components into
+conformance with their pages and fixtures through small component slices.
+Alert, breadcrumb, button, button group and card are in place; the remaining catalog
+is still being completed.
 
-- Do not chase unrelated red checks, and do not "fix" the Fixtures contract job
-  by editing fixtures or pages back toward the SCSS.
-- Never suppress a check or loosen configuration to get green; the rules in
-  [`AGENTS.md`](../../AGENTS.md#no-check-suppressions) still apply.
-- Still run `pnpm lint` locally and fix every problem in the files you touched.
-- Report red checks in the pull request's Evidence or Validation section
-  honestly, and say which reds were already on `main` and which your change
-  introduced. A new red is a defect in your change.
+## USWDS deviation policy
+
+Begin with current USWDS markup and compiled styles, configure its supported
+theme settings for PathAble, and keep local deviations exceptional.
+
+A deviation is in scope only when it:
+
+- encodes an approved PathAble brand choice that USWDS configuration cannot
+  express adequately; or
+- corrects a demonstrated accessibility defect.
+
+Each deviation must be as narrow as practical, state its motivation, and have
+evidence in a fixture, story, automated check or documented visual review.
+General redesign, convenience divergence, application-specific behavior and
+new interaction behavior are outside the current refactor. A generally useful
+USWDS defect should be considered for an upstream report; a local workaround
+must still remain understandable and removable.
+
+## Retained but deferred areas
+
+Presence in the repository is not the same as active support scope. The
+following areas remain to avoid accidental breaking changes, but are not
+current refactor targets unless a task explicitly names them:
+
+| Area                                                      | Current instruction                                                                                                                                                              |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/react/`                                         | Do not expand, modernize or remove React components, APIs, stories or guidance as part of static styles work. Do not use React behavior to redefine a component page or fixture. |
+| React Storybook and the former `/react` Pages surface     | Retained but not currently built or deployed during the static styles refactor. Do not re-enable, expand or remove it without an explicitly scoped task.                         |
+| `packages/styles/src/js/` and the existing `./js` exports | Do not add JavaScript behavior, make a static component depend on it, modernize it opportunistically or delete it.                                                               |
+| JavaScript-dependent component wrappers                   | Do not bring them into the supported catalog or change their DOM contract during static component work.                                                                          |
+| Legacy PathAble-only components                           | Keep them unless a separate decision says to retain, move or remove one. They do not expand the USWDS static catalog.                                                            |
+
+A component-page or fixture change may make committed React guidance stale.
+When an existing check requires it, update only the generated output
+mechanically and describe it that way. If generation requires a semantic React
+decision, stop and ask rather than widening the styles task.
+
+Nothing in this document authorizes deletion of deferred code.
+
+## Hybrid state and defects
+
+The repository is intentionally hybrid while the CSS catches up:
+
+- the token, utility and static component pages describe the target contract;
+- fixtures contain target markup with no `usa-` classes;
+- parts of the compiled CSS still carry legacy selectors, custom properties or
+  wrapper behavior;
+- generated component Markdown already ships in `@pathableai/styles`, but the
+  dedicated styles consumer-guidance entry point and package-wide instructions
+  are not complete; and
+- contributor-oriented `packages/styles/AGENTS.md` is still included in the
+  npm package and must not be mistaken for the intended consumer guidance.
+
+For an in-scope static component, a difference between the component page or
+fixture and compiled CSS is a defect in the CSS. Do not change a fixture, page
+or documented class back toward legacy SCSS. Fix the implementation in the
+component's scoped work, or record the known gap without expanding the pull
+request.
+
+Existing drift in a deferred React, JavaScript or legacy component area is not
+an invitation to fix it. Do not introduce a new failure there, but keep a
+confirmed unrelated defect out of the current change and report it through the
+repository bug process.
+
+## Bug reporting target
+
+Consumer agents and contributor agents use the same defect vocabulary:
+
+- search for an existing issue first;
+- identify the released `@pathableai/styles` version or base SHA;
+- identify the component slug, or a non-component area such as tokens,
+  utilities, packaging or documentation;
+- state observed and expected behavior, reproduction steps and the broken
+  component-page guarantee when one exists;
+- name the relevant WCAG criterion for an accessibility defect; and
+- use synthetic content and include no credentials or sensitive data.
+
+A styles defect carries `bug` and `package:styles`. A component defect also
+identifies the affected component so repository triage can apply a component
+label. The exact label names and automation, and how an installed third-party
+agent submits when it lacks GitHub authority, remain follow-up product work;
+agents must not invent those mechanisms independently.
 
 ## Order of work
 
-1. **Docs and fixtures describe the target.** The baseline is in place: the 26
-   component pages in [`components/`](../../components/README.md) and the
-   [`fixtures/`](../../fixtures/README.md) already describe the target (#607),
-   and refinement continues. The internal agent docs are updated with this
-   document. Next: the consumer-facing docs that still describe the old `usa-`
-   model, namely
-   [`packages/styles/README.md`](../../packages/styles/README.md),
-   [`packages/styles/BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) and
-   [`packages/react/agent-guidance/`](../../packages/react/agent-guidance/pathable-react/)
-   (`SKILL.md` and `references/server-and-client.md`), plus the documentation of
-   utilities and tokens under their unprefixed names.
-2. **SCSS and the build catch up.** Rename selectors to `pathable-*`, re-export
-   unprefixed tokens and utilities, add per-component compiled CSS, and remove
-   `usa-*` from React. Delete code the thin wrapper makes unnecessary.
-3. **Restore the gates.** Re-enable the checks gated `if: false`, make the
-   fixtures contract and axe checks merge-gating, and retire the temporary notes
-   in the workflow docs and `README.md`.
+1. **Keep shared sources authoritative.** Maintain the token, utility and
+   static component pages and fixtures as the target. Generate human and
+   installed documentation from them rather than copying content.
+2. **Bring static component CSS into conformance.** Work in small component
+   slices. Rename and implement only the selectors, variants and behavior the
+   page and fixtures require, with narrow brand or accessibility deviations.
+3. **Complete styles consumer guidance.** Add a clear installed entry point,
+   semantic component-selection guidance and the shared bug-reporting
+   instructions to `@pathableai/styles`. Do not use React guidance as its
+   substitute.
+4. **Restore and tighten gates as implementation catches up.** Make fixture,
+   accessibility, package-content and documentation-drift checks protect the
+   supported contract, then retire transitional allowances.
 
-## Open questions
+## Open decisions
 
-Recorded for the owner. Do not decide them in a pull request.
+These decisions belong to the maintainer and must not be made incidentally in
+a component pull request:
 
-- What happens to the custom components with no USWDS counterpart (activity
-  list, app shell, bento grid, toast, wizard and others) under a "thin wrapper"
-  model: keep, move or remove?
-- Can the JavaScript drop its `.usa-*` DOM requirements? That means renaming
-  selectors in the USWDS Sass and JavaScript, not only in the patch.
-- What shape does the per-component compiled CSS entry point take?
-- Open questions from [#607](https://github.com/PathableAI-org/styles/pull/607):
-  where the checkbox and radio tile modifiers go, the nested alert in
-  site-alert, alert tints, `--back` and `--submit` buttons only inside
-  `pathable-wizard__actions`, the `pathable-card--media` alias, and
-  `pathable-link--nav` having no CSS.
+- the final installed path and routing entry point for styles consumer agent
+  guidance;
+- whether and how GitHub issue automation applies component and area labels;
+- whether GitHub Pages becomes versioned or continues as a clearly identified
+  rolling build;
+- the eventual disposition of React, styles JavaScript, JavaScript-dependent
+  wrappers and PathAble-only legacy components; and
+- any future compiled-CSS entry points beyond the package's current bundle
+  shape.

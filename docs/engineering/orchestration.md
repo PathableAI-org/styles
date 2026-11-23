@@ -198,6 +198,14 @@ on that pull request. A defect is unrelated when the base branch already has
 it and the current change neither causes it nor touches the code or story
 that shows it.
 
+Use the shared [bug template](../../.github/ISSUE_TEMPLATE/bug.md). Consumer
+agents using an installed package and contributor agents working here should
+produce the same evidence: package version or base SHA, component slug or
+non-component area, observed and expected behavior, reproduction, and the
+broken component-page guarantee when one exists. An external consumer agent
+files only when its environment and person authorize GitHub writes; otherwise
+it prepares the completed report for the person.
+
 1. **Confirm it.** Reproduce it at the base SHA or on `main`: a story, a
    command, or a measurement. Drop anything that cannot be reproduced.
 2. **Look for an existing issue.**
@@ -206,8 +214,12 @@ that shows it.
 3. **File it** with `gh api repos/{owner}/{repo}/issues -f title=… -f body=…`
    and the `bug` label plus one package label, `package:styles` or
    `package:react`, for the package the defect is in. A defect in both
-   packages is two issues, one per package, each linking the other. The title is a plain sentence naming the component
-   and the defect. The body gives:
+   packages is two issues, one per package, each linking the other. For a
+   component defect, name its component-page slug in the template and apply
+   the repository's component label when one exists; do not invent a label.
+   Use `tokens`, `utilities`, `packaging` or `documentation` for a styles
+   defect that has no component. The title is a plain sentence naming the
+   component or area and the defect. The body gives:
    - **Observed** and **expected**, with the story ID, viewport and condition,
      or the file and line
    - **How to reproduce**, and the SHA it was seen on
@@ -220,9 +232,12 @@ that shows it.
    summary, by issue number. The lead never adds the defect to the current
    pull request's scope.
 
-Filing a bug issue is the one GitHub write every role may make beyond its
-records. It needs no person's approval, because an issue changes no code.
-Use only synthetic content in it, as in the stories.
+Filing a bug issue is the one GitHub write every repository contributor role in
+this orchestration may make beyond its records. It needs no additional
+approval, because an issue changes no code. This permission does not extend to
+an agent operating from an installed package in another repository; that agent
+follows its environment's and person's authority. Use only synthetic content
+in the issue, as in the stories.
 
 ## Concurrency
 

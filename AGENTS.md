@@ -1,36 +1,63 @@
 # Agent Instructions
 
-This repository is the PathAble design system: the `@pathableai/styles` CSS
-package, the `@pathableai/react` component package, and a Storybook for each.
-See [README.md](README.md) for setup and commands.
+This repository is the PathAble design system. Current delivery work centers
+on the `@pathableai/styles` CSS package, its human product documentation and
+the consumer agent guidance that ships with it and is being completed. The existing
+`@pathableai/react` package and React Storybook remain in the repository but
+are not current refactor targets. See [README.md](README.md) for setup and
+commands.
 
 This file is a routing table. Read the owning document for the task in front of
 you, and only when it is relevant; do not load every document up front. When an
 owning document and this file disagree, the owning document wins for its topic,
 and the constitution wins over both.
 
-## Current refactor: `@pathableai/styles` is becoming a thin USWDS wrapper
+## Current refactor: three `@pathableai/styles` deliverables
 
-The styles package is being refactored into a thin wrapper around USWDS that
-exposes `pathable-` names (no `usa-` in the public contract), re-exports
-unprefixed USWDS tokens and utilities under the same names, and ships compiled
-CSS. The component pages (`components/`) and `fixtures/` already describe that
-target, so a difference between them and the code is a defect in the code:
-never change them back to match today's SCSS. The consumer docs
-(`packages/styles/README.md`, `BRAND_RULES.md` and the React agent guidance)
-still describe the old `usa-` model and are the next work. CI is expected to be partly red while the code catches up.
-Read [`docs/engineering/target-state.md`](docs/engineering/target-state.md)
-before changing the styles package, its fixtures or component pages. Where
-`packages/styles/AGENTS.md` or `BRAND_RULES.md` describe `usa-` dual-classing,
-they describe the code being replaced, and `target-state.md` wins for the
-direction of the package (the constitution still wins overall).
+The active refactor produces three things:
+
+1. **Human product documentation** in the styles Storybook published at
+   `https://pathableai-org.github.io/styles/`.
+2. **Compiled CSS** in the `@pathableai/styles` npm package: a thin,
+   PathAble-branded wrapper around the static portion of USWDS.
+3. **Consumer agent guidance** in that same npm package, so its prose and
+   examples match the installed CSS version.
+
+Do not call both kinds of agent documentation "agent-facing docs."
+**Contributor agent guidance** is the repository-local `AGENTS.md`, engineering
+documentation, skills and role instructions used to change this repository.
+**Consumer agent guidance** is auditable Markdown for agents using the
+installed package.
+
+The component pages in `components/` are the shared product specifications and
+the HTML in `fixtures/` is the canonical example markup. The fixtures feed the
+human documentation, the installed component pages and the accessibility and
+CSS-contract checks. A difference between those sources and an in-scope static
+component's CSS is a defect in the CSS; never change the page or fixture back
+to match legacy SCSS.
+
+The current catalog is limited to components whose defining behavior needs no
+design-system JavaScript. `packages/react/`, the React Storybook and consumer
+guidance, `packages/styles/src/js/`, and the existing `./js` exports are
+**retained but deferred**. Unless a task explicitly puts one in scope, do not
+modernize, expand or remove it, and do not use its current behavior to redefine
+the styles target. A shared-source change may still require a mechanical
+generated React-guidance update or an existing check to pass; that does not
+make React behavior part of the change.
+
+Read [`docs/engineering/intent.md`](docs/engineering/intent.md) for the product
+model and [`docs/engineering/target-state.md`](docs/engineering/target-state.md)
+before changing the styles package, its fixtures or component pages. Where a
+package document describes `usa-` dual-classing or JavaScript-powered
+components, it describes retained implementation, not the current direction
+of the package (the constitution still wins overall).
 
 ## Where the rules live
 
 | When you are…                                                                                                                                                      | Read                                                                                                                                                  |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Making any architectural, packaging, release or quality-gate decision                                                                                              | [`.specify/memory/constitution.md`](.specify/memory/constitution.md)                                                                                  |
-| Changing the direction of `@pathableai/styles`, or judging a red check, a fixture or a doc against the refactor                                                    | [`docs/engineering/target-state.md`](docs/engineering/target-state.md)                                                                                |
+| Changing the direction of `@pathableai/styles`, or judging a fixture or doc against the refactor                                                                   | [`docs/engineering/target-state.md`](docs/engineering/target-state.md)                                                                                |
 | Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/intent.md`](docs/engineering/intent.md)                                                                                            |
 | Choosing a risk tier, branching, opening or merging a pull request                                                                                                 | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                |
 | Leading a delivery issue through specification, plan, implementation and its review and verification subagents, or choosing a role's model and effort              | [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md) and the `orchestrate-stack` skill                                            |
@@ -39,6 +66,7 @@ direction of the package (the constitution still wins overall).
 | Reviewing what a pushed revision renders as the `visual-reviewer` subagent                                                                                         | [`docs/engineering/visual-review.md`](docs/engineering/visual-review.md) and the `visual-reviewer` skill                                              |
 | Running a drift review of one area of the design system                                                                                                            | [`docs/engineering/drift-review.md`](docs/engineering/drift-review.md) and the `drift-review` skill                                                   |
 | Filing a delivery issue or writing a pull request body                                                                                                             | [`.github/ISSUE_TEMPLATE/delivery.md`](.github/ISSUE_TEMPLATE/delivery.md) and [`.github/pull_request_template.md`](.github/pull_request_template.md) |
+| Filing a confirmed defect                                                                                                                                          | [`.github/ISSUE_TEMPLATE/bug.md`](.github/ISSUE_TEMPLATE/bug.md) and [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md)         |
 | Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                       |
 | Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                            |
 | Writing or changing HTML fixtures in `fixtures/`                                                                                                                   | [`fixtures/README.md`](fixtures/README.md)                                                                                                            |

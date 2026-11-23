@@ -2,14 +2,39 @@
 
 Use these rules when creating or editing PathAble UI, documentation, prototypes, design tokens, CSS, SCSS, or visual assets.
 
+> **Contributor guidance.** This file tells agents how to change this
+> repository. It is not the intended consumer agent guidance for an installed
+> `@pathableai/styles` version, even though the current package manifest still
+> includes it. Consumer component guidance is auditable Markdown generated
+> from the component pages and fixtures and shipped with the CSS; package-wide
+> routing, selection and bug-reporting guidance also belongs in the installed
+> package but is not generated from individual component pages. See
+> [`docs/engineering/intent.md`](../../docs/engineering/intent.md).
+>
 > **Refactor in progress.** `@pathableai/styles` is becoming a thin wrapper
-> around USWDS that exposes `pathable-` names only, with unprefixed USWDS
-> tokens and utilities re-exported under the same names. See
+> around the static portion of USWDS. It exposes `pathable-` component names,
+> re-exports unprefixed USWDS tokens and utilities under the same names, and
+> applies PathAble brand settings. See
 > [`docs/engineering/target-state.md`](../../docs/engineering/target-state.md),
 > which wins for the direction of the package. Sections below marked "current
 > implementation, being replaced" describe today's code, including `usa-`
 > dual-classing; follow them to work on that code, but do not copy the pattern
 > into new docs or fixtures.
+>
+> **Active scope.** Work only on the documented static catalog, its component
+> pages and fixtures, tokens and utilities, and the compiled CSS unless the task
+> explicitly says otherwise. `packages/react/`, `src/js/`, the existing `./js`
+> exports, JavaScript-dependent wrappers and legacy PathAble-only components
+> are retained but deferred. Do not modernize, expand or remove them as cleanup,
+> and do not make a static component depend on package JavaScript. Existing
+> generated-output checks may still require a mechanical React-guidance update;
+> stop and ask if that would require a semantic React decision.
+>
+> Begin with USWDS markup and styles. A local deviation must be narrow and
+> motivated by either an approved PathAble brand choice that configuration
+> cannot express or a demonstrated accessibility defect, with fixture, story,
+> automated or visual evidence. General redesign and convenience divergence are
+> outside the current refactor.
 
 ## Required Source Of Truth
 
@@ -301,7 +326,12 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 
 ## USWDS Component Wrappers Usage
 
-> Current implementation, being replaced: the target is `pathable-*` selectors with no `@extend .usa-*`, and no `.usa-*` class on the DOM, including on JS-driven components and the Modal shell. See [target state](../../docs/engineering/target-state.md).
+> Current implementation, being replaced for the supported static catalog:
+> the target is `pathable-*` selectors with no `@extend .usa-*` and no
+> `.usa-*` class in canonical fixture markup. The JS-driven instructions below
+> describe retained, deferred code. They are not a request to modernize its DOM
+> contract or bring it into the current catalog. See
+> [target state](../../docs/engineering/target-state.md).
 
 This package provides `.pathable-{component}` CSS class wrappers for all USWDS components, organized into a package system. Each `.pathable-{component}` class resolves to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`.
 
