@@ -145,6 +145,8 @@ The heading is set in the brand heading typeface, Fredoka, at weight 400
   `alt=""` when the heading already names the item. Make each heading link's
   text unique within the list, so a list of links is not a list of "Read
   more". Label every metadata list with `aria-label`.
+- Roles and names for the list: give the outer `<ul>` `role="list"` and a name,
+  with `aria-label` or with `aria-labelledby` pointing at a visible heading.
 - Thumbnails of one shape. Give every thumbnail in a list the same width and
   aspect ratio, or none at all, so the items line up.
 - The destination. Add `pathable-link--external` to a heading link that leaves

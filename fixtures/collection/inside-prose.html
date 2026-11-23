@@ -1,8 +1,14 @@
 <!-- description: A default collection with tagged meta items and a condensed collection, each placed directly inside pathable-prose. Each keeps its own item, condensed and meta-item spacing, and renders the same as one outside it. -->
 <section class="pathable-prose">
-  <h2>Guides for your first month</h2>
+  <h2 id="collection-inside-prose-guides-heading">
+    Guides for your first month
+  </h2>
   <p>Read these before your first day, then keep them to hand.</p>
-  <ul class="pathable-collection">
+  <ul
+    role="list"
+    aria-labelledby="collection-inside-prose-guides-heading"
+    class="pathable-collection"
+  >
     <li class="pathable-collection__item">
       <div class="pathable-collection__body">
         <h3 class="pathable-collection__heading">
@@ -56,8 +62,12 @@
       </div>
     </li>
   </ul>
-  <h2>Recent updates</h2>
-  <ul class="pathable-collection pathable-collection--condensed">
+  <h2 id="collection-inside-prose-updates-heading">Recent updates</h2>
+  <ul
+    role="list"
+    aria-labelledby="collection-inside-prose-updates-heading"
+    class="pathable-collection pathable-collection--condensed"
+  >
     <li class="pathable-collection__item">
       <div class="pathable-collection__body">
         <h3 class="pathable-collection__heading">
