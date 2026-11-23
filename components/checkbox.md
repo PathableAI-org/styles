@@ -19,7 +19,7 @@ guarantees:
   - id: disabled
     claim: A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white box with a 2 px #757575 outline, and a checked or indeterminate one fills the box #757575.
   - id: focus-ring
-    claim: When the input has focus, the box shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it, except on a focused tile input that is checked or indeterminate and not disabled, where the outline is #00365c so it keeps 3:1 against the tile tint.
+    claim: When the input has focus, the box shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it, except on a focused tile input that is checked or indeterminate and does not have aria-disabled="true", where the outline is #00365c so it keeps 3:1 against the tile tint (an input with the disabled attribute cannot take focus).
   - id: root-block
     claim: The root is display block, so each checkbox starts on its own line, unless the element is a bare input or has the hidden attribute.
   - id: description
