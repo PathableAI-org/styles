@@ -57,24 +57,29 @@
   @extend .usa-collection__meta-item;
 }
 
+// Inside .pathable-prose, `.pathable-prose > ul li` is more specific than the
+// rule that gives a meta item no bottom margin and no maximum width, so every
+// meta item but the last would gain both there. Keep them as they are outside
+// prose.
+.pathable-prose .pathable-collection__meta > li {
+  margin-bottom: 0;
+  max-width: unset;
+}
+
 .pathable-collection__img {
   @extend .usa-collection__img;
 }
 
-// USWDS styles a meta item that is also a tag with a compound selector on
-// .usa-tag. Extending the meta item leaves .pathable-tag out of it, so the
-// same declarations are written here for the pathable-tag compound.
+// The collection page draws a meta item that is also a tag as a PathAble tag,
+// with the meta-item margins. pathable-tag supplies the colour, padding, type
+// and radius; this rule keeps only the margins the two pages need together,
+// and stops the tag stretching as the block a meta item is. The tag's own
+// :only-of-type rule clears the right margin, so restore it.
 .pathable-collection__meta-item.pathable-tag {
-  @include u-bg('base-lighter');
-  @include u-line-height('ui', 1);
-  @include u-padding-y(0.5);
-  @include u-text('ink');
   display: inline-block;
   margin-right: units(1);
   margin-top: units(0.5);
 
-  // .pathable-tag:only-of-type clears the right margin with the same
-  // specificity and a later source position.
   &:only-of-type {
     margin-right: units(1);
   }
