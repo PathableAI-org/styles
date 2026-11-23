@@ -297,6 +297,10 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
       }
 
       .pathable-card__img {
+        // The image box fills the column (or the inset content box) whatever
+        // the image's ratio, and the image is cropped to cover it.
+        flex: 1 1 100%;
+        min-width: 0;
         border-radius: 0;
         border-top-left-radius: $-card-inner-radius;
         border-bottom-left-radius: $-card-inner-radius;

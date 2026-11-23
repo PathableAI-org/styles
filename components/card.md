@@ -34,7 +34,7 @@ guarantees:
   - id: header-first
     claim: With the header-first modifier the header stays above the media, the media's top corners stay square, and the header and body each have 1rem of padding towards the media.
   - id: inset-media
-    claim: An inset media box has 1.5rem of padding above and on both sides, and the image box inside it has square corners.
+    claim: Where the media is not a 15rem column, an inset media box has 1.5rem of padding above and on both sides; in the flag column layout it has 1.5rem above and below and on the outer side, and none beside the text. The image box inside it has square corners.
   - id: exdent-media
     claim: The exdent media modifier gives the media a negative 2 px margin on its left, right and top, so it covers the container border, which makes the image 4 px wider than the container's content box.
   - id: exdent-parts
