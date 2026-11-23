@@ -144,8 +144,9 @@ the default theme.
   40em viewport.
 - From a 40em viewport, a flag card whose width comes from its content, such
   as one with `width-auto` or in a shrink-to-fit parent, is 30rem wide, or the
-  viewport width if that is less. A width or max-width class still sets another
-  width.
+  viewport width if that is less. As a flex or grid item it shrinks to the space
+  available and stacks below 30rem. A width or max-width class still sets
+  another width.
 - From a 40em viewport, a flag card is an unnamed inline-size query container.
   Container queries and `cqi` or `cqw` units written inside it resolve against
   the card.

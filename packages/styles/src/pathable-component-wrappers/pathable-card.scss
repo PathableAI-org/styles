@@ -106,6 +106,13 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   --pathable-surface-focus-ring: initial;
 }
 
+// What the USWDS mixin also does: everything inside the container inherits the
+// border-box sizing (the media column's 15rem includes its inset padding, for
+// one). At no specificity, so any rule that sets its own box-sizing wins.
+:where(.pathable-card__container) :where(*, *::before, *::after) {
+  box-sizing: inherit;
+}
+
 .pathable-card__header {
   @extend .usa-card__header;
 }
