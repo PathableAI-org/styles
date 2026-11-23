@@ -79,14 +79,18 @@
 
 // A deliberate deviation from USWDS, which draws .usa-collection__meta-item.usa-tag
 // as ink on base-lighter. The Collection and Tag pages draw it as a PathAble
-// tag: pathable-tag supplies the colour, padding, type, radius and trailing
-// margin (including the :only-of-type reset). That margin wins over the
-// meta-item right margin only because pathable-tag is forwarded after
-// pathable-collection in pathable-communication.scss, at equal specificity.
-// The meta-item top margin stays; this rule stops the tag stretching as the
-// block a meta item is.
+// tag: pathable-tag supplies the colour, padding, type and radius. The rule
+// restates the tag's trailing margin (and its :only-of-type reset), so it beats
+// the meta-item right margin on specificity in any order a consumer forwards
+// the wrappers. The meta-item top margin stays; this rule also stops the tag
+// stretching as the block a meta item is.
 .pathable-collection__meta-item.pathable-tag {
   display: inline-block;
+  margin-right: units(0.5);
+
+  &:only-of-type {
+    margin-right: 0;
+  }
 }
 
 .pathable-collection__calendar-date {
