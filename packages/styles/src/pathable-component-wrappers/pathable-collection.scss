@@ -41,8 +41,13 @@
   font-weight: var(--pathable-font-weight-normal);
 }
 
+// Accessibility deviation from USWDS: at enlarged text on a narrow viewport the
+// body, a flex item, would not shrink below its longest word and the page would
+// scroll sideways. Let it shrink and break long words, so text reflows.
 .pathable-collection__body {
   @extend .usa-collection__body;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .pathable-collection__description {
@@ -70,19 +75,13 @@
   @extend .usa-collection__img;
 }
 
-// The collection page draws a meta item that is also a tag as a PathAble tag,
-// with the meta-item margins. pathable-tag supplies the colour, padding, type
-// and radius; this rule keeps only the margins the two pages need together,
-// and stops the tag stretching as the block a meta item is. The tag's own
-// :only-of-type rule clears the right margin, so restore it.
+// A meta item that is also a tag is drawn by pathable-tag: colour, padding,
+// type, radius and its trailing margin (including the :only-of-type reset).
+// This rule only keeps the meta-item top margin and stops the tag stretching
+// as the block a meta item is.
 .pathable-collection__meta-item.pathable-tag {
   display: inline-block;
-  margin-right: units(1);
   margin-top: units(0.5);
-
-  &:only-of-type {
-    margin-right: units(1);
-  }
 }
 
 .pathable-collection__calendar-date {

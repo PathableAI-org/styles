@@ -30,7 +30,7 @@ guarantees:
   - id: description
     claim: The description has 0.5rem of margin above and below it.
   - id: meta-item
-    claim: Each meta item is a block with a 0.25rem top margin and a 0.5rem right margin, in a smaller type size than the description. A meta item that also has the pathable-tag class is drawn as a tag.
+    claim: Each meta item is a block with a 0.25rem top margin and a 0.5rem right margin, in a smaller type size than the description. A meta item that also has the pathable-tag class is drawn as a tag, with the tag's right margin in place of the 0.5rem.
   - id: calendar-date
     claim: The calendar date block is the width of the thumbnail with the same 1rem right margin, the month is a bold centred label in white on the primary colour with rounded top corners, and the day is a bold centred number in the primary colour inside a 1px primary border with rounded bottom corners.
 ---
