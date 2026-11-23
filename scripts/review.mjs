@@ -50,7 +50,7 @@ const record = () => {
   if (!outcome.ok) return failed('Review not recorded:', outcome.problems)
   const review = outcome.value
   process.stdout.write(
-    `Recorded review ${review.reviewId} for slice ${review.sliceId} on ${review.reviewedSha} in ${ref}.\n` +
+    `Recorded review ${review.reviewId} for this pull request on ${review.reviewedSha} in ${ref}.\n` +
       `Pointer for the implementation session: ${ref} @ ${review.reviewedSha} (review ${review.reviewId}).\n` +
       blockingSummary(review),
   )

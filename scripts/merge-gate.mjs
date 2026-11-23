@@ -1,8 +1,8 @@
 /**
  * The merge gate for agent merge: whether a pull request is eligible for an agent to merge it, and whether it is ready
  * to merge now. It reads the pull request, its files, reviews, checks and statuses through REST, syncs its note
- * comments, and judges the latest code review, visual review and, for an implementation slice, the verification gate
- * at the head. See docs/engineering/git-workflow.md#agent-merge and docs/engineering/visual-review.md.
+ * comments, and judges the latest code review and visual review at the head.
+ * See docs/engineering/git-workflow.md#agent-merge and docs/engineering/visual-review.md.
  */
 import { execFileSync } from 'node:child_process'
 
@@ -14,11 +14,6 @@ import {
   reviewProblems,
 } from './review-findings.mjs'
 import { isFixSlice, isRecord } from './schema-checks.mjs'
-import {
-  isImplementationBranch,
-  isPhaseBranch,
-  runGate,
-} from './verification.mjs'
 import {
   defaultVisualNotesRef,
   nearestVisualReview,
@@ -77,7 +72,6 @@ export const guardrailPaths = [
   'scripts/github-access.mjs',
   'scripts/cli.mjs',
   'package.json',
-  '.specify/memory/constitution.md',
   '**/AGENTS.md',
   'CLAUDE.md',
   'docs/engineering/',
@@ -384,7 +378,6 @@ export const changesRequestedBy = (reviews) => {
  * @typedef {object} EligibilityFacts
  * @property {readonly string[]} escalations Open escalations in the latest code and visual reviews, one line each.
  * @property {readonly string[]} files Every path the pull request changes, renamed-from paths included.
- * @property {boolean} phaseBranch Whether the head branch is a Spec Kit specification or plan branch.
  * @property {GatePull} pull
  * @property {readonly PullReview[]} reviews The pull request's GitHub reviews, oldest first.
  */
@@ -406,11 +399,6 @@ export const mergeEligibility = (facts) => {
       : []),
     ...(risk.length > 1
       ? [`it has more than one risk label (${risk.join(', ')})`]
-      : []),
-    ...(facts.phaseBranch
-      ? [
-          `${pull.headRef} is a Spec Kit specification or plan branch, which a person approves`,
-        ]
       : []),
     ...(guardrails.length > 0
       ? [`it changes guardrail files: ${guardrails.join(', ')}`]
@@ -459,18 +447,8 @@ const coverageProblems = (cwd, label, reviewedSha, head, mainRef) => {
     : [`${label} does not cover the head: ${coverage.how}`]
 }
 
-/** The code review half: the verification gate for a slice, else the nearest fix review covering the head. */
+/** The code review half of the merge gate. */
 const codeReviewProblems = (cwd, pull, mainRef) => {
-  if (isImplementationBranch(pull.headRef)) {
-    const gate = runGate(cwd, {
-      branch: pull.headRef,
-      head: pull.headSha,
-      labels: pull.labels,
-    })
-    return gate.ok
-      ? []
-      : gate.problems.map((problem) => `verification gate: ${problem}`)
-  }
   const review = nearestReview(cwd, defaultNotesRef, pull.headSha)
   if (!review.ok)
     return review.problems.map((problem) => `code review: ${problem}`)
@@ -635,7 +613,6 @@ export const runMergeGate = (
   const restIneligible = mergeEligibility({
     escalations: [],
     files,
-    phaseBranch: false,
     pull,
     reviews,
   })
@@ -652,10 +629,6 @@ export const runMergeGate = (
   const ineligible = mergeEligibility({
     escalations: openEscalations(cwd, pull.headSha),
     files,
-    phaseBranch: isPhaseBranch(cwd, {
-      branch: pull.headRef,
-      head: pull.headSha,
-    }),
     pull,
     reviews,
   })

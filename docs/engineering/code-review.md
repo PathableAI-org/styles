@@ -1,8 +1,8 @@
 # Code review
 
 This document describes the reviewer session: an agent that reviews each
-pushed implementation slice for correctness reasoning, the constitution's
-design-system rules, and maintainability, with a clean context. It owns the
+pushed pull request for correctness reasoning, the design-system's owning
+rules, and maintainability, with a clean context. It owns the
 reviewer's scope, its findings and where they are stored, the review loop, and
 the advisory pre-push self-review.
 [The verification harness](verification-harness.md) owns the other sessions
@@ -21,11 +21,9 @@ approval; the [visual review](visual-review.md) is the other.
 
 ## When a reviewer runs
 
-The reviewer runs on every implementation slice of High new behaviour and of
-specified Standard work, on a High fix's single pull request, and on every
-other Standard and Light pull request, as
-[process by tier](git-workflow.md#process-by-tier) defines them. Single
-pull requests use slice ID `fix` and may omit the feature directory. The
+The reviewer runs on every High, Standard and Light pull request, as
+[process by tier](git-workflow.md#process-by-tier) defines them. Reviews use
+slice ID `fix` and omit the feature directory. The
 advisory [pre-push self-review](#pre-push-self-review) runs at every tier and
 is not a code review subagent.
 
@@ -37,15 +35,13 @@ findings.
 
 The reviewer starts with a clean context. It reads only:
 
-- the request: branch, pushed SHA, base SHA, slice ID, feature directory and
+- the request: branch, pushed SHA, base SHA, slice ID `fix`, pull request and
   round, plus for a repeat round the previous review ID and the implementation
   session's answer to each open finding
 - the diff from the base SHA to the pushed SHA, and the files it touches at
   the pushed SHA
-- the feature's approved `spec.md`, `verification.md`, `plan.md` and
-  `contracts/` at the pushed SHA
-- [AGENTS.md](../../AGENTS.md), the
-  [constitution](../../.specify/memory/constitution.md), and the owning
+- the linked delivery issue and pull request body
+- [AGENTS.md](../../AGENTS.md) and the owning
   documents for the code the diff changes, as the routing table names them:
   for example [`packages/styles/AGENTS.md`](../../packages/styles/AGENTS.md)
   and [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for styles,
@@ -60,24 +56,25 @@ worktree or with `git show` and `git diff` on the SHAs.
 ## Scope
 
 The reviewer owns what tools cannot check. The design-system lenses come from
-the constitution; the general ones are the same as in Pre-ETS.
+the current owning documents routed by `AGENTS.md`; the general ones are the
+same as in Pre-ETS.
 
-| Category              | What it looks for                                                                                                                                                                              |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `source-first`        | A wrapper exposing visual behaviour, a variant or a prop before the `packages/styles` class, token or pattern it maps to exists (principles I and IV, Wrapper Package Contract)                |
-| `wrapper-styling`     | Private CSS, inline styles or style objects in a wrapper that change visual semantics outside the `@pathableai/styles` contract                                                                |
-| `naming-parity`       | A React component whose name is not the CamelCase form of the styles component name without its `pathable` prefix                                                                              |
-| `token-usage`         | A raw color, size, spacing, radius or elevation value where a semantic token exists, or a Sass variable without its published custom property (principles III and VIII)                        |
-| `story-contract`      | A new or changed supported state without a deterministic named story, a Playground standing in for one, or a story with randomness, dates or invented props (principle XIV)                    |
-| `accessibility`       | Keyboard, focus placement and restoration, accessible names, ARIA state, or a narrow-exception rule that hides a real violation (principles X and XV)                                          |
-| `guidance-drift`      | A public API change the consumer agent guidance should describe but does not, or guidance that now contradicts the code                                                                        |
-| `ownership`           | Code in the wrong package or layer: framework code in `@pathableai/styles`, a styles concern defined in React, or a consumer asked to import `@pathableai/styles` itself (principles V and XI) |
-| `correctness`         | Races, error and edge paths, state transitions, event-listener and timer cleanup, and assumptions the code does not check                                                                      |
-| `duplication`         | A helper, token, constant or type that repeats one the package, or the package it wraps, already has                                                                                           |
-| `readability`         | Names that mislead, abstractions that do not fit the problem, and code a maintainer would misread                                                                                              |
-| `complexity`          | Indirection, configuration or generality the slice does not need                                                                                                                               |
-| `test-meaningfulness` | Play functions or tests that would still pass if the behaviour they name broke, judged by [Component testing](../testing/README.md)                                                            |
-| `contract-drift`      | Classes, props, exports or behaviour that differ from `plan.md` and `contracts/` without an approved correction                                                                                |
+| Category              | What it looks for                                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `source-first`        | A wrapper exposing visual behaviour, a variant or a prop before the `packages/styles` class, token or pattern it maps to exists                                          |
+| `wrapper-styling`     | Private CSS, inline styles or style objects in a wrapper that change visual semantics outside the `@pathableai/styles` contract                                          |
+| `naming-parity`       | A React component whose name is not the CamelCase form of the styles component name without its `pathable` prefix                                                        |
+| `token-usage`         | A raw color, size, spacing, radius or elevation value where a semantic token exists, or a Sass variable without its published custom property                            |
+| `story-contract`      | A new or changed supported state without a deterministic named story, a Playground standing in for one, or a story with randomness, dates or invented props              |
+| `accessibility`       | Keyboard, focus placement and restoration, accessible names, ARIA state, or a narrow-exception rule that hides a real violation                                          |
+| `guidance-drift`      | A public API change the consumer agent guidance should describe but does not, or guidance that now contradicts the code                                                  |
+| `ownership`           | Code in the wrong package or layer: framework code in `@pathableai/styles`, a styles concern defined in React, or a consumer asked to import `@pathableai/styles` itself |
+| `correctness`         | Races, error and edge paths, state transitions, event-listener and timer cleanup, and assumptions the code does not check                                                |
+| `duplication`         | A helper, token, constant or type that repeats one the package, or the package it wraps, already has                                                                     |
+| `readability`         | Names that mislead, abstractions that do not fit the problem, and code a maintainer would misread                                                                        |
+| `complexity`          | Indirection, configuration or generality the slice does not need                                                                                                         |
+| `test-meaningfulness` | Play functions or tests that would still pass if the behaviour they name broke, judged by [Component testing](../testing/README.md)                                      |
+| `contract-drift`      | Classes, props, exports or behaviour that differ from the delivery issue, pull request or current owning documentation without an approved correction                    |
 
 It does not repeat lint, stylelint, token-lint, typecheck or test-runner
 findings, and does not re-verify claims; those belong to the checks and the
@@ -96,7 +93,7 @@ finding still open, the findings this round closes, and any escalations. Each
 finding has:
 
 - `severity`: `blocking` when it would let the slice merge with a defect, a
-  constitution violation, a story or test that cannot fail, or unapproved
+  ownership or accessibility violation, a story or test that cannot fail, or unapproved
   contract drift; otherwise `advisory`
 - `category` from the table above
 - `file` and `line` at the reviewed SHA
@@ -217,7 +214,7 @@ slice ID `fix`), or a change after the reviewed SHA that is not evidence-only.
 Escalate to a person, through the lead session, instead of
 continuing the loop when:
 
-- a finding belongs to the specification or plan under the
+- a finding belongs to the accepted delivery issue under the
   [corrections table](git-workflow.md#corrections)
 - the reviewer does not accept a justification, and the implementation
   session does not accept the finding
@@ -227,8 +224,8 @@ continuing the loop when:
 
 ## Boundaries
 
-The reviewer is read-only. It edits no branch, pull request, issue or `specs/`
-file, and does not fix the code or write patches. It names the defect, where
+The reviewer is read-only. It edits no branch, pull request or issue, and does
+not fix the code or write patches. It names the defect, where
 it is and how it fails. It writes only its note. Its GitHub writes are the
 note comment `pnpm review:record` posts on the pull request, and bug issues
 for [unrelated defects](orchestration.md#defects-found-along-the-way).

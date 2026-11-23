@@ -11,16 +11,10 @@ import {
   checkedOut,
   gateApplies,
   recordReport,
-  renderResults,
   runGate,
   validateReport,
 } from '../verification.mjs'
-import {
-  featureDir,
-  sampleRepo,
-  sampleReport,
-  sampleReview,
-} from './support.mjs'
+import { sampleRepo, sampleReport, sampleReview } from './support.mjs'
 /** @typedef {import('./support.mjs').SampleRepo} SampleRepo */
 
 /**
@@ -98,14 +92,6 @@ void describe("a High fix's report and review schema", () => {
       '$.featureDir: required unless sliceId is fix',
     ])
   })
-
-  void it('has no quickstart to render results into', () => {
-    record()
-    const rendered = renderResults(repo.dir, verified)
-    assert.deepEqual(rendered.ok ? [] : rendered.problems, [
-      `the report on ${verified} is for a High fix with no feature directory, so it has no quickstart results`,
-    ])
-  })
 })
 
 void describe('the High fix gate', () => {
@@ -115,14 +101,14 @@ void describe('the High fix gate', () => {
     assert.equal(gate.ok && gate.value.branch, 'fix-button-focus')
   })
 
-  void it("needs the pull request's labels to gate a branch that is not an implementation slice", () => {
+  void it("needs the pull request's risk:high label", () => {
     record()
     const unlabelled = runGate(repo.dir)
     assert.deepEqual(unlabelled.ok ? [] : unlabelled.problems, [
-      'fix-button-focus is not an implementation-slice branch, and no pull request was found to show a High fix',
+      'no pull request was found to show whether fix-button-focus is labelled risk:high',
     ])
     assert.deepEqual(fixGate(['risk:standard']), [
-      'fix-button-focus is not an implementation-slice branch or a High fix labelled risk:high',
+      'fix-button-focus is not labelled risk:high',
     ])
   })
 
@@ -153,8 +139,8 @@ void describe('the High fix gate', () => {
       report.escalations = [{ detail: 'The claim needs a plan.', kind: 'plan' }]
     })
     assert.deepEqual(fixGate(), [
-      'V-001 is violated; a High fix must establish every claim',
-      'V-002 is blocked; a High fix must establish every claim',
+      'V-001 is violated; a High-risk pull request must establish every claim',
+      'V-002 is blocked; a High-risk pull request must establish every claim',
       'story components-button--primary in the react Storybook is missing',
       'open escalation (plan): The claim needs a plan.',
     ])
@@ -166,12 +152,15 @@ void describe('the High fix gate', () => {
         report.claims = []
       },
       (review) => {
-        Object.assign(review, { featureDir, sliceId: 'A1' })
+        Object.assign(review, {
+          featureDir: 'specs/900-sample',
+          sliceId: 'A1',
+        })
       },
     )
     assert.deepEqual(fixGate(), [
       'the report names no claim',
-      'code review: the review is for slice A1, not a High fix (slice fix)',
+      'code review: the review is for slice A1, not this pull request (slice fix)',
     ])
   })
 
@@ -206,66 +195,22 @@ void describe('the High fix gate', () => {
       'chore: retrigger',
     )
     assert.deepEqual(fixGate(), [])
-    repo.commit('docs: results', {
-      [`${featureDir}/quickstart.md`]:
-        '# Quickstart\n\n## Execution results\n\nDone.\n',
-    })
+    repo.commit('docs: results', { 'docs/results.md': '# Results\n' })
     assert.deepEqual(fixGate(), [
-      `commits after the verified SHA change ${featureDir}/quickstart.md`,
-      `code review: commits after the reviewed SHA change ${featureDir}/quickstart.md`,
+      'commits after the verified SHA change docs/results.md',
+      'code review: commits after the reviewed SHA change docs/results.md',
     ])
   })
 
-  void it('applies to a High fix and a slice, but not to a High specification or plan branch', () => {
+  void it('applies only when the pull request is labelled risk:high', () => {
     const applies = (branch, labels = ['risk:high']) =>
       gateApplies(repo.dir, { branch, head: verified, labels })
-    assert.equal(applies('900-sample'), false)
-    assert.equal(applies('900-sample-plan'), false)
+    assert.equal(applies('900-sample'), true)
+    assert.equal(applies('900-sample-plan'), true)
     assert.equal(applies('fix-button-focus'), true)
     assert.equal(applies('901-button-focus'), true)
-    assert.equal(applies('900-sample-impl', []), true)
-    assert.equal(applies('900-sample-impl-b2', []), true)
+    assert.equal(applies('900-sample-impl', []), false)
+    assert.equal(applies('900-sample-impl-b2', []), false)
     assert.equal(applies('fix-button-focus', ['risk:standard']), false)
-  })
-
-  void it('reads the feature directory from the tree at the head, not the working tree', () => {
-    const head = repo.commit('spec: later feature', {
-      'specs/902-later/spec.md': '# Later\n',
-    })
-    assert.equal(
-      gateApplies(repo.dir, {
-        branch: '902-later',
-        head,
-        labels: ['risk:high'],
-      }),
-      false,
-    )
-    assert.equal(
-      gateApplies(repo.dir, {
-        branch: '902-later',
-        head: verified,
-        labels: ['risk:high'],
-      }),
-      true,
-    )
-  })
-
-  void it('does not judge a specification or plan branch as a High fix', () => {
-    repo.git('checkout', '--quiet', '-b', '900-sample-plan')
-    record()
-    const gate = runGate(repo.dir, checkedOut(repo.dir, ['risk:high']))
-    assert.deepEqual(gate.ok ? [] : gate.problems, [
-      '900-sample-plan is a Spec Kit specification or plan branch, which the gate does not judge',
-    ])
-  })
-
-  void it('does not let a fix report pass an implementation-slice branch', () => {
-    repo.git('checkout', '--quiet', '-b', '900-sample-impl')
-    record()
-    const gate = runGate(repo.dir)
-    assert.ok(!gate.ok)
-    assert.deepEqual(gate.problems, [
-      'no verification report for slice A1 of specs/900-sample',
-    ])
   })
 })

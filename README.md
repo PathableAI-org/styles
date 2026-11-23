@@ -57,8 +57,6 @@ Run these from the repository root.
 
 ## Contributing
 
-- The [constitution](.specify/memory/constitution.md) holds the project's
-  governing principles.
 - [AGENTS.md](AGENTS.md) routes each kind of change to the document that owns
   its rules, and lists the checks to run before committing. It applies to
   people as well as coding agents.
@@ -68,9 +66,9 @@ Run these from the repository root.
   [target state](docs/engineering/target-state.md); `pnpm lint` still runs
   locally.
 - Commits follow Conventional Commits and are checked by commitlint.
-- New features are specified with Spec Kit under `specs/`; those folders and
-  `docs/plans/` are historical records. Current behaviour is documented in
-  `docs/` and the package READMEs.
+- Delivery issues record the accepted scope and outcome for new work. Current
+  behaviour is documented in `docs/`, component pages, fixtures and package
+  READMEs; `docs/plans/` remains historical.
 
 ## License
 

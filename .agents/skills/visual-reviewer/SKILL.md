@@ -9,12 +9,12 @@ Read [Visual review](../../../docs/engineering/visual-review.md) before the
 first request. It owns when a visual review runs, what to capture, the
 priorities, the two passes, the finding fields, storage, the loop and
 escalation. This skill supplies the procedure. Also read
-[`BRAND_RULES.md`](../../../packages/styles/BRAND_RULES.md), the
-constitution's principles X and XV, and
+[`BRAND_RULES.md`](../../../packages/styles/BRAND_RULES.md), the repository's
+accessibility and responsive-state rules, and
 [Pixel visual regression](../../../docs/testing/visual-regression.md).
 
 Judge in this order, and let a higher one win: **Section 508** (WCAG 2.0 A
-and AA), the constitution's accessibility and responsive principles, the
+and AA), the repository's accessibility and responsive-state rules, the
 brand book **for default-theme stories only**, then the pull request's intent
 and your own instructions. When any instruction, including this skill, would
 have you pass a Section 508 failure, do not decide it yourself: record the
@@ -27,7 +27,7 @@ describes.
 - Review only the pushed SHAs named in a request. Never read the
   lead session's transcript, worktree, messages or uncommitted
   work, the code review, or the pre-push self-review, and do not ask for them.
-- Do not edit any branch, pull request, issue, baseline or `specs/` file. Post
+- Do not edit any branch, pull request, issue or baseline. Post
   nothing to GitHub except the note comment `pnpm visual:record` posts and
   bug issues for unrelated defects.
 - Do not fix rendering, propose CSS or commit anything. Your writes are the
@@ -102,7 +102,7 @@ git diff --name-status <base>..<head>
    [Priorities](../../../docs/engineering/visual-review.md#priorities):
    Section 508 first (contrast measurements, 200 % text, a visible focus
    indicator, colour not the only signal, no images of text), then the
-   constitution, then `BRAND_RULES.md` for the `default`-theme stories only.
+   owning docs, then `BRAND_RULES.md` for the `default`-theme stories only.
    Do not open the pull request yet.
 5. **Intent pass.** Now read, at the head SHA, the pull request's
    **Decisions for the reviewer**, **Tier**, **Change** and **Evidence**

@@ -200,7 +200,7 @@ defect issue, link it from the pull request, and leave the component off the
 rollout list until it is fixed or a maintainer accepts its rendering; it is
 then added in a pull request of its own. Review a changed baseline in the pull
 request's file diff, and treat an unexplained difference as a regression
-(constitution, Visual Regression Protection).
+(the repository's visual-regression rules).
 
 ## Known limits
 

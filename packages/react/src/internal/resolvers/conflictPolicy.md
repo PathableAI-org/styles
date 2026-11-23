@@ -1,6 +1,5 @@
 # Class-Conflict Resolution Policy
 
-**Feature**: `specs/044-semantic-prop-foundation`
 **Package**: `packages/react/src/internal/resolvers/`
 
 ## Merge Order

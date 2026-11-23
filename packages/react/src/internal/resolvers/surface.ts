@@ -2,8 +2,6 @@
  * Surface elevation vocabulary — the depth axis of the `Surface` primitive.
  * Each value maps to a verified `--elevation-*` token via a `pathable-surface--elevation-*`
  * modifier class. Arbitrary box-shadow values are not part of this contract.
- *
- * @see specs/054-surface-primitive/data-model.md
  */
 
 export const SURFACE_ELEVATION_MAP = {

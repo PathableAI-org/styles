@@ -87,22 +87,23 @@ const escalationRound = 3
 
 /**
  * @typedef {object} Review
- * @property {string} baseSha The slice's base: the parent branch tip the diff was taken from.
+ * @property {string} baseSha The pull request's base revision.
  * @property {readonly ClosedFinding[]} closed Findings from earlier rounds that this review closes.
  * @property {readonly Escalation[]} escalations
- * @property {string | undefined} [featureDir] The feature's `specs/{number}-{slug}`. A High fix (slice ID `fix`) may omit it.
+ * @property {string | undefined} [featureDir] Legacy feature path retained so historical reviews remain importable. New reviews omit it.
  * @property {readonly Finding[]} findings Every finding still open at the reviewed SHA, carried-forward findings included.
  * @property {ReviewInputs | undefined} [inputs]
  * @property {string} reviewedSha
  * @property {string} reviewId
- * @property {number} round 1 for the first review of a slice; each re-review after a fix adds one.
+ * @property {number} round 1 for the first review; each re-review after a fix adds one.
  * @property {1} schemaVersion
- * @property {string} sliceId
+ * @property {string} sliceId Legacy field name; new reviews use `fix` for the whole pull request.
  * @property {string | undefined} [supersedesReviewId] The review ID on the same SHA that this review replaces.
  */
 
 /**
- * What the review covered, recorded by `review:record` from the base and reviewed SHAs rather than written by the reviewer: each commit's code tree outside `specs/`. Reviews recorded before this field existed have none.
+ * What the review covered, recorded by `review:record` from the base and
+ * reviewed SHAs. Reports recorded before this field existed have none.
  * @typedef {object} ReviewInputs
  * @property {string} baseCodeTree
  * @property {string} codeTree

@@ -21,7 +21,7 @@ import {
 } from './support.mjs'
 /** @typedef {import('./support.mjs').SampleRepo} SampleRepo */
 
-const slice = '900-sample-impl'
+const branch = 'work/button-focus'
 
 let repo
 let verified
@@ -35,7 +35,7 @@ afterEach(() => {
   repo.remove()
 })
 
-/** Records a passing report and review for the slice in `dir`, which defaults to the repository under test. */
+/** Records a passing report and review in `dir`, which defaults to the repository under test. */
 const recordPassing = (dir = repo.dir) => {
   assert.ok(recordReport(dir, sampleReport(verified)).ok)
   assert.ok(
@@ -58,8 +58,8 @@ const mcpUpdate = (input) => ({
   tool_name: 'mcp__github__update_pull_request',
 })
 
-const slicePull = (labels = ['risk:high']) =>
-  restPull(7, { ref: slice, sha: verified }, labels)
+const highPull = (labels = ['risk:high']) =>
+  restPull(7, { ref: branch, sha: verified }, labels)
 
 const kind = (decision) => decision.kind
 
@@ -157,7 +157,7 @@ void describe('recognizing an attempt to mark a pull request ready', () => {
     )
   })
 
-  void it('refuses ways the gate cannot judge: stack submit --open, the GraphQL mutation, a non-draft slice PR', () => {
+  void it('refuses ways the gate cannot judge: stack submit --open and the GraphQL mutation', () => {
     const refused = (name, input) =>
       readyAttempt(name, input)?.kind === 'refuse'
     assert.ok(refused('Bash', { command: 'gh stack submit --auto --open' }))
@@ -167,17 +167,18 @@ void describe('recognizing an attempt to mark a pull request ready', () => {
           "gh api graphql -f query='mutation { markPullRequestReadyForReview(input: {}) { clientMutationId } }'",
       }),
     )
-    assert.ok(
-      refused('mcp__github__create_pull_request', {
+    assert.equal(
+      readyAttempt('mcp__github__create_pull_request', {
         base: 'main',
-        head: slice,
+        head: branch,
         title: 'A1',
       }),
+      undefined,
     )
     assert.equal(
       readyAttempt('mcp__github__create_pull_request', {
         draft: true,
-        head: slice,
+        head: branch,
       }),
       undefined,
     )
@@ -193,13 +194,13 @@ void describe('recognizing an attempt to mark a pull request ready', () => {
 })
 
 void describe("the ready hook's decision", () => {
-  void it('blocks gh pr ready on a slice whose gate fails, and allows it once the gate passes', () => {
-    const github = fakeGitHub({ pulls: [slicePull()] })
+  void it('blocks a High pull request whose gate fails, and allows it once the gate passes', () => {
+    const github = fakeGitHub({ pulls: [highPull()] })
     const blocked = readyDecision(bash('gh pr ready'), github)
     assert.equal(kind(blocked), 'block')
     assert.match(
       JSON.stringify(blocked),
-      /gate fails[\s\S]*no verification report for slice A1/,
+      /gate fails[\s\S]*no verification report/,
     )
     recordPassing()
     assert.deepEqual(readyDecision(bash('gh pr ready'), github), {
@@ -208,14 +209,14 @@ void describe("the ready hook's decision", () => {
   })
 
   void it('gates on notes another clone recorded, after importing them from the pull request', () => {
-    const github = fakeGitHub({ pulls: [slicePull()] })
+    const github = fakeGitHub({ pulls: [highPull()] })
     const other = sampleRepo()
     try {
       other.git(
         'fetch',
         '--quiet',
         repo.dir,
-        `${slice}:refs/remotes/origin/${slice}`,
+        `${branch}:refs/remotes/origin/${branch}`,
       )
       const report = recordReport(other.dir, sampleReport(verified))
       const review = recordReview(
@@ -240,13 +241,11 @@ void describe("the ready hook's decision", () => {
     assert.notEqual(repo.git('notes', `--ref=${defaultNotesRef}`, 'list'), '')
   })
 
-  void it('gates a checked-out slice on its local notes when GitHub is unreachable', () => {
+  void it('fails closed when GitHub cannot provide the checked-out pull request labels', () => {
     const offline = fakeGitHub({ offline: true })
     assert.equal(kind(readyDecision(bash('gh pr ready'), offline)), 'block')
     recordPassing()
-    assert.deepEqual(readyDecision(bash('gh pr ready'), offline), {
-      kind: 'allow',
-    })
+    assert.equal(kind(readyDecision(bash('gh pr ready'), offline)), 'block')
   })
 
   void it('lets a branch that needs no gate through, but refuses when it cannot tell', () => {
@@ -271,7 +270,7 @@ void describe("the ready hook's decision", () => {
   })
 
   void it("gates the REST ready route at the pull request's head, and leaves the prompt to the settings", () => {
-    const github = fakeGitHub({ pulls: [slicePull()] })
+    const github = fakeGitHub({ pulls: [highPull()] })
     const route = bash(
       'gh api -X POST repos/acme/app/pulls/7/ccr/ready_for_review',
     )
@@ -281,7 +280,7 @@ void describe("the ready hook's decision", () => {
   })
 
   void it("gates the MCP update with draft false at the pull request's head, and approves it when it passes", () => {
-    const github = fakeGitHub({ pulls: [slicePull()] })
+    const github = fakeGitHub({ pulls: [highPull()] })
     repo.git('checkout', '--quiet', 'main')
     assert.equal(
       kind(readyDecision(mcpUpdate({ draft: false }), github)),
@@ -318,28 +317,28 @@ void describe("the ready hook's decision", () => {
     )
   })
 
-  void it('approves a High specification or plan pull request, and still gates a High fix and a slice', () => {
-    const later = repo.commit('spec: later feature', {
-      'specs/902-later/spec.md': '# Later\n',
-    })
+  void it('gates every High pull request regardless of branch name', () => {
     const decide = (ref, sha = verified) =>
       readyDecision(
         mcpUpdate({ draft: false }),
         fakeGitHub({ pulls: [restPull(7, { ref, sha }, ['risk:high'])] }),
       )
-    assert.equal(kind(decide('900-sample')), 'approve')
-    assert.equal(kind(decide('900-sample-plan')), 'approve')
-    assert.equal(kind(decide('902-later', later)), 'approve')
-    for (const fix of ['fix-button-focus', '901-button-focus', '902-later']) {
-      assert.match(JSON.stringify(decide(fix)), /no verification report/, fix)
+    for (const ref of [
+      '900-sample',
+      '900-sample-plan',
+      'fix-button-focus',
+      '901-button-focus',
+      '902-later',
+      branch,
+    ]) {
+      assert.match(JSON.stringify(decide(ref)), /no verification report/, ref)
     }
-    assert.match(JSON.stringify(decide(slice)), /no verification report/)
   })
 
   void it("blocks when the pull request's head is not in this clone or the pull request cannot be read", () => {
     const missing = 'f'.repeat(40)
     const ahead = fakeGitHub({
-      pulls: [restPull(7, { ref: slice, sha: missing })],
+      pulls: [restPull(7, { ref: branch, sha: missing }, ['risk:high'])],
     })
     assert.match(
       JSON.stringify(readyDecision(mcpUpdate({ draft: false }), ahead)),

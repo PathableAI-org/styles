@@ -111,7 +111,7 @@ export const latestReviewMatching = (cwd, ref, matches) => {
     : notes
 }
 
-/** Why a review does not let the slice be marked ready: open blocking findings and escalations. Empty passes. */
+/** Why a review does not let the pull request proceed: open blocking findings and escalations. Empty passes. */
 export const reviewProblems = (review) => [
   ...openBlocking(review).map(
     (entry) => `${entry.id} is blocking at ${entry.file}:${String(entry.line)}`,
@@ -121,11 +121,15 @@ export const reviewProblems = (review) => [
   ),
 ]
 
-/** A review's counts and one line per open blocking finding, for the implementation session. */
+/** A review's counts and one line per open blocking finding. */
 export const blockingSummary = (review) => {
   const blocking = openBlocking(review)
+  const scope =
+    review.sliceId.toLowerCase() === 'fix'
+      ? 'for this pull request'
+      : `for legacy slice ${review.sliceId}`
   const head =
-    `Review ${review.reviewId} (round ${String(review.round)}) of slice ${review.sliceId} at ${review.reviewedSha}: ` +
+    `Review ${review.reviewId} (round ${String(review.round)}) ${scope} at ${review.reviewedSha}: ` +
     `${String(blocking.length)} blocking, ${String(review.findings.length - blocking.length)} advisory, ` +
     `${String(review.escalations.length)} escalations.\n`
   return (

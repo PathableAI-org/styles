@@ -1,18 +1,15 @@
-// Ported from pathableai-org/pre-ets scripts/verify.ts @ f2ee390 (types stripped only).
 /**
- * Verification handoff commands. Run through the `verify:*` package scripts:
+ * Verification commands for High-risk pull requests:
  *
- *   pnpm verify:request --slice A1 [--feature specs/383-x] [--sha <rev>]   print the slice's request as JSON
- *   pnpm verify:record <report.json | -> [--pr <n>]                        validate a report, add it to notes, and
- *                                                                          post it on the verified SHA's pull request
- *   pnpm verify:show [<rev>]                                               print the latest report on a commit
- *   pnpm verify:gate                                                       check the branch against the gate
- *   pnpm verify:render [<rev>] [--write]                                   render quickstart execution results
+ *   pnpm verify:record <report.json | -> [--pr <n>]  validate, store, and publish a report
+ *   pnpm verify:show [<rev>]                          print the latest report on a commit
+ *   pnpm verify:gate                                  check the pull request against the gate
  *
- * `show` and `gate` first sync the checked-out branch's pull request comments into the local notes, and read the
- * local notes as they are when there is no pull request or GitHub cannot be reached. See scripts/note-sync.mjs.
+ * `show` and `gate` first sync the checked-out branch's pull request comments
+ * into local Git notes. Without a pull request or GitHub access, they use the
+ * local notes as-is. See scripts/note-sync.mjs.
  */
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
 
 import { runCommand } from './cli.mjs'
@@ -21,33 +18,25 @@ import { publishRecordedReport, syncCheckedOutBranch } from './note-sync.mjs'
 import { defaultNotesRef } from './review-findings.mjs'
 import {
   checkedOut,
-  featureForBranch,
-  generateRequest,
   notesRef,
   recordReport,
-  renderResults,
   reportAt,
   runGate,
 } from './verification.mjs'
-/** @typedef {import('./verification.mjs').Outcome} Outcome */
 
 const cwd = process.cwd()
 
 const { positionals, values } = parseArgs({
   allowPositionals: true,
   options: {
-    feature: { type: 'string' },
     pr: { type: 'string' },
-    sha: { default: 'HEAD', type: 'string' },
-    slice: { type: 'string' },
-    write: { default: false, type: 'boolean' },
   },
 })
 
 const [command, argument] = positionals
 const rest = ghRest(cwd)
 
-/** Syncs the branch's pull request into the local notes, and returns that pull request's labels when it has one. */
+/** Sync the branch's pull request and return its labels when it has one. */
 const syncFirst = () => {
   const context = syncCheckedOutBranch({
     cwd,
@@ -75,31 +64,6 @@ const finish = (outcome, onSuccess, heading) => {
   return 1
 }
 
-const request = () => {
-  const featureDir = values.feature ?? featureForBranch(cwd)
-  if (featureDir === undefined || values.slice === undefined) {
-    return finish(
-      {
-        ok: false,
-        problems: [
-          'pass --slice, and --feature unless on an implementation branch',
-        ],
-      },
-      print,
-      'Usage',
-    )
-  }
-  return finish(
-    generateRequest(cwd, {
-      featureDir,
-      revision: values.sha,
-      sliceId: values.slice,
-    }),
-    print,
-    'No request',
-  )
-}
-
 const record = () => {
   const json = readFileSync(
     argument === undefined || argument === '-' ? 0 : argument,
@@ -109,7 +73,7 @@ const record = () => {
   if (!recorded.ok) return finish(recorded, print, 'Report not recorded')
   const report = recorded.value
   print(
-    `Recorded run ${report.runId} for slice ${report.sliceId} on ${report.verifiedSha} in ${notesRef}.\n` +
+    `Recorded run ${report.runId} for this pull request on ${report.verifiedSha} in ${notesRef}.\n` +
       `Pointer for the implementation session: ${notesRef} @ ${report.verifiedSha} (run ${report.runId}).\n`,
   )
   return publishRecordedReport({ cwd, pr: values.pr, rest }, report)
@@ -122,31 +86,17 @@ const gate = () =>
       const via =
         pass.report.verifiedSha === pass.head
           ? 'HEAD'
-          : `${pass.report.verifiedSha}, whose diff to HEAD is evidence-only`
+          : `${pass.report.verifiedSha}, followed only by empty commits`
       print(
-        `Verification gate passed for ${pass.branch}: slice ${pass.report.sliceId}, run ${pass.report.runId}, via ${via}.\n`,
+        `Verification gate passed for ${pass.branch}: run ${pass.report.runId}, via ${via}.\n`,
       )
     },
     'Verification gate failed:',
   )
 
-const render = () =>
-  finish(
-    renderResults(cwd, argument ?? 'HEAD'),
-    (value) => {
-      if (!values.write) print(value.rendered)
-      else if (value.updated === undefined)
-        process.stderr.write(`${value.path} has no Execution results section\n`)
-      else writeFileSync(value.path, value.updated)
-    },
-    'Nothing rendered',
-  )
-
 const commands = {
   gate,
   record,
-  render,
-  request,
   show: () => {
     syncFirst()
     return finish(
@@ -162,5 +112,5 @@ const commands = {
 runCommand(
   commands,
   command,
-  'Usage: verify.mjs request|record|show|gate|render (see the header of scripts/verify.mjs)',
+  'Usage: verify.mjs record|show|gate (see the header of scripts/verify.mjs)',
 )

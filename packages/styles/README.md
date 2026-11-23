@@ -124,8 +124,8 @@ precompiled USWDS CSS adds stock, unbranded components; it does not apply the
 PathAble Sass configuration. Use the combined Sass build above for any other
 brand-aligned USWDS components.
 
-For detailed setup instructions, see the
-[USWDS theme quickstart](https://github.com/PathableAI-org/styles/blob/main/specs/003-wrap-uswds-theme/quickstart.md).
+The example above is the supported source-build path. Consumers that only need
+the PathAble contract should import the package's compiled CSS instead.
 
 ### Token Usage
 

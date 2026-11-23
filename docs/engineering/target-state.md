@@ -5,10 +5,10 @@ This document owns the direction and current scope of the
 2026-11-22 with `main` at `28cc03eb`. Update it as the refactor progresses and
 remove transitional statements when they stop being true.
 
-The [constitution](../../.specify/memory/constitution.md) wins where it states
-a repository-wide rule, but it predates this narrower refactor target. Where a
-package document describes the old `usa-` model, JavaScript components or
-React as the current delivery path, this document owns the current direction.
+Where a package document describes the old `usa-` model, JavaScript components
+or React as the current delivery path, this document owns the current
+direction. Repository process and quality rules remain in their owning
+documents routed from [`AGENTS.md`](../../AGENTS.md).
 
 ## Three deliverables
 

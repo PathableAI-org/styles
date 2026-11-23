@@ -1,11 +1,11 @@
 // Ported from pathableai-org/pre-ets tests/tooling/support.ts @ f2ee390 (types stripped only).
-/** A throwaway Git repository holding the sample feature, for verification tooling tests. */
+/** A throwaway Git repository for workflow-tooling tests. */
 import { execFileSync } from 'node:child_process'
 import {
-  cpSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from 'node:fs'
@@ -16,7 +16,6 @@ import { fileURLToPath } from 'node:url'
 /** @typedef {import('../github-access.mjs').RestAccess} RestAccess */
 
 const fixtures = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
-export const featureDir = 'specs/900-sample'
 
 export const fixture = (name) => readFileSync(join(fixtures, name), 'utf8')
 
@@ -28,8 +27,8 @@ export const fixture = (name) => readFileSync(join(fixtures, name), 'utf8')
  * @property {() => void} remove
  */
 
-export const sampleRepo = (branch = '900-sample-impl') => {
-  const dir = mkdtempSync(join(tmpdir(), 'verification-test-'))
+export const sampleRepo = (branch = 'work/button-focus') => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'verification-test-')))
   const git = (...args) =>
     execFileSync('git', args, {
       cwd: dir,
@@ -50,16 +49,7 @@ export const sampleRepo = (branch = '900-sample-impl') => {
   git('config', 'user.name', 'Verifier')
   git('config', 'commit.gpgsign', 'false')
   git('config', 'core.hooksPath', '/dev/null')
-  mkdirSync(join(dir, featureDir), { recursive: true })
-  for (const name of [
-    'plan.md',
-    'research.md',
-    'verification.md',
-    'quickstart.md',
-  ]) {
-    cpSync(join(fixtures, name), join(dir, featureDir, name))
-  }
-  commit('plan', { 'src/app.ts': 'export const app = 1\n' })
+  commit('chore: start', { 'src/app.ts': 'export const app = 1\n' })
   git('checkout', '--quiet', '-b', branch)
   return {
     commit,
@@ -71,7 +61,7 @@ export const sampleRepo = (branch = '900-sample-impl') => {
   }
 }
 
-/** The A1 sample report for `sha`, optionally changed by `edit`. */
+/** The sample pull-request report for `sha`, optionally changed by `edit`. */
 export const sampleReport = (sha, edit = () => undefined) => {
   const report = JSON.parse(fixture('report-a1.json'))
   report.verifiedSha = sha
@@ -79,7 +69,7 @@ export const sampleReport = (sha, edit = () => undefined) => {
   return JSON.stringify(report)
 }
 
-/** A passing round-one review of slice A1 from `base` to `sha`, optionally changed by `edit`. */
+/** A passing round-one review from `base` to `sha`, optionally changed by `edit`. */
 export const sampleReview = (base, sha, edit = () => undefined) => {
   const review = JSON.parse(fixture('review-a1.json'))
   Object.assign(review, { baseSha: base, findings: [], reviewedSha: sha })

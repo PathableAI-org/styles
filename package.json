@@ -34,8 +34,6 @@
     "review:show": "node scripts/review.mjs show",
     "verify:gate": "node scripts/verify.mjs gate",
     "verify:record": "node scripts/verify.mjs record",
-    "verify:render": "node scripts/verify.mjs render",
-    "verify:request": "node scripts/verify.mjs request",
     "verify:show": "node scripts/verify.mjs show",
     "visual:record": "node scripts/visual.mjs record",
     "visual:show": "node scripts/visual.mjs show",

@@ -4,8 +4,6 @@
  * styles package's `$semantic-colors` map remains the authoritative token
  * list; `checkThemeTokenSync` in `packages/styles/scripts/lint-tokens.mjs`
  * keeps this key set in lockstep with it.
- *
- * @see specs/058-theme-token-types/contracts/theme-types.md
  */
 
 export const THEME_COLOR_KEYS = [

@@ -71,7 +71,6 @@ void describe('path matching', () => {
       'package.json',
       'scripts/review.mjs',
       'docs/engineering/git-workflow.md',
-      '.specify/memory/constitution.md',
     ]) {
       assert.ok(matchesAny([path], guardrailPaths), path)
     }
@@ -258,16 +257,11 @@ void describe('eligibility', () => {
     )
   })
 
-  void it('is not eligible on a Spec Kit specification branch', () => {
+  void it('does not infer workflow from a numeric branch name', () => {
     repo.git('checkout', '--quiet', '-b', '900-sample')
-    assert.deepEqual(
-      ineligible((state) => {
-        state.pull.head = { ref: '900-sample', sha: head }
-      }),
-      [
-        '900-sample is a Spec Kit specification or plan branch, which a person approves',
-      ],
-    )
+    const state = gateState('900-sample', head, ['src/app.ts'])
+    const result = gate(state)
+    assert.equal(result.ok || result.eligible, true)
   })
 })
 
@@ -392,17 +386,6 @@ void describe('readiness of an eligible pull request', () => {
     })
     const result = gate(state)
     assert.equal(result.ok && result.value.visualRequired, true)
-  })
-
-  void it('judges an implementation slice by the verification gate', () => {
-    repo.git('checkout', '--quiet', '900-sample-impl')
-    head = repo.commit('feat: A1', { 'src/app.ts': 'export const app = 2\n' })
-    const problems = problemsOf(
-      gate(gateState('900-sample-impl', head, ['src/app.ts'])),
-    )
-    assert.deepEqual(problems, [
-      'verification gate: no verification report for slice A1 of specs/900-sample',
-    ])
   })
 
   void it('fails closed when GitHub cannot be read or the head is missing', () => {

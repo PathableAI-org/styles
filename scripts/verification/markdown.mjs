@@ -1,6 +1,6 @@
 // Ported from pathableai-org/pre-ets scripts/verification/markdown.ts @ f2ee390 (types stripped only).
 /**
- * Markdown reading helpers for Spec Kit artifacts. They read structure only: headings, sections, and pipe tables.
+ * Markdown structure helpers retained to import historical verification notes.
  * @typedef {object} Heading
  * @property {number} level
  * @property {number} line

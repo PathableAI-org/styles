@@ -19,7 +19,7 @@ import {
 } from '../visual-review.mjs'
 import { fakeGitHub, restPull, sampleRepo } from './support.mjs'
 
-const branch = '900-sample-impl'
+const branch = 'work/button-focus'
 const page = 'https://claude.ai/artifact/0f4b2c6e-screens'
 
 /** A round-one visual review of pull request 7 from `base` to `sha` with one blocking and one advisory finding. */

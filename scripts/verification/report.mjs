@@ -91,14 +91,15 @@ const escalationKinds = ['specification', 'plan', 'disagreement', 'third round']
  */
 
 /**
- * What the report was observed against, recorded by `verify:record` from the verified SHA rather than written by the verifier: the code tree outside `specs/`, and a digest of the feature's artifacts without its execution results. Reports recorded before this field existed have none.
+ * What the report was observed against, recorded by `verify:record` from the
+ * verified SHA. `featureInputs` exists only for historical-note compatibility.
  * @typedef {object} ReportInputs
  * @property {string} codeTree
  * @property {string | undefined} [featureInputs] Absent for a High fix, which has no feature directory.
  */
 
 /**
- * A story the plan assigns to the slice, as the Storybook test runner observed it.
+ * A Storybook story observed during verification.
  * @typedef {object} StoryReport
  * @property {string | undefined} [detail]
  * @property {string} id The Storybook story ID.
@@ -112,11 +113,11 @@ const escalationKinds = ['specification', 'plan', 'disagreement', 'third round']
  * @property {{ readonly complete: boolean; readonly remaining?: string | undefined }} cleanup
  * @property {string} environment Which Storybooks, ports, and builds the run used, without credentials.
  * @property {readonly Escalation[]} escalations
- * @property {string | undefined} [featureDir] The feature's `specs/{number}-{slug}`. A High fix (slice ID `fix`) may omit it.
+ * @property {string | undefined} [featureDir] Legacy feature path retained so historical reports remain importable. New reports omit it.
  * @property {ReportInputs | undefined} [inputs]
  * @property {string} runId
  * @property {1} schemaVersion
- * @property {string} sliceId
+ * @property {string} sliceId Legacy field name; new reports use `fix` for the whole pull request.
  * @property {string | undefined} [supersedesRunId] The run ID of the report on the same SHA that this retry replaces.
  * @property {readonly StoryReport[]} stories
  * @property {{ readonly end: string; readonly start: string }} timeRange

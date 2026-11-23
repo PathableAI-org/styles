@@ -2,10 +2,6 @@
  * Semantic tone vocabulary — shared internal types consumed by `Text` (09),
  * future `Surface` (12), and other primitives. Each tone role maps to a
  * BEM modifier class grounded in a verified `@pathableai/styles` SCSS contract.
- *
- * @see specs/053-semantic-color-tones/contracts/tone-vocabulary.md
- * @see specs/053-semantic-color-tones/research.md
- *
  * ## Text tones — VERIFIED
  *
  * | Value     | SCSS source          | Class                          | Token                          |

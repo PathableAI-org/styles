@@ -1,8 +1,7 @@
 {
   "schemaVersion": 1,
   "verifiedSha": "0000000000000000000000000000000000000000",
-  "featureDir": "specs/900-sample",
-  "sliceId": "A1",
+  "sliceId": "fix",
   "runId": "79b28959-742b-4ba0-84dc-e25bb8a345dc",
   "timeRange": {
     "start": "2026-11-13T18:02:00Z",
@@ -25,8 +24,7 @@
     {
       "id": "V-004",
       "scope": "partial",
-      "result": "not established",
-      "limitationId": "L-2",
+      "result": "established",
       "evidence": {
         "channel": "browser",
         "procedure": "§A1 step 1 at 200% and 400% text size"

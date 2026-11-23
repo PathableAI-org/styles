@@ -22,9 +22,6 @@ import { segmentedControlManifest } from '../segmented-control/manifest.js'
  * - `styles-only` entries MUST NOT list capabilities or downstream adoptions.
  * - A `styles-proven`/`adopted` entry MUST have a green focused run recorded in
  *   `scripts/.storybook-evidence.json` (checked by the evidence report).
- *
- * See `specs/043-component-test-rollout/contracts/rollout-ledger.md` for the
- * full contract.
  */
 
 export function rolloutEntry(entry: RolloutEntry): RolloutEntry {

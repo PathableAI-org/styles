@@ -1,8 +1,6 @@
 node_modules
 dist
-.specify
 .cursor
-specs
 handoffs
 
 # Agent transcripts

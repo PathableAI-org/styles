@@ -50,7 +50,6 @@
 /scripts/github-access.mjs @j-shilling
 /scripts/cli.mjs @j-shilling
 /package.json @j-shilling
-/.specify/memory/constitution.md @j-shilling
 **/AGENTS.md @j-shilling
 /CLAUDE.md @j-shilling
 /docs/engineering/ @j-shilling

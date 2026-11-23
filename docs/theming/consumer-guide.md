@@ -92,10 +92,7 @@ import '@pathableai/react'
 
 `ThemeProvider` is the preferred path for scoped runtime overrides.
 
-The original delivery contracts behind these APIs live under `specs/`. Feature
-061's structural-only React entry-point contract is historical and superseded;
-its independent stylesheet-subpath contract remains current:
-
-- `createTheme` / `defaultTheme`: `specs/059-default-theme-create-theme/contracts/`
-- `ThemeProvider`: `specs/060-theme-provider/contracts/theme-provider.md`
-- Stylesheet subpaths: `specs/061-react-entry-point-wiring/contracts/styles-subpaths.md`
+The public types and exports in `packages/react/src/theme/` own the runtime
+API. `packages/styles/package.json` owns stylesheet subpaths, and
+[acceptance-verification.md](./acceptance-verification.md) lists the checks
+that keep these contracts observable.

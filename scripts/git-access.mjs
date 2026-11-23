@@ -75,8 +75,10 @@ export const readAtSha = (cwd, sha, path) =>
 const fetchTimeoutMs = 60_000
 
 /**
- * Fetches one commit by SHA from `origin`, for a commit no branch holds any more, such as a slice tip a restack
- * replaced. GitHub serves such commits by SHA until it garbage-collects them. Returns whether the commit is now here.
+ * Fetches one commit by SHA from `origin`, for a commit no branch holds any
+ * more, such as a reviewed revision after a branch is rewritten. GitHub serves
+ * such commits by SHA until it garbage-collects them. Returns whether the
+ * commit is now here.
  */
 export const fetchCommit = (cwd, sha) => {
   gitOrUndefined(
@@ -88,9 +90,9 @@ export const fetchCommit = (cwd, sha) => {
 }
 
 /**
- * The tree of a commit's root without `specs/`: everything that can change behavior, as a git tree ID. Feature
- * directories under `specs/` are decision records no code reads, so two commits with the same code tree differ at
- * most in those records.
+ * The behavior-bearing tree ID recorded with review evidence. The retired
+ * `specs/` directory remains excluded so notes created before its removal can
+ * still be imported and compared.
  */
 export const codeTree = (cwd, sha) =>
   git(

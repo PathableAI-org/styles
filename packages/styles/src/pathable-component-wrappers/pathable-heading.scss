@@ -7,9 +7,9 @@
 // Contrast evidence:
 //   --pathable-color-text (#00365c) on --pathable-color-surface (#ffffff)
 //   = 12.48:1 — passes WCAG AA normal-text threshold (≥ 4.5:1).
-//   Confirmed in the Text primitive audit (specs/051-text-primitive/research.md).
+//   The ratio follows directly from the current semantic token values above.
 //
-// Level mapping (see data-model.md and research.md Decision 2):
+// Level mapping:
 //   1 → display-lg (Fredoka, --pathable-font-size-display-lg, weight 400)
 //   2 → heading-lg (Poppins, --pathable-font-size-heading-lg, weight 700)
 //   3 → heading-md (Poppins, --pathable-font-size-heading-md, weight 700)

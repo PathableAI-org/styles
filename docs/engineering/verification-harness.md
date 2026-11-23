@@ -1,326 +1,124 @@
 # Verification harness
 
-This document describes how a feature's verification plan decides what
-evidence each claim needs, and how a verifier subagent gathers that
-evidence for each implementation slice before review.
-[Git workflow](git-workflow.md) owns tiers, branches and review gates.
-[Component testing](../testing/README.md) owns how component tests and
-behaviour contracts are written. [Orchestration](orchestration.md) owns the
-sessions' lifecycle, stop points and models.
+This document owns independent verification for High-risk pull requests.
+[Git workflow](git-workflow.md) owns tiers and merge rules,
+[Component testing](../testing/README.md) owns durable tests, and
+[Orchestration](orchestration.md) owns the lead session and subagents.
 
-A harness here means the stories, scripts and procedures that let an agent see
-what the design system actually does as a consumer receives it. There is no
-telemetry: the running system is the two Storybooks (`apps/storybook` for
-`@pathableai/styles`, `apps/storybook-react` for `@pathableai/react`) and the
-packed packages.
+The running system is the styles Storybook, the retained React Storybook when
+the change explicitly touches it, and the packed packages. Verification uses
+synthetic content only and records what was observed at one pushed SHA.
 
-## Claims follow verification
+## Claims live with the delivery
 
-Each phase adds one layer:
+High work numbers its claims `V-001`, `V-002`, and so on in the delivery issue
+and repeats them in the pull request's Evidence table. A claim states:
 
-| Phase          | Artifact                       | Adds                                                                                                |
-| -------------- | ------------------------------ | --------------------------------------------------------------------------------------------------- |
-| Specification  | `verification.md`              | For each claim, the observation that distinguishes it from its violation, and the evidence channel  |
-| Plan           | `plan.md` slice table          | Which slice implements which claims, and which named stories each slice adds or changes             |
-| Plan           | `quickstart.md`                | The procedure the verifier runs, in sections that name their slice: `(slice A1)` or `(every slice)` |
-| Implementation | Code, stories, `quickstart.md` | The stories and code themselves, and the generated verification results                             |
+- the meaningful violation;
+- the observation that distinguishes the claim from that violation; and
+- the evidence channel that can make that observation.
 
-The specification names facts, not stories. "Escape closes a dismissible
-Modal and returns focus to the trigger" is an observation. The story that
-shows it, `components-modal--dismissible`, is a plan row.
+For High new behaviour, the maintainer accepts the issue's claims and
+implementation approach before work begins. If a claim changes during
+implementation, update the issue and stop for the maintainer instead of
+quietly changing the pull request's evidence.
 
-### Evidence channels
+## Evidence channels
 
-| Channel                | What it observes                                                                                                                                                                                                                                                                                                     |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `storybook-test`       | The Storybook test-runner on named stories: play-function interactions and the rendered axe check, through `pnpm test:storybook-styles` or `pnpm test:storybook-react`                                                                                                                                               |
-| `visual`               | `pnpm test:visual`: the canonical styles stories render, at 375, 768 and 1280 px, without blank output or horizontal overflow. `pnpm test:pixels-styles`: pixel comparison with committed baselines, only for the stories listed for rollout components ([Pixel visual regression](../testing/visual-regression.md)) |
-| `browser`              | Playwright observation of specific stories in a built Storybook: keyboard order and focus placement, narrow and wide viewports, increased text size, `forced-colors` and `prefers-reduced-motion`                                                                                                                    |
-| `package`              | The packed packages as a consumer receives them: `check:package`, `check:types`, `pnpm test:next-consumer`                                                                                                                                                                                                           |
-| `agent-guidance`       | `pnpm check:agent-guidance`: the consumer agent guidance matches the public API                                                                                                                                                                                                                                      |
-| `unit-test`            | `pnpm --filter @pathableai/react test:unit`                                                                                                                                                                                                                                                                          |
-| `assistive-technology` | A person's manual check with a screen reader or other assistive technology                                                                                                                                                                                                                                           |
+| Channel                | What it observes                                                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `storybook-test`       | Named stories' play functions and rendered axe checks through `pnpm test:storybook-styles` or `pnpm test:storybook-react` |
+| `visual`               | Canonical rendering and committed pixel baselines through `pnpm test:visual` and `pnpm test:pixels-styles`                |
+| `browser`              | Playwright observation of keyboard order, focus, responsive layouts, text zoom, forced colors and reduced motion          |
+| `package`              | Packed-package contents, exports, declarations and consumer installation                                                  |
+| `agent-guidance`       | `pnpm check:agent-guidance`                                                                                               |
+| `unit-test`            | `pnpm --filter @pathableai/react test:unit`                                                                               |
+| `assistive-technology` | A person's manual screen-reader or other assistive-technology check                                                       |
 
-Pick the channel that can actually observe the fact. Constitution XIV to XVI
-decide what usually needs which: interactive behaviour needs `storybook-test`
-interactions with accessible queries; responsive and inclusive states
-(principle XV) usually need `browser`; anything about installability or the
-`@pathableai/styles` assets a React consumer receives needs `package`. A
-behaviour shared between the styles and React Storybooks follows the
-Styles-first rule in [Behavioural parity](../testing/behavior-parity.md):
-establish it in the styles Storybook first.
+Pick the channel that can observe the fact. A successful build does not prove
+keyboard behavior, a DOM snapshot does not prove rendering, and a source diff
+does not prove the packed consumer artifact.
 
-Durable tests stay in the stories and unit tests the slice commits. The
-verifier's own Playwright observations are not committed; a claim that should
-never regress needs a committed story or test as well, which the plan names.
+Durable regression coverage stays in committed stories and tests. Temporary
+browser probes, screenshots and transcripts are evidence for the review and
+are not committed.
 
-## Verification by risk tier
+## Roles
 
-The [risk tier](git-workflow.md#risk-tiers) sets the minimum. A
-`verification.md` may plan more.
+| Role          | Owns                                                                     | Does not                                                 |
+| ------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- |
+| Lead session  | Issue, code, stories, pull request and responses to findings             | Mark High work ready without a passing report and review |
+| Verification  | Building and observing the pushed SHA; the verification note and comment | Edit the branch or fix the implementation                |
+| Code review   | Correctness and maintainability review at the same SHA                   | Edit the branch                                          |
+| Visual review | Judging captured rendering against the base and stated change            | Edit code or baselines                                   |
 
-| Tier                  | `verification.md`                                                                                                                                                                                               | Verifier                                                                                                                                                     |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| High, new behaviour   | Claims, meaningful violations, observations and channels. Each keyboard, focus or ARIA claim names its `browser` or `storybook-test` observation; each entry-point or dependency claim names `package` evidence | One report per slice through [the verification loop](#the-verification-loop)                                                                                 |
-| High, fix             | None. The pull request's Evidence table numbers the claims the fix establishes `V-001`, `V-002`, and so on, each with its observation and channel. An ID keeps its claim once a report uses it                  | One report on the pull request for those claims at the verified SHA. Slice ID `fix`; the feature directory may be omitted. Every claim must be `established` |
-| Standard, specified   | Claims, observations and channels, plus the planned manual procedure                                                                                                                                            | One report per slice through the verification loop                                                                                                           |
-| Other Standard, Light | None                                                                                                                                                                                                            | None. Normal CI and the checks the pull request names                                                                                                        |
+## Verification loop
 
-## Sessions and roles
+1. The lead pushes a draft pull request whose Evidence table contains every
+   numbered claim, its observation, channel and current result.
+2. The verifier creates a detached worktree at that SHA, installs with the
+   frozen lockfile, builds the affected packages and runs the checks each
+   claim needs.
+3. It reads the claim table from the pull request at the requested SHA. Missing,
+   ambiguous or changed claims are `blocked`; the verifier does not infer them.
+4. It records one result per claim: `established`, `violated`,
+   `not established` or `blocked`. Every named story is `passing`, `failing`
+   or `missing` for the Storybook in which it was observed.
+5. `pnpm verify:record <report.json>` validates the report, stores it in
+   `refs/notes/verification` on the verified SHA and posts the rendered report
+   to the pull request. A retry uses a new run UUID and supersedes the earlier
+   report without erasing it.
+6. The lead fixes the change and requests another round until the latest report
+   and code review pass, or stops at an escalation.
 
-| Role          | Owns                                                                                                   | Does not                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| Lead session  | `spec.md`, `verification.md`, `plan.md`, `quickstart.md`, `tasks.md`, code, stories, pull requests     | Mark a slice ready without a passing verification report, or with an open blocking finding |
-| Verification  | Building pushed revisions, observing the Storybooks and packed packages, reports                       | Edit any branch or fix the implementation                                                  |
-| Review        | Reviewing pushed revisions for correctness reasoning, constitution lenses and maintainability, reviews | Edit any branch or fix the implementation                                                  |
-| Visual review | Capturing and judging what a pushed revision renders against its base, visual reviews                  | Edit any branch, baseline or fix the rendering                                             |
+The verifier uses ports 6006 and 6007 for the Storybooks and removes its
+worktree and temporary files when finished. It never reuses the lead session's
+build output.
 
-Verification, review and visual review run as subagents of the lead session,
-from `.claude/agents/` definitions, on each pushed SHA, as
-[Orchestration](orchestration.md) describes. [Code review](code-review.md)
-owns the reviewer's scope, findings and loop. Only a
-person approves a specification or plan phase and merges High work; Standard
-slices merge under [agent merge](git-workflow.md#agent-merge).
+## Report
 
-## The verification loop
+The schema in [`scripts/verification/report.mjs`](../../scripts/verification/report.mjs)
+requires the verified SHA, run UUID, time range, environment summary, slice ID
+`fix`, claims, story statuses, cleanup status, escalations and any violation
+observed outside the requested claims. New reports omit `featureDir`; the
+schema may continue to accept that field while old note comments remain in
+GitHub history.
 
-### Request
+For each claim, evidence names its channel plus the story IDs, commands or
+procedure that produced the observation. `not established` and `blocked` are
+not passing results. Manual assistive-technology work stays unestablished until
+a person records the observation.
 
-When a slice is committed and pushed as a draft pull request, the
-lead session generates the request instead of choosing claims by
-hand:
+For visual claims, committed pixel baselines are the primary evidence where
+they cover the story. Otherwise the verifier publishes one private screenshot
+page for the run and links it from one pull request comment. Screenshots do not
+decide the gate on their own.
 
-```sh
-pnpm verify:request --slice <ID> --sha <pushed SHA>
-```
+## Gate and escalation
 
-The command reads the feature's `plan.md`, `verification.md`, `quickstart.md`
-and `research.md` at that SHA through Git, not from the working tree. It prints
-the slice ID, the pushed SHA, each claim the slice asserts in full or in part,
-the named stories the plan assigns to the slice, its `quickstart.md` sections,
-and the limitations already approved in `verification.md` and the plan. On a
-[feature branch](git-workflow.md#feature-branches) it finds the feature
-directory from the branch name; elsewhere, pass
-`--feature specs/{number}-{slug}`.
+`pnpm verify:gate` passes High work only when:
 
-The plan's slice table has ID-only `Full claims`, `Partial claims`,
-`Quickstart sections` and `Stories` columns. Stories are Storybook story IDs,
-such as `components-modal--dismissible`. Unnumbered `verification.md`
-limitations get positional IDs `VL-1`, `VL-2`, and so on at that SHA, and plan
-limitations keep their `L-n` IDs. Anything the parser cannot read is listed
-under `warnings`. A request with warnings cannot pass the gate, so correct the
-plan through the [corrections](git-workflow.md#corrections) path rather than
-working around it.
+- the latest report is for slice `fix` and the pull request's pushed SHA;
+- it names at least one claim and establishes every claim;
+- every reported story passes;
+- it contains no violated unrequested claim or open escalation; and
+- the latest code review covers the same head with no open blocking finding
+  or escalation.
 
-The lead session then starts the verifier subagent with only the branch, the
-pushed SHA, the base SHA, the slice ID, the pull request number, the round and
-any change to the run instructions since the last request. The verifier regenerates the request from the SHA itself. It
-checks only pushed commits and never reads the lead session's
-uncommitted work.
+Any commit after the verified or reviewed SHA requires a new round unless it
+changes no path. An update from `main` therefore requires new High-risk
+verification even when the pull request's own patch is unchanged.
 
-### Environment
-
-The verifier subagent owns its environment:
-
-- Its own worktree, detached at the requested SHA, with
-  `pnpm install --frozen-lockfile`. It is read-only with respect to the
-  implementation branch.
-- Its own builds from that worktree: `pnpm build`, then the Storybook builds
-  the request needs. Nothing is reused from the lead session's output.
-- Its own ports. `scripts/test-storybook.mjs` uses 6006 and 6007 and fails on
-  an occupied port, so run one verifier at a time per machine. The visual
-  capture uses 6020 to 6023 and the pixel suite 6014, so they can run
-  alongside it.
-- The pre-installed Playwright Chromium. Do not install another browser.
-- Synthetic content only, as in the stories (constitution X).
-
-### Observation
-
-The verifier runs the requested `quickstart.md` steps and the commands for
-each claim's channel. For `storybook-test`, it reads the result for each named
-story, including its axe result, not only the run's exit status. For
-`browser`, it opens the named stories' iframe URLs in the built Storybook and
-records what it saw: the focused element's role and name after each key, the
-layout at the requested widths, wrapping at 200 % text size, and the result
-under emulated `forced-colors: active` and `prefers-reduced-motion: reduce`
-where the claim needs them. An empty or skipped run is inconclusive until the
-verifier confirms the story exists at that SHA and the runner actually
-executed it.
-
-### Report
-
-The verifier subagent records one result per requested claim ID:
-
-| Result            | Meaning                                                                          |
-| ----------------- | -------------------------------------------------------------------------------- |
-| `established`     | The required observation was made at the requested revision                      |
-| `violated`        | A meaningful violation was observed                                              |
-| `not established` | The procedure ran but did not produce a conclusive observation                   |
-| `blocked`         | A prerequisite outside the slice prevented the procedure, such as a failed build |
-
-The report is a JSON document checked by the schema in
-[`scripts/verification/report.mjs`](../../scripts/verification/report.mjs). It
-holds the verified SHA, slice ID, feature directory, run UUID, time range, and
-an environment summary (builds, Storybooks and ports, without credentials).
-Per claim, it holds the scope (`full` or `partial`), the result, the evidence
-(its channel, plus the story IDs, commands or procedure), the observed values,
-the conditions, and, for `not established` or `blocked`, the ID of the
-approved limitation it falls under. It gives a status for each named story the
-plan assigns to the slice (`passing`, `failing` or `missing`, per Storybook),
-escalations, cleanup, and any unrequested claim the run showed violated. The
-schema rejects text that looks like a credential.
-
-`verify:record` adds the report's `inputs` itself, computed from the verified
-SHA: the code tree (the Git tree of the root without `specs/`) and, when the
-report names a feature directory, a digest of that directory with
-`quickstart.md` read without its execution results. Sync refuses an imported
-report whose inputs are not those of its verified SHA.
-
-The verifier records the report with `pnpm verify:record <report.json>`. The
-command validates it and adds it to the Git note on the verified SHA under
-`refs/notes/verification`. A retry on the same SHA is appended and supersedes
-the earlier report, which stays in the note. The command then posts the report
-as a comment on the verified SHA's pull request, so the implementation
-session's clone can import it. [Code review storage](code-review.md#storage)
-owns how entries are published and synced, the author rule and the trust
-model. Do not push or configure pushing for the notes ref itself.
-
-The note is the record. The verifier subagent then replies to the lead
-session with only a pointer, such as
-`refs/notes/verification @ <SHA> (run <uuid>)`. `pnpm verify:show <SHA>` syncs
-the branch's pull request and prints the report. Raw command output,
-screenshots and transcripts are not committed.
-
-### Screenshots for visual claims
-
-For a claim about visual appearance, such as a token value, spacing, a focus
-indicator or `forced-colors` rendering, the evidence is the committed
-[pixel baselines](../testing/visual-regression.md) where they cover the named
-story: the `visual` channel compares them, and the pull request's file diff
-shows any baseline change. Baselines cover only the stories listed for each
-workspace's rollout components, in their default rendering with the first
-interactive control focused. For the rest, including `forced-colors`,
-increased text size and reduced motion, the verifier captures Playwright
-screenshots of the named stories under the claim's conditions. GitHub's REST
-API cannot attach images to a comment, so it publishes them as one private
-review page per run (an Artifact in Claude Code sessions) and posts one pull
-request comment linking it, titled with the verified SHA and run UUID. The
-report's evidence for that claim names the page in its `procedure`. The
-screenshots are evidence for the person reviewing; they are not
-schema-checked, are never committed, and do not decide the gate. Other claims
-get no screenshots.
-
-### Gate and escalation
-
-The lead session fixes the slice and requests verification again. A
-slice may be marked ready for review only when its latest report shows all of
-the following:
-
-- Every named story that `plan.md` assigns to the slice is `passing`.
-- Every claim the slice asserts in full is `established`.
-- Every `not established` or `blocked` result is on a claim the slice asserts
-  in part, and matches a limitation already approved in `verification.md` or
-  `plan.md`.
-- No `violated` result and no open escalation.
-
-The report covers the verified SHA, which may be older than the pushed tip
-only through evidence-only commits. An evidence-only commit changes nothing but
-the feature's `quickstart.md` execution results, as described under
-[Recording](#recording). Any code, story, test or run-instruction change after
-the verified SHA, including a change to `quickstart.md` steps, needs a new
-verification request.
-
-`pnpm verify:gate` applies these rules to the checked-out
-`{number}-{slug}-impl*` branch. It first syncs the branch's pull request
-comments into the local notes. It takes the slice's latest report, on whatever
-commit: that report's SHA must be HEAD, or the diff from it to HEAD must change
-only the feature's `quickstart.md` execution-results section. It never falls
-back to an earlier report. It regenerates the request at the report's SHA,
-checks the report's slice against the branch, and exits non-zero with every
-failing reason. It also applies the
-[code review gate](code-review.md#gate-and-escalation) to the slice's latest
-review, found the same way.
-
-A High fix is a branch whose open pull request is labelled `risk:high` and
-that is neither an implementation slice nor a specification or plan branch.
-For a High fix, the gate requires a report on HEAD (or an evidence-only
-ancestor, which for a fix changes no path at all) with slice ID `fix`, at least
-one claim, every claim `established`, every listed story `passing`, no
-unrequested violation and no open escalation, plus a fix review that passes the
-code review gate. The gate does not read the pull request body, so the person
-reviewing checks that the report's claims are the body's numbered claims. The
-gate reads the label from the pull request, so it cannot judge a fix branch
-offline. Specification and plan branches are not gated.
-
-A Claude Code `PreToolUse` hook in `.claude/settings.json` runs the gate
-whenever a session tries to mark a pull request ready, and blocks the attempt
-when the gate fails. It covers `gh pr ready`, a `gh api` call that sets
-`draft` false on a pull request, a `gh api` or `curl` call to a pull request's
-`ccr/ready_for_review` route, and the GitHub MCP tool `update_pull_request`
-with `draft: false`. It refuses paths it cannot judge, such as a GraphQL
-`markPullRequestReadyForReview` mutation or creating an implementation-slice
-pull request without `draft: true`, and names the gated way. Once the gate
-passes or does not apply, marking ready needs no person's confirmation: the
-hook approves the MCP update, and the project settings allow `gh pr ready` and
-the REST ready route without a prompt. Removing that prompt does not relax the
-gate, which still decides every attempt.
-
-Known limits: the hook cannot see `gh pr create` without `--draft`, any other
-HTTP client, another GitHub MCP server name, or a person in the web interface.
-A fix pull request created ready is not gated, because its `risk:high` label is
-not yet set. Other agents (Codex, OpenCode, Cursor) are not covered. The hook
-takes effect in sessions started after it is installed.
-
-A slice pull request cannot create its own exception. A new limitation goes
-back through the [corrections](git-workflow.md#corrections) path to the phase
-that owns it.
-
-Escalate to a person, through the lead session, instead of patching
-the implementation when:
-
-- a finding belongs to the specification or plan under the
-  [corrections table](git-workflow.md#corrections), for example a missing
-  story or a wrong claim
-- the same claim is still `violated` or `not established` after three
-  verification rounds
-- the verifier and implementation disagree about what a claim means
-
-One escalation covers the whole claim. Before escalating, the escalating
-session analyses every observation the claim makes, and every other claim in
-the request that uses the same channel and stories, and puts every decision
-those analyses need into the one escalation.
-
-### Recording
-
-The lead session does not summarize the report by hand. It runs
-`pnpm verify:render --write`, which appends the latest report on HEAD (or on a
-named commit: `pnpm verify:render <SHA> --write`) to the feature's
-`quickstart.md` execution results. The generated section names the slice's
-earlier results it supersedes, so they stay in place, marked stale. Do not
-edit the generated text; correct the report through a new verification run.
-The pull request body names the verified SHA and run UUID and links that
-section. Committing that summary creates an evidence-only commit, which needs
-no new verification request.
+The lead stops for a person when a claim still fails after three rounds, a
+blocking review finding remains in round three, the issue's accepted scope or
+claim must change, or a verifier and the lead disagree about the observation.
 
 ## Known limits
 
-- Assistive-technology claims remain a person's manual check. The verifier can
-  report what the accessibility tree exposes, which does not establish what a
-  screen reader announces.
-- `forced-colors` and `prefers-reduced-motion` are emulated in Chromium only.
-  They do not establish behaviour in Windows High Contrast or other browsers.
-- `test:visual` measures render health and overflow; it does not compare
-  pixels. The pixel suites compare pixels only for the stories listed for
-  rollout components. For Standard work the
-  [visual review](visual-review.md) judges appearance outside that coverage.
-  For High work a claim about exact visual appearance outside that coverage is judged
-  by a person from the verifier's
-  [screenshots](#screenshots-for-visual-claims) and the story links the pull
-  request names.
-- A claim that a downstream application works with a change cannot be
-  established here, and the verifier never attaches or runs another
-  repository. `test:next-consumer` is the in-repository consumer proxy. When a
-  change matters to a specific consumer, `verification.md` records that as an
-  approved limitation, and a delivery issue in the consumer's repository,
-  linked with `Contributes to`, covers the upgrade and its verification under
-  that repository's own process.
+- The harness observes this repository's Storybooks and packed packages. It
+  does not prove behavior inside a consuming application; link that consumer's
+  own issue and treat its evidence as a separate release/adoption concern.
+- Automated accessibility checks do not replace manual keyboard or
+  assistive-technology review where the claim needs it.
+- Old Git notes and pull request comments retain historical feature metadata.
+  That compatibility is not a current specification workflow.

@@ -4,8 +4,6 @@ import type { ThemeConfig } from './tokens.js'
  * The canonical default theme — the complete 25-token semantic color set,
  * copied byte-for-byte from the `$semantic-colors` map in
  * `packages/styles/src/_semantic.scss`.
- *
- * @see specs/059-default-theme-create-theme/contracts/default-theme.md
  */
 export const defaultTheme: ThemeConfig = {
   colors: {

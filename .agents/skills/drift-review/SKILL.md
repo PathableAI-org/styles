@@ -1,6 +1,6 @@
 ---
 name: drift-review
-description: Review one area of the PathAble design system (tokens, utilities, component wrappers, styles JS, React primitives, React theming, agent guidance, Storybook infrastructure) for slow drift from its owning documents and the constitution, verify and cap the findings, and file or update GitHub issues labelled drift. Read-only on the repository. Use for the scheduled drift review or when a person asks for a drift review of an area.
+description: Review one area of the PathAble design system (tokens, utilities, component wrappers, styles JS, React primitives, React theming, agent guidance, Storybook infrastructure) for slow drift from its current owning documents, verify and cap the findings, and file or update GitHub issues labelled drift. Read-only on the repository. Use for the scheduled drift review or when a person asks for a drift review of an area.
 ---
 
 # Drift review
@@ -10,8 +10,7 @@ description: Review one area of the PathAble design system (tokens, utilities, c
 Read [Drift review](../../../docs/engineering/drift-review.md) first. It owns
 the area list, the scope and categories, the finding fields, the issue format
 and how an area is chosen. This skill supplies the procedure. Also read
-[AGENTS.md](../../../AGENTS.md) and the
-[constitution](../../../.specify/memory/constitution.md).
+[AGENTS.md](../../../AGENTS.md).
 
 ## Arguments
 
@@ -127,9 +126,9 @@ For each candidate, before keeping it:
 
 1. Re-read the cited code at `SHA` and the document passage it depends on, and
    trace the path end to end.
-2. Try to refute it: look for an approved exception in the owning document,
-   `AGENTS.md`, the constitution or the feature's `specs/` record, a story or
-   test you missed, or an open issue that already covers it.
+2. Try to refute it: look for an approved exception in the owning document or
+   `AGENTS.md`, a story or test you missed, or an open issue that already
+   covers it.
 3. Write the `failureScenario` with concrete inputs or state and the wrong
    outcome, or the concrete change a maintainer would get wrong. If you
    cannot, drop the candidate.

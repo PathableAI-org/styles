@@ -48,6 +48,12 @@ const inline = (value) =>
 
 const count = (entries, noun) => `${String(entries.length)} ${noun}`
 
+/** New entries cover a pull request; older entries retain their slice label. */
+const evidenceScope = (sliceId) =>
+  sliceId.toLowerCase() === 'fix'
+    ? 'for this pull request'
+    : `for legacy slice ${sliceId}`
+
 /** A titled section, or nothing when it has no lines. */
 const section = (title, lines) =>
   lines.length === 0 ? [] : ['', `#### ${title}`, '', ...lines]
@@ -110,7 +116,7 @@ export const renderReview = (review, context) => {
   return [
     `**Code review** \`${review.reviewId}\` (round ${String(
       review.round,
-    )}) of slice ${review.sliceId} at \`${review.reviewedSha}\`: ${count(severity(review, 'blocking'), 'blocking')}, ${count(
+    )}) ${evidenceScope(review.sliceId)} at \`${review.reviewedSha}\`: ${count(severity(review, 'blocking'), 'blocking')}, ${count(
       severity(review, 'advisory'),
       'advisory',
     )}, ${count(review.closed, 'closed')}, ${count(review.escalations, 'escalations')}.`,
@@ -149,7 +155,7 @@ const reportHeadline = (report) => {
     const matching = report.claims.filter((claim) => claim.result === result)
     return matching.length > 0 ? [count(matching, result)] : []
   })
-  return `**Verification report** run \`${report.runId}\` of slice ${report.sliceId} at \`${report.verifiedSha}\`: ${
+  return `**Verification report** run \`${report.runId}\` ${evidenceScope(report.sliceId)} at \`${report.verifiedSha}\`: ${
     results.length > 0 ? results.join(', ') : 'no claims'
   }; ${count(
     report.stories.filter((story) => story.status !== 'passing'),

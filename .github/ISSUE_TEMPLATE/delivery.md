@@ -34,6 +34,14 @@ Say whether each change is additive, a visible change, or a removal or rename. S
 
 <!-- Prerequisites and unresolved decisions. Use real issue URLs; do not invent numbers. Separate what blocks starting from what blocks release. -->
 
+## Verification claims
+
+<!-- For High work, number each observable claim V-001, V-002, and so on. State the meaningful violation, the observation that distinguishes it, and the evidence channel that can see it. Standard and Light work may use concise acceptance bullets instead. -->
+
+## Implementation approach
+
+<!-- Name the owning sources and the smallest independently releasable change. Record ordering, migration and rollback concerns. If the work is too large for one reviewable pull request, split it into linked delivery issues rather than an in-repository specification stack. A maintainer accepts this section and the claims before High new behaviour starts. -->
+
 ## Completion evidence
 
 <!-- What proves this is done: the stories and checks that demonstrate the behaviour, and the released package version that contains it. A consumer need is done when it is released, not when it is merged. -->

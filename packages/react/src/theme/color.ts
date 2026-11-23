@@ -6,8 +6,6 @@
  * any other browser global and is deliberately conservative: modern color
  * functions that require color-space parsing (`lab()`, `lch()`, `oklch()`,
  * `color()`, `color-mix()`, …) are not accepted.
- *
- * @see specs/059-default-theme-create-theme/contracts/color-validation.md
  */
 
 const HEX_RE = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i

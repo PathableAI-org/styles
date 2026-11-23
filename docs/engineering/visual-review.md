@@ -58,8 +58,8 @@ The visual reviewer starts with a clean context and reads only:
   reviewer**, **Tier**, **Change** and **Evidence** sections and its
   changeset, at the head SHA
 - the standards it judges by, in [priority order](#priorities): Section 508,
-  the constitution's principles X and XV and its Visual Regression Protection
-  section, [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for the
+  the repository's accessibility, responsive-state and visual-regression
+  rules, [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for the
   default theme, and [Pixel visual regression](../testing/visual-regression.md)
 
 It never reads the lead session's transcript, worktree or messages,
@@ -147,7 +147,7 @@ over a lower one:
    A failure is a `section-508` finding, names its criterion and always
    blocks.
 
-2. **The constitution's accessibility and responsive principles** (X and XV):
+2. **The repository's accessibility and responsive-state rules:**
    visible focus, accessible state colours and disabled affordances, and
    layouts that hold at every viewport. A clear failure is a blocking
    `defect`. Where a principle asks for more than WCAG 2.0, such as 3:1
@@ -190,7 +190,7 @@ example, or a dark or high-contrast candidate, is captured with theme
 - Default-theme stories are judged against every priority above, including
   [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md): its palette, colour
   hierarchy and pairings, typography, iconography and the violations it lists.
-- Other-theme stories are judged against Section 508, the constitution and the
+- Other-theme stories are judged against Section 508, the owning docs and the
   pull request's intent, and never against the brand book. A `brand` finding
   on one is invalid, and the schema rejects it.
 
@@ -333,7 +333,7 @@ or tells the sessions how to continue.
 ## Boundaries
 
 The visual reviewer is read-only. It edits no branch, pull request, issue,
-baseline or `specs/` file, and does not fix rendering or propose patches. Its
+baseline file, and does not fix rendering or propose patches. Its
 only writes are its note, the comment `pnpm visual:record` posts, the
 private screenshots page, and bug issues for unrelated defects.
 

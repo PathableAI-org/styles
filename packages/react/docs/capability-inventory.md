@@ -1,6 +1,5 @@
 # Capability Inventory: @pathable/styles Utility Classes
 
-**Feature**: `specs/044-semantic-prop-foundation`
 **Source**: `packages/styles/src/_utilities-config.scss` (`$pathable-utilities` config map); `_utilities.scss` generates the utility classes
 **Generated**: 2026-08-19
 
@@ -179,18 +178,16 @@ This document inventories every utility CSS class family emitted by `@pathable/s
 
 ## Component Semantic-Prop Support Matrix
 
-**Feature**: `specs/046-form-control-button-sizing` (slice 03)
-
 This matrix records which `@pathable/react` components support which semantic sizing props. Supported = ✅, Not yet supported = —, Not applicable = N/A.
 
-| Component | `width` | `maxWidth` | Notes                                             |
-| --------- | ------- | ---------- | ------------------------------------------------- |
-| Card      | ✅      | ✅         | Slice 02 (`specs/045-card-sizing-spacing`)        |
-| Button    | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
-| Input     | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
-| Select    | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
-| Textarea  | ✅      | ✅         | Slice 03 (`specs/046-form-control-button-sizing`) |
-| Accordion | —       | —          | Not yet evaluated                                 |
-| Alert     | —       | —          | Not yet evaluated                                 |
+| Component | `width` | `maxWidth` | Notes             |
+| --------- | ------- | ---------- | ----------------- |
+| Card      | ✅      | ✅         | Implemented       |
+| Button    | ✅      | ✅         | Implemented       |
+| Input     | ✅      | ✅         | Implemented       |
+| Select    | ✅      | ✅         | Implemented       |
+| Textarea  | ✅      | ✅         | Implemented       |
+| Accordion | —       | —          | Not yet evaluated |
+| Alert     | —       | —          | Not yet evaluated |
 
 **Note**: `minWidth` is not yet supported on any component — no `min-width` utility class exists in `@pathable/styles`. See Gap Summary above.

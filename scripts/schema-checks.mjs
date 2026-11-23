@@ -72,6 +72,7 @@ export const uuid = matching(
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
   'a UUID',
 )
+/** Retained so notes published before the workflow change remain importable. */
 export const featureDir = matching(
   /^specs\/\d+-[a-z0-9-]+$/,
   'specs/{number}-{slug}',
@@ -81,12 +82,13 @@ export const storyId = matching(
   /^[a-z0-9]+(?:-[a-z0-9]+)*--[a-z0-9]+(?:-[a-z0-9]+)*$/,
   'a Storybook story ID such as components-button--primary',
 )
-export const sliceId = matching(/^[A-Za-z0-9]+$/, 'a slice ID such as A1')
+/** Legacy field name; new whole-pull-request evidence uses the value `fix`. */
+export const sliceId = matching(/^[A-Za-z0-9]+$/, 'a slice ID such as fix')
 
-/** Whether a slice ID names a High fix's single pull request rather than an implementation slice. */
+/** Whether the legacy slice field names the whole pull request. */
 export const isFixSlice = (id) => id.toLowerCase() === 'fix'
 
-/** A High fix (slice ID `fix`) may omit its feature directory; every implementation slice names one. */
+/** New entries omit `featureDir`; legacy slice entries must still name it. */
 export const featureDirUnlessFix = (value) =>
   value.featureDir === undefined &&
   !(typeof value.sliceId === 'string' && isFixSlice(value.sliceId))

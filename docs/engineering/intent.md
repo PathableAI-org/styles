@@ -2,10 +2,10 @@
 
 This document says why this repository exists, what it currently produces, who
 those products serve, and how a consumer's need becomes a released change. It
-owns intent and flow only. The rules that govern the work live in the
-[constitution](../../.specify/memory/constitution.md), the current refactor
-boundary lives in [Target state](target-state.md), and the process weight a
-change needs lives in the [Git workflow](git-workflow.md).
+owns intent and flow only. The current refactor boundary lives in
+[Target state](target-state.md), and the process weight a change needs lives in
+the [Git workflow](git-workflow.md). Package and testing rules live in the
+owning documents routed from [`AGENTS.md`](../../AGENTS.md).
 
 ## Why it exists
 
@@ -126,7 +126,7 @@ in other PathAble repositories.
    (blocking modal) are examples: each describes current behaviour in a named
    release, the consumer's use case, and what "done" looks like.
 2. **Land it source-first.** New visual behaviour, classes, tokens and assets
-   land in `packages/styles` (the constitution's "Source-first sequencing").
+   land in `packages/styles` first.
    React is deferred during the current refactor and changes only when an issue
    explicitly puts it in scope. In that separate scope, an adapter change still
    begins from the existing styles contract; a change that only adds React
@@ -165,11 +165,11 @@ adoption in the consumer repository is tracked there, not here.
 
 ## Where the rules live
 
-| Topic                                                       | Owner                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Principles, packaging, release and quality gates            | [Constitution](../../.specify/memory/constitution.md)                                                |
-| Current styles product and consumer-guidance direction      | [Target state](target-state.md) and [`components/README.md`](../../components/README.md)             |
-| Risk tiers, branches, pull requests and merging             | [Git workflow](git-workflow.md)                                                                      |
-| Changesets and version bumps                                | [`.changeset/README.md`](../../.changeset/README.md)                                                 |
-| When an explicitly scoped React change updates its guidance | [React agent guidance instructions](../../.github/instructions/react-agent-guidance.instructions.md) |
-| Spec Kit templates, presets and the upgrade workflow        | [Spec Kit](spec-kit.md)                                                                              |
+| Topic                                                       | Owner                                                                                                          |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Product intent and source-first package ownership           | This document, [Target state](target-state.md), and the owning package documentation                           |
+| Release process and quality gates                           | [Git workflow](git-workflow.md), [Changesets](../../.changeset/README.md), and [Testing](../testing/README.md) |
+| Current styles product and consumer-guidance direction      | [Target state](target-state.md) and [`components/README.md`](../../components/README.md)                       |
+| Risk tiers, branches, pull requests and merging             | [Git workflow](git-workflow.md)                                                                                |
+| Changesets and version bumps                                | [`.changeset/README.md`](../../.changeset/README.md)                                                           |
+| When an explicitly scoped React change updates its guidance | [React agent guidance instructions](../../.github/instructions/react-agent-guidance.instructions.md)           |

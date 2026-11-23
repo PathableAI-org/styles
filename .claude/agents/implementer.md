@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: Implements one clearly scoped task for a PathAble design-system lead session, from the lead's brief, in the lead's working tree. Edits files and runs the checks the brief names, then reports the files changed, each check's result and any open question. Never commits, pushes, edits a pull request, records a note or edits specs/. Stops and asks when the brief leaves the scope open.
+description: Implements one clearly scoped task for a PathAble design-system lead session, from the lead's brief, in the lead's working tree. Edits files and runs the checks the brief names, then reports the files changed, each check's result and any open question. Never commits, pushes, edits a pull request or records a note. Stops and asks when the brief leaves the scope open.
 tools: Read, Edit, Write, Grep, Glob, Bash, Skill
 model: sonnet
 effort: medium
@@ -35,7 +35,7 @@ costs a review round.
   than widening the change.
 - Never commit, push, switch branches, stash, or rewrite history. The lead
   reads your diff and commits.
-- Never edit `specs/`, the pull request, issues or notes, and never run
+- Never edit the pull request, issues or notes, and never run
   `review:record`, `verify:record`, `visual:record` or `notes:publish`.
 - Never disable or suppress a lint, format or type check, as
   [AGENTS.md](../../AGENTS.md#no-check-suppressions) forbids. Fix the cause,

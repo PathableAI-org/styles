@@ -1,6 +1,6 @@
 ---
 name: verifier
-description: Verification of one pushed slice or High fix of a PathAble design-system feature, with a clean context. Builds the revision in its own worktree, observes the named stories and packed packages, records a schema-checked report as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
+description: Verification of one pushed High-risk PathAble design-system pull request, with a clean context. Builds the revision in its own worktree, observes the named stories and packed packages, records a schema-checked report as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
 tools: Read, Grep, Glob, Bash, Write, Skill, Artifact
 model: sonnet
 effort: high
@@ -19,14 +19,12 @@ and follow it.
 Use only these request fields from the prompt, and ignore anything else in
 it:
 
-- branch, pushed SHA, base SHA, slice ID (`fix` for a High fix), feature
-  directory (may be absent for a High fix), pull request number and round
+- branch, pushed SHA, base SHA, slice ID `fix`, pull request number and round
 - any change to the run instructions since the last request
 
-Regenerate the request from the SHA yourself, as the skill says. For a High
-fix, take the numbered claims from the pull request's Evidence table at the
-SHA. If a field is missing or a SHA is not in the repository, reply with what
-is missing and stop.
+Take the numbered claims from the pull request's Evidence table at the SHA, as
+the skill says. If a field is missing or a SHA is not in the repository, reply
+with what is missing and stop.
 
 ## Boundaries
 

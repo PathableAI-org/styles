@@ -15,7 +15,6 @@ export default defineConfig([
     '**/.vite/**',
     '**/.cache/**',
     '**/.pnpm-store/**',
-    'specs/**',
     'handoffs/**',
     'patches/**',
     'tmp/**',

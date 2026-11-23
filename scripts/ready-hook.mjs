@@ -2,8 +2,8 @@
 /**
  * Decisions for the Claude Code PreToolUse hook that gates marking a pull request ready for review, however a session
  * attempts it: `gh pr ready`, a `gh api` call that clears `draft` or posts to the `ccr/ready_for_review` route, or the
- * GitHub MCP tool's `update_pull_request` with `draft: false`. An implementation-slice branch or a High fix (labelled
- * risk:high, and not a Spec Kit specification or plan branch) must pass the verification and code review gate, judged
+ * GitHub MCP tool's `update_pull_request` with `draft: false`. A pull request
+ * labelled risk:high must pass the verification and code review gate, judged
  * at the pull request's head after syncing its note comments. Paths the gate cannot judge are refused with the gated
  * way to do the same thing. Once the gate passes or does not apply, marking ready needs no person's confirmation. See
  * docs/engineering/verification-harness.md#gate-and-escalation.
@@ -17,12 +17,7 @@ import { ghRest, openPullForBranch, pullRequest } from './github-access.mjs'
 /** @typedef {import('./github-access.mjs').RestAccess} RestAccess */
 import { syncNotice } from './note-sync.mjs'
 import { defaultNotesRef } from './review-findings.mjs'
-import {
-  checkedOut,
-  gateApplies,
-  isImplementationBranch,
-  runGate,
-} from './verification.mjs'
+import { gateApplies, runGate } from './verification.mjs'
 
 /**
  * @typedef {{ readonly kind: "allow" } | { readonly kind: "approve"; readonly reason: string } | { readonly kind: "block"; readonly reason: string }} Decision
@@ -137,18 +132,6 @@ const mcpUpdateAttempt = (input) => {
   }
 }
 
-const mcpCreateAttempt = (input) => {
-  const head = field(input, 'head')
-  if (field(input, 'draft') === true || typeof head !== 'string')
-    return undefined
-  return !isImplementationBranch(head)
-    ? undefined
-    : {
-        kind: 'refuse',
-        reason: `Create the pull request for ${head} as a draft (draft: true), then mark it ready once the gate passes.`,
-      }
-}
-
 /** The ready-for-review attempt a tool call makes, or undefined when it makes none. */
 export const readyAttempt = (toolName, toolInput) => {
   if (toolName === 'Bash') {
@@ -157,9 +140,7 @@ export const readyAttempt = (toolName, toolInput) => {
   }
   if (toolName === 'mcp__github__update_pull_request')
     return mcpUpdateAttempt(toolInput)
-  return toolName === 'mcp__github__create_pull_request'
-    ? mcpCreateAttempt(toolInput)
-    : undefined
+  return undefined
 }
 
 const blocked = (problems) => ({
@@ -203,17 +184,13 @@ const pullProblems = (cwd, rest, target) => {
 }
 
 /**
- * A branch's open pull request, gated at its head. Offline or before the pull request exists, a checked-out slice
- * branch is still gated on its local notes; any other branch GitHub cannot answer for is refused.
+ * A branch's open pull request, gated at its head. When GitHub cannot answer,
+ * the hook cannot establish the risk label and refuses the operation.
  */
 const branchProblems = (cwd, rest, target) => {
   const pull = openPullForBranch(rest, target.name)
   if (pull.ok && pull.value !== undefined)
     return gatePull(cwd, rest, pull.value)
-  if (target.checkedOut && isImplementationBranch(target.name)) {
-    const gate = runGate(cwd, checkedOut(cwd))
-    return gate.ok ? undefined : gate.problems
-  }
   return pull.ok
     ? undefined
     : [

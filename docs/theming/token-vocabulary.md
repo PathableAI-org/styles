@@ -5,14 +5,10 @@ each token control?" It lists every public color token in the `ThemeColors`
 surface of `@pathableai/react`, its `--pathable-color-*` CSS custom property,
 its default value, and a plain-language description of its role.
 
-For how to actually override these tokens, see the
-[consumer guide](./consumer-guide.md). For the runtime API contracts behind the
-types and defaults, see the feature contracts under `specs/`:
-
-- Key set and camelCase-to-kebab mapping:
-  `specs/058-theme-token-types/contracts/theme-types.md`
-- Default values and `defaultTheme`:
-  `specs/059-default-theme-create-theme/contracts/default-theme.md`
+For how to override these tokens, see the
+[consumer guide](./consumer-guide.md). The public types in
+`packages/react/src/theme/` and the generated declarations own the runtime API;
+the SCSS semantic map owns the defaults.
 
 ## The 25 color tokens
 

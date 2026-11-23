@@ -11,10 +11,10 @@ behaviour and rules live in:
 - the package READMEs and guidance files (`packages/styles/`,
   `packages/react/`)
 - [`docs/testing/`](../testing/README.md) and [`docs/theming/`](../theming/)
-- the [constitution](../../.specify/memory/constitution.md)
+- [`docs/engineering/`](../engineering/)
 
-New feature work is specified with Spec Kit under `specs/<n>-<slug>/`, which is
-also a historical record once the feature ships. See the root
-[AGENTS.md](../../AGENTS.md) for how the two relate.
+Delivery issues and pull requests preserve the accepted scope, decisions and
+evidence for new work. Git history preserves the retired feature-spec records.
+See the root [AGENTS.md](../../AGENTS.md) for the current owners.
 
 Do not move, rename or delete the existing plans.

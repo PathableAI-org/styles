@@ -92,12 +92,6 @@ apps/storybook-react/test-results/
 # Test artifacts
 artifacts/
 
-# Specs and handoffs
-specs/**/*.json
-specs/**/part*.md
-specs/**/merged*.md
-specs/**/handoffs/
-
 # Temporary feedback files
 FEEDBACK.md
 

@@ -11,40 +11,18 @@ checks to run before committing are in [`AGENTS.md`](../../AGENTS.md#before-comm
 - Name a branch `<type>/<short-slug>`, where `<type>` is the Conventional
   Commit type of the change (for example `fix/modal-escape`). A branch name
   assigned by an agent harness, such as `claude/<slug>`, is also fine.
-- Spec Kit feature work uses [feature branch names](#feature-branches)
-  instead, because the verification gate reads the feature and slice from them.
 - Never push to `main`. Never rewrite history on someone else's branch.
-
-### Feature branches
-
-Spec Kit allocates the feature number and creates the specification branch as
-`{number}-{slug}`, matching `specs/{number}-{slug}/`. Later branches keep the
-same number:
-
-| Branch                         | Holds                                                            |
-| ------------------------------ | ---------------------------------------------------------------- |
-| `{number}-{slug}`              | The specification, or the combined specification and plan        |
-| `{number}-{slug}-plan`         | The plan (High new behaviour only)                               |
-| `{number}-{slug}-impl`         | The first implementation slice                                   |
-| `{number}-{slug}-impl-<slice>` | Each further slice, using the lower-case slice ID from `plan.md` |
-
-Do not put the GitHub issue number in the branch name; issue numbers and Spec
-Kit numbers are different sequences. Name the issue in the pull request title
-and body. Before planning, tasks or implementation, set
-`SPECIFY_FEATURE_DIRECTORY` to `specs/{number}-{slug}`, so a missing or stale
-`.specify/feature.json` cannot point at a different specification.
 
 ## Commits
 
 Commits follow Conventional Commits; commitlint and lint-staged run in the
 Husky hooks and must not be bypassed. Keep commits small and focused. Commit
-per workspace package where that makes sense (constitution, "Commit
-discipline").
+per workspace package where that makes sense.
 
 ## Pull requests
 
-- One pull request per change, or per phase and slice for High new behaviour
-  and specified Standard work (see [Process by tier](#process-by-tier)).
+- One pull request per independently reviewable change (see
+  [Process by tier](#process-by-tier)).
 - Use the [pull request template](../../.github/pull_request_template.md).
 - The PR title is a Conventional Commit subject. It becomes the commit subject
   on `main`, so it is the durable history: make it say what changed for a
@@ -70,7 +48,8 @@ to decide or accept, so they do not have to dig it out of the evidence:
 
 Process weight follows risk. Each delivery issue and each pull request has one
 tier: **High**, **Standard** or **Light**. The tier decides what evidence the
-work needs and whether new behaviour needs a specification pull request first.
+work needs and whether the delivery issue needs a maintainer's acceptance
+before implementation starts.
 
 ### Triggers
 
@@ -107,8 +86,8 @@ the change itself.
 
 Otherwise, work is **Light**: documentation, tests, stories for existing
 behaviour, repository tooling, CI, dependency updates (including lockfile-only
-updates and minor or patch range bumps of runtime dependencies), generated Spec
-Kit upgrades, and refactors or fixes that stay inside an existing contract with
+updates and minor or patch range bumps of runtime dependencies), and refactors
+or fixes that stay inside an existing contract with
 no consumer-visible change (same exports and declarations, no baseline change,
 and no visible rendering change outside baseline coverage). A dependency update
 that changes rendering is Standard.
@@ -124,8 +103,8 @@ props and link semantics are untouched, and High if the design changes them.
 ### Tiers and changesets
 
 The changeset bump sets a minimum tier; a trigger can raise it. Changeset
-rules themselves are in [`.changeset/README.md`](../../.changeset/README.md),
-and version semantics in constitution principle XIII.
+rules and version semantics are in
+[`.changeset/README.md`](../../.changeset/README.md).
 
 | Changeset in the pull request                               | Minimum tier |
 | ----------------------------------------------------------- | ------------ |
@@ -140,37 +119,26 @@ A High trigger does not by itself mean `major`: a compatible keyboard fix to an
 interactive component is High with a `patch` changeset.
 
 Both packages are below 1.0.0, so breaking changes currently ship as `minor`
-with a breaking-change label (constitution principle XIII).
+with a breaking-change label and migration notes, as
+[`.changeset/README.md`](../../.changeset/README.md) defines.
 
 ### Process by tier
 
-| Work                | Pull requests                                                                                                                                                                                                     |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| High, new behaviour | A specification pull request (`spec.md`, `verification.md`), then a plan pull request (`plan.md` with its slice table, `quickstart.md`), then one pull request per [implementation slice](#implementation-slices) |
-| High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table                                                                                                                             |
-| Standard, specified | One combined specification-and-plan pull request, then one pull request per implementation slice                                                                                                                  |
-| Standard, otherwise | One pull request with normal CI, a code review subagent and, when it touches a rendering path, a visual review subagent; it merges under [agent merge](#agent-merge)                                              |
-| Light               | One pull request with normal CI, a code review subagent and, when it touches a rendering path, a visual review subagent; it merges under [agent merge](#agent-merge)                                              |
+| Work                | Required path                                                                                                                                                                                |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| High, new behaviour | The maintainer accepts the delivery issue's outcome, scope, contract impact, numbered claims and implementation approach before work starts; one pull request follows and a person merges it |
+| High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table; a person merges it                                                                                    |
+| Standard            | One pull request with normal CI, code review and, for a rendering path, visual review; it merges under [agent merge](#agent-merge)                                                           |
+| Light               | One pull request with normal CI, code review and, for a rendering path, visual review; it merges under [agent merge](#agent-merge)                                                           |
 
-Each specification, plan or combined phase merges on a person's approval
-before the next starts (see [Spec Kit](spec-kit.md) for the artifacts).
-Standard and Light implementation pull requests then merge under
-[agent merge](#agent-merge); High ones on a person's approval. A High feature combines
-specification and plan only as the maintainer's explicit choice for a small,
-coherent feature, recorded in the pull request body.
-
-Standard work is one pull request by default, new behaviour included. It
-becomes **specified** only when the maintainer asks for a specification, for
-example for a new component or multi-state interactive behaviour, and records
-that in the delivery issue; it then runs as a combined specification-and-plan
-pull request and verified slices. An agent may suggest specifying Standard
-work, but never specifies, waives or combines a phase on its own.
+The delivery issue is the accepted definition of one change. If the work is
+too large for one reviewable pull request, split it into separately releasable
+delivery issues instead of creating an in-repository specification stack.
+Each issue links the others and owns its own tier, scope, claims and evidence.
 
 #### Visual-only styles work
 
-Specifications are for behaviour, not appearance. Work that only changes how
-`@pathableai/styles` looks never gets a Spec Kit specification, plan or slices,
-at any tier. It is visual-only when every changed path is in `packages/styles`
+Work is visual-only when every changed path is in `packages/styles`
 (SCSS, tokens, fonts, icons and other assets), its styles stories,
 `apps/storybook` or `visual-baselines/`, and it changes no behaviour: no
 JavaScript helper, no keyboard, focus or ARIA behaviour, no interaction story's
@@ -180,7 +148,7 @@ play function asserting new behaviour, and no React source or API.
   [visual review](visual-review.md) as its evidence, merged under
   [agent merge](#agent-merge).
 - **High** (for example renaming or removing a token or class). One pull
-  request that runs like a High fix: numbered claims in its Evidence table,
+  request with numbered claims in its Evidence table,
   code review, verification and visual review, and a person's merge. Migration notes go in
   the changeset as usual.
 
@@ -198,7 +166,7 @@ Evidence each tier needs, in addition to the checks in
   unchanged).
 - **Standard.** Everything for Light, plus:
   - a deterministic, named story for each new or changed state, in the styles
-    Storybook first and then the React Storybook (constitution XIV);
+    Storybook first and then the React Storybook;
   - `pnpm test:storybook-styles` and/or `pnpm test:storybook-react`, which run
     the Storybook test-runner with rendered accessibility checks;
   - `pnpm test:visual`, and the pixel visual-regression suites with every
@@ -221,8 +189,9 @@ Evidence each tier needs, in addition to the checks in
   - a package-content check (`pnpm pack --dry-run` or the `check:package` and
     `check:types` scripts) when entry points or files change;
   - migration notes in the changeset for any removal or rename;
-  - numbered claims, each with its result and evidence: from `verification.md`
-    for new behaviour, or in the Evidence table for a fix.
+  - numbered claims, each with its result and evidence, in the pull request's
+    Evidence table. For new behaviour, the claim IDs and observations must
+    match the accepted delivery issue.
 
 ### Recording and changing a tier
 
@@ -251,64 +220,32 @@ Every delivery issue runs in one lead session, which runs the independent
 checks as clean-context subagents. [Orchestration](orchestration.md) owns
 which subagents each tier gets, the stop points and the models.
 
-- **Claims.** The specification's `verification.md` numbers the claims a
-  feature makes (`V-001`, `V-002`, …), each with the observation that tells it
-  apart from its violation and the evidence channel that can see it. A High
-  fix numbers its claims in the pull request's Evidence table instead.
-  [The verification harness](verification-harness.md) owns the channels and
-  what each tier's `verification.md` holds.
-- **Verification.** A verifier subagent checks each pushed slice in its
+- **Claims.** High work numbers its claims (`V-001`, `V-002`, …) in the
+  delivery issue and the pull request's Evidence table. Each claim names the
+  observation that distinguishes it from its violation and the evidence
+  channel that can see it. [The verification harness](verification-harness.md)
+  owns the channels and report format.
+- **Verification.** A verifier subagent checks the pushed pull request in its
   own detached worktree, through the Storybooks and the packed packages, and
   records a schema-checked report in a Git note on the exact pushed SHA.
 - **Review.** A code review subagent reviews the same SHA with a clean context
-  against the constitution's lenses and records its findings the same way
+  against the owning documentation and records its findings the same way
   ([Code review](code-review.md)).
-- **Gate.** `pnpm verify:gate` passes only when the slice's latest report
+- **Gate.** `pnpm verify:gate` passes only when the pull request's latest report
   establishes its claims and its latest review has no open blocking finding.
   A Claude Code hook runs the gate on every attempt to mark a pull request
   ready, and blocks a failing one.
 - **For High work, human review is still the approval.** The reports and
   reviews are input to it, as are passing checks and Copilot's comments.
-- **For Standard and Light work, the reviews replace it.** Specified Standard
-  slices also get a [visual review](visual-review.md), and merge under
+- **For Standard and Light work, the reviews replace it.** They merge under
   [agent merge](#agent-merge).
 
-Other Standard work and Light work get no verifier subagent and no
-`verification.md`. They get normal CI, the checks the pull request names, a
+Standard and Light work get no verifier subagent. They get normal CI, the
+checks the pull request names, a
 [code review subagent](code-review.md) and, when they touch a rendering path,
 a [visual review subagent](visual-review.md), and then merge under
 [agent merge](#agent-merge). Every tier runs the advisory
 [pre-push self-review](code-review.md#pre-push-self-review).
-
-## Implementation slices
-
-The plan divides implementation into slices. Each slice is one pull request:
-
-- **One decision.** A reviewer can accept the slice without also accepting a
-  later one.
-- **Source first.** A slice that adds React API for new visual behaviour comes
-  after, or includes, the slice that adds the `@pathableai/styles` contract and
-  its styles stories (constitution I and IV).
-- **About 15 hand-written files at most.** Lockfile changes, visual
-  baselines and generated output are listed separately. When no coherent stopping point
-  exists below that size, the plan and the pull request body say why.
-- **Vertical.** Each slice passes CI on its own. A public contract lands with
-  its first consumer, its stories and its evidence, not ahead of them.
-- **Verified.** A slice is marked ready only after its latest verification
-  report and review pass [the gate](verification-harness.md#gate-and-escalation).
-
-Slices are sequential. While slice N's pull request is open, slice N+1 may
-branch from N's branch and target it as its base; after N merges, GitHub
-retargets N+1 to `main`, and its session merges `origin/main` into it. Agents
-cannot force-push here, so a correction moves upward by merging the lower
-branch into the upper one, never by rebasing a pushed branch. The repository
-squash-merges, so the merge commits never reach `main`. This repository does
-not use the `gh stack` extension or GitHub's native stacks, as
-[Orchestration](orchestration.md#decisions) records.
-
-If the planned slices cannot meet these rules, change the plan's slices
-through the [corrections](#corrections) path rather than letting one slice
-grow.
 
 ## Merge timing
 
@@ -319,10 +256,10 @@ grow.
   approval, once the merge gate passes.
 - Every other pull request merges only after a person has approved it, and an
   agent merges one only when a person has approved it and explicitly asked
-  that agent to merge it. That covers High work, specification, plan and
-  combined pull requests, [guardrail changes](#guardrail-changes), a pull
-  request labelled `hold`, and any escalated pull request. Passing checks and
-  bot review comments are not approval.
+  that agent to merge it. That covers High work,
+  [guardrail changes](#guardrail-changes), a pull request labelled `hold`, and
+  any escalated pull request. Passing checks and bot review comments are not
+  approval.
 - Renovate's automerge (configured in [`renovate.json5`](../../renovate.json5))
   is the maintainer's standing exception for dependency updates. It never
   automerges major upgrades, or `react`, `react-dom`, `next` or `@uswds/uswds`,
@@ -350,9 +287,7 @@ An agent may merge a pull request when all of these hold:
 - It is labelled `risk:standard` or `risk:light`, and the tier is right under
   [Triggers](#triggers). When in doubt the tier is High, as always, and an
   agent never lowers a tier.
-- It is single-pull-request work, or an implementation slice of specified
-  Standard work. Specification, plan and combined pull requests are decisions,
-  and a person approves them.
+- It is single-pull-request work.
 - It changes no [guardrail file](#guardrail-changes).
 - It is not the `ci: version packages` release pull request.
 - It is not labelled `hold`, has no unresolved escalation, and no person has
@@ -385,8 +320,8 @@ tier, because it changes the rules agents work under:
   `scripts/merge.mjs`, `scripts/verify.mjs`, `scripts/review.mjs`,
   `scripts/visual.mjs` and `scripts/notes.mjs`
 - the root `package.json`, whose scripts name those commands
-- `.specify/memory/constitution.md`, every `AGENTS.md`, `CLAUDE.md`, and the
-  process documents in `docs/engineering/`
+- every `AGENTS.md`, `CLAUDE.md`, and the process documents in
+  `docs/engineering/`
 
 The list lives in code, in `guardrailPaths` in
 [`scripts/merge-gate.mjs`](../../scripts/merge-gate.mjs); change both
@@ -414,10 +349,9 @@ the reviews as subagents. For single-pull-request work:
 5. When `pnpm merge:gate` passes, it merges with the GitHub MCP tool
    `merge_pull_request` and `merge_method: squash`, and notifies the person.
 
-Implementation slices of specified Standard work follow the same steps, with
-the verifier subagent as well: the slice is reviewed, visually reviewed
-and verified, and the [verification gate](verification-harness.md#gate-and-escalation)
-must pass at the head.
+High work follows the same steps with the verifier subagent as well. The
+[verification gate](verification-harness.md#gate-and-escalation) must pass at
+the head before the pull request is marked ready for a person.
 
 ### Keeping up to date
 
@@ -435,7 +369,7 @@ at the head, with the merge base taken against `origin/main` each time. A
 conflict resolution, or `main` changing a line the pull request's diff carries
 as context, changes the patch ID, and the lead session requests a
 new round. A verification report is an observation of one SHA and does not
-carry over this way: a slice that merges `main` in needs a new verification
+carry over this way: High work that merges `main` in needs a new verification
 round.
 
 ### The merge gate
@@ -453,7 +387,7 @@ when all of these hold:
   finding or escalation; for single-pull-request work its slice ID is `fix`
 - when the pull request touches a rendering path, the latest visual review
   covers the head with no open blocking finding or escalation
-- for an implementation slice, `pnpm verify:gate` passes at the head
+- for High work, `pnpm verify:gate` passes at the head before a person merges
 
 A Claude Code `PreToolUse` hook runs the gate whenever a session tries to
 merge a pull request:
@@ -522,31 +456,24 @@ run. Re-enable the gated jobs and steps when the refactor lands.
 
 ## Corrections
 
-Change the earliest phase that owns the decision.
+Change the current owner of the decision.
 
-| Discovery                                                  | Owner                                           |
-| ---------------------------------------------------------- | ----------------------------------------------- |
-| Algorithm, private implementation or story layout          | Implementation                                  |
-| Component class, token, prop, export, entry point or slice | Plan                                            |
-| Claim, observation or evidence channel                     | Specification                                   |
-| Scope of the delivery issue                                | The maintainer. Stop the affected feature work. |
+| Discovery                                         | Owner                                                     |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| Algorithm, private implementation or story layout | The implementation pull request                           |
+| Public contract or verification claim             | The delivery issue; update it before continuing           |
+| Scope of the delivery issue                       | The maintainer. Stop the affected work and ask for review |
 
-When the owning pull request is still open, fix that branch, merge it upward
-into each open branch above it, rerun the affected checks, and ask for review
-where a decision changed. When the owning phase is already on `main`, open a
-corrective pull request for that phase, merge it on approval, and merge
-`origin/main` into the open slice branches. Do not hide the correction inside
-an implementation branch.
+Update the delivery issue when an accepted contract, claim or scope changes,
+record the decision, and rerun the affected checks and independent reviews.
+Do not hide a product decision only in an implementation diff.
 
-A merge does not renew approval, and by itself does not renew evidence. A
-slice keeps its verification report and review only when
-[the gate](verification-harness.md#gate-and-escalation) finds that the diff
-from the verified or reviewed commit to the new head changes nothing but the
-feature's `quickstart.md` execution results. The one exception is the
-[merge gate](#the-merge-gate), which keeps a code review or visual review
-across an update from `main` that leaves the pull request's own diff
-unchanged, as [Keeping up to date](#keeping-up-to-date) defines. Report which decisions changed,
-which public contracts are affected, and which evidence must be repeated.
+A merge does not renew approval or evidence. The merge gate keeps a code or
+visual review across an update from `main` only when the pull request's own
+diff is unchanged, as [Keeping up to date](#keeping-up-to-date) defines.
+Otherwise repeat the affected reviews and verification. Report which
+decisions changed, which public contracts are affected, and which evidence
+was repeated.
 
 ## Working without GraphQL
 

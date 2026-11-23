@@ -29,7 +29,7 @@ import {
 /** @typedef {import('./support.mjs').SampleRepo} SampleRepo */
 
 const refs = { review: defaultNotesRef }
-const branch = '900-sample-impl'
+const branch = 'work/button-focus'
 const secondReviewId = '0b6f3c1e-2d4a-4e8b-9c7f-5a1d2e3f4b6c'
 
 let source
@@ -394,7 +394,7 @@ void describe('syncing pull request comments into local notes', () => {
         refs,
         rest: fakeGitHub({ offline: true }),
       }).notice,
-      'Notes: GitHub is unreachable (GitHub repos/{owner}/{repo}/pulls?state=open&head={owner}:900-sample-impl: ' +
+      'Notes: GitHub is unreachable (GitHub repos/{owner}/{repo}/pulls?state=open&head={owner}:work%2Fbutton-focus: ' +
         'error connecting to api.github.com); reading local notes only.\n',
     )
     target.git('checkout', '--quiet', '--detach')
@@ -461,7 +461,7 @@ void describe('rendering a note comment for people', () => {
     assert.equal(
       rendered(body),
       [
-        `**Code review** \`${review.reviewId}\` (round 1) of slice A1 at \`${verified}\`: 1 blocking, 1 advisory, 1 closed, 1 escalations.`,
+        `**Code review** \`${review.reviewId}\` (round 1) for this pull request at \`${verified}\`: 1 blocking, 1 advisory, 1 closed, 1 escalations.`,
         '',
         '#### Findings',
         '',
@@ -488,7 +488,7 @@ void describe('rendering a note comment for people', () => {
     const [body = ''] = bodies(fake)
     assert.equal(
       rendered(body),
-      `**Code review** \`${review.reviewId}\` (round 1) of slice A1 at \`${verified}\`: 0 blocking, 0 advisory, 0 closed, 0 escalations.\n\n#### Findings\n\nNo open findings.`,
+      `**Code review** \`${review.reviewId}\` (round 1) for this pull request at \`${verified}\`: 0 blocking, 0 advisory, 0 closed, 0 escalations.\n\n#### Findings\n\nNo open findings.`,
     )
   })
 
@@ -533,7 +533,7 @@ void describe('rendering a note comment for people', () => {
     const text = rendered(bodies(fake)[0] ?? '')
     assert.ok(
       text.startsWith(
-        `**Verification report** run \`${recorded.value.runId}\` of slice A1 at \`${verified}\`: `,
+        `**Verification report** run \`${recorded.value.runId}\` for this pull request at \`${verified}\`: `,
       ),
     )
     assert.deepEqual(tableRows(text), [
@@ -547,7 +547,7 @@ void describe('rendering a note comment for people', () => {
       ],
       [
         'V-004 (partial)',
-        'not established (L-2)',
+        'established',
         'browser',
         '§A1 step 1 at 200% and 400% text size',
         'Increased text size in Chromium',
@@ -570,7 +570,7 @@ void describe('rendering a note comment for people', () => {
     ])
     assert.match(
       text,
-      /: 1 established, 1 not established; 1 stories not passing; 1 escalations\.\n/,
+      /: 2 established; 1 stories not passing; 1 escalations\.\n/,
     )
     assert.ok(
       text.endsWith(

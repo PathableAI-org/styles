@@ -45,11 +45,9 @@ const EXCLUDED_DIRECTORIES = [
   'apps/storybook-react/',
   'visual-baselines/',
   'docs/',
-  'specs/',
   '.changeset/',
   '.agents/',
   '.claude/',
-  '.specify/',
   'scripts/',
 ]
 

@@ -1,20 +1,19 @@
 // Ported from pathableai-org/pre-ets scripts/verification/inputs.ts @ f2ee390 (types stripped only).
 /**
- * The inputs a verification report records: what the verified SHA's behavior and its verification depend on, so a
- * later commit with the same inputs can be recognized without the verified commit. See
- * docs/engineering/verification-harness.md#report.
+ * The inputs a verification report records. The optional feature digest is
+ * retained only to import reports published before the issue-and-PR workflow.
  */
 import { createHash } from 'node:crypto'
 
 /** @typedef {import('./report.mjs').ReportInputs} ReportInputs */
 
 import { blobsAt, codeTree, readAtSha } from '../git-access.mjs'
-import { executionResults } from './gate.mjs'
 import { withoutSection } from './markdown.mjs'
 
+const executionResults = /^execution results$/i
+
 /**
- * A digest of every file in the feature directory at `sha`, with `quickstart.md` read without its execution
- * results, so recording results, which is an evidence-only change, leaves it unchanged.
+ * A digest of a retired feature directory, for historical-note compatibility.
  */
 const featureInputs = (cwd, sha, featureDir) => {
   const quickstart = `${featureDir}/quickstart.md`
@@ -32,7 +31,7 @@ const featureInputs = (cwd, sha, featureDir) => {
   return hash.digest('hex')
 }
 
-/** The inputs of the commit `sha`, for a report on the feature in `featureDir`, or a High fix without one. */
+/** The inputs of `sha`, plus legacy feature inputs when an old report names them. */
 export const reportInputs = (cwd, sha, featureDir) => ({
   codeTree: codeTree(cwd, sha),
   featureInputs:
