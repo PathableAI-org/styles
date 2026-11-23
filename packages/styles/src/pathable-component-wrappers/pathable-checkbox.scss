@@ -37,3 +37,10 @@
 .pathable-checkbox__label-description {
   @extend .usa-checkbox__label-description;
 }
+
+// The tile modifier sits on the input. Its rules are compound selectors
+// (checked, disabled, indeterminate and the label that follows the input), and
+// `@extend` rewrites each of them for `.pathable-checkbox__input--tile`.
+.pathable-checkbox__input--tile {
+  @extend .usa-checkbox__input--tile;
+}
