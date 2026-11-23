@@ -53,6 +53,7 @@ env:
     button-group
     card
     checkbox
+    collection
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens

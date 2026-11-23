@@ -19,6 +19,18 @@
   @extend .usa-collection;
 }
 
+.pathable-collection--condensed {
+  @extend .usa-collection--condensed;
+}
+
+// Inside .pathable-prose the :last-child rule that removes an item's bottom
+// margin is more specific than the condensed rule, so the last condensed item
+// would lose its margin there. Keep it, as it is outside prose.
+.pathable-collection.pathable-collection--condensed
+  > .pathable-collection__item:last-child {
+  margin-bottom: units(1);
+}
+
 .pathable-collection__item {
   @extend .usa-collection__item;
 }
@@ -33,10 +45,49 @@
   @extend .usa-collection__body;
 }
 
+.pathable-collection__description {
+  @extend .usa-collection__description;
+}
+
 .pathable-collection__meta {
   @extend .usa-collection__meta;
 }
 
+.pathable-collection__meta-item {
+  @extend .usa-collection__meta-item;
+}
+
 .pathable-collection__img {
   @extend .usa-collection__img;
+}
+
+// USWDS styles a meta item that is also a tag with a compound selector on
+// .usa-tag. Extending the meta item leaves .pathable-tag out of it, so the
+// same declarations are written here for the pathable-tag compound.
+.pathable-collection__meta-item.pathable-tag {
+  @include u-bg('base-lighter');
+  @include u-line-height('ui', 1);
+  @include u-padding-y(0.5);
+  @include u-text('ink');
+  display: inline-block;
+  margin-right: units(1);
+  margin-top: units(0.5);
+
+  // .pathable-tag:only-of-type clears the right margin with the same
+  // specificity and a later source position.
+  &:only-of-type {
+    margin-right: units(1);
+  }
+}
+
+.pathable-collection__calendar-date {
+  @extend .usa-collection__calendar-date;
+}
+
+.pathable-collection__calendar-date-month {
+  @extend .usa-collection__calendar-date-month;
+}
+
+.pathable-collection__calendar-date-day {
+  @extend .usa-collection__calendar-date-day;
 }

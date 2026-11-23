@@ -199,7 +199,7 @@ changes the workflow, every folder is selected. It is not a required check.
 
 **Only some folders are re-enabled.** While the styles refactor catches up
 ([target state](../engineering/target-state.md)), the workflow checks only
-the folders listed in its `REENABLED_FOLDERS` variable, currently `alert`, `breadcrumb`, `button`, `button-group`, `card`, `checkbox` and every
+the folders listed in its `REENABLED_FOLDERS` variable, currently `alert`, `breadcrumb`, `button`, `button-group`, `card`, `checkbox`, `collection` and every
 `tokens-*` and `utilities-*` folder: the lint step, html-validate, the contract and axe run for
 those folders alone, and only when one is selected. The other folders are not
 checked in CI, and the React fixture tests job stays disabled. A folder joins
