@@ -80,9 +80,10 @@ and relative to the container's font size.
   `<ol>` and `<table>`. They take the container's rules without a class.
 - An introduction paragraph can carry `pathable-intro`.
 - A list placed directly in the container takes the prose list rules, not
-  only the `pathable-list` rules. `pathable-collection` and
-  `pathable-process-list` placed in a container are affected: their own list
-  spacing is kept, as their `inside-prose` guarantees state.
+  only the `pathable-list` rules. `pathable-card-group`,
+  `pathable-collection` and `pathable-process-list` placed in a container are
+  affected: their own list and card spacing is kept, as their `inside-prose`
+  guarantees state.
 - Give a table a `<caption>`, a `<thead>` and a `<tbody>`, and `scope` on its
   header cells. A table with `pathable-table` classes keeps those classes' own
   styling.

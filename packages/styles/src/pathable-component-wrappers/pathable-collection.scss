@@ -19,6 +19,18 @@
   @extend .usa-collection;
 }
 
+.pathable-collection--condensed {
+  @extend .usa-collection--condensed;
+}
+
+// Inside .pathable-prose the :last-child rule that removes an item's bottom
+// margin is more specific than the condensed rule, so the last condensed item
+// would lose its margin there. Keep it, as it is outside prose.
+.pathable-collection.pathable-collection--condensed
+  > .pathable-collection__item:last-child {
+  margin-bottom: units(1);
+}
+
 .pathable-collection__item {
   @extend .usa-collection__item;
 }
@@ -29,14 +41,66 @@
   font-weight: var(--pathable-font-weight-normal);
 }
 
+// Accessibility deviation from USWDS: at enlarged text on a narrow viewport the
+// body, a flex item, would not shrink below its longest word and the page would
+// scroll sideways. Let it shrink and break long words, including the text of an
+// inline-block tag, so text reflows. `anywhere`, unlike `break-word`, also
+// lowers the minimum content width.
 .pathable-collection__body {
   @extend .usa-collection__body;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pathable-collection__description {
+  @extend .usa-collection__description;
 }
 
 .pathable-collection__meta {
   @extend .usa-collection__meta;
 }
 
+.pathable-collection__meta-item {
+  @extend .usa-collection__meta-item;
+}
+
+// Inside .pathable-prose, `.pathable-prose > ul li` is more specific than the
+// rule that gives a meta item no bottom margin and no maximum width, so every
+// meta item but the last would gain both there. Keep them as they are outside
+// prose.
+.pathable-prose .pathable-collection__meta > li {
+  margin-bottom: 0;
+  max-width: unset;
+}
+
 .pathable-collection__img {
   @extend .usa-collection__img;
+}
+
+// A deliberate deviation from USWDS, which draws .usa-collection__meta-item.usa-tag
+// as ink on base-lighter. The Collection and Tag pages draw it as a PathAble
+// tag: pathable-tag supplies the colour, padding, type and radius. The rule
+// restates the tag's trailing margin (and its :only-of-type reset), so it beats
+// the meta-item right margin on specificity in any order a consumer forwards
+// the wrappers. The meta-item top margin stays; this rule also stops the tag
+// stretching as the block a meta item is.
+.pathable-collection__meta-item.pathable-tag {
+  display: inline-block;
+  margin-right: units(0.5);
+
+  &:only-of-type {
+    margin-right: 0;
+  }
+}
+
+.pathable-collection__calendar-date {
+  @extend .usa-collection__calendar-date;
+}
+
+.pathable-collection__calendar-date-month {
+  @extend .usa-collection__calendar-date-month;
+}
+
+.pathable-collection__calendar-date-day {
+  @extend .usa-collection__calendar-date-day;
 }

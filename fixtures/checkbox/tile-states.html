@@ -1,0 +1,57 @@
+<!-- description: Tiles in the states the basic tile example leaves out: indeterminate, and checked or indeterminate with aria-disabled="true". The application sets the indeterminate property in script and keeps the aria-disabled choices from changing. -->
+<fieldset class="pathable-fieldset">
+  <legend class="pathable-legend">Which intake steps are complete?</legend>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input pathable-checkbox__input--tile"
+      id="checkbox-tile-states-documents"
+      type="checkbox"
+      name="intake-steps[]"
+      value="documents"
+      data-indeterminate
+    />
+    <label
+      class="pathable-checkbox__label"
+      for="checkbox-tile-states-documents"
+    >
+      Intake documents
+      <span class="pathable-checkbox__label-description"
+        >Some of the required forms are on file.</span
+      >
+    </label>
+  </div>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input pathable-checkbox__input--tile"
+      id="checkbox-tile-states-eligibility"
+      type="checkbox"
+      name="intake-steps[]"
+      value="eligibility"
+      checked
+      aria-disabled="true"
+    />
+    <label
+      class="pathable-checkbox__label"
+      for="checkbox-tile-states-eligibility"
+    >
+      Eligibility review
+      <span class="pathable-checkbox__label-description"
+        >Completed by the intake coordinator.</span
+      >
+    </label>
+  </div>
+  <div class="pathable-checkbox">
+    <input
+      class="pathable-checkbox__input pathable-checkbox__input--tile"
+      id="checkbox-tile-states-referrals"
+      type="checkbox"
+      name="intake-steps[]"
+      value="referrals"
+      data-indeterminate
+      aria-disabled="true"
+    />
+    <label class="pathable-checkbox__label" for="checkbox-tile-states-referrals"
+      >Referrals</label
+    >
+  </div>
+</fieldset>

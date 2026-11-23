@@ -30,7 +30,9 @@ guarantees:
   - id: description
     claim: The description has 0.5rem of margin above and below it.
   - id: meta-item
-    claim: Each meta item is a block with a 0.25rem top margin and a 0.5rem right margin, in a smaller type size than the description. A meta item that also has the pathable-tag class is drawn as a tag.
+    claim: Each meta item is a block with a 0.25rem top margin and a 0.5rem right margin, in a smaller type size than the description. A meta item that also has the pathable-tag class is drawn as a tag, with the tag's right margin in place of the 0.5rem.
+  - id: long-words
+    claim: A word too long for the body, in the heading, the description or a meta item including a tag, wraps inside the body, so an item never scrolls sideways under enlarged text on a narrow screen.
   - id: calendar-date
     claim: The calendar date block is the width of the thumbnail with the same 1rem right margin, the month is a bold centred label in white on the primary colour with rounded top corners, and the day is a bold centred number in the primary colour inside a 1px primary border with rounded bottom corners.
 ---
@@ -143,6 +145,8 @@ The heading is set in the brand heading typeface, Fredoka, at weight 400
   `alt=""` when the heading already names the item. Make each heading link's
   text unique within the list, so a list of links is not a list of "Read
   more". Label every metadata list with `aria-label`.
+- Roles and names for the list: give the outer `<ul>` `role="list"` and a name,
+  with `aria-label` or with `aria-labelledby` pointing at a visible heading.
 - Thumbnails of one shape. Give every thumbnail in a list the same width and
   aspect ratio, or none at all, so the items line up.
 - The destination. Add `pathable-link--external` to a heading link that leaves

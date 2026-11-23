@@ -9,16 +9,116 @@
 
 @use 'usa-card/src/styles';
 
+// Selector lists used by several rules below. --primary, --continue and
+// --destructive each render a whole button without .pathable-button, so they
+// are listed with it.
+$-card-buttons: '.pathable-button, .pathable-button--primary, .pathable-button--continue, .pathable-button--destructive';
+$-card-exdent-parts: '.pathable-card__header--exdent, .pathable-card__body--exdent, .pathable-card__footer--exdent';
+$-card-flag-image-width: units($theme-card-flag-image-width);
+$-card-inner-radius: calc(
+  #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
+);
+// The least card width, in rem, at which the flag layout applies: twice the
+// media column's width, so the column sits beside a text column. The parts are
+// inside the container's margins, border and padding, so the text column is a
+// little narrower than the column itself.
+$-card-flag-container-min: $-card-flag-image-width * 2;
+$-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__footer';
+
+// Inside .pathable-prose, a list that is a direct child gets the prose list
+// rules (`.pathable-prose > ul`, `> ul li`, `> ul li:last-child`), which would
+// give the card group list padding and margins and its cards a 68ex cap and no
+// bottom margin. `@extend .usa-prose` is not used: it would add
+// `.pathable-prose .pathable-card-group` (0,2,0) and `.pathable-prose
+// .pathable-card:last-child` (0,3,0) rules that beat spacing and width
+// utilities anywhere under prose. These resets win on specificity, not source order, so
+// they hold in any order a consumer forwards the wrappers (this file does not
+// load the prose module): the group's (0,2,1) beats `.pathable-prose > ul`
+// (0,1,1), and the card's (0,3,2) beats `.pathable-prose > ul li:last-child`
+// (0,2,2), the strongest prose list rule. A utility (0,1,0) on a group or card
+// that is a direct child of prose loses, as it does on any other list there:
+// a card in such a group ignores max-width and margin-bottom utilities.
+.pathable-prose > :is(ul, ol).pathable-card-group {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.pathable-prose > :is(ul, ol).pathable-card-group > li.pathable-card {
+  max-width: none;
+  margin-bottom: units($theme-card-margin-bottom + 1);
+
+  @include at-media('tablet') {
+    margin-bottom: units($theme-card-margin-bottom);
+  }
+}
+
+// A lone button directly in the footer loses its right margin, as USWDS does
+// for `.usa-card__footer .usa-button:only-of-type`. That rule is not extended
+// here: `@extend .usa-button` would also match every button inside a button
+// group in the footer and a link next to a button, and its descendant selector
+// ties the segmented group's joint overlap. A direct, only child is what is
+// meant. The selector is (0,3,0), so it beats `.pathable-button` (0,1,0) in
+// any order the wrappers are forwarded (this file does not load the button
+// module); like USWDS's own (0,3,0) rule, it also beats a margin-right
+// utility on that button.
+.pathable-card__footer > :is(#{$-card-buttons}):only-child {
+  margin-right: 0;
+}
+
+.pathable-card-group {
+  @extend .usa-card-group;
+
+  // USWDS pulls the group out by half the card gap and gives each container
+  // the same margin back. The page promises a group with no margin, so the
+  // group sits on its parent's edges (and cannot scroll the page sideways);
+  // the container's own 0.5rem margin stays.
+  margin-inline: 0;
+}
+
 .pathable-card {
   @extend .usa-card;
+}
+
+// USWDS lays a card group out as a flex row from the tablet breakpoint, and a
+// card in it shrinks to its content. A card with no width or column class
+// fills the group instead, as it did before the group extended USWDS's. The
+// zero-specificity :where() lets a width or column utility on the card win,
+// and min-width: 0 lets a long word wrap inside the card rather than widen it.
+:where(.pathable-card-group) > :where(.pathable-card) {
+  width: 100%;
+  min-width: 0;
 }
 
 .pathable-card__container {
   @extend .usa-card__container;
 
+  // USWDS designs the container for border-box and gets it from a global reset
+  // this package does not emit (its `border-box-sizing` mixin emits nothing
+  // while the theme's global border-box setting is on). In a card group that is
+  // a flex row (from 40em) the card has a definite height, and without
+  // border-box the container's `height: 100%` plus its two 2px borders would
+  // reach 4px past the card into the margin below it.
+  box-sizing: border-box;
+
   // Light container: reset the surface focus ring (see pathable-bg-link in
   // _utilities.scss).
   --pathable-surface-focus-ring: initial;
+}
+
+// USWDS assumes global border-box sizing, which this package does not emit, so
+// the card's own parts get it here: the flag media column's 15rem includes its
+// inset padding, for one. Only the parts, not the USWDS mixin's rule for every
+// descendant: content a consumer places in a card keeps the sizes it has
+// outside one. At no specificity, so any rule that sets its own box-sizing wins.
+:where(
+  .pathable-card__header,
+  .pathable-card__body,
+  .pathable-card__footer,
+  .pathable-card__media,
+  .pathable-card__img
+) {
+  box-sizing: border-box;
 }
 
 .pathable-card__header {
@@ -54,9 +154,10 @@
 }
 
 // Media scales to the card width at every viewport instead of keeping an
-// intrinsic width attribute that overflows narrow cards. USWDS crops flag card
-// media to a fixed column from the tablet breakpoint up, so flag cards keep
-// that behaviour there and are sized like any other card below it.
+// intrinsic width attribute that overflows narrow cards. A flag card crops its
+// media to a fixed column from the tablet breakpoint up while the card is wide
+// enough for it (see the flag rules below); a narrower flag card, or one below
+// the breakpoint, is sized like any other card.
 @mixin pathable-card-media-fit {
   > img,
   > svg,
@@ -82,30 +183,303 @@
   > .pathable-card__container
   > .pathable-card__media {
   overflow: hidden;
-  border-start-start-radius: calc(
-    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
-  );
-  border-start-end-radius: calc(
-    #{radius($theme-card-border-radius)} - #{units($theme-card-border-width)}
-  );
+  border-start-start-radius: $-card-inner-radius;
+  border-start-end-radius: $-card-inner-radius;
 }
 
+// The flag layout needs room: a 15rem media column plus a text column. Below
+// the flag breakpoint, or when the card itself is narrower than
+// $-card-flag-container-min (in rem, so it grows with the root text size), a
+// flag card stacks like a card with media and its media is sized like any
+// other card's. The flag rules below are written with `pathable-` selectors
+// instead of extending USWDS's `.usa-card--flag`, because USWDS applies those
+// from the breakpoint whatever the card's width.
 @include at-media-max($theme-card-flag-min-width) {
   .pathable-card--flag .pathable-card__media {
     @include pathable-card-media-fit;
   }
 }
 
+@include at-media($theme-card-flag-min-width) {
+  @container (width < #{$-card-flag-container-min}) {
+    .pathable-card--flag .pathable-card__media {
+      @include pathable-card-media-fit;
+    }
+  }
+}
+
+// From the flag breakpoint, a flag card is a size container so the rules above
+// and below can ask how wide it is. Inline-size containment means its width
+// never comes from its content, so its intrinsic width is set: the flag
+// threshold, capped at the viewport width. A card in a group or a block fills
+// its parent as before; a content-sized one (a flex item, a `width-auto` or
+// column-auto card, an inline-block, float or table-cell parent) is that wide,
+// and a width or max-width utility still wins. Below the breakpoint a flag card
+// has no containment and is sized as any other card.
+@include at-media($theme-card-flag-min-width) {
+  .pathable-card--flag {
+    container-type: inline-size;
+    contain-intrinsic-inline-size: min(#{$-card-flag-container-min}, 100vw);
+  }
+
+  // The intrinsic width above is also the card's automatic minimum as a flex
+  // item (a cluster, a column). Let it shrink to its parent, so the container
+  // query can stack it there instead of it overflowing into the next column.
+  // At no specificity, a width or max-width utility still wins.
+  :where(.pathable-card--flag) {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+// USWDS gives a card's only child the perimeter padding, except in a flag card,
+// and it can only name that exception by extending `.usa-card--flag`, which
+// would also bring in its column layout. So a flag card's only child gets back
+// the padding it would have without that rule: its own part padding (a lone
+// header or body has the perimeter all round, less the header-first spacing
+// below), none for other children, and the inset media's padding in the stacked
+// and the column layout. These win on specificity (0,5,0 and up) against the
+// (0,4,0) rule.
+.pathable-card.pathable-card--flag
+  .pathable-card__container
+  > :only-child:not(
+    .pathable-card__header,
+    .pathable-card__body,
+    .pathable-card__footer,
+    .pathable-card__media--inset
+  ) {
+  padding: 0;
+}
+
+.pathable-card.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__footer:only-child {
+  padding: units($theme-card-padding-y) * 0.5
+    units($theme-card-padding-perimeter) units($theme-card-padding-perimeter);
+}
+
+.pathable-card.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__media--inset:only-child {
+  padding: units($theme-card-padding-perimeter)
+    units($theme-card-padding-perimeter) 0;
+}
+
+.pathable-card--header-first.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__header:only-child {
+  padding-bottom: units($theme-card-padding-y);
+}
+
+.pathable-card--header-first.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__body:only-child {
+  padding-top: units($theme-card-padding-y);
+}
+
+.pathable-card--header-first.pathable-card--flag
+  .pathable-card__container
+  > .pathable-card__media--inset:only-child {
+  padding-top: 0;
+}
+
+@include at-media($theme-card-flag-min-width) {
+  @container (width >= #{$-card-flag-container-min}) {
+    .pathable-card--flag {
+      .pathable-card__media {
+        display: flex;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: $-card-flag-image-width;
+        overflow: hidden;
+      }
+
+      .pathable-card__img {
+        // The image box fills the column (or the inset content box) whatever
+        // the image's ratio, and the image is cropped to cover it.
+        flex: 1 1 100%;
+        min-width: 0;
+        border-radius: 0;
+        border-top-left-radius: $-card-inner-radius;
+        border-bottom-left-radius: $-card-inner-radius;
+      }
+
+      .pathable-card__header,
+      .pathable-card__body,
+      .pathable-card__footer {
+        margin-left: $-card-flag-image-width;
+      }
+
+      .pathable-card__media--exdent {
+        margin: units($theme-card-border-width) * -1;
+
+        .pathable-card__img {
+          border-top-left-radius: radius($theme-card-border-radius);
+          border-bottom-left-radius: radius($theme-card-border-radius);
+        }
+      }
+
+      .pathable-card__media--inset {
+        padding-right: 0;
+        padding-bottom: units($theme-card-padding-perimeter);
+
+        .pathable-card__img {
+          border-radius: 0;
+        }
+      }
+
+      &.pathable-card--header-first {
+        .pathable-card__header {
+          padding-bottom: units($theme-card-padding-y) * 0.5;
+        }
+
+        .pathable-card__body {
+          padding-top: units($theme-card-padding-y) * 0.5;
+        }
+
+        .pathable-card__media--inset {
+          padding-top: units($theme-card-padding-perimeter);
+        }
+      }
+
+      &.pathable-card--media-right {
+        .pathable-card__media {
+          right: 0;
+          left: auto;
+        }
+
+        .pathable-card__media--inset {
+          padding-right: units($theme-card-padding-perimeter);
+          padding-left: 0;
+
+          .pathable-card__img {
+            border-radius: 0;
+          }
+        }
+
+        .pathable-card__img {
+          border-radius: 0;
+          border-top-right-radius: radius($theme-card-border-radius);
+          border-bottom-right-radius: radius($theme-card-border-radius);
+        }
+
+        .pathable-card__header,
+        .pathable-card__body,
+        .pathable-card__footer {
+          margin-right: $-card-flag-image-width;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// The same, for a flag card's only child when it is inset media in the column
+// layout: padding on all sides but the one beside the text.
+@include at-media($theme-card-flag-min-width) {
+  @container (width >= #{$-card-flag-container-min}) {
+    .pathable-card.pathable-card--flag
+      .pathable-card__container
+      > .pathable-card__media--inset.pathable-card__media:only-child {
+      padding: units($theme-card-padding-perimeter) 0
+        units($theme-card-padding-perimeter)
+        units($theme-card-padding-perimeter);
+    }
+
+    .pathable-card--header-first.pathable-card--flag
+      .pathable-card__container
+      > .pathable-card__header:only-child {
+      padding-bottom: units($theme-card-padding-y) * 0.5;
+    }
+
+    .pathable-card--header-first.pathable-card--flag
+      .pathable-card__container
+      > .pathable-card__body:only-child {
+      padding-top: units($theme-card-padding-y) * 0.5;
+    }
+
+    .pathable-card.pathable-card--flag.pathable-card--media-right
+      .pathable-card__container
+      > .pathable-card__media--inset:only-child {
+      padding: units($theme-card-padding-perimeter)
+        units($theme-card-padding-perimeter)
+        units($theme-card-padding-perimeter) 0;
+    }
+  }
+}
+
+.pathable-card__img {
+  @extend .usa-card__img;
+}
+
+.pathable-card__media--inset {
+  @extend .usa-card__media--inset;
+}
+
 .pathable-card__media--exdent {
   @extend .usa-card__media--exdent;
 }
 
-.pathable-card--media {
-  @extend .usa-card;
+.pathable-card__header--exdent {
+  @extend .usa-card__header--exdent;
 }
 
-.pathable-card--flag {
-  @extend .usa-card--flag;
+.pathable-card__body--exdent {
+  @extend .usa-card__body--exdent;
+}
+
+.pathable-card__footer--exdent {
+  @extend .usa-card__footer--exdent;
+}
+
+// A button in a card part is never wider than the part's content box, and its
+// label wraps to fit: `overflow-wrap: anywhere` lets the label shrink below its
+// longest word, so a word breaks inside only when it alone is wider than the
+// button's content box. Stacking a narrow flag card keeps the button clear of
+// the media column, but at a large text size on a very narrow screen (320px at
+// 200%) a long word is still wider than the part, and without this the label
+// would run out of the button. The selector is (0,1,0), so in the usual order a
+// max-width utility on the button wins; in an exdent part the (0,2,0) rule
+// below sets its own max-width and a max-width utility does not apply.
+:where(#{$-card-parts}, #{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+// USWDS gives every direct child of an exdent part 2px of side padding, which
+// keeps text in line with the other parts. A button has padding of its own that
+// this would replace, so its own side padding is declared again (1.25rem; 1.5rem
+// for --big; none for --unstyled) and the 2px becomes an inset instead: a left
+// margin of the border width, and a max-width reduced by twice that, so a
+// full-width button still ends 2px inside the part. The selectors are (0,2,0),
+// which beats both USWDS's `.usa-card__footer--exdent > *` and the button's own
+// (0,1,0) padding rules in any order the wrappers are forwarded, and the
+// --big and --unstyled rules follow the first in this file. Because of that
+// specificity a utility for side padding, left margin or max-width does not
+// apply to a button directly in an exdent part, as the lone footer button rule
+// above beats a margin-right utility.
+
+:is(#{$-card-exdent-parts}) > :is(#{$-card-buttons}) {
+  max-width: calc(100% - #{units($theme-card-border-width) * 2});
+  margin-left: units($theme-card-border-width);
+  padding-left: units(2.5);
+  padding-right: units(2.5);
+}
+
+:is(#{$-card-exdent-parts}) > .pathable-button--big {
+  padding-left: units(3);
+  padding-right: units(3);
+}
+
+:is(#{$-card-exdent-parts}) > .pathable-button--unstyled {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.pathable-card--media {
+  @extend .usa-card;
 }
 
 .pathable-card--header-first {
