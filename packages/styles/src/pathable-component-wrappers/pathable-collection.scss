@@ -43,11 +43,13 @@
 
 // Accessibility deviation from USWDS: at enlarged text on a narrow viewport the
 // body, a flex item, would not shrink below its longest word and the page would
-// scroll sideways. Let it shrink and break long words, so text reflows.
+// scroll sideways. Let it shrink and break long words, including the text of an
+// inline-block tag, so text reflows. `anywhere`, unlike `break-word`, also
+// lowers the minimum content width.
 .pathable-collection__body {
   @extend .usa-collection__body;
   min-width: 0;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .pathable-collection__description {
@@ -75,13 +77,16 @@
   @extend .usa-collection__img;
 }
 
-// A meta item that is also a tag is drawn by pathable-tag: colour, padding,
-// type, radius and its trailing margin (including the :only-of-type reset).
-// This rule only keeps the meta-item top margin and stops the tag stretching
-// as the block a meta item is.
+// A deliberate deviation from USWDS, which draws .usa-collection__meta-item.usa-tag
+// as ink on base-lighter. The Collection and Tag pages draw it as a PathAble
+// tag: pathable-tag supplies the colour, padding, type, radius and trailing
+// margin (including the :only-of-type reset). That margin wins over the
+// meta-item right margin only because pathable-tag is forwarded after
+// pathable-collection in pathable-communication.scss, at equal specificity.
+// The meta-item top margin stays; this rule stops the tag stretching as the
+// block a meta item is.
 .pathable-collection__meta-item.pathable-tag {
   display: inline-block;
-  margin-top: units(0.5);
 }
 
 .pathable-collection__calendar-date {

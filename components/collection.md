@@ -31,6 +31,8 @@ guarantees:
     claim: The description has 0.5rem of margin above and below it.
   - id: meta-item
     claim: Each meta item is a block with a 0.25rem top margin and a 0.5rem right margin, in a smaller type size than the description. A meta item that also has the pathable-tag class is drawn as a tag, with the tag's right margin in place of the 0.5rem.
+  - id: long-words
+    claim: A word too long for the body, in the heading, the description or a meta item including a tag, wraps inside the body, so an item never scrolls sideways under enlarged text on a narrow screen.
   - id: calendar-date
     claim: The calendar date block is the width of the thumbnail with the same 1rem right margin, the month is a bold centred label in white on the primary colour with rounded top corners, and the day is a bold centred number in the primary colour inside a 1px primary border with rounded bottom corners.
 ---
