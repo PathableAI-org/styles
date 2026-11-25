@@ -56,7 +56,7 @@ person to follow. Subagents give the same independence with one session:
 
 | Role                 | Runs as                                                                   | Writes                                                                      |
 | -------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Lead                 | The one session for the delivery issue                                    | Branches, commits, briefs, lead-kept code, pull requests, merge             |
+| Lead                 | The one session for the delivery issue                                    | Branches, commits, briefs, lead-written code, pull requests, merge          |
 | Implementer          | [`implementer`](../../.claude/agents/implementer.md) subagent             | Uncommitted edits in the lead's working tree, for one delegated task        |
 | Checker              | [`checker`](../../.claude/agents/checker.md) subagent                     | Nothing but build output; its reply only                                    |
 | Pre-push self-review | [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) subagent | Nothing; advisory reply only                                                |
@@ -218,10 +218,12 @@ the lead commits, only implementers edit the tree, unless the lead takes the
 task back, which ends the implementers' part in it. Whoever writes a change
 writes its changeset: an implementer when it is one of the brief's files, the
 lead with code it writes itself. The lead resumes an implementer only when
-the tree's uncommitted changes are all that implementer's own. Code the lead
-writes itself goes in before an implementer starts: either committed, after
-its own checker pass, or left uncommitted and listed under earlier work in a
-fresh brief. When the same failure survives two implementer
+the tree is as that implementer last saw it, apart from the lead committing
+the implementer's own changes: no lead edit and no other commit since its
+last reply. Earlier work it was briefed with counts as seen. Code the lead
+writes itself is either committed after its own checker pass or left
+uncommitted and listed under earlier work, and the next implementer after it
+is a fresh one. When the same failure survives two implementer
 fixes, the lead steps the implementer up one rung of [the ladder](#the-ladder)
 for its next run in the same round, as
 [Which roles step up](#which-roles-step-up) describes. That run is a fresh

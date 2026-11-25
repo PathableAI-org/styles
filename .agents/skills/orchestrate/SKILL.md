@@ -210,10 +210,12 @@ when you step it up, or after about three resumes.
 
 From the brief until you commit, only implementers edit the tree, unless you
 take the task back, which ends the implementers' part in it. Resume an
-implementer only when the tree's uncommitted changes are all its own. Code
-you write yourself goes in before an implementer starts: either committed,
-after its own checker pass, or left uncommitted and listed under
-`earlier work` in a fresh brief.
+implementer only when the tree is as it last saw it, apart from your commit
+of its own changes: no edit of yours and no other commit since its last
+reply. Earlier work it was briefed with counts as seen. Code you write
+yourself is either committed after its own checker pass or left uncommitted
+and listed under `earlier work`, and the next implementer after it is a fresh
+one.
 
 ## Check request
 
