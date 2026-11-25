@@ -44,7 +44,9 @@
 }
 
 // USWDS styles .usa-link--alt only together with .usa-link--external, so the
-// alt modifier changes nothing on a link without the external modifier.
+// alt modifier changes nothing on a link without the external modifier. With
+// it, only the icon's fallback image for browsers without CSS mask support
+// changes, to a white one; with masks, the icon is the text colour either way.
 .pathable-link--alt {
   @extend .usa-link--alt;
 }
