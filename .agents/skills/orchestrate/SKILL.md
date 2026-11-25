@@ -60,9 +60,13 @@ stack inside the repository.
      briefing; a short lookup is yours to run, a subagent is for reading a lot
      of material.
    - Start the `implementer` with the [brief](#implementer-brief) and end the
-     turn. It edits and builds, and does not run the checks. Write a change
-     yourself only when its brief would be at least as long as its diff, and
-     name it in the round summary as a lead edit.
+     turn. It edits and builds, and does not run the checks. Write code
+     yourself only where
+     [Delegating implementation](../../../docs/engineering/orchestration.md#delegating-implementation)
+     keeps it with the lead: the code behind a High trigger, a task you take
+     back on the step-up ladder, or an edit whose brief would be at least as
+     long as its diff, which you name in the round summary as a lead edit.
+     Your own code goes through a checker too.
    - Then start a **new** `checker` with only the
      [check request](#check-request) and end the turn. Its checks are the ones
      `AGENTS.md` routes for the changed paths. Never resume a checker, and
@@ -197,8 +201,9 @@ acceptance: <the brief's acceptance items, each with the fixture folders or stor
 ```
 
 Leave out the task, the reasoning, the implementer's reply and any expected
-result. Run one checker at a time, do not edit the working tree while it runs,
-and start a new one for every check.
+result. One checker runs every command in the request. Run one checker at a
+time, do not edit the working tree while it runs, and start a new one for
+every pass through the checks.
 
 ## Release and wrap-up
 

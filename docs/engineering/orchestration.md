@@ -168,12 +168,14 @@ The lead keeps:
 - answering reviewer findings. Once it has decided a fix, it hands that fix
   over as a task.
 
-Everything else is delegated. The one exception is an edit so small that its
-brief would be at least as long as its diff, such as a one-line fix the lead
-has already decided. The lead may write that itself, and names it in its
-round summary, for example `Lead edit: one-line token fix in pathable-card.scss
-(brief longer than diff)`. A lead edit still goes through a fresh checker; no
-exception skips the check step.
+Everything the lead does not keep is delegated, with two exceptions. The
+lead may take a task back and write it itself at any step of
+[the ladder](#the-ladder). And it may write an edit so small that its brief
+would be at least as long as its diff, such as a one-line fix it has already
+decided. It names that edit in its round summary, for example `Lead edit: one-line token fix in pathable-card.scss
+(brief longer than diff)`. Code the lead writes, whether it keeps it, takes
+it back or makes a small edit, still goes through a fresh checker; nothing
+skips the check step.
 
 The implementer is not an independent check, so it gets a full brief: the
 task, the files, the constraints, the acceptance items and the build to run,
@@ -196,8 +198,8 @@ The loop between them:
 
 1. The lead starts the implementer with the brief and waits.
 2. When it replies, the lead starts a **new** checker with the check request
-   and waits. A checker is never resumed; every check runs in a fresh
-   context.
+   and waits. One checker runs every check in the request. A checker is
+   never resumed, so each pass through the checks runs in a fresh context.
 3. If every check and acceptance item passes, the lead reads the diff and
    commits only what it accepts. The pre-push self-review and every later
    check then treat that code as the lead's.
@@ -209,8 +211,9 @@ The loop between them:
 
 The lead runs one implementer or one checker at a time and does not edit the
 working tree while either runs. When the same failure survives two implementer
-fixes, the lead treats it as a [failed round](#which-roles-step-up) for the
-implementer.
+fixes, the lead steps the implementer up one rung of [the ladder](#the-ladder)
+for its next run in the same round, as
+[Which roles step up](#which-roles-step-up) describes.
 
 Three more rules keep the brief complete and the cost down:
 
@@ -258,6 +261,9 @@ The lead session stops, notifies the person and waits at these points:
   before briefing, when settling them needs a design trade-off: the lead stops
   with options.
 - A delivery-scope discovery or tier change.
+- A check that still fails after the implementer has worked on it at the
+  ceiling of [the ladder](#the-ladder) and the lead has taken it back. The
+  lead sends the checker's report and what it tried.
 - A subagent that failed or hit a usage limit twice in a row, or the capture
   script writing no manifest twice in a row. A manifest that reports errors
   is not a stop point: the lead passes it to the visual reviewer.
@@ -428,7 +434,7 @@ raise:
 - **The checker** steps up after a failed run: the subagent errors, returns
   no usable report, or reports a check it did not run. A failing check is a
   result about the code, not a failed run. It steps up once, to `sonnet` at
-  `high`.
+  `high`, on the next checker the lead starts.
 - **The verification** steps up after a failed run: the subagent errors,
   returns no record, or returns one the lead cannot use. A failing claim, or a head that does not build, is a result
   about the code, not a failed run.
@@ -440,13 +446,17 @@ raise:
 #### The ladder
 
 For the implementer, within the three rounds before the
-[stop point](#stop-points):
+[stop point](#stop-points). Each failed round moves it one rung. A checker
+failure that survives two of its fixes also moves it one rung, on its next
+run in the same round, so it can reach the ceiling before review round 3:
 
-1. **Round 1:** its row, `sonnet` at `medium`.
-2. **Round 2:** one step on the axis the lead diagnosed: `sonnet` at `high`
-   for too little, `opus` at `medium` for too little knowledge.
-3. **Round 3:** one more step, up to `opus` at `high`, the ceiling.
-4. **After round 3:** the existing stop point applies.
+1. **First rung:** its row, `sonnet` at `medium`.
+2. **Second rung:** one step on the axis the lead diagnosed: `sonnet` at
+   `high` for too little, `opus` at `medium` for too little knowledge.
+3. **Third rung:** one more step, up to `opus` at `high`, the ceiling.
+4. **Past the ceiling:** the lead takes the task back. If a review round is
+   failing, the existing stop points apply; if a check still fails after the
+   lead's own attempt, that is a stop point too.
 
 The verification takes its one step on the next run of the same round. The lead never steps a role down within a delivery issue,
 and it may take a task back and write it itself at any step.
@@ -496,6 +506,7 @@ request.
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Models and effort           | Changed 2026-11-22 to save usage: Opus leads, Fable judges at a fixed setting, Sonnet and Haiku do clearly scoped work and [step up](#stepping-up) on evidence. Revisit using [the measures](#revisiting-the-table)                                                                                                 |
 | Implementer and capture     | Decided 2026-11-22: the lead may delegate clearly scoped tasks to the `implementer` subagent. Changed 2026-11-25: the lead runs the capture script in the background; the `visual-capture` subagent was removed, as a script run needs no clean context and a background command costs no tokens                    |
+| Delegation and checks       | Decided 2026-11-25. The lead diagnoses and decides and delegates the code to the `implementer`, apart from the exceptions in [Delegating implementation](#delegating-implementation); a fresh `checker` subagent runs every check pass                                                                              |
 | Delivery record             | The issue owns the accepted outcome, scope, contract impact, claims and implementation approach; the pull request owns the implementation and evidence ([Process by tier](git-workflow.md#process-by-tier))                                                                                                         |
 | Pull request shape          | One pull request per independently reviewable change. Oversized work is split into separately releasable delivery issues rather than an in-repository specification stack                                                                                                                                           |
 | Drift review                | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                                                                                                   |
