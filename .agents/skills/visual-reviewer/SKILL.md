@@ -97,8 +97,8 @@ git diff --name-status <base>..<head>
      images.
 4. **Blind pass.** On a repeat round, first compare each pair's head image in
    the new manifest with the same story, viewport and condition head image in
-   the previous manifest (the `previous capture` path), pixel by pixel, as
-   with PIL or the manifest tooling. Judge only the pairs whose head image
+   the previous manifest (the `previous capture` path), pixel by pixel, for
+   example with PIL. Judge only the pairs whose head image
    changed, the pairs new to this manifest and every story tied to an open
    finding; carry the rest from the previous review without judging them
    again. If the previous manifest is missing, unreadable or has a different

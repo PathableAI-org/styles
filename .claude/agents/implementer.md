@@ -25,7 +25,9 @@ The brief from the lead: the branch, the task, the files to change, the
 constraints, the `acceptance` items (the Section 508 and defect checks the visual
 reviewer applies that bear on a change on a rendering path, or none), and the checks to run. If any of these
 is missing, or the brief
-contradicts an owning document, reply with the question and stop. Do not
+contradicts an owning document, reply with the question and stop. The
+`acceptance` field is optional: when the brief has none, treat it as `none`
+and do not stop to ask about it. Do not
 guess at scope or design: a question costs the lead one message, a wrong guess
 costs a review round.
 

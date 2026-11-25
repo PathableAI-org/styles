@@ -36,10 +36,11 @@ findings.
 The reviewer starts with a clean context. It reads only:
 
 - the request: branch, pushed SHA, base SHA, slice ID `fix`, pull request and
-  round, plus for a repeat round the previous review ID and the implementation
-  session's answer to each open finding
+  round, plus for a repeat round the previous review ID, the previous SHA and
+  the implementation session's answer to each open finding
 - the diff from the base SHA to the pushed SHA, and the files it touches at
-  the pushed SHA
+  the pushed SHA; on a repeat round, the pull request's own commits since the
+  previously reviewed SHA instead (see the [range](#report))
 - the linked delivery issue and pull request body
 - [AGENTS.md](../../AGENTS.md) and the owning
   documents for the code the diff changes, as the routing table names them:
@@ -286,7 +287,8 @@ weaken the review or verifier subagent, which stay the only gates.
   merges the base in to stay current, and a plain two-dot diff would sweep the
   base branch's changes into the review), reading the surrounding code as
   needed to trace each changed path, including callers and dependents of
-  changed code. If `since` is not an ancestor of `HEAD`, it
+  changed code. If `since` does not resolve to a commit or is not an ancestor
+  of `HEAD` (`git merge-base --is-ancestor` exits non-zero), it
   reviews the full `origin/<base>...HEAD` and says so. The lead session never
   describes the change or what to check, because a reviewer handed the author's
   hypothesis tends to confirm it.

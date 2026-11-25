@@ -1,6 +1,6 @@
 ---
 name: pre-push-reviewer
-description: Advisory pre-push self-review for a PathAble design-system lead session. Reviews origin/<base>...HEAD plus uncommitted changes with a fresh context, before the implementer pushes or requests a round, and reports findings. Pass only the base branch and, on a later push, `since`; never describe the change or what to check. Read-only, records nothing, and never gates.
+description: Advisory pre-push self-review for a PathAble design-system lead session. Reviews origin/<base>...HEAD, or with `since` only the commits since that SHA, plus uncommitted changes with a fresh context, before the implementer pushes or requests a round, and reports findings. Pass only the base branch and, on a later push, `since`; never describe the change or what to check. Read-only, records nothing, and never gates.
 tools: Read, Grep, Glob, Bash
 model: fable
 effort: high
@@ -34,8 +34,8 @@ Review this range, from the current worktree:
    branch merges the base in to stay current, and a plain two-dot diff would
    sweep the base branch's changes into the review), reading the surrounding code as needed to trace each changed path,
    including callers and dependents of changed code.
-   If `since` is not an ancestor of `HEAD` (`git merge-base --is-ancestor`),
-   review the full `origin/<base>...HEAD` and say so in your reply.
+   If `since` does not resolve to a commit or is not an ancestor of `HEAD`
+   (`git merge-base --is-ancestor` exits non-zero), review the full `origin/<base>...HEAD` and say so in your reply.
 2. `git status --porcelain --untracked-files=all`, `git diff` and
    `git diff --cached` for uncommitted work
 3. the files those touch, at their current content

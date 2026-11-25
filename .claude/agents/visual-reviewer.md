@@ -30,10 +30,12 @@ it, such as a description of the change or what to look at:
 - capture: the path of the visual capture's `manifest.json`
 - for round two or later: the previous visual review ID, the lead
   session's answer to each open finding, and `previous capture`, the path of
-  the previous round's `manifest.json`
+  the previous round's `manifest.json`, or `none`
 
-If a field is missing or a SHA is not in the repository, reply with what is
-missing and stop.
+If a field other than `previous capture` is missing or a SHA is not in the
+repository, reply with what is missing and stop. If `previous capture` is
+`none`, missing or unreadable, do not stop: review every pair as in round one
+and say so.
 
 ## Boundaries
 

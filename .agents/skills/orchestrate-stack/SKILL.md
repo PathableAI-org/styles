@@ -39,7 +39,8 @@ From the person, take the delivery issue number.
    Raise an understated tier; never lower one. For a component that embeds
    another component or is embedded in one, read both component pages in
    `components/`; settle any conflict between their guarantees before
-   briefing, or stop under Read below.
+   briefing. When settling it needs a design trade-off, stop and send the
+   person the conflict and the options.
 2. Find an existing pull request linked to the issue and resume it, or branch
    from current `origin/main` as `<type>/<short-slug>`.
 3. Tell the person which tier row applies, which subagents run, and whether the
@@ -111,7 +112,7 @@ answers: <finding ID and fixing commit or justification, or none>
 Verification also gets `run instructions changed: <what, or none>`. The
 pre-push reviewer gets only `base: <branch>`, plus
 `since: <40-character SHA>` on a later push: the last commit a pre-push
-self-review covered.
+self-review covered. The lead passes the full SHA from `git rev-parse`.
 
 Visual capture gets:
 
@@ -123,7 +124,7 @@ out: <scratchpad>/visual-capture/<pr>-round-<n>
 
 The visual reviewer gets that manifest path plus the common request fields.
 From round 2 it also gets `previous capture: <path to the previous round's
-capture manifest>`.
+capture manifest, or none>`.
 
 ## Implementer brief
 
