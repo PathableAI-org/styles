@@ -4,12 +4,12 @@ A delivery issue runs in **one lead session**. The lead session reads the
 accepted issue, writes the code or hands clearly scoped tasks to an
 **implementer** subagent, and runs every independent check as a **subagent**
 with a clean context: the pre-push self-review, the code review, the
-verification and the visual review, whose screenshots a **visual capture**
-subagent takes first. This document owns the lead session's loop by risk
-tier, its stop points, how it starts subagents and keeps them independent,
-its notifications, and the model and effort each role runs on, including when
-the lead steps a role up. The `orchestrate-stack` skill supplies the
-procedure.
+verification and the visual review, whose screenshots the lead takes first by
+running the capture script itself. This document owns the lead session's loop
+by risk tier, its stop points, how it starts subagents and keeps them
+independent, its notifications, and the model and effort each role runs on,
+including when the lead steps a role up. The `orchestrate-stack` skill
+supplies the procedure.
 
 [Git workflow](git-workflow.md) owns tiers, branches, merges, corrections and
 [agent merge](git-workflow.md#agent-merge).
@@ -60,12 +60,10 @@ person to follow. Subagents give the same independence with one session:
 | Pre-push self-review | [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) subagent | Nothing; advisory reply only                                                |
 | Code review          | [`code-reviewer`](../../.claude/agents/code-reviewer.md) subagent         | Its review note and the note comment                                        |
 | Verification         | [`verifier`](../../.claude/agents/verifier.md) subagent                   | Its report note, the note comment, and a screenshots page for visual claims |
-| Visual capture       | [`visual-capture`](../../.claude/agents/visual-capture.md) subagent       | Screenshots and a capture manifest in its output directory                  |
 | Visual review        | [`visual-reviewer`](../../.claude/agents/visual-reviewer.md) subagent     | Its visual review note, the note comment, and the screenshots page          |
 | Drift review         | Its own scheduled or person-started session, outside any delivery issue   | Drift issues                                                                |
 
-The reviewing subagents and the visual capture are read-only on every branch.
-Each works in its own detached worktrees of the lead session's clone, at the
+The reviewing subagents are read-only on every branch. Each works in its own detached worktrees of the lead session's clone, at the
 SHAs it was given, so their notes land in the shared local notes refs as well
 as on the pull request. The implementer is the one subagent that edits files,
 and only as [Delegating implementation](#delegating-implementation) allows.
@@ -111,9 +109,10 @@ when the pull request touches a
    same pushed SHA, each with only its request fields: branch, SHA, base SHA,
    slice ID `fix`, pull request number and round, plus for a repeat round the previous record's ID
    and the lead's answer to each open finding. When the round has a visual
-   review, it starts the visual capture instead of the visual reviewer, and
-   starts the visual reviewer with the capture's manifest once the capture
-   finishes. Then it ends its turn; each subagent's completion wakes it.
+   review, it runs the capture script in the background instead of starting
+   the visual reviewer, and starts the visual reviewer with the script's
+   manifest once it finishes. Then it ends its turn; each subagent's
+   completion wakes it.
 5. **Read.** It reads each record with `pnpm review:show`, `pnpm verify:show`
    or `pnpm visual:show`, answers every finding with a fix or a written
    justification, and goes back to step 1 for a new round, or on when every
@@ -130,9 +129,9 @@ when the pull request touches a
    without polling, and merges when `pnpm merge:gate` passes. For High work it
    stops for the person.
 
-The verifier and the visual capture each build Storybooks. They may run at
+The verifier and the capture script each build Storybooks. They may run at
 the same time: the verifier serves on ports 6006 and 6007, the pixel suite on
-6014, and the visual capture on 6020 to 6023. If the session's disk
+6014, and the capture script on 6020 to 6023. If the session's disk
 allowance runs low, run them one after the other.
 
 ## Delegating implementation
@@ -212,7 +211,8 @@ The lead session stops, notifies the person and waits at these points:
   before briefing, when settling them needs a design trade-off: the lead stops
   with options.
 - A delivery-scope discovery or tier change.
-- A subagent that failed or hit a usage limit twice in a row.
+- A subagent that failed or hit a usage limit twice in a row, or the capture
+  script failing twice in a row.
 
 An agent-merged pull request is not a stop point. The lead merges it,
 notifies the person, and goes on.
@@ -343,7 +343,6 @@ goes to Sonnet or Haiku and starts low.
 | Pre-push self-review         | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; [fixed](#which-roles-step-up)                               |
 | Code review                  | `fable` (`claude-fable-5-2`), a different and stronger model than the lead | `high`                        | No; fixed                                                       |
 | Verification                 | `sonnet` (`claude-sonnet-5-5`)                                             | `high`                        | After a [failed run](#which-roles-step-up), to `opus` at `high` |
-| Visual capture               | `haiku` (`claude-haiku-5-5`)                                               | `low`                         | After a failed run, to `sonnet` at `medium`                     |
 | Visual review                | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; fixed                                                       |
 | Drift review                 | `claude-opus-5-5`                                                          | `high`                        | No                                                              |
 | Lookups, read-only subagents | `claude-haiku-5-5`, or `claude-sonnet-5-5` when the lookup needs judgment  | `low`                         | No                                                              |
@@ -372,9 +371,8 @@ raise:
   fails, or a blocking finding lands, in code it wrote, or it reports a check
   it could not get green. A different finding in each round is ordinary
   review and does not count.
-- **The verification and the visual capture** step up after a failed run:
-  the subagent errors, returns no record or manifest, or returns one the lead
-  cannot use. A failing claim, or a head that does not build, is a result
+- **The verification** steps up after a failed run: the subagent errors,
+  returns no record, or returns one the lead cannot use. A failing claim, or a head that does not build, is a result
   about the code, not a failed run.
 - **The reviewers** (pre-push self-review, code review and visual review)
   never change. A review that does too little passes what it should have
@@ -392,8 +390,7 @@ For the implementer, within the three rounds before the
 3. **Round 3:** one more step, up to `opus` at `high`, the ceiling.
 4. **After round 3:** the existing stop point applies.
 
-The verification and the visual capture take their one step on the next run
-of the same round. The lead never steps a role down within a delivery issue,
+The verification takes its one step on the next run of the same round. The lead never steps a role down within a delivery issue,
 and it may take a task back and write it itself at any step.
 
 The lead sets a step with the Agent tool's `model` and `effort` parameters,
@@ -440,7 +437,7 @@ request.
 | Decision                    | Outcome                                                                                                                                                                                                                                                                                                             |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Models and effort           | Changed 2026-11-22 to save usage: Opus leads, Fable judges at a fixed setting, Sonnet and Haiku do clearly scoped work and [step up](#stepping-up) on evidence. Revisit using [the measures](#revisiting-the-table)                                                                                                 |
-| Implementer and capture     | Decided 2026-11-22. The lead may delegate clearly scoped tasks to the `implementer` subagent, and the `visual-capture` subagent runs the visual capture script so the visual reviewer only judges                                                                                                                   |
+| Implementer and capture     | Decided 2026-11-22: the lead may delegate clearly scoped tasks to the `implementer` subagent. Changed 2026-11-25: the lead runs the capture script in the background; the `visual-capture` subagent was removed, as a script run needs no clean context and a background command costs no tokens                    |
 | Delivery record             | The issue owns the accepted outcome, scope, contract impact, claims and implementation approach; the pull request owns the implementation and evidence ([Process by tier](git-workflow.md#process-by-tier))                                                                                                         |
 | Pull request shape          | One pull request per independently reviewable change. Oversized work is split into separately releasable delivery issues rather than an in-repository specification stack                                                                                                                                           |
 | Drift review                | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                                                                                                   |

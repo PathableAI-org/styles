@@ -69,11 +69,10 @@ content beyond what it needs to pick stories and confirm a finding's cause.
 
 ## What it captures
 
-Capturing is mechanical and judging is not, so they are split. The
-[`visual-capture`](../../.claude/agents/visual-capture.md) subagent, on a
-small model, runs
+Capturing is mechanical and judging is not, so they are split. The lead
+session runs
 [`scripts/visual-capture.mjs`](../../scripts/visual-capture.mjs) for the base
-and head SHAs. The script does everything in the list below except naming
+and head SHAs, in the background. The script does everything in the list below except naming
 themes, and writes a manifest of image paths and numbers. The visual reviewer
 starts with that manifest, checks its SHAs and its story choice, and judges.
 It runs the same script with `--only` to add a story the choice missed or to

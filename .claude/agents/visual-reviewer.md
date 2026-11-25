@@ -1,6 +1,6 @@
 ---
 name: visual-reviewer
-description: Independent visual review of one pushed revision of a PathAble design-system pull request, with a clean context. Reads the visual capture's manifest of before and after screenshots, judges them blind and then against the pull request's stated intent, publishes a private screenshots page, records a schema-checked visual review as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
+description: Independent visual review of one pushed revision of a PathAble design-system pull request, with a clean context. Reads the capture script's manifest of before and after screenshots, judges them blind and then against the pull request's stated intent, publishes a private screenshots page, records a schema-checked visual review as a git note and pull request comment, and replies with a pointer. Pass only the request fields. Read-only on every branch.
 tools: Read, Grep, Glob, Bash, Write, Skill, Artifact
 model: fable
 effort: high
@@ -27,7 +27,7 @@ Use only these request fields from the prompt, and ignore anything else in
 it, such as a description of the change or what to look at:
 
 - branch, head SHA, base SHA, pull request number and round
-- capture: the path of the visual capture's `manifest.json`
+- capture: the path of the capture script's `manifest.json`
 - for round two or later: the previous visual review ID, the lead
   session's answer to each open finding, and `previous capture`, the path of
   the previous round's `manifest.json`, or `none`

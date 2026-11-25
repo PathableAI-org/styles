@@ -15,9 +15,9 @@ implementation approach. This skill owns the execution loop.
 - You are the only writer who commits or pushes. The `implementer` may edit
   your working tree for one bounded task while you wait; no reviewing subagent
   edits it.
-- Start every role from its `.claude/agents/` definition. Give reviewers,
-  verification and visual capture only the request fields below. Do not brief
-  them with the author's explanation or another reviewer's findings.
+- Start every role from its `.claude/agents/` definition. Give reviewers and
+  verification only the request fields below. Do not brief them with the
+  author's explanation or another reviewer's findings.
 - Leave each role at the model and effort in its definition unless
   [Stepping up](../../../docs/engineering/orchestration.md#stepping-up)
   explicitly allows a change.
@@ -69,8 +69,9 @@ stack inside the repository.
 4. **Check.** On the same pushed SHA, start:
    - `code-reviewer`, always;
    - `verifier`, for High work;
-   - `visual-capture` and then `visual-reviewer`, whenever the changed paths
-     match the rendering paths in the visual-review guide.
+   - `visual-reviewer`, whenever the changed paths match the rendering paths
+     in the visual-review guide, after you run the capture script yourself
+     (see Requests).
 
    End the turn while they run.
 
@@ -114,15 +115,26 @@ pre-push reviewer gets only `base: <branch>`, plus
 `since: <40-character SHA>` on a later push: the last commit a pre-push
 self-review covered. The lead passes the full SHA from `git rev-parse`.
 
-Visual capture gets:
+When the round has a visual review, run the capture script yourself; no
+subagent takes the screenshots. Make sure Docker is running: if `docker info`
+fails, start it with `(nohup dockerd > /tmp/dockerd.log 2>&1 &)` and wait for
+`docker info` to succeed, at most two minutes. If it never does, add
+`--no-pixels` and say so in the round summary. Then run it in the background,
+with its output sent to a log file:
 
-```text
-base: <40-character base SHA>
-head: <pushed 40-character SHA>
-out: <scratchpad>/visual-capture/<pr>-round-<n>
+```sh
+node scripts/visual-capture.mjs --base <base SHA> --head <pushed SHA> \
+  --out <scratchpad>/visual-capture/<pr>-round-<n> \
+  > <scratchpad>/visual-capture/<pr>-round-<n>.log 2>&1
 ```
 
-The visual reviewer gets that manifest path plus the common request fields.
+When it finishes, read only the script's summary lines (the manifest path, the
+counts and any error lines) from the end of the log. Never read the
+screenshots, the manifest's contents or the full log. Leave the worktrees: the
+visual reviewer reuses them and removes them. A run that errors or writes no
+manifest is re-run once; a second failure is a stop point.
+
+The visual reviewer gets the manifest path plus the common request fields.
 From round 2 it also gets `previous capture: <path to the previous round's
 capture manifest, or none>`.
 

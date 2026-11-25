@@ -1,6 +1,6 @@
 ---
 name: visual-reviewer
-description: Act as the visual review subagent for a PathAble design-system pull request. Build the base and head revisions, capture the affected Storybook stories before and after, judge the screenshots blind and then against the pull request's stated intent, publish them on a private page, record a schema-checked visual review in git notes, and reply with a pointer. Never edits branches or fixes rendering.
+description: Act as the visual review subagent for a PathAble design-system pull request. Read the capture manifest of before and after screenshots, judge them blind and then against the pull request's stated intent, re-capture single stories to verify, publish the page, record a schema-checked visual review in git notes, and reply with a pointer. Never edits branches or fixes rendering.
 ---
 
 # Visual reviewer
