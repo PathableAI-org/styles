@@ -7,7 +7,7 @@
 
 @use 'uswds-core' as *;
 
-@use 'usa-input-prefix-suffix/src/styles';
+@use 'usa-input-prefix-suffix/src/styles' as input-affix;
 
 .pathable-input-prefix-suffix,
 .pathable-input-group {
@@ -22,17 +22,33 @@
   @extend .usa-input-group--success;
 }
 
+// USWDS moves the focus ring out by the state border width, which leaves it
+// flush against the 4px border. Keep the 1px gap the default group has
+// between its border and the ring (the brand ring sits 2px out from a 1px
+// border).
+.pathable-input-group--error,
+.pathable-input-group--success {
+  input:focus {
+    outline-offset: calc(#{units($theme-input-state-border-width)} + 1px);
+  }
+}
+
 // One modifier per USWDS input width, including the small and medium aliases.
 //
 // A deliberate deviation from USWDS, which caps the whole group at the input
-// width. The input inside keeps 3rem of padding for the affix (2.5rem on the
-// affix side, 0.5rem on the other) and the group has a 1px border, so at 2xs
+// width. The input inside keeps 3rem of padding for the affix (USWDS's icon
+// offset on the affix side, its input padding on the other) and the group has
+// a 1px border, so at 2xs
 // the affix would spill out of the group and no value would fit. Cap the
 // group at the width plus that padding and border instead, so the width
 // names the room left for the value.
 @each $name, $width in $system-input-widths {
   .pathable-input-group--#{$name} {
-    max-width: calc(#{$width} + #{units(6)} + 2px);
+    max-width: calc(
+      #{$width} +
+        #{units(input-affix.$icon-offset + input-affix.$input-padding)} +
+        2px
+    );
   }
 }
 
@@ -60,11 +76,15 @@
   // gives the box the height of its text, centred on the same line.
   line-height: normal;
 
-  // USWDS sizes only .usa-icon here; size the PathAble icon class the same,
-  // 1.5rem square. As a block it sets the affix height alone, so the line
-  // height adds no space below it and the icon stays centred on the group.
-  .pathable-icon {
-    @include u-square(3);
+  // An icon or image as a block sets the affix height alone, so the line
+  // height adds no space below it and it stays centred on the group.
+  > svg,
+  > img {
     display: block;
+  }
+
+  // USWDS sizes only .usa-icon here; size the PathAble icon class the same.
+  .pathable-icon {
+    @include u-square(input-affix.$icon-width);
   }
 }
