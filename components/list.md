@@ -21,6 +21,8 @@ guarantees:
     claim: A list nested inside an item of the list has a top margin of 0.25em.
   - id: unstyled-markers
     claim: With the unstyled modifier, the list has no bullets or numbers, no left padding and no top or bottom margin, and its items have no bottom margin and no width limit.
+  - id: inside-prose
+    claim: A list with the unstyled modifier that is a direct child of pathable-prose renders the same as one outside it, with no markers, no left padding, no top or bottom margin, and items with no bottom margin and no width limit.
 ---
 
 # List

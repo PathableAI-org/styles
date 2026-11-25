@@ -56,6 +56,7 @@ env:
     collection
     icon-list
     input-prefix-suffix
+    list
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens

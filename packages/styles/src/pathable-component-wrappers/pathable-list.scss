@@ -9,6 +9,18 @@
 
 @use 'usa-list/src/styles';
 
+// The framework scopes its unstyled-list override to .usa-prose. Make the same
+// scope apply to .pathable-prose so an unstyled list renders the same inside it.
+.pathable-prose {
+  @extend .usa-prose;
+}
+
 .pathable-list {
   @extend .usa-list;
+}
+
+// Unstyled modifier: also picks up the `.usa-prose .usa-list--unstyled`
+// override, so it applies under `.pathable-prose`.
+.pathable-list--unstyled {
+  @extend .usa-list--unstyled;
 }
