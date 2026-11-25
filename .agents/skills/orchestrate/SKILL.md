@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Lead one PathAble design-system delivery issue through a single implementation pull request, independent review and verification appropriate to its risk tier, and the repository's merge rules.
+description: Lead one PathAble design-system delivery issue through local implementation, independent local review and verification appropriate to its risk tier, and a single pull request opened ready for a person to review and merge.
 ---
 
 # Lead a delivery issue
@@ -21,14 +21,15 @@ implementation approach. This skill owns the execution loop.
   author's explanation or another reviewer's findings.
 - Leave each role at the model and effort in its definition unless
   [Stepping up](../../../docs/engineering/orchestration.md#stepping-up)
-  explicitly allows a change.
-- Merge only under [agent merge](../../../docs/engineering/git-workflow.md#agent-merge),
-  only with the GitHub MCP merge tool and squash, and only after
-  `pnpm merge:gate <pr>` passes. High and guardrail work wait for a person.
+  explicitly allows a change. Reviewers never step up; rerun one at the same
+  setting if its run errors.
+- Every subagent replies to you only. No role posts records, notes or findings
+  on GitHub; the pull request body is yours, written for the human reviewer.
+- Never merge, never enable auto-merge and never mark a release pull request
+  ready. A person merges every pull request.
 - Never poll. End the turn while long checks, subagents or CI run.
 - A Stop-hook reminder about uncommitted or unpushed work while an implementer,
-  a checker or a pre-push self-review runs is not a reason to commit or push
-  early. Say
+  a checker or a reviewer runs is not a reason to commit or push early. Say
   so and end the turn.
 
 ## Start
@@ -45,8 +46,7 @@ From the person, take the delivery issue number.
    person the conflict and the options.
 2. Find an existing pull request linked to the issue and resume it, or branch
    from current `origin/main` as `<type>/<short-slug>`.
-3. Tell the person which tier row applies, which subagents run, and whether the
-   pull request waits for their merge approval.
+3. Tell the person which tier row applies and which subagents run.
 
 If the accepted work is too large for one reviewable pull request, stop and
 propose separately releasable delivery issues. Do not create a specification
@@ -86,66 +86,68 @@ stack inside the repository.
      not accept back to the implementer as a failure. When published package
      code changes, whoever writes the code writes the changeset: put it in
      the brief's `files` for an implementer, or write it with your own code.
-2. **Self-review.** Run the `pre-push-reviewer` with only the base branch, plus
-   `since:` on a later push. Never skip it on a later push. Fix accepted
-   findings through the same implementer and checker loop, and keep rejected findings out of other
-   subagent requests.
-3. **Push.** Before each push that starts or answers a round, bring the pull
-   request body current: Change, Evidence and the visible-change description
-   cover every commit in the round. Push and open or update one draft pull
-   request with the matching risk label. Keep Decisions for the reviewer and
-   Validation current.
-4. **Check.** On the same pushed SHA, start:
+2. **Review round.** Nothing is pushed yet. On the committed local `HEAD`,
+   start in parallel, each in a fresh context with only its
+   [request fields](#requests):
    - `code-reviewer`, always;
-   - `verifier`, for High work;
-   - `visual-reviewer`, whenever the changed paths match the rendering paths
-     in the visual-review guide, after you run the capture script yourself
-     (see Requests).
+   - `scope-reviewer`, always;
+   - `visual-reviewer`, whenever the round's diff touches a rendering path in
+     the visual-review guide, after you run the capture script yourself on the
+     local base and head SHAs (see Requests);
+   - `verifier`, for High work.
 
-   End the turn while they run.
-
-5. **Read.** Read records with `pnpm review:show`, `pnpm verify:show` and
-   `pnpm visual:show`. Answer every finding with a fix or a written
-   justification. When every required record passes apart from advisory
-   findings, the fix loop ends: no review has an open blocking finding, and for
-   High work the latest verification report passes (no `violated`,
-   `not established` or `blocked` claim and no failing or missing named story),
-   as `docs/engineering/verification-harness.md` step 6 requires. Answer each advisory finding with a justification, a follow-up issue
-   or a fix, prefer the first two outside the accepted scope, and put accepted
-   fixes in one batch and one final round. Never start a round for a single
-   advisory fix. Otherwise begin another round. Stop on an escalation,
-   accepted scope/claim change, a round that ends with a blocking finding open
-   in round three or later (new or carried), or a blocking finding whose fix
+   End the turn while they run. Each replies to you only.
+3. **Answer.** Read every reply. Answer every finding with a fix, which goes
+   through step 1 (implementer, then a new checker, then your commit), or a
+   written justification. Start the next review round with each reviewer's own
+   previous findings and your answers, plus `since: <sha>` so it reviews only
+   what changed. Repeat steps 2 and 3 until no reviewer has an open blocking
+   finding, every advisory finding is fixed or justified, and for High work the
+   verifier reports every claim `established` and no failing or missing named
+   story. Prefer a justification or a follow-up issue for an advisory finding
+   outside the accepted scope, put accepted fixes in one batch, and never
+   start a round for a single advisory fix. Stop for the person on an
+   escalation, an accepted scope or claim change, a blocking finding open in
+   round three or later (new or carried), or a blocking finding whose fix
    needs a design trade-off or sets two documented guarantees against each
    other; for the last, stop when it first appears. Send the open findings and
    your options.
-6. **Ready.** Mark the pull request ready only when its required records pass.
-   The ready hook runs `pnpm verify:gate` for High work.
-7. **Merge or stop.** High and guardrail work stop for a person. Otherwise keep
-   the branch current with `main`; if the pull request's own diff changes,
-   repeat the affected reviews. When CI and `pnpm merge:gate <pr>` pass, squash
-   merge through the GitHub MCP tool and notify the person.
+4. **Push.** Only when the loop is clean: bring the pull request body current
+   (Change, Evidence, Decisions for the reviewer and Validation), with the
+   Evidence section summarising each reviewer's final result and the round
+   count. Push, and open or update one pull request with the matching risk
+   label, ready for review and not draft, since all review is done. Post no
+   reviewer findings or records on it.
+5. **CI.** Fix a CI failure through steps 1 to 3 (fix, checks, a review round
+   on the fix commits) before pushing again.
+6. **Hand off.** Notify the person. They review and merge. Never merge.
 
 ## Requests
 
-Pass these fields and nothing else to code review or verification:
+Pass these fields and nothing else to each reviewer. Reviewers read the local
+commits (`git diff <base>...<head>`); nothing has been pushed. Pass full SHAs
+from `git rev-parse`.
+
+Code reviewer:
 
 ```text
-branch: <branch>
-sha: <pushed 40-character SHA>
 base: <40-character base SHA>
-slice: fix
-pr: <number>
+head: <40-character local head SHA>
 round: <n>
-previous: <previous record ID, or none>
-previous sha: <40-character SHA reviewed in the previous round, or none>
-answers: <finding ID and fixing commit or justification, or none>
+previous: <its own earlier findings with your answers, or none>
+since: <40-character SHA it reviewed last round, or none>
 ```
 
-Verification also gets `run instructions changed: <what, or none>`. The
-pre-push reviewer gets only `base: <branch>`, plus
-`since: <40-character SHA>` on a later push: the last commit a pre-push
-self-review covered. The lead passes the full SHA from `git rev-parse`.
+Scope reviewer: the same fields, plus
+`task: <delivery issue URL or number; with no issue, the person's task text quoted verbatim>`.
+
+Visual reviewer: `base`, `head`, `round`, `previous`, `task` as above, plus
+`capture: <manifest path>` and, from round 2,
+`previous capture: <path to the previous round's manifest, or none>`.
+
+Verifier: `base`, `head`, `round`, plus
+`claims: <the numbered claims from the accepted issue, each with its observation and evidence channel>` and
+`run instructions changed: <what, or none>`.
 
 When the round has a visual review, run the capture script yourself; no
 subagent takes the screenshots. Make sure Docker is running: if `docker info`
@@ -156,9 +158,9 @@ with its output sent to a log file:
 
 ```sh
 mkdir -p <scratchpad>/visual-capture
-node scripts/visual-capture.mjs --base <base SHA> --head <pushed SHA> \
-  --out <scratchpad>/visual-capture/<pr>-round-<n> \
-  > <scratchpad>/visual-capture/<pr>-round-<n>.log 2>&1
+node scripts/visual-capture.mjs --base <base SHA> --head <local head SHA> \
+  --out <scratchpad>/visual-capture/round-<n> \
+  > <scratchpad>/visual-capture/round-<n>.log 2>&1
 ```
 
 When it finishes, read only the script's summary lines (the manifest path, the
@@ -237,4 +239,4 @@ time and start a new one for every pass through the checks.
 
 After a changeset pull request merges, report any open `ci: version packages`
 pull request and never merge or mark it ready. Remove worktrees, summarize the
-records and checks, and name the drift-review areas touched by the merged diff.
+review results and checks, and name the drift-review areas touched by the merged diff.
