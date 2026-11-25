@@ -48,9 +48,16 @@ observed, not what the implementation was intended to do.
 
 ```text
 Verification — <head SHA>, round <n>
+Run: <start and end time>
+Environment: <short summary of the host, tools and Storybooks used>
 Claims:
   1 <established | violated | not established | blocked> — <what you observed, and how>
 Stories: <each named story: passing | failing | missing, with its Storybook>
+Cleanup: <what you removed or stopped, and anything left behind>
+Outside claims: <violations observed outside the requested claims, or none>
 Page: <private screenshots page URL, or none>
 Escalation: <kind and claim numbers with detail, or none>
 ```
+
+A violation observed outside the requested claims is reported like a
+`violated` claim: the lead treats it as blocking the push decision.

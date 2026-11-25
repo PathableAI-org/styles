@@ -39,7 +39,12 @@ read, reply with what is missing and stop.
 2. Read the diff: `git diff <base>...<head>` and `git log <base>..<head>`, in a
    detached worktree of the lead's clone or with `git show`. On a repeat round
    with a `since` SHA, review `git log -p --no-merges <since>..<head> ^<base>`
-   and read the rest of the diff only as far as an open finding needs.
+   plus `git show --remerge-diff <merge>` for each merge commit in that range
+   (the branch may merge the base in to stay current, and a merge's conflict
+   resolution can add out-of-scope changes that `--no-merges` hides), and read
+   the rest of the diff only as far as an open finding needs. If `since` is not
+   an ancestor of `head`, review the full `git diff <base>...<head>` instead
+   and say why in the reply.
 3. Report, each as a finding:
    - a change outside the accepted scope: a file, a behaviour, a public
      contract (classes, props, exports, tokens, package entry points) or a

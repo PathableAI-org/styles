@@ -69,7 +69,12 @@ stack inside the repository.
      Your own code goes through a checker too.
    - Then start a **new** `checker` with only the
      [check request](#check-request) and end the turn. Its checks are the ones
-     `AGENTS.md` routes for the changed paths. Never resume a checker, and
+     `AGENTS.md` "Before committing" routes for the changed paths plus every
+     check the work's tier requires in the
+     [Process by tier](../../../docs/engineering/git-workflow.md#process-by-tier)
+     evidence list (for example `pnpm --filter @pathableai/react check:package`
+     and `check:types` for Standard React changes); you pick them from both
+     lists. Never resume a checker, and
      never send it the brief's reasoning or the implementer's reply.
    - If anything fails, resume the implementer with the checker's report as
      written. When the failure shows the design or the brief was wrong,
@@ -228,7 +233,7 @@ Pass these fields and nothing else to a new `checker`:
 
 ```text
 branch: <checked-out branch>
-checks: <every check AGENTS.md routes for the changed paths, as commands in order>
+checks: <every check AGENTS.md routes for the changed paths and every check the tier's evidence list requires, as commands in order>
 acceptance: <the brief's acceptance items, each with the fixture folders or story IDs to probe it on; or none>
 ```
 

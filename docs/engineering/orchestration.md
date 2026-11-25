@@ -85,7 +85,10 @@ touches a [rendering path](visual-review.md#when-a-visual-review-runs).
 
 1. **Build.** The lead session settles the design and hands the code to the
    implementer, which edits and builds. A fresh checker then runs the
-   [Before committing](../../AGENTS.md#before-committing) checks, as
+   [Before committing](../../AGENTS.md#before-committing) checks for the
+   changed paths and every check the work's tier requires in the
+   [Process by tier](git-workflow.md#process-by-tier) evidence list (the lead
+   picks them from both lists), as
    [Delegating implementation](#delegating-implementation) describes. When
    every check passes, the lead reads the diff and commits.
 2. **Review.** Nothing is pushed yet. On the committed local `HEAD`, it starts
