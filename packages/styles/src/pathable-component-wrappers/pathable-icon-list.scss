@@ -31,6 +31,14 @@
 
 .pathable-icon-list__content {
   @extend .usa-icon-list__content;
+
+  // Accessibility deviation from USWDS: at enlarged text on a narrow viewport
+  // the content, a flex item, would not shrink below its longest word and the
+  // page would scroll sideways. Let it shrink and break long words so text
+  // reflows. `anywhere`, unlike `break-word`, also lowers the minimum content
+  // width.
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .pathable-icon-list__title {
