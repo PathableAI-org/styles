@@ -31,7 +31,7 @@ guarantees:
   - id: success-modifier
     claim: With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.
   - id: width-modifiers
-    claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex plus 3rem for the input's padding beside the affix and 2px for the border, so the value has that width, and small and medium are aliases of sm and md.
+    claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex plus 3rem for the input's padding beside the affix and 2px for the default 1px border, so the value has that width (6px less with the 4px error or success border), and small and medium are aliases of sm and md.
 ---
 
 # Input prefix/suffix
@@ -101,8 +101,10 @@ The modifiers go on `pathable-input-group`, not on `pathable-input`.
 
 ## Tokens
 
-None. The colours, sizes and spacing are fixed values in the compiled
-stylesheet, not custom properties, so a theme does not change them.
+The group has none of its own. The prefix and suffix text takes the theme's
+muted text colour, so a theme that changes that colour changes the affix too,
+and must keep it at 4.5:1 or more against white for the affix-contrast
+guarantee to hold. Every other value is fixed in the stylesheet.
 
 ## Composition
 
