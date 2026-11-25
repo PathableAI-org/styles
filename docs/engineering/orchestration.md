@@ -206,11 +206,11 @@ The lead session stops, notifies the person and waits at these points:
   blocking finding without the person. The lead sends the open findings and
   the options it sees.
 - A blocking finding whose fix needs a design trade-off, or that sets two
-  documented guarantees against each other, and likewise two documented
-  guarantees (for example two component pages) that conflict, found before
-  briefing or in a finding, when settling them needs a design trade-off. The
-  lead stops when it first finds it, with options, instead of trying fixes
-  round by round.
+  documented guarantees against each other. The lead stops when it first
+  appears, with options, instead of trying fixes round by round. Likewise two
+  documented guarantees (for example two component pages) found to conflict
+  before briefing, when settling them needs a design trade-off: the lead stops
+  with options.
 - A delivery-scope discovery or tier change.
 - A subagent that failed or hit a usage limit twice in a row.
 

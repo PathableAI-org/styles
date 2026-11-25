@@ -51,7 +51,7 @@ The visual reviewer starts with a clean context and reads only:
 - the request: branch, head SHA, base SHA, pull request number and round, plus
   for a repeat round the previous visual review ID, the implementation
   session's answer to each open finding, and `previous capture`, the path of
-  the previous round's capture manifest
+  the previous round's capture manifest or `none`
 - the list of changed paths from the base SHA to the head SHA, which it uses
   to choose the stories to capture, not to judge the code
 - the stories it captures, rendered at both SHAs
@@ -298,7 +298,8 @@ time as the code review request, on the same pushed SHA (see
 [Agent merge](git-workflow.md#agent-merge)). A repeat request after a fix names the new SHA, the previous visual review
 ID, and for each open finding either the fixing commit or a written
 justification, and `previous capture: <path to the previous round's capture
-manifest>`.
+manifest, or none>`. With `none`, a missing value or an unreadable manifest the
+reviewer reviews every pair as in round one and says so.
 
 Both reviewers read the pull request body. When the lead session's answer
 changes only the body and adds no commit, the lead runs both reviewers again on

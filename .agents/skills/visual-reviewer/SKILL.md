@@ -47,9 +47,11 @@ describes.
 From the request: branch, head SHA, base SHA, pull request number and round,
 the capture manifest's path, and for round two or later the previous visual
 review ID, the lead session's answer to each open finding, and
-`previous capture`, the path of the previous round's capture manifest. If a SHA or the
-manifest is missing, or a SHA is not in the repository, reply with what is
-missing instead of guessing.
+`previous capture`, the path of the previous round's capture manifest or
+`none`. If a SHA or the capture manifest is missing, or a SHA is not in the
+repository, reply with what is missing instead of guessing. `previous capture`
+being `none`, missing or an unreadable manifest is not a reason to stop: review
+every pair as in round one and say so (step 4).
 
 Until step 5 below, read nothing the pull request says about itself: not its
 title, body, commit messages or changeset. Use only the list of changed
