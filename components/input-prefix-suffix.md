@@ -31,7 +31,7 @@ guarantees:
   - id: success-modifier
     claim: With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.
   - id: width-modifiers
-    claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex, and small and medium are aliases of sm and md.
+    claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex plus 3rem for the input's padding beside the affix and 2px for the border, so the value has that width, and small and medium are aliases of sm and md.
 ---
 
 # Input prefix/suffix
@@ -113,7 +113,8 @@ stylesheet, not custom properties, so a theme does not change them.
 - `pathable-input-suffix`: last child, after the `<input>`. It holds a short
   unit and takes `aria-hidden="true"`. It must follow the input directly,
   because the disabled look is applied from the input to the suffix next to it.
-- Use one prefix or one suffix in a group.
+- Use one prefix or one suffix in a group, and keep it short: the input leaves
+  2.5rem for it, enough for an icon, a symbol or a unit of a few letters.
 - The input is a `pathable-input` with a type of `text`, `tel` or similar;
   inside the group it loses its own border, so the group's border is the only one.
 - An icon prefix holds an `<svg>` with `pathable-icon`, `aria-hidden="true"`,

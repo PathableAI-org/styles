@@ -14,6 +14,28 @@
   @extend .usa-input-group;
 }
 
+.pathable-input-group--error {
+  @extend .usa-input-group--error;
+}
+
+.pathable-input-group--success {
+  @extend .usa-input-group--success;
+}
+
+// One modifier per USWDS input width, including the small and medium aliases.
+//
+// A deliberate deviation from USWDS, which caps the whole group at the input
+// width. The input inside keeps 3rem of padding for the affix (2.5rem on the
+// affix side, 0.5rem on the other) and the group has a 1px border, so at 2xs
+// the affix would spill out of the group and no value would fit. Cap the
+// group at the width plus that padding and border instead, so the width
+// names the room left for the value.
+@each $name, $width in $system-input-widths {
+  .pathable-input-group--#{$name} {
+    max-width: calc(#{$width} + #{units(6)} + 2px);
+  }
+}
+
 .pathable-input-prefix {
   @extend .usa-input-prefix;
 
@@ -27,4 +49,22 @@
   @extend .usa-input-suffix;
 
   color: var(--pathable-color-text-muted);
+}
+
+.pathable-input-prefix,
+.pathable-input-suffix {
+  // USWDS sets a line height of 0, which leaves a text affix with a box 0 px
+  // tall: the text still shows, centred on the group, but its glyphs overflow
+  // the box, so contrast checkers cannot measure it, and over the grey
+  // disabled background they report it as obscured. A normal line height
+  // gives the box the height of its text, centred on the same line.
+  line-height: normal;
+
+  // USWDS sizes only .usa-icon here; size the PathAble icon class the same,
+  // 1.5rem square. As a block it sets the affix height alone, so the line
+  // height adds no space below it and the icon stays centred on the group.
+  .pathable-icon {
+    @include u-square(3);
+    display: block;
+  }
 }

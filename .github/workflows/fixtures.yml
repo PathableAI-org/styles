@@ -54,6 +54,7 @@ env:
     card
     checkbox
     collection
+    input-prefix-suffix
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens
