@@ -205,10 +205,13 @@ replies. Read and own the diff before committing it. Resume the same
 implementer for follow-up on the same task, including fixes for a checker's
 report and answers to its questions; start a fresh one with a fresh brief
 when the task changes, when a checker failure makes you rewrite the brief,
-when you step it up, or after about three resumes. A resumed implementer
-expects the tree as it left it: if you edit or drop any uncommitted change
-after it replies, start a fresh implementer and list that work under
-`earlier work` instead of resuming.
+when you step it up, or after about three resumes.
+
+From the brief until you commit, only implementers edit the tree, unless you
+take the task back, which ends the implementers' part in it. Otherwise write
+any code of your own before you brief, and list it under `earlier work`. Your
+commit ends the task: work after it, including a hunk you chose not to
+commit, is a new brief to a fresh implementer.
 
 ## Check request
 

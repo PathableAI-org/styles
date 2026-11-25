@@ -211,8 +211,13 @@ The loop between them:
    the design or the brief was wrong comes back to the lead, which settles it,
    rewrites the brief and starts a fresh implementer with it.
 
-The lead runs one implementer or one checker at a time and does not edit the
-working tree while either runs. When the same failure survives two implementer
+The lead runs one implementer or one checker at a time. From the brief until
+the lead commits, only implementers edit the tree, unless the lead takes the
+task back, which ends the implementers' part in it. Otherwise the lead writes
+any code of its own before it briefs, and lists it in the brief as earlier
+work. The
+commit ends the task, and later work on it is a new brief to a fresh
+implementer. When the same failure survives two implementer
 fixes, the lead steps the implementer up one rung of [the ladder](#the-ladder)
 for its next run in the same round, as
 [Which roles step up](#which-roles-step-up) describes. That run is a fresh
