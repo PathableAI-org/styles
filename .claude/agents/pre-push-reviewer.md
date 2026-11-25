@@ -1,6 +1,6 @@
 ---
 name: pre-push-reviewer
-description: Advisory pre-push self-review for a PathAble design-system lead session. Reviews origin/<base>...HEAD, or with `since` only the commits since that SHA, plus uncommitted changes with a fresh context, before the implementer pushes or requests a round, and reports findings. Pass only the base branch and, on a later push, `since`; never describe the change or what to check. Read-only, records nothing, and never gates.
+description: Advisory pre-push self-review for a PathAble design-system lead session. Reviews origin/<base>...HEAD, or with `since` only the commits since that SHA, plus uncommitted changes with a fresh context, before the lead pushes or requests a round, and reports findings. Pass only the base branch and, on a later push, `since`; never describe the change or what to check. Read-only, records nothing, and never gates.
 tools: Read, Grep, Glob, Bash
 model: fable
 effort: high

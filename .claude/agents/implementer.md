@@ -23,7 +23,8 @@ owning documents it names for the files in your brief, for example
 
 The brief from the lead: the branch, the task, the files to change, the
 constraints, the `acceptance` items (the Section 508 and defect checks the visual
-reviewer applies that bear on a change on a rendering path, or none), and the build to run. If any of these
+reviewer applies that bear on a change on a rendering path, or none), the build to run, and a
+`report` (a checker's report, or none). If any of these
 is missing, or the brief
 contradicts an owning document, reply with the question and stop. The
 `acceptance` field defaults to `none` only when the task touches no rendering
@@ -62,8 +63,11 @@ costs a review round.
 4. Look over `git diff` once: no stray files, no debugging output, nothing
    outside the brief.
 
-When the lead resumes you with a checker report, fix the cause of each
-failure it lists, rebuild and reply again. Do not rerun the checks to confirm
+When the lead resumes you with a checker report, or your brief's `report`
+carries one, fix the cause of each failure it lists, rebuild and reply again.
+A brief with a `report` means an earlier implementer gave up on these
+failures: its uncommitted changes in the tree are part of the task, not stray
+files, so work from them rather than discarding them. Do not rerun the checks to confirm
 the fix; the lead starts a new checker. If the same failure comes back after
 two of your fixes, say so under Open instead of trying a third.
 

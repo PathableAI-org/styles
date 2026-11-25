@@ -143,9 +143,9 @@ allowance runs low, run them one after the other.
 
 ## Delegating implementation
 
-The lead runs on Opus at `high`, a more expensive setting than the
-implementer's or the checker's, so it spends that on judgment and hands the
-code to cheaper subagents. Smaller
+The lead runs on a more expensive setting than the implementer and the checker
+start on, as [Models and effort](#models-and-effort) sets them, so it spends
+that on judgment and hands the code to cheaper subagents. Smaller
 models do well on work whose scope is clear and less well on work that is
 ambiguous, so the lead first makes the work clear, then delegates it:
 

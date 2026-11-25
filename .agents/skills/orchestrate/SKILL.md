@@ -184,7 +184,12 @@ files: <files to change or add>
 constraints: <owning docs, public contracts and explicit exclusions>
 acceptance: <Section 508 and defect checks the visual reviewer applies that bear on the change, for a rendering path; or none>
 build: <build command to run before replying, or none>
+report: <the checker's report as written, when this implementer is a step-up from one that gave up on a failure; or none>
 ```
+
+On a step-up, the working tree still holds the earlier implementer's
+uncommitted attempt. Leave it in place; the brief's `files` cover it, and the
+new implementer fixes the reported failures on top of it.
 
 For `acceptance:`, name the rules that bear on the change from
 [Priorities](../../../docs/engineering/visual-review.md#priorities) and
