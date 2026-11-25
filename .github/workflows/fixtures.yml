@@ -57,6 +57,7 @@ env:
     icon-list
     input-prefix-suffix
     list
+    pagination
     radio
     tokens-color
     tokens-color-state-tokens

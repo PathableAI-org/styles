@@ -15,6 +15,15 @@
 
 .pathable-pagination__list {
   @extend .usa-pagination__list;
+
+  // Accessibility deviation from USWDS: USWDS keeps the list on one row
+  // (`flex-flow: row nowrap`). With the 44 px touch targets a seven-item row is
+  // wider than a 375 px viewport, and at 200 % text it is wider than the
+  // viewport at 375 and 768 px, so the page would scroll sideways. Wrapping
+  // keeps every item in view (WCAG 1.4.4/1.4.10). The row gap keeps wrapped
+  // rows apart, including the 44 px targets that are taller than the 40 px item.
+  flex-wrap: wrap;
+  row-gap: units(1);
 }
 
 .pathable-pagination__item {
@@ -29,16 +38,58 @@
   @extend .usa-pagination__arrow;
 }
 
-.pathable-pagination__item:not(.pathable-pagination__arrow)
-  .pathable-pagination__link {
+.pathable-pagination__button {
   @extend .usa-pagination__button;
+}
+
+.pathable-pagination__previous-page {
+  @extend .usa-pagination__previous-page;
+}
+
+.pathable-pagination__next-page {
+  @extend .usa-pagination__next-page;
+}
+
+// USWDS ships usa-pagination__page-no as an unstyled hook; a page-number item
+// is always also a pathable-pagination__item, so extending the item style is
+// harmless and gives the documented class a selector.
+.pathable-pagination__page-no {
+  @extend .usa-pagination__item;
+}
+
+// USWDS ships usa-pagination__link-text unstyled; keeps the visible
+// "Previous"/"Next" label on one line inside the 40 px item.
+.pathable-pagination__link-text {
+  white-space: nowrap;
+}
+
+// The .pathable-current extend in pathable-sidenav.scss does not reach this
+// module's .usa-pagination .usa-current rule (same pattern as sidenav).
+.pathable-current {
+  @extend .usa-current;
+}
+
+// The icon wrapper's own extend does not reach .usa-pagination .usa-icon (the
+// 18 px arrow size), so repeat it here (same pattern as pathable-icon-list).
+.pathable-icon {
+  @extend .usa-icon;
+}
+
+// USWDS sizes the arrows with px-to-rem(18px), which rounds to 1.13rem
+// (18.08 px). The page guarantees 18 px, so set the exact value.
+.pathable-pagination .pathable-icon {
+  height: 1.125rem;
+  width: 1.125rem;
 }
 
 .pathable-pagination__overflow {
   @extend .usa-pagination__overflow;
 }
 
-@media (max-width: 39.99em), (pointer: coarse) {
+// The page guarantees 44 px targets at a viewport of 640 px (40em) or
+// narrower, so the bound includes 40em itself.
+@media (max-width: 40em), (pointer: coarse) {
+  .pathable-pagination__button,
   .pathable-pagination__link {
     box-sizing: border-box;
     min-width: 2.75rem;

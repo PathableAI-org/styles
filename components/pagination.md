@@ -7,7 +7,7 @@ styles-class: pathable-pagination
 variants: []
 guarantees:
   - id: row-layout
-    claim: The list is a single centred row that does not wrap, with no list markers or left padding, and each list item is 40 px tall and at least 40 px wide with 4 px of margin on each side.
+    claim: The list is a centred row with no list markers or left padding that wraps onto further centred rows, 8 px apart, when it does not fit its container, and each list item is 40 px tall and at least 40 px wide with 4 px of margin on each side.
   - id: page-link-style
     claim: Each numbered page button (`pathable-pagination__button`) has a 1 px border in a faint tint of the text colour, 4 px rounded corners, 8 px of padding and the theme link colour, and on hover or focus its text and border change to the darker hover colour.
   - id: arrows-hidden-narrow
@@ -92,10 +92,12 @@ unbounded result set differ in which items the markup holds, not in classes.
   added to the previous and the next link, to space them from the page
   buttons.
 - `pathable-pagination__link-text`: the `<span>` that holds the visible
-  "Previous" or "Next" inside the arrow link, beside the icon.
+  "Previous" or "Next" inside the arrow link, beside the icon. It keeps the
+  label on one line.
 - `pathable-pagination__overflow`: an item that stands for pages left out. It
-  carries `aria-label="ellipsis indicating non-visible pages"` and holds a
-  `<span>` with the `…`.
+  holds the `…` in a `<span aria-hidden="true">` and the accessible text
+  "ellipsis indicating non-visible pages" in a `pathable-sr-only` `<span>`,
+  instead of an `aria-label` on the item.
 - `pathable-current`: added to the numbered page button of the current page,
   together with `aria-current="page"`.
 - Show the previous link only when there is a previous page, and the next link
