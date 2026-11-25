@@ -212,7 +212,8 @@ The lead session stops, notifies the person and waits at these points:
   with options.
 - A delivery-scope discovery or tier change.
 - A subagent that failed or hit a usage limit twice in a row, or the capture
-  script failing twice in a row.
+  script writing no manifest twice in a row. A manifest that reports errors
+  is not a stop point: the lead passes it to the visual reviewer.
 
 An agent-merged pull request is not a stop point. The lead merges it,
 notifies the person, and goes on.
@@ -333,8 +334,8 @@ together.
 
 The roles split three ways. Work whose scope is unclear goes to the lead on
 Opus. Work that only judges goes to Fable, the strongest model, at a fixed
-setting. Work whose scope is clear, writing to a brief or running a script,
-goes to Sonnet or Haiku and starts low.
+setting. Work whose scope is clear goes to Sonnet or Haiku and starts low:
+Sonnet does work written to a brief, and Haiku does lookups.
 
 | Role                         | Model                                                                      | Effort                        | Steps up                                                        |
 | ---------------------------- | -------------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------- |

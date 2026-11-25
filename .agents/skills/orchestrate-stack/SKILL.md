@@ -123,6 +123,7 @@ fails, start it with `(nohup dockerd > /tmp/dockerd.log 2>&1 &)` and wait for
 with its output sent to a log file:
 
 ```sh
+mkdir -p <scratchpad>/visual-capture
 node scripts/visual-capture.mjs --base <base SHA> --head <pushed SHA> \
   --out <scratchpad>/visual-capture/<pr>-round-<n> \
   > <scratchpad>/visual-capture/<pr>-round-<n>.log 2>&1
@@ -131,8 +132,13 @@ node scripts/visual-capture.mjs --base <base SHA> --head <pushed SHA> \
 When it finishes, read only the script's summary lines (the manifest path, the
 counts and any error lines) from the end of the log. Never read the
 screenshots, the manifest's contents or the full log. Leave the worktrees: the
-visual reviewer reuses them and removes them. A run that errors or writes no
-manifest is re-run once; a second failure is a stop point.
+visual reviewer reuses them and removes them. The script exits non-zero
+whenever the manifest has any `errors` entry, so a non-zero exit is not a
+failed run. When it writes a manifest, pass it to the visual reviewer even if
+it reports errors: a head that does not build is the reviewer's blocking
+finding, a result about the code, and a single capture error is something the
+reviewer re-captures. Re-run once only when the script writes no manifest; a
+second run with no manifest is a stop point.
 
 The visual reviewer gets the manifest path plus the common request fields.
 From round 2 it also gets `previous capture: <path to the previous round's
