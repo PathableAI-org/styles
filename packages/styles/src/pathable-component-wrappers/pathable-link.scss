@@ -42,3 +42,9 @@
 .pathable-link--external {
   @extend .usa-link--external;
 }
+
+// USWDS styles .usa-link--alt only together with .usa-link--external, so the
+// alt modifier changes nothing on a link without the external modifier.
+.pathable-link--alt {
+  @extend .usa-link--alt;
+}

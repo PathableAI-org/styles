@@ -56,6 +56,7 @@ env:
     collection
     icon-list
     input-prefix-suffix
+    link
     list
     pagination
     radio
