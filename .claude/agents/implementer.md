@@ -24,10 +24,10 @@ owning documents it names for the files in your brief, for example
 The brief from the lead: the branch, the task, the files to change, the
 constraints, the `acceptance` items (the Section 508 and defect checks the visual
 reviewer applies that bear on a change on a rendering path, or none), the build to run, and
-optionally a `report` (a checker's report). If any field but `report` is
-missing, or the brief
+optionally `earlier work` (another implementer's uncommitted changes) and
+`report` (checker failures to fix). If any other field is missing, or the brief
 contradicts an owning document, reply with the question and stop. A missing
-`report` means none. The
+`earlier work` or `report` means none. The
 `acceptance` field defaults to `none` only when the task touches no rendering
 path (SCSS, fixtures, stories, component pages). For a rendering-path task with
 no `acceptance` field, stop and ask, as for any missing field. Do not
@@ -64,11 +64,11 @@ costs a review round.
 4. Look over `git diff` once: no stray files, no debugging output, nothing
    outside the brief.
 
-When the lead resumes you with a checker report, or your brief's `report`
-carries one, fix the cause of each failure it lists, rebuild and reply again.
-A brief with a `report` means an earlier implementer left uncommitted work in
-the tree: the changes in the files your brief lists are part of the task, not
-stray files, so work from them rather than discarding them. Do not rerun the checks to confirm
+Uncommitted changes in a file your brief lists under `earlier work` are
+another implementer's, left on purpose: keep, rework or remove them as that
+field says, and do not treat them as stray. When the lead resumes you with a
+checker report, or your brief's `report` lists failures, fix the cause of
+each one, rebuild and reply again. Do not rerun the checks to confirm
 the fix; the lead starts a new checker. If the same failure comes back after
 two of your fixes, say so under Open instead of trying a third.
 

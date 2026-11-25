@@ -180,8 +180,8 @@ skips the check step.
 
 The implementer is not an independent check, so it gets a full brief: the
 task, the files, the constraints, the acceptance items, the build to run and,
-when it starts on an earlier implementer's uncommitted work, the latest
-checker report, as the `orchestrate` skill's
+when it starts on an earlier implementer's uncommitted work, what to do with
+that work and the checker failures that still apply, as the `orchestrate` skill's
 [implementer brief](../../.agents/skills/orchestrate/SKILL.md#implementer-brief)
 sets out. It edits the lead's working tree, builds, and replies with the files
 it changed, the build result and any question. It does not run the checks.
@@ -208,8 +208,8 @@ The loop between them:
 4. If any fails, the lead reads the report. A failure the brief already
    covers goes back to the implementer: the lead resumes it with the
    checker's report as written and returns to step 2. A failure that shows
-   the design or the brief was wrong comes back to the lead, which settles it
-   and rewrites the brief.
+   the design or the brief was wrong comes back to the lead, which settles it,
+   rewrites the brief and starts a fresh implementer with it.
 
 The lead runs one implementer or one checker at a time and does not edit the
 working tree while either runs. When the same failure survives two implementer
@@ -238,7 +238,8 @@ Three more rules keep the brief complete and the cost down:
   the brief names only those that bear on the change.
 - The lead follows up on the same task by resuming the same implementer. It
   starts a fresh implementer with a fresh brief when the task changes, when
-  it steps the implementer up, or after about three resumes, because each
+  it rewrites the brief, when it steps the implementer up, or after about
+  three resumes, because each
   resume carries the whole earlier context. It never resumes a checker.
 
 ## Stop points
