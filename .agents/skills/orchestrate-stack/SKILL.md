@@ -104,6 +104,7 @@ slice: fix
 pr: <number>
 round: <n>
 previous: <previous record ID, or none>
+previous sha: <40-character SHA reviewed in the previous round, or none>
 answers: <finding ID and fixing commit or justification, or none>
 ```
 
@@ -133,7 +134,7 @@ branch: <checked-out branch>
 task: <bounded behavior to implement>
 files: <files to change or add>
 constraints: <owning docs, public contracts and explicit exclusions>
-acceptance: <Section 508 and fixture rules the change must meet, for a rendering path; or none>
+acceptance: <Section 508 and defect checks the visual reviewer applies that bear on the change, for a rendering path; or none>
 checks: <commands to run before replying>
 ```
 

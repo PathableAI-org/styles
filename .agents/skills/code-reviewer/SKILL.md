@@ -36,20 +36,23 @@ and escalation. This skill supplies the procedure.
 ## Inputs
 
 From the request: branch, pushed SHA, base SHA, slice ID `fix`, pull request,
-round, and, for round two or later, the previous review ID and the
+round, and, for round two or later, the previous review ID, `previous sha`
+(the 40-character SHA reviewed in the previous round, or `none`) and the
 lead session's answer to each open finding. If the base SHA is
 missing or the SHAs are not in the repository, reply with what is missing
-instead of guessing. For a repeat round, read the previous review's reviewed
-SHA and base SHA from its note (`pnpm review:show`, or the note the `previous`
-field names). Omit `featureDir` and read the pull request's linked
+instead of guessing. If `previous sha` is missing or not an ancestor of the
+new SHA, do a full review and say why. Omit `featureDir` and read the pull request's linked
 delivery issue for its accepted scope, contracts and High-risk claims.
 
 Read at the pushed SHA, with `git show <sha>:<path>` or a detached worktree
 this session owns:
 
 1. `git diff <base>..<sha>` and `git log <base>..<sha>`. On a repeat round,
-   `git diff <previous-sha>..<sha>` and `git log <previous-sha>..<sha>` instead,
-   unless step 1 of the procedure sends you to a full review.
+   `git log -p --no-merges <previous-sha>..<sha> ^<base>` instead, plus
+   `git show --remerge-diff <merge>` for each merge commit in that range (the
+   branch merges the base in to stay current, and a plain two-dot diff would
+   sweep the base branch's changes into the review), unless step 1 of the
+   procedure sends you to a full review.
 2. The linked delivery issue and pull request body.
 3. [AGENTS.md](../../../AGENTS.md) and the owning
    document the routing table names for each kind of file the diff changes.
@@ -62,10 +65,12 @@ this session owns:
    open findings. Do a full review of `<base>..<sha>` instead, and say why in
    the note, when the previous review's base differs from the request's base
    in a way that changes the pull request's own diff (a head that only merged
-   the base branch in does not count), or when the previously reviewed SHA is
-   not an ancestor of the new SHA.
+   the base branch in does not count), or when `previous sha` is missing or not
+   an ancestor of the new SHA.
 2. **Find candidates.** On a repeat round, search only
-   `git diff <previous-sha>..<sha>`, reading the surrounding code at the pushed
+   `git log -p --no-merges <previous-sha>..<sha> ^<base>` and
+   `git show --remerge-diff <merge>` for each merge commit in that range,
+   reading the surrounding code at the pushed
    SHA as needed to trace each changed path, including callers and dependents
    of changed code; do not re-sweep what is unchanged since the previous
    reviewed SHA. Go through each category in the scope table:

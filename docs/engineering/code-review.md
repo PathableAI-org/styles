@@ -169,13 +169,15 @@ trial ref is not posted.
 
 The lead session sends the reviewer a request when it sends the
 verifier one: when a slice is pushed as a draft pull request. A repeat request
-after a fix names the new SHA, the previous review ID, and for each open
-finding either the fixing commit or a written justification.
+after a fix names the new SHA, the previous review ID, `previous sha: <40-character
+SHA reviewed in the previous round, or none>`, and for each open finding either
+the fixing commit or a written justification.
 
-A reviewer whose inputs did not change is not run again. When the lead
-session's answer to a finding changes only the pull request body and adds no
-commit, only the reviewer that raised the finding is run again, on the same
-SHA. The other reviewer's record at that SHA still stands.
+Both reviewers read the pull request body. When the lead session's answer
+changes only the body and adds no commit, the lead runs both reviewers again on
+the same SHA. With no commits since the previously reviewed SHA, each repeat
+review checks only the open findings and the body against the code, which
+keeps the run small.
 
 ### Report
 
@@ -184,15 +186,18 @@ pointer only: `refs/notes/review @ <sha> (review <id>)`, plus the counts of
 blocking and advisory findings. The note is the record. Do not paste findings
 into messages.
 
-On a repeat round the reviewer reads the previously reviewed SHA from the
-previous review's note (`pnpm review:show`, or the note the request's
-`previous` field names). It closes a finding as `fixed` when the
+On a repeat round the reviewer takes the previously reviewed SHA from the
+request's `previous sha` field. It closes a finding as `fixed` when the
 new code removes the failure scenario, `justified` when it accepts the written
 justification, and `withdrawn` when it finds its own finding was wrong. It
 carries forward, with the same ID, any finding it still holds.
 
-It runs the candidate search only on `git diff <previous-sha>..<sha>`, the
-commits since the previously reviewed SHA. It reads the surrounding code at
+It runs the candidate search only on the pull request's own commits since the
+previously reviewed SHA: `git log -p --no-merges <previous-sha>..<sha> ^<base>`,
+plus the conflict resolution of each merge commit in that range,
+`git show --remerge-diff <merge>`. The branch merges `<base>` in to stay
+current, and a plain two-dot diff would sweep the base branch's changes into
+the review. It reads the surrounding code at
 the pushed SHA as needed to trace each changed path, including the callers and
 dependents of changed code. It does not re-sweep the parts of `<base>..<sha>`
 that are unchanged since the previously reviewed SHA, because the previous
@@ -201,8 +206,8 @@ round already reviewed them.
 It does a full review of `<base>..<sha>` instead, and says why in the note,
 when the previous review's base differs from the request's base in a way that
 changes the pull request's own diff (a head that only merged the base branch in
-does not count), or when the previously reviewed SHA is not an ancestor of the
-new SHA because history was rewritten.
+does not count), or when `previous sha` is missing or is not an ancestor of the
+new SHA, for example because history was rewritten.
 
 ### Responses
 
@@ -274,9 +279,14 @@ weaken the review or verifier subagent, which stay the only gates.
   last commit that a pre-push self-review already covered. Without `since` it
   reviews `origin/<base>...HEAD` plus uncommitted changes, so an untracked or
   temporary file the push would leave behind or sweep in is a finding. With
-  `since` it reviews `<since>..HEAD` plus uncommitted changes, reading the
-  surrounding code as needed to trace each changed path, including callers and
-  dependents of changed code. If `since` is not an ancestor of `HEAD`, it
+  `since` it reviews the pull request's own commits since then,
+  `git log -p --no-merges <since>..HEAD ^origin/<base>`, plus the conflict
+  resolution of each merge commit in that range,
+  `git show --remerge-diff <merge>`, plus uncommitted changes (the branch
+  merges the base in to stay current, and a plain two-dot diff would sweep the
+  base branch's changes into the review), reading the surrounding code as
+  needed to trace each changed path, including callers and dependents of
+  changed code. If `since` is not an ancestor of `HEAD`, it
   reviews the full `origin/<base>...HEAD` and says so. The lead session never
   describes the change or what to check, because a reviewer handed the author's
   hypothesis tends to confirm it.

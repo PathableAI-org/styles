@@ -300,10 +300,12 @@ ID, and for each open finding either the fixing commit or a written
 justification, and `previous capture: <path to the previous round's capture
 manifest>`.
 
-A reviewer whose inputs did not change is not run again. When the lead
-session's answer to a finding changes only the pull request body and adds no
-commit, only the reviewer that raised the finding is run again, on the same
-SHA. The other reviewer's record at that SHA still stands.
+Both reviewers read the pull request body. When the lead session's answer
+changes only the body and adds no commit, the lead runs both reviewers again on
+the same SHA. With no commits since the previously reviewed SHA, every pair's
+head image is unchanged, so the visual reviewer judges only the stories tied to
+open findings plus the intent pass against the new body, which keeps the run
+small.
 
 The reviewer records the review with `pnpm visual:record` and replies with a
 pointer only, `refs/notes/visual @ <sha> (visual review <id>)`, plus the

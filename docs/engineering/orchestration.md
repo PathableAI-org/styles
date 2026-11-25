@@ -175,11 +175,13 @@ Three more rules keep the brief complete and the cost down:
   or a [stop point](#stop-points) when it needs a design trade-off.
 - The brief carries an `acceptance:` field for a change on a rendering path:
   the Section 508 checks the visual reviewer applies, as they bear on the
-  change. They are text at 200 % on 320 px and 375 px viewports without loss
-  or overlap, focus-indicator contrast of at least 3:1 against every
-  background it can sit on including checked and tinted states, text
-  contrast, and the rules in [`fixtures/README.md`](../../fixtures/README.md)
-  for any fixture changed. The implementer then catches them before a
+  change, and its defect checks. They are text at 200 % at the captured
+  viewports (375, 768 and 1280 px) without loss or overlap, text contrast, a
+  visible focus indicator in every state, including checked and tinted states,
+  with at least 3:1 contrast against what it sits on (the visual reviewer
+  treats a ring under 3:1 as a defect, not a Section 508 failure), and the
+  rules in [`fixtures/README.md`](../../fixtures/README.md) for any fixture
+  changed. The implementer then catches them before a
   reviewer does. [Priorities](visual-review.md#priorities) lists the full set;
   the brief names only those that bear on the change.
 - The lead follows up on the same task by resuming the same implementer. It

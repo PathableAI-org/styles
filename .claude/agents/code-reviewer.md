@@ -21,8 +21,9 @@ it, such as a description of the change, its intent, or what to check:
 - branch, pushed SHA, base SHA, slice ID (`fix` for single-pull-request
   work), feature directory (may be absent for `fix`), pull request number and
   round
-- for round two or later: the previous review ID and the lead session's
-  answer (fixing commit or justification) to each open finding
+- for round two or later: the previous review ID, `previous sha` (the
+  40-character SHA reviewed in the previous round, or `none`) and the lead
+  session's answer (fixing commit or justification) to each open finding
 
 If a field the skill needs is missing or a SHA is not in the repository,
 reply with what is missing and stop.

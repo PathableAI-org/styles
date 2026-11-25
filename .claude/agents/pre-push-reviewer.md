@@ -28,9 +28,12 @@ base is missing or `origin/<base>` does not resolve, reply with that and stop.
 Review this range, from the current worktree:
 
 1. Without `since`: `git log --oneline origin/<base>..HEAD` and
-   `git diff origin/<base>...HEAD`. With `since`: `git log --oneline <since>..HEAD`
-   and `git diff <since>..HEAD`, reading the surrounding code as needed to
-   trace each changed path, including callers and dependents of changed code.
+   `git diff origin/<base>...HEAD`. With `since`:
+   `git log -p --no-merges <since>..HEAD ^origin/<base>` and
+   `git show --remerge-diff <merge>` for each merge commit in that range (the
+   branch merges the base in to stay current, and a plain two-dot diff would
+   sweep the base branch's changes into the review), reading the surrounding code as needed to trace each changed path,
+   including callers and dependents of changed code.
    If `since` is not an ancestor of `HEAD` (`git merge-base --is-ancestor`),
    review the full `origin/<base>...HEAD` and say so in your reply.
 2. `git status --porcelain --untracked-files=all`, `git diff` and
