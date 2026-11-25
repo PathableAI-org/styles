@@ -180,7 +180,7 @@ skips the check step.
 
 The implementer is not an independent check, so it gets a full brief: the
 task, the files, the constraints, the acceptance items, the build to run and,
-when it starts on an earlier implementer's uncommitted work, what to do with
+when it starts on uncommitted work already in the tree, what to do with
 that work and the checker failures that still apply, as the `orchestrate` skill's
 [implementer brief](../../.agents/skills/orchestrate/SKILL.md#implementer-brief)
 sets out. It edits the lead's working tree, builds, and replies with the files
@@ -236,10 +236,11 @@ Three more rules keep the brief complete and the cost down:
   changed. The implementer writes to them and the checker probes them, so
   they are caught before a reviewer does. [Priorities](visual-review.md#priorities) lists the full set;
   the brief names only those that bear on the change.
-- The lead follows up on the same task by resuming the same implementer. It
-  starts a fresh implementer with a fresh brief when the task changes, when
-  it rewrites the brief, when it steps the implementer up, or after about
-  three resumes, because each
+- The lead follows up on the same task, including answers to the
+  implementer's questions, by resuming the same implementer. It starts a
+  fresh implementer with a fresh brief when the task changes, when a checker
+  failure makes it rewrite the brief, when it steps the implementer up, or
+  after about three resumes, because each
   resume carries the whole earlier context. It never resumes a checker.
 
 ## Stop points

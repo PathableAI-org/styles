@@ -24,7 +24,7 @@ owning documents it names for the files in your brief, for example
 The brief from the lead: the branch, the task, the files to change, the
 constraints, the `acceptance` items (the Section 508 and defect checks the visual
 reviewer applies that bear on a change on a rendering path, or none), the build to run, and
-optionally `earlier work` (another implementer's uncommitted changes) and
+optionally `earlier work` (uncommitted changes already in the tree) and
 `report` (checker failures to fix). If any other field is missing, or the brief
 contradicts an owning document, reply with the question and stop. A missing
 `earlier work` or `report` means none. The
@@ -64,8 +64,8 @@ costs a review round.
 4. Look over `git diff` once: no stray files, no debugging output, nothing
    outside the brief.
 
-Uncommitted changes in a file your brief lists under `earlier work` are
-another implementer's, left on purpose: keep, rework or remove them as that
+Uncommitted changes in a file your brief lists under `earlier work` were
+left on purpose, by the lead or an earlier implementer: keep, rework or remove them as that
 field says, and do not treat them as stray. When the lead resumes you with a
 checker report, or your brief's `report` lists failures, fix the cause of
 each one, rebuild and reply again. Do not rerun the checks to confirm

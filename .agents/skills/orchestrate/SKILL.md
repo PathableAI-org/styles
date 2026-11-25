@@ -72,9 +72,9 @@ stack inside the repository.
      `AGENTS.md` routes for the changed paths. Never resume a checker, and
      never send it the brief's reasoning or the implementer's reply.
    - If anything fails, resume the implementer with the checker's report as
-     written. When the failure shows the design was wrong, take it back,
-     rewrite the brief and start a fresh implementer with it. Then start
-     another new checker.
+     written. When the failure shows the design was wrong, settle the
+     design yourself, rewrite the brief and start a fresh implementer with
+     the new brief. Then start another new checker.
    - When the same failure survives two implementer fixes, start a fresh
      implementer one rung up
      [the ladder](../../../docs/engineering/orchestration.md#the-ladder), with
@@ -185,12 +185,12 @@ files: <files to change or add>
 constraints: <owning docs, public contracts and explicit exclusions>
 acceptance: <Section 508 and defect checks the visual reviewer applies that bear on the change, for a rendering path; or none>
 build: <build command to run before replying, or none>
-earlier work: <files holding an earlier implementer's uncommitted changes, each with keep, rework or remove for this task; or none>
+earlier work: <files holding uncommitted changes from an earlier implementer or from you, each with keep, rework or remove for this task; or none>
 report: <the checker failures this task must still fix, quoted as written; or none>
 ```
 
-Whenever a fresh implementer starts on a tree that still holds an earlier
-implementer's uncommitted work, leave that work in place and say under
+Whenever a fresh implementer starts on a tree that still holds uncommitted
+work, whether an earlier implementer's or your own, leave that work in place and say under
 `earlier work` what to do with each file. Under `report`, pass only the
 failures that still apply to the new task: all of them on a step-up or after
 about three resumes, and none that a rewritten design makes moot. A fresh
@@ -203,8 +203,9 @@ For `acceptance:`, name the rules that bear on the change from
 Run one implementer at a time and do not edit the working tree until it
 replies. Read and own the diff before committing it. Resume the same
 implementer for follow-up on the same task, including fixes for a checker's
-report; start a fresh one with a fresh brief when the task changes, when you
-rewrite the brief, when you step it up, or after about three resumes.
+report and answers to its questions; start a fresh one with a fresh brief
+when the task changes, when a checker failure makes you rewrite the brief,
+when you step it up, or after about three resumes.
 
 ## Check request
 
