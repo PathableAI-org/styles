@@ -250,8 +250,10 @@ Three more rules keep the brief complete and the cost down:
 - The lead follows up on the same task, including answers to the
   implementer's questions, by resuming the same implementer. It starts a
   fresh implementer with a fresh brief when the task changes, when a checker
-  failure makes it rewrite the brief, when it steps the implementer up, or
-  after about three resumes, because each
+  failure makes it rewrite the brief, when it steps the implementer up, when
+  the tree has changed since the implementer last saw it (a lead edit, or a
+  commit other than of the implementer's own changes), or after about three
+  resumes, because each
   resume carries the whole earlier context. It never resumes a checker.
 
 ## Stop points
