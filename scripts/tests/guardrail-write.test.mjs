@@ -26,8 +26,8 @@ void describe('guardrail paths', () => {
       '.github',
       '.github/workflows/ci.yml',
       '.claude/settings.json',
-      'scripts/claude/pr-merge-hook.mjs',
-      'scripts/merge-gate.mjs',
+      'scripts/claude/no-suppressions-hook.mjs',
+      'scripts/guardrail-paths.mjs',
       'packages/react/tsconfig.json',
       'packages/styles/AGENTS.md',
       'package.json',
@@ -119,7 +119,7 @@ void describe('the PreToolUse tripwire', () => {
   void it('asks for git commands that rewrite guardrail files', () => {
     assert.equal(asks('git checkout main -- .github/workflows/ci.yml'), true)
     assert.equal(
-      asks('git restore --source=HEAD~1 scripts/merge-gate.mjs'),
+      asks('git restore --source=HEAD~1 scripts/guardrail-paths.mjs'),
       true,
     )
     assert.equal(asks('git -C /work/styles rm --cached AGENTS.md'), true)
@@ -182,7 +182,7 @@ void describe('the PreToolUse tripwire', () => {
       'cat .claude/settings.json',
       'grep -rn guardrail .github | head -5 > /tmp/out.txt',
       `node -e "console.log(require('./package.json').version)"`,
-      'node scripts/claude/pr-merge-hook.mjs < /tmp/input.json',
+      'node scripts/claude/no-suppressions-hook.mjs < /tmp/input.json',
       'echo x > packages/styles/src/a.scss',
       "git commit -F - <<'EOF'\nfix: don't touch .github > now\nEOF",
       'pnpm test:tooling',

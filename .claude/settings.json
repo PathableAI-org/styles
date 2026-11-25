@@ -39,22 +39,11 @@
       "Bash(pnpm --filter @pathableai/react test:unit)",
       "Bash(pnpm --filter @pathableai/styles build)",
       "Bash(pnpm --filter @pathableai/react build)",
-      "Bash(pnpm verify:gate)",
-      "Bash(pnpm verify:show)",
-      "Bash(pnpm verify:show:*)",
-      "Bash(pnpm review:show)",
-      "Bash(pnpm review:show:*)",
-      "Bash(pnpm notes:sync)",
-      "Bash(pnpm notes:sync:*)",
-      "Bash(pnpm visual:show)",
-      "Bash(pnpm visual:show:*)",
-      "Bash(pnpm merge:gate:*)",
       "Bash(gh pr ready)",
       "Bash(gh pr ready:*)",
       "Bash(gh api *pulls/*/ccr/ready_for_review*)"
     ],
     "ask": [
-      "Bash(gh pr merge:*)",
       "Edit(**/eslint.config.js)",
       "Edit(**/.stylelintrc.json)",
       "Edit(**/.markdownlint.json)",
@@ -103,7 +92,10 @@
       "Read(**/.env.*)",
       "Read(**/.npmrc.local)",
       "Read(~/.npmrc)",
-      "Read(~/.ssh/**)"
+      "Read(~/.ssh/**)",
+      "Bash(gh pr merge:*)",
+      "mcp__github__merge_pull_request",
+      "mcp__github__enable_pr_auto_merge"
     ]
   },
   "hooks": {
@@ -115,26 +107,6 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/no-suppressions-hook.mjs\"",
             "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Bash|mcp__github__update_pull_request|mcp__github__create_pull_request",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/pr-ready-hook.mjs\"",
-            "timeout": 60
-          }
-        ]
-      },
-      {
-        "matcher": "Bash|mcp__github__merge_pull_request|mcp__github__enable_pr_auto_merge",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/claude/pr-merge-hook.mjs\"",
-            "timeout": 60
           }
         ]
       },

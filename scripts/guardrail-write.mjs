@@ -13,7 +13,7 @@
  * command, by the file-editing tools, a person or a background command, are in the record and are not reported;
  * changes another process makes while the command runs are reported as the command's.
  *
- * The guardrail paths are `guardrailPaths` in scripts/merge-gate.mjs, the one shared list.
+ * The guardrail paths are `guardrailPaths` in scripts/guardrail-paths.mjs, the one shared list.
  */
 import { execFileSync, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -30,7 +30,7 @@ import {
 import { tmpdir } from 'node:os'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 
-import { guardrailPaths, matchesPattern } from './merge-gate.mjs'
+import { guardrailPaths, matchesPattern } from './guardrail-paths.mjs'
 
 /**
  * @typedef {{ readonly kind: "allow" } | { readonly kind: "ask"; readonly reason: string } | { readonly kind: "block"; readonly reason: string }} Decision

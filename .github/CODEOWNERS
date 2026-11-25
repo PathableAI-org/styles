@@ -3,7 +3,7 @@
 # These paths change the rules agents work under, so a person must review
 # them. See docs/engineering/git-workflow.md#guardrail-changes.
 #
-# Keep this list in step with `guardrailPaths` in scripts/merge-gate.mjs.
+# Keep this list in step with `guardrailPaths` in scripts/guardrail-paths.mjs.
 # There is deliberately no catch-all owner.
 
 /.claude/ @j-shilling
@@ -27,28 +27,8 @@
 /.github/ @j-shilling
 /renovate.json5 @j-shilling
 /.changeset/config.json @j-shilling
-/scripts/merge-gate.mjs @j-shilling
-/scripts/merge-hook.mjs @j-shilling
-/scripts/ready-hook.mjs @j-shilling
 /scripts/guardrail-write.mjs @j-shilling
-/scripts/verification.mjs @j-shilling
-/scripts/verification/ @j-shilling
-/scripts/review-findings/ @j-shilling
-/scripts/visual-review/ @j-shilling
-/scripts/note-sync.mjs @j-shilling
-/scripts/note-sync/ @j-shilling
-/scripts/note-store.mjs @j-shilling
-/scripts/merge.mjs @j-shilling
-/scripts/verify.mjs @j-shilling
-/scripts/review.mjs @j-shilling
-/scripts/visual.mjs @j-shilling
-/scripts/notes.mjs @j-shilling
-/scripts/review-findings.mjs @j-shilling
-/scripts/visual-review.mjs @j-shilling
-/scripts/schema-checks.mjs @j-shilling
-/scripts/git-access.mjs @j-shilling
-/scripts/github-access.mjs @j-shilling
-/scripts/cli.mjs @j-shilling
+/scripts/guardrail-paths.mjs @j-shilling
 /package.json @j-shilling
 **/AGENTS.md @j-shilling
 /CLAUDE.md @j-shilling
