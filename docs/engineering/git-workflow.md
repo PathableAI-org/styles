@@ -235,9 +235,9 @@ stop points and the models.
   accepted scope in the delivery issue. A visual review subagent joins them
   when the diff touches a rendering path.
 - **Replies only.** Every subagent replies to the lead. None posts anything on
-  the pull request. The lead pushes and opens the pull request only when no
-  reviewer has an open blocking finding and, for High work, every claim is
-  established.
+  the pull request. The lead pushes and opens the pull request only when no code,
+  visual or verification finding is open as blocking, every scope finding is
+  answered and, for High work, every claim is established.
 - **A person's review is the approval, at every tier.** The reviewers' replies,
   summarised in the pull request's Evidence section, are input to it, as are
   passing checks and Copilot's comments.
@@ -252,8 +252,11 @@ scope review subagent and, when they touch a rendering path, a
 - The repository squash-merges, with the pull request title as the commit
   subject.
 - A person merges every pull request, at every tier, after approving it.
-  Agents never merge: `gh pr merge`, the GitHub MCP merge tool and auto-merge
-  are denied in `.claude/settings.json`. Passing checks and bot review
+  Agents never merge: `gh pr merge`, the GitHub MCP merge tool, auto-merge,
+  and the `gh api` and `curl` routes to a pull request's `merge` or
+  `auto_merge` endpoints, the `mergePullRequest` mutation and the
+  `enablePullRequestAutoMerge` mutation are denied in `.claude/settings.json`.
+  The patterns match command text, so a person reviews any other merge route. Passing checks and bot review
   comments are not approval.
 - A person may add the `hold` label to mark a pull request not to merge yet.
   Nothing an agent does reads it.
@@ -303,9 +306,9 @@ the reviews as subagents, all on local commits. For single-pull-request work:
    review subagent. High work adds the verifier subagent. Each replies to
    the lead only.
 3. The lead session answers every finding with a fix or a written
-   justification, and runs a new local round until no review has an open
-   blocking finding or escalation and, for High work, every claim is
-   established.
+   justification, and runs a new local round until no code, visual or
+   verification finding is open as blocking, no escalation is open, every scope
+   finding is answered and, for High work, every claim is established.
 4. Only then it pushes and opens the pull request, ready for review, with its
    `risk:` label. It keeps it [up to date](#keeping-up-to-date) with `main`
    and waits for CI on the head. A CI failure goes back through steps 1 to 3
@@ -316,8 +319,11 @@ the reviews as subagents, all on local commits. For single-pull-request work:
 
 The lead session keeps its pull request current with `main` until
 a person merges it. When `main` moves, it merges `origin/main` into the
-branch, or uses the GitHub MCP tool `update_pull_request_branch`, and pushes.
-It never rebases or force-pushes. The ruleset on `main` requires branches to
+branch locally and runs the checks through a checker. When the merge changes
+the pull request's own diff (its patch ID, below), it runs a review round on
+the merge before pushing, and it pushes only when that round is clean. It
+never uses `update_pull_request_branch` for a branch with an open review loop,
+and never rebases or force-pushes. The ruleset on `main` requires branches to
 be up to date.
 
 Updating from `main` changes the head SHA. A review still covers the new head

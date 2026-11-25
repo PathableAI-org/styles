@@ -101,14 +101,15 @@ stack inside the repository.
    through step 1 (implementer, then a new checker, then your commit), or a
    written justification. Start the next review round with each reviewer's own
    previous findings and your answers, plus `since: <sha>` so it reviews only
-   what changed. Repeat steps 2 and 3 until no reviewer has an open blocking
-   finding, every advisory finding is fixed or justified, and for High work the
+   what changed. Repeat steps 2 and 3 until no code, visual or verification
+   finding is open as blocking, every scope finding is answered, every advisory
+   finding is fixed or justified, and for High work the
    verifier reports every claim `established` and no failing or missing named
    story. Prefer a justification or a follow-up issue for an advisory finding
    outside the accepted scope, put accepted fixes in one batch, and never
    start a round for a single advisory fix. Stop for the person on an
-   escalation, an accepted scope or claim change, a blocking finding open in
-   round three or later (new or carried), or a blocking finding whose fix
+   escalation, an accepted scope or claim change, a code, visual or verification finding open as blocking in
+   round three or later (new or carried; scope findings never count), or a blocking finding whose fix
    needs a design trade-off or sets two documented guarantees against each
    other; for the last, stop when it first appears. Send the open findings and
    your options.

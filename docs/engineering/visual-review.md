@@ -30,6 +30,7 @@ any of these paths:
 - `packages/react/src/` or `packages/react/package.json`
 - `apps/storybook/` or `apps/storybook-react/`
 - `visual-baselines/`
+- `fixtures/` or `components/`
 - `pnpm-lock.yaml`
 
 This list owns which paths need a visual review; the lead session reads it. A

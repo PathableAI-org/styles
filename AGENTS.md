@@ -123,7 +123,8 @@ Some of these rules are enforced for Claude Code by
 - Editing check configuration asks a human first: ESLint, stylelint,
   markdownlint, Prettier, lint-staged, Husky and commitlint configuration,
   `scripts/accessibility-exceptions.mjs`, any `tsconfig*.json`, GitHub
-  workflows, the hook itself and `.claude/settings.json`. The `Edit(...)`
+  workflows, the hook itself, `scripts/guardrail-paths.mjs` and
+  `.claude/settings.json`. The `Edit(...)`
   rules cover the `Write` and `MultiEdit` tools too.
 - A hook on `Bash`,
   [`scripts/claude/guardrail-write-hook.mjs`](scripts/claude/guardrail-write-hook.mjs)
@@ -164,8 +165,11 @@ Some of these rules are enforced for Claude Code by
   environment dumps, `.env` reads and publishing commands are denied.
 - Agents never merge. `gh pr merge`, the GitHub MCP `merge_pull_request` tool
   and auto-merge (`enable_pr_auto_merge`) are denied in
-  [`.claude/settings.json`](.claude/settings.json); a person merges every pull
-  request. Day-to-day git work
+  [`.claude/settings.json`](.claude/settings.json), as are the `gh api` and
+  `curl` routes to a pull request's `merge` and `auto_merge` endpoints and the
+  `mergePullRequest` and `enablePullRequestAutoMerge` mutations. The patterns
+  match command text, so a person reviews any other merge route; a person
+  merges every pull request. Day-to-day git work
   (`add`, `commit`, `checkout`, `switch`, `merge`, `pull`, `stash`, `tag` and
   non-force `push`), read-only git and `gh` commands and the check scripts
   below run without a prompt. Force pushes and `--no-verify` remain denied.

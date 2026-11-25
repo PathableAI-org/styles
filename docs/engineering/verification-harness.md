@@ -107,8 +107,9 @@ The lead treats High work as verified only when:
 - it names at least one claim and establishes every claim;
 - every reported story passes;
 - it contains no violated unrequested claim or open escalation; and
-- the latest code review and scope review cover the same head with no open
-  blocking finding or escalation.
+- the latest code review and scope review cover the same head with no code
+  finding open as blocking, every scope finding answered and no open
+  escalation.
 
 There is no gate that enforces this: the lead applies it before it pushes. Any
 commit after the verified or reviewed SHA requires a new round unless it

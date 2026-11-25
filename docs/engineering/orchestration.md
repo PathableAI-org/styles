@@ -103,8 +103,8 @@ touches a [rendering path](visual-review.md#when-a-visual-review-runs).
    which goes back through step 1, or a written justification. The next
    review round passes each reviewer its own previous findings and the lead's
    answers, plus `since: <SHA>`, the commit it reviewed last, so it reviews
-   only what changed. Rounds repeat until no reviewer has an open blocking
-   finding, every advisory finding is fixed or justified, and for High work
+   only what changed. Rounds repeat until no code, visual or verification
+   finding is open as blocking, every scope finding is answered, every advisory finding is fixed or justified, and for High work
    the latest verification reply reports every claim `established` and no
    failing or missing named story, as
    [the verification harness](verification-harness.md) requires. The lead
@@ -261,9 +261,11 @@ The lead session stops, notifies the person and waits at these points:
   [corrections table](git-workflow.md#corrections), a claim still failing
   after three verification rounds, a blocking finding open in round three, or
   a disagreement the lead does not accept.
-- A round ends with a blocking finding open in round three or later, whether
-  new or carried, so a pull request never enters a fourth round for a
-  blocking finding without the person. The lead sends the open findings and
+- A round ends with a code, visual or verification finding open as blocking in
+  round three or later, whether new or carried, so a pull request never enters
+  a fourth round for a blocking finding without the person. Scope findings are
+  advisory: they never hold the push by severity and never trigger this
+  escalation, but the lead answers each one. The lead sends the open findings and
   the options it sees.
 - A blocking finding whose fix needs a design trade-off, or that sets two
   documented guarantees against each other. The lead stops when it first

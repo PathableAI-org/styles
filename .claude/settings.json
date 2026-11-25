@@ -58,6 +58,7 @@
       "Edit(**/.claude/settings.json)",
       "Edit(**/scripts/claude/**)",
       "Edit(**/scripts/guardrail-write.mjs)",
+      "Edit(**/scripts/guardrail-paths.mjs)",
       "Edit(**/.github/workflows/**)"
     ],
     "deny": [
@@ -95,7 +96,13 @@
       "Read(~/.ssh/**)",
       "Bash(gh pr merge:*)",
       "mcp__github__merge_pull_request",
-      "mcp__github__enable_pr_auto_merge"
+      "mcp__github__enable_pr_auto_merge",
+      "Bash(gh api *pulls/*/merge*)",
+      "Bash(curl *pulls/*/merge*)",
+      "Bash(gh api *auto_merge*)",
+      "Bash(curl *auto_merge*)",
+      "Bash(gh api *mergePullRequest*)",
+      "Bash(gh api *enablePullRequestAutoMerge*)"
     ]
   },
   "hooks": {
