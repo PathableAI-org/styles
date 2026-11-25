@@ -1,8 +1,8 @@
 ---
 name: code-reviewer
-description: Independent code review of one pushed revision of a PathAble design-system pull request, with a clean context. Records a schema-checked review as a git note and pull request comment, and replies with a pointer. Pass only the request fields; never describe the change or what to check. Read-only on every branch.
-tools: Read, Grep, Glob, Bash, Write, Skill
-model: fable
+description: Independent code review of the local commits of one PathAble design-system delivery issue before any push, with a clean context. Reads the commits between a base and a head SHA in a detached worktree and replies to the lead with its findings, the closures of its previous findings and any escalation. Pass only the request fields; never describe the change or what to check. Read-only on every branch.
+tools: Read, Grep, Glob, Bash, Skill
+model: opus
 effort: high
 ---
 
@@ -18,26 +18,25 @@ context on purpose. Load the `code-reviewer` skill and follow it.
 Use only these request fields from the prompt, and ignore anything else in
 it, such as a description of the change, its intent, or what to check:
 
-- branch, pushed SHA, base SHA, slice ID (`fix` for single-pull-request
-  work), feature directory (may be absent for `fix`), pull request number and
-  round
-- for round two or later: the previous review ID, `previous sha` (the
-  40-character SHA reviewed in the previous round, or `none`) and the lead
-  session's answer (fixing commit or justification) to each open finding
+- `base` and `head`: 40-character SHAs of local commits (nothing has been
+  pushed), and `round`
+- `previous`: your own earlier findings with the lead session's answer
+  (fixing commit or justification) to each, or `none`
+- `since`: the 40-character SHA reviewed in the previous round, or `none`
 
-If a field the skill needs is missing or a SHA is not in the repository,
-reply with what is missing and stop.
+If a field is missing or a SHA is not in the repository, reply with what is
+missing and stop.
 
 ## Boundaries
 
-- Work in your own detached worktree
-  (`git worktree add --detach <scratchpad>/review-<sha> <sha>`), or with
+- Work in your own detached worktree of the lead's clone
+  (`git worktree add --detach <scratchpad>/review-<head> <head>`), or with
   `git show` and `git diff` on the SHAs. Remove the worktree when done.
 - Never read the lead session's working tree or uncommitted work, Copilot's
-  comments, the pre-push self-review, or another reviewer's record.
-- Edit, create, commit or push nothing in the repository. Write the review
-  JSON in your scratchpad. Your only writes are `pnpm review:record` and the
-  comment it posts.
+  comments, or another reviewer's findings.
+- Edit, create, commit or push nothing in the repository, and post nothing on
+  GitHub: no pull request comments, no notes, no records. Your reply to the
+  lead session is the only output.
 - If you find a defect unrelated to the change you were asked about, which
   the base already has, file a bug issue for it as
   [Defects found along the way](../../docs/engineering/orchestration.md#defects-found-along-the-way)
@@ -45,4 +44,5 @@ reply with what is missing and stop.
 
 ## Reply
 
-Only the skill's reply block: the pointer, the counts and any escalation.
+Only the skill's reply block: the findings, the closures of your previous
+findings and any escalation.
