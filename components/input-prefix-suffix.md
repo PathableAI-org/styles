@@ -30,8 +30,10 @@ guarantees:
     claim: With pathable-input-group--error, the group has a 0.25rem (4 px) solid #a52834 border.
   - id: success-modifier
     claim: With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.
+  - id: state-focus-gap
+    claim: In an error or success group, the focused input's 2 px focus ring is offset 0.25rem plus 1 px, so a 1 px gap separates it from the outside of the 4 px border, as the default group's 2 px offset does outside its 1 px border.
   - id: width-modifiers
-    claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex, and small and medium are aliases of sm and md.
+    claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex plus 3rem for the input's padding beside the affix and 2px for the default 1px border, so the value has that width (6px less with the 4px error or success border), and small and medium are aliases of sm and md.
 ---
 
 # Input prefix/suffix
@@ -97,12 +99,18 @@ Add at most one modifier from each axis to `pathable-input-group`.
 | width | `xl`      | `pathable-input-group--xl`      | A value of about 40 characters                     |
 | width | `2xl`     | `pathable-input-group--2xl`     | A value of about 50 characters                     |
 
-The modifiers go on `pathable-input-group`, not on `pathable-input`.
+The modifiers go on `pathable-input-group`, not on `pathable-input`. The
+form caps every group at its own width too: from a 480 px viewport a
+`pathable-form` is at most 20rem wide, so there an `xl` or `2xl` group is as
+wide as the form. Below 480 px the form fills its container, and a group is
+as wide as the form only when its own cap is wider.
 
 ## Tokens
 
-None. The colours, sizes and spacing are fixed values in the compiled
-stylesheet, not custom properties, so a theme does not change them.
+The group has none of its own. The prefix and suffix text takes the theme's
+muted text colour, so a theme that changes that colour changes the affix too,
+and must keep it at 4.5:1 or more against white for the affix-contrast
+guarantee to hold. Every other value is fixed in the stylesheet.
 
 ## Composition
 
@@ -113,7 +121,8 @@ stylesheet, not custom properties, so a theme does not change them.
 - `pathable-input-suffix`: last child, after the `<input>`. It holds a short
   unit and takes `aria-hidden="true"`. It must follow the input directly,
   because the disabled look is applied from the input to the suffix next to it.
-- Use one prefix or one suffix in a group.
+- Use one prefix or one suffix in a group, and keep it short: the input leaves
+  2.5rem for it, enough for an icon, a symbol or a unit of a few letters.
 - The input is a `pathable-input` with a type of `text`, `tel` or similar;
   inside the group it loses its own border, so the group's border is the only one.
 - An icon prefix holds an `<svg>` with `pathable-icon`, `aria-hidden="true"`,
