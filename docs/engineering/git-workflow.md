@@ -322,8 +322,9 @@ a person merges it. When `main` moves, it merges `origin/main` into the
 branch locally and runs the checks through a checker. When the merge changes
 the pull request's own diff (its patch ID, below), it runs a review round on
 the merge before pushing, and it pushes only when that round is clean. It
-never uses `update_pull_request_branch` for a branch with an open review loop,
-and never rebases or force-pushes. The ruleset on `main` requires branches to
+never uses `update_pull_request_branch` or GitHub's "Update branch" button, so
+every merge from `main` is made locally, checked, reviewed when the patch ID
+changes and pushed only when clean. It never rebases or force-pushes. The ruleset on `main` requires branches to
 be up to date.
 
 Updating from `main` changes the head SHA. A review still covers the new head
