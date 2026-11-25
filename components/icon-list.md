@@ -18,7 +18,7 @@ guarantees:
   - id: icon-box
     claim: A pathable-icon inside pathable-icon-list__icon is a block 1.5rem square.
   - id: title
-    claim: The class pathable-icon-list__title sets a heading in the heading typeface at the body size with 1.2 line height, no bottom margin, and 8 px above the element that follows it.
+    claim: The class pathable-icon-list__title sets a heading in the heading typeface at regular weight (400) and the body size with 1.2 line height, no bottom margin, and 8 px above the element that follows it.
   - id: size-lg
     claim: The class pathable-icon-list--size-lg makes the icon 2.235rem square, the content text 1.49rem and the gap between icon and content 0.596rem, and removes the 72ex maximum width.
 ---

@@ -22,6 +22,32 @@
   @extend .usa-icon-list__icon;
 }
 
+// USWDS sizes the icon with `.usa-icon-list__icon .usa-icon` and the size
+// modifiers. The icon wrapper's own @extend does not reach this module's
+// rules, so repeat it here for `.pathable-icon`.
+.pathable-icon {
+  @extend .usa-icon;
+}
+
 .pathable-icon-list__content {
   @extend .usa-icon-list__content;
+}
+
+.pathable-icon-list__title {
+  @extend .usa-icon-list__title;
+
+  // Heading typeface (Fredoka) ships only Regular (400); the browser's default
+  // heading weight is bold, which it would synthesise. Brand rules: Regular.
+  font-weight: var(--pathable-font-weight-normal);
+}
+
+.pathable-icon-list--size-lg {
+  @extend .usa-icon-list--size-lg;
+}
+
+// The framework removes the list's maximum width with an attribute selector
+// that matches only usa-icon-list--size-* classes, which @extend does not
+// carry over. Remove it for the PathAble size modifier too.
+.pathable-icon-list.pathable-icon-list--size-lg {
+  @include u-measure('none');
 }
