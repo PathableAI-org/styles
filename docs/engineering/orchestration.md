@@ -56,7 +56,7 @@ person to follow. Subagents give the same independence with one session:
 
 | Role                 | Runs as                                                                   | Writes                                                                      |
 | -------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Lead                 | The one session for the delivery issue                                    | Branches, commits, briefs, pull requests, merge                             |
+| Lead                 | The one session for the delivery issue                                    | Branches, commits, briefs, lead-kept code, pull requests, merge             |
 | Implementer          | [`implementer`](../../.claude/agents/implementer.md) subagent             | Uncommitted edits in the lead's working tree, for one delegated task        |
 | Checker              | [`checker`](../../.claude/agents/checker.md) subagent                     | Nothing but build output; its reply only                                    |
 | Pre-push self-review | [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) subagent | Nothing; advisory reply only                                                |
@@ -215,12 +215,13 @@ The loop between them:
 
 The lead runs one implementer or one checker at a time. From the brief until
 the lead commits, only implementers edit the tree, unless the lead takes the
-task back, which ends the implementers' part in it. A changeset the change
-needs is one of the brief's files, so the implementer writes it and the
-checker sees it. Code the lead writes itself, such as a small edit or the
-code behind a High trigger, is either committed or listed in the brief as
-earlier work before the lead briefs or resumes an implementer, so a resumed
-implementer always finds the tree as it left it. When the same failure survives two implementer
+task back, which ends the implementers' part in it. Whoever writes a change
+writes its changeset: an implementer when it is one of the brief's files, the
+lead with code it writes itself. The lead resumes an implementer only when
+the tree's uncommitted changes are all that implementer's own. Code the lead
+writes itself goes in before an implementer starts: either committed, after
+its own checker pass, or left uncommitted and listed under earlier work in a
+fresh brief. When the same failure survives two implementer
 fixes, the lead steps the implementer up one rung of [the ladder](#the-ladder)
 for its next run in the same round, as
 [Which roles step up](#which-roles-step-up) describes. That run is a fresh

@@ -84,8 +84,8 @@ stack inside the repository.
    - Commit only when a checker reports every check and acceptance item
      passed on the tree you commit, and commit all of it: send a change you do
      not accept back to the implementer as a failure. When published package
-     code changes, put the changeset in the brief's `files` so the
-     implementer writes it before the checker runs.
+     code changes, whoever writes the code writes the changeset: put it in
+     the brief's `files` for an implementer, or write it with your own code.
 2. **Self-review.** Run the `pre-push-reviewer` with only the base branch, plus
    `since:` on a later push. Never skip it on a later push. Fix accepted
    findings through the same implementer and checker loop, and keep rejected findings out of other
@@ -209,10 +209,11 @@ when the task changes, when a checker failure makes you rewrite the brief,
 when you step it up, or after about three resumes.
 
 From the brief until you commit, only implementers edit the tree, unless you
-take the task back, which ends the implementers' part in it. Code you write
-yourself, such as a small edit or the code behind a High trigger, is either
-committed or listed under `earlier work` before you brief or resume an
-implementer, so a resumed implementer always finds the tree as it left it.
+take the task back, which ends the implementers' part in it. Resume an
+implementer only when the tree's uncommitted changes are all its own. Code
+you write yourself goes in before an implementer starts: either committed,
+after its own checker pass, or left uncommitted and listed under
+`earlier work` in a fresh brief.
 
 ## Check request
 
