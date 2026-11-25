@@ -28,8 +28,9 @@ it, such as a description of the change or what to look at:
 
 - branch, head SHA, base SHA, pull request number and round
 - capture: the path of the visual capture's `manifest.json`
-- for round two or later: the previous visual review ID and the lead
-  session's answer to each open finding
+- for round two or later: the previous visual review ID, the lead
+  session's answer to each open finding, and `previous capture`, the path of
+  the previous round's `manifest.json`
 
 If a field is missing or a SHA is not in the repository, reply with what is
 missing and stop.

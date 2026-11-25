@@ -46,7 +46,8 @@ describes.
 
 From the request: branch, head SHA, base SHA, pull request number and round,
 the capture manifest's path, and for round two or later the previous visual
-review ID and the lead session's answer to each open finding. If a SHA or the
+review ID, the lead session's answer to each open finding, and
+`previous capture`, the path of the previous round's capture manifest. If a SHA or the
 manifest is missing, or a SHA is not in the repository, reply with what is
 missing instead of guessing.
 
@@ -94,8 +95,17 @@ git diff --name-status <base>..<head>
      with a difference image.
    - `pixels`: the pixel suite's status at the head, its log and its diff
      images.
-4. **Blind pass.** Look at every differing pair, and at every head capture of
-   a story the pull request changed, even when it did not differ. Write down
+4. **Blind pass.** On a repeat round, first compare each pair's head image in
+   the new manifest with the same story, viewport and condition head image in
+   the previous manifest (the `previous capture` path), pixel by pixel, as
+   with PIL or the manifest tooling. Judge only the pairs whose head image
+   changed, the pairs new to this manifest and every story tied to an open
+   finding; carry the rest from the previous review without judging them
+   again. If the previous manifest is missing, unreadable or has a different
+   `baseSha`, judge every pair as in round one and say so in the review.
+   Look at every differing pair, and at every head capture of
+   a story the pull request changed, even when it did not differ (within that
+   set on a repeat round). Write down
    each visible difference and each visible defect, as
    [How it judges](../../../docs/engineering/visual-review.md#how-it-judges)
    lists them. Then check the changed stories against
@@ -120,7 +130,9 @@ git diff --name-status <base>..<head>
    not change is not a finding: file a bug issue for it. Drop what you cannot
    confirm. Rank by severity, `section-508` first, and keep at most ten.
 7. **Repeat rounds.** For round two or later, the lead sends a new manifest
-   for the new head against the same base. Close each earlier finding as `fixed`, `justified` or
+   for the new head against the same base, with the previous round's manifest
+   path as `previous capture`. Judge only what step 4 selects, but still read
+   the pull request body in full in step 5. Close each earlier finding as `fixed`, `justified` or
    `withdrawn`, and carry forward with the same ID any you still hold. Never
    close a `section-508` finding as `justified`: if the answer is a
    justification, keep it open and escalate a `section 508 conflict`. Raise

@@ -172,6 +172,11 @@ verifier one: when a slice is pushed as a draft pull request. A repeat request
 after a fix names the new SHA, the previous review ID, and for each open
 finding either the fixing commit or a written justification.
 
+A reviewer whose inputs did not change is not run again. When the lead
+session's answer to a finding changes only the pull request body and adds no
+commit, only the reviewer that raised the finding is run again, on the same
+SHA. The other reviewer's record at that SHA still stands.
+
 ### Report
 
 The reviewer records the review with `pnpm review:record` and replies with a
@@ -179,11 +184,25 @@ pointer only: `refs/notes/review @ <sha> (review <id>)`, plus the counts of
 blocking and advisory findings. The note is the record. Do not paste findings
 into messages.
 
-On a repeat round the reviewer reviews the commits since the previously
-reviewed SHA and each open finding. It closes a finding as `fixed` when the
+On a repeat round the reviewer reads the previously reviewed SHA from the
+previous review's note (`pnpm review:show`, or the note the request's
+`previous` field names). It closes a finding as `fixed` when the
 new code removes the failure scenario, `justified` when it accepts the written
 justification, and `withdrawn` when it finds its own finding was wrong. It
 carries forward, with the same ID, any finding it still holds.
+
+It runs the candidate search only on `git diff <previous-sha>..<sha>`, the
+commits since the previously reviewed SHA. It reads the surrounding code at
+the pushed SHA as needed to trace each changed path, including the callers and
+dependents of changed code. It does not re-sweep the parts of `<base>..<sha>`
+that are unchanged since the previously reviewed SHA, because the previous
+round already reviewed them.
+
+It does a full review of `<base>..<sha>` instead, and says why in the note,
+when the previous review's base differs from the request's base in a way that
+changes the pull request's own diff (a head that only merged the base branch in
+does not count), or when the previously reviewed SHA is not an ancestor of the
+new SHA because history was rewritten.
 
 ### Responses
 
@@ -242,17 +261,24 @@ weaken the review or verifier subagent, which stay the only gates.
 - **When.** Once the lead session believes a slice or fix is
   complete, before each push that starts or answers a round. It runs at that
   milestone only, never from a Git hook. It also runs on unspecified Standard
-  work and Light work, which get no verifier subagent.
+  work and Light work, which get no verifier subagent. The lead session does
+  not skip it on later pushes: the `since` form of the input keeps those runs
+  small.
 - **Who.** A subagent from the
   [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) definition,
   which holds its fixed brief, its read-only tools and its model. It starts
   with a fresh context, never as a fork of the lead session, on a
   different model, as [Models and effort](orchestration.md#models-and-effort)
   sets.
-- **Input.** Only the base branch. It reviews `origin/<base>...HEAD` plus
-  uncommitted changes, so an untracked or temporary file the push would leave
-  behind or sweep in is a finding. The lead session never describes
-  the change or what to check, because a reviewer handed the author's
+- **Input.** The base branch, and optionally `since: <40-character SHA>`, the
+  last commit that a pre-push self-review already covered. Without `since` it
+  reviews `origin/<base>...HEAD` plus uncommitted changes, so an untracked or
+  temporary file the push would leave behind or sweep in is a finding. With
+  `since` it reviews `<since>..HEAD` plus uncommitted changes, reading the
+  surrounding code as needed to trace each changed path, including callers and
+  dependents of changed code. If `since` is not an ancestor of `HEAD`, it
+  reviews the full `origin/<base>...HEAD` and says so. The lead session never
+  describes the change or what to check, because a reviewer handed the author's
   hypothesis tends to confirm it.
 - **Scope.** The [scope](#scope) and finding fields of the code review subagent,
   plus a `leftover` category for files and code that should not be pushed.

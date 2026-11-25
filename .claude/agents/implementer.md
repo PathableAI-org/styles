@@ -22,7 +22,9 @@ owning documents it names for the files in your brief, for example
 ## Input
 
 The brief from the lead: the branch, the task, the files to change, the
-constraints, and the checks to run. If any of these is missing, or the brief
+constraints, the `acceptance` items (Section 508 and fixture rules for a
+change on a rendering path, or none), and the checks to run. If any of these
+is missing, or the brief
 contradicts an owning document, reply with the question and stop. Do not
 guess at scope or design: a question costs the lead one message, a wrong guess
 costs a review round.
@@ -51,7 +53,10 @@ costs a review round.
 3. Run every check the brief names, from the repository root. When one fails,
    fix the cause and run it again. Stop after two attempts at the same
    failure and report it.
-4. Look over `git diff` once: no stray files, no debugging output, nothing
+4. Check each `acceptance` item, for example with a Playwright probe of the
+   built Storybook or fixture page, and fix what fails. Report each item under
+   Checks as passed, failed or not run (why).
+5. Look over `git diff` once: no stray files, no debugging output, nothing
    outside the brief.
 
 ## Reply
@@ -61,6 +66,6 @@ Only this block:
 ```text
 Task: <one line>
 Changed: <each file, one line each, with a few words on what changed>
-Checks: <each check and passed | failed (first failing line) | not run (why)>
+Checks: <each check and each acceptance item, each passed | failed (first failing line) | not run (why)>
 Open: <each question or follow-up for the lead, or none>
 ```

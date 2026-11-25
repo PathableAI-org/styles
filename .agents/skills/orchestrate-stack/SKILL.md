@@ -25,6 +25,9 @@ implementation approach. This skill owns the execution loop.
   only with the GitHub MCP merge tool and squash, and only after
   `pnpm merge:gate <pr>` passes. High and guardrail work wait for a person.
 - Never poll. End the turn while long checks, subagents or CI run.
+- A Stop-hook reminder about uncommitted or unpushed work while an implementer
+  or a pre-push self-review runs is not a reason to commit or push early. Say
+  so and end the turn.
 
 ## Start
 
@@ -33,7 +36,10 @@ From the person, take the delivery issue number.
 1. Read the issue and its risk tier. Confirm the outcome, scope, contract
    impact, dependencies, claims and implementation approach are sufficient.
    For High new behaviour, stop unless a maintainer has accepted the issue.
-   Raise an understated tier; never lower one.
+   Raise an understated tier; never lower one. For a component that embeds
+   another component or is embedded in one, read both component pages in
+   `components/`; settle any conflict between their guarantees before
+   briefing, or stop under Read below.
 2. Find an existing pull request linked to the issue and resume it, or branch
    from current `origin/main` as `<type>/<short-slug>`.
 3. Tell the person which tier row applies, which subagents run, and whether the
@@ -48,12 +54,17 @@ stack inside the repository.
 1. **Build.** Implement only the accepted issue. Delegate a task only when the
    files, behavior, constraints and checks are explicit. Add a changeset when
    published package code changes and run the checks routed by `AGENTS.md`.
-2. **Self-review.** Run the `pre-push-reviewer` with only the base branch. Fix
-   accepted findings, rerun affected checks and keep rejected findings out of
-   other subagent requests.
-3. **Push.** Push and open or update one draft pull request with the matching
-   risk label. Keep Decisions for the reviewer, Change, Evidence and Validation
-   current.
+   Give a rendering-path brief an `acceptance:` field. Run short commands
+   yourself; a subagent is for reading a lot of material.
+2. **Self-review.** Run the `pre-push-reviewer` with only the base branch, plus
+   `since:` on a later push. Never skip it on a later push. Fix accepted
+   findings, rerun affected checks and keep rejected findings out of other
+   subagent requests.
+3. **Push.** Before each push that starts or answers a round, bring the pull
+   request body current: Change, Evidence and the visible-change description
+   cover every commit in the round. Push and open or update one draft pull
+   request with the matching risk label. Keep Decisions for the reviewer and
+   Validation current.
 4. **Check.** On the same pushed SHA, start:
    - `code-reviewer`, always;
    - `verifier`, for High work;
@@ -64,8 +75,16 @@ stack inside the repository.
 
 5. **Read.** Read records with `pnpm review:show`, `pnpm verify:show` and
    `pnpm visual:show`. Answer every finding with a fix or a written
-   justification and begin another round. Stop on an escalation, accepted
-   scope/claim change, or third-round blocking result.
+   justification. When no record has an open blocking finding, the fix loop
+   ends: answer each advisory finding with a justification, a follow-up issue
+   or a fix, prefer the first two outside the accepted scope, and put accepted
+   fixes in one batch and one final round. Never start a round for a single
+   advisory fix. Otherwise begin another round. Stop on an escalation,
+   accepted scope/claim change, a round that ends with a blocking finding open
+   in round three or later (new or carried), or a blocking finding whose fix
+   needs a design trade-off or sets two documented guarantees against each
+   other; for the last, stop when it first appears. Send the open findings and
+   your options.
 6. **Ready.** Mark the pull request ready only when its required records pass.
    The ready hook runs `pnpm verify:gate` for High work.
 7. **Merge or stop.** High and guardrail work stop for a person. Otherwise keep
@@ -89,7 +108,9 @@ answers: <finding ID and fixing commit or justification, or none>
 ```
 
 Verification also gets `run instructions changed: <what, or none>`. The
-pre-push reviewer gets only `base: <branch>`.
+pre-push reviewer gets only `base: <branch>`, plus
+`since: <40-character SHA>` on a later push: the last commit a pre-push
+self-review covered.
 
 Visual capture gets:
 
@@ -100,6 +121,8 @@ out: <scratchpad>/visual-capture/<pr>-round-<n>
 ```
 
 The visual reviewer gets that manifest path plus the common request fields.
+From round 2 it also gets `previous capture: <path to the previous round's
+capture manifest>`.
 
 ## Implementer brief
 
@@ -110,11 +133,18 @@ branch: <checked-out branch>
 task: <bounded behavior to implement>
 files: <files to change or add>
 constraints: <owning docs, public contracts and explicit exclusions>
+acceptance: <Section 508 and fixture rules the change must meet, for a rendering path; or none>
 checks: <commands to run before replying>
 ```
 
+For `acceptance:`, name the rules that bear on the change from
+[Priorities](../../../docs/engineering/visual-review.md#priorities) and
+[Delegating implementation](../../../docs/engineering/orchestration.md#delegating-implementation).
+
 Run one implementer at a time and do not edit the working tree until it
-replies. Read and own the diff before committing it.
+replies. Read and own the diff before committing it. Resume the same
+implementer for follow-up on the same task; start a fresh one with a fresh
+brief when the task changes or after about three resumes.
 
 ## Release and wrap-up
 

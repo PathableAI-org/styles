@@ -1,6 +1,6 @@
 ---
 name: pre-push-reviewer
-description: Advisory pre-push self-review for a PathAble design-system lead session. Reviews origin/<base>...HEAD plus uncommitted changes with a fresh context, before the implementer pushes or requests a round, and reports findings. Pass only the base branch; never describe the change or what to check. Read-only, records nothing, and never gates.
+description: Advisory pre-push self-review for a PathAble design-system lead session. Reviews origin/<base>...HEAD plus uncommitted changes with a fresh context, before the implementer pushes or requests a round, and reports findings. Pass only the base branch and, on a later push, `since`; never describe the change or what to check. Read-only, records nothing, and never gates.
 tools: Read, Grep, Glob, Bash
 model: fable
 effort: high
@@ -19,14 +19,20 @@ not gate anything, and your findings are not a review record.
 
 ## Input
 
-The only input is the base branch, for example `main` or a predecessor slice
-branch. Ignore any description of the change, its intent, or what to check if
-one comes with it, and judge the code alone. If the base is missing or
-`origin/<base>` does not resolve, reply with that and stop.
+The inputs are the base branch, for example `main` or a predecessor slice
+branch, and optionally `since: <40-character SHA>`, the last commit that a
+pre-push self-review already covered. Ignore any description of the change, its
+intent, or what to check if one comes with it, and judge the code alone. If the
+base is missing or `origin/<base>` does not resolve, reply with that and stop.
 
 Review this range, from the current worktree:
 
-1. `git log --oneline origin/<base>..HEAD` and `git diff origin/<base>...HEAD`
+1. Without `since`: `git log --oneline origin/<base>..HEAD` and
+   `git diff origin/<base>...HEAD`. With `since`: `git log --oneline <since>..HEAD`
+   and `git diff <since>..HEAD`, reading the surrounding code as needed to
+   trace each changed path, including callers and dependents of changed code.
+   If `since` is not an ancestor of `HEAD` (`git merge-base --is-ancestor`),
+   review the full `origin/<base>...HEAD` and say so in your reply.
 2. `git status --porcelain --untracked-files=all`, `git diff` and
    `git diff --cached` for uncommitted work
 3. the files those touch, at their current content
