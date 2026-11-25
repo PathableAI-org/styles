@@ -72,8 +72,8 @@ stack inside the repository.
      `AGENTS.md` routes for the changed paths. Never resume a checker, and
      never send it the brief's reasoning or the implementer's reply.
    - If anything fails, resume the implementer with the checker's report as
-     written. When the failure shows the design was wrong, settle the
-     design yourself, rewrite the brief and start a fresh implementer with
+     written. When the failure shows the design or the brief was wrong,
+     settle it yourself, rewrite the brief and start a fresh implementer with
      the new brief. Then start another new checker.
    - When the same failure survives two implementer fixes, start a fresh
      implementer one rung up
@@ -205,7 +205,10 @@ replies. Read and own the diff before committing it. Resume the same
 implementer for follow-up on the same task, including fixes for a checker's
 report and answers to its questions; start a fresh one with a fresh brief
 when the task changes, when a checker failure makes you rewrite the brief,
-when you step it up, or after about three resumes.
+when you step it up, or after about three resumes. A resumed implementer
+expects the tree as it left it: if you edit or drop any uncommitted change
+after it replies, start a fresh implementer and list that work under
+`earlier work` instead of resuming.
 
 ## Check request
 
