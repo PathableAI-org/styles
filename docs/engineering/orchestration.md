@@ -1,9 +1,10 @@
 # Orchestration
 
 A delivery issue runs in **one lead session**. The lead session reads the
-accepted issue, writes the code or hands clearly scoped tasks to an
-**implementer** subagent, and runs every independent check as a **subagent**
-with a clean context: the pre-push self-review, the code review, the
+accepted issue, settles its design, and hands the code to an **implementer**
+subagent. A **checker** subagent with a fresh context runs the checks on what
+the implementer built. The lead runs every independent check as a
+**subagent** with a clean context: the pre-push self-review, the code review, the
 verification and the visual review, whose screenshots the lead takes first by
 running the capture script itself. This document owns the lead session's loop
 by risk tier, its stop points, how it starts subagents and keeps them
@@ -57,6 +58,7 @@ person to follow. Subagents give the same independence with one session:
 | -------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
 | Lead                 | The one session for the delivery issue                                    | Branches, code, stories, changesets, pull requests, merge                   |
 | Implementer          | [`implementer`](../../.claude/agents/implementer.md) subagent             | Uncommitted edits in the lead's working tree, for one delegated task        |
+| Checker              | [`checker`](../../.claude/agents/checker.md) subagent                     | Nothing but build output; its reply only                                    |
 | Pre-push self-review | [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) subagent | Nothing; advisory reply only                                                |
 | Code review          | [`code-reviewer`](../../.claude/agents/code-reviewer.md) subagent         | Its review note and the note comment                                        |
 | Verification         | [`verifier`](../../.claude/agents/verifier.md) subagent                   | Its report note, the note comment, and a screenshots page for visual claims |
@@ -67,6 +69,8 @@ The reviewing subagents are read-only on every branch. Each works in its own det
 SHAs it was given, so their notes land in the shared local notes refs as well
 as on the pull request. The implementer is the one subagent that edits files,
 and only as [Delegating implementation](#delegating-implementation) allows.
+The checker runs in the lead's working tree, because it checks uncommitted
+work, but writes only build output and its own scratchpad.
 
 ## The loop by tier
 
@@ -87,11 +91,11 @@ when the pull request touches a
 
 ### One round
 
-1. **Build.** The lead session implements the change, or hands its
-   clearly scoped tasks to the implementer as
-   [Delegating implementation](#delegating-implementation) describes, reads
-   the result, commits, and runs the
-   [Before committing](../../AGENTS.md#before-committing) checks.
+1. **Build.** The lead session settles the design and hands the code to the
+   implementer, which edits and builds. A fresh checker then runs the
+   [Before committing](../../AGENTS.md#before-committing) checks, as
+   [Delegating implementation](#delegating-implementation) describes. When
+   every check passes, the lead reads the diff and commits.
 2. **Self-review.** It runs the `pre-push-reviewer` subagent with only the
    base branch, fixes what it accepts, and keeps the findings for its round
    summary. They never go to another subagent or the pull request body. On a
@@ -139,35 +143,74 @@ allowance runs low, run them one after the other.
 
 ## Delegating implementation
 
-Smaller models do well on work whose scope is clear and less well on work
-that is ambiguous, so the lead keeps the ambiguous work and may hand the rest
-to the [`implementer`](../../.claude/agents/implementer.md) subagent.
+The lead runs on the strongest and most expensive setting of any role, so it
+spends that on judgment and hands the code to cheaper subagents. Smaller
+models do well on work whose scope is clear and less well on work that is
+ambiguous, so the lead first makes the work clear, then delegates it:
 
-A task is **clearly scoped** when the lead can name the files to change, the
-behaviour wanted, and the checks that show it is done: typically one bounded
-part of the accepted issue, or a Light or Standard change the lead can
-describe precisely.
+- The lead **diagnoses and decides**: it reads the issue and the failing
+  checks, settles the design, and writes the brief.
+- The [`implementer`](../../.claude/agents/implementer.md) **edits and
+  builds**.
+- The [`checker`](../../.claude/agents/checker.md) **checks**, always with a
+  fresh context separate from the edit and build, so the code is never judged
+  only by the context that wrote it.
+
 The lead keeps:
 
 - the delivery issue decisions and the pull request body
-- any task whose scope or design is still open, or that needs a judgment the
-  lead has not made yet
+- diagnosis and design: anything whose scope or design is still open, or that
+  needs a judgment the lead has not made yet. It settles these before
+  briefing, not by handing over an open task.
 - the code behind a [High trigger](git-workflow.md#triggers): keyboard, focus
   and ARIA behaviour, removed or renamed public API, entry points and the
   theming API
-- answering reviewer findings. Once it has decided a fix, it may hand that fix
+- answering reviewer findings. Once it has decided a fix, it hands that fix
   over as a task.
 
+Everything else is delegated. The one exception is an edit so small that its
+brief would be at least as long as its diff, such as a one-line fix the lead
+has already decided. The lead may write that itself, and names it in its
+round summary, for example `Lead edit: one-line token fix in pathable-card.scss
+(brief longer than diff)`. A lead edit still goes through a fresh checker; no
+exception skips the check step.
+
 The implementer is not an independent check, so it gets a full brief: the
-task, the files, the constraints and the checks to run, as the
-`orchestrate-stack` skill's [implementer brief](../../.agents/skills/orchestrate-stack/SKILL.md#implementer-brief)
-sets out. It edits the lead's working tree, runs the checks, and replies with
-the files it changed, each check's result and any question. It never commits,
-pushes, edits a pull request or records a note. When the brief
-leaves a question open, it stops and asks instead of guessing. The lead runs
-one implementer at a time, does not edit the working tree while it runs,
-reads the diff, and commits only what it accepts. The pre-push self-review
-and every later check then treat that code as the lead's.
+task, the files, the constraints, the acceptance items and the build to run,
+as the `orchestrate-stack` skill's
+[implementer brief](../../.agents/skills/orchestrate-stack/SKILL.md#implementer-brief)
+sets out. It edits the lead's working tree, builds, and replies with the files
+it changed, the build result and any question. It does not run the checks.
+It never commits, pushes, edits a pull request or records a note. When the
+brief leaves a question open, it stops and asks instead of guessing.
+
+The checker then gets only the
+[check request](../../.agents/skills/orchestrate-stack/SKILL.md#check-request):
+the branch, the check commands and the acceptance items with what to probe
+them on. It never gets the brief's reasoning, the implementer's reply or what
+the lead expects to pass. It reruns any build a check needs instead of
+trusting the implementer's, runs every check, probes every acceptance item,
+and replies with what passed and what failed, quoting the failing output.
+
+The loop between them:
+
+1. The lead starts the implementer with the brief and waits.
+2. When it replies, the lead starts a **new** checker with the check request
+   and waits. A checker is never resumed; every check runs in a fresh
+   context.
+3. If every check and acceptance item passes, the lead reads the diff and
+   commits only what it accepts. The pre-push self-review and every later
+   check then treat that code as the lead's.
+4. If any fails, the lead reads the report. A failure the brief already
+   covers goes back to the implementer: the lead resumes it with the
+   checker's report as written and returns to step 2. A failure that shows
+   the design or the brief was wrong comes back to the lead, which settles it
+   and rewrites the brief.
+
+The lead runs one implementer or one checker at a time and does not edit the
+working tree while either runs. When the same failure survives two implementer
+fixes, the lead treats it as a [failed round](#which-roles-step-up) for the
+implementer.
 
 Three more rules keep the brief complete and the cost down:
 
@@ -183,12 +226,13 @@ Three more rules keep the brief complete and the cost down:
   with at least 3:1 contrast against what it sits on (the visual reviewer
   treats a ring under 3:1 as a defect, not a Section 508 failure), and the
   rules in [`fixtures/README.md`](../../fixtures/README.md) for any fixture
-  changed. The implementer then catches them before a
-  reviewer does. [Priorities](visual-review.md#priorities) lists the full set;
+  changed. The implementer writes to them and the checker probes them, so
+  they are caught before a reviewer does. [Priorities](visual-review.md#priorities) lists the full set;
   the brief names only those that bear on the change.
 - The lead follows up on the same task by resuming the same implementer. It
   starts a fresh implementer with a fresh brief when the task changes or after
   about three resumes, because each resume carries the whole earlier context.
+  It never resumes a checker.
 
 ## Stop points
 
@@ -281,7 +325,9 @@ in the issue, as in the stories.
   share the person's usage limits.
 - **One writer.** Only the lead session commits to and pushes the issue's
   branches. The implementer edits the lead's working tree only while the lead
-  waits on it, one task at a time, and never commits. Other subagents write
+  waits on it, one task at a time, and never commits. The checker runs in that
+  tree only while the lead waits on it, and writes only build output. Other
+  subagents write
   only notes, note comments, screenshots pages and files in their own
   scratchpad.
 - **Shared hot spots** such as the [AGENTS.md](../../AGENTS.md) routing table,
@@ -293,12 +339,15 @@ in the issue, as in the stories.
   and ends its turn; it is woken when they finish. While waiting on CI or a
   person, it schedules at most one check-in about two hours out
   (`send_later` in cloud sessions) and does not reschedule it as a loop.
-- **Short commands stay with the lead.** It runs a short command itself, such
-  as a few checks or a git or `gh` lookup, in the background when it is long.
-  A lookup subagent is for reading and digesting a lot of material, because
-  every subagent pays a fixed cost to start a fresh context.
+- **Short lookups stay with the lead.** It runs a short lookup itself, such
+  as a git or `gh` command or a quick read of a check's output while
+  diagnosing, in the background when it is long. A lookup subagent is for
+  reading and digesting a lot of material, because every subagent pays a fixed
+  cost to start a fresh context. The edit, build and check loop is not a
+  lookup: it goes to the implementer and the checker as
+  [Delegating implementation](#delegating-implementation) describes.
 - **Stop-hook reminders.** A Stop-hook reminder about uncommitted or unpushed
-  work while an implementer or a pre-push self-review is running is not a
+  work while an implementer, a checker or a pre-push self-review is running is not a
   reason to commit or push early. The lead says so and ends its turn.
 
 ## Other agents and Copilot
@@ -340,16 +389,17 @@ Opus. Work that only judges goes to Fable, the strongest model, at a fixed
 setting. Work whose scope is clear goes to Sonnet or Haiku and starts low:
 Sonnet does work written to a brief, and Haiku does lookups.
 
-| Role                         | Model                                                                      | Effort                        | Steps up                                                        |
-| ---------------------------- | -------------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------- |
-| Lead                         | `claude-opus-5-5`                                                          | `high`; `xhigh` for High work | No; a person sets it                                            |
-| Implementer                  | `sonnet` (`claude-sonnet-5-5`)                                             | `medium`                      | On a [failed round](#stepping-up), to `opus` at `high` at most  |
-| Pre-push self-review         | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; [fixed](#which-roles-step-up)                               |
-| Code review                  | `fable` (`claude-fable-5-2`), a different and stronger model than the lead | `high`                        | No; fixed                                                       |
-| Verification                 | `sonnet` (`claude-sonnet-5-5`)                                             | `high`                        | After a [failed run](#which-roles-step-up), to `opus` at `high` |
-| Visual review                | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; fixed                                                       |
-| Drift review                 | `claude-opus-5-5`                                                          | `high`                        | No                                                              |
-| Lookups, read-only subagents | `claude-haiku-5-5`, or `claude-sonnet-5-5` when the lookup needs judgment  | `low`                         | No                                                              |
+| Role                         | Model                                                                      | Effort                        | Steps up                                                          |
+| ---------------------------- | -------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
+| Lead                         | `claude-opus-5-5`                                                          | `high`; `xhigh` for High work | No; a person sets it                                              |
+| Implementer                  | `sonnet` (`claude-sonnet-5-5`)                                             | `medium`                      | On a [failed round](#stepping-up), to `opus` at `high` at most    |
+| Checker                      | `sonnet` (`claude-sonnet-5-5`)                                             | `medium`                      | After a [failed run](#which-roles-step-up), to `sonnet` at `high` |
+| Pre-push self-review         | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; [fixed](#which-roles-step-up)                                 |
+| Code review                  | `fable` (`claude-fable-5-2`), a different and stronger model than the lead | `high`                        | No; fixed                                                         |
+| Verification                 | `sonnet` (`claude-sonnet-5-5`)                                             | `high`                        | After a [failed run](#which-roles-step-up), to `opus` at `high`   |
+| Visual review                | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; fixed                                                         |
+| Drift review                 | `claude-opus-5-5`                                                          | `high`                        | No                                                                |
+| Lookups, read-only subagents | `claude-haiku-5-5`, or `claude-sonnet-5-5` when the lookup needs judgment  | `low`                         | No                                                                |
 
 Set effort explicitly. `claude-opus-5-5` defaults to `medium`. A person starts
 the lead session at its row: `claude --model claude-opus-5-5 --effort high`,
@@ -372,9 +422,13 @@ raise:
 #### Which roles step up
 
 - **The implementer** steps up on a failed round: a verification claim
-  fails, or a blocking finding lands, in code it wrote, or it reports a check
-  it could not get green. A different finding in each round is ordinary
-  review and does not count.
+  fails, or a blocking finding lands, in code it wrote, or the same checker
+  failure survives two of its fixes. A different finding in each round, or a
+  checker failure it fixes, is ordinary work and does not count.
+- **The checker** steps up after a failed run: the subagent errors, returns
+  no usable report, or reports a check it did not run. A failing check is a
+  result about the code, not a failed run. It steps up once, to `sonnet` at
+  `high`.
 - **The verification** steps up after a failed run: the subagent errors,
   returns no record, or returns one the lead cannot use. A failing claim, or a head that does not build, is a result
   about the code, not a failed run.

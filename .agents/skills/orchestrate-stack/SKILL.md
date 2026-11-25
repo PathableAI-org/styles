@@ -12,8 +12,9 @@ implementation approach. This skill owns the execution loop.
 
 ## Boundaries
 
-- You are the only writer who commits or pushes. The `implementer` may edit
-  your working tree for one bounded task while you wait; no reviewing subagent
+- You are the only writer who commits or pushes. You diagnose and decide; the
+  `implementer` edits and builds your working tree for one bounded task while
+  you wait, and a fresh `checker` runs the checks on it. No reviewing subagent
   edits it.
 - Start every role from its `.claude/agents/` definition. Give reviewers and
   verification only the request fields below. Do not brief them with the
@@ -25,8 +26,9 @@ implementation approach. This skill owns the execution loop.
   only with the GitHub MCP merge tool and squash, and only after
   `pnpm merge:gate <pr>` passes. High and guardrail work wait for a person.
 - Never poll. End the turn while long checks, subagents or CI run.
-- A Stop-hook reminder about uncommitted or unpushed work while an implementer
-  or a pre-push self-review runs is not a reason to commit or push early. Say
+- A Stop-hook reminder about uncommitted or unpushed work while an implementer,
+  a checker or a pre-push self-review runs is not a reason to commit or push
+  early. Say
   so and end the turn.
 
 ## Start
@@ -52,14 +54,28 @@ stack inside the repository.
 
 ## Round
 
-1. **Build.** Implement only the accepted issue. Delegate a task only when the
-   files, behavior, constraints and checks are explicit. Add a changeset when
-   published package code changes and run the checks routed by `AGENTS.md`.
-   Give a rendering-path brief an `acceptance:` field. Run short commands
-   yourself; a subagent is for reading a lot of material.
+1. **Build.** Implement only the accepted issue, through the loop in
+   [Delegating implementation](../../../docs/engineering/orchestration.md#delegating-implementation):
+   - Diagnose and decide yourself. Settle every open design question before
+     briefing; a short lookup is yours to run, a subagent is for reading a lot
+     of material.
+   - Start the `implementer` with the [brief](#implementer-brief) and end the
+     turn. It edits and builds, and does not run the checks. Write a change
+     yourself only when its brief would be at least as long as its diff, and
+     name it in the round summary as a lead edit.
+   - Then start a **new** `checker` with only the
+     [check request](#check-request) and end the turn. Its checks are the ones
+     `AGENTS.md` routes for the changed paths. Never resume a checker, and
+     never send it the brief's reasoning or the implementer's reply.
+   - If anything fails, resume the implementer with the checker's report as
+     written, or take the failure back and rewrite the brief when it shows the
+     design was wrong. Then start another new checker.
+   - Commit only when a checker reports every check and acceptance item
+     passed on the tree you commit. Add a changeset when published package code
+     changes; the implementer can write it from the brief.
 2. **Self-review.** Run the `pre-push-reviewer` with only the base branch, plus
    `since:` on a later push. Never skip it on a later push. Fix accepted
-   findings, rerun affected checks and keep rejected findings out of other
+   findings through the same implementer and checker loop, and keep rejected findings out of other
    subagent requests.
 3. **Push.** Before each push that starts or answers a round, bring the pull
    request body current: Change, Evidence and the visible-change description
@@ -157,7 +173,7 @@ task: <bounded behavior to implement>
 files: <files to change or add>
 constraints: <owning docs, public contracts and explicit exclusions>
 acceptance: <Section 508 and defect checks the visual reviewer applies that bear on the change, for a rendering path; or none>
-checks: <commands to run before replying>
+build: <build command to run before replying, or none>
 ```
 
 For `acceptance:`, name the rules that bear on the change from
@@ -166,8 +182,23 @@ For `acceptance:`, name the rules that bear on the change from
 
 Run one implementer at a time and do not edit the working tree until it
 replies. Read and own the diff before committing it. Resume the same
-implementer for follow-up on the same task; start a fresh one with a fresh
-brief when the task changes or after about three resumes.
+implementer for follow-up on the same task, including fixes for a checker's
+report; start a fresh one with a fresh brief when the task changes or after
+about three resumes.
+
+## Check request
+
+Pass these fields and nothing else to a new `checker`:
+
+```text
+branch: <checked-out branch>
+checks: <every check AGENTS.md routes for the changed paths, as commands in order>
+acceptance: <the brief's acceptance items, each with the fixture folders or story IDs to probe it on; or none>
+```
+
+Leave out the task, the reasoning, the implementer's reply and any expected
+result. Run one checker at a time, do not edit the working tree while it runs,
+and start a new one for every check.
 
 ## Release and wrap-up
 
