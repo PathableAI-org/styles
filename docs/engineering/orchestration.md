@@ -468,7 +468,7 @@ The lead sets a step with the Agent tool's `model` and `effort` parameters,
 which override the definition for that run. This section is the instruction
 that allows those parameters, and only for the roles and steps above. The
 lead writes each step in its round summary, for example
-`Step-up: implementer, round 2, did too little (skipped the story tests), sonnet/medium → sonnet/high`.
+`Step-up: implementer, round 2, did too little (skipped a file the brief named), sonnet/medium → sonnet/high`.
 
 ### Revisiting the table
 
