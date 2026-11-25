@@ -1,5 +1,5 @@
 ---
-name: orchestrate-stack
+name: orchestrate
 description: Lead one PathAble design-system delivery issue through a single implementation pull request, independent review and verification appropriate to its risk tier, and the repository's merge rules.
 ---
 

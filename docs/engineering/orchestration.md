@@ -9,7 +9,7 @@ verification and the visual review, whose screenshots the lead takes first by
 running the capture script itself. This document owns the lead session's loop
 by risk tier, its stop points, how it starts subagents and keeps them
 independent, its notifications, and the model and effort each role runs on,
-including when the lead steps a role up. The `orchestrate-stack` skill
+including when the lead steps a role up. The `orchestrate` skill
 supplies the procedure.
 
 [Git workflow](git-workflow.md) owns tiers, branches, merges, corrections and
@@ -177,15 +177,15 @@ exception skips the check step.
 
 The implementer is not an independent check, so it gets a full brief: the
 task, the files, the constraints, the acceptance items and the build to run,
-as the `orchestrate-stack` skill's
-[implementer brief](../../.agents/skills/orchestrate-stack/SKILL.md#implementer-brief)
+as the `orchestrate` skill's
+[implementer brief](../../.agents/skills/orchestrate/SKILL.md#implementer-brief)
 sets out. It edits the lead's working tree, builds, and replies with the files
 it changed, the build result and any question. It does not run the checks.
 It never commits, pushes, edits a pull request or records a note. When the
 brief leaves a question open, it stops and asks instead of guessing.
 
 The checker then gets only the
-[check request](../../.agents/skills/orchestrate-stack/SKILL.md#check-request):
+[check request](../../.agents/skills/orchestrate/SKILL.md#check-request):
 the branch, the check commands and the acceptance items with what to probe
 them on. It never gets the brief's reasoning, the implementer's reply or what
 the lead expects to pass. It reruns any build a check needs instead of
