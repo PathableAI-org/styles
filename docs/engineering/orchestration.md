@@ -179,8 +179,9 @@ it back or makes a small edit, still goes through a fresh checker; nothing
 skips the check step.
 
 The implementer is not an independent check, so it gets a full brief: the
-task, the files, the constraints, the acceptance items and the build to run,
-as the `orchestrate` skill's
+task, the files, the constraints, the acceptance items, the build to run and,
+when it starts on an earlier implementer's uncommitted work, the latest
+checker report, as the `orchestrate` skill's
 [implementer brief](../../.agents/skills/orchestrate/SKILL.md#implementer-brief)
 sets out. It edits the lead's working tree, builds, and replies with the files
 it changed, the build result and any question. It does not run the checks.

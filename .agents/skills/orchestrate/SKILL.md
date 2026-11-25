@@ -184,12 +184,15 @@ files: <files to change or add>
 constraints: <owning docs, public contracts and explicit exclusions>
 acceptance: <Section 508 and defect checks the visual reviewer applies that bear on the change, for a rendering path; or none>
 build: <build command to run before replying, or none>
-report: <the checker's report as written, when this implementer is a step-up from one that gave up on a failure; or none>
+report: <the latest checker report as written, when the tree holds an earlier implementer's uncommitted work; or none>
 ```
 
-On a step-up, the working tree still holds the earlier implementer's
-uncommitted attempt. Leave it in place; the brief's `files` cover it, and the
-new implementer fixes the reported failures on top of it.
+Whenever a fresh implementer starts on a tree that still holds an earlier
+implementer's uncommitted work, for any of the reasons below (a step-up within
+a round, about three resumes, or a rewritten brief), leave that work in place.
+List every file it changed under `files`, and pass the latest checker report
+under `report`. A fresh implementer after a pushed round starts from a
+committed tree and gets `report: none`.
 
 For `acceptance:`, name the rules that bear on the change from
 [Priorities](../../../docs/engineering/visual-review.md#priorities) and
