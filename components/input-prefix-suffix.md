@@ -100,8 +100,10 @@ Add at most one modifier from each axis to `pathable-input-group`.
 | width | `2xl`     | `pathable-input-group--2xl`     | A value of about 50 characters                     |
 
 The modifiers go on `pathable-input-group`, not on `pathable-input`. The
-form caps every group at its own width too: inside a `pathable-form`, which is
-at most 20rem wide, an `xl` or `2xl` group is as wide as the form.
+form caps every group at its own width too: from a 480 px viewport a
+`pathable-form` is at most 20rem wide, so there an `xl` or `2xl` group is as
+wide as the form. Below 480 px the form fills its container, and a group is
+as wide as the form only when its own cap is wider.
 
 ## Tokens
 
