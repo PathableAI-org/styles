@@ -93,7 +93,8 @@ Add at most one modifier class to `pathable-footer`.
 - `pathable-footer__primary-content--collapsible`: marks a big footer group.
   The group shows its links expanded.
 - `pathable-footer__secondary-link`: a link in a big footer group, inside a
-  `pathable-list pathable-list--unstyled` list.
+  `pathable-list pathable-list--unstyled` list. The list carries `role="list"`
+  and is named by the group heading through `aria-labelledby`.
 - `pathable-footer__primary-container`: the row of the slim footer's primary
   section.
 - `pathable-footer__secondary-section`: the area with the logo, social links
@@ -125,6 +126,8 @@ colours; the figures on this page are those of the default theme.
   and contact details.
 - The `aria-label` of the `<nav>`, and the accessible name of each social
   link icon.
+- The `role="list"` of each big footer group's list, and its name through
+  `aria-labelledby` pointing at the group heading.
 - The `alt` text of the logo: empty when the name beside it already says the
   same.
 - The return-to-top target and the sign-up form's handling of submission.

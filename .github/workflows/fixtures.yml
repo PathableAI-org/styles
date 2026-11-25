@@ -54,6 +54,7 @@ env:
     card
     checkbox
     collection
+    footer
     icon-list
     input-prefix-suffix
     link

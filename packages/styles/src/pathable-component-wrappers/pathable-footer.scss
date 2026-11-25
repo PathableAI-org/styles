@@ -1,6 +1,9 @@
 // packages/styles/src/pathable-component-wrappers/pathable-footer.scss
 //
 // Wraps usa-footer component as pathable-footer.
+// The usa-footer rules that select .usa-list--unstyled, .usa-label and
+// .usa-button are restated here against the pathable-* classes, scoped to the
+// footer, because @extend elsewhere does not reach the usa-footer module.
 // USWDS dependencies: uswds-fonts
 // JS-driven: No
 // Requires .usa-* on DOM: No
@@ -55,4 +58,90 @@
 
 .pathable-footer__social-links {
   @extend .usa-footer__social-links;
+}
+
+.pathable-footer--big {
+  @extend .usa-footer--big;
+}
+
+.pathable-footer__primary-container {
+  @extend .usa-footer__primary-container;
+}
+
+.pathable-footer__primary-content--collapsible {
+  @extend .usa-footer__primary-content--collapsible;
+}
+
+.pathable-footer__primary-link {
+  @extend .usa-footer__primary-link;
+}
+
+.pathable-footer__secondary-link {
+  @extend .usa-footer__secondary-link;
+}
+
+.pathable-footer__logo {
+  @extend .usa-footer__logo;
+}
+
+.pathable-footer__logo-img {
+  @extend .usa-footer__logo-img;
+}
+
+.pathable-footer__contact-links {
+  @extend .usa-footer__contact-links;
+}
+
+.pathable-social-link {
+  @extend .usa-social-link;
+}
+
+.pathable-social-link__icon {
+  @extend .usa-social-link__icon;
+
+  // The icon is an inline sprite <svg> without a viewBox, not USWDS's <img>,
+  // so it fills the link square instead of defaulting to 150 px tall.
+  height: 100%;
+}
+
+.pathable-sign-up {
+  @extend .usa-sign-up;
+
+  .pathable-label,
+  .pathable-button {
+    margin-top: units(1.5);
+  }
+}
+
+.pathable-sign-up__heading {
+  @extend .usa-sign-up__heading;
+}
+
+.pathable-footer--big
+  .pathable-footer__primary-content--collapsible
+  .pathable-list--unstyled {
+  @include u-padding-x($theme-site-margins-mobile-width);
+  padding-bottom: units(2.5);
+
+  @include at-media('mobile-lg') {
+    @include u-padding-x(0);
+    padding-bottom: units(4);
+    padding-top: units(1.5);
+  }
+}
+
+// The footer sections are Shilling Silver family surfaces, where Bright Blue
+// Brooks is under 3:1, so focus is drawn in PathAble Blue.
+.pathable-footer__primary-section,
+.pathable-footer__secondary-section {
+  --pathable-surface-focus-ring: var(--pathable-color-text);
+
+  a:focus {
+    outline: 0.25rem solid var(--pathable-surface-focus-ring);
+  }
+}
+
+// Lets the address wrap instead of pushing the page sideways at 200% text.
+.pathable-footer__contact-info a {
+  overflow-wrap: anywhere;
 }
