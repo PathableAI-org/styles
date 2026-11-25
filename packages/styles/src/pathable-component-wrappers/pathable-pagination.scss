@@ -28,6 +28,10 @@
 
 .pathable-pagination__item {
   @extend .usa-pagination__item;
+
+  // USWDS sets `flex: 1 0 auto` on items from 40em. With the wrapping list that
+  // would stretch items across each row, so keep them at their natural width.
+  flex-grow: 0;
 }
 
 .pathable-pagination__link {
@@ -40,6 +44,29 @@
 
 .pathable-pagination__button {
   @extend .usa-pagination__button;
+}
+
+// Kept so markup that used `pathable-pagination__link` for numbered pages before
+// `pathable-pagination__button` existed keeps its button look; new markup uses
+// `pathable-pagination__button`.
+.pathable-pagination__item:not(.pathable-pagination__arrow)
+  .pathable-pagination__link {
+  @extend .usa-pagination__button;
+}
+
+// The rule above outranks `.pathable-pagination .pathable-current`, which would
+// leave the current page's text in the link colour on its dark fill. Keep the
+// current-page text white and its border hidden in that legacy markup too.
+.pathable-pagination__item:not(.pathable-pagination__arrow)
+  .pathable-pagination__link.pathable-current {
+  &,
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited {
+    border-color: transparent;
+    color: color('white');
+  }
 }
 
 .pathable-pagination__previous-page {
@@ -84,6 +111,10 @@
 
 .pathable-pagination__overflow {
   @extend .usa-pagination__overflow;
+
+  // USWDS's 2.5rem item height is content-box, so the overflow mark's 8 px
+  // padding made it 56 px tall; border-box keeps it at the 40 px item height.
+  box-sizing: border-box;
 }
 
 // The page guarantees 44 px targets at a viewport of 640 px (40em) or
