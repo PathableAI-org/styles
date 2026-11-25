@@ -297,7 +297,9 @@ the reviews as subagents, all on local commits. For single-pull-request work:
 
 1. The lead session branches from `origin/main` and decides the change. The
    implementer subagent edits and builds it, and a fresh checker subagent runs
-   the [Before committing](../../AGENTS.md#before-committing) checks, as
+   the [Before committing](../../AGENTS.md#before-committing) checks and every
+   check the tier's evidence list in [Process by tier](#process-by-tier)
+   requires, as
    [Delegating implementation](orchestration.md#delegating-implementation)
    describes. The lead then commits.
 2. On the local head it runs the code review subagent and the scope review

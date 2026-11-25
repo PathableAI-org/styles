@@ -47,5 +47,7 @@ with what is missing and stop.
 
 ## Reply
 
-Only the skill's reply block: each claim's result, stories not passing,
-escalations, and the screenshots page if any.
+Only the skill's reply block: the run time range, the environment summary,
+each claim's result, stories not passing, cleanup status, violations observed
+outside the requested claims (`none` when there are none), escalations, and the
+screenshots page if any.
