@@ -364,7 +364,7 @@ deleted, and skipped:
   tests, the component-page records cache and the visual smoke tests. The
   deploy builds only the styles Storybook, once, with the `/styles/` base path.
 - In `fixtures.yml`: the `React fixture tests` job. The `Fixtures` job runs
-  only for the `alert`, `breadcrumb`, `button`, `button-group`, `card`, `checkbox`, `collection`, `icon-list`, `input-prefix-suffix`, `list`, `tokens-*` and `utilities-*` folders (the `REENABLED_FOLDERS` variable); see
+  only for the `alert`, `breadcrumb`, `button`, `button-group`, `card`, `checkbox`, `collection`, `icon-list`, `input-prefix-suffix`, `list`, `radio`, `tokens-*` and `utilities-*` folders (the `REENABLED_FOLDERS` variable); see
   [Fixtures in CI](../testing/fixtures.md#in-ci).
 
 The reason is that the component pages describe target `pathable-*` classes

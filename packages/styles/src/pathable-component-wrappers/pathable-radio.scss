@@ -10,7 +10,8 @@
 @use 'usa-radio/src/styles';
 
 // No base .usa-radio class exists in USWDS source.
-// Only .usa-radio__input, .usa-radio__label, and .usa-radio__label-description are defined.
+// Only .usa-radio__input, .usa-radio__input--tile, .usa-radio__label, and
+// .usa-radio__label-description are defined.
 
 // The root wraps the input and its label (a <label> in the stories and the
 // React Radio). Block layout puts the control on its own line, so it does
@@ -36,4 +37,50 @@
 
 .pathable-radio__label-description {
   @extend .usa-radio__label-description;
+}
+
+// The tile modifier sits on the input. Its rules are compound selectors
+// (checked, disabled and the label that follows the input), and `@extend`
+// rewrites each of them for `.pathable-radio__input--tile`.
+.pathable-radio__input--tile {
+  @extend .usa-radio__input--tile;
+}
+
+// usa-radio draws the circle as a `position: absolute` `::before` on the
+// label. axe treats an absolutely positioned pseudo-element with an opaque
+// background that covers over 25% of its element as an unknown background, so
+// a short label's contrast check comes back incomplete. Same reasoning as the
+// alert icon in pathable-alert.scss: lay the circle out in normal flow. It stays
+// `position: relative` (same paint layer, usa `left` offsets still apply). The
+// negative start margin pulls it back over the label's 2rem start padding to
+// where `left: 0; margin-left: 2px` put it, and the negative end margin gives
+// back the block space it takes, so the label's size and text do not move.
+// The tile label has 2.5rem of start padding and usa keeps `left: 0.5rem`.
+.pathable-radio__label::before {
+  position: relative;
+  display: block;
+  margin-top: 0.075rem;
+  margin-right: 0;
+  margin-bottom: calc(-1.25rem - 0.075rem);
+  margin-left: calc(2px - 2rem);
+}
+
+.pathable-radio__input--tile + [class*='__label']::before {
+  margin-left: calc(2px - 2.5rem);
+}
+
+// A checked tile tints its label with rgba(1, 90, 118, 0.1), about #e6eef1
+// over white. The focus ring sits on that tint, where Bright Blue Brooks is
+// 2.55:1, under the 3:1 a focus indicator needs. On a checked tile the ring
+// takes the PathAble ink (10.6:1 on the tint and 12.5:1 on white). Like the
+// tint, it is compiled rather than read from a theme token. Width, style and
+// offset stay as usa-radio sets them. A disabled tile is white, not tinted,
+// and keeps the default ring. The selector is more specific than usa-radio's
+// `:focus` rule, so it wins whatever the source order.
+.pathable-radio__input--tile:checked:not(
+    :disabled,
+    [aria-disabled='true']
+  ):focus
+  + [class*='__label']::before {
+  outline-color: #{color('ink')};
 }
