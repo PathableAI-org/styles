@@ -1,9 +1,10 @@
-<!-- description: A list with the unstyled modifier placed directly inside pathable-prose. It renders the same as one outside it, with no markers, indent or outer margin. -->
+<!-- description: A list with the unstyled modifier placed directly inside pathable-prose. It renders the same as one outside it, with no markers, indent or outer margin, and it has `role="list"` so it is still announced as a list. -->
 <section class="pathable-prose">
   <h2 id="list-inside-prose-contact-heading">Your case worker</h2>
   <p>Contact the office if you need to change an appointment.</p>
   <ul
     class="pathable-list pathable-list--unstyled"
+    role="list"
     aria-labelledby="list-inside-prose-contact-heading"
   >
     <li>Sara Mitchell, case worker</li>

@@ -100,6 +100,8 @@ as wide as its container.
 - Choosing `<ol>` when order matters and `<ul>` when it does not; screen
   readers announce the list type and the number of items.
 - Keeping each item short, and writing items in parallel form.
-- A name for an unstyled list when the items need context, with `aria-label`.
+- List semantics for an unstyled list. Some browsers stop announcing a list
+  whose items draw no markers, so give an unstyled `<ul>` `role="list"` and a
+  name (`aria-label` or `aria-labelledby`), as the states here do.
 - Layout around the list: the width of its container and the spacing between
   the list and the content around it.

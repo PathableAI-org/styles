@@ -83,7 +83,9 @@ and relative to the container's font size.
   only the `pathable-list` rules. `pathable-card-group`,
   `pathable-collection` and `pathable-process-list` placed in a container are
   affected: their own list and card spacing is kept, as their `inside-prose`
-  guarantees state.
+  guarantees state. An unstyled `pathable-list` (`pathable-list--unstyled`)
+  keeps no markers, indent, outer margin or item width limit, as the list's
+  `inside-prose` guarantee states.
 - Give a table a `<caption>`, a `<thead>` and a `<tbody>`, and `scope` on its
   header cells. A table with `pathable-table` classes keeps those classes' own
   styling.
