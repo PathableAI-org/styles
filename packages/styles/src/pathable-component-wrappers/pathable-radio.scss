@@ -5,6 +5,8 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
+@use 'sass:math';
+
 @use 'uswds-core' as *;
 
 @use 'usa-radio/src/styles';
@@ -52,21 +54,41 @@
 // a short label's contrast check comes back incomplete. Same reasoning as the
 // alert icon in pathable-alert.scss: lay the circle out in normal flow. It stays
 // `position: relative` (same paint layer, usa `left` offsets still apply). The
-// negative start margin pulls it back over the label's 2rem start padding to
-// where `left: 0; margin-left: 2px` put it, and the negative end margin gives
-// back the block space it takes, so the label's size and text do not move.
-// The tile label has 2.5rem of start padding and usa keeps `left: 0.5rem`.
+// negative start margin pulls it back over the label's start padding to where
+// `left: 0; margin-left: 2px` put it, and the negative bottom margin gives back
+// the block space it takes, so the label's size and text do not move. The
+// physical `margin-left` is the one that is honoured: `margin-right: auto`
+// absorbs the free space, so the circle stays on the left in a right-to-left
+// context too, where an over-constrained `margin-right: 0` would drop the left
+// margin and put the circle over the end of the first line. Every value is
+// derived from the settings usa-radio uses: the circle size, its border
+// offset, its top margin, the label's start padding (the circle's size plus
+// `$input-select-margin-right`) and the tile's start padding of `units(5)`.
+$-radio-label-padding: units($input-select-margin-right) +
+  units($theme-input-select-size);
+$-radio-circle-top: math.div(
+  line-height($theme-form-font-family, $theme-input-line-height) *
+    font-size($theme-form-font-family, $theme-body-font-size) - units(
+      $theme-input-select-size
+    ),
+  2
+);
+
 .pathable-radio__label::before {
   position: relative;
   display: block;
-  margin-top: 0.075rem;
-  margin-right: 0;
-  margin-bottom: calc(-1.25rem - 0.075rem);
-  margin-left: calc(2px - 2rem);
+  margin-top: $-radio-circle-top;
+  margin-right: auto;
+  margin-bottom: calc(
+    (units($theme-input-select-size) + $-radio-circle-top) * -1
+  );
+  margin-left: calc(
+    units($theme-input-select-border-width) - #{$-radio-label-padding}
+  );
 }
 
 .pathable-radio__input--tile + [class*='__label']::before {
-  margin-left: calc(2px - 2.5rem);
+  margin-left: calc(units($theme-input-select-border-width) - units(5));
 }
 
 // A checked tile tints its label with rgba(1, 90, 118, 0.1), about #e6eef1
