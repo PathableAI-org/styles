@@ -116,8 +116,11 @@ when the pull request touches a
 5. **Read.** It reads each record with `pnpm review:show`, `pnpm verify:show`
    or `pnpm visual:show`, answers every finding with a fix or a written
    justification, and goes back to step 1 for a new round, or on when every
-   record passes. When no record in the round has an open blocking finding,
-   the fix loop ends. The lead answers each advisory finding with a written
+   record passes. When every required record passes apart from advisory
+   findings, the fix loop ends: no review has an open blocking finding, and for
+   High work the latest verification report passes (no `violated`,
+   `not established` or `blocked` claim and no failing or missing named story),
+   as [the verification harness](verification-harness.md) requires. The lead answers each advisory finding with a written
    justification, a follow-up issue or a fix, and prefers a justification or a
    follow-up issue for one outside the accepted scope. The fixes it accepts go
    into one batch and one final round; it never starts a round just to fix

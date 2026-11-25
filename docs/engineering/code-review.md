@@ -207,8 +207,10 @@ round already reviewed them.
 It does a full review of `<base>..<sha>` instead, and says why in the note,
 when the previous review's base differs from the request's base in a way that
 changes the pull request's own diff (a head that only merged the base branch in
-does not count), or when `previous sha` is missing or is not an ancestor of the
-new SHA, for example because history was rewritten.
+does not count), when `previous sha` is missing or is not an ancestor of the
+new SHA, for example because history was rewritten, or when the previous review
+recorded ten findings (the cap), because it may have dropped candidates in code
+the incremental search would not revisit.
 
 ### Responses
 

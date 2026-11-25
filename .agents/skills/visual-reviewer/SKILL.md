@@ -104,7 +104,8 @@ git diff --name-status <base>..<head>
    changed, the pairs new to this manifest and every story tied to an open
    finding; carry the rest from the previous review without judging them
    again. If the previous manifest is missing, unreadable or has a different
-   `baseSha`, judge every pair as in round one and say so in the review.
+   `baseSha`, or the previous visual review recorded ten findings (the cap),
+   judge every pair as in round one and say so in the review.
    Look at every differing pair, and at every head capture of
    a story the pull request changed, even when it did not differ (within that
    set on a repeat round). Write down
@@ -120,7 +121,9 @@ git diff --name-status <base>..<head>
    **Decisions for the reviewer**, **Tier**, **Change** and **Evidence**
    sections (`gh api repos/{owner}/{repo}/pulls/<n> --jq .body`) and its
    `.changeset/*.md` file, if any. Match each note from step 4 to the stated
-   change. Turn every unexplained difference, regression and defect into a
+   change. On a repeat round, also check every base-to-head difference in the
+   manifest, including pairs carried from the previous review, against the
+   current body. Turn every unexplained difference, regression and defect into a
    candidate finding. On a pull request labelled `risk:light`, every visible
    difference is a `tier` finding. If the stated intent, a brand rule, or the
    lead session's answer to an earlier finding asks for something that fails
@@ -133,8 +136,9 @@ git diff --name-status <base>..<head>
    confirm. Rank by severity, `section-508` first, and keep at most ten.
 7. **Repeat rounds.** For round two or later, the lead sends a new manifest
    for the new head against the same base, with the previous round's manifest
-   path as `previous capture`. Judge only what step 4 selects, but still read
-   the pull request body in full in step 5. Close each earlier finding as `fixed`, `justified` or
+   path as `previous capture`. Step 4 limits only the blind pass and the
+   Section 508 checks; the intent pass in step 5 still reads the pull request
+   body in full and checks every difference in the manifest against it. Close each earlier finding as `fixed`, `justified` or
    `withdrawn`, and carry forward with the same ID any you still hold. Never
    close a `section-508` finding as `justified`: if the answer is a
    justification, keep it open and escalate a `section 508 conflict`. Raise

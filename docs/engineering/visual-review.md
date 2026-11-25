@@ -303,9 +303,10 @@ reviewer reviews every pair as in round one and says so.
 Both reviewers read the pull request body. When the lead session's answer
 changes only the body and adds no commit, the lead runs both reviewers again on
 the same SHA. With no commits since the previously reviewed SHA, every pair's
-head image is unchanged, so the visual reviewer judges only the stories tied to
-open findings plus the intent pass against the new body, which keeps the run
-small.
+head image is unchanged, so the visual reviewer runs the blind pass and the
+Section 508 checks only on the stories tied to open findings, which keeps the
+run small. The intent pass still checks every base-to-head difference in the
+manifest against the new body.
 
 The reviewer records the review with `pnpm visual:record` and replies with a
 pointer only, `refs/notes/visual @ <sha> (visual review <id>)`, plus the
@@ -324,9 +325,11 @@ whose head image changed since the previous round, every pair new to this
 manifest, and every story tied to an open finding. A pair whose head image is
 unchanged since the previous round and that is tied to no open finding is
 carried from the previous review and not judged again. If the previous
-manifest is missing, unreadable or has a different `baseSha`, the reviewer
-reviews every pair as in round one and says so. The intent pass still reads
-the pull request body in full every round.
+manifest is missing, unreadable or has a different `baseSha`, or the previous
+visual review recorded ten findings (the cap), the reviewer reviews every pair
+as in round one and says so. The intent pass still reads the pull request body
+in full every round and checks every base-to-head difference in the manifest,
+including pairs carried from the previous review, against the current body.
 
 A review covers the reviewed SHA. It still covers a later head when every
 commit since changes no path, or when the head only merged the base branch in

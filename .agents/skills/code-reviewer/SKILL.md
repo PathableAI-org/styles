@@ -65,8 +65,10 @@ this session owns:
    open findings. Do a full review of `<base>..<sha>` instead, and say why in
    the note, when the previous review's base differs from the request's base
    in a way that changes the pull request's own diff (a head that only merged
-   the base branch in does not count), or when `previous sha` is missing or not
-   an ancestor of the new SHA.
+   the base branch in does not count), when `previous sha` is missing or not
+   an ancestor of the new SHA, or when the previous review recorded ten
+   findings (the cap), since it may have dropped candidates in code the
+   incremental search would not revisit.
 2. **Find candidates.** On a repeat round, search only
    `git log -p --no-merges <previous-sha>..<sha> ^<base>` and
    `git show --remerge-diff <merge>` for each merge commit in that range,
