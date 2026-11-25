@@ -82,8 +82,10 @@ stack inside the repository.
      the task back; if the check still fails after your own attempt, stop for
      the person.
    - Commit only when a checker reports every check and acceptance item
-     passed on the tree you commit. Add a changeset when published package code
-     changes; the implementer can write it from the brief.
+     passed on the tree you commit, and commit all of it: send a change you do
+     not accept back to the implementer as a failure. When published package
+     code changes, put the changeset in the brief's `files` so the
+     implementer writes it before the checker runs.
 2. **Self-review.** Run the `pre-push-reviewer` with only the base branch, plus
    `since:` on a later push. Never skip it on a later push. Fix accepted
    findings through the same implementer and checker loop, and keep rejected findings out of other
@@ -200,18 +202,17 @@ For `acceptance:`, name the rules that bear on the change from
 [Priorities](../../../docs/engineering/visual-review.md#priorities) and
 [Delegating implementation](../../../docs/engineering/orchestration.md#delegating-implementation).
 
-Run one implementer at a time and do not edit the working tree until it
-replies. Read and own the diff before committing it. Resume the same
+Run one implementer at a time. Read and own the diff before committing it. Resume the same
 implementer for follow-up on the same task, including fixes for a checker's
 report and answers to its questions; start a fresh one with a fresh brief
 when the task changes, when a checker failure makes you rewrite the brief,
 when you step it up, or after about three resumes.
 
 From the brief until you commit, only implementers edit the tree, unless you
-take the task back, which ends the implementers' part in it. Otherwise write
-any code of your own before you brief, and list it under `earlier work`. Your
-commit ends the task: work after it, including a hunk you chose not to
-commit, is a new brief to a fresh implementer.
+take the task back, which ends the implementers' part in it. Code you write
+yourself, such as a small edit or the code behind a High trigger, is either
+committed or listed under `earlier work` before you brief or resume an
+implementer, so a resumed implementer always finds the tree as it left it.
 
 ## Check request
 
@@ -225,8 +226,7 @@ acceptance: <the brief's acceptance items, each with the fixture folders or stor
 
 Leave out the task, the reasoning, the implementer's reply and any expected
 result. One checker runs every command in the request. Run one checker at a
-time, do not edit the working tree while it runs, and start a new one for
-every pass through the checks.
+time and start a new one for every pass through the checks.
 
 ## Release and wrap-up
 

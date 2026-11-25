@@ -56,7 +56,7 @@ person to follow. Subagents give the same independence with one session:
 
 | Role                 | Runs as                                                                   | Writes                                                                      |
 | -------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Lead                 | The one session for the delivery issue                                    | Branches, code, stories, changesets, pull requests, merge                   |
+| Lead                 | The one session for the delivery issue                                    | Branches, commits, briefs, pull requests, merge                             |
 | Implementer          | [`implementer`](../../.claude/agents/implementer.md) subagent             | Uncommitted edits in the lead's working tree, for one delegated task        |
 | Checker              | [`checker`](../../.claude/agents/checker.md) subagent                     | Nothing but build output; its reply only                                    |
 | Pre-push self-review | [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) subagent | Nothing; advisory reply only                                                |
@@ -202,9 +202,11 @@ The loop between them:
 2. When it replies, the lead starts a **new** checker with the check request
    and waits. One checker runs every check in the request. A checker is
    never resumed, so each pass through the checks runs in a fresh context.
-3. If every check and acceptance item passes, the lead reads the diff and
-   commits only what it accepts. The pre-push self-review and every later
-   check then treat that code as the lead's.
+3. If every check and acceptance item passes, the lead reads the diff. When
+   it accepts all of it, it commits that tree. A change it does not accept
+   goes back to the implementer as a failure to fix, as in step 4, so what it
+   commits is always the tree a checker passed. The pre-push self-review and
+   every later check then treat that code as the lead's.
 4. If any fails, the lead reads the report. A failure the brief already
    covers goes back to the implementer: the lead resumes it with the
    checker's report as written and returns to step 2. A failure that shows
@@ -213,11 +215,12 @@ The loop between them:
 
 The lead runs one implementer or one checker at a time. From the brief until
 the lead commits, only implementers edit the tree, unless the lead takes the
-task back, which ends the implementers' part in it. Otherwise the lead writes
-any code of its own before it briefs, and lists it in the brief as earlier
-work. The
-commit ends the task, and later work on it is a new brief to a fresh
-implementer. When the same failure survives two implementer
+task back, which ends the implementers' part in it. A changeset the change
+needs is one of the brief's files, so the implementer writes it and the
+checker sees it. Code the lead writes itself, such as a small edit or the
+code behind a High trigger, is either committed or listed in the brief as
+earlier work before the lead briefs or resumes an implementer, so a resumed
+implementer always finds the tree as it left it. When the same failure survives two implementer
 fixes, the lead steps the implementer up one rung of [the ladder](#the-ladder)
 for its next run in the same round, as
 [Which roles step up](#which-roles-step-up) describes. That run is a fresh
