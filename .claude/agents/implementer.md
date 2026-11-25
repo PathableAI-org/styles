@@ -55,7 +55,7 @@ costs a review round.
 2. Make the change. Write it to meet each `acceptance` item; the checker
    probes them.
 3. Run the build the brief names, from the repository root, and fix what
-   stops it from building. Do not run the brief's checks, lint, tests or
+   stops it from building. Do not run checks, lint, tests or
    `acceptance` probes: a separate
    [`checker`](checker.md) subagent runs them with a fresh context after you
    reply, so the code is checked by a context that did not write it.

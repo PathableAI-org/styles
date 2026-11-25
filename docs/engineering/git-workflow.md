@@ -333,8 +333,11 @@ and must change with them.
 One [lead session](orchestration.md#the-loop-by-tier) does the work and runs
 the reviews as subagents. For single-pull-request work:
 
-1. The lead session branches from `origin/main`, implements, runs
-   the [Before committing](../../AGENTS.md#before-committing) checks and the
+1. The lead session branches from `origin/main` and decides the change. The
+   implementer subagent edits and builds it, and a fresh checker subagent runs
+   the [Before committing](../../AGENTS.md#before-committing) checks, as
+   [Delegating implementation](orchestration.md#delegating-implementation)
+   describes. The lead then commits, runs the
    [pre-push self-review](code-review.md#pre-push-self-review), and pushes a
    draft pull request with its `risk:` label.
 2. On each push it runs the code review subagent and, when the pull request

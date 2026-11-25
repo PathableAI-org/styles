@@ -143,8 +143,9 @@ allowance runs low, run them one after the other.
 
 ## Delegating implementation
 
-The lead runs on the strongest and most expensive setting of any role, so it
-spends that on judgment and hands the code to cheaper subagents. Smaller
+The lead runs on Opus at `high`, a more expensive setting than the
+implementer's or the checker's, so it spends that on judgment and hands the
+code to cheaper subagents. Smaller
 models do well on work whose scope is clear and less well on work that is
 ambiguous, so the lead first makes the work clear, then delegates it:
 
@@ -213,7 +214,9 @@ The lead runs one implementer or one checker at a time and does not edit the
 working tree while either runs. When the same failure survives two implementer
 fixes, the lead steps the implementer up one rung of [the ladder](#the-ladder)
 for its next run in the same round, as
-[Which roles step up](#which-roles-step-up) describes.
+[Which roles step up](#which-roles-step-up) describes. That run is a fresh
+implementer, started at the new rung's model and effort with a fresh brief
+that carries the checker's report, not a resume of the one that gave up.
 
 Three more rules keep the brief complete and the cost down:
 
@@ -233,9 +236,9 @@ Three more rules keep the brief complete and the cost down:
   they are caught before a reviewer does. [Priorities](visual-review.md#priorities) lists the full set;
   the brief names only those that bear on the change.
 - The lead follows up on the same task by resuming the same implementer. It
-  starts a fresh implementer with a fresh brief when the task changes or after
-  about three resumes, because each resume carries the whole earlier context.
-  It never resumes a checker.
+  starts a fresh implementer with a fresh brief when the task changes, when
+  it steps the implementer up, or after about three resumes, because each
+  resume carries the whole earlier context. It never resumes a checker.
 
 ## Stop points
 
@@ -421,8 +424,8 @@ raise:
 
 | Cause               | What it looks like                                                                                   | What the lead changes                |
 | ------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| The brief was wrong | Missing context, an unclear task, the wrong files named, a check left out                            | The brief; the model and effort stay |
-| It did too little   | Skipped a file, did not run a check, stopped early, ignored a rule the brief stated                  | Effort, one step                     |
+| The brief was wrong | Missing context, an unclear task, the wrong files named, the build left out                          | The brief; the model and effort stay |
+| It did too little   | Skipped a file, skipped the build, stopped early, ignored a rule the brief stated                    | Effort, one step                     |
 | It knew too little  | The wrong approach, a misunderstanding of the system, the same mistake again after effort was raised | The model, one step                  |
 
 #### Which roles step up
@@ -505,7 +508,7 @@ request.
 | Decision                    | Outcome                                                                                                                                                                                                                                                                                                             |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Models and effort           | Changed 2026-11-22 to save usage: Opus leads, Fable judges at a fixed setting, Sonnet and Haiku do clearly scoped work and [step up](#stepping-up) on evidence. Revisit using [the measures](#revisiting-the-table)                                                                                                 |
-| Implementer and capture     | Decided 2026-11-22: the lead may delegate clearly scoped tasks to the `implementer` subagent. Changed 2026-11-25: the lead runs the capture script in the background; the `visual-capture` subagent was removed, as a script run needs no clean context and a background command costs no tokens                    |
+| Implementer and capture     | Decided 2026-11-22: the `implementer` subagent was added; see Delegation and checks for its use. Changed 2026-11-25: the lead runs the capture script in the background; the `visual-capture` subagent was removed, as a script run needs no clean context and a background command costs no tokens                 |
 | Delegation and checks       | Decided 2026-11-25. The lead diagnoses and decides and delegates the code to the `implementer`, apart from the exceptions in [Delegating implementation](#delegating-implementation); a fresh `checker` subagent runs every check pass                                                                              |
 | Delivery record             | The issue owns the accepted outcome, scope, contract impact, claims and implementation approach; the pull request owns the implementation and evidence ([Process by tier](git-workflow.md#process-by-tier))                                                                                                         |
 | Pull request shape          | One pull request per independently reviewable change. Oversized work is split into separately releasable delivery issues rather than an in-repository specification stack                                                                                                                                           |

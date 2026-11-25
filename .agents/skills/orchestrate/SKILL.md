@@ -74,6 +74,12 @@ stack inside the repository.
    - If anything fails, resume the implementer with the checker's report as
      written, or take the failure back and rewrite the brief when it shows the
      design was wrong. Then start another new checker.
+   - When the same failure survives two implementer fixes, start a fresh
+     implementer one rung up
+     [the ladder](../../../docs/engineering/orchestration.md#the-ladder), with
+     a fresh brief that carries the checker's report. Past the ceiling, take
+     the task back; if the check still fails after your own attempt, stop for
+     the person.
    - Commit only when a checker reports every check and acceptance item
      passed on the tree you commit. Add a changeset when published package code
      changes; the implementer can write it from the brief.
@@ -187,8 +193,8 @@ For `acceptance:`, name the rules that bear on the change from
 Run one implementer at a time and do not edit the working tree until it
 replies. Read and own the diff before committing it. Resume the same
 implementer for follow-up on the same task, including fixes for a checker's
-report; start a fresh one with a fresh brief when the task changes or after
-about three resumes.
+report; start a fresh one with a fresh brief when the task changes, when you
+step it up, or after about three resumes.
 
 ## Check request
 
