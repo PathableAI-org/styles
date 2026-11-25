@@ -56,9 +56,12 @@
 
 // The rule above outranks `.pathable-pagination .pathable-current`, which would
 // leave the current page's text in the link colour on its dark fill. Keep the
-// current-page text white and its border hidden in that legacy markup too.
+// current-page text white and its border hidden in that legacy markup too,
+// including markup that marks the current page with the USWDS `usa-current`.
 .pathable-pagination__item:not(.pathable-pagination__arrow)
-  .pathable-pagination__link.pathable-current {
+  .pathable-pagination__link.pathable-current,
+.pathable-pagination__item:not(.pathable-pagination__arrow)
+  .pathable-pagination__link.usa-current {
   &,
   &:hover,
   &:focus,
