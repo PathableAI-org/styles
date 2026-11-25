@@ -4,28 +4,21 @@ A delivery issue runs in **one lead session**. The lead session reads the
 accepted issue, settles its design, and hands the code to an **implementer**
 subagent. A **checker** subagent with a fresh context runs the checks on what
 the implementer built. The lead runs every independent check as a
-**subagent** with a clean context: the pre-push self-review, the code review, the
+**subagent** with a clean context: the code review, the scope review, the
 verification and the visual review, whose screenshots the lead takes first by
-running the capture script itself. This document owns the lead session's loop
+running the capture script itself. All of this happens on local commits. The
+lead pushes and opens the pull request only when every review is clean, and a
+person merges every pull request. This document owns the lead session's loop
 by risk tier, its stop points, how it starts subagents and keeps them
 independent, its notifications, and the model and effort each role runs on,
 including when the lead steps a role up. The `orchestrate` skill
 supplies the procedure.
 
-[Git workflow](git-workflow.md) owns tiers, branches, merges, corrections and
-[agent merge](git-workflow.md#agent-merge).
+[Git workflow](git-workflow.md) owns tiers, branches, merges and corrections.
 [The verification harness](verification-harness.md) owns claims and the
-verification loop. [Code review session](code-review.md) owns the reviewer's
-scope and loop, and [Visual review session](visual-review.md) the visual
+verification loop. [Code review session](code-review.md) owns the code
+reviewer's scope and loop, and [Visual review session](visual-review.md) the visual
 reviewer's. This document does not restate them.
-
-This workflow is adapted from the one the sister repository
-`pathableai-org/pre-ets` uses. The notes and gate tooling under `scripts/` is a
-JavaScript port of Pre-ETS's TypeScript tooling, and every ported file names
-its Pre-ETS source path and commit in a provenance header. The two copies
-are maintained separately and may diverge: each repository evolves its own
-schemas and gate, and a fix in one copy is ported to the other only when it
-applies there. The provenance headers record where each file started.
 
 ## Why subagents, not sessions
 
@@ -44,30 +37,32 @@ person to follow. Subagents give the same independence with one session:
   the prompt.
 - **Same model rules.** A definition's `model` and `effort` apply for the
   subagent's whole run, with no ceiling from the lead session's own model, so
-  a reviewer runs on a different and stronger model than the code it reviews.
-- **Same hooks.** The suppression, ready and merge hooks in
-  `.claude/settings.json` apply to subagents' tool calls as to the lead's.
-- **Same records.** Each reviewing subagent records its result as a Git note
-  and posts it on the pull request, exactly as the session did. The lead
-  session reads the note, not the subagent's reply, so the gate decides on the
-  record.
+  a reviewer runs on a stronger model than the one that wrote the code it
+  reviews.
+- **Same hooks and permissions.** The suppression and guardrail hooks and the
+  permission rules in `.claude/settings.json` apply to subagents' tool calls
+  as to the lead's.
+- **Replies only.** Every subagent replies to the lead session and nothing
+  else. None posts a record, note or finding on GitHub: pull request comments
+  are never a channel between roles. The lead answers each finding itself, and
+  writes the pull request body for the human reviewer.
 
 ## Roles
 
-| Role                 | Runs as                                                                   | Writes                                                                      |
-| -------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Lead                 | The one session for the delivery issue                                    | Branches, commits, briefs, lead-written code, pull requests, merge          |
-| Implementer          | [`implementer`](../../.claude/agents/implementer.md) subagent             | Uncommitted edits in the lead's working tree, for one delegated task        |
-| Checker              | [`checker`](../../.claude/agents/checker.md) subagent                     | Nothing but build output; its reply only                                    |
-| Pre-push self-review | [`pre-push-reviewer`](../../.claude/agents/pre-push-reviewer.md) subagent | Nothing; advisory reply only                                                |
-| Code review          | [`code-reviewer`](../../.claude/agents/code-reviewer.md) subagent         | Its review note and the note comment                                        |
-| Verification         | [`verifier`](../../.claude/agents/verifier.md) subagent                   | Its report note, the note comment, and a screenshots page for visual claims |
-| Visual review        | [`visual-reviewer`](../../.claude/agents/visual-reviewer.md) subagent     | Its visual review note, the note comment, and the screenshots page          |
-| Drift review         | Its own scheduled or person-started session, outside any delivery issue   | Drift issues                                                                |
+| Role          | Runs as                                                                 | Writes                                                                |
+| ------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Lead          | The one session for the delivery issue                                  | Branches, commits, briefs, lead-written code, push, pull request body |
+| Implementer   | [`implementer`](../../.claude/agents/implementer.md) subagent           | Uncommitted edits in the lead's working tree, for one delegated task  |
+| Checker       | [`checker`](../../.claude/agents/checker.md) subagent                   | Nothing but build output; its reply only                              |
+| Code review   | [`code-reviewer`](../../.claude/agents/code-reviewer.md) subagent       | Its reply only                                                        |
+| Scope review  | [`scope-reviewer`](../../.claude/agents/scope-reviewer.md) subagent     | Its reply only                                                        |
+| Verification  | [`verifier`](../../.claude/agents/verifier.md) subagent                 | Its reply, and a private screenshots page for visual claims           |
+| Visual review | [`visual-reviewer`](../../.claude/agents/visual-reviewer.md) subagent   | Its reply, and a private screenshots page                             |
+| Drift review  | Its own scheduled or person-started session, outside any delivery issue | Drift issues                                                          |
 
-The reviewing subagents are read-only on every branch. Each works in its own detached worktrees of the lead session's clone, at the
-SHAs it was given, so their notes land in the shared local notes refs as well
-as on the pull request. The implementer is the one subagent that edits files,
+The reviewing subagents are read-only on every branch. Each works in its own
+detached worktrees of the lead session's clone, at the local SHAs it was given.
+The implementer is the one subagent that edits files,
 and only as [Delegating implementation](#delegating-implementation) allows.
 The checker runs in the lead's working tree, because it checks uncommitted
 work, but writes only build output and its own scratchpad.
@@ -77,17 +72,14 @@ work, but writes only build output and its own scratchpad.
 The [risk tier](git-workflow.md#risk-tiers) on the delivery issue decides the
 phases, as [Process by tier](git-workflow.md#process-by-tier) sets them:
 
-| Work            | Pull requests    | Subagents per round                                           | Merge       |
-| --------------- | ---------------- | ------------------------------------------------------------- | ----------- |
-| High            | One pull request | Code review, verification; visual review for a rendering path | A person    |
-| Standard, Light | One pull request | Code review; visual review for a rendering path               | Agent merge |
+| Work            | Pull requests    | Subagents per review round                                                  | Merge    |
+| --------------- | ---------------- | --------------------------------------------------------------------------- | -------- |
+| High            | One pull request | Code review, scope review, verification; visual review for a rendering path | A person |
+| Standard, Light | One pull request | Code review, scope review; visual review for a rendering path               | A person |
 
 [Visual-only styles work](git-workflow.md#visual-only-styles-work) gets a
-visual review at every tier.
-
-Every round also starts with the pre-push self-review. Visual review runs only
-when the pull request touches a
-[rendering path](visual-review.md#when-a-visual-review-runs).
+visual review at every tier. Visual review runs only when the round's diff
+touches a [rendering path](visual-review.md#when-a-visual-review-runs).
 
 ### One round
 
@@ -96,45 +88,45 @@ when the pull request touches a
    [Before committing](../../AGENTS.md#before-committing) checks, as
    [Delegating implementation](#delegating-implementation) describes. When
    every check passes, the lead reads the diff and commits.
-2. **Self-review.** It runs the `pre-push-reviewer` subagent with only the
-   base branch, fixes what it accepts, and keeps the findings for its round
-   summary. They never go to another subagent or the pull request body. On a
-   later push it also passes `since: <SHA>`, the last commit a pre-push
-   self-review covered, as
-   [Pre-push self-review](code-review.md#pre-push-self-review) describes. It
-   never skips the self-review on a later push.
-3. **Push.** It pushes and opens or updates the draft pull request. Before
-   each push that starts or answers a round, it brings the body's Change,
-   Evidence and visible-change description up to date with every commit in the
-   round. For agent-merge work, the body describes every intended visible
-   change, because the visual reviewer judges against it, and a stale body
-   costs a round.
-4. **Check.** It starts the round's subagents in the background, all on the
-   same pushed SHA, each with only its request fields: branch, SHA, base SHA,
-   slice ID `fix`, pull request number and round, plus for a repeat round the previous record's ID
-   and the lead's answer to each open finding. When the round has a visual
-   review, it runs the capture script in the background instead of starting
-   the visual reviewer, and starts the visual reviewer with the script's
-   manifest once it finishes. Then it ends its turn; each subagent's
-   completion wakes it.
-5. **Read.** It reads each record with `pnpm review:show`, `pnpm verify:show`
-   or `pnpm visual:show`, answers every finding with a fix or a written
-   justification, and goes back to step 1 for a new round, or on when every
-   record passes. When every required record passes apart from advisory
-   findings, the fix loop ends: no review has an open blocking finding, and for
-   High work the latest verification report passes (no `violated`,
-   `not established` or `blocked` claim and no failing or missing named story),
-   as [the verification harness](verification-harness.md) requires. The lead answers each advisory finding with a written
-   justification, a follow-up issue or a fix, and prefers a justification or a
-   follow-up issue for one outside the accepted scope. The fixes it accepts go
-   into one batch and one final round; it never starts a round just to fix
-   advisory findings one at a time.
-6. **Ready.** It marks the pull request ready. The ready hook runs the
-   verification gate on High work.
-7. **Merge.** For agent-merge work it keeps the branch
-   [up to date](git-workflow.md#keeping-up-to-date) with `main`, waits for CI
-   without polling, and merges when `pnpm merge:gate` passes. For High work it
-   stops for the person.
+2. **Review.** Nothing is pushed yet. On the committed local `HEAD`, it starts
+   the round's subagents in the background, each in a fresh context with only
+   its request fields, as the `orchestrate` skill's
+   [requests](../../.agents/skills/orchestrate/SKILL.md#requests) list them:
+   the code reviewer and the scope reviewer always, the visual reviewer when
+   the round's diff touches a rendering path, and the verifier for High work.
+   The reviewers read the local commits (`git diff <base>...<head>`). When the
+   round has a visual review, the lead first runs the capture script itself
+   in the background on the local base and head SHAs and passes the visual
+   reviewer the manifest. Then it ends its turn; each subagent's completion
+   wakes it.
+3. **Answer.** It reads each reply and answers every finding with a fix,
+   which goes back through step 1, or a written justification. The next
+   review round passes each reviewer its own previous findings and the lead's
+   answers, plus `since: <SHA>`, the commit it reviewed last, so it reviews
+   only what changed. Rounds repeat until no reviewer has an open blocking
+   finding, every advisory finding is fixed or justified, and for High work
+   the latest verification reply reports every claim `established` and no
+   failing or missing named story, as
+   [the verification harness](verification-harness.md) requires. The lead
+   answers each advisory finding with a written justification, a follow-up
+   issue or a fix, and prefers a justification or a follow-up issue for one
+   outside the accepted scope. The fixes it accepts go into one batch and one
+   final round; it never starts a round just to fix advisory findings one at
+   a time.
+4. **Push.** Only when the loop is clean. It brings the pull request body's
+   Change, Evidence, Decisions for the reviewer and Validation up to date,
+   with Evidence summarising each reviewer's final result and the round
+   count, then pushes and opens or updates the pull request, ready for review
+   and not draft, since all review is done. It posts no reviewer findings or
+   records on it.
+5. **CI.** It waits for CI without polling. A CI failure goes back through
+   steps 1 to 3: a fix, the checks, and a review round on the fix commits,
+   before it pushes again.
+6. **Hand off.** It notifies the person, who reviews and merges. The lead
+   never merges, never enables auto-merge and never marks a release pull
+   request ready. It keeps the branch
+   [up to date](git-workflow.md#keeping-up-to-date) with `main` while the
+   person reviews.
 
 The verifier and the capture script each build Storybooks. They may run at
 the same time: the verifier serves on ports 6006 and 6007, the pixel suite on
@@ -185,7 +177,7 @@ that work and the checker failures that still apply, as the `orchestrate` skill'
 [implementer brief](../../.agents/skills/orchestrate/SKILL.md#implementer-brief)
 sets out. It edits the lead's working tree, builds, and replies with the files
 it changed, the build result and any question. It does not run the checks.
-It never commits, pushes, edits a pull request or records a note. When the
+It never commits, pushes or edits a pull request. When the
 brief leaves a question open, it stops and asks instead of guessing.
 
 The checker then gets only the
@@ -205,8 +197,8 @@ The loop between them:
 3. If every check and acceptance item passes, the lead reads the diff. When
    it accepts all of it, it commits that tree. A change it does not accept
    goes back to the implementer as a failure to fix, as in step 4, so what it
-   commits is always the tree a checker passed. The pre-push self-review and
-   every later check then treat that code as the lead's.
+   commits is always the tree a checker passed. Every review then treats that
+   code as the lead's.
 4. If any fails, the lead reads the report. A failure the brief already
    covers goes back to the implementer: the lead resumes it with the
    checker's report as written and returns to step 2. A failure that shows
@@ -260,12 +252,12 @@ Three more rules keep the brief complete and the cost down:
 
 The lead session stops, notifies the person and waits at these points:
 
-- A High pull request is ready for review. A person reviews and merges it.
-- The merge gate reports a pull request as not eligible for agent merge.
+- A pull request is ready for review. A person reviews and merges every pull
+  request.
 - The `ci: version packages` release pull request is open after a merge with
   a changeset. Merging it publishes to npm, so only a person does; the lead
   reports which packages and bumps it carries and never merges it.
-- An escalation in any record: a delivery-issue correction under the
+- An escalation in any reviewer's reply: a delivery-issue correction under the
   [corrections table](git-workflow.md#corrections), a claim still failing
   after three verification rounds, a blocking finding open in round three, or
   a disagreement the lead does not accept.
@@ -287,11 +279,8 @@ The lead session stops, notifies the person and waits at these points:
   script writing no manifest twice in a row. A manifest that reports errors
   is not a stop point: the lead passes it to the visual reviewer.
 
-An agent-merged pull request is not a stop point. The lead merges it,
-notifies the person, and goes on.
-
 Approval reaches the lead session as the person's message or an approving
-review on the pull request.
+review on the pull request. The lead never merges.
 
 ## Defects found along the way
 
@@ -329,15 +318,15 @@ it prepares the completed report for the person.
    - **How to reproduce**, and the SHA it was seen on
    - **Proposed risk tier** with the trigger or condition, for the maintainer
      to set; do not add a `risk:` label
-   - **Found by**: the role (lead, code review, verification, visual review or
-     pre-push self-review) and the pull request it was working on
+   - **Found by**: the role (lead, code review, scope review, verification or
+     visual review) and the pull request or branch it was working on
    - for a Section 508 failure, the WCAG criterion it fails
 4. **Mention it** in the subagent's reply, or the lead session's round
    summary, by issue number. The lead never adds the defect to the current
    pull request's scope.
 
 Filing a bug issue is the one GitHub write every repository contributor role in
-this orchestration may make beyond its records. It needs no additional
+this orchestration may make. It needs no additional
 approval, because an issue changes no code. This permission does not extend to
 an agent operating from an installed package in another repository; that agent
 follows its environment's and person's authority. Use only synthetic content
@@ -352,8 +341,7 @@ in the issue, as in the stories.
   branches. The implementer edits the lead's working tree only while the lead
   waits on it, one task at a time, and never commits. The checker runs in that
   tree only while the lead waits on it, and writes only build output. Other
-  subagents write
-  only notes, note comments, screenshots pages and files in their own
+  subagents write only private screenshots pages and files in their own
   scratchpad.
 - **Shared hot spots** such as the [AGENTS.md](../../AGENTS.md) routing table,
   root `package.json` scripts, `packages/styles/src/pathable-components.scss`,
@@ -372,16 +360,16 @@ in the issue, as in the stories.
   lookup: it goes to the implementer and the checker as
   [Delegating implementation](#delegating-implementation) describes.
 - **Stop-hook reminders.** A Stop-hook reminder about uncommitted or unpushed
-  work while an implementer, a checker or a pre-push self-review is running is not a
+  work while an implementer, a checker or a reviewer is running is not a
   reason to commit or push early. The lead says so and ends its turn.
 
 ## Other agents and Copilot
 
-The loop runs only in Claude Code, because the project's hooks, the gates and
-the permission rules in `.claude/settings.json` run only there. Codex,
+The loop runs only in Claude Code, because the project's hooks and the
+permission rules in `.claude/settings.json` run only there. Codex,
 OpenCode and Cursor stay available to a person outside the loop. Their work
-enters it only as a pushed SHA that a Claude Code lead session sends through
-the reviewing subagents, and it is marked ready and merged from Claude Code.
+enters it only as local commits that a Claude Code lead session sends through
+the reviewing subagents before it pushes.
 
 Copilot's pull request review stays advisory, on its
 [path-scoped instructions](../../.github/instructions/). It is not a gate. The
@@ -392,10 +380,8 @@ or waiting on a person, and never passes Copilot's comments to a subagent.
 
 The lead session sends a push notification when:
 
-- it reaches a stop point: review, approval, a merge request, a release pull
-  request, an escalation or a decision
-- it merged a pull request under agent merge, with its number, tier and
-  whether it carries a changeset
+- it reaches a stop point: a pull request ready for review and merge, a
+  release pull request, an escalation or a decision
 - it is blocked, or a subagent failed or hit a usage limit
 
 A notification reaches a phone only while the session has Remote Control
@@ -410,21 +396,21 @@ definitions carry them in their frontmatter; change a row and its definition
 together.
 
 The roles split three ways. Work whose scope is unclear goes to the lead on
-Opus. Work that only judges goes to Fable, the strongest model, at a fixed
-setting. Work whose scope is clear goes to Sonnet or Haiku and starts low:
-Sonnet does work written to a brief, and Haiku does lookups.
+Opus. Work that only judges, the code, scope and visual reviews, runs on Opus
+at `high`, a fixed setting. Work whose scope is clear goes to Sonnet or Haiku
+and starts low: Sonnet does work written to a brief, and Haiku does lookups.
 
-| Role                         | Model                                                                      | Effort                        | Steps up                                                          |
-| ---------------------------- | -------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
-| Lead                         | `claude-opus-5-5`                                                          | `high`; `xhigh` for High work | No; a person sets it                                              |
-| Implementer                  | `sonnet` (`claude-sonnet-5-5`)                                             | `medium`                      | On a [failed round](#stepping-up), to `opus` at `high` at most    |
-| Checker                      | `sonnet` (`claude-sonnet-5-5`)                                             | `medium`                      | After a [failed run](#which-roles-step-up), to `sonnet` at `high` |
-| Pre-push self-review         | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; [fixed](#which-roles-step-up)                                 |
-| Code review                  | `fable` (`claude-fable-5-2`), a different and stronger model than the lead | `high`                        | No; fixed                                                         |
-| Verification                 | `sonnet` (`claude-sonnet-5-5`)                                             | `high`                        | After a [failed run](#which-roles-step-up), to `opus` at `high`   |
-| Visual review                | `fable` (`claude-fable-5-2`), a different model from the lead              | `high`                        | No; fixed                                                         |
-| Drift review                 | `claude-opus-5-5`                                                          | `high`                        | No                                                                |
-| Lookups, read-only subagents | `claude-haiku-5-5`, or `claude-sonnet-5-5` when the lookup needs judgment  | `low`                         | No                                                                |
+| Role                         | Model                                                                     | Effort                        | Steps up                                                          |
+| ---------------------------- | ------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
+| Lead                         | `claude-opus-5-5`                                                         | `high`; `xhigh` for High work | No; a person sets it                                              |
+| Implementer                  | `sonnet` (`claude-sonnet-5-5`)                                            | `low`                         | On a [failed round](#stepping-up), to `opus` at `high` at most    |
+| Checker                      | `sonnet` (`claude-sonnet-5-5`)                                            | `medium`                      | After a [failed run](#which-roles-step-up), to `sonnet` at `high` |
+| Code review                  | `opus` (`claude-opus-5-5`)                                                | `high`                        | No; [fixed](#which-roles-step-up)                                 |
+| Scope review                 | `opus` (`claude-opus-5-5`)                                                | `high`                        | No; fixed                                                         |
+| Verification                 | `sonnet` (`claude-sonnet-5-5`)                                            | `high`                        | After a [failed run](#which-roles-step-up), to `opus` at `high`   |
+| Visual review                | `opus` (`claude-opus-5-5`)                                                | `high`                        | No; fixed                                                         |
+| Drift review                 | `claude-opus-5-5`                                                         | `high`                        | No                                                                |
+| Lookups, read-only subagents | `claude-haiku-5-5`, or `claude-sonnet-5-5` when the lookup needs judgment | `low`                         | No                                                                |
 
 Set effort explicitly. `claude-opus-5-5` defaults to `medium`. A person starts
 the lead session at its row: `claude --model claude-opus-5-5 --effort high`,
@@ -455,9 +441,9 @@ raise:
   result about the code, not a failed run. It steps up once, to `sonnet` at
   `high`, on the next checker the lead starts.
 - **The verification** steps up after a failed run: the subagent errors,
-  returns no record, or returns one the lead cannot use. A failing claim, or a head that does not build, is a result
+  returns no reply, or returns one the lead cannot use. A failing claim, or a head that does not build, is a result
   about the code, not a failed run.
-- **The reviewers** (pre-push self-review, code review and visual review)
+- **The reviewers** (code review, scope review and visual review)
   never change. A review that does too little passes what it should have
   flagged, and no failed round ever shows it, so reviewers stay at their row.
   A reviewer run that errors is rerun at the same setting.
@@ -469,9 +455,9 @@ For the implementer, within the three rounds before the
 failure that survives two of its fixes also moves it one rung, on its next
 run in the same round, so it can reach the ceiling before review round 3:
 
-1. **First rung:** its row, `sonnet` at `medium`.
+1. **First rung:** its row, `sonnet` at `low`.
 2. **Second rung:** one step on the axis the lead diagnosed: `sonnet` at
-   `high` for too little, `opus` at `medium` for too little knowledge.
+   `medium` for too little, `opus` at `low` for too little knowledge.
 3. **Third rung:** one more step, up to `opus` at `high`, the ceiling.
 4. **Past the ceiling:** the lead takes the task back. If a review round is
    failing, the existing stop points apply; if a check still fails after the
@@ -484,24 +470,22 @@ The lead sets a step with the Agent tool's `model` and `effort` parameters,
 which override the definition for that run. This section is the instruction
 that allows those parameters, and only for the roles and steps above. The
 lead writes each step in its round summary, for example
-`Step-up: implementer, round 2, did too little (skipped a file the brief named), sonnet/medium → sonnet/high`.
+`Step-up: implementer, round 2, did too little (skipped a file the brief named), sonnet/low → sonnet/medium`.
 
 ### Revisiting the table
 
 Revisit a row when these measures move:
 
-- verification rounds to a passing gate for High pull requests
+- verification rounds to a passing result for High pull requests
 - reviewer findings accepted versus dismissed (closures `fixed` against
-  `justified` and `withdrawn` in review notes)
+  `justified` and `withdrawn` in the reviewers' replies)
 - visual review findings accepted versus dismissed, and visible regressions
-  found after an agent merge that the visual review passed
+  found after a merge that the visual review passed
 - defects that escaped to `main` or were first found in human review, and
-  agent-merged pull requests that a person later reverted or corrected
+  merged pull requests that a person later reverted or corrected
 - usage-limit pressure: subagents or lead sessions stopped by limits
 - review rounds per pull request
 - reviewer cost per round, in tokens from each subagent's completion
-- the code reviewer's round-1 findings per pull request, before and after the
-  [pre-push self-review](code-review.md#pre-push-self-review)
 - step-ups per role and their causes, from the round summaries. A role that
   steps up in most issues starts too low; raise its row. A brief that keeps
   being the cause means the implementer brief needs work, not a bigger model
@@ -521,20 +505,20 @@ The maintainer decided these on 2026-11-17, unless a row says otherwise.
 Change one by editing its row and the documents it links in the same pull
 request.
 
-| Decision                    | Outcome                                                                                                                                                                                                                                                                                                             |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Models and effort           | Changed 2026-11-22 to save usage: Opus leads, Fable judges at a fixed setting, Sonnet and Haiku do clearly scoped work and [step up](#stepping-up) on evidence. Revisit using [the measures](#revisiting-the-table)                                                                                                 |
-| Implementer and capture     | Decided 2026-11-22: the `implementer` subagent was added; see Delegation and checks for its use. Changed 2026-11-25: the lead runs the capture script in the background; the `visual-capture` subagent was removed, as a script run needs no clean context and a background command costs no tokens                 |
-| Delegation and checks       | Decided 2026-11-25. The lead diagnoses and decides and delegates the code to the `implementer`, apart from the exceptions in [Delegating implementation](#delegating-implementation); a fresh `checker` subagent runs every check pass                                                                              |
-| Delivery record             | The issue owns the accepted outcome, scope, contract impact, claims and implementation approach; the pull request owns the implementation and evidence ([Process by tier](git-workflow.md#process-by-tier))                                                                                                         |
-| Pull request shape          | One pull request per independently reviewable change. Oversized work is split into separately releasable delivery issues rather than an in-repository specification stack                                                                                                                                           |
-| Drift review                | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                                                                                                   |
-| Screenshots                 | The verifier publishes screenshots for visual claims only, as a private page linked from one pull request comment ([Screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims))                                                                                                          |
-| Evidence from consumers     | In-repository only. Consumer impact is an approved limitation plus a linked delivery issue in the consumer's repository ([Known limits](verification-harness.md#known-limits))                                                                                                                                      |
-| Labels                      | `risk:high`, `risk:standard` and `risk:light` exist; the gate reads `risk:high`. The merge gate also reads `hold`. `package:styles` and `package:react` mark which package a bug affects; nothing reads them                                                                                                        |
-| Ready without a prompt      | Allowed. `gh pr ready` and the REST ready route are in the project allow list, and the hook approves the MCP call; the gate decides every attempt                                                                                                                                                                   |
-| Pull request comment marker | `<!-- pathable-note kind=… sha=… id=… -->`, renamed from Pre-ETS's marker                                                                                                                                                                                                                                           |
-| Shared tooling package      | None. The JavaScript port is maintained separately from Pre-ETS's copy                                                                                                                                                                                                                                              |
-| Agent merge                 | Decided 2026-11-19. Standard and Light pull requests merge without a person, once an independent code review and, for rendering changes, a visual review pass the merge gate ([Agent merge](git-workflow.md#agent-merge))                                                                                           |
-| Review rounds               | Decided 2026-11-25. Repeat rounds and later pre-push self-reviews review only what changed since the last review; advisory findings are batched; a blocking finding open in round three or later, or one that needs a design trade-off, stops for the person ([One round](#one-round), [Stop points](#stop-points)) |
-| Subagents over sessions     | Decided 2026-11-19. One lead session per delivery issue; every independent role runs as a clean-context subagent from a `.claude/agents/` definition, replacing the orchestrator and per-role sessions                                                                                                              |
+| Decision                   | Outcome                                                                                                                                                                                                                                                                                             |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Models and effort          | Changed 2026-11-25: Opus leads and runs the code, scope and visual reviews at `high`; Sonnet implements at `low` and Sonnet and Haiku do other clearly scoped work, and they [step up](#stepping-up) on evidence. Revisit using [the measures](#revisiting-the-table)                               |
+| Implementer and capture    | Decided 2026-11-22: the `implementer` subagent was added; see Delegation and checks for its use. Changed 2026-11-25: the lead runs the capture script in the background; the `visual-capture` subagent was removed, as a script run needs no clean context and a background command costs no tokens |
+| Delegation and checks      | Decided 2026-11-25. The lead diagnoses and decides and delegates the code to the `implementer`, apart from the exceptions in [Delegating implementation](#delegating-implementation); a fresh `checker` subagent runs every check pass                                                              |
+| Delivery record            | The issue owns the accepted outcome, scope, contract impact, claims and implementation approach; the pull request owns the implementation and evidence ([Process by tier](git-workflow.md#process-by-tier))                                                                                         |
+| Pull request shape         | One pull request per independently reviewable change. Oversized work is split into separately releasable delivery issues rather than an in-repository specification stack                                                                                                                           |
+| Drift review               | Not started. The skill and [areas](drift-review.md#areas) are ready; the `drift` label, the tracking issue and any scheduled task are not created                                                                                                                                                   |
+| Screenshots                | The verifier and the visual reviewer may publish screenshots as a private page and name its URL in their reply ([Screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims))                                                                                             |
+| Evidence from consumers    | In-repository only. Consumer impact is an approved limitation plus a linked delivery issue in the consumer's repository ([Known limits](verification-harness.md#known-limits))                                                                                                                      |
+| Labels                     | `risk:high`, `risk:standard` and `risk:light` exist. `package:styles` and `package:react` mark which package a bug affects; nothing reads them. A person may use `hold` to mark a pull request not to merge; nothing an agent does reads it                                                         |
+| Ready without a prompt     | Changed 2026-11-25: the lead opens the pull request ready for review, after every review is clean; no hook gates it. The lead never marks a release pull request ready                                                                                                                              |
+| Shared tooling package     | None                                                                                                                                                                                                                                                                                                |
+| Agent merge                | Dropped 2026-11-25 (decided 2026-11-19). A person merges every pull request; `gh pr merge`, the MCP merge tool and auto-merge are denied in `.claude/settings.json`                                                                                                                                 |
+| Review rounds              | Decided 2026-11-25. Repeat rounds review only what changed since the last review; advisory findings are batched; a blocking finding open in round three or later, or one that needs a design trade-off, stops for the person ([One round](#one-round), [Stop points](#stop-points))                 |
+| Local review, replies only | Decided 2026-11-25. Every review runs on local commits before the first push and replies to the lead only; nothing posts records, notes or findings on GitHub, and the pull request opens only when the reviews are clean. The scope reviewer was added                                             |
+| Subagents over sessions    | Decided 2026-11-19, changed 2026-11-25. One lead session per delivery issue; every independent role runs as a clean-context subagent from a `.claude/agents/` definition and replies to the lead only, replacing the orchestrator and per-role sessions                                             |

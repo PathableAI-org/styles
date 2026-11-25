@@ -128,8 +128,8 @@ with a breaking-change label and migration notes, as
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | High, new behaviour | The maintainer accepts the delivery issue's outcome, scope, contract impact, numbered claims and implementation approach before work starts; one pull request follows and a person merges it |
 | High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table; a person merges it                                                                                    |
-| Standard            | One pull request with normal CI, code review and, for a rendering path, visual review; it merges under [agent merge](#agent-merge)                                                           |
-| Light               | One pull request with normal CI, code review and, for a rendering path, visual review; it merges under [agent merge](#agent-merge)                                                           |
+| Standard            | Local code and scope review and, for a rendering path, visual review until clean; then one pull request with normal CI, which a person merges                                                |
+| Light               | Local code and scope review and, for a rendering path, visual review until clean; then one pull request with normal CI, which a person merges                                                |
 
 The delivery issue is the accepted definition of one change. If the work is
 too large for one reviewable pull request, split it into separately releasable
@@ -144,12 +144,12 @@ Work is visual-only when every changed path is in `packages/styles`
 JavaScript helper, no keyboard, focus or ARIA behaviour, no interaction story's
 play function asserting new behaviour, and no React source or API.
 
-- **Standard or Light.** One pull request, with the code review and the
-  [visual review](visual-review.md) as its evidence, merged under
-  [agent merge](#agent-merge).
+- **Standard or Light.** One pull request, with the code review, scope review
+  and [visual review](visual-review.md) as its evidence, and a person's
+  merge.
 - **High** (for example renaming or removing a token or class). One pull
   request with numbered claims in its Evidence table,
-  code review, verification and visual review, and a person's merge. Migration notes go in
+  code review, scope review, verification and visual review, and a person's merge. Migration notes go in
   the changeset as usual.
 
 A change that adds React API for the new appearance, or any behaviour, is not
@@ -217,49 +217,46 @@ Evidence each tier needs, in addition to the checks in
 ### Verification and review
 
 Every delivery issue runs in one lead session, which runs the independent
-checks as clean-context subagents. [Orchestration](orchestration.md) owns
-which subagents each tier gets, the stop points and the models.
+checks as clean-context subagents on local commits, before the first push.
+[Orchestration](orchestration.md) owns which subagents each tier gets, the
+stop points and the models.
 
 - **Claims.** High work numbers its claims (`V-001`, `V-002`, …) in the
   delivery issue and the pull request's Evidence table. Each claim names the
   observation that distinguishes it from its violation and the evidence
   channel that can see it. [The verification harness](verification-harness.md)
-  owns the channels and report format.
-- **Verification.** A verifier subagent checks the pushed pull request in its
-  own detached worktree, through the Storybooks and the packed packages, and
-  records a schema-checked report in a Git note on the exact pushed SHA.
-- **Review.** A code review subagent reviews the same SHA with a clean context
-  against the owning documentation and records its findings the same way
-  ([Code review](code-review.md)).
-- **Gate.** `pnpm verify:gate` passes only when the pull request's latest report
-  establishes its claims and its latest review has no open blocking finding.
-  A Claude Code hook runs the gate on every attempt to mark a pull request
-  ready, and blocks a failing one.
-- **For High work, human review is still the approval.** The reports and
-  reviews are input to it, as are passing checks and Copilot's comments.
-- **For Standard and Light work, the reviews replace it.** They merge under
-  [agent merge](#agent-merge).
+  owns the channels and reply format.
+- **Verification.** A verifier subagent checks the local head in its own
+  detached worktree, through the Storybooks and the packed packages, and
+  replies to the lead with each claim's result.
+- **Review.** A code review subagent and a scope review subagent review the
+  same local commits with clean contexts, the first against the owning
+  documentation ([Code review](code-review.md)) and the second against the
+  accepted scope in the delivery issue. A visual review subagent joins them
+  when the diff touches a rendering path.
+- **Replies only.** Every subagent replies to the lead. None posts anything on
+  the pull request. The lead pushes and opens the pull request only when no
+  reviewer has an open blocking finding and, for High work, every claim is
+  established.
+- **A person's review is the approval, at every tier.** The reviewers' replies,
+  summarised in the pull request's Evidence section, are input to it, as are
+  passing checks and Copilot's comments.
 
 Standard and Light work get no verifier subagent. They get normal CI, the
-checks the pull request names, a
-[code review subagent](code-review.md) and, when they touch a rendering path,
-a [visual review subagent](visual-review.md), and then merge under
-[agent merge](#agent-merge). Every tier runs the advisory
-[pre-push self-review](code-review.md#pre-push-self-review).
+checks the pull request names, a [code review subagent](code-review.md), a
+scope review subagent and, when they touch a rendering path, a
+[visual review subagent](visual-review.md).
 
 ## Merge timing
 
 - The repository squash-merges, with the pull request title as the commit
   subject.
-- Standard and Light pull requests merge under [agent merge](#agent-merge):
-  the lead session merges its own pull request, without a person's
-  approval, once the merge gate passes.
-- Every other pull request merges only after a person has approved it, and an
-  agent merges one only when a person has approved it and explicitly asked
-  that agent to merge it. That covers High work,
-  [guardrail changes](#guardrail-changes), a pull request labelled `hold`, and
-  any escalated pull request. Passing checks and bot review comments are not
-  approval.
+- A person merges every pull request, at every tier, after approving it.
+  Agents never merge: `gh pr merge`, the GitHub MCP merge tool and auto-merge
+  are denied in `.claude/settings.json`. Passing checks and bot review
+  comments are not approval.
+- A person may add the `hold` label to mark a pull request not to merge yet.
+  Nothing an agent does reads it.
 - Renovate's automerge (configured in [`renovate.json5`](../../renovate.json5))
   is the maintainer's standing exception for dependency updates. It never
   automerges major upgrades, or `react`, `react-dom`, `next` or `@uswds/uswds`,
@@ -268,36 +265,7 @@ a [visual review subagent](visual-review.md), and then merge under
   which then waits for a person to approve the `npm` environment deployment.
   A person decides both, at every tier.
 
-## Agent merge
-
-This repository lets agents carry work that is not High from issue to `main`
-without a person in the loop. A person can still read, comment on, label
-`hold` or revert anything an agent merges. What replaces their approval is two
-independent reviews with clean contexts, recorded and checked by a gate:
-
-- a [code review subagent](code-review.md), on a different model from the
-  implementation, for every agent-merged pull request
-- a [visual review subagent](visual-review.md), for every agent-merged pull
-  request that can change what the Storybooks render
-
-### Which pull requests
-
-An agent may merge a pull request when all of these hold:
-
-- It is labelled `risk:standard` or `risk:light`, and the tier is right under
-  [Triggers](#triggers). When in doubt the tier is High, as always, and an
-  agent never lowers a tier.
-- It is single-pull-request work.
-- It changes no [guardrail file](#guardrail-changes).
-- It is not the `ci: version packages` release pull request.
-- It is not labelled `hold`, has no unresolved escalation, and no person has
-  left a review requesting changes on it.
-
-A person stops agent merge on one pull request by adding the `hold` label, and
-resumes it by removing the label. A person's review that requests changes
-also stops it until that person approves or dismisses the review.
-
-### Guardrail changes
+## Guardrail changes
 
 A pull request that changes any of these waits for a person, whatever its
 tier, because it changes the rules agents work under:
@@ -308,111 +276,62 @@ tier, because it changes the rules agents work under:
   `tsconfig*.json`
 - `.github/` (workflows, instructions and templates), `renovate.json5` and
   `.changeset/config.json`
-- the gates, their commands and their notes tooling: `scripts/merge-gate.mjs`,
-  `scripts/merge-hook.mjs`, `scripts/ready-hook.mjs`,
-  `scripts/guardrail-write.mjs`, `scripts/verification.mjs`,
-  `scripts/verification/`,
-  `scripts/review-findings.mjs`, `scripts/review-findings/`,
-  `scripts/visual-review.mjs`, `scripts/visual-review/`,
-  `scripts/note-sync.mjs`, `scripts/note-sync/`, `scripts/note-store.mjs`,
-  `scripts/schema-checks.mjs`, `scripts/git-access.mjs`,
-  `scripts/github-access.mjs`, `scripts/cli.mjs`, and the CLIs
-  `scripts/merge.mjs`, `scripts/verify.mjs`, `scripts/review.mjs`,
-  `scripts/visual.mjs` and `scripts/notes.mjs`
-- the root `package.json`, whose scripts name those commands
+- the guardrail write hook and the list itself: `scripts/guardrail-write.mjs`
+  and `scripts/guardrail-paths.mjs`
+- the root `package.json`, whose scripts name the repository's commands
 - every `AGENTS.md`, `CLAUDE.md`, and the process documents in
   `docs/engineering/`
 
 The list lives in code, in `guardrailPaths` in
-[`scripts/merge-gate.mjs`](../../scripts/merge-gate.mjs); change both
+[`scripts/guardrail-paths.mjs`](../../scripts/guardrail-paths.mjs); change both
 together. [`.github/CODEOWNERS`](../../.github/CODEOWNERS) lists the same paths
 and must change with them.
 
-### The flow
+## The flow
 
 One [lead session](orchestration.md#the-loop-by-tier) does the work and runs
-the reviews as subagents. For single-pull-request work:
+the reviews as subagents, all on local commits. For single-pull-request work:
 
 1. The lead session branches from `origin/main` and decides the change. The
    implementer subagent edits and builds it, and a fresh checker subagent runs
    the [Before committing](../../AGENTS.md#before-committing) checks, as
    [Delegating implementation](orchestration.md#delegating-implementation)
-   describes. The lead then commits, runs the
-   [pre-push self-review](code-review.md#pre-push-self-review), and pushes a
-   draft pull request with its `risk:` label.
-2. On each push it runs the code review subagent and, when the pull request
-   touches a [rendering path](visual-review.md#when-a-visual-review-runs),
-   the visual review subagent, both on the same SHA, with slice ID `fix` for
-   the code review.
+   describes. The lead then commits.
+2. On the local head it runs the code review subagent and the scope review
+   subagent and, when the diff touches a
+   [rendering path](visual-review.md#when-a-visual-review-runs), the visual
+   review subagent. High work adds the verifier subagent. Each replies to
+   the lead only.
 3. The lead session answers every finding with a fix or a written
-   justification, and pushes a new round until neither review has an open
-   blocking finding or escalation.
-4. It marks the pull request ready, keeps it [up to date](#keeping-up-to-date)
-   with `main`, and waits for CI on the head.
-5. When `pnpm merge:gate` passes, it merges with the GitHub MCP tool
-   `merge_pull_request` and `merge_method: squash`, and notifies the person.
+   justification, and runs a new local round until no review has an open
+   blocking finding or escalation and, for High work, every claim is
+   established.
+4. Only then it pushes and opens the pull request, ready for review, with its
+   `risk:` label. It keeps it [up to date](#keeping-up-to-date) with `main`
+   and waits for CI on the head. A CI failure goes back through steps 1 to 3
+   before the next push.
+5. It notifies the person, who reviews and merges. The lead never merges.
 
-High work follows the same steps with the verifier subagent as well. The
-[verification gate](verification-harness.md#gate-and-escalation) must pass at
-the head before the pull request is marked ready for a person.
-
-### Keeping up to date
+## Keeping up to date
 
 The lead session keeps its pull request current with `main` until
-it merges. When `main` moves, it merges `origin/main` into the branch, or uses
-the GitHub MCP tool `update_pull_request_branch`, and pushes. It never rebases
-or force-pushes. The ruleset on `main` requires branches to be up to date, and
-the merge gate checks it too.
+a person merges it. When `main` moves, it merges `origin/main` into the
+branch, or uses the GitHub MCP tool `update_pull_request_branch`, and pushes.
+It never rebases or force-pushes. The ruleset on `main` requires branches to
+be up to date.
 
-Updating from `main` changes the head SHA. A code review or visual review
-still covers the new head when the commits after the reviewed SHA only merge
-the base branch in and the pull request's own diff is unchanged: the patch ID
-of `git diff --binary <merge-base>..<sha>` is the same at the reviewed SHA and
-at the head, with the merge base taken against `origin/main` each time. A
+Updating from `main` changes the head SHA. A review still covers the new head
+when the commits after the reviewed SHA only merge the base branch in and the
+pull request's own diff is unchanged: the patch ID of
+`git diff --binary <merge-base>..<sha>` is the same at the reviewed SHA and at
+the head, with the merge base taken against `origin/main` each time. A
 conflict resolution, or `main` changing a line the pull request's diff carries
-as context, changes the patch ID, and the lead session requests a
-new round. A verification report is an observation of one SHA and does not
-carry over this way: High work that merges `main` in needs a new verification
+as context, changes the patch ID, and the lead session runs a new review
+round. A verification result is an observation of one SHA and does not carry
+over this way: High work that merges `main` in needs a new verification
 round.
 
-### The merge gate
-
-`pnpm merge:gate <pr>` syncs the pull request's note comments and passes only
-when all of these hold:
-
-- the pull request is open, not a draft, targets `main` and is eligible under
-  [Which pull requests](#which-pull-requests)
-- its head is not behind `main`
-- every check run and commit status on the head has finished, at least one
-  exists, and none failed, timed out or was cancelled; a skipped or neutral
-  check passes
-- the latest code review covers the head, as above, with no open blocking
-  finding or escalation; for single-pull-request work its slice ID is `fix`
-- when the pull request touches a rendering path, the latest visual review
-  covers the head with no open blocking finding or escalation
-- for High work, `pnpm verify:gate` passes at the head before a person merges
-
-A Claude Code `PreToolUse` hook runs the gate whenever a session tries to
-merge a pull request:
-
-- the GitHub MCP tool `merge_pull_request`: the hook approves the merge when
-  the gate passes, blocks it with every failing reason when the pull request
-  is eligible but the gate fails, and asks the person when the pull request is
-  not eligible for agent merge, so a person's explicit request still works
-- `gh pr merge` and a `gh api` or `curl` call to a pull request's `merge`
-  route: the hook asks the person for a pull request that is not eligible, and
-  otherwise blocks and names the MCP tool, so the gate approves exactly one
-  action
-- the GitHub MCP tool `enable_pr_auto_merge` and `gh pr merge --auto`: always
-  blocked, because GitHub's auto-merge would merge later without the gate
-
-Known limits: the hook covers Claude Code sessions only. It cannot see a
-person's merge in the web interface, another HTTP client or another GitHub MCP
-server name. The workflows expose two aggregate checks, `CI result` and
-`Storybook result`, meant to be the ruleset's required checks. Until a
-maintainer requires them in the ruleset on `main`, GitHub itself would merge a
-pull request with failing checks, and the gate is what stops an agent from
-doing so.
+## CI during the refactor
 
 Temporarily, for the `@pathableai/styles` refactor described in
 [Target state](target-state.md) (it began with the component reset,
@@ -446,11 +365,10 @@ has no `React` reference and no `Fixtures` section, and its component pages
 show HTML and CSS only. The fixture stories that back the page previews still
 exist but are hidden from the sidebar.
 
-This does not contradict the gate's "none failed" rule. GitHub's required
-checks are the aggregate jobs `CI result` and `Storybook result`. They treat
-skipped jobs as passing, so they are green when Markdownlint and the Storybook
-build pass. `pnpm merge:gate` reads every check run and commit status on the
-head and also accepts skipped ones, so the disabled jobs do not block it.
+GitHub's required checks are the aggregate jobs `CI result` and
+`Storybook result`. They treat skipped jobs as passing, so they are green when
+Markdownlint and the Storybook build pass and the disabled jobs do not block
+a merge.
 
 Say in the pull request's Evidence or Validation section which checks did not
 run. Re-enable the gated jobs and steps when the refactor lands.
@@ -471,9 +389,9 @@ Update the delivery issue when an accepted contract, claim or scope changes,
 record the decision, and rerun the affected checks and independent reviews.
 Do not hide a product decision only in an implementation diff.
 
-A merge does not renew approval or evidence. The merge gate keeps a code or
-visual review across an update from `main` only when the pull request's own
-diff is unchanged, as [Keeping up to date](#keeping-up-to-date) defines.
+A merge does not renew approval or evidence. A review carries across an
+update from `main` only when the pull request's own diff is unchanged, as
+[Keeping up to date](#keeping-up-to-date) defines.
 Otherwise repeat the affected reviews and verification. Report which
 decisions changed, which public contracts are affected, and which evidence
 was repeated.
@@ -483,19 +401,14 @@ was repeated.
 Claude Code cloud sessions reach GitHub's REST API but not GraphQL, and `gh pr`
 and `gh issue` subcommands use GraphQL, so they fail there with HTTP 403. Do
 not retry them or ask for a network change. Use the replacements for the rest
-of the session; every gate in this document applies to them unchanged.
+of the session; every rule in this document applies to them unchanged.
 
-| Step with GraphQL                | Replacement                                                                                                                   |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `gh pr view`                     | `gh api repos/{owner}/{repo}/pulls/N`, or the MCP tool `pull_request_read`                                                    |
-| `gh pr create --draft`           | The MCP tool `create_pull_request` with `draft: true`                                                                         |
-| `gh pr edit`                     | The MCP tool `update_pull_request` (`title`, `body`, `base`)                                                                  |
-| `gh pr ready`                    | The MCP tool `update_pull_request` with `draft: false`, or `gh api -X POST repos/{owner}/{repo}/pulls/N/ccr/ready_for_review` |
-| `gh pr ready --undo`             | `update_pull_request` with `draft: true`, or `gh api -X POST repos/{owner}/{repo}/pulls/N/ccr/convert_to_draft`               |
-| `gh pr merge`                    | The MCP tool `merge_pull_request` with `merge_method: squash`, under [Merge timing](#merge-timing)                            |
-| `gh issue view`, `gh issue list` | `gh api repos/{owner}/{repo}/issues/N`, or the MCP tool `issue_read`                                                          |
+| Step with GraphQL                | Replacement                                                                |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| `gh pr view`                     | `gh api repos/{owner}/{repo}/pulls/N`, or the MCP tool `pull_request_read` |
+| `gh pr create`                   | The MCP tool `create_pull_request` with `draft: false`                     |
+| `gh pr edit`                     | The MCP tool `update_pull_request` (`title`, `body`, `base`)               |
+| `gh issue view`, `gh issue list` | `gh api repos/{owner}/{repo}/issues/N`, or the MCP tool `issue_read`       |
 
-The ready hook gates the MCP update and the REST route exactly as it gates
-`gh pr ready`; see [the verification gate](verification-harness.md#gate-and-escalation).
-The `ccr/` routes are the cloud proxy's and have not yet been exercised from
-this repository; confirm them on first use.
+A person merges every pull request, so there is no replacement for
+`gh pr merge`.

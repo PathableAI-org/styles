@@ -61,9 +61,9 @@ of the package.
 | Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/intent.md`](docs/engineering/intent.md)                                                                                                                     |
 | Choosing a risk tier, branching, opening or merging a pull request                                                                                                 | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                                         |
 | Leading a delivery issue through implementation and its review and verification subagents, or choosing a role's model and effort                                   | [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md) and the `orchestrate` skill                                                                           |
-| Defining High-risk claims or recording a verification report                                                                                                       | [`docs/engineering/verification-harness.md`](docs/engineering/verification-harness.md) and the `verification-harness` skill                                                    |
-| Reviewing a pushed revision as the `code-reviewer` subagent, or running the pre-push self-review                                                                   | [`docs/engineering/code-review.md`](docs/engineering/code-review.md) and the `code-reviewer` skill                                                                             |
-| Reviewing what a pushed revision renders as the `visual-reviewer` subagent                                                                                         | [`docs/engineering/visual-review.md`](docs/engineering/visual-review.md) and the `visual-reviewer` skill                                                                       |
+| Defining High-risk claims or verifying them as the `verifier` subagent                                                                                             | [`docs/engineering/verification-harness.md`](docs/engineering/verification-harness.md) and the `verification-harness` skill                                                    |
+| Reviewing local commits as the `code-reviewer` subagent                                                                                                            | [`docs/engineering/code-review.md`](docs/engineering/code-review.md) and the `code-reviewer` skill                                                                             |
+| Reviewing what local commits render as the `visual-reviewer` subagent                                                                                              | [`docs/engineering/visual-review.md`](docs/engineering/visual-review.md) and the `visual-reviewer` skill                                                                       |
 | Running a drift review of one area of the design system                                                                                                            | [`docs/engineering/drift-review.md`](docs/engineering/drift-review.md) and the `drift-review` skill                                                                            |
 | Filing a delivery issue or writing a pull request body                                                                                                             | [`.github/ISSUE_TEMPLATE/delivery.md`](.github/ISSUE_TEMPLATE/delivery.md) and [`.github/pull_request_template.md`](.github/pull_request_template.md)                          |
 | Filing a confirmed defect                                                                                                                                          | [`.github/ISSUE_TEMPLATE/bug.md`](.github/ISSUE_TEMPLATE/bug.md) and [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md)                                  |
@@ -128,7 +128,8 @@ Some of these rules are enforced for Claude Code by
 - A hook on `Bash`,
   [`scripts/claude/guardrail-write-hook.mjs`](scripts/claude/guardrail-write-hook.mjs)
   (logic in `scripts/guardrail-write.mjs`), catches shell writes to the
-  [guardrail paths](docs/engineering/git-workflow.md#guardrail-changes), which
+  [guardrail paths](docs/engineering/git-workflow.md#guardrail-changes) listed
+  in [`scripts/guardrail-paths.mjs`](scripts/guardrail-paths.mjs), which
   are wider than the `Edit(...)` rules above. Before a command runs
   (`PreToolUse`), it asks a person when the command names a guardrail path, or
   for deletes and copies a directory holding one, together with a redirection,
@@ -161,12 +162,10 @@ Some of these rules are enforced for Claude Code by
   ask a human. Its tests run with `pnpm test:tooling`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
-- A `PreToolUse` hook, `scripts/claude/pr-merge-hook.mjs`, runs the
-  [merge gate](docs/engineering/git-workflow.md#the-merge-gate) on every merge
-  attempt. It approves the GitHub MCP `merge_pull_request` call for a Standard
-  or Light pull request that passes, blocks one that fails, asks a person for
-  any other pull request, and always blocks GitHub auto-merge. `gh pr merge`
-  still asks first. Day-to-day git work
+- Agents never merge. `gh pr merge`, the GitHub MCP `merge_pull_request` tool
+  and auto-merge (`enable_pr_auto_merge`) are denied in
+  [`.claude/settings.json`](.claude/settings.json); a person merges every pull
+  request. Day-to-day git work
   (`add`, `commit`, `checkout`, `switch`, `merge`, `pull`, `stash`, `tag` and
   non-force `push`), read-only git and `gh` commands and the check scripts
   below run without a prompt. Force pushes and `--no-verify` remain denied.

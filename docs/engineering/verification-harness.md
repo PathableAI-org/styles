@@ -7,7 +7,9 @@ This document owns independent verification for High-risk pull requests.
 
 The running system is the styles Storybook, the retained React Storybook when
 the change explicitly touches it, and the packed packages. Verification uses
-synthetic content only and records what was observed at one pushed SHA.
+synthetic content only and reports what was observed at one local head SHA,
+before anything is pushed. The verifier replies to the lead session and posts
+nothing on GitHub.
 
 ## Claims live with the delivery
 
@@ -45,67 +47,71 @@ are not committed.
 
 ## Roles
 
-| Role          | Owns                                                                     | Does not                                                 |
-| ------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- |
-| Lead session  | Issue, code, stories, pull request and responses to findings             | Mark High work ready without a passing report and review |
-| Verification  | Building and observing the pushed SHA; the verification note and comment | Edit the branch or fix the implementation                |
-| Code review   | Correctness and maintainability review at the same SHA                   | Edit the branch                                          |
-| Visual review | Judging captured rendering against the base and stated change            | Edit code or baselines                                   |
+| Role          | Owns                                                              | Does not                                                               |
+| ------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Lead session  | Issue, code, stories, pull request and responses to findings      | Push High work before every claim is established and reviews are clean |
+| Verification  | Building and observing the local head SHA; its reply              | Edit the branch, fix the implementation or post on GitHub              |
+| Code review   | Correctness and maintainability review at the same SHA            | Edit the branch                                                        |
+| Scope review  | Whether the diff delivers the accepted scope, no more and no less | Edit the branch                                                        |
+| Visual review | Judging captured rendering against the base and stated change     | Edit code or baselines                                                 |
 
 ## Verification loop
 
-1. The lead pushes a draft pull request whose Evidence table contains every
-   numbered claim, its observation, channel and current result.
-2. The verifier creates a detached worktree at that SHA, installs with the
-   frozen lockfile, builds the affected packages and runs the checks each
-   claim needs.
-3. It reads the claim table from the pull request at the requested SHA. Missing,
-   ambiguous or changed claims are `blocked`; the verifier does not infer them.
-4. It records one result per claim: `established`, `violated`,
+1. The lead commits the change locally. Each numbered claim from the accepted
+   issue goes to the verifier with its observation and channel. Nothing is
+   pushed.
+2. The verifier creates a detached worktree at the local head SHA, installs
+   with the frozen lockfile, builds the affected packages and runs the checks
+   each claim needs.
+3. It takes the claims from the request only. Missing, ambiguous or changed
+   claims are `blocked`; the verifier does not infer them.
+4. It reports one result per claim: `established`, `violated`,
    `not established` or `blocked`. Every named story is `passing`, `failing`
    or `missing` for the Storybook in which it was observed.
-5. `pnpm verify:record <report.json>` validates the report, stores it in
-   `refs/notes/verification` on the verified SHA and posts the rendered report
-   to the pull request. A retry uses a new run UUID and supersedes the earlier
-   report without erasing it.
-6. The lead fixes the change and requests another round until the latest report
-   and code review pass, or stops at an escalation.
+5. It replies to the lead with the results, and with nothing else: no note, no
+   pull request comment. A retry is a new run and supersedes the earlier
+   reply.
+6. The lead fixes the change and requests another round until the latest reply
+   and the other reviews are clean, or stops at an escalation. Only then does
+   it push and open the pull request, and its Evidence table carries each
+   claim's final result.
 
 The verifier uses ports 6006 and 6007 for the Storybooks and removes its
 worktree and temporary files when finished. It never reuses the lead session's
 build output.
 
-## Report
+## Reply
 
-The schema in [`scripts/verification/report.mjs`](../../scripts/verification/report.mjs)
-requires the verified SHA, run UUID, time range, environment summary, slice ID
-`fix`, claims, story statuses, cleanup status, escalations and any violation
-observed outside the requested claims. New reports omit `featureDir`; the
-schema may continue to accept that field while old note comments remain in
-GitHub history.
+The verifier's reply names the verified SHA, the run time range, an
+environment summary, the claims, story statuses, cleanup status, escalations
+and any violation observed outside the requested claims.
 
 For each claim, evidence names its channel plus the story IDs, commands or
 procedure that produced the observation. `not established` and `blocked` are
 not passing results. Manual assistive-technology work stays unestablished until
 a person records the observation.
 
+## Screenshots for visual claims
+
 For visual claims, committed pixel baselines are the primary evidence where
 they cover the story. Otherwise the verifier publishes one private screenshot
-page for the run and links it from one pull request comment. Screenshots do not
-decide the gate on their own.
+page for the run and names its URL in its reply. A private page is allowed;
+nothing is posted on the pull request. Screenshots do not decide the result on
+their own.
 
-## Gate and escalation
+## Result and escalation
 
-`pnpm verify:gate` passes High work only when:
+The lead treats High work as verified only when:
 
-- the latest report is for slice `fix` and the pull request's pushed SHA;
+- the latest reply is for the local head SHA about to be pushed;
 - it names at least one claim and establishes every claim;
 - every reported story passes;
 - it contains no violated unrequested claim or open escalation; and
-- the latest code review covers the same head with no open blocking finding
-  or escalation.
+- the latest code review and scope review cover the same head with no open
+  blocking finding or escalation.
 
-Any commit after the verified or reviewed SHA requires a new round unless it
+There is no gate that enforces this: the lead applies it before it pushes. Any
+commit after the verified or reviewed SHA requires a new round unless it
 changes no path. An update from `main` therefore requires new High-risk
 verification even when the pull request's own patch is unchanged.
 
@@ -120,5 +126,3 @@ claim must change, or a verifier and the lead disagree about the observation.
   own issue and treat its evidence as a separate release/adoption concern.
 - Automated accessibility checks do not replace manual keyboard or
   assistive-technology review where the claim needs it.
-- Old Git notes and pull request comments retain historical feature metadata.
-  That compatibility is not a current specification workflow.
