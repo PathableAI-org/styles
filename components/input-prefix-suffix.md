@@ -30,6 +30,8 @@ guarantees:
     claim: With pathable-input-group--error, the group has a 0.25rem (4 px) solid #a52834 border.
   - id: success-modifier
     claim: With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.
+  - id: state-focus-gap
+    claim: In an error or success group, the focused input's 2 px focus ring is offset 0.25rem plus 1 px, so a 1 px gap separates it from the outside of the 4 px border, as the default group's 2 px offset does outside its 1 px border.
   - id: width-modifiers
     claim: The modifiers 2xs, xs, sm, md, lg, xl and 2xl cap the group at 5ex, 9ex, 13ex, 20ex, 30ex, 40ex and 50ex plus 3rem for the input's padding beside the affix and 2px for the default 1px border, so the value has that width (6px less with the 4px error or success border), and small and medium are aliases of sm and md.
 ---
@@ -97,7 +99,9 @@ Add at most one modifier from each axis to `pathable-input-group`.
 | width | `xl`      | `pathable-input-group--xl`      | A value of about 40 characters                     |
 | width | `2xl`     | `pathable-input-group--2xl`     | A value of about 50 characters                     |
 
-The modifiers go on `pathable-input-group`, not on `pathable-input`.
+The modifiers go on `pathable-input-group`, not on `pathable-input`. The
+form caps every group at its own width too: inside a `pathable-form`, which is
+at most 20rem wide, an `xl` or `2xl` group is as wide as the form.
 
 ## Tokens
 
