@@ -11,6 +11,10 @@
 
 .pathable-summary-box {
   @extend .usa-summary-box;
+
+  // Enlarged text on a narrow screen: break a word wider than the box instead
+  // of letting it run past the border.
+  overflow-wrap: break-word;
 }
 
 .pathable-summary-box__heading {
