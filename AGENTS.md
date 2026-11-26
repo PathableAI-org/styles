@@ -163,13 +163,13 @@ Some of these rules are enforced for Claude Code by
   ask a human. Its tests run with `pnpm test:tooling`.
 - Force pushes, `--no-verify`, `HUSKY=0`, `git reset --hard`, `git clean -f`,
   environment dumps, `.env` reads and publishing commands are denied.
-- Agents never merge. `gh pr merge`, the GitHub MCP `merge_pull_request` tool
-  and auto-merge (`enable_pr_auto_merge`) are denied in
-  [`.claude/settings.json`](.claude/settings.json), as are the `gh api` and
-  `curl` routes to a pull request's `merge` and `auto_merge` endpoints and the
-  `mergePullRequest` and `enablePullRequestAutoMerge` mutations. The patterns
-  match command text, so a person reviews any other merge route; a person
-  merges every pull request. Day-to-day git work
+- Agents may merge a pull request when a person has asked them to. `gh pr merge`,
+  the GitHub MCP `merge_pull_request` tool and the `gh api` and `curl` routes to a
+  pull request's `merge` endpoint and the `mergePullRequest` mutation are no
+  longer denied in [`.claude/settings.json`](.claude/settings.json). Auto-merge
+  (`enable_pr_auto_merge`, the `auto_merge` endpoints and the
+  `enablePullRequestAutoMerge` mutation) remains denied. Never merge on your own
+  initiative or before a person has approved the pull request. Day-to-day git work
   (`add`, `commit`, `checkout`, `switch`, `merge`, `pull`, `stash`, `tag` and
   non-force `push`), read-only git and `gh` commands and the check scripts
   below run without a prompt. Force pushes and `--no-verify` remain denied.
