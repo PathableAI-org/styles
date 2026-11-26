@@ -137,11 +137,25 @@
   --pathable-surface-focus-ring: var(--pathable-color-text);
 
   a:focus {
-    outline: 0.25rem solid var(--pathable-surface-focus-ring);
+    @include focus-outline;
+
+    outline-color: var(
+      --pathable-surface-focus-ring,
+      var(--pathable-color-focus-ring)
+    );
   }
 }
 
 // Lets the address wrap instead of pushing the page sideways at 200% text.
 .pathable-footer__contact-info a {
   overflow-wrap: anywhere;
+}
+
+// USWDS spreads the secondary section's row with space-between, which would
+// push the slim footer's name away from its logo image.
+.pathable-footer--slim
+  .pathable-footer__secondary-section
+  > .grid-container
+  > .pathable-footer__logo {
+  justify-content: flex-start;
 }
