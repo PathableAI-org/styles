@@ -56,6 +56,7 @@ env:
     collection
     footer
     form
+    icon
     icon-list
     input-prefix-suffix
     link
