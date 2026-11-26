@@ -13,8 +13,11 @@
 // positioning the bar and circle absolutely. axe reports colour contrast on the
 // label as incomplete when an absolute pseudo-element with a background sits on
 // an ancestor, and the fixture harness fails on incomplete results. Relative
-// positioning in the cell keeps USWDS's top and left offsets, so the layout
-// renders the same.
+// positioning in the cell keeps USWDS's top and left offsets, so at the default
+// text size the bars, circles and labels render where USWDS draws them. The
+// single minmax(0, 1fr) column means a long label no longer widens its
+// segment, so segments stay equal under enlarged text instead of overflowing
+// the row.
 $pathable-step-indicator-segments:
   '.pathable-step-indicator__segment', '.pathable-step-indicator__step';
 $pathable-step-indicator-labels:
@@ -145,6 +148,10 @@ ol.pathable-step-indicator {
     }
 
     &::before {
+      // USWDS designs the circle for border-box and gets it from a global reset
+      // this package does not emit. Without it the padding is added to the
+      // circle size.
+      box-sizing: border-box;
       justify-self: start;
     }
 
