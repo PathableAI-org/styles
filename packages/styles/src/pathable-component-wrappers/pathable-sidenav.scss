@@ -37,7 +37,7 @@
   display: block;
   left: 0;
   width: 0.25rem;
-  background-color: var(--pathable-color-link);
+  background-color: color($theme-link-color);
 }
 
 // Deviation from USWDS (`focus-ring`): USWDS leaves the browser default
