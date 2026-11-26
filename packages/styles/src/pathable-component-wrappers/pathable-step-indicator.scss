@@ -9,6 +9,18 @@
 
 @use 'usa-step-indicator/src/styles';
 
+// A segment lays its bar, counter circle and label in one grid cell instead of
+// positioning the bar and circle absolutely. axe reports colour contrast on the
+// label as incomplete when an absolute pseudo-element with a background sits on
+// an ancestor, and the fixture harness fails on incomplete results. Relative
+// positioning in the cell keeps USWDS's top and left offsets, so the layout
+// renders the same.
+$pathable-step-indicator-segments:
+  '.pathable-step-indicator__segment', '.pathable-step-indicator__step';
+$pathable-step-indicator-labels:
+  '.pathable-step-indicator__segment-label',
+  '.pathable-step-indicator__step-label';
+
 .pathable-step-indicator {
   @extend .usa-step-indicator;
 }
@@ -32,7 +44,9 @@ ol.pathable-step-indicator {
 }
 
 .pathable-step-indicator__heading-counter {
-  @extend .usa-step-indicator__heading-counter !optional;
+  // USWDS styles neither heading element. This rule gives the documented
+  // element its class selector, as inline text.
+  display: inline;
 }
 
 .pathable-step-indicator__current-step {
@@ -45,7 +59,9 @@ ol.pathable-step-indicator {
 }
 
 .pathable-step-indicator__heading-text {
-  @extend .usa-step-indicator__heading-text !optional;
+  // USWDS styles neither heading element. This rule gives the documented
+  // element its class selector, as inline text.
+  display: inline;
 }
 
 .pathable-step-indicator__segment {
@@ -96,4 +112,80 @@ ol.pathable-step-indicator {
 
 .pathable-step-indicator__total-steps {
   @extend .usa-step-indicator__total-steps;
+}
+
+.pathable-step-indicator--counters {
+  @extend .usa-step-indicator--counters;
+}
+
+.pathable-step-indicator--counters-sm {
+  @extend .usa-step-indicator--counters-sm;
+}
+
+.pathable-step-indicator--center {
+  @extend .usa-step-indicator--center;
+}
+
+.pathable-step-indicator--no-labels {
+  @extend .usa-step-indicator--no-labels;
+}
+
+@each $segment in $pathable-step-indicator-segments {
+  // The root class raises specificity to match USWDS's counter rule, which
+  // sets position: absolute and comes earlier in the output.
+  .pathable-step-indicator #{$segment} {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+
+    &::before,
+    &::after {
+      align-self: start;
+      grid-area: 1 / 1;
+      position: relative;
+    }
+
+    &::before {
+      justify-self: start;
+    }
+
+    &::after {
+      justify-self: stretch;
+    }
+  }
+}
+
+@each $label in $pathable-step-indicator-labels {
+  .pathable-step-indicator #{$label} {
+    grid-area: 1 / 1;
+  }
+}
+
+// Relative items ignore right and shift with left, so the centred bars use
+// margins where USWDS uses left: 50% and right: 50%.
+@include at-media($theme-step-indicator-min-width) {
+  @each $segment in $pathable-step-indicator-segments {
+    .pathable-step-indicator--counters.pathable-step-indicator--center,
+    .pathable-step-indicator--counters-sm.pathable-step-indicator--center {
+      #{$segment}:first-child::after {
+        left: 0;
+        margin-left: 50%;
+      }
+
+      #{$segment}:last-child::after {
+        margin-right: 50%;
+      }
+    }
+  }
+}
+
+@each $segment in $pathable-step-indicator-segments {
+  .pathable-step-indicator--center.pathable-step-indicator--no-labels
+    #{$segment}:first-child::after {
+    margin-left: 0;
+  }
+
+  .pathable-step-indicator--center.pathable-step-indicator--no-labels
+    #{$segment}:last-child::after {
+    margin-right: 0;
+  }
 }
