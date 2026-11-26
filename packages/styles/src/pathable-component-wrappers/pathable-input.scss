@@ -31,21 +31,19 @@
 }
 
 // Width modifiers cap the input at a USWDS input width. They must win over the
-// form's own `max-width: none` rules, so rely on specificity, not source order:
-// the form selector outranks the form reset and the form-row selector outranks
-// the grid-context reset.
+// `max-width: none` resets in pathable-form, pathable-form-stack and
+// pathable-form-row, so rely on specificity, not source order: each selector
+// below outranks its container's reset. The form-row selector is not in a
+// media query, so it applies wherever the form-row reset does, at any root
+// font size.
 @each $name, $width in $system-input-widths {
   .pathable-input--#{$name} {
     @extend .usa-input--#{$name};
   }
 
-  .pathable-form .pathable-input--#{$name} {
+  .pathable-form .pathable-input--#{$name},
+  .pathable-form-stack .pathable-input--#{$name},
+  .pathable-form-row > .pathable-form-group > .pathable-input--#{$name} {
     max-width: #{$width};
-  }
-
-  @include at-media('desktop') {
-    .pathable-form-row > .pathable-form-group > .pathable-input--#{$name} {
-      max-width: #{$width};
-    }
   }
 }
