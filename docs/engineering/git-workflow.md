@@ -340,49 +340,44 @@ round. A verification result is an observation of one SHA and does not carry
 over this way: High work that merges `main` in needs a new verification
 round.
 
-## CI during the refactor
+## CI checks
 
-Temporarily, for the `@pathableai/styles` refactor described in
-[Target state](target-state.md) (it began with the component reset,
-[PR #607][reset-pr]), the repository is in a refactor, planning and
-documentation phase, and CI checks only two things: that the Markdown lints
-(`pnpm lint:md`, the `Markdownlint` job in `ci-full.yml`) and that the styles
-Storybook builds (the `Build styles Storybook` job in `storybook-quality.yml`,
-and the build in `docs-deploy.yml`, which publishes it to GitHub Pages from
-`main`). Everything else is gated with `if: false` in the workflows, not
-deleted, and skipped:
+The workflows run on pull requests to `main` and, for `fixtures.yml` and
+`docs-deploy.yml`, on pushes to `main`:
 
-- In `ci-full.yml`: `js-lint` (ESLint and the repository tooling tests),
-  `format` (Prettier), `react-typecheck`, `react-build`, `next-consumer` and
-  `agent-guidance-impact`. The `stylelint` job (including the token lint) is
-  enabled again: on a pull request it lints only the changed `.scss` files.
-- In `storybook-quality.yml`: the accessibility tests (styles and React),
-  `visual-smoke`, `pixels-styles`, `coverage`, `quality-gates` and
-  `component-pages`. The build no longer builds `@pathableai/react` or the
-  React Storybook.
-- In `docs-deploy.yml`: the token lint, Storybook coverage, the accessibility
-  tests, the component-page records cache and the visual smoke tests. The
-  deploy builds only the styles Storybook, once, with the `/styles/` base path.
-- In `fixtures.yml`: the `React fixture tests` job. The `Fixtures` job runs
-  only for the `alert`, `breadcrumb`, `button`, `button-group`, `card`, `checkbox`, `collection`, `footer`, `form`, `icon-list`, `input-prefix-suffix`, `link`, `list`, `pagination`, `prose`, `radio`, `search`, `site-alert`, `tokens-*` and `utilities-*` folders (the `REENABLED_FOLDERS` variable); see
+- `ci-full.yml`: ESLint and the repository tooling tests, Markdownlint,
+  stylelint (on a pull request, only the changed `.scss` files) with the
+  token lint, and Prettier. Each job but Markdownlint runs only when its
+  paths change.
+- `storybook-quality.yml`: the styles Storybook build, its accessibility
+  tests, the visual smoke tests, the styles pixel suite, Storybook coverage
+  and the quality gates, when anything the HTML Storybook is built from
+  changes.
+- `fixtures.yml`: every fixture check on every folder; see
   [Fixtures in CI](../testing/fixtures.md#in-ci).
+- `docs-deploy.yml`: on `main`, the token lint and the styles Storybook
+  build, which it publishes to GitHub Pages with the `/styles/` base path.
 
-The reason is that the component pages describe target `pathable-*` classes
-the SCSS does not have yet, so most checks would fail or test code being
-replaced. The Storybook is documentation of the components being defined: it
-has no `React` reference and no `Fixtures` section, and its component pages
-show HTML and CSS only. The fixture stories that back the page previews still
-exist but are hidden from the sidebar.
+A few checks stay off with `if: false`, each with its reason beside it in the
+workflow:
+
+- In `storybook-quality.yml`, the component-page checks
+  (`check:component-pages` and `check:component-pages:executed`) and the
+  `component-pages` job, because some component pages and the compiled CSS
+  still disagree on variants and most page guarantees have no test that
+  cites them yet. The matching records-cache steps in `docs-deploy.yml` stay
+  off with them.
+- In `fixtures.yml`, axe skips the folders in `AXE_DEFERRED_FOLDERS`, each
+  with a maintainer's acceptance and a tracking issue.
+
+CI does not run the `@pathableai/react` checks or the React Storybook, which
+are retained but deferred ([Target state](target-state.md)).
 
 GitHub's required checks are the aggregate jobs `CI result` and
-`Storybook result`. They treat skipped jobs as passing, so they are green when
-Markdownlint and the Storybook build pass and the disabled jobs do not block
-a merge.
+`Storybook result`. They treat skipped jobs as passing.
 
 Say in the pull request's Evidence or Validation section which checks did not
-run. Re-enable the gated jobs and steps when the refactor lands.
-
-[reset-pr]: https://github.com/PathableAI-org/styles/pull/607
+run.
 
 ## Corrections
 

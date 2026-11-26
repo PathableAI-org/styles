@@ -31,7 +31,6 @@ See [React fixture tests](../docs/testing/fixtures.md#react-fixture-tests).
 ```text
 fixtures/
   .htmlvalidate.json      html-validate configuration
-  folders.json            the committed list of component folders
   harness/                the checks (the only non-component folder)
   <component-slug>/       one folder per component page
     <state>.html          one fixture per state
@@ -50,10 +49,6 @@ fixtures/
   examples to be in the compiled CSS. On Storybook each fixture is a story
   under **Fixtures**; the page itself is under **Utilities** or
   **Design tokens**.
-- Every component folder is listed in [`folders.json`](folders.json), and
-  every listed folder exists. The contract check compares the two both ways,
-  so a folder cannot disappear unnoticed: removing one means editing the list
-  in the same pull request.
 - Every non-default variant in the page's front matter has at least one
   fixture that uses its modifier class.
 - A component folder holds only `<state>.html` files: no subfolders and no
@@ -149,16 +144,13 @@ Run them from `fixtures/` or with `pnpm --filter @pathableai/fixtures`. The
 contract and axe checks need the built stylesheet:
 `pnpm --filter @pathableai/styles build`.
 
-| Script                       | What it checks                                                                                                                                                                                                                                                                               |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm check:html`            | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                                                                                                 |
-| `pnpm check:contract`        | `folders.json` matches the folders on disk, each folder is a page slug, file names are kebab-case states, every `pathable-*` class is a class selector in `dist/styles.css`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
-| `pnpm check:axe`             | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                                                                                                         |
-| `pnpm check`                 | All three                                                                                                                                                                                                                                                                                    |
-| `pnpm changed [base]`        | Prints the folders `git diff <base>...HEAD -- fixtures/` touched ([`harness/changed.mjs`](harness/changed.mjs)); default base `origin/main`, `--all` for every folder                                                                                                                        |
-| `pnpm affected --base <ref>` | Prints, as JSON, the folders a compiled-CSS change affects and why ([`harness/affected.mjs`](harness/affected.mjs)); see [Choosing folders](../docs/testing/fixtures.md#choosing-folders)                                                                                                    |
-| `pnpm select [base]`         | Prints the union of `changed`, `affected` and the folders whose component page changed ([`harness/select.mjs`](harness/select.mjs)); what CI checks on a pull request                                                                                                                        |
-| `pnpm test`                  | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                                                                                                        |
+| Script                | What it checks                                                                                                                                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm check:html`     | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                                                     |
+| `pnpm check:contract` | each folder is a page slug, file names are kebab-case states, every `pathable-*` class is a class selector in `dist/styles.css`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
+| `pnpm check:axe`      | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                                                             |
+| `pnpm check`          | All three                                                                                                                                                                                                                                        |
+| `pnpm test`           | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                                                            |
 
 ### html-validate configuration
 
@@ -197,9 +189,10 @@ rule that applies to whole documents, and add it here with the reason.
 Any violation fails, and so does any **incomplete** result: a rule axe ran
 but could not decide, such as colour contrast over a gradient, which needs a
 person to look. The harness has no exceptions mechanism and no allowlist; the
-only exception is in CI, where the fixtures workflow skips axe for the folders
-in its `AXE_DEFERRED_FOLDERS` list, each with a maintainer's acceptance and a
-tracking issue ([fixtures in CI](../docs/testing/fixtures.md#in-ci)). Each
+only exception is in CI, where the fixtures workflow runs axe on every folder
+except those listed in `AXE_DEFERRED_FOLDERS` in
+`.github/workflows/fixtures.yml`, each with a maintainer's acceptance and a
+tracking issue, currently `memorable-date` and `select` (#736) ([fixtures in CI](../docs/testing/fixtures.md#in-ci)). Each
 violation and incomplete result is printed with its nodes, and in GitHub
 Actions it is also listed in the job summary. Only these page-level
 rules are off, because a fixture is a fragment of a page, not a page:

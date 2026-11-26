@@ -30,51 +30,19 @@ jobs:
       - name: Build docs for Pages
         run: STORYBOOK_BUILD=true pnpm --filter @pathable/storybook build-storybook
 
-      # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
       - name: Token custom property lint
-        if: false
         run: pnpm lint:tokens
-
-      # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-      - name: Storybook coverage
-        if: false
-        run: pnpm storybook:coverage
-
-      # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-      - name: Storybook accessibility tests
-        if: false
-        run: |
-          set +e
-          npx serve -n -l 6006 apps/storybook/storybook-static &
-          SERVE_PID=$!
-          for i in $(seq 1 30); do
-            if curl -s -o /dev/null http://127.0.0.1:6006/ 2>/dev/null; then
-              echo "Server ready after ${i}s"
-              break
-            fi
-            if [ "$i" -eq 30 ]; then
-              echo "Server failed to start"
-              kill $SERVE_PID 2>/dev/null || true
-              exit 1
-            fi
-            sleep 1
-          done
-          pnpm --filter @pathable/storybook test-storybook --index-json --url http://127.0.0.1:6006
-          TEST_EXIT=$?
-          kill $SERVE_PID 2>/dev/null || true
-          exit $TEST_EXIT
 
       # Pull requests that change only component pages restore these records
       # instead of building and testing the HTML Storybook (Storybook
       # Quality's component-pages job). Saved before the Pages rebuild below
       # rewrites index.json, so the records stay newer than the index.
-      # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
+      # Disabled with that job until check:component-pages:executed passes.
       - name: Component page records cache key
         if: false
         id: records-key
         run: echo "key=$(node scripts/component-pages-records-key.mjs)" >> "$GITHUB_OUTPUT"
 
-      # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
       - name: Save component page records
         if: false
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
@@ -83,11 +51,6 @@ jobs:
             apps/storybook/test-results/component-pages
             apps/storybook/storybook-static/index.json
           key: ${{ steps.records-key.outputs.key }}
-
-      # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-      - name: Visual smoke tests
-        if: false
-        run: pnpm test:visual
 
       - name: Create .nojekyll
         run: touch apps/storybook/storybook-static/.nojekyll

@@ -29,20 +29,6 @@ jobs:
       js_app_storybook_react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.js_app_storybook_react == 'true' }}
       js_root_scripts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.js_root_scripts == 'true' }}
       js_config: ${{ github.event_name != 'pull_request' || steps.filter.outputs.js_config == 'true' }}
-      markdown: ${{ github.event_name != 'pull_request' || steps.filter.outputs.markdown == 'true' }}
-      md_styles: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_styles == 'true' }}
-      md_components: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_components == 'true' }}
-      md_react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_react == 'true' }}
-      md_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_contracts == 'true' }}
-      md_app_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_app_storybook == 'true' }}
-      md_app_storybook_react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_app_storybook_react == 'true' }}
-      md_root: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_root == 'true' }}
-      md_docs: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_docs == 'true' }}
-      md_config: ${{ github.event_name != 'pull_request' || steps.filter.outputs.md_config == 'true' }}
-      react: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react == 'true' }}
-      react_build: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react_build == 'true' }}
-      behavior_contracts: ${{ github.event_name != 'pull_request' || steps.filter.outputs.behavior_contracts == 'true' }}
-      next_consumer: ${{ github.event_name != 'pull_request' || steps.filter.outputs.next_consumer == 'true' }}
       stylelint: ${{ github.event_name != 'pull_request' || steps.filter.outputs.stylelint == 'true' }}
       formattable: ${{ github.event_name != 'pull_request' || steps.filter.outputs.formattable == 'true' }}
     steps:
@@ -116,92 +102,6 @@ jobs:
               - 'eslint.config.js'
               - 'package.json'
               - 'pnpm-lock.yaml'
-            markdown:
-              - 'apps/**/*.md'
-              - 'packages/**/*.md'
-              - 'components/**/*.md'
-              - 'docs/**/*.md'
-              - '*.md'
-              - '.markdownlint.json'
-              - '.markdownlintignore'
-            md_styles:
-              - 'packages/styles/**/*.md'
-            md_components:
-              - 'components/**/*.md'
-            md_react:
-              - 'packages/react/**/*.md'
-            md_contracts:
-              - 'packages/storybook-contracts/**/*.md'
-            md_app_storybook:
-              - 'apps/storybook/**/*.md'
-            md_app_storybook_react:
-              - 'apps/storybook-react/**/*.md'
-            md_root:
-              - '*.md'
-            md_docs:
-              - 'docs/**/*.md'
-            md_config:
-              - '.markdownlint.json'
-              - '.markdownlintignore'
-            # React source the build, typecheck and unit tests read: all
-            # of packages/react but its Markdown and stories (tsconfig and
-            # vitest exclude src/stories). Patterns use picomatch with
-            # dot: true; `!(…)` excludes.
-            react_source: &react_source
-              - 'packages/react/!(*.md)'
-              - 'packages/react/!(src|*.md)/**/!(*.md)'
-              - 'packages/react/src/!(*.md)'
-              - 'packages/react/src/!(stories|*.md)/**/!(*.md)'
-            # The styles package manifest. React imports styles through its
-            # exports, so its entry points and dependencies can break the
-            # React build, tests and packed consumers. A change to styles
-            # source alone runs no React job: the styles jobs test what the
-            # classes do, and the token lint (stylelint) checks the React
-            # theme files against the styles tokens. See
-            # https://github.com/PathableAI-org/styles/issues/590.
-            styles_package: &styles_package
-              - 'packages/styles/package.json'
-            # Markdown that check:agent-guidance validates and the packed
-            # consumer test checks in the React tarball.
-            agent_guidance: &agent_guidance
-              - 'packages/react/README.md'
-              - 'packages/react/agent-guidance/**'
-              - 'scripts/check-agent-guidance.mjs'
-              - 'scripts/check-agent-guidance*.test.mjs'
-            react:
-              - *react_source
-              - *styles_package
-              - '.github/actions/setup/**'
-              - '.github/workflows/ci-full.yml'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-            # check:agent-guidance also fails when the committed React
-            # component pages differ from what scripts/component-docs
-            # generates from the source pages and fixtures.
-            react_build:
-              - *react_source
-              - *styles_package
-              - *agent_guidance
-              - 'components/**'
-              - 'fixtures/**/*.html'
-              - 'scripts/component-docs/**'
-              - '.github/actions/setup/**'
-              - '.github/workflows/ci-full.yml'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-            next_consumer:
-              - *react_source
-              - *styles_package
-              - *agent_guidance
-              - 'scripts/test-next-consumer.mjs'
-              - 'scripts/fixtures/next-consumer/**'
-              - '.github/actions/setup/**'
-              - '.github/workflows/ci-full.yml'
-              - '.gitattributes'
-              - '.npmrc'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
             # pnpm lint:styles lints packages/styles/src/**/*.scss; the token
             # lint also reads the styles stories and the React theme files.
             stylelint:
@@ -228,18 +128,15 @@ jobs:
               - 'package.json'
               - 'pnpm-lock.yaml'
 
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   js-lint:
     needs: changes
-    if: false
+    if: needs.changes.outputs.js == 'true'
     name: JS lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
       - name: Build ESLint scope
-        if: false
         id: scope
         run: |
           SCOPE=""
@@ -279,24 +176,19 @@ jobs:
           fi
 
           echo "path=$SCOPE" >> "$GITHUB_OUTPUT"
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
       - name: Restore ESLint cache
-        if: false
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .eslintcache
           key: eslint-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             eslint-${{ runner.os }}-
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
       - name: JS lint
-        if: false
         run: pnpm exec eslint ${{ steps.scope.outputs.path }} --max-warnings=0 --cache --cache-location .eslintcache
       - name: Test repository tooling
         run: pnpm test:tooling
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
       - name: Save ESLint cache
-        if: false
+        if: always()
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .eslintcache
@@ -312,9 +204,7 @@ jobs:
       - name: Markdownlint
         run: pnpm lint:md
 
-  # Re-enabled for SCSS changes (docs/engineering/target-state.md): on a pull
-  # request it lints only the changed files, so a change to the SCSS is checked
-  # while the rest of the package is still being refactored.
+  # On a pull request it lints only the changed .scss files.
   stylelint:
     needs: changes
     if: needs.changes.outputs.stylelint == 'true'
@@ -362,10 +252,9 @@ jobs:
       - name: Token custom property lint
         run: pnpm lint:tokens
 
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   format:
     needs: changes
-    if: false
+    if: needs.changes.outputs.formattable == 'true'
     name: Prettier Format Check
     runs-on: ubuntu-latest
     steps:
@@ -387,103 +276,8 @@ jobs:
           path: .prettiercache
           key: prettier-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.run_id }}
 
-  react-typecheck:
-    # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-    needs: changes
-    if: false
-    name: React unit tests + typecheck
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - name: Test React
-        run: pnpm --filter @pathableai/react test:unit
-      - name: Typecheck React
-        run: pnpm --filter @pathableai/react typecheck
-      - name: Audit React server compatibility (advisory)
-        if: always()
-        continue-on-error: true
-        run: pnpm test:storybook-react-server
-      - name: Upload server compatibility report
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: react-server-compatibility
-          path: apps/storybook-react/test-results/server-compatibility.*
-          if-no-files-found: warn
-
-  react-build:
-    # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-    needs: changes
-    if: false
-    name: React build + package validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - name: Build styles
-        run: pnpm --filter @pathableai/styles build
-      - name: Build React
-        run: pnpm --filter @pathableai/react build
-      - name: Validate package
-        run: pnpm --filter @pathableai/react check:package
-      - name: Validate types
-        run: pnpm --filter @pathableai/react check:types
-      - name: Validate agent guidance
-        run: pnpm check:agent-guidance
-
-  next-consumer:
-    # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-    needs: changes
-    if: false
-    name: Packed consumer (${{ matrix.label }})
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: next15-react18-linux
-            os: ubuntu-latest
-            fixture: next15-react18
-          - label: next16-react19-linux
-            os: ubuntu-latest
-            fixture: next16-react19
-          - label: next16-react19-windows
-            os: windows-latest
-            fixture: next16-react19
-    env:
-      NEXT_CONSUMER_FIXTURE: ${{ matrix.fixture }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-      - name: Validate packed Next.js consumer
-        run: pnpm test:next-consumer
-
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-  agent-guidance-impact:
-    if: false
-    name: Agent guidance impact (advisory)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 26
-      - name: Review agent guidance impact
-        run: >-
-          node scripts/check-agent-guidance-impact.mjs
-          --base origin/${{ github.base_ref }}
-          --head ${{ github.sha }}
-
   # One aggregate check for the branch ruleset to require. It passes when
-  # every needed job succeeded or was skipped (path filter or disabled). The
-  # advisory agent guidance job is left out on purpose.
+  # every needed job succeeded or was skipped by its path filter.
   ci-result:
     name: CI result
     if: always()
@@ -493,9 +287,6 @@ jobs:
       - markdownlint
       - stylelint
       - format
-      - react-typecheck
-      - react-build
-      - next-consumer
     runs-on: ubuntu-latest
     steps:
       - name: Check job results

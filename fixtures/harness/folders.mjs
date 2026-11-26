@@ -11,7 +11,7 @@ import process from 'node:process'
 export const packageRoot = resolve(import.meta.dirname, '..')
 
 /**
- * Where the component folders and folders.json are read from: the package
+ * Where the component folders are read from: the package
  * root, or FIXTURES_ROOT when it is set. The harness's own tests set it to run
  * the real commands against a scratch folder; nothing else should.
  */
@@ -47,8 +47,7 @@ export function fixtureFiles(folder, root = fixturesRoot) {
 
 /**
  * The folders a check runs on: the command-line arguments if any were given
- * (whitespace- or comma-separated, so `$(node harness/changed.mjs)` works),
- * otherwise every folder.
+ * (whitespace- or comma-separated), otherwise every folder.
  */
 export function foldersFromArgs(argv, root = fixturesRoot) {
   const named = argv.flatMap((arg) => arg.split(/[\s,]+/u)).filter(Boolean)

@@ -60,11 +60,8 @@ Run these from the repository root.
 - [AGENTS.md](AGENTS.md) routes each kind of change to the document that owns
   its rules, and lists the checks to run before committing. It applies to
   people as well as coding agents.
-- During the `@pathableai/styles` refactor CI runs only Markdown lint and the
-  styles Storybook build; every other check is disabled with `if: false`. See
-  [Git workflow](docs/engineering/git-workflow.md) and
-  [target state](docs/engineering/target-state.md); `pnpm lint` still runs
-  locally.
+- [CI checks](docs/engineering/git-workflow.md#ci-checks) lists what CI runs
+  and the few checks that stay off.
 - Commits follow Conventional Commits and are checked by commitlint.
 - Delivery issues record the accepted scope and outcome for new work. Current
   behaviour is documented in `docs/`, component pages, fixtures and package

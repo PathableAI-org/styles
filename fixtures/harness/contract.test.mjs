@@ -5,7 +5,6 @@ import {
   STATE_FILE_NAME,
   checkFolder,
   checkFolderEntries,
-  checkFolderList,
   classesIn,
 } from './contract.mjs'
 
@@ -143,16 +142,6 @@ test('fixture file names must be kebab-case state names', () => {
   const errors = checkFolder('thing', fixtures, page, css)
   assert.equal(errors.length, 1)
   assert.match(errors[0], /No_Actions\.html: a fixture file name must be/u)
-})
-
-test('the folder list must match the folders on disk, both ways', () => {
-  assert.deepEqual(checkFolderList(['a', 'b'], ['a', 'b']), [])
-  const missing = checkFolderList(['a', 'b'], ['a'])
-  assert.equal(missing.length, 1)
-  assert.match(missing[0], /lists b\/, which is not on disk/u)
-  const unlisted = checkFolderList(['a'], ['a', 'c'])
-  assert.equal(unlisted.length, 1)
-  assert.match(unlisted[0], /c\/ is on disk but not listed/u)
 })
 
 test('component folders hold only .html files, not subfolders or other files', () => {

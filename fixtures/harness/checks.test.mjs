@@ -166,26 +166,6 @@ function runCommand(script, args, files, extraEnv = {}) {
   return { ...result, scratch }
 }
 
-test('the contract command fails when folders.json lists a deleted folder', () => {
-  const { status, stderr } = runCommand('contract.mjs', [], {
-    'folders.json': '["activity-list"]\n',
-  })
-  assert.equal(status, 1)
-  assert.match(
-    stderr,
-    /folders\.json lists activity-list\/, which is not on disk/u,
-  )
-})
-
-test('the contract command fails when a folder is not in folders.json', () => {
-  const { status, stderr } = runCommand('contract.mjs', [], {
-    'folders.json': '[]\n',
-    'activity-list/flat.html': '<p>Text</p>\n',
-  })
-  assert.equal(status, 1)
-  assert.match(stderr, /activity-list\/ is on disk but not listed/u)
-})
-
 test('the axe command exits 1 on an incomplete result and writes it to the summary', () => {
   const summaryPath = join(
     mkdtempSync(join(tmpdir(), 'fixtures-summary-')),

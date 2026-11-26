@@ -1,33 +1,23 @@
 name: Fixtures
 
 # Validates the canonical HTML fixtures in fixtures/. Not a required check.
-# On a pull request it checks the fixture folders whose files changed, the
-# folders a compiled-CSS change affects and the folders whose component page
-# changed; on main it checks every folder.
-# See docs/testing/fixtures.md.
+# Every check runs on every fixture folder. See docs/testing/fixtures.md.
 
 on:
   pull_request:
-    # Every input of the selection (INPUT_GLOBS in fixtures/harness/select.mjs);
-    # fixtures/harness/workflow.test.mjs fails when one is missing.
     paths:
       - 'fixtures/**'
       - 'components/*.md'
       - 'packages/styles/scripts/check-component-pages.mjs'
       - 'packages/styles/scripts/component-pages.mjs'
-      - 'packages/styles/src/**/*.scss'
-      - 'packages/styles/src/**/*.sass'
+      - 'packages/styles/src/**'
       - 'packages/styles/package.json'
       # A dependency update (axe-core, html-validate, Playwright) can change
-      # every result, so select.mjs checks every folder for it.
+      # every result.
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'patches/**'
-      # Not selection inputs: these run the react job's fixture tests. The
-      # fixtures job skips a pull request that changes only packages/react/.
-      - 'packages/react/src/**'
-      - 'packages/react/vitest.config.ts'
-      - 'packages/react/package.json'
+      - '.github/actions/setup/**'
       - '.github/workflows/fixtures.yml'
   push:
     branches:
@@ -40,77 +30,10 @@ concurrency:
 permissions:
   contents: read
 
-# The fixture folders whose checks are re-enabled while the styles refactor
-# catches up (docs/engineering/target-state.md). Space-separated. A folder
-# joins this list once its contract and axe checks pass against the compiled
-# CSS, or once its contract passes and a maintainer accepts an axe exception
-# recorded in AXE_DEFERRED_FOLDERS below; the other folders stay unchecked in this workflow until the SCSS
-# catches up, and then the list and the filtering step below go away.
 env:
-  REENABLED_FOLDERS: >-
-    alert
-    breadcrumb
-    button
-    button-group
-    card
-    checkbox
-    collection
-    footer
-    form
-    icon
-    icon-list
-    input-prefix-suffix
-    link
-    list
-    memorable-date
-    pagination
-    process-list
-    prose
-    radio
-    search
-    select
-    side-navigation
-    site-alert
-    step-indicator
-    summary-box
-    table
-    tag
-    text-input
-    tokens-color
-    tokens-color-state-tokens
-    tokens-color-system-tokens
-    tokens-color-theme-tokens
-    tokens-flex
-    tokens-opacity
-    tokens-order
-    tokens-shadow
-    tokens-spacing-units
-    tokens-typesetting
-    tokens-typesetting-font-family
-    tokens-typesetting-font-size
-    tokens-typesetting-font-weight
-    tokens-typesetting-letterspacing
-    tokens-typesetting-line-height
-    tokens-typesetting-measure
-    tokens-z-index
-    utilities-border
-    utilities-clearfix
-    utilities-color
-    utilities-display
-    utilities-flex
-    utilities-float
-    utilities-font-size-and-family
-    utilities-height-and-width
-    utilities-layout-grid
-    utilities-list-reset
-    utilities-margin-and-padding
-    utilities-outline
-    utilities-paragraph-styles
-    utilities-shadow
-    utilities-text-styles
-  # Re-enabled folders whose axe step is held back by a maintainer-accepted
-  # exception, each with its tracking issue. Their lint, html-validate and
-  # contract checks still run. Space-separated.
+  # Folders whose axe step is held back by a maintainer-accepted exception,
+  # each with its tracking issue. Every other check still runs for them.
+  # Space-separated.
   #   memorable-date, select: the pathable-select arrow background image makes
   #   axe's color-contrast rule incomplete (#736).
   AXE_DEFERRED_FOLDERS: >-
@@ -118,212 +41,53 @@ env:
     select
 
 jobs:
-  # The checks run only for the folders in REENABLED_FOLDERS; the rest stay
-  # off until the refactor lands (docs/engineering/git-workflow.md).
   fixtures:
     name: Fixtures
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-      # The workflow also runs for React-only pull requests, for the react
-      # job. They cannot change a fixture, the stylesheet or the harness, so
-      # this job skips them, says so in the summary, and checks everything
-      # else. The steps below that use steps.changed skip with it.
-      - name: Decide whether fixture checks run
-        id: gate
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_REF: ${{ github.base_ref }}
-        run: |
-          if [ "$EVENT_NAME" = "pull_request" ] &&
-            [ -z "$(git diff --name-only "origin/$BASE_REF...HEAD" | grep -v '^packages/react/')" ]; then
-            echo "run=false" >> "$GITHUB_OUTPUT"
-            {
-              echo "## Fixtures"
-              echo
-              echo "Skipped: this pull request changes only files under packages/react/, so no fixture, stylesheet or harness input changed. The React fixture tests job covers it."
-            } >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
       - uses: ./.github/actions/setup
-        if: steps.gate.outputs.run == 'true'
         with:
           install_playwright: 'true'
       - name: Build styles
-        if: steps.gate.outputs.run == 'true'
         run: pnpm --filter @pathableai/styles build
-      # CI Full's lint jobs filter on packages/, apps/ and scripts/, so they
-      # skip a pull request that changes only fixtures/.
-      # Scoped to REENABLED_FOLDERS; the other folders stay unlinted until the
-      # SCSS catches up (docs/engineering/target-state.md). ESLint is not run:
-      # these folders hold only HTML, which ESLint ignores, and it exits with
-      # an error when every file it is given is ignored.
+      # CI Full's Prettier job does not run for a pull request that changes
+      # only HTML, so the fixtures are linted here. ESLint is not run: the
+      # folders hold only HTML, which ESLint ignores, and the harness is
+      # linted by CI Full.
       - name: Lint fixtures
-        if: steps.gate.outputs.run == 'true'
         run: |
-          dirs=$(for folder in $REENABLED_FOLDERS; do echo "fixtures/$folder"; done)
-          pnpm exec markdownlint $dirs --ignore-path .markdownlintignore
-          pnpm exec prettier --check $dirs
+          pnpm exec markdownlint fixtures --ignore-path .markdownlintignore
+          pnpm exec prettier --check fixtures
       - name: Test fixture harness
-        if: steps.gate.outputs.run == 'true'
         run: pnpm --filter @pathableai/fixtures test
-      # The union of the folders whose files changed, the folders the
-      # compiled-CSS diff affects and the folders whose component page
-      # changed, with a job summary saying why each was selected. Writes the
-      # folders and fixtures_changed outputs.
-      - name: Select fixture folders
-        id: changed
-        if: steps.gate.outputs.run == 'true'
+      - name: html-validate
+        run: pnpm --filter @pathableai/fixtures check:html
+      - name: Contract
+        run: pnpm --filter @pathableai/fixtures check:contract
+      # Every component folder (as harness/folders.mjs lists them) except
+      # those in AXE_DEFERRED_FOLDERS.
+      - name: axe
+        working-directory: fixtures
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_REF: ${{ github.base_ref }}
+          FIXTURES_AXE_REPORT: ${{ runner.temp }}/fixtures-axe-report.json
         run: |
-          if [ "$EVENT_NAME" = "pull_request" ] &&
-            git diff --quiet "origin/$BASE_REF...HEAD" -- .github/workflows/fixtures.yml; then
-            # A lockfile, workspace or patches change selects every folder
-            # here, with that reason in the job summary; a lockfile change
-            # also runs html-validate.
-            node fixtures/harness/select.mjs "origin/$BASE_REF"
-          else
-            # On main, or when this workflow changed, check every folder.
-            node fixtures/harness/select.mjs --all
-          fi
-      # Keeps only the selected folders that are in REENABLED_FOLDERS. The
-      # checks below name these folders, so a folder outside the list is
-      # never checked, and with none selected they do not run.
-      - name: Limit to re-enabled folders
-        id: enabled
-        if: steps.gate.outputs.run == 'true'
-        env:
-          SELECTED: ${{ steps.changed.outputs.folders }}
-        run: |
-          kept=""
-          for folder in $REENABLED_FOLDERS; do
-            case " $SELECTED " in
-              *" $folder "*) kept="$kept $folder" ;;
+          folders=()
+          for dir in */; do
+            folder=${dir%/}
+            case "$folder" in
+              harness | node_modules) continue ;;
             esac
-          done
-          echo "folders=${kept# }" >> "$GITHUB_OUTPUT"
-          echo "Checking: ${kept:-none of the re-enabled folders was selected}"
-          axe=""
-          for folder in $kept; do
             case " $AXE_DEFERRED_FOLDERS " in
               *" $folder "*) echo "axe held back for $folder (see AXE_DEFERRED_FOLDERS)" ;;
-              *) axe="$axe $folder" ;;
+              *) folders+=("$folder") ;;
             esac
           done
-          echo "axe_folders=${axe# }" >> "$GITHUB_OUTPUT"
-      - name: html-validate (re-enabled folders)
-        if: steps.enabled.outputs.folders != ''
-        env:
-          FOLDERS: ${{ steps.enabled.outputs.folders }}
-        run: pnpm --filter @pathableai/fixtures check:html $FOLDERS
-      # Contract always runs, because it always checks folders.json against the
-      # folders on disk, even when fixtures/ changed with no folder selected
-      # (such as a deleted folder). It is given the re-enabled folders, never
-      # no arguments, which would check every folder.
-      - name: Contract (re-enabled folders)
-        if: steps.gate.outputs.run == 'true'
-        working-directory: fixtures
-        run: node harness/contract.mjs $REENABLED_FOLDERS
-      # Skips the folders in AXE_DEFERRED_FOLDERS.
-      - name: axe (re-enabled folders)
-        if: steps.enabled.outputs.axe_folders != ''
-        working-directory: fixtures
-        env:
-          FOLDERS: ${{ steps.enabled.outputs.axe_folders }}
-          FIXTURES_AXE_REPORT: ${{ runner.temp }}/fixtures-axe-report.json
-        run: node harness/axe.mjs $FOLDERS
+          node harness/axe.mjs "${folders[@]}"
       - name: Upload axe report
-        if: always() && steps.enabled.outputs.axe_folders != ''
+        if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: fixtures-axe-report
           path: ${{ runner.temp }}/fixtures-axe-report.json
           if-no-files-found: ignore
-
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-  react:
-    name: React fixture tests
-    if: false
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-      # The workflow also runs for changes that cannot affect React rendering,
-      # so the job decides for itself whether to run, and which tests.
-      - name: Select React fixture tests
-        id: select
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_REF: ${{ github.base_ref }}
-        run: |
-          if [ "$EVENT_NAME" != "pull_request" ]; then
-            MODE=all
-          elif ! git diff --quiet "origin/$BASE_REF...HEAD" -- \
-            .github/workflows/fixtures.yml packages/react/vitest.config.ts \
-            packages/react/package.json packages/react/src/test pnpm-lock.yaml; then
-            # The test setup changed, so every fixture test could be affected.
-            MODE=all
-          elif ! git diff --quiet "origin/$BASE_REF...HEAD" -- \
-            fixtures packages/react/src; then
-            MODE=changed
-          else
-            MODE=none
-          fi
-          echo "Mode: $MODE"
-          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
-      - uses: ./.github/actions/setup
-        if: steps.select.outputs.mode != 'none'
-      - name: Run fixture tests
-        if: steps.select.outputs.mode != 'none'
-        working-directory: packages/react
-        env:
-          MODE: ${{ steps.select.outputs.mode }}
-          BASE_REF: ${{ github.base_ref }}
-          REPORT_DIR: ${{ runner.temp }}/react-fixture-tests
-        run: |
-          mkdir -p "$REPORT_DIR"
-          if [ "$MODE" = "all" ]; then
-            pnpm exec vitest run --project fixtures \
-              --reporter=default --reporter=github-actions \
-              --reporter=json --outputFile.json="$REPORT_DIR/tests.json"
-          else
-            # Only the fixture tests whose module graph holds a changed file.
-            pnpm exec vitest run --project fixtures --changed "origin/$BASE_REF" \
-              --reporter=default --reporter=github-actions \
-              --reporter=json --outputFile.json="$REPORT_DIR/tests.json"
-            # --changed never selects the coverage test, which reads its
-            # inputs from disk, so it runs on every run.
-            pnpm exec vitest run --project fixtures \
-              src/test/__tests__/fixture-coverage.test.ts \
-              --reporter=default --reporter=github-actions \
-              --reporter=json --outputFile.json="$REPORT_DIR/coverage.json"
-          fi
-      - name: Summarise fixture tests
-        if: always()
-        env:
-          MODE: ${{ steps.select.outputs.mode }}
-          REPORT_DIR: ${{ runner.temp }}/react-fixture-tests
-        run: |
-          {
-            echo "## React fixture tests"
-            echo
-            case "$MODE" in
-              all) echo "Ran every fixture test." ;;
-              changed) echo "Ran the fixture tests affected by this pull request, and the coverage test." ;;
-              *) echo "No React or fixture change, so no fixture test ran." ;;
-            esac
-            echo
-            for report in "$REPORT_DIR"/*.json; do
-              [ -f "$report" ] || continue
-              jq -r '.testResults[] |
-                "- `\(.name | sub(".*/packages/react/"; ""))`",
-                (.assertionResults[] |
-                  "  - \(if .status == "passed" then "✅" else "❌" end) \(.fullName)")' "$report"
-            done
-          } >> "$GITHUB_STEP_SUMMARY"

@@ -25,8 +25,8 @@ Each check takes a list of component folders and defaults to every folder.
 | Check         | Command                                             | Runs on                      |
 | ------------- | --------------------------------------------------- | ---------------------------- |
 | html-validate | `pnpm --filter @pathableai/fixtures check:html`     | Every fixture                |
-| Contract      | `pnpm --filter @pathableai/fixtures check:contract` | Selected folders in CI       |
-| axe           | `pnpm --filter @pathableai/fixtures check:axe`      | Selected folders in CI       |
+| Contract      | `pnpm --filter @pathableai/fixtures check:contract` | Every folder                 |
+| axe           | `pnpm --filter @pathableai/fixtures check:axe`      | Every folder                 |
 | Harness tests | `pnpm --filter @pathableai/fixtures test`           | The harness's own unit tests |
 | All three     | `pnpm --filter @pathableai/fixtures check`          | Every folder                 |
 
@@ -37,11 +37,8 @@ Each check takes a list of component folders and defaults to every folder.
   them), loaded
   explicitly from `fixtures/.htmlvalidate.json`. It rejects inline
   `html-validate-*` directive comments. It is cheap, so CI runs it on every
-  fixture, but only when a file under `fixtures/` or `pnpm-lock.yaml`
-  changed.
-- **Contract** fails when `fixtures/folders.json` and the component folders
-  on disk disagree in either direction (so deleting a folder fails unless the
-  list is edited in the same change), when a folder is not named after a page
+  fixture.
+- **Contract** fails when a folder is not named after a page
   in `components/`, when a fixture's file name is not a
   kebab-case state name (`^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$`), when a
   `pathable-*` class in a fixture is not a class selector in
@@ -64,151 +61,28 @@ Each check takes a list of component folders and defaults to every folder.
 The contract and axe checks need the built stylesheet, so run
 `pnpm --filter @pathableai/styles build` first.
 
-## Choosing folders
-
-Two scripts choose folders, and CI checks their union together with the
-folders whose component page changed.
-
-### Folders whose files changed
-
-`node fixtures/harness/changed.mjs [base]` prints the component folders that
-`git diff --name-only <base>...HEAD -- fixtures/` touched, one per line;
-`base` defaults to `origin/main`. A change to `fixtures/harness/`,
-`fixtures/.htmlvalidate.json`, `fixtures/folders.json` or `fixtures/package.json`
-selects every folder.
-`--all` prints every folder. Pass the output to a check:
-
-```sh
-cd fixtures && node harness/axe.mjs $(node harness/changed.mjs)
-```
-
-### Folders a stylesheet change affects
-
-`node fixtures/harness/affected.mjs --base <ref> [--json <file>]`
-selects folders from the compiled CSS alone. No component page or fixture
-declares which source files it depends on.
-
-1. It compiles `packages/styles/src/index.scss` (what becomes `styles.css`)
-   at the merge base of `<ref>` and HEAD, and in the working tree, which is
-   the head: its fixtures, stylesheet and dependencies all come from one
-   checkout. The base compiles in a temporary git
-   worktree with the head's `node_modules`, so there is no second install.
-2. It parses both with PostCSS and pairs up rules by at-rule context (such as
-   a media query) and selector, comparing their declarations property by
-   property.
-3. A changed, added or removed rule contributes the classes in its selector
-   (read with the component-page check's `classesInSelector`).
-4. A changed custom property contributes the classes of every rule that reads
-   it through `var()`, followed through custom properties defined from it:
-   a change to `--a` reaches `.x { color: var(--b) }` when `--b: var(--a)`.
-5. A folder is selected when one of its fixtures uses one of those classes in
-   a `class` attribute, or names one of those custom properties.
-
-Every folder is selected when the change cannot be narrowed to classes:
-
-- `pnpm-lock.yaml`, `pnpm-workspace.yaml` or `patches/` changed, or the
-  `@uswds/uswds` range in `packages/styles/package.json` changed, because the
-  two sides would not compile with the same packages;
-- a changed rule has a selector that can match markup without any of the
-  classes it names, even when other selectors in the same list name one
-  (`button, .pathable-button`). That covers an element selector, the reset,
-  `@font-face`, a keyframe, and a class only inside `:not()`, `:has()` or
-  another pseudo-class (`:not(.x)`, `div:has(.x)`). An `:is()` or `:where()`
-  counts as needing a class only when every argument needs one, so
-  `:where(.x)` narrows to `.x` and `:is(button, .x)` selects every folder;
-- a custom property changed on a rule with no class (such as `:root`) and,
-  in the end, no rule reads it, directly or through other custom properties;
-- a changed custom property is read by such a rule.
-
-When no stylesheet source changed, it compiles nothing and selects nothing.
-It prints JSON: `all`, `allReasons`, and per folder the selected `files` and
-`reasons`. Each reason names the class or custom property, why it changed,
-the selector, and the source file and line from the Sass source map, such as
-`packages/styles/src/pathable-component-wrappers/pathable-dashboard.scss:13`.
-
-So a change to a `.pathable-button` rule selects `button` and every other
-folder whose fixtures use a button, and a change to a `.pathable-tag` rule
-selects only the folders whose fixtures use a tag.
-
-Declarations that only change order within a rule, such as a shorthand
-moved after its longhand, count as a change to every property of the rule,
-and a changed statement at-rule such as `@import` or `@layer a, b` selects
-every folder. Whitespace is collapsed before comparing, except inside quoted
-strings, so `content: "a  b"` or `[data-label="A  B"]` changing is seen.
-
-Rule order is compared too. Among the rules that did not change, a rule
-whose position moved relative to the others contributes its classes, or
-selects every folder when it can match without a class. Markup restyled by
-two rules swapping matches both, so it carries the classes of the one that
-moved. A changed rule already contributes its classes. Each rule is
-identified by its selector and its own declarations, so a declaration that
-moves between two rules with the same selector (as Sass splits a block
-around a nested rule) counts as both rules moving.
-
-Known limit: a class added to the markup by JavaScript is not seen, because
-only the fixture HTML is read.
-
-### The union
-
-`INPUT_GLOBS` in `select.mjs` lists every path that can change the
-selection, and `fixtures/harness/workflow.test.mjs` fails when the
-workflow's `pull_request.paths` misses one.
-
-`node fixtures/harness/select.mjs <base>` lists the changed paths once,
-with `affected.mjs`'s listing (working tree against the merge base, renames
-as a delete and an add), and prints the union of the folders `changed.mjs`'s
-`selectFolders` picks from them, the folders `affected.mjs` selects, and
-every folder whose page `components/<slug>.md` changed (the
-contract check reads the page's slug and variants). A change to
-`packages/styles/scripts/check-component-pages.mjs` or `component-pages.mjs`,
-which the selection and the contract check read selectors, CSS and pages
-with, selects every folder, as a change to `fixtures/harness/` does. It
-prints one folder per
-line, with the reasons for each on standard error. `--all` selects
-every folder. In GitHub Actions it also writes the `folders` and
-`fixtures_changed` step outputs and a job summary.
-
 ## In CI
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
-on a pull request that changes any input of the selection (`fixtures/**`,
-`components/*.md`, the component-page scripts
-`check-component-pages.mjs` and `component-pages.mjs` it reads selectors and
-pages with, `packages/styles/src/**/*.scss` or `*.sass`,
-`packages/styles/package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` or
-`patches/**`), the React paths listed under
-[React fixture tests in CI](#in-ci-1) or the workflow itself, and on every
-push to `main`. Its `fixtures` job skips a pull request that changes only
-files under `packages/react/`, and says so in its job summary; otherwise it:
+on a pull request that changes `fixtures/**`, `components/*.md`,
+`packages/styles/scripts/check-component-pages.mjs` or `component-pages.mjs`,
+`packages/styles/src/**`, `packages/styles/package.json`, `pnpm-lock.yaml`,
+`pnpm-workspace.yaml`, `patches/**`, `.github/actions/setup/**` or the
+workflow itself, and on every push to `main`. Its `fixtures` job:
 
 1. builds `@pathableai/styles`;
-2. runs markdownlint and Prettier on the re-enabled folders (see below),
-   because CI Full's lint jobs filter on `packages/`, `apps/` and `scripts/`
-   and skip a pull request that changes only `fixtures/`;
+2. runs markdownlint and Prettier on `fixtures/`, because CI Full's Prettier
+   job does not cover HTML;
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
-4. selects folders with `select.mjs`;
-5. keeps only the selected folders that are re-enabled (see below);
-6. runs html-validate, the contract check and axe on those folders, except
-   that axe skips any folder in `AXE_DEFERRED_FOLDERS` (see below), and skips
-   them when none remains;
-7. uploads the axe report as the `fixtures-axe-report` artifact.
+4. runs html-validate and the contract check on every folder;
+5. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, currently
+   `memorable-date` and `select`, until #736 settles the select arrow's
+   incomplete colour-contrast result; every other check still runs for them;
+6. uploads the axe report as the `fixtures-axe-report` artifact.
 
-The job summary lists each selected folder with its reasons, and says
-explicitly when no folder was selected. On `main`, and on a pull request that
-changes the workflow, every folder is selected. It is not a required check.
-
-**Only some folders are re-enabled.** While the styles refactor catches up
-([target state](../engineering/target-state.md)), the workflow checks only
-the folders listed in its `REENABLED_FOLDERS` variable, currently `alert`, `breadcrumb`, `button`, `button-group`, `card`, `checkbox`, `collection`, `footer`, `form`, `icon`, `icon-list`, `input-prefix-suffix`, `link`, `list`, `memorable-date`, `pagination`, `process-list`, `prose`, `radio`, `search`, `select`, `side-navigation`, `site-alert`, `step-indicator`, `summary-box`, `table`, `tag`, `text-input` and every
-`tokens-*` and `utilities-*` folder: the lint step, html-validate, the contract and axe run for
-those folders alone, and only when one is selected. The other folders are not
-checked in CI, and the React fixture tests job stays disabled. A folder joins
-the list when its contract and axe checks pass against the compiled CSS.
-A maintainer may accept an exception for axe alone: the folder is also listed
-in `AXE_DEFERRED_FOLDERS` with its tracking issue, and every check but axe runs
-for it. `memorable-date` and `select` are listed there until #736 settles the select arrow's
-incomplete colour-contrast result.
+A folder joins `AXE_DEFERRED_FOLDERS` only with a maintainer's acceptance and
+a tracking issue. It is not a required check.
 
 ## React fixture tests
 
@@ -332,25 +206,9 @@ project's environment, `src/test/fixture-environment.ts`: jsdom, but
 processed by Vite's SSR environment. In Vite's client environment, which
 Vitest uses for plain jsdom, a `?raw` import is recorded as `?import&raw` and
 `--changed` does not connect the test to the fixture file. The coverage test
-reads its inputs from disk, so `--changed` never selects it; CI runs it on
-every run.
+reads its inputs from disk, so `--changed` never selects it.
 
 ### In CI
 
-The `react` job in
-[`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml)
-runs the fixture tests. The workflow also runs on a pull request that changes
-`packages/react/src/**`, `packages/react/vitest.config.ts` or
-`packages/react/package.json`. The job chooses what to run from
-`git diff origin/<base>...HEAD`:
-
-| Change in the pull request                                                                                      | What runs                                                                       |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| None (push to `main`)                                                                                           | Every fixture test                                                              |
-| The workflow, `vitest.config.ts`, `packages/react/package.json`, `packages/react/src/test/` or `pnpm-lock.yaml` | Every fixture test                                                              |
-| Otherwise, anything under `fixtures/` or `packages/react/src/`                                                  | `vitest run --project fixtures --changed origin/<base>`, then the coverage test |
-| Nothing above, such as a SCSS-only change                                                                       | No fixture test; the job installs nothing                                       |
-
-The job summary lists each test file that ran and each test in it. The
-coverage test's list of unmapped components appears as a notice on the run.
-It is not a required check.
+CI does not run the React fixture tests. React is deferred, so they run
+locally only.

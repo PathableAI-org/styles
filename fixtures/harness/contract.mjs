@@ -4,9 +4,6 @@
  *   node harness/contract.mjs [folder …]    default: every component folder
  *
  * It fails when:
- *   - a folder on disk is missing from fixtures/folders.json, or a folder that
- *     file lists is missing from disk (always checked, whatever folders are
- *     named, so deleting a folder has to edit the list visibly);
  *   - a folder's name is not the slug of a page in components/;
  *   - a folder holds no fixture;
  *   - a fixture's file name is not a kebab-case state name such as
@@ -41,18 +38,10 @@ import { readCss } from '../../packages/styles/scripts/check-component-pages.mjs
 import { readPages } from '../../packages/styles/scripts/component-pages.mjs'
 
 import { stylesCssPath } from './css.mjs'
-import {
-  allFolders,
-  fixtureFiles,
-  fixturesRoot,
-  foldersFromArgs,
-} from './folders.mjs'
+import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
 
 /** A fixture file name: a kebab-case state name ending in `.html`. */
 export const STATE_FILE_NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$/u
-
-/** The committed list of component folders. */
-export const folderListPath = join(fixturesRoot, 'folders.json')
 
 /** Every class in a `class` attribute of an element in the markup. */
 export function classesIn(html) {
@@ -70,28 +59,6 @@ export function classesIn(html) {
 }
 
 /**
- * Compares the committed folder list with the component folders on disk, in
- * both directions. Returns errors.
- */
-export function checkFolderList(listed, onDisk) {
-  const errors = []
-  const listedSet = new Set(listed)
-  const diskSet = new Set(onDisk)
-  for (const folder of listed) {
-    if (!diskSet.has(folder)) {
-      errors.push(
-        `folders.json lists ${folder}/, which is not on disk; remove it from folders.json if the removal is deliberate`,
-      )
-    }
-  }
-  for (const folder of onDisk) {
-    if (!listedSet.has(folder))
-      errors.push(`${folder}/ is on disk but not listed in folders.json`)
-  }
-  return errors
-}
-
-/**
  * Errors for entries of a component folder that are not `.html` files, so a
  * subfolder or a file such as `disabled.htm` cannot sit beside the fixtures
  * unchecked. `entries` is a list of `{ name, isDirectory }`; dotfiles are
@@ -106,14 +73,6 @@ export function checkFolderEntries(folder, entries) {
         ? `${folder}/${name}/: component folders hold only <state>.html fixtures, not subfolders`
         : `${folder}/${name}: component folders hold only <state>.html fixtures; this file would not be checked`,
     )
-}
-
-/** Reads fixtures/folders.json: a JSON array of folder names. */
-export function readFolderList(path = folderListPath) {
-  const list = JSON.parse(readFileSync(path, 'utf8'))
-  if (!Array.isArray(list) || !list.every((name) => typeof name === 'string'))
-    throw new Error('folders.json must be a JSON array of folder names')
-  return list
 }
 
 /**
@@ -187,10 +146,7 @@ export async function checkFolders(folders, root = fixturesRoot) {
 
 async function main(argv) {
   const folders = foldersFromArgs(argv)
-  const errors = [
-    ...checkFolderList(readFolderList(), allFolders()),
-    ...(await checkFolders(folders)),
-  ]
+  const errors = await checkFolders(folders)
   for (const error of errors)
     process.stderr.write(`[fixtures:contract] ${error}\n`)
   process.stdout.write(

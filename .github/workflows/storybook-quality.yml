@@ -17,7 +17,6 @@ jobs:
   # The workflow runs on every pull request so its aggregate check always
   # reports. This job decides which Storybook jobs need to run:
   #   html_storybook   the HTML (styles) Storybook jobs
-  #   react_storybook  the React Storybook jobs
   #   component_pages  the component-pages job, which checks component
   #                    pages (components/*.md) against the tests when the
   #                    HTML Storybook jobs do not run
@@ -33,7 +32,6 @@ jobs:
       pull-requests: read
     outputs:
       html_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.html_storybook == 'true' }}
-      react_storybook: ${{ github.event_name != 'pull_request' || steps.filter.outputs.react_storybook == 'true' }}
       component_pages: ${{ github.event_name != 'pull_request' || steps.filter.outputs.component_pages == 'true' }}
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
@@ -66,17 +64,6 @@ jobs:
               - 'fixtures/**/!(*.md)'
               - 'scripts/component-docs/**/!(*.md)'
               - 'visual-baselines/**'
-            # A change to styles source alone does not run the React
-            # Storybook jobs: the HTML Storybook jobs test what the classes
-            # do. The styles manifest still does, because React imports
-            # styles through its exports. See
-            # https://github.com/PathableAI-org/styles/issues/590.
-            react_storybook:
-              - *shared
-              - 'packages/styles/package.json'
-              - *contracts
-              - 'packages/react/**/!(*.md)'
-              - 'apps/storybook-react/**/!(*.md)'
             component_pages:
               - 'components/**'
 
@@ -92,7 +79,10 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
 
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
+      # Disabled: check:component-pages still fails. Some pages and the
+      # compiled CSS disagree on variants (alert, button, card, site-alert,
+      # table), and static component pages have no enforced pixel entry yet.
+      # Re-enable when it passes.
       - name: Component pages agree with the compiled CSS and pixel entries
         if: false
         run: |
@@ -117,7 +107,9 @@ jobs:
   # checks the pages against those records; on a miss (the pull request is
   # behind main on those inputs, or that run has not finished) it builds and
   # tests the HTML Storybook itself.
-  # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
+  # Disabled: its guarantee check (check:component-pages:executed) still
+  # fails, because most component page guarantees have no test that cites
+  # them. Re-enable with the Docs Deploy records steps when it passes.
   component-pages:
     name: Component pages
     needs: changes
@@ -146,7 +138,10 @@ jobs:
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
 
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
+      # Disabled: check:component-pages still fails. Some pages and the
+      # compiled CSS disagree on variants (alert, button, card, site-alert,
+      # table), and static component pages have no enforced pixel entry yet.
+      # Re-enable when it passes.
       - name: Component pages agree with the compiled CSS and pixel entries
         if: false
         run: |
@@ -166,11 +161,10 @@ jobs:
       - name: Component page guarantees are covered by tests that ran
         run: pnpm --filter @pathableai/styles check:component-pages:executed
 
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   accessibility-tests:
     name: Storybook accessibility tests
     needs: [changes, build]
-    if: false
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -206,58 +200,16 @@ jobs:
           kill $SERVE_PID 2>/dev/null || true
           exit $TEST_EXIT
 
-      # Disabled for the component reset (PR #607); re-enable when the SCSS catches up.
+      # Disabled: most component page guarantees have no test that cites them
+      # yet. Re-enable when check:component-pages:executed passes.
       - name: Component page guarantees are covered by tests that ran
         if: false
         run: pnpm --filter @pathableai/styles check:component-pages:executed
 
-  # The React Storybook accessibility run is its own job so it runs in
-  # parallel with the HTML one instead of after it.
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
-  accessibility-tests-react:
-    name: Storybook accessibility tests (React)
-    needs: [changes, build]
-    if: false
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-
-      - name: Download React Storybook static
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: storybook-react-static
-          path: apps/storybook-react/storybook-static/
-
-      - name: Test React Storybook
-        run: |
-          set +e
-          npx serve -n -l 6007 apps/storybook-react/storybook-static &
-          SERVE_PID=$!
-          for i in $(seq 1 30); do
-            if curl -s -o /dev/null http://127.0.0.1:6007/ 2>/dev/null; then
-              echo "Server ready after ${i}s"
-              break
-            fi
-            if [ "$i" -eq 30 ]; then
-              echo "Server failed to start"
-              kill $SERVE_PID 2>/dev/null || true
-              exit 1
-            fi
-            sleep 1
-          done
-          pnpm --filter @pathable/storybook-react test-storybook --index-json --url http://127.0.0.1:6007
-          TEST_EXIT=$?
-          kill $SERVE_PID 2>/dev/null || true
-          exit $TEST_EXIT
-
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   visual-smoke:
     name: Storybook visual smoke
     needs: [changes, build]
-    if: false
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -283,13 +235,13 @@ jobs:
           if-no-files-found: ignore
 
   # Pixel comparison with committed baselines, only for the stories of the
-  # components on the styles rollout list. Runs in the pinned Playwright
-  # container through Docker (docs/testing/visual-regression.md).
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
+  # components on the styles rollout list (empty for now, so it compares
+  # nothing). Runs in the pinned Playwright container through Docker
+  # (docs/testing/visual-regression.md).
   pixels-styles:
     name: Styles pixel visual regression
     needs: [changes, build]
-    if: false
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -312,11 +264,10 @@ jobs:
           path: apps/storybook/test-results/pixels/
           if-no-files-found: ignore
 
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   coverage:
     name: Storybook coverage
     needs: [changes, build]
-    if: false
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -339,11 +290,10 @@ jobs:
           path: apps/storybook/test-results/storybook-coverage.*
           if-no-files-found: ignore
 
-  # Disabled temporarily during the refactor (docs/engineering/git-workflow.md); re-enable when the refactor lands.
   quality-gates:
     name: Storybook Quality Gates
     needs: [changes, build]
-    if: false
+    if: needs.changes.outputs.html_storybook == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -371,7 +321,6 @@ jobs:
       - build
       - component-pages
       - accessibility-tests
-      - accessibility-tests-react
       - visual-smoke
       - pixels-styles
       - coverage
