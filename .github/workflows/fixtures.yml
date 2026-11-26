@@ -43,7 +43,8 @@ permissions:
 # The fixture folders whose checks are re-enabled while the styles refactor
 # catches up (docs/engineering/target-state.md). Space-separated. A folder
 # joins this list once its contract and axe checks pass against the compiled
-# CSS; the other folders stay unchecked in this workflow until the SCSS
+# CSS, or once its contract passes and a maintainer accepts an axe exception
+# recorded in AXE_DEFERRED_FOLDERS below; the other folders stay unchecked in this workflow until the SCSS
 # catches up, and then the list and the filtering step below go away.
 env:
   REENABLED_FOLDERS: >-

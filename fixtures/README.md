@@ -196,7 +196,10 @@ rule that applies to whole documents, and add it here with the reason.
 
 Any violation fails, and so does any **incomplete** result: a rule axe ran
 but could not decide, such as colour contrast over a gradient, which needs a
-person to look. There is no exceptions mechanism and no allowlist. Each
+person to look. The harness has no exceptions mechanism and no allowlist; the
+only exception is in CI, where the fixtures workflow skips axe for the folders
+in its `AXE_DEFERRED_FOLDERS` list, each with a maintainer's acceptance and a
+tracking issue ([fixtures in CI](../docs/testing/fixtures.md#in-ci)). Each
 violation and incomplete result is printed with its nodes, and in GitHub
 Actions it is also listed in the job summary. Only these page-level
 rules are off, because a fixture is a fragment of a page, not a page:

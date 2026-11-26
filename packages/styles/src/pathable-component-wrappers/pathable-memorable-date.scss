@@ -7,9 +7,13 @@
 //
 // USWDS sets the 16 px top margin through `.usa-memorable-date .usa-form-group`,
 // and @extend does not carry that compound rule across modules to
-// .pathable-form-group, so it is restated here. USWDS ships no rule for
-// usa-form-group--select; the select group sizes its month select to the
-// page's 160 px here, where USWDS's `--month select` rule gives 240 px.
+// .pathable-form-group, so it is restated here.
+//
+// USWDS ships no rule for usa-form-group--select. Here the select group is
+// 160 px (10rem) wide, where USWDS's `--month select` rule gives 240 px, and
+// the select fills it. A flex basis rather than a fixed select width lets the
+// group shrink when 10rem does not fit, such as at 200 % text on a phone,
+// instead of forcing the fieldset wider than the viewport.
 
 @use 'uswds-core' as *;
 
@@ -35,6 +39,11 @@
   @extend .usa-form-group--year;
 }
 
+.pathable-memorable-date > .pathable-form-group--select {
+  flex: 0 1 units('card');
+  min-width: 0;
+}
+
 .pathable-form-group--select > .pathable-select {
-  width: units('card');
+  width: 100%;
 }

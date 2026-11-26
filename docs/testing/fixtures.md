@@ -189,7 +189,8 @@ files under `packages/react/`, and says so in its job summary; otherwise it:
    known-bad markup through each check;
 4. selects folders with `select.mjs`;
 5. keeps only the selected folders that are re-enabled (see below);
-6. runs html-validate, the contract check and axe on those folders, and skips
+6. runs html-validate, the contract check and axe on those folders, except
+   that axe skips any folder in `AXE_DEFERRED_FOLDERS` (see below), and skips
    them when none remains;
 7. uploads the axe report as the `fixtures-axe-report` artifact.
 
