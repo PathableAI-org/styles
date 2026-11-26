@@ -6,6 +6,7 @@
 // Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
+@use 'pathable-alert-icon-mixins' as icons;
 
 @use 'usa-icon';
 @use 'usa-site-alert/src/styles';
@@ -46,39 +47,35 @@
 
 // The site-alert rules place the icon absolutely, with `left` set to the
 // padding plus usa-alert's optical adjustment, and its status rules set
-// `position: absolute` again. pathable-alert.scss keeps the icon in normal
-// flow, where `left` is measured from the body's content box (see the long
-// comment there), so inside a site alert the in-flow block is applied again
-// and `left` is only the optical adjustment. The doubled class outranks the
-// site-alert rules whatever their order.
+// `position: absolute` again. Apply the in-flow icon of pathable-alert.scss
+// again, where `left` is only the optical adjustment. The doubled class
+// outranks the site-alert rules whatever their order.
 .pathable-site-alert
   .pathable-alert.pathable-alert
   .pathable-alert__body::before {
-  position: relative;
-  top: calc(units($theme-alert-icon-size) / -6);
-  left: $alert-icon-optical-adjust-left;
-  flex: none;
-  margin-right: auto;
-  margin-bottom: calc(units($theme-alert-icon-size) * -1);
+  @include icons.in-flow-icon;
 }
 
 .pathable-site-alert--slim
   .pathable-alert.pathable-alert
   .pathable-alert__body::before {
-  top: 0;
-  left: $alert-slim-icon-optical-adjust-left;
-  margin-bottom: calc(units($alert-slim-icon-size) * -1);
+  @include icons.in-flow-icon-slim;
 }
 
-// Forced colours drop the icon's mask fill; the site-alert status rules would
-// otherwise keep its white or blue fill on the forced canvas.
 @media (forced-colors: active) {
   .pathable-site-alert
     .pathable-alert.pathable-alert
     .pathable-alert__body::before {
-    background-color: CanvasText;
-    forced-color-adjust: none;
+    @include icons.forced-colors-icon-fill;
   }
+}
+
+// The status rules make the nested body a flex column, where margins do not
+// collapse: a list after the heading would add its 1em top margin to the
+// heading's 0.5rem bottom margin. Take the heading's margin off the list's so
+// the gap stays the larger of the two, as in normal flow.
+.pathable-site-alert .pathable-alert__heading + .pathable-list {
+  margin-top: calc(1em - 0.5rem);
 }
 
 // Bright Blue Brooks is 2.3:1 on the emergency red, and the Tech Teal link

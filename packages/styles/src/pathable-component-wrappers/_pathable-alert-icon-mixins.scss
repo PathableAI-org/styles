@@ -1,0 +1,41 @@
+// packages/styles/src/pathable-component-wrappers/_pathable-alert-icon-mixins.scss
+//
+// Declarations for the alert's in-flow status icon, shared by
+// pathable-alert.scss and pathable-site-alert.scss. Each caller supplies the
+// selector; the site alert uses a doubled class to outrank its own rules.
+
+@use 'uswds-core' as *;
+
+// usa-alert draws the status icon as a `position: absolute` `::before` on the
+// body. axe cannot tell what is behind text whose ancestor has an absolutely
+// positioned pseudo-element larger than a quarter of the text's own box, so a
+// short lead-in such as "Warning:" or a link left colour contrast undecided.
+// Keep the icon out of absolute positioning: it is a flex item of the body, in
+// the normal flow, and its negative bottom margin gives back its height, so
+// the content starts at the top of the body beside it. `position: relative`
+// only shifts it by usa-alert's optical adjustments, measured from the body's
+// content box rather than its border box. `margin-right: auto` keeps it on the
+// left, where usa-alert's physical `margin-left` indents the text, in a
+// right-to-left context too.
+@mixin in-flow-icon {
+  position: relative;
+  top: calc(units($theme-alert-icon-size) / -6);
+  left: $alert-icon-optical-adjust-left;
+  flex: none;
+  margin-right: auto;
+  margin-bottom: calc(units($theme-alert-icon-size) * -1);
+}
+
+// The slim alert's smaller icon takes its own offsets.
+@mixin in-flow-icon-slim {
+  top: 0;
+  left: $alert-slim-icon-optical-adjust-left;
+  margin-bottom: calc(units($alert-slim-icon-size) * -1);
+}
+
+// Forced colours drop the icon's mask fill, which leaves the icon blank and
+// its indent empty. Draw it in the text colour of the forced palette.
+@mixin forced-colors-icon-fill {
+  background-color: CanvasText;
+  forced-color-adjust: none;
+}
