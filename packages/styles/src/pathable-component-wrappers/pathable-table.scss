@@ -76,13 +76,15 @@
 .pathable-table-container--scrollable {
   @extend .usa-table-container--scrollable;
 
-  // Inset so the scroll container's edges and neighbours do not clip the ring.
+  // The ring is drawn outside the container, on the surface behind it, so it
+  // takes that surface's --pathable-surface-focus-ring, as the state-focus
+  // mixin does; drawn inside, it would lie over the light table cells.
   // :focus-visible only, so focus on a control inside does not outline the
   // whole container.
   &:focus-visible {
     outline: 2px solid
       var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
 }
 
