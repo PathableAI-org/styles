@@ -24,3 +24,18 @@
 .pathable-summary-box__link {
   @extend .usa-summary-box__link;
 }
+
+// USWDS styles no body element. This rule gives the documented element its
+// class selector, as a plain block.
+.pathable-summary-box__body {
+  display: block;
+}
+
+// Guarantee text-margins: the first and last child add no space of their own.
+.pathable-summary-box__text > :first-child {
+  margin-top: 0;
+}
+
+.pathable-summary-box__text > :last-child {
+  margin-bottom: 0;
+}

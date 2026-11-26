@@ -66,6 +66,7 @@ env:
     search
     side-navigation
     site-alert
+    summary-box
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens

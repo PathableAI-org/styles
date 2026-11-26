@@ -23,8 +23,8 @@ guarantees:
 # Summary box
 
 A bordered box with a heading and a short body that gives a reader the key
-points to know or act on. Put the class on a `<div>` with `role="region"` and an
-`aria-labelledby` that points at the heading. Inside it, a
+points to know or act on. Put the class on a `<section>` with an `aria-labelledby` that points at the
+heading; a named section is a region landmark. Inside it, a
 `pathable-summary-box__body` holds a `pathable-summary-box__heading` and a
 `pathable-summary-box__text`.
 
@@ -67,8 +67,8 @@ class.
 
 ## Composition
 
-- `pathable-summary-box`: the `<div role="region" aria-labelledby>`, the
-  box itself.
+- `pathable-summary-box`: the `<section aria-labelledby>`, the box
+  itself.
 - `pathable-summary-box__body`: the `<div>` inside the box that holds the
   heading and the text.
 - `pathable-summary-box__heading`: the heading, an `<h3>` in the examples,
@@ -92,7 +92,7 @@ the figures on this page are those of the default theme.
 
 ## The consumer owns
 
-- The region's name. The box is a `role="region"` named by its heading
+- The region's name. The box is a `<section>`, a region landmark named by its heading
   through `aria-labelledby`. Give each heading a literal `id` that is unique
   on the page. Keep to two or three boxes on a page, because each is a
   landmark.
