@@ -12,3 +12,7 @@
 .pathable-label {
   @extend .usa-label;
 }
+
+.pathable-label--error {
+  @extend .usa-label--error;
+}

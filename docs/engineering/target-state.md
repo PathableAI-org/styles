@@ -91,7 +91,7 @@ catalog. Their existing source does not make them part of the target.
 The design-token and utility documentation and fixture slices are in place.
 Current implementation work is bringing the documented static components into
 conformance with their pages and fixtures through small component slices.
-Alert, breadcrumb, button, button group, card, checkbox, collection, footer, icon list, input prefix/suffix, link, list, pagination and radio are in place; the remaining catalog
+Alert, breadcrumb, button, button group, card, checkbox, collection, footer, form, icon list, input prefix/suffix, link, list, pagination and radio are in place; the remaining catalog
 is still being completed.
 
 ## USWDS deviation policy

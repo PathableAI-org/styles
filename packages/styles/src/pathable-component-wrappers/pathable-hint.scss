@@ -13,3 +13,9 @@
   @extend .usa-hint;
   color: var(--pathable-color-text-muted);
 }
+
+// Follows .pathable-hint so the error colour wins over the muted hint colour.
+.pathable-hint--required {
+  @extend .usa-hint--required;
+  color: color('error-dark');
+}

@@ -55,6 +55,7 @@ env:
     checkbox
     collection
     footer
+    form
     icon-list
     input-prefix-suffix
     link

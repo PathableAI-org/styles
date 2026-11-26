@@ -17,3 +17,7 @@
   // which this package does not include, so apply the shared brand focus ring.
   @include states.state-focus;
 }
+
+.pathable-input--error {
+  @extend .usa-input--error;
+}
