@@ -5,6 +5,12 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 //
+// Static USWDS wrappers:
+//   .pathable-table--stacked                — stacked layout at 480px and narrower
+//   .pathable-table--stacked-header         — stacked layout with the header row kept
+//   .pathable-table--sticky-header          — header row stays in view while scrolling
+//   .pathable-table-container--scrollable   — focusable, horizontally scrolling container
+//
 // Application-oriented modifiers:
 //   .pathable-table--sortable        — sortable column headers with sort indicators
 //   .pathable-table--selected        — selected row styling
@@ -40,6 +46,22 @@
 
 .pathable-table--striped {
   @extend .usa-table--striped;
+}
+
+.pathable-table--stacked {
+  @extend .usa-table--stacked;
+}
+
+.pathable-table--stacked-header {
+  @extend .usa-table--stacked-header;
+}
+
+.pathable-table--sticky-header {
+  @extend .usa-table--sticky-header;
+}
+
+.pathable-table-container--scrollable {
+  @extend .usa-table-container--scrollable;
 }
 
 // --- Sortable column headers ---

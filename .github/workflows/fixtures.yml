@@ -73,6 +73,7 @@ env:
     site-alert
     step-indicator
     summary-box
+    table
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens
