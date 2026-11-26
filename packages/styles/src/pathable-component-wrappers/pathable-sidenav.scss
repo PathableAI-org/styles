@@ -20,3 +20,37 @@
 .pathable-sidenav__sublist {
   @extend .usa-sidenav__sublist;
 }
+
+// `side-navigation.md` (`item-divider`): every list item, at every nesting
+// level, carries the USWDS 1 px light grey top border, and the markup uses
+// this class on nested items too.
+.pathable-sidenav__item {
+  @extend .usa-sidenav__item;
+}
+
+// Deviation from USWDS (`current`): USWDS draws the current-page bar in a
+// darker colour, 4 px in from the left below 40em, and hides it on current
+// links in a sublist. The page guarantees a 4 px bar at the left edge of the
+// link, in the link text colour, at every width and nesting level.
+.pathable-sidenav .pathable-current::after,
+.pathable-sidenav .pathable-sidenav__sublist .pathable-current::after {
+  display: block;
+  left: 0;
+  width: 0.25rem;
+  background-color: var(--pathable-color-link);
+}
+
+// Deviation from USWDS (`focus-ring`): USWDS leaves the browser default
+// outline. The page guarantees the 2 px design-system ring with no offset on
+// every sidenav link, current or not.
+.pathable-sidenav a:focus-visible {
+  outline: 2px solid
+    var(--pathable-surface-focus-ring, var(--pathable-color-focus-ring));
+  outline-offset: 0;
+}
+
+@media (forced-colors: active) {
+  .pathable-sidenav a:focus-visible {
+    outline-color: Highlight;
+  }
+}

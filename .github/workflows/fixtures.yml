@@ -64,6 +64,7 @@ env:
     prose
     radio
     search
+    side-navigation
     site-alert
     tokens-color
     tokens-color-state-tokens
