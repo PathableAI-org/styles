@@ -33,7 +33,7 @@ guarantees:
   - id: error-group
     claim: A pathable-form-group--error group and a pathable-label--error label mark the field with the error colour.
   - id: success
-    claim: With the success modifier, the input has a 4 px border in the theme's green, with 4 px less padding above and below to keep its height.
+    claim: With the success modifier, the input has a 4 px border in the theme's dark green, with 4 px less padding above and below to keep its height.
 ---
 
 # Text input

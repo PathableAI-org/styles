@@ -21,3 +21,31 @@
 .pathable-input--error {
   @extend .usa-input--error;
 }
+
+.pathable-input--success {
+  @extend .usa-input--success;
+  // USWDS draws this border in the theme's success colour, which PathAble
+  // sets to Intelligent Jade (2.8:1 on white). A state border needs 3:1, so use
+  // the text-safe dark jade (5.3:1), as the error state uses error-dark.
+  border-color: color('success-dark');
+}
+
+// Width modifiers cap the input at a USWDS input width. They must win over the
+// form's own `max-width: none` rules, so rely on specificity, not source order:
+// the form selector outranks the form reset and the form-row selector outranks
+// the grid-context reset.
+@each $name, $width in $system-input-widths {
+  .pathable-input--#{$name} {
+    @extend .usa-input--#{$name};
+  }
+
+  .pathable-form .pathable-input--#{$name} {
+    max-width: #{$width};
+  }
+
+  @include at-media('desktop') {
+    .pathable-form-row > .pathable-form-group > .pathable-input--#{$name} {
+      max-width: #{$width};
+    }
+  }
+}
