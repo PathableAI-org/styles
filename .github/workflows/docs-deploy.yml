@@ -36,12 +36,15 @@ jobs:
       # The accessibility test run writes the component page records that the
       # two steps below save. Pull requests that change only component pages
       # restore these records instead of building and testing the HTML
-      # Storybook (Storybook Quality's component-pages job). Saved before the
-      # Pages rebuild below rewrites index.json, so the records stay newer
-      # than the index. All three are disabled with that job until
-      # check:component-pages:executed passes; re-enable them together. Pull
-      # requests already run these accessibility tests (Storybook Quality's
-      # accessibility-tests job).
+      # Storybook (Storybook Quality's component-pages job). All three are
+      # disabled with that job until check:component-pages:executed passes;
+      # re-enable them together. As written they cannot pass here: the setup
+      # step does not install Playwright, and the only build uses the
+      # /styles/ base path while this step serves it at the root. Re-enabling
+      # needs install_playwright and an unprefixed build to test, with the
+      # Pages build after the records are saved. Pull requests already run
+      # these accessibility tests (Storybook Quality's accessibility-tests
+      # job).
       - name: Storybook accessibility tests
         if: false
         run: |

@@ -367,8 +367,8 @@ workflow:
   (`check:component-pages` and `check:component-pages:executed`) and the
   `component-pages` job, because some component pages and the compiled CSS
   still disagree on variants and most page guarantees have no test that
-  cites them yet. The matching records-cache steps in `docs-deploy.yml` stay
-  off with them.
+  cites them yet. In `docs-deploy.yml`, the accessibility test run on `main`
+  and the records-cache steps it feeds stay off with them.
 - In `fixtures.yml`, axe skips the folders in `AXE_DEFERRED_FOLDERS`, each
   with a maintainer's acceptance and a tracking issue.
 
