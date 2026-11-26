@@ -68,6 +68,7 @@ env:
     prose
     radio
     search
+    select
     side-navigation
     site-alert
     step-indicator
@@ -107,10 +108,11 @@ env:
   # Re-enabled folders whose axe step is held back by a maintainer-accepted
   # exception, each with its tracking issue. Their lint, html-validate and
   # contract checks still run. Space-separated.
-  #   memorable-date: the pathable-select arrow background image makes axe's
-  #   color-contrast rule incomplete (#736).
+  #   memorable-date, select: the pathable-select arrow background image makes
+  #   axe's color-contrast rule incomplete (#736).
   AXE_DEFERRED_FOLDERS: >-
     memorable-date
+    select
 
 jobs:
   # The checks run only for the folders in REENABLED_FOLDERS; the rest stay
