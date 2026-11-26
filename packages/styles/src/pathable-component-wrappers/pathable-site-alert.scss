@@ -2,8 +2,8 @@
 //
 // Wraps usa-site-alert component as pathable-site-alert.
 // USWDS dependencies: uswds-fonts, usa-icon
-// JS-driven: Yes — site-alert JS may handle dismiss
-// Requires .usa-* on DOM: Yes — keep .usa-site-alert for JS to find elements
+// JS-driven: No
+// Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
 
@@ -25,4 +25,77 @@
 
 .pathable-site-alert--slim {
   @extend .usa-site-alert--slim;
+}
+
+.pathable-site-alert--no-icon {
+  @extend .usa-site-alert--no-icon;
+}
+
+// USWDS writes its site-alert rules for `.usa-site-alert .usa-alert` and its
+// `.usa-alert__body`. pathable-alert.scss does not load this module, so its
+// extends add nothing here; extend them again so the site-alert rules reach
+// the nested PathAble alert. The base usa-alert rules live in another module,
+// so only the site-alert rules gain selectors.
+.pathable-alert {
+  @extend .usa-alert;
+}
+
+.pathable-alert__body {
+  @extend .usa-alert__body;
+}
+
+// The site-alert rules place the icon absolutely, with `left` set to the
+// padding plus usa-alert's optical adjustment, and its status rules set
+// `position: absolute` again. pathable-alert.scss keeps the icon in normal
+// flow, where `left` is measured from the body's content box (see the long
+// comment there), so inside a site alert the in-flow block is applied again
+// and `left` is only the optical adjustment. The doubled class outranks the
+// site-alert rules whatever their order.
+.pathable-site-alert
+  .pathable-alert.pathable-alert
+  .pathable-alert__body::before {
+  position: relative;
+  top: calc(units($theme-alert-icon-size) / -6);
+  left: $alert-icon-optical-adjust-left;
+  flex: none;
+  margin-right: auto;
+  margin-bottom: calc(units($theme-alert-icon-size) * -1);
+}
+
+.pathable-site-alert--slim
+  .pathable-alert.pathable-alert
+  .pathable-alert__body::before {
+  top: 0;
+  left: $alert-slim-icon-optical-adjust-left;
+  margin-bottom: calc(units($alert-slim-icon-size) * -1);
+}
+
+// Forced colours drop the icon's mask fill; the site-alert status rules would
+// otherwise keep its white or blue fill on the forced canvas.
+@media (forced-colors: active) {
+  .pathable-site-alert
+    .pathable-alert.pathable-alert
+    .pathable-alert__body::before {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+}
+
+// Bright Blue Brooks is 2.3:1 on the emergency red, and the Tech Teal link
+// colour is under 2:1; as in pathable-alert--emergency, the ring and links take
+// the alert's white text colour.
+.pathable-site-alert--emergency .pathable-alert {
+  --pathable-surface-focus-ring: var(--pathable-color-status-danger-text);
+}
+
+.pathable-site-alert--emergency .pathable-alert__body .pathable-link,
+.pathable-site-alert--emergency .pathable-alert__body .pathable-link:visited {
+  color: inherit;
+}
+
+// USWDS has no rule for usa-site-alert--no-heading: the body keeps the icon,
+// padding and indent of a site alert with a heading. The modifier sets the
+// bold lead-in that stands in for the heading in the PathAble bold weight.
+.pathable-site-alert--no-heading .pathable-alert__text strong {
+  font-weight: var(--pathable-font-weight-bold);
 }
