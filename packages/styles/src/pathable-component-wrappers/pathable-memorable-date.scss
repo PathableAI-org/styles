@@ -4,6 +4,12 @@
 // USWDS dependencies: uswds-fonts
 // JS-driven: No
 // Requires .usa-* on DOM: No
+//
+// USWDS sets the 16 px top margin through `.usa-memorable-date .usa-form-group`,
+// and @extend does not carry that compound rule across modules to
+// .pathable-form-group, so it is restated here. USWDS ships no rule for
+// usa-form-group--select; the select group sizes its month select to the
+// page's 160 px here, where USWDS's `--month select` rule gives 240 px.
 
 @use 'uswds-core' as *;
 
@@ -11,4 +17,24 @@
 
 .pathable-memorable-date {
   @extend .usa-memorable-date;
+}
+
+.pathable-memorable-date .pathable-form-group {
+  margin-top: units(2);
+}
+
+.pathable-form-group--month {
+  @extend .usa-form-group--month;
+}
+
+.pathable-form-group--day {
+  @extend .usa-form-group--day;
+}
+
+.pathable-form-group--year {
+  @extend .usa-form-group--year;
+}
+
+.pathable-form-group--select > .pathable-select {
+  width: units('card');
 }

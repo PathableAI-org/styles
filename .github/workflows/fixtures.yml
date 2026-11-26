@@ -61,6 +61,7 @@ env:
     input-prefix-suffix
     link
     list
+    memorable-date
     pagination
     prose
     radio
@@ -101,6 +102,13 @@ env:
     utilities-paragraph-styles
     utilities-shadow
     utilities-text-styles
+  # Re-enabled folders whose axe step is held back by a maintainer-accepted
+  # exception, each with its tracking issue. Their lint, html-validate and
+  # contract checks still run. Space-separated.
+  #   memorable-date: the pathable-select arrow background image makes axe's
+  #   color-contrast rule incomplete (#736).
+  AXE_DEFERRED_FOLDERS: >-
+    memorable-date
 
 jobs:
   # The checks run only for the folders in REENABLED_FOLDERS; the rest stay
@@ -193,6 +201,14 @@ jobs:
           done
           echo "folders=${kept# }" >> "$GITHUB_OUTPUT"
           echo "Checking: ${kept:-none of the re-enabled folders was selected}"
+          axe=""
+          for folder in $kept; do
+            case " $AXE_DEFERRED_FOLDERS " in
+              *" $folder "*) echo "axe held back for $folder (see AXE_DEFERRED_FOLDERS)" ;;
+              *) axe="$axe $folder" ;;
+            esac
+          done
+          echo "axe_folders=${axe# }" >> "$GITHUB_OUTPUT"
       - name: html-validate (re-enabled folders)
         if: steps.enabled.outputs.folders != ''
         env:
@@ -206,15 +222,16 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         working-directory: fixtures
         run: node harness/contract.mjs $REENABLED_FOLDERS
+      # Skips the folders in AXE_DEFERRED_FOLDERS.
       - name: axe (re-enabled folders)
-        if: steps.enabled.outputs.folders != ''
+        if: steps.enabled.outputs.axe_folders != ''
         working-directory: fixtures
         env:
-          FOLDERS: ${{ steps.enabled.outputs.folders }}
+          FOLDERS: ${{ steps.enabled.outputs.axe_folders }}
           FIXTURES_AXE_REPORT: ${{ runner.temp }}/fixtures-axe-report.json
         run: node harness/axe.mjs $FOLDERS
       - name: Upload axe report
-        if: always() && steps.enabled.outputs.folders != ''
+        if: always() && steps.enabled.outputs.axe_folders != ''
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: fixtures-axe-report
