@@ -11,6 +11,7 @@
 @use 'uswds-core' as *;
 
 @use 'usa-search/src/styles';
+@use 'pathable-sr-only';
 
 .pathable-search {
   @extend .usa-search;
@@ -30,17 +31,10 @@
 
 // Unlike usa-search__submit-text, which uses display: none below mobile-lg and
 // so removes the button's only accessible name, hide the text in place the way
-// pathable-sr-only does, and show it as block text from mobile-lg up.
+// pathable-sr-only does (it reuses pathable-sr-only below mobile-lg), and show
+// it as block text from mobile-lg up.
 .pathable-search__submit-text {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  @extend .pathable-sr-only;
 
   @include at-media('mobile-lg') {
     position: static;
