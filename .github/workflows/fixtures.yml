@@ -74,6 +74,7 @@ env:
     step-indicator
     summary-box
     table
+    tag
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens
