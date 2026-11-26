@@ -38,9 +38,9 @@ guarantees:
   - id: striped
     claim: With the striped modifier, the cells of every odd body row have a #f6f8f9 background, with the text at a contrast of at least 11:1.
   - id: stacked
-    claim: At a viewport 480 px wide or narrower, with the stacked modifier, each row is a block and each cell is on its own line preceded by the text of its data-label attribute.
+    claim: At a viewport narrower than 480 px, with the stacked modifier, each row is a block and each cell is on its own line preceded by the text of its data-label attribute.
   - id: stacked-header
-    claim: At a viewport 480 px wide or narrower, with the stacked-header modifier, each row is a block as with stacked, and the row header is shown as a heading above the other cells of its row.
+    claim: At a viewport narrower than 480 px, with the stacked-header modifier, each row is a block as with stacked, and the row header is shown as a heading above the other cells of its row.
   - id: sticky-header
     claim: With the sticky-header modifier, the header cells stay at the top of the scrolling area while the body rows scroll beneath them.
   - id: scroll-container
@@ -122,7 +122,7 @@ wraps the table; see Composition.
   column header; keep the row header to the one cell that names the row.
 - Stacked tables: put a `data-label` attribute on every `<th>` and `<td>` of
   the body, with the text of its column heading. The stacked layout shows that
-  text beside each value.
+  text above each value.
 - Scrollable container: wrap the table in
   `<div class="pathable-table-container--scrollable" tabindex="0">`. The
   container scrolls a table that is wider than it and, with `tabindex="0"`, a
