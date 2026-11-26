@@ -4,10 +4,14 @@
 // USWDS dependencies: uswds-fonts
 // JS-driven: Yes — search JS may enhance search behavior
 // Requires .usa-* on DOM: Yes — keep .usa-search for JS to find elements
+//
+// Also provides the pathable-search__submit-icon and
+// pathable-search__submit-text elements of the submit button.
 
 @use 'uswds-core' as *;
 
 @use 'usa-search/src/styles';
+@use 'pathable-sr-only';
 
 .pathable-search {
   @extend .usa-search;
@@ -19,6 +23,29 @@
 
 .pathable-search--small {
   @extend .usa-search--small;
+}
+
+.pathable-search__submit-icon {
+  @extend .usa-search__submit-icon;
+}
+
+// Unlike usa-search__submit-text, which uses display: none below mobile-lg and
+// so removes the button's only accessible name, hide the text in place the way
+// pathable-sr-only does (it reuses pathable-sr-only below mobile-lg), and show
+// it as block text from mobile-lg up.
+.pathable-search__submit-text {
+  @extend .pathable-sr-only;
+
+  @include at-media('mobile-lg') {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    display: block;
+  }
 }
 
 @media (max-width: 39.99em), (pointer: coarse) {

@@ -63,6 +63,7 @@ env:
     pagination
     prose
     radio
+    search
     tokens-color
     tokens-color-state-tokens
     tokens-color-system-tokens
