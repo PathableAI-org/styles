@@ -32,6 +32,21 @@
       // fraction of a pixel. At larger text the floor keeps some breathing room.
       padding-block: max(#{units(0.5)}, calc((#{units(5)} - 2px - 1lh) / 2));
       white-space: normal;
+
+      // The error state's thicker border would otherwise add to that height,
+      // so size the padding for the error border on both sides instead.
+      &.pathable-input--error {
+        padding-block: max(
+          0px,
+          calc(
+            (
+                #{units(5)} - #{2 * units($theme-input-state-border-width)} -
+                  1lh
+              ) /
+              2
+          )
+        );
+      }
     }
   }
 }

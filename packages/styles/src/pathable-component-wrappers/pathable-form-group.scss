@@ -25,14 +25,3 @@
 .pathable-form-group--error {
   @extend .usa-form-group--error;
 }
-
-// Deliberate, narrow USWDS deviation under docs/engineering/target-state.md's
-// deviation policy: USWDS hangs the error bar into the left gutter at desktop
-// widths. The hung bar is clipped off-screen whenever the form's container has
-// less than 1.25rem of left gutter, so the error indication is lost. Keep the
-// bar inside the form instead.
-.pathable-form-group--error {
-  @include at-media('desktop') {
-    margin-left: 0;
-  }
-}
