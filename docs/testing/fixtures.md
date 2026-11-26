@@ -30,6 +30,10 @@ Each check takes a list of component folders and defaults to every folder.
 | Harness tests | `pnpm --filter @pathableai/fixtures test`           | The harness's own unit tests |
 | All three     | `pnpm --filter @pathableai/fixtures check`          | Every folder                 |
 
+Run locally, axe also checks the folders CI defers (see [In CI](#in-ci)), so
+until #736 is settled it reports incomplete colour-contrast results for
+`select` and `memorable-date` and exits 1. Any other result is a real failure.
+
 - **html-validate** uses the `html-validate:recommended` and
   `html-validate:a11y` presets, plus `no-missing-references`, with
   `no-redundant-role` allowing only `role="list"` on a `<ul>` and

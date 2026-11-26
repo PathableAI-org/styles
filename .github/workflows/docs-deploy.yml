@@ -33,11 +33,38 @@ jobs:
       - name: Token custom property lint
         run: pnpm lint:tokens
 
-      # Pull requests that change only component pages restore these records
-      # instead of building and testing the HTML Storybook (Storybook
-      # Quality's component-pages job). Saved before the Pages rebuild below
-      # rewrites index.json, so the records stay newer than the index.
-      # Disabled with that job until check:component-pages:executed passes.
+      # The accessibility test run writes the component page records that the
+      # two steps below save. Pull requests that change only component pages
+      # restore these records instead of building and testing the HTML
+      # Storybook (Storybook Quality's component-pages job). Saved before the
+      # Pages rebuild below rewrites index.json, so the records stay newer
+      # than the index. All three are disabled with that job until
+      # check:component-pages:executed passes; re-enable them together. Pull
+      # requests already run these accessibility tests (Storybook Quality's
+      # accessibility-tests job).
+      - name: Storybook accessibility tests
+        if: false
+        run: |
+          set +e
+          npx serve -n -l 6006 apps/storybook/storybook-static &
+          SERVE_PID=$!
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:6006/ 2>/dev/null; then
+              echo "Server ready after ${i}s"
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "Server failed to start"
+              kill $SERVE_PID 2>/dev/null || true
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm --filter @pathable/storybook test-storybook --index-json --url http://127.0.0.1:6006
+          TEST_EXIT=$?
+          kill $SERVE_PID 2>/dev/null || true
+          exit $TEST_EXIT
+
       - name: Component page records cache key
         if: false
         id: records-key

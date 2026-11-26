@@ -342,17 +342,19 @@ round.
 
 ## CI checks
 
-The workflows run on pull requests to `main` and, for `fixtures.yml` and
-`docs-deploy.yml`, on pushes to `main`:
+`ci-full.yml` and `storybook-quality.yml` run on every pull request to `main`
+(and on demand), `fixtures.yml` on pull requests that change its inputs and on
+pushes to `main`, and `docs-deploy.yml` on pushes to `main` only:
 
 - `ci-full.yml`: ESLint and the repository tooling tests, Markdownlint,
   stylelint (on a pull request, only the changed `.scss` files) with the
   token lint, and Prettier. Each job but Markdownlint runs only when its
   paths change.
-- `storybook-quality.yml`: the styles Storybook build, its accessibility
-  tests, the visual smoke tests, the styles pixel suite, Storybook coverage
-  and the quality gates, when anything the HTML Storybook is built from
-  changes.
+- `storybook-quality.yml`: the styles Storybook build and its accessibility
+  tests, when anything the HTML Storybook is built from changes. The visual
+  smoke tests, the styles pixel suite, Storybook coverage and the quality
+  gates run then too, but their story lists are empty for now, so they check
+  nothing until stories are added to them.
 - `fixtures.yml`: every fixture check on every folder; see
   [Fixtures in CI](../testing/fixtures.md#in-ci).
 - `docs-deploy.yml`: on `main`, the token lint and the styles Storybook

@@ -51,10 +51,11 @@ jobs:
           install_playwright: 'true'
       - name: Build styles
         run: pnpm --filter @pathableai/styles build
-      # CI Full's Prettier job does not run for a pull request that changes
-      # only HTML, so the fixtures are linted here. ESLint is not run: the
-      # folders hold only HTML, which ESLint ignores, and the harness is
-      # linted by CI Full.
+      # CI Full's Prettier job does not start for a pull request that changes
+      # only HTML (its formattable filter has no *.html pattern), so the
+      # fixtures are linted here. ESLint is not run: the folders hold only
+      # HTML, which ESLint ignores, and CI Full's js-lint job lints the
+      # harness (its js_fixtures filter).
       - name: Lint fixtures
         run: |
           pnpm exec markdownlint fixtures --ignore-path .markdownlintignore
@@ -65,19 +66,17 @@ jobs:
         run: pnpm --filter @pathableai/fixtures check:html
       - name: Contract
         run: pnpm --filter @pathableai/fixtures check:contract
-      # Every component folder (as harness/folders.mjs lists them) except
-      # those in AXE_DEFERRED_FOLDERS.
+      # Every component folder, as allFolders() in harness/folders.mjs lists
+      # them, except those in AXE_DEFERRED_FOLDERS.
       - name: axe
         working-directory: fixtures
         env:
           FIXTURES_AXE_REPORT: ${{ runner.temp }}/fixtures-axe-report.json
         run: |
+          mapfile -t all < <(node --input-type=module \
+            -e "import { allFolders } from './harness/folders.mjs'; console.log(allFolders().join('\n'))")
           folders=()
-          for dir in */; do
-            folder=${dir%/}
-            case "$folder" in
-              harness | node_modules) continue ;;
-            esac
+          for folder in "${all[@]}"; do
             case " $AXE_DEFERRED_FOLDERS " in
               *" $folder "*) echo "axe held back for $folder (see AXE_DEFERRED_FOLDERS)" ;;
               *) folders+=("$folder") ;;
