@@ -20,13 +20,11 @@ const page = {
     ],
   },
 }
-const css = {
-  classes: new Set([
-    'pathable-thing',
-    'pathable-thing--small',
-    'pathable-thing__part',
-  ]),
-}
+const css = new Map([
+  ['pathable-thing', 'thing'],
+  ['pathable-thing--small', 'thing'],
+  ['pathable-thing__part', 'thing'],
+])
 
 test('classesIn reads every class attribute, either quote style', () => {
   assert.deepEqual(
@@ -57,7 +55,10 @@ test('an unknown pathable class fails; other classes are ignored', () => {
   ])
   const errors = checkFolder('thing', fixtures, page, css)
   assert.equal(errors.length, 1)
-  assert.match(errors[0], /\.pathable-thing__bogus is not a class selector/u)
+  assert.match(
+    errors[0],
+    /\.pathable-thing__bogus is not defined by any module in dist\/css\/manifest\.json/u,
+  )
 })
 
 test('a non-default variant without a fixture fails', () => {
@@ -185,7 +186,7 @@ test('an unknown pathable class still fails in a utility folder', () => {
     css,
   )
   assert.equal(errors.length, 1)
-  assert.match(errors[0], /\.pathable-bogus is not a class selector/u)
+  assert.match(errors[0], /\.pathable-bogus is not defined by any module/u)
 })
 
 const utilitiesCss = `
@@ -200,13 +201,11 @@ const utilityCheck = (markup) =>
     'utilities-color',
     new Map([['a.html', markup]]),
     { data: { kind: 'utility' } },
-    {
-      classes: new Set([
-        'pathable-margin-top-2',
-        'pathable-bg-link',
-        'pathable-button',
-      ]),
-    },
+    new Map([
+      ['pathable-margin-top-2', 'utilities'],
+      ['pathable-bg-link', 'utilities'],
+      ['pathable-button', 'button'],
+    ]),
     {
       classes: readUtilityClasses(utilitiesCss),
       patterns: utilityPatterns([

@@ -79,6 +79,10 @@ jobs:
             esac
           done
           node harness/axe.mjs "${folders[@]}"
+      # Every component folder: each fixture's module page must compute the
+      # same styles as the full bundle.
+      - name: Modules
+        run: pnpm --filter @pathableai/fixtures check:modules
       - name: Upload axe report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7

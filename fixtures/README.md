@@ -65,7 +65,8 @@ fixtures/
 ## Writing a fixture
 
 - An HTML fragment, not a document: no `<html>`, `<head>` or `<body>`. The
-  harness injects it into a `<main>` on a page that loads `styles.css`.
+  harness injects it into a `<main>` on a page that links only the CSS modules
+  the fixture needs (`dist/css/*.css`), not the full `styles.css`.
 - Optionally start with one `<!-- description: … -->` comment: a sentence or
   two saying what the state shows. The component page prints it above the
   state's example; it is not part of the markup shown. Nothing else comes
@@ -144,16 +145,26 @@ to these rules:
 
 Each check takes a list of component folders and defaults to all of them.
 Run them from `fixtures/` or with `pnpm --filter @pathableai/fixtures`. The
-contract and axe checks need the built stylesheet:
+contract, axe and modules checks need the built stylesheet:
 `pnpm --filter @pathableai/styles build`.
 
-| Script                | What it checks                                                                                                                                                                                                                                   |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `pnpm check:html`     | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                                                     |
-| `pnpm check:contract` | each folder is a page slug, file names are kebab-case states, every `pathable-*` class is a class selector in `dist/styles.css`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
-| `pnpm check:axe`      | axe in Chromium, with `styles.css` loaded, at a desktop and a phone viewport; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                                                             |
-| `pnpm check`          | All three                                                                                                                                                                                                                                        |
-| `pnpm test`           | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                                                            |
+The CSS modules in `dist/css/` are slices of `dist/styles.css`, not separate
+compiles: `build-css-modules.mjs` compiles the components layer once, splits
+it at the statements of `pathable-all.scss` and checks the slices equal the
+bundle's rules. There is one module per wrapper, plus `shared-input` and
+`shared-alert` for the USWDS rules several wrappers extend (`icon` holds the
+USWDS icon rules), `base` and `utilities`. A module page loads modules in
+manifest order, each with the modules it requires, so it holds a subset of the
+bundle's rules in bundle order.
+
+| Script                | What it checks                                                                                                                                                                                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm check:html`     | html-validate with the `html-validate:recommended` and `html-validate:a11y` presets ([`harness/html.mjs`](harness/html.mjs))                                                                                                                                        |
+| `pnpm check:contract` | each folder is a page slug, file names are kebab-case states, every `pathable-*` class is in the `classes` of a module in `dist/css/manifest.json`, and every non-default variant has a fixture using its modifier ([`harness/contract.mjs`](harness/contract.mjs)) |
+| `pnpm check:axe`      | axe in Chromium at a desktop and a phone viewport, on a page that links the CSS modules the fixture needs; writes `.cache/axe-report.json` ([`harness/axe.mjs`](harness/axe.mjs))                                                                                   |
+| `pnpm check:modules`  | the computed styles of every element and its `::before` and `::after` match between a page with `styles.css` and a page with the fixture's modules, at both viewports ([`harness/modules-check.mjs`](harness/modules-check.mjs))                                    |
+| `pnpm check`          | All four                                                                                                                                                                                                                                                            |
+| `pnpm test`           | Unit tests of the harness, and integration tests that run each check on markup that must fail (`node --test`; needs the styles build)                                                                                                                               |
 
 ### html-validate configuration
 

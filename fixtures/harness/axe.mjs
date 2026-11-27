@@ -3,10 +3,14 @@
  *
  *   node harness/axe.mjs [folder …]    default: every component folder
  *
- * harness/page.html links /dist/styles.css. The @pathableai/styles package
- * root is served at /, so the stylesheet's ../fonts and ../img references
- * resolve to the package's own fonts and images; a missing asset fails the
- * run. The page has one empty <main>. Each
+ * Each fixture gets its own page, built from harness/page.html: its head
+ * links /dist/css/<file> for each CSS module the fixture needs (modulesFor in
+ * modules.mjs: the modules owning its `pathable-*` classes, what they
+ * require, base and utilities), not the full bundle. The @pathableai/styles
+ * package root is served at /, so the modules' ../../fonts and ../../img
+ * references resolve to the package's own fonts and images; a missing asset
+ * fails the run, and so does a linked stylesheet that did not load. The page
+ * has one empty <main>. Each
  * fixture is injected into that <main> and checked at a desktop and a phone
  * viewport, because some parts (such as an activity row's trailing actions)
  * are only visible at one of them.
@@ -29,6 +33,7 @@ import { chromium } from 'playwright'
 
 import { stylesCssPath } from './css.mjs'
 import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
+import { moduleHref, modulesFor, readManifest, renderPage } from './modules.mjs'
 
 /** Page-level rules that cannot apply to a fragment; see README.md. */
 export const DISABLED_RULES = [
@@ -146,10 +151,11 @@ export function renderSummary(report) {
   return `${lines.join('\n')}\n`
 }
 
-const ORIGIN = 'http://fixtures.test'
+export const ORIGIN = 'http://fixtures.test'
 const CONTENT_TYPES = {
   '.css': 'text/css',
   '.html': 'text/html',
+  '.json': 'application/json',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.woff': 'font/woff',
@@ -157,17 +163,19 @@ const CONTENT_TYPES = {
   '.ttf': 'font/ttf',
 }
 
+/** The @pathableai/styles package root, which the harness serves at /. */
+export const stylesPackageDir = () => dirname(dirname(stylesCssPath()))
+
 /**
- * Serves page.html at / and everything else from the styles package root,
- * except that /assets/ is the package's dist folder.
- * Paths that are not found are added to `missing`.
+ * Serves `state.html` at / and everything else from the styles package root,
+ * except that /assets/ is the package's dist folder. Set `state.html` before
+ * each navigation. Paths that are not found are added to `missing`.
  */
-async function serve(context, packageDir, missing) {
-  const pageHtml = readFileSync(join(import.meta.dirname, 'page.html'))
+export async function serve(context, packageDir, missing, state) {
   await context.route(`${ORIGIN}/**`, async (route) => {
     const { pathname } = new URL(route.request().url())
     if (pathname === '/') {
-      await route.fulfill({ body: pageHtml, contentType: 'text/html' })
+      await route.fulfill({ body: state.html, contentType: 'text/html' })
       return
     }
     // Fixtures reference the sprite at /assets/img/sprite.svg, where an
@@ -193,8 +201,32 @@ async function serve(context, packageDir, missing) {
   })
 }
 
+/** The page for a fixture that links the modules it needs, and that list. */
+export function modulePage(html, manifest) {
+  const names = modulesFor(html, manifest)
+  const hrefs = names.map((name) => moduleHref(manifest, name))
+  return { names, page: renderPage(hrefs) }
+}
+
+/** Throws unless every stylesheet the page links loaded with rules. */
+export async function assertStylesheetsLoaded(page, expected, label) {
+  const loaded = await page.evaluate(() =>
+    [...document.styleSheets].map((sheet) => {
+      try {
+        return sheet.cssRules.length
+      } catch {
+        return 0
+      }
+    }),
+  )
+  if (loaded.length !== expected || loaded.some((rules) => rules === 0)) {
+    throw new Error(`${label}: a linked stylesheet did not load`)
+  }
+}
+
 export async function runAxe(folders, root = fixturesRoot) {
-  const packageDir = dirname(dirname(stylesCssPath()))
+  const packageDir = stylesPackageDir()
+  const manifest = readManifest()
   const missing = new Set()
   const browser = await chromium.launch()
   const results = []
@@ -204,18 +236,21 @@ export async function runAxe(folders, root = fixturesRoot) {
       const context = await browser.newContext({
         viewport: { width: viewport.width, height: viewport.height },
       })
-      await serve(context, packageDir, missing)
+      const state = { html: '' }
+      await serve(context, packageDir, missing, state)
       const page = await context.newPage()
       const cdp = await context.newCDPSession(page)
-      await page.goto(`${ORIGIN}/`)
-      const rules = await page.evaluate(
-        () => document.styleSheets[0]?.cssRules.length ?? 0,
-      )
-      if (rules === 0) throw new Error('page.html did not load styles.css')
       for (const folder of folders) {
         for (const file of fixtureFiles(folder, root)) {
           const html = readFileSync(join(root, folder, file), 'utf8')
+          const { names, page: pageHtml } = modulePage(html, manifest)
+          state.html = pageHtml
           await page.goto(`${ORIGIN}/`)
+          await assertStylesheetsLoaded(
+            page,
+            names.length,
+            `${folder}/${file} (${viewport.name})`,
+          )
           await page.locator('#fixture').evaluate((main, markup) => {
             main.innerHTML = markup
           }, html)

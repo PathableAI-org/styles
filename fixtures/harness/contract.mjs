@@ -9,8 +9,8 @@
  *   - a fixture's file name is not a kebab-case state name such as
  *     `no-actions.html`, or a component folder holds anything other than such
  *     files (a subfolder, `.htm`, `.HTML`), which the checks would skip;
- *   - a `pathable-*` class in a fixture is not a class selector in
- *     @pathableai/styles/dist/styles.css (a class without the prefix, such as
+ *   - a `pathable-*` class in a fixture is not in the `classes` of any module
+ *     in @pathableai/styles/dist/css/manifest.json (a class without the prefix, such as
  *     the USWDS utility `margin-x-2`, is not checked here: the component-page
  *     check reads every class of a page's examples, fixtures included);
  *   - a `pathable-` utility class in a fixture (one in dist/utilities.css
@@ -36,10 +36,7 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
-import { parseFragment } from 'parse5'
-
 import {
-  readCss,
   readUtilityClasses,
   undeclaredUtilityClasses,
   undeclaredUtilityMessage,
@@ -47,26 +44,14 @@ import {
 } from '../../packages/styles/scripts/check-component-pages.mjs'
 import { readPages } from '../../packages/styles/scripts/component-pages.mjs'
 
-import { stylesCssPath, utilitiesCssPath } from './css.mjs'
+import { utilitiesCssPath } from './css.mjs'
 import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
+import { classOwners, classesIn, readManifest } from './modules.mjs'
+
+export { classesIn }
 
 /** A fixture file name: a kebab-case state name ending in `.html`. */
 export const STATE_FILE_NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$/u
-
-/** Every class in a `class` attribute of an element in the markup. */
-export function classesIn(html) {
-  const classes = new Set()
-  const visit = (node) => {
-    for (const attr of node.attrs ?? []) {
-      if (attr.name !== 'class') continue
-      for (const name of attr.value.split(/\s+/u)) if (name) classes.add(name)
-    }
-    for (const child of node.childNodes ?? []) visit(child)
-    if (node.content) visit(node.content)
-  }
-  visit(parseFragment(html))
-  return classes
-}
 
 /**
  * Errors for entries of a component folder that are not `.html` files, so a
@@ -87,12 +72,12 @@ export function checkFolderEntries(folder, entries) {
 
 /**
  * Checks one folder. `fixtures` maps file name to markup, `page` is the parsed
- * component page (or undefined) and `css` is readCss() output. `utility` is
+ * component page (or undefined) and `owners` is classOwners() of the manifest. `utility` is
  * `{ classes, patterns }`: the utility classes of dist/utilities.css and the
  * patterns every page declares (omitted: utility citations are not checked).
  * Returns errors.
  */
-export function checkFolder(folder, fixtures, page, css, utility) {
+export function checkFolder(folder, fixtures, page, owners, utility) {
   if (!page) {
     return [
       `${folder}/: no component page components/${folder}.md; a fixture folder must be named after a page slug`,
@@ -120,9 +105,9 @@ export function checkFolder(folder, fixtures, page, css, utility) {
     }
     for (const name of classes) {
       used.add(name)
-      if (name.startsWith('pathable-') && !css.classes.has(name)) {
+      if (name.startsWith('pathable-') && !owners.has(name)) {
         errors.push(
-          `${folder}/${file}: .${name} is not a class selector in dist/styles.css`,
+          `${folder}/${file}: .${name} is not defined by any module in dist/css/manifest.json`,
         )
       }
     }
@@ -152,7 +137,7 @@ export async function checkFolders(folders, root = fixturesRoot) {
     classes: readUtilityClasses(readFileSync(utilitiesCssPath(), 'utf8')),
     patterns: utilityPatterns(allPages),
   }
-  const css = readCss(readFileSync(stylesCssPath(), 'utf8'))
+  const owners = classOwners(readManifest())
   return folders.flatMap((folder) => {
     if (!existsSync(join(root, folder)))
       return [`${folder}/: no such folder under fixtures/`]
@@ -167,7 +152,7 @@ export async function checkFolders(folders, root = fixturesRoot) {
     }).map((entry) => ({ name: entry.name, isDirectory: entry.isDirectory() }))
     return [
       ...checkFolderEntries(folder, entries),
-      ...checkFolder(folder, fixtures, pages.get(folder), css, utility),
+      ...checkFolder(folder, fixtures, pages.get(folder), owners, utility),
     ]
   })
 }
