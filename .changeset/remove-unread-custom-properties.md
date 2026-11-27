@@ -14,7 +14,7 @@ utility classes are unchanged and nothing renders differently. The Sass
 variables and maps the removed properties came from (`$spacing-scale`,
 `$pathable-spacing-scale`, `$radius-scale`, `$typography-tokens`, the `$ui-*`
 sizes and `$pathable-utilities`) stay in place. The `src/_utilities-tokens.scss`
-partial, which only emitted the utility properties, is removed.
+partial stays, so loading it still compiles, but it now emits nothing.
 
 Migration: replace each removed property with the class or value below. Spacing
 values follow the spacing token page (`tokens-spacing-units`), where one step

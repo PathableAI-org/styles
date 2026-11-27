@@ -267,7 +267,7 @@ Consuming projects do not need to manually place font files — they are distrib
 
 > Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes. See [target state](../../docs/engineering/target-state.md).
 
-This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as an internal `--pathable-*` CSS custom property, which is not consumer API.
+This package generates `.pathable-*` CSS utility classes from configuration maps. It emits no custom property for a utility value; each class sets its value directly.
 
 ### Utility Class Naming Convention
 
@@ -317,7 +317,6 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 - Agents MUST use `.pathable-*` utility classes in HTML templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
 - Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
 - Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
-- Agents MUST NOT present `--pathable-{module}-{value}` custom properties to consumers as an alternative to the class-based utilities; they are internal.
 
 ## USWDS Component Wrappers Usage
 

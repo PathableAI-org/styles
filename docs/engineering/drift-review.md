@@ -153,6 +153,7 @@ The utility classes and their configuration.
   - `packages/styles/AGENTS.md`
   - `packages/styles/src/_utilities.scss`
   - `packages/styles/src/_utilities-config.scss`
+  - `packages/styles/src/_utilities-tokens.scss`
   - `packages/styles/src/utilities.scss`
   - `packages/styles/src/stories/utilities`
   - `packages/styles/test/selective-import.scss`

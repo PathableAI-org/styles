@@ -137,7 +137,8 @@ function parseScssMap(content, mapName) {
  * hyphen, `&`, `}` or `(`, so a BEM modifier before a pseudo-class
  * (`.card--sm:hover`, `&--sm:hover`, `#{&}--sm:hover`) and an `@supports`
  * feature query (`(--x: y)`) are not mistaken for declarations. Interpolated
- * names (`--pathable-#{$x}:`) do not match; the map parsers below cover those.
+ * names (`--pathable-#{$x}:`) do not match, so token source files declare
+ * each defined token with a literal name.
  * Callers strip comments first (see stripComments).
  */
 const DECLARATION_PATTERN = /(?<![\w&}(-])(--[a-zA-Z0-9_-]+)\s*:/g
