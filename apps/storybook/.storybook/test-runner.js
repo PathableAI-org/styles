@@ -3,10 +3,8 @@ import { join } from 'node:path'
 
 import { injectAxe, checkA11y } from 'axe-playwright'
 
-import { capturePixels, pixelMode, setupPixels } from './pixels.js'
-
 // The test-runner runs with this workspace (apps/storybook) as its working
-// directory, from the root scripts, the pixel suite and CI alike.
+// directory, from the root scripts and CI alike.
 const EXECUTED_DIR = join(process.cwd(), 'test-results/component-pages')
 
 /**
@@ -39,9 +37,6 @@ async function recordExecuted(page, context) {
 
 /** @type { import('@storybook/test-runner').TestRunnerConfig } */
 const config = {
-  setup() {
-    if (pixelMode) setupPixels()
-  },
   async preVisit(page, context) {
     await page.setViewportSize({ width: 1280, height: 900 })
     const storyViewports = new Map([
@@ -110,21 +105,16 @@ const config = {
     }
     // Stories named `--forced-colors` render and run their play functions with
     // forced colors active, matching quality-gates.mjs and test-visual.mjs.
-    // This runs before the pixel-mode return so a play function sees the same
-    // rendering in both runs; no pixel baseline captures a forced-colors story.
     // The page is reused across the stories of one file, so every other story
     // resets the emulation.
     await page.emulateMedia({
       forcedColors: context.id.endsWith('--forced-colors') ? 'active' : null,
     })
 
-    // Pixel runs only capture; the accessibility job owns the axe checks.
-    if (pixelMode) return
     await injectAxe(page)
   },
   async postVisit(page, context) {
     await recordExecuted(page, context)
-    if (pixelMode) return capturePixels(page, context)
     await assertInteractionStatesPointerFeedback(page, context)
     const isFilterableOptionList = context.id.startsWith(
       'components-form-controls-filterable-option-list--',

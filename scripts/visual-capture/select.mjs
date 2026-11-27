@@ -110,8 +110,6 @@ function entryFromChangedFile(entry, changedPaths) {
  * - `indexes`: `{ styles, react }`, each the head Storybook's `index.json`
  *   entries as an array (`react` may be absent when not built)
  * - `canonical`: the canonical story list, `{ id, mode }`
- * - `pixelStories` and `rollout`: the pixel suite's story entries and rollout
- *   component keys
  * - `extra`: story IDs asked for explicitly, `react:<id>` for the React
  *   Storybook
  *
@@ -123,8 +121,6 @@ export function chooseStories({
   changedPaths,
   indexes,
   canonical = [],
-  pixelStories = [],
-  rollout = [],
   extra = [],
 }) {
   const chosen = new Map()
@@ -169,18 +165,6 @@ export function chooseStories({
     (entry) => entry.type === 'story',
   )
   const byId = new Map(styles.map((entry) => [entry.id, entry]))
-  const rolloutIds = pixelStories
-    .filter((story) => rollout.includes(story.key.split('/')[0]))
-    .map((story) => ({ id: story.id, component: story.key.split('/')[0] }))
-
-  for (const { id, component } of rolloutIds) {
-    const entry = byId.get(id)
-    if (!entry) continue
-    if (slugs.some((slug) => loose(slug) === loose(component))) {
-      add('styles', entry, `Pixel rollout story of "${component}".`, false)
-    }
-  }
-
   for (const [workspace, entries] of workspaces) {
     const paths = shared.filter((path) =>
       sharedWorkspaces(path).includes(workspace),
@@ -190,13 +174,11 @@ export function chooseStories({
     const stories = entries.filter((entry) => entry.type === 'story')
     const listed =
       workspace === 'styles'
-        ? [...canonical, ...rolloutIds]
-            .map(({ id }) => byId.get(id))
-            .filter(Boolean)
+        ? canonical.map(({ id }) => byId.get(id)).filter(Boolean)
         : []
-    // With no canonical or rollout story in this Storybook (the React one has
-    // none, and the styles lists are empty while they are rebuilt), fall back
-    // to the first story of each stories file.
+    // With no canonical story in this Storybook (the React one has none, and
+    // the styles list is empty while it is rebuilt), fall back to the first
+    // story of each stories file.
     const firstOfEachFile = stories.filter(
       (entry, index) =>
         stories.findIndex((other) => other.importPath === entry.importPath) ===
@@ -246,7 +228,7 @@ export function conditionsForDiff(diffText) {
   return conditions
 }
 
-/** The viewport names for a story's mode, as the pixel suite uses them. */
+/** The viewport names for a story's mode. */
 export function viewportsForMode(mode) {
   return mode === 'desktop' || mode === 'mobile'
     ? [mode]

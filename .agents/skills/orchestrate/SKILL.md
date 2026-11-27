@@ -156,11 +156,8 @@ Verifier: `base`, `head`, `round`, plus
 `run instructions changed: <what, or none>`.
 
 When the round has a visual review, run the capture script yourself; no
-subagent takes the screenshots. Make sure Docker is running: if `docker info`
-fails, start it with `(nohup dockerd > /tmp/dockerd.log 2>&1 &)` and wait for
-`docker info` to succeed, at most two minutes. If it never does, add
-`--no-pixels` and say so in the round summary. Then run it in the background,
-with its output sent to a log file:
+subagent takes the screenshots. Run it in the background, with its output
+sent to a log file:
 
 ```sh
 mkdir -p <scratchpad>/visual-capture

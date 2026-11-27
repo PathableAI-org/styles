@@ -34,7 +34,7 @@ claims are missing, ambiguous or inconsistent with each other, reply with a
    guidance checks, unit tests or a person's assistive-technology observation.
 3. Confirm that every named story exists and ran. Report it as `passing`,
    `failing` or `missing` for the applicable Storybook.
-4. For a visual claim not covered by a committed pixel baseline, publish one
+4. For a visual claim, publish one
    private screenshots page for the run as a private Artifact and name it in
    the claim's result.
 5. Stop servers, remove the worktree and remove temporary files.

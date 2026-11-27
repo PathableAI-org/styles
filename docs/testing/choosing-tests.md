@@ -14,7 +14,7 @@ Use these questions in order:
 3. **Is this behavior specific to one framework API?** Use a package-specific
    test.
 4. **Is this a supported visual state?** Add a deterministic fixed story and
-   visual-regression coverage.
+   visual smoke test coverage.
 5. **Can an automated accessibility rule detect the problem?** Cover the story
    with the accessibility runner.
 6. **Does the requirement involve keyboard operation, focus, or changing
