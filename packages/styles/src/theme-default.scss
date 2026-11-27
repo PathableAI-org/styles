@@ -3,6 +3,7 @@
 // all non-color tokens) into dist/theme-default.css.
 // Configure USWDS before loading any PathAble additions.
 @forward 'uswds-theme';
+@forward 'layers';
 
 @forward '_colors';
 @forward '_typography';

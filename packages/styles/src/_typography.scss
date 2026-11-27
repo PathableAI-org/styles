@@ -69,12 +69,14 @@ $typography-scale: (
   ),
 );
 
-:where(:root) {
-  --pathable-font-heading: #{$pathable-font-heading};
-  --pathable-font-alternate-heading: #{$pathable-font-alternate-heading};
-  --pathable-font-subheading: #{$pathable-font-subheading};
-  --pathable-font-body: #{$pathable-font-body};
-  --pathable-font-mono: #{$pathable-font-mono};
+@layer pathable.base {
+  :where(:root) {
+    --pathable-font-heading: #{$pathable-font-heading};
+    --pathable-font-alternate-heading: #{$pathable-font-alternate-heading};
+    --pathable-font-subheading: #{$pathable-font-subheading};
+    --pathable-font-body: #{$pathable-font-body};
+    --pathable-font-mono: #{$pathable-font-mono};
+  }
 }
 
 // Typography Scale
@@ -89,17 +91,19 @@ $ui-label-md: 0.875rem;
 $ui-label-sm: 0.75rem;
 $ui-caption-md: 0.75rem;
 
-:where(:root) {
-  --ui-display-lg: #{$ui-display-lg};
-  --ui-heading-lg: #{$ui-heading-lg};
-  --ui-heading-md: #{$ui-heading-md};
-  --ui-heading-sm: #{$ui-heading-sm};
-  --ui-body-lg: #{$ui-body-lg};
-  --ui-body-md: #{$ui-body-md};
-  --ui-body-sm: #{$ui-body-sm};
-  --ui-label-md: #{$ui-label-md};
-  --ui-label-sm: #{$ui-label-sm};
-  --ui-caption-md: #{$ui-caption-md};
+@layer pathable.base {
+  :where(:root) {
+    --ui-display-lg: #{$ui-display-lg};
+    --ui-heading-lg: #{$ui-heading-lg};
+    --ui-heading-md: #{$ui-heading-md};
+    --ui-heading-sm: #{$ui-heading-sm};
+    --ui-body-lg: #{$ui-body-lg};
+    --ui-body-md: #{$ui-body-md};
+    --ui-body-sm: #{$ui-body-sm};
+    --ui-label-md: #{$ui-label-md};
+    --ui-label-sm: #{$ui-label-sm};
+    --ui-caption-md: #{$ui-caption-md};
+  }
 }
 
 // CSS Custom Properties for Typography Tokens
@@ -128,8 +132,10 @@ $typography-tokens: (
   'font-line-height-caption-md': 1.33,
 );
 
-:where(:root) {
-  @each $name, $value in $typography-tokens {
-    --pathable-#{$name}: #{$value};
+@layer pathable.base {
+  :where(:root) {
+    @each $name, $value in $typography-tokens {
+      --pathable-#{$name}: #{$value};
+    }
   }
 }

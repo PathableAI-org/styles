@@ -13,48 +13,56 @@
 
 $theme-font-path: '../fonts' !default;
 
-// Fredoka Regular (400)
-@font-face {
-  font-family: 'Fredoka';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('#{$theme-font-path}/fredoka/Fredoka-Regular.woff2') format('woff2');
-}
+@use 'sass:meta';
 
-// Nunito Regular (400)
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('#{$theme-font-path}/nunito/Nunito-Regular.woff2') format('woff2');
-}
+@layer pathable.base {
+  // USWDS font faces (give the mono utilities their Roboto Mono face).
+  @include meta.load-css('uswds-fonts');
 
-// Nunito SemiBold (600)
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('#{$theme-font-path}/nunito/Nunito-SemiBold.woff2') format('woff2');
-}
+  // Fredoka Regular (400)
+  @font-face {
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('#{$theme-font-path}/fredoka/Fredoka-Regular.woff2')
+      format('woff2');
+  }
 
-// Poppins Bold (700)
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('#{$theme-font-path}/poppins/Poppins-Bold.woff2') format('woff2');
-}
+  // Nunito Regular (400)
+  @font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('#{$theme-font-path}/nunito/Nunito-Regular.woff2') format('woff2');
+  }
 
-// Montserrat Bold (700)
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('#{$theme-font-path}/montserrat/Montserrat-Bold.woff2')
-    format('woff2');
+  // Nunito SemiBold (600)
+  @font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('#{$theme-font-path}/nunito/Nunito-SemiBold.woff2') format('woff2');
+  }
+
+  // Poppins Bold (700)
+  @font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('#{$theme-font-path}/poppins/Poppins-Bold.woff2') format('woff2');
+  }
+
+  // Montserrat Bold (700)
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('#{$theme-font-path}/montserrat/Montserrat-Bold.woff2')
+      format('woff2');
+  }
 }

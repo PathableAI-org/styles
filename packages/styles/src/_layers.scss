@@ -1,0 +1,4 @@
+// Cascade layer order. Whichever file loads first fixes the order, so every
+// compiled file declares the same statement and the order never depends on
+// which files a page loads, or in what order.
+@layer pathable.base, pathable.components, pathable.utilities;

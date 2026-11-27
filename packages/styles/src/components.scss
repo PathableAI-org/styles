@@ -3,7 +3,8 @@
 // grid) into dist/components.css, without the default :root theme tokens.
 // Configure USWDS before loading any USWDS source or PathAble additions.
 @forward 'uswds-theme';
+@forward 'layers';
 
 @forward 'fonts';
 @forward 'pathable-component-wrappers';
-@forward 'usa-layout-grid/src/styles';
+@forward 'layout-grid';
