@@ -96,9 +96,11 @@ stack inside the repository.
    [request fields](#requests):
    - `code-reviewer`, always;
    - `scope-reviewer`, always;
-   - `visual-reviewer`, whenever the round's diff touches a rendering path in
-     the visual-review guide, after you run the capture script yourself on the
-     local base and head SHAs (see Requests);
+   - `visual-reviewer`, only when the capture's verdict is `review`. First run
+     `node scripts/visual-capture.mjs --base <base SHA> --head <local head SHA> --classify`
+     yourself and quote its verdict line in the round summary; exit 0 means a
+     visual review is required, exit 3 means it is not. On exit 0, run the
+     capture (see Requests);
    - `verifier`, for High work.
 
    End the turn while they run. Each replies to you only.
@@ -155,7 +157,11 @@ Verifier: `base`, `head`, `round`, plus
 `claims: <the numbered claims from the accepted issue, each with its observation and evidence channel>` and
 `run instructions changed: <what, or none>`.
 
-When the round has a visual review, run the capture script yourself; no
+Never judge by hand whether a diff needs a visual review; the classifier
+(`scripts/visual-capture/classify.mjs`) owns the rule. Run
+`node scripts/visual-capture.mjs --base <base SHA> --head <local head SHA> --classify`
+first (no build, about a second). On exit 3, no review is required: start no
+capture and no visual reviewer. On exit 0, run the capture script yourself; no
 subagent takes the screenshots. Run it in the background, with its output
 sent to a log file:
 
@@ -167,15 +173,26 @@ node scripts/visual-capture.mjs --base <base SHA> --head <local head SHA> \
 ```
 
 When it finishes, read only the script's summary lines (the manifest path, the
-counts and any error lines) from the end of the log. Never read the
-screenshots, the manifest's contents or the full log. Leave the worktrees: the
-visual reviewer reuses them and removes them. The script exits non-zero
+`Verdict:` line, the counts and any error lines) from the end of the log. Never read the
+screenshots, the manifest's contents or the full log. When the verdict is
+`no-render-change` or `no-difference`, the script removes the worktrees itself.
+For `review`, leave them: the visual reviewer reuses them and removes them. The script exits non-zero
 whenever the manifest has any `errors` entry, so a non-zero exit is not a
 failed run. When it writes a manifest, pass it to the visual reviewer even if
 it reports errors: a head that does not build is the reviewer's blocking
 finding, a result about the code, and a single capture error is something the
 reviewer re-captures. Re-run once only when the script writes no manifest; a
 second run with no manifest is a stop point.
+
+Start the visual reviewer only when the verdict line says `review`. For
+`not-required`, `no-render-change` and `no-difference`, record the verdict and
+the capture summary as the round's visual evidence and start no reviewer.
+`--force` captures anyway, when you or a person want a review on a diff the
+rule skips. It skips the classifier gate and the output pre-check, always ends
+with the verdict `review`, and, with no rendering paths, samples the first
+story of each stories file. For visual-only styles work, always run the
+capture with `--force`: the visual review is its evidence, so the reviewer
+always runs and a missing visible change is reported as `missing`.
 
 The visual reviewer gets the manifest path plus the common request fields.
 From round 2 it also gets `previous capture: <path to the previous round's
