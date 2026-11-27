@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict'
+import { readFileSync, readdirSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { after, before, describe, it } from 'node:test'
 import { chromium } from 'playwright'
 
@@ -12,6 +14,7 @@ import {
 } from '../visual-capture/measure.mjs'
 import {
   chooseStories,
+  classPages,
   componentSlug,
   conditionsForDiff,
   conditionsForStory,
@@ -19,7 +22,11 @@ import {
   kebab,
   sharedWorkspaces,
   viewportsForMode,
+  wrapperClass,
 } from '../visual-capture/select.mjs'
+
+const ROOT = resolve(import.meta.dirname, '../..')
+const WRAPPER_DIR = 'packages/styles/src/pathable-component-wrappers/'
 
 const story = (id, title, importPath) => ({
   type: 'story',
@@ -136,6 +143,65 @@ describe('isSharedPath', () => {
   })
 })
 
+describe('wrapperClass and classPages', () => {
+  it('reads the class a wrapper partial defines', () => {
+    assert.equal(
+      wrapperClass(`${WRAPPER_DIR}pathable-input.scss`),
+      'pathable-input',
+    )
+    assert.equal(wrapperClass(`${WRAPPER_DIR}_index.scss`), null)
+    assert.equal(wrapperClass(`${WRAPPER_DIR}pathable-all.scss`), null)
+    assert.equal(wrapperClass('packages/styles/src/_colors.scss'), null)
+  })
+
+  it('maps classes to pages by front matter and by fixture use', () => {
+    const map = classPages({
+      pages: [
+        {
+          slug: 'text-input',
+          text: '---\nname: Text input\nstyles-class: pathable-input\n---\n\nstyles-class: pathable-other\n',
+        },
+      ],
+      fixtures: [
+        {
+          slug: 'form',
+          html: '<input class="pathable-input pathable-input--error">',
+        },
+        {
+          slug: 'group',
+          html: '<div class="pathable-input-group"><i class="pathable-input__x"></i></div>',
+        },
+      ],
+    })
+    assert.deepEqual(
+      map.get('pathable-input'),
+      ['form', 'text-input', 'group'].sort(),
+    )
+    assert.deepEqual(map.get('pathable-input-group'), ['group'])
+    assert.equal(map.has('pathable-other'), false)
+  })
+
+  it('finds the real pages and fixtures that show a class', () => {
+    const fixtures = (slug) =>
+      readdirSync(resolve(ROOT, 'fixtures', slug))
+        .filter((name) => name.endsWith('.html'))
+        .map((name) => ({
+          slug,
+          html: readFileSync(resolve(ROOT, 'fixtures', slug, name), 'utf8'),
+        }))
+    const page = (slug) => ({
+      slug,
+      text: readFileSync(resolve(ROOT, 'components', `${slug}.md`), 'utf8'),
+    })
+    const map = classPages({
+      pages: [page('text-input'), page('side-navigation')],
+      fixtures: [...fixtures('text-input'), ...fixtures('side-navigation')],
+    })
+    assert.ok(map.get('pathable-input').includes('text-input'))
+    assert.ok(map.get('pathable-sidenav').includes('side-navigation'))
+  })
+})
+
 describe('chooseStories', () => {
   it('chooses every story of a changed component and marks it changed', () => {
     const chosen = chooseStories({
@@ -220,6 +286,72 @@ describe('chooseStories', () => {
     )
     assert.equal(provider.changed, true)
     assert.equal(chosen.length, 3)
+  })
+
+  const generated = [
+    ['text-input', 'default'],
+    ['text-input', 'error'],
+    ['form', 'default'],
+    ['side-navigation', 'default'],
+    ['alert', 'info'],
+  ].map(([slug, name]) =>
+    story(
+      `component-examples-${slug}--${name}`,
+      `Component examples/${slug}`,
+      `./generated/${slug}.stories.ts`,
+    ),
+  )
+
+  it('chooses the stories that show a changed wrapper class', () => {
+    const chosen = chooseStories({
+      changedPaths: [`${WRAPPER_DIR}pathable-input.scss`],
+      indexes: { styles: generated },
+      classPages: new Map([['pathable-input', ['form', 'text-input']]]),
+    })
+    assert.deepEqual(
+      chosen.map((item) => [item.id, item.changed]),
+      [
+        ['component-examples-form--default', true],
+        ['component-examples-text-input--default', true],
+        ['component-examples-text-input--error', true],
+      ],
+    )
+    assert.equal(
+      chosen[0].reasons[0],
+      'Wrapper "pathable-input" changed (shown on form).',
+    )
+    const sidenav = chooseStories({
+      changedPaths: [`${WRAPPER_DIR}pathable-sidenav.scss`],
+      indexes: { styles: generated },
+      classPages: new Map([['pathable-sidenav', ['side-navigation']]]),
+    })
+    assert.deepEqual(
+      sidenav.map((item) => item.id),
+      ['component-examples-side-navigation--default'],
+    )
+  })
+
+  it('samples when a changed wrapper matches no story', () => {
+    for (const [file, pagesByClass] of [
+      ['pathable-sidenav.scss', null],
+      ['pathable-input.scss', new Map()],
+    ]) {
+      const chosen = chooseStories({
+        changedPaths: [`${WRAPPER_DIR}${file}`],
+        indexes: { styles: generated },
+        classPages: pagesByClass,
+      })
+      assert.deepEqual(
+        chosen.map((item) => item.id),
+        [
+          'component-examples-alert--info',
+          'component-examples-form--default',
+          'component-examples-side-navigation--default',
+          'component-examples-text-input--default',
+        ],
+      )
+      assert.match(chosen[0].reasons[0], /First story of its file/)
+    }
   })
 
   it('adds stories asked for explicitly and flags unknown ones', () => {

@@ -140,7 +140,10 @@ log files, and serves them on ports 6020 to 6023.
    of each stories file. A shared React change (the
    theming source, the React Storybook configuration, the React package's
    dependencies or the lockfile) samples the first story of each React stories
-   file. The script matches stories to changed files by component name, and
+   file. The script matches stories to changed files by component name. It
+   also matches a wrapper partial to the component pages whose `styles-class`
+   names its class and to the fixture folders that use the class, and it
+   samples like a shared change when a changed component matches no story. It
    records a story missing from the index, or one that does not render, as a
    capture error rather than a screenshot; the reviewer adds any story it
    missed. The

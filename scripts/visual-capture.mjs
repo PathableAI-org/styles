@@ -73,6 +73,7 @@ import {
 import {
   captureVerdict,
   chooseStories,
+  classPages,
   conditionsForDiff,
   conditionsForStory,
   viewportsForMode,
@@ -432,6 +433,34 @@ async function headLists() {
   }
 }
 
+/** The pages and fixtures of the head worktree, as `classPages` reads them. */
+function headClassPages() {
+  const root = WORKTREES.head
+  const names = (dir) =>
+    existsSync(join(root, dir)) ? readdirSync(join(root, dir)) : []
+  const pages = names('components')
+    .filter((name) => name.endsWith('.md') && name !== 'README.md')
+    .map((name) => ({
+      slug: name.slice(0, -'.md'.length),
+      text: readFileSync(join(root, 'components', name), 'utf8'),
+    }))
+  const fixtures = names('fixtures')
+    .filter(
+      (slug) =>
+        !['harness', 'scripts', 'node_modules'].includes(slug) &&
+        statSync(join(root, 'fixtures', slug)).isDirectory(),
+    )
+    .flatMap((slug) =>
+      names(`fixtures/${slug}`)
+        .filter((name) => name.endsWith('.html'))
+        .map((name) => ({
+          slug,
+          html: readFileSync(join(root, 'fixtures', slug, name), 'utf8'),
+        })),
+    )
+  return classPages({ pages, fixtures })
+}
+
 const indexes = {
   head: {
     styles: readIndex('head', 'styles'),
@@ -464,6 +493,7 @@ let stories = failures.head
       indexes: indexes.head,
       extra: args.story,
       force: args.force,
+      classPages: headClassPages(),
       ...lists,
     })
 if (args.only) {

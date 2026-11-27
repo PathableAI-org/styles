@@ -81,6 +81,52 @@ export function componentSlug(path) {
   return null
 }
 
+/**
+ * The CSS class a styles wrapper partial defines, `pathable-input` for
+ * `pathable-input.scss`, or `null` for any other path.
+ */
+export function wrapperClass(path) {
+  if (!path.startsWith(WRAPPERS)) return null
+  const match = /^(pathable-[^/]+)\.scss$/.exec(path.slice(WRAPPERS.length))
+  return match && match[1] !== 'pathable-all' ? match[1] : null
+}
+
+/**
+ * Which component pages show each `pathable-*` class.
+ *
+ * - `pages`: `[{ slug, text }]`, the Markdown of each component page; its
+ *   front matter `styles-class:` value maps to the page's slug
+ * - `fixtures`: `[{ slug, html }]`, one entry per fixture file with the slug of
+ *   its folder; each `pathable-*` class in a `class` attribute maps to that
+ *   slug, without any BEM `--modifier` or `__element` suffix
+ *
+ * Returns a `Map` of class name to sorted, unique slugs.
+ */
+export function classPages({ pages = [], fixtures = [] }) {
+  const found = new Map()
+  const note = (className, slug) => {
+    if (!found.has(className)) found.set(className, new Set())
+    found.get(className).add(slug)
+  }
+  for (const { slug, text } of pages) {
+    const front = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)
+    const line = front && /^styles-class:[ \t]*(\S+)[ \t]*$/m.exec(front[1])
+    if (line) note(line[1].replace(/^["']|["']$/g, ''), slug)
+  }
+  for (const { slug, html } of fixtures) {
+    for (const [, value] of html.matchAll(/\bclass\s*=\s*"([^"]*)"/g)) {
+      for (const token of value.split(/\s+/)) {
+        if (token.startsWith('pathable-')) {
+          note(token.replace(/(--|__).*$/, ''), slug)
+        }
+      }
+    }
+  }
+  return new Map(
+    [...found].map(([className, slugs]) => [className, [...slugs].sort()]),
+  )
+}
+
 /** The last segment of a story title as a slug: `Basic/Icon Button` → `icon-button`. */
 function titleSlug(title) {
   const last = title.split('/').pop() ?? ''
@@ -143,6 +189,9 @@ function entryFromChangedFile(entry, renderPaths) {
  * - `classification`: `classifyChanges(...).paths`, so a manifest or the
  *   lockfile counts only for the workspaces its content changed; without it
  *   every path is classified by name alone
+ * - `classPages`: `classPages(...)`'s map of wrapper class to the slugs of
+ *   the components that show it, so a changed wrapper partial also chooses
+ *   those components' stories; without it a wrapper matches by name alone
  * - `force`: when nothing else chose a story and none was asked for, sample
  *   the first story of each stories file of every Storybook in `indexes`
  *
@@ -157,6 +206,7 @@ export function chooseStories({
   extra = [],
   classification = null,
   force = false,
+  classPages: pagesByClass = null,
 }) {
   const resolved = new Map(
     (classification ?? []).map((item) => [item.path, item]),
@@ -186,24 +236,35 @@ export function chooseStories({
     chosen.set(key, story)
   }
 
-  const slugs = [
-    ...new Set(renderPaths.map(componentSlug).filter((slug) => slug !== null)),
-  ]
   const inspectedFor = (path) => resolved.get(path)?.workspaces
-  // A render path that names no component, is not shared above and matched no
-  // stories file still counts as shared for its classified workspaces, so it
-  // is never left without a sample.
+  // The component slugs a path chooses stories for, each with its reason: the
+  // path's own component, then the components that show its wrapper class.
+  const slugsFor = (path) => {
+    const own = componentSlug(path)
+    const className = wrapperClass(path)
+    const found = own === null ? [] : [[own, `Component "${own}" changed.`]]
+    for (const slug of pagesByClass?.get(className) ?? []) {
+      if (slug === own) continue
+      found.push([slug, `Wrapper "${className}" changed (shown on ${slug}).`])
+    }
+    return found
+  }
+  const allEntries = Object.values(indexes).flatMap((entries) =>
+    (entries ?? []).filter((entry) => entry.type === 'story'),
+  )
+  const matchedAny = (path) =>
+    allEntries.some(
+      (entry) =>
+        entryFromChangedFile(entry, [path]) ||
+        slugsFor(path).some(([slug]) => entryMatchesSlug(entry, slug)),
+    )
+  // A render path that is not shared above and matches no story, by its
+  // component, the components showing its class or its own stories file, is
+  // treated as shared for its classified workspaces, so it is never left
+  // without a sample.
   const sharedFor = (path) => {
     const named = sharedWorkspaces(path, inspectedFor(path))
-    if (named.length > 0 || componentSlug(path) !== null) return named
-    // A changed stories file already chose its own stories.
-    const ownStories = Object.values(indexes).some((entries) =>
-      (entries ?? []).some(
-        (entry) =>
-          entry.type === 'story' && entryFromChangedFile(entry, [path]),
-      ),
-    )
-    if (ownStories) return named
+    if (named.length > 0 || matchedAny(path)) return named
     return inspectedFor(path) ?? classifyPath(path).workspaces
   }
   const shared = renderPaths.filter((path) => sharedFor(path).length > 0)
@@ -215,9 +276,9 @@ export function chooseStories({
       if (entryFromChangedFile(entry, renderPaths)) {
         add(workspace, entry, 'Its stories file changed.', true)
       }
-      for (const slug of slugs) {
-        if (entryMatchesSlug(entry, slug)) {
-          add(workspace, entry, `Component "${slug}" changed.`, true)
+      for (const path of renderPaths) {
+        for (const [slug, reason] of slugsFor(path)) {
+          if (entryMatchesSlug(entry, slug)) add(workspace, entry, reason, true)
         }
       }
     }
