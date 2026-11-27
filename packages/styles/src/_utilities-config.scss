@@ -3,10 +3,8 @@
 // ==========================================
 //
 // Shared configuration for the utility layer. This partial defines the
-// utility module map and its supporting variables but emits no CSS, so both
-// _utilities-tokens.scss (the :root token block) and _utilities.scss (the
-// class generation) can reference it without coupling token emission to class
-// emission.
+// utility module map and its supporting variables but emits no CSS, so
+// _utilities.scss (the class generation) and Sass consumers can reference it.
 //
 // ==========================================
 

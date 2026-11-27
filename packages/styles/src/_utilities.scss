@@ -3,9 +3,8 @@
 // ==========================================
 //
 // This partial generates .pathable-* CSS utility classes from the
-// configuration maps in _utilities-config.scss. The corresponding :root token
-// declarations live in _utilities-tokens.scss so tokens and classes can be
-// emitted into separate compiled layers.
+// configuration maps in _utilities-config.scss. It emits no custom
+// properties: each class sets its value directly.
 //
 // ==========================================
 

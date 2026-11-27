@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // Font Family Tokens
 $pathable-font-heading: 'Fredoka', system-ui, sans-serif;
 $pathable-font-alternate-heading: 'Montserrat', system-ui, sans-serif;
@@ -69,16 +71,6 @@ $typography-scale: (
   ),
 );
 
-@layer pathable.base {
-  :where(:root) {
-    --pathable-font-heading: #{$pathable-font-heading};
-    --pathable-font-alternate-heading: #{$pathable-font-alternate-heading};
-    --pathable-font-subheading: #{$pathable-font-subheading};
-    --pathable-font-body: #{$pathable-font-body};
-    --pathable-font-mono: #{$pathable-font-mono};
-  }
-}
-
 // Typography Scale
 $ui-display-lg: 2rem;
 $ui-heading-lg: 1.5rem;
@@ -91,23 +83,8 @@ $ui-label-md: 0.875rem;
 $ui-label-sm: 0.75rem;
 $ui-caption-md: 0.75rem;
 
-@layer pathable.base {
-  :where(:root) {
-    --ui-display-lg: #{$ui-display-lg};
-    --ui-heading-lg: #{$ui-heading-lg};
-    --ui-heading-md: #{$ui-heading-md};
-    --ui-heading-sm: #{$ui-heading-sm};
-    --ui-body-lg: #{$ui-body-lg};
-    --ui-body-md: #{$ui-body-md};
-    --ui-body-sm: #{$ui-body-sm};
-    --ui-label-md: #{$ui-label-md};
-    --ui-label-sm: #{$ui-label-sm};
-    --ui-caption-md: #{$ui-caption-md};
-  }
-}
-
-// CSS Custom Properties for Typography Tokens
-// These emit --pathable-#{$name} for each entry of the map below.
+// Typography token values. Sass data: the root block at the end declares only the
+// font roles and weights the component CSS reads, the weights from this map.
 $typography-tokens: (
   'font-heading': $pathable-font-heading,
   'font-body': $pathable-font-body,
@@ -134,8 +111,15 @@ $typography-tokens: (
 
 @layer pathable.base {
   :where(:root) {
-    @each $name, $value in $typography-tokens {
-      --pathable-#{$name}: #{$value};
-    }
+    --pathable-font-heading: #{$pathable-font-heading};
+    --pathable-font-body: #{$pathable-font-body};
+    --pathable-font-weight-normal: #{map.get(
+        $typography-tokens,
+        'font-weight-normal'
+      )};
+    --pathable-font-weight-bold: #{map.get(
+        $typography-tokens,
+        'font-weight-bold'
+      )};
   }
 }

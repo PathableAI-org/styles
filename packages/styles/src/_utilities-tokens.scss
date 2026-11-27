@@ -2,22 +2,11 @@
 // Utility CSS Custom Properties
 // ==========================================
 //
-// Emits every utility token value as --pathable-{name} in :root. Names are prefixed with the module name (e.g., --pathable-bg-primary,
-// --pathable-padding-4) to avoid collisions across modules. Lives in its own
-// partial so the token block can be compiled into theme-default.css while the
-// utility classes compile into utilities.css.
+// Emits nothing. This partial used to declare a --pathable-{module}-{value}
+// custom property for every utility value; no rule read them, so they were
+// removed (#770). The file stays so a Sass consumer that loads it through the
+// ./src/* export still compiles. The utility values live in
+// _utilities-config.scss, and _utilities.scss sets them on the classes
+// directly.
 //
 // ==========================================
-
-@use 'sass:map';
-@use '_utilities-config' as uc;
-
-@layer pathable.base {
-  :where(:root) {
-    @each $module-name, $module in uc.$pathable-utilities {
-      @each $val-name, $val in map.get($module, 'values') {
-        --pathable-#{$module-name}-#{$val-name}: #{$val};
-      }
-    }
-  }
-}

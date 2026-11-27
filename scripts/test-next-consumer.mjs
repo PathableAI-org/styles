@@ -937,7 +937,7 @@ async function assertBrowserConsumer(fixtureRoot) {
       }
       return {
         accent: root.getPropertyValue('--pathable-color-accent').trim(),
-        spacing: root.getPropertyValue('--pathable-space-6').trim(),
+        fontWeight: root.getPropertyValue('--pathable-font-weight-bold').trim(),
         text: root.getPropertyValue('--pathable-color-text').trim(),
         titleColor: getComputedStyle(title).color,
         headerDisplay: getComputedStyle(header).display,
@@ -949,9 +949,9 @@ async function assertBrowserConsumer(fixtureRoot) {
       'Default accent token is not applied',
     )
     assert.equal(
-      computed.spacing,
-      '3rem',
-      'Default spacing token is not applied',
+      computed.fontWeight,
+      '700',
+      'Default font weight token is not applied',
     )
     assert.equal(
       computed.text,
@@ -1207,8 +1207,8 @@ allowBuilds:
   )
   assert.match(
     emittedCss,
-    /:where\(:root\)\s*\{[^}]*--pathable-space-6\s*:\s*3rem\s*;/u,
-    'Next build CSS omits the low-specificity PathAble spacing fallback',
+    /:where\(:root\)\s*\{[^}]*--pathable-font-weight-bold\s*:\s*700\s*;/u,
+    'Next build CSS omits the low-specificity PathAble font weight fallback',
   )
   assert.match(
     emittedCss,
