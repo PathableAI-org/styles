@@ -158,8 +158,8 @@ Evidence each tier needs, in addition to the checks in
     Storybook first and then the React Storybook;
   - `pnpm test:storybook-styles` and/or `pnpm test:storybook-react`, which run
     the Storybook test-runner with rendered accessibility checks;
-  - `pnpm test:visual`, and screenshots or story links in the pull request
-    for each rendering change;
+  - screenshots or story links in the pull request for each rendering
+    change;
   - for `packages/react`: `pnpm --filter @pathableai/react test:unit`,
     `pnpm build`, `pnpm --filter @pathableai/react check:package` and
     `pnpm --filter @pathableai/react check:types`;

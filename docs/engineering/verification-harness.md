@@ -30,7 +30,7 @@ quietly changing the pull request's evidence.
 | Channel                | What it observes                                                                                                          |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `storybook-test`       | Named stories' play functions and rendered axe checks through `pnpm test:storybook-styles` or `pnpm test:storybook-react` |
-| `visual`               | Canonical rendering through `pnpm test:visual` and screenshots                                                            |
+| `visual`               | Rendering captured by `scripts/visual-capture.mjs` and screenshots                                                        |
 | `browser`              | Playwright observation of keyboard order, focus, responsive layouts, text zoom, forced colors and reduced motion          |
 | `package`              | Packed-package contents, exports, declarations and consumer installation                                                  |
 | `agent-guidance`       | `pnpm check:agent-guidance`                                                                                               |

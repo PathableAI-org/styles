@@ -173,8 +173,6 @@ The `.pathable-*` component classes and their styles stories.
   - `packages/styles/src/components.scss`
   - `packages/styles/src/stories/components`
   - `packages/styles/src/stories/recipes`
-  - `packages/styles/scripts/quality-gates.mjs`
-  - `packages/styles/scripts/test-visual.mjs`
 
 ### `react-primitives`
 

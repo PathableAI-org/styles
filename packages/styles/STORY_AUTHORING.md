@@ -32,27 +32,6 @@ any hand-written story added again; the helpers they name, such as
       links, etc.).
 - [ ] Run `pnpm test:storybook` locally and ensure all axe tests pass.
 
-## Visual Smoke Requirements
-
-- [ ] Stories render correctly at 375, 768, and 1280 px viewport widths.
-- [ ] No horizontal overflow (`scrollWidth <= clientWidth + 2`).
-- [ ] Document height > 20 px (reasonable content).
-- [ ] Screenshots are not all-black or all-white at any viewport.
-- [ ] Run `pnpm test:visual` locally (requires `pnpm build` first).
-
-## Coverage Expectations
-
-- [ ] New story IDs are present in the Storybook index after building.
-- [ ] New stories are listed in the category expectations in
-      `packages/styles/scripts/storybook-coverage.mjs`.
-- [ ] Run `pnpm storybook:coverage` after building Storybook to verify.
-
-## Quality Gates
-
-- [ ] Story passes the quality gates: story index check, horizontal overflow,
-      unnamed controls, and touch-target checks.
-- [ ] Run `pnpm quality-gates` locally after building Storybook.
-
 ## Component Page Guarantees
 
 - [ ] When a component has a page under the repository's `components/`, wrap the
@@ -80,7 +59,4 @@ Copy this section into your PR description:
 
 - [ ] All token references (`--pathable-*` and non-prefixed tokens such as `--space-*`) are defined (`pnpm lint:tokens` passes)
 - [ ] Axe accessibility tests pass (`pnpm test:storybook`)
-- [ ] Visual smoke tests pass at 375/768/1280 px (`pnpm test:visual`)
-- [ ] Storybook coverage updated (`pnpm storybook:coverage`)
-- [ ] Quality gates pass (`pnpm quality-gates`)
 ```

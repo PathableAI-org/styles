@@ -61,7 +61,7 @@ only when behavior—not merely CSS layout—changes with the viewport.
 
 ## Automated checks are not complete accessibility coverage
 
-The Storybook accessibility runner detects many markup and rule violations. It
+Automated Axe checks detect many markup and rule violations. It
 cannot establish that the keyboard model is correct, focus moves appropriately,
 announcements are useful, or the component is understandable with assistive
 technology.
