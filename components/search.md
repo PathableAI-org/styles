@@ -83,8 +83,8 @@ Add at most one size modifier to `pathable-search`.
 
 ## Tokens
 
-None. The sizes, type and spacing are fixed values in the compiled stylesheet,
-not custom properties, so a theme does not change them.
+None. The sizes, type and spacing are fixed values in the compiled
+stylesheet.
 
 ## Composition
 

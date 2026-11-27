@@ -44,12 +44,12 @@ pnpm add @pathableai/styles
 Import the compiled CSS entry point to get all default styles, tokens, and utilities:
 
 ```css
-/* Full import — components and utilities */
+/* Full import — theme, components and utilities */
 @import '@pathableai/styles';
 ```
 
 React consumers should import only `@pathableai/react`, which loads the
-component and utility layers automatically.
+theme, component and utility layers automatically.
 
 The root import and all three subpath imports resolve to corresponding files
 under `dist/`:
@@ -60,6 +60,10 @@ under `dist/`:
 | `@pathableai/styles/components` | `dist/components.css`    |
 | `@pathableai/styles/utilities`  | `dist/utilities.css`     |
 | `@pathableai/styles/theme`      | `dist/theme-default.css` |
+
+The `components` and `utilities` layers read their colours, fonts and other
+values from the `theme` layer; import `@pathableai/styles` (all three) unless
+you import `theme` as well.
 
 ### SCSS (`@use`)
 
@@ -118,8 +122,8 @@ the PathAble contract should import the package's compiled CSS instead.
 
 ## Tokens
 
-A token is a class suffix, such as `bg-primary` or `padding-2`, with a value
-fixed when the package is built. The token pages in the installed package's
+A token is the suffix of a class, such as `primary` in `bg-primary` or `2` in
+`padding-2`, with a value fixed when the package is built. The token pages in the installed package's
 `components/` directory list them, for example `components/tokens-color.md`,
 `components/tokens-spacing-units.md` and `components/tokens-typesetting.md`;
 `components/index.md` lists the rest. The utility class pages,

@@ -161,7 +161,7 @@ Agents MUST preserve clear hierarchy between heading, subheading, and body text.
 
 ## Theme Rules
 
-Agents MAY create light, dark, and high-contrast themes by mapping semantic tokens to approved brand colors or reviewed derived colors.
+The package ships one PathAble theme, fixed at build time. Light, dark and high-contrast variants are package work done in the SCSS source with approved brand colors or reviewed derived colors, not consumer overrides.
 
 Agents MUST NOT treat an algorithmically generated theme as official without review.
 
@@ -175,11 +175,11 @@ High-contrast themes MAY reduce the palette to black, white, PathAble Blue, and 
 
 ## Implementation Rules
 
-Agents MUST use existing package tokens before creating new ones.
+Contributors define internal semantic custom properties in SCSS; consumers do not use them. Contributors MUST reuse an existing internal property before creating a new one.
 
-Agents MUST add new tokens semantically, not by visual description alone.
+Contributors MUST name new internal properties semantically, not by visual description alone.
 
-Good token names:
+Good internal property names:
 
 ```css
 --pathable-color-text
@@ -187,7 +187,7 @@ Good token names:
 --pathable-color-focus-ring
 ```
 
-Avoid token names like:
+Avoid internal property names like:
 
 ```css
 --pathable-color-pretty-blue
@@ -195,7 +195,7 @@ Avoid token names like:
 --pathable-color-card-thing
 ```
 
-Agents MUST document any new token with its intended role.
+Contributors MUST document any new internal property with its intended role.
 
 Agents MUST check contrast before using color pairs for text.
 

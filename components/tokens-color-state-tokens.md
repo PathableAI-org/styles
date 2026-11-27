@@ -26,7 +26,7 @@ guarantees:
 The colour tokens error, warning, success, info, disabled and emergency, which
 carry the meaning of a status, with PathAble brand values for the base, dark
 and lighter grades. A state token names a meaning, so `error` stays the error
-colour even if a theme changes. See the
+colour whatever its hex value. See the
 [USWDS state tokens](https://designsystem.digital.gov/design-tokens/color/state-tokens/).
 
 ## When to use
