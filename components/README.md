@@ -108,7 +108,8 @@ settings, and they are not part of the public API.
   fixed, how to get the effect from the documented tokens, utilities and
   components, and the settings groups left at USWDS defaults) and one
   `settings-<name>.md` for each USWDS settings file the build overrides
-  (`settings-general.md`, `settings-color.md`, `settings-typography.md`).
+  (`settings-general.md`, `settings-color.md`, `settings-typography.md`,
+  `settings-components.md`).
 - Front matter: `name`, `slug`, `kind` and `summary`, and optionally `uswds`,
   a link under `https://designsystem.digital.gov/documentation/settings/`
   (an anchor is fine). No `styles-class`, `variants`, `classes` or
