@@ -249,14 +249,24 @@ export function chooseStories({
     }
     return found
   }
-  const allEntries = Object.values(indexes).flatMap((entries) =>
-    (entries ?? []).filter((entry) => entry.type === 'story'),
-  )
+  // The reasons a path chooses a story by component: only in the Storybooks
+  // the path is classified for, so a styles page never picks a React story.
+  const matchesPath = (workspace, entry, path) => {
+    const classified = inspectedFor(path) ?? classifyPath(path).workspaces
+    if (!classified.includes(workspace)) return []
+    return slugsFor(path)
+      .filter(([slug]) => entryMatchesSlug(entry, slug))
+      .map(([, reason]) => reason)
+  }
+  const storiesOf = ([, entries]) =>
+    (entries ?? []).filter((entry) => entry.type === 'story')
   const matchedAny = (path) =>
-    allEntries.some(
-      (entry) =>
-        entryFromChangedFile(entry, [path]) ||
-        slugsFor(path).some(([slug]) => entryMatchesSlug(entry, slug)),
+    Object.entries(indexes).some(([workspace, entries]) =>
+      storiesOf([workspace, entries]).some(
+        (entry) =>
+          entryFromChangedFile(entry, [path]) ||
+          matchesPath(workspace, entry, path).length > 0,
+      ),
     )
   // A render path that is not shared above and matches no story, by its
   // component, the components showing its class or its own stories file, is
@@ -277,8 +287,8 @@ export function chooseStories({
         add(workspace, entry, 'Its stories file changed.', true)
       }
       for (const path of renderPaths) {
-        for (const [slug, reason] of slugsFor(path)) {
-          if (entryMatchesSlug(entry, slug)) add(workspace, entry, reason, true)
+        for (const reason of matchesPath(workspace, entry, path)) {
+          add(workspace, entry, reason, true)
         }
       }
     }

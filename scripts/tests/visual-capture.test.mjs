@@ -354,6 +354,64 @@ describe('chooseStories', () => {
     }
   })
 
+  it('keeps a styles wrapper from choosing React stories', () => {
+    const react = [
+      story(
+        'components-tag--default',
+        'Components/Tag',
+        '../../packages/react/src/stories/components/Tag.stories.tsx',
+      ),
+      story(
+        'components-card--default',
+        'Components/Card',
+        '../../packages/react/src/stories/components/Card.stories.tsx',
+      ),
+    ]
+    const styles = ['button', 'card'].map((slug) =>
+      story(
+        `component-examples-${slug}--default`,
+        `Component examples/${slug}`,
+        `./generated/${slug}.stories.ts`,
+      ),
+    )
+    const chosen = chooseStories({
+      changedPaths: [
+        `${WRAPPER_DIR}pathable-button.scss`,
+        'packages/react/src/components/Tag/Tag.tsx',
+      ],
+      indexes: { styles, react },
+      classPages: new Map([['pathable-button', ['button', 'card']]]),
+    })
+    assert.deepEqual(
+      chosen.map((item) => `${item.workspace}:${item.id}`),
+      [
+        'react:components-tag--default',
+        'styles:component-examples-button--default',
+        'styles:component-examples-card--default',
+      ],
+    )
+  })
+
+  it('samples styles when a wrapper matches only a React story', () => {
+    const react = [
+      story(
+        'components-navigation-sidenav--default',
+        'Components/Navigation/Sidenav',
+        '../../packages/react/src/stories/components/Sidenav.stories.tsx',
+      ),
+    ]
+    const chosen = chooseStories({
+      changedPaths: [`${WRAPPER_DIR}pathable-sidenav.scss`],
+      indexes: { styles: generated, react },
+    })
+    assert.equal(
+      chosen.some((item) => item.workspace === 'react'),
+      false,
+    )
+    assert.equal(chosen.length, 4)
+    assert.match(chosen[0].reasons[0], /First story of its file/)
+  })
+
   it('adds stories asked for explicitly and flags unknown ones', () => {
     const chosen = chooseStories({
       changedPaths: [],
