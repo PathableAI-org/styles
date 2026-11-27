@@ -22,7 +22,7 @@ variants:
     values: [default, sticky-header]
 guarantees:
   - id: type
-    claim: The table text is Nunito at 0.99rem with a line height of 1.6 in dark blue (#00365c), and header cells have a line height of 1.4.
+    claim: The table text is Nunito at 1rem (the sm size) with a line height of 1.6 in dark blue (#00365c), and header cells have a line height of 1.4.
   - id: cell-box
     claim: Cells have a 1 px solid #00365c border, collapsed so neighbouring cells share one line, and 0.5rem of padding above and below and 1rem left and right.
   - id: header-surface

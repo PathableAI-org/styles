@@ -17,7 +17,7 @@ variants:
     values: [default, inverse]
 guarantees:
   - id: box
-    claim: A button is an inline flex box with its label centred, 0.75rem of padding above and below and 1.25rem left and right, 0.25rem rounded corners, no border, bold (700) Nunito text at 0.99rem with a line height of 1, a 0.5rem margin on its right and no margin elsewhere.
+    claim: A button is an inline flex box with its label centred, 0.75rem of padding above and below and 1.25rem left and right, 0.25rem rounded corners, no border, bold (700) Nunito text at 1rem (the sm size) with a line height of 1, a 0.5rem margin on its right and no margin elsewhere.
   - id: width
     claim: Below a viewport width of 30em (480 px at a 16 px root font size) a button fills the width of its container, and from 30em it is as wide as its content, unless a width class such as width-auto sets another width, which then wins at every viewport width.
   - id: touch-target
@@ -31,7 +31,7 @@ guarantees:
   - id: inverse
     claim: The inverse modifier, used with the outline modifier, changes the border and text to #eef0f4 so the button is drawn on a dark surface.
   - id: big
-    claim: A big button has 1rem of padding above and below, 1.5rem left and right and text at 1.49rem.
+    claim: A big button has 1rem of padding above and below, 1.5rem left and right and text at 1.5rem (the lg size).
   - id: unstyled
     claim: An unstyled button has no padding, border, margin or fill, and its text is underlined, left aligned, not bold and in the link colour.
   - id: disabled

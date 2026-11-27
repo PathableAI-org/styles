@@ -22,7 +22,7 @@ guarantees:
   - id: line-length
     claim: Each item is at most 68ex wide.
   - id: heading-style
-    claim: The heading is 1.12rem with a line height of 1.4 and no margin, and the metadata list below it has a 0.25em top margin.
+    claim: The heading is 1.13rem (the md size) with a line height of 1.4 and no margin, and the metadata list below it has a 0.25em top margin.
   - id: heading-typeface
     claim: The heading is set in the brand heading typeface, Fredoka Regular.
   - id: condensed
@@ -126,7 +126,7 @@ colour of its own: it takes the item's text colour.
   icon and hidden label say it leaves the application.
 - JavaScript is not part of this component: it does not sort, filter or page
   the items.
-- The list's text is Nunito at 0.99rem with a line height of 1.6.
+- The list's text is Nunito at 1rem (the sm size) with a line height of 1.6.
 
 ## Guarantees
 

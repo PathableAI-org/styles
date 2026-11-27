@@ -32,7 +32,7 @@ guarantees:
   - id: status-fill
     claim: The success, warning and error alerts fill the whole alert, body included, with the status background (#1cae96, #f5a623, #dc3545) and set their text in the status text colour (#001a33, #001a33, #ffffff), so every pairing has at least 4.5:1 contrast.
   - id: heading-text-type
-    claim: The heading is set about 24 px (1.49rem) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves.
+    claim: The heading is set at 1.5rem (the lg size, 24 px at a 16 px root) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves.
   - id: link-colour
     claim: A link inside an alert is set in a colour that has at least 4.5:1 contrast on that alert's background.
   - id: no-icon
