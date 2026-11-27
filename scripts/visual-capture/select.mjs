@@ -237,36 +237,50 @@ export function chooseStories({
   }
 
   const inspectedFor = (path) => resolved.get(path)?.workspaces
-  // The component slugs a path chooses stories for, each with its reason: the
-  // path's own component, then the components that show its wrapper class.
+  const classifiedFor = (path) =>
+    inspectedFor(path) ?? classifyPath(path).workspaces
+  // The component slugs a path chooses stories for, each with its reason and
+  // whether it comes from the wrapper class: the path's own component, then
+  // the components that show its wrapper class.
   const slugsFor = (path) => {
     const own = componentSlug(path)
     const className = wrapperClass(path)
-    const found = own === null ? [] : [[own, `Component "${own}" changed.`]]
+    const found =
+      own === null ? [] : [[own, `Component "${own}" changed.`, false]]
     for (const slug of pagesByClass?.get(className) ?? []) {
       if (slug === own) continue
-      found.push([slug, `Wrapper "${className}" changed (shown on ${slug}).`])
+      found.push([
+        slug,
+        `Wrapper "${className}" changed (shown on ${slug}).`,
+        true,
+      ])
     }
     return found
   }
-  // The reasons a path chooses a story by component: only in the Storybooks
-  // the path is classified for, so a styles page never picks a React story.
-  const matchesPath = (workspace, entry, path) => {
-    const classified = inspectedFor(path) ?? classifyPath(path).workspaces
-    if (!classified.includes(workspace)) return []
-    return slugsFor(path)
-      .filter(([slug]) => entryMatchesSlug(entry, slug))
+  // The reasons a path chooses a story by component. Its own component
+  // matches in every Storybook; the components that show its wrapper class
+  // match only in the Storybooks the path is classified for, so a styles
+  // wrapper never picks a React story.
+  const matchesPath = (workspace, entry, path) =>
+    slugsFor(path)
+      .filter(
+        ([slug, , byClass]) =>
+          entryMatchesSlug(entry, slug) &&
+          (!byClass || classifiedFor(path).includes(workspace)),
+      )
       .map(([, reason]) => reason)
-  }
-  const storiesOf = ([, entries]) =>
-    (entries ?? []).filter((entry) => entry.type === 'story')
+  // Whether a path matches any story in a Storybook it is classified for, by
+  // its own stories file, its component or its wrapper class.
   const matchedAny = (path) =>
-    Object.entries(indexes).some(([workspace, entries]) =>
-      storiesOf([workspace, entries]).some(
-        (entry) =>
-          entryFromChangedFile(entry, [path]) ||
-          matchesPath(workspace, entry, path).length > 0,
-      ),
+    Object.entries(indexes).some(
+      ([workspace, entries]) =>
+        classifiedFor(path).includes(workspace) &&
+        (entries ?? []).some(
+          (entry) =>
+            entry.type === 'story' &&
+            (entryFromChangedFile(entry, [path]) ||
+              matchesPath(workspace, entry, path).length > 0),
+        ),
     )
   // A render path that is not shared above and matches no story, by its
   // component, the components showing its class or its own stories file, is

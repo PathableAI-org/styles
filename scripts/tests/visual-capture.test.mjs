@@ -392,7 +392,35 @@ describe('chooseStories', () => {
     )
   })
 
-  it('samples styles when a wrapper matches only a React story', () => {
+  it('keeps matching a component by its own slug in every Storybook', () => {
+    const react = [
+      story(
+        'components-button--default',
+        'Components/Button',
+        '../../packages/react/src/stories/components/Button.stories.tsx',
+      ),
+    ]
+    const styles = [
+      story(
+        'component-examples-button--default',
+        'Component examples/button',
+        './generated/button.stories.ts',
+      ),
+    ]
+    const chosen = chooseStories({
+      changedPaths: ['packages/react/src/components/Button/Button.tsx'],
+      indexes: { styles, react },
+    })
+    assert.deepEqual(
+      chosen.map((item) => `${item.workspace}:${item.id}`),
+      [
+        'react:components-button--default',
+        'styles:component-examples-button--default',
+      ],
+    )
+  })
+
+  it('samples styles when a wrapper matches only a React story by its own slug', () => {
     const react = [
       story(
         'components-navigation-sidenav--default',
@@ -404,12 +432,12 @@ describe('chooseStories', () => {
       changedPaths: [`${WRAPPER_DIR}pathable-sidenav.scss`],
       indexes: { styles: generated, react },
     })
-    assert.equal(
-      chosen.some((item) => item.workspace === 'react'),
-      false,
+    // The React story still matches by the wrapper's own slug.
+    assert.deepEqual(
+      chosen.map((item) => item.workspace),
+      ['react', 'styles', 'styles', 'styles', 'styles'],
     )
-    assert.equal(chosen.length, 4)
-    assert.match(chosen[0].reasons[0], /First story of its file/)
+    assert.match(chosen[1].reasons[0], /First story of its file/)
   })
 
   it('adds stories asked for explicitly and flags unknown ones', () => {
