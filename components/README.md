@@ -2,7 +2,7 @@
 
 One Markdown page per component, named after its slug (`button.md`). A page is
 the product specification of the component: what it is for, an example, its
-variants, its tokens, how to compose it, what it guarantees and what the
+variants, how to compose it, what it guarantees and what the
 consumer owns. Together with the exact HTML in `fixtures/`, these pages are the
 shared source for human product documentation and version-matched consumer
 agent guidance; neither output maintains its own component semantics or
@@ -63,6 +63,11 @@ them. The sections, in order:
 - `settings`: Not public API, then Values on every page but the overview.
   See [Settings pages](#settings-pages).
 
+**No page names a custom property.** The package's runtime CSS custom
+properties are internal implementation, not consumer API, so none is public.
+No page of any kind (static, utility, token or settings) names one, and the
+checker fails any page that does. Do not deny that they exist either.
+
 **The public contract of a utility or token page is the compiled CSS only.**
 Consumers import `@pathableai/styles` as CSS. These pages therefore document
 class names and the values the classes output, and nothing else:
@@ -72,9 +77,6 @@ class names and the values the classes output, and nothing else:
   instruction to enable a class "through settings". A class the package does
   not output is simply not in the contract; do not tell consumers how to turn
   it on. There are no `## Sass` or `## Settings` sections;
-- no custom properties: the package's runtime CSS custom properties are
-  internal implementation, not consumer API, and the checker fails a utility
-  or token page that names one. Do not deny that they exist either;
 - guarantees are about compiled CSS for a class (selector, computed property
   and value at PathAble defaults), never about Sass functions, and carry no
   `status:` line;
@@ -106,7 +108,8 @@ settings, and they are not part of the public API.
   fixed, how to get the effect from the documented tokens, utilities and
   components, and the settings groups left at USWDS defaults) and one
   `settings-<name>.md` for each USWDS settings file the build overrides
-  (`settings-general.md`, `settings-color.md`, `settings-typography.md`).
+  (`settings-general.md`, `settings-color.md`, `settings-typography.md`,
+  `settings-components.md`).
 - Front matter: `name`, `slug`, `kind` and `summary`, and optionally `uswds`,
   a link under `https://designsystem.digital.gov/documentation/settings/`
   (an anchor is fine). No `styles-class`, `variants`, `classes` or

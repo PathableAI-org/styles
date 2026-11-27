@@ -81,11 +81,6 @@ Add at most one size modifier to `pathable-search`.
 | size | `default` | none                     | A search in a page or panel; 32 px tall controls, visible submit text         |
 | size | `small`   | `pathable-search--small` | A compact search for a toolbar or header; an icon-only submit button          |
 
-## Tokens
-
-None. The sizes, type and spacing are fixed values in the compiled
-stylesheet.
-
 ## Composition
 
 - `<section aria-label>`: the wrapper that names the search region, such as

@@ -98,8 +98,8 @@ usual background image. The opened list is the browser's own in both.
 The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour.
 
-The colours are fixed in the stylesheet. The figures on this page are those of
-the default theme.
+The colours are fixed when the package is built. The pixel figures on this page
+assume a 16 px root font size.
 
 ## The consumer owns
 

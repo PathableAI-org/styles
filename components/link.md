@@ -81,16 +81,10 @@ alt modifier belongs on an external link on a dark background.
 A visited link needs no class. Combine the alt modifier with the external
 modifier.
 
-## Tokens
-
-| What                    | Value                                                                        |
-| ----------------------- | ---------------------------------------------------------------------------- |
-| Link and visited colour | Tech Teal, #015a76                                                           |
-| Focus outline colour    | Bright Blue Brooks, #4899e8, or the surface's focus ring colour on a surface |
-
-The colours are named on [tokens-color.md](tokens-color.md).
-
-Hover and pressed colours are fixed values in the stylesheet.
+The link and visited colour is Tech Teal, #015a76, named on
+[tokens-color.md](tokens-color.md). The focus outline is Bright Blue Brooks, #4899e8,
+or the surface's focus ring colour on a surface. The hover and pressed
+colours are fixed when the package is built.
 
 ## Composition
 

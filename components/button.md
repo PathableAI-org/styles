@@ -101,28 +101,22 @@ style axis.
 | surface | `default`     | none                           | A button on a light surface.                                          |
 | surface | `inverse`     | `pathable-button--inverse`     | An outline button on a dark surface, with `pathable-button--outline`. |
 
+- Default: PathAble Blue, #00365c, with white, #ffffff, text.
+- Secondary: Intelligent Jade, #1cae96, with #001a33 text.
+- Accent-cool: Bright Blue Brooks, #4899e8, with #001a33 text.
+- Accent-warm: Lived-In Lime, #d3ff66, with PathAble Blue, #00365c, text.
+- Base: Shilling Silver, #dde2e8, with PathAble Blue, #00365c, text.
+- Outline: PathAble Blue, #00365c, for the text and the border.
+- Unstyled: Tech Teal, #015a76, for the text.
+- Focus ring: Bright Blue Brooks, #4899e8, or the surface's focus ring colour
+  on a `pathable-bg-*` surface.
+
+The colour names and hex values are on [tokens-color.md](tokens-color.md). The
+pixel figures on this page assume a 16 px root font size.
+
 ## States
 
 <!-- examples -->
-
-## Tokens
-
-| What                    | Value                                                                                        |
-| ----------------------- | -------------------------------------------------------------------------------------------- |
-| Default fill and text   | PathAble Blue, #00365c, with white, #ffffff, text                                            |
-| Secondary fill and text | Intelligent Jade, #1cae96, with #001a33 text                                                 |
-| Accent-cool fill, text  | Bright Blue Brooks, #4899e8, with #001a33 text                                               |
-| Accent-warm fill, text  | Lived-In Lime, #d3ff66, with PathAble Blue, #00365c, text                                    |
-| Base fill and text      | Shilling Silver, #dde2e8, with PathAble Blue, #00365c, text                                  |
-| Outline text and border | PathAble Blue, #00365c                                                                       |
-| Unstyled text           | Tech Teal, #015a76                                                                           |
-| Focus ring              | Bright Blue Brooks, #4899e8, or the surface's focus ring colour on a `pathable-bg-*` surface |
-
-The colour names and hex values are on [tokens-color.md](tokens-color.md). The
-hover and pressed colours, the disabled colours, the padding, the
-corner radius, the sizes and the inverse colours are fixed values in the
-stylesheet. The pixel figures on
-this page are those of the default theme.
 
 ## Composition
 

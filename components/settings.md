@@ -31,7 +31,7 @@ overrides only the ones it wants to change.
 PathAble overrides a small number of settings in one place in the package
 source, and compiles the result once when the package is built. Every value is
 chosen to match the PathAble brand guide, and a value is not changed to suit an
-individual product. The overrides cover three of the five USWDS settings
+individual product. The overrides cover four of the five USWDS settings
 groups:
 
 - [General](settings-general.md): the focus colour and compile notifications.
@@ -39,6 +39,7 @@ groups:
   colours.
 - [Typography](settings-typography.md): the typefaces, the type scale, and
   the heading and body sizes.
+- [Components](settings-components.md): the breadcrumb separator colour.
 
 ## Getting the same effect as a consumer
 
@@ -63,12 +64,10 @@ do not look for a setting to change.
 
 ## Settings left at USWDS defaults
 
-PathAble sets nothing in these USWDS settings groups, so each one is at its
+PathAble sets nothing in these two USWDS settings groups, so each one is at its
 USWDS 3.14.0 default:
 
 - Spacing: the
   [spacing settings](https://designsystem.digital.gov/documentation/settings/#spacing-settings).
-- Components: the
-  [component settings](https://designsystem.digital.gov/documentation/settings/#component-settings).
 - Utilities: the
   [utility settings](https://designsystem.digital.gov/documentation/settings/#utilities-settings).

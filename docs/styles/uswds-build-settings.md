@@ -127,6 +127,12 @@ At the USWDS default: `error-light` (`'red-warm-30v'`), `error-darker`
 | `$theme-link-visited-color`                                                | `'violet-70v'` (USWDS default)                                  | Visited link    |
 | `$theme-focus-color`                                                       | `'accent-cool'` (Bright Blue Brooks)                            | Focus outline   |
 
+### Component colours
+
+| Setting                             | PathAble value                          | Why                                                  |
+| ----------------------------------- | --------------------------------------- | ---------------------------------------------------- |
+| `$theme-breadcrumb-separator-color` | `'base-dark'` (gray-cool-60, `#565c65`) | Breadcrumb separators and back arrow; 6.7:1 on white |
+
 ### Colour utility output
 
 | Setting                                                   | PathAble value                                                           | Effect                                                                                                                                                         |

@@ -163,6 +163,13 @@ $_jade-text: #0d7a63;
   // Bright Blue Brooks, matching --pathable-color-focus-ring.
   $theme-focus-color: 'accent-cool',
 
+  // -------- Breadcrumb separator color --------
+  // base-dark is gray-cool-60 (#565c65, 6.7:1 on white), the neutral
+  // grey for borders and tags in the base family. The USWDS default, "base",
+  // is Shilling Silver here (1.3:1), so the chevrons and the back arrow
+  // would be near invisible. The setting takes a theme token name, not a hex.
+  $theme-breadcrumb-separator-color: 'base-dark',
+
   // -------- Suppress notifications --------
   $theme-show-notifications: false,
 
