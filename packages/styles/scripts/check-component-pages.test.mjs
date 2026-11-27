@@ -232,13 +232,30 @@ test('classes named in prose must exist, and no custom property is named', () =>
 })
 
 test('a static page naming a custom property in prose fails', () => {
+  // The CSS rule for the page's class reads the property, and the page still
+  // may not name it: no property is public, used or not.
+  const reading = css('.pathable-widget { color: var(--pathable-color-text); }')
   const errors = checkPage(
     page(`${frontMatter + body}\nSet \`--pathable-color-text\`.\n`),
-    facts(),
+    facts({ css: reading }),
   )
   assert.deepEqual(errors, [
     'the page names `--pathable-color-text`, but a page names no custom property: none is public',
   ])
+})
+
+test('a guarantee claim naming a custom property fails', () => {
+  const claimed = (claim) =>
+    checkPage(
+      page(frontMatter.replace('It looks right.', claim) + body),
+      facts(),
+    )
+  const expected = [
+    'guarantee "looks-right" names `--pathable-color-text`, but a page names no custom property: none is public',
+  ]
+  assert.deepEqual(claimed('Text uses `--pathable-color-text`.'), expected)
+  assert.deepEqual(claimed('Text uses var(--pathable-color-text).'), expected)
+  assert.deepEqual(claimed('The pathable-widget--big class is wide.'), [])
 })
 
 test('consumer pages must not mention usa-* classes', () => {

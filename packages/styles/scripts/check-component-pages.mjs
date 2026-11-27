@@ -42,7 +42,7 @@
  * `pathable-*` component with modifiers. The class of a variant, the variant
  * rules and the "every modifier is a variant" rule are therefore `static`
  * only. A page of any of the three kinds that names a `--custom-property` in
- * prose fails, because no custom property is public. Every other rule applies
+ * prose or in a guarantee claim fails, because no custom property is public. Every other rule applies
  * to all three kinds: the guarantees, the
  * title and summary paragraph, no `usa-` anywhere, exactly one html example,
  * and every class in an html example (fixtures included) being a class
@@ -63,7 +63,7 @@
  *     in the compiled CSS; a default variant has no modifier class; every
  *     modifier the CSS has for the class is a variant on the page (static);
  *   - the body's summary paragraph and Variants table agree with the front
- *     matter, and no page names a custom property;
+ *     matter, and no page names a custom property in prose or a claim;
  * It does not look at play functions.
  *
  * Stage 2, `… check:component-pages:executed`, needs the records the Storybook
@@ -585,6 +585,19 @@ function checkNames(page, css, errors) {
     errors.push(
       `the page names \`${token}\`, but a page names no custom property: none is public`,
     )
+  }
+  // Claims ship in the packed page too. A custom property is `--x` not
+  // preceded by a word character, so a BEM modifier does not match.
+  for (const guarantee of list(page.data.guarantees)) {
+    const claim = typeof guarantee?.claim === 'string' ? guarantee.claim : ''
+    const tokens = new Set(
+      [...claim.matchAll(/(?<!\w)(--[a-z0-9-]+)/gu)].map((match) => match[1]),
+    )
+    for (const token of tokens) {
+      errors.push(
+        `guarantee "${guarantee.id}" names \`${token}\`, but a page names no custom property: none is public`,
+      )
+    }
   }
 }
 

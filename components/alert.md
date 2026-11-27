@@ -109,6 +109,18 @@ Add at most one modifier class from each axis to `pathable-alert`.
 Info is the default status; the examples also carry
 `pathable-alert--info`, which gives the same look. An alert with no heading needs no modifier: leave the heading out.
 
+- Success: Intelligent Jade, #1cae96, with #001a33 text.
+- Warning: Amber, #f5a623, with #001a33 text.
+- Error: Danger, #dc3545, with white, #ffffff, text.
+- Focus ring on success, warning and error: #001a33 on all three, which is
+  also the text colour on success and warning.
+- Focus ring on emergency: White, #ffffff, the text colour of the alert.
+- Focus ring on info and plain alerts: PathAble Blue, #00365c.
+
+The info and emergency colours are fixed when the package is built and are
+named on [tokens-color.md](tokens-color.md). The pixel figures on this page
+assume a 16 px root font size.
+
 ## Announcing an alert
 
 An alert is one of three kinds, by how a screen reader meets it:
@@ -127,19 +139,6 @@ when there is no heading, such as "Warning: benefits recertification due
 soon". Colour and the icon are never the only cue.
 
 ## Composition
-
-| What                                  | Value                                                                      |
-| ------------------------------------- | -------------------------------------------------------------------------- |
-| Success background and text           | Intelligent Jade, #1cae96, with #001a33 text                               |
-| Warning background and text           | Amber, #f5a623, with #001a33 text                                          |
-| Error background and text             | Danger, #dc3545, with white, #ffffff, text                                 |
-| Focus ring on success, warning, error | #001a33 on all three, which is also the text colour on success and warning |
-| Focus ring on emergency               | White, #ffffff, the text colour of the alert                               |
-| Focus ring on info and plain alerts   | PathAble Blue, #00365c                                                     |
-
-The info and emergency colours are fixed when the package is built and are
-named on [tokens-color.md](tokens-color.md). The pixel figures on this page
-assume a 16 px root font size.
 
 - `pathable-alert__body`: required, the only child of `pathable-alert`. It
   carries the padding, the icon and the indent of its children.
