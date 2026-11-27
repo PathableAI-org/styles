@@ -115,7 +115,7 @@
 .pathable-pagination__overflow {
   @extend .usa-pagination__overflow;
 
-  // USWDS's 2.5rem item height is content-box, so the overflow mark's 8 px
+  // USWDS's border-box mixins do not cover this element. Its 2.5rem item height is content-box, so the overflow mark's 8 px
   // padding made it 56 px tall; border-box keeps it at the 40 px item height.
   box-sizing: border-box;
 }

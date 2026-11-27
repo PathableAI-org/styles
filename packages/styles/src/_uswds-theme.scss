@@ -363,5 +363,12 @@ $_jade-text: #0d7a63;
   // semibold is on at 600 so text-semibold exists (Nunito SemiBold is loaded
   // for UI labels); light, normal and bold stay at the USWDS defaults, and
   // thin, medium and heavy stay off. See docs/styles/uswds-build-settings.md.
-  $theme-font-weight-semibold: 600
+  $theme-font-weight-semibold: 600,
+
+  // -------- Box sizing --------
+  // The package does not emit USWDS's global sizing reset (it does not change
+  // elements it does not own). Turning the setting off makes USWDS's
+  // `border-box-sizing` and `this-border-box-sizing` mixins emit
+  // `box-sizing: border-box` on the components themselves.
+  $theme-global-border-box-sizing: false
 );

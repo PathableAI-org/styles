@@ -45,19 +45,6 @@
   @extend .usa-table--stacked-header;
 }
 
-// USWDS designs the stacked cells for border-box and gets it from a global
-// reset PathAble does not ship. Without it, the 1rem side padding makes each
-// block cell wider than its row and the row separator stops short.
-.pathable-table--stacked,
-.pathable-table--stacked-header {
-  @include at-media-max('mobile-lg') {
-    th,
-    td {
-      box-sizing: border-box;
-    }
-  }
-}
-
 .pathable-table--sticky-header {
   @extend .usa-table--sticky-header;
 }
