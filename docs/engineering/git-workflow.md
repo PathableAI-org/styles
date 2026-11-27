@@ -119,8 +119,8 @@ with a breaking-change label and migration notes, as
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | High, new behaviour | The maintainer accepts the delivery issue's outcome, scope, contract impact, numbered claims and implementation approach before work starts; one pull request follows and a person merges it |
 | High, fix           | One pull request that names its triggers and numbers its claims in the Evidence table; a person merges it                                                                                    |
-| Standard            | Local code and scope review and, for a rendering path, visual review until clean; then one pull request with normal CI, which a person merges                                                |
-| Light               | Local code and scope review and, for a rendering path, visual review until clean; then one pull request with normal CI, which a person merges                                                |
+| Standard            | Local code and scope review and, when the classifier requires one, visual review until clean; then one pull request with normal CI, which a person merges                                    |
+| Light               | Local code and scope review and, when the classifier requires one, visual review until clean; then one pull request with normal CI, which a person merges                                    |
 
 The delivery issue is the accepted definition of one change. If the work is
 too large for one reviewable pull request, split it into separately releasable
@@ -220,7 +220,8 @@ stop points and the models.
   same local commits with clean contexts, the first against the owning
   documentation ([Code review](code-review.md)) and the second against the
   accepted scope in the delivery issue. A visual review subagent joins them
-  when the diff touches a rendering path.
+  when `visual-capture.mjs --classify` requires one
+  ([When a visual review runs](visual-review.md#when-a-visual-review-runs)).
 - **Replies only.** Every subagent replies to the lead. None posts anything on
   the pull request. The lead pushes and opens the pull request only when no code,
   visual or verification finding is open as blocking, every scope finding is
@@ -231,8 +232,8 @@ stop points and the models.
 
 Standard and Light work get no verifier subagent. They get normal CI, the
 checks the pull request names, a [code review subagent](code-review.md), a
-scope review subagent and, when they touch a rendering path, a
-[visual review subagent](visual-review.md).
+scope review subagent and, when the classifier requires one, a
+[visual review subagent](visual-review.md#when-a-visual-review-runs).
 
 ## Merge timing
 
@@ -290,8 +291,8 @@ the reviews as subagents, all on local commits. For single-pull-request work:
    [Delegating implementation](orchestration.md#delegating-implementation)
    describes. The lead then commits.
 2. On the local head it runs the code review subagent and the scope review
-   subagent and, when the diff touches a
-   [rendering path](visual-review.md#when-a-visual-review-runs), the visual
+   subagent and, when `visual-capture.mjs --classify` requires
+   [a visual review](visual-review.md#when-a-visual-review-runs), the visual
    review subagent. High work adds the verifier subagent. Each replies to
    the lead only.
 3. The lead session answers every finding with a fix or a written

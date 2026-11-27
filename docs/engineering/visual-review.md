@@ -19,24 +19,62 @@ session with what it saw. There is no gate: the lead answers every finding.
 
 ## When a visual review runs
 
-A visual review runs in every review round whose diff can change what the
-Storybooks render, at every tier. A diff can change rendering when it changes
-any of these paths:
+A visual review runs in a review round whose diff can change what the
+Storybooks render, at every tier. A path can need a review when it can change
+what a Storybook renders:
 
-- `packages/styles/src/`, `packages/styles/scripts/` or
-  `packages/styles/package.json`
-- `packages/react/src/` or `packages/react/package.json`
-- `apps/storybook/` or `apps/storybook-react/`
-- `fixtures/` or `components/`
-- `pnpm-lock.yaml`
+- shipped SCSS, fonts and icons
+- Storybook configuration and decorators
+- stories and fixtures
+- component pages and the component-docs generator
+- runtime or Storybook-rendering dependencies
 
-This list owns which paths need a visual review; the lead session reads it. A
-diff that touches none of them, such as documentation or repository tooling,
-needs no visual review.
+Tests, check and test scripts, test-runner hooks, lint configuration,
+contributor docs and dev-only dependencies do not. A file the classifier does
+not list but that sits in a render tree counts as rendering. A package manifest
+or `pnpm-lock.yaml` counts only when a dependency, export or build script that
+affects rendering changed; for the lockfile, when a render dependency's
+resolved closure changed.
+
+[`scripts/visual-capture/classify.mjs`](../../scripts/visual-capture/classify.mjs)
+owns the exact rule and its list of paths. The lead session never judges by
+hand. In the review round it runs:
+
+```sh
+node scripts/visual-capture.mjs --base <base SHA> --head <head SHA> --classify
+```
+
+This builds nothing and takes about a second. Exit 0 means a visual review is
+required; exit 3 means it is not. The lead quotes the verdict line in the round
+summary.
+
+When a review is required, the lead runs the capture as before. The capture
+can end early, and writes a manifest `verdict`:
+
+| Verdict            | Meaning                                                                                                                                                             | What the lead does                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `not-required`     | No changed path can change rendering. Written when the capture runs without `--classify` on a diff that needs no review.                                            | Records the verdict and summary; starts no reviewer. |
+| `no-render-change` | A styles-only diff whose built `packages/styles/dist` and `apps/storybook/generated` are byte-identical at base and head, with no Storybook-side dependency change. | Records the verdict and summary; starts no reviewer. |
+| `no-difference`    | Every pair matches, no story is one the change touches directly and no story is gone at the head (`removedStories` is empty).                                       | Records the verdict and summary; starts no reviewer. |
+| `review`           | Something differs, a touched story needs judging, or a stories file's stories are gone at the head (removed stories).                                               | Passes the manifest to the visual reviewer.          |
+
+Only `review` goes to the visual reviewer. For the other three, the lead
+records the verdict and the capture summary as the round's visual evidence.
+For `no-render-change` and `no-difference` the script removes its worktrees
+itself, because no reviewer runs to do it.
+`--force` captures anyway, when the lead or a person wants a review on a diff
+the rule skips. It skips the classifier gate and the output pre-check, always
+ends with the verdict `review`, and, when the diff has no rendering paths,
+samples the first story of each stories file.
 
 [Visual-only styles work](git-workflow.md#visual-only-styles-work) gets a
-visual review at every tier because the visual review is its evidence. The
-verifier's [screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims)
+visual review at every tier, because the visual review is its evidence. For
+visual-only work the lead runs the capture with `--force`, so the reviewer
+always runs and a missing visible change is reported as `missing`. High work
+gets a visual review whenever its diff changes rendering, because such a diff
+always touches SCSS, stories, fixtures or component pages, which have no
+exclusions. The verifier's
+[screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims)
 still apply to High work.
 
 ## Inputs
@@ -50,7 +88,8 @@ The visual reviewer starts with a clean context and reads only:
   `previous capture`, the path of the previous round's capture manifest or
   `none`
 - the list of changed paths from the base SHA to the head SHA, which it uses
-  to choose the stories to capture, not to judge the code
+  to check the story choice and the manifest's `classification`, not to judge
+  the code
 - the stories it captures, rendered at both SHAs
 - after the blind pass only: the task's stated intent (the delivery issue or
   task text), the commit messages between the two SHAs and the changeset, at
@@ -70,19 +109,30 @@ Capturing is mechanical and judging is not, so they are split. The lead
 session runs
 [`scripts/visual-capture.mjs`](../../scripts/visual-capture.mjs) itself, for
 the local base and head SHAs, in the background, and passes the manifest to the
-reviewer. The script does everything in the list below except naming
-themes, and writes a manifest of image paths and numbers. The visual reviewer
+reviewer only when its verdict is `review`. The script does everything in the
+list below except naming themes, and writes a manifest (schema 2) of image
+paths and numbers, with the `verdict`, the `classification` of each changed
+path, the `precheck` result and `removedStories` (the stories in the base
+index that the head index lacks, which always make the verdict `review`). The
+script removes its worktrees itself when the verdict is `no-render-change` or
+`no-difference`. The visual reviewer
 starts with that manifest, checks its SHAs and its story choice, and judges.
 It runs the same script with `--only` to add a story the choice missed or to
 re-capture a candidate finding, and removes the worktrees with `--clean`
 when done.
 
-The script builds both SHAs in detached worktrees under its output directory
+The script first classifies the diff and stops with `not-required` when no
+path can change rendering. For a styles-only diff it then builds both SHAs and
+compares `packages/styles/dist` and `apps/storybook/generated` (the output
+pre-check, before story choice), stopping with `no-render-change` when they are
+identical. Otherwise it builds both SHAs in detached worktrees under its output directory
 (`pnpm install --frozen-lockfile`, `pnpm build`, then `pnpm build:docs` and,
 when a React path changed, the React Storybook build), with build output in
 log files, and serves them on ports 6020 to 6023.
 
-1. **Choose stories.** Every story in a stories file the pull request changes,
+1. **Choose stories.** Paths the classifier marks none never sample stories:
+   a test-runner edit does not sample every stories file. A lockfile change
+   samples only the Storybook whose dependencies changed. Every story in a stories file the pull request changes,
    every story of a component whose page, fixtures, styles or React source
    changed. A change to a shared token, a base partial or a dependency
    affects every component: capture the canonical stories in
@@ -261,8 +311,9 @@ can look at the same images. The page is evidence; the reply is the review.
 ## The visual review loop
 
 The lead session sends the visual reviewer a request in the same review
-round as the code review request, on the same local head. It runs the capture
-script itself first and passes the manifest. A repeat request after a fix
+round as the code review request, on the same local head. It classifies the
+diff and runs the capture script itself first, and sends the request only when
+the manifest's verdict is `review`, passing the manifest. A repeat request after a fix
 names the new head, the reviewer's own previous findings with, for each open
 finding, the fixing commit or a written justification, and
 `previous capture: <path to the previous round's capture manifest, or none>`.

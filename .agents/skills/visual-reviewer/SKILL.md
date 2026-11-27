@@ -72,7 +72,13 @@ git diff --name-status <base>..<head>
    is missing, add it in step 3. Note each story, its viewports and
    conditions, the reason, and its theme: `default` unless the story applies
    another theme (a `ThemeProvider` with overrides, a consumer theme example,
-   a dark or high-contrast candidate), then `other`.
+   a dark or high-contrast candidate), then `other`. Also check the
+   manifest's `classification`: a rendering path the classifier marked none
+   is an advisory `missing` finding naming the path. Then read the
+   manifest's `removedStories`: each ID rendered at the base and is gone at
+   the head. Count each one as a visible difference in the blind pass, and
+   in the intent pass treat a removal the task does not describe as
+   `unexplained`. You receive only manifests whose verdict is `review`.
 3. **Fill gaps.** To add a story or re-capture one, run
    `node scripts/visual-capture.mjs --base <base> --head <head> --out <dir> --only --story <id>`
    (`react:<id>` for a React story), with `<dir>` the manifest's directory.
