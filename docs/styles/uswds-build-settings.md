@@ -291,6 +291,31 @@ are at the USWDS defaults; the brand does not override them. Component pages:
 The layout grid is not a utilities module, so `$output-these-utilities` and the
 `$<module>-settings` maps do not control it.
 
+## Box sizing
+
+| Setting                           | Value   | Effect                                                                                                                     |
+| --------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `$theme-global-border-box-sizing` | `false` | USWDS's `border-box-sizing` and `this-border-box-sizing` mixins emit `box-sizing: border-box` on the components themselves |
+
+The build does not include `uswds-elements`, so it emits no global sizing
+reset (`html { box-sizing: border-box }` and `*, *::before, *::after
+{ box-sizing: inherit }`) and does not change elements it does not own. With
+the setting off, each USWDS component that calls `border-box-sizing` is
+border-box and its descendants and pseudo-elements inherit that, so content a
+consumer places inside a form, fieldset, alert body, table, prose table,
+summary box, search, side navigation, footer, tag, button, hint, input group,
+checkbox label or radio label is border-box too. A footer's social links are
+border-box by inheriting from the footer, so a social link outside a footer
+stays content-box. `this-border-box-sizing` sets only the element itself: it
+makes `grid-container` border-box (its `max-width` then includes its padding),
+and also `grid-row` and the direct children of a `grid-gap` row (their gap
+padding is then inside their width). The `grid-col` classes are border-box
+whatever the setting, because the layout grid declares it on them directly. The card container is the exception: it takes USWDS's declarations
+without the mixin, so card content keeps the sizing it has outside a card, and
+only the card's own parts are border-box. Elements no mixin covers, such as the
+pagination overflow item, the step indicator counter and the process list
+marker, set `box-sizing` in their wrappers.
+
 ## Utilities output
 
 Every utility module is output (`$output-these-utilities: default`) without
