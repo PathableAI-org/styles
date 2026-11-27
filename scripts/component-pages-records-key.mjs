@@ -22,7 +22,6 @@
  *     untested docs entry), except under apps/storybook/ and
  *     packages/styles/src/, where a story could import it;
  *   - the React package and React Storybook;
- *   - pixel baselines, which only the pixel suite reads;
  *   - documentation, specifications, changesets, agent files and the
  *     repository scripts under scripts/, which neither build nor test run
  *     imports, except scripts/component-docs/, which writes the generated
@@ -43,7 +42,6 @@ const MARKDOWN_KEPT_UNDER = ['apps/storybook/', 'packages/styles/src/']
 const EXCLUDED_DIRECTORIES = [
   'packages/react/',
   'apps/storybook-react/',
-  'visual-baselines/',
   'docs/',
   '.changeset/',
   '.agents/',

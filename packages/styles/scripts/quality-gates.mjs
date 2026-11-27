@@ -97,8 +97,8 @@ const VIEWPORTS = {
 }
 
 /**
- * Viewports at which the visual checks (the `test:visual` smoke test and the
- * pixel visual-regression suites) capture a canonical story. A `both` story is
+ * Viewports at which the visual check (the `test:visual` smoke test)
+ * captures a canonical story. A `both` story is
  * captured at every viewport, including tablet; the DOM audit below checks
  * `both` stories at desktop and mobile only.
  */
@@ -171,8 +171,8 @@ const MIME_TYPES = {
 
 /**
  * Serve a built Storybook from `staticDir` on 127.0.0.1:`port`. The defaults
- * serve the styles Storybook for the quality gates; the pixel
- * visual-regression harness passes each workspace's own directory and port.
+ * serve the styles Storybook for the quality gates; a caller can pass another
+ * workspace's directory and port.
  */
 export function startServer({ staticDir = STATIC_DIR, port = PORT } = {}) {
   return new Promise((resolvePromise, reject) => {

@@ -84,9 +84,9 @@ describe('component page records cache key', () => {
   it('keeps every tracked file the html_storybook path filter names', () => {
     const prefixes = htmlStorybookPrefixes()
     assert.ok(prefixes.includes('packages/styles/'), prefixes.join(', '))
-    // Pixel baselines and the modal gate script start the HTML lane for
+    // The modal gate script starts the HTML lane for
     // other jobs; the records do not depend on them.
-    const notRecordInputs = ['visual-baselines/', 'scripts/']
+    const notRecordInputs = ['scripts/']
     const missing = trackedFiles.filter(
       (path) =>
         !path.toLowerCase().endsWith('.md') &&

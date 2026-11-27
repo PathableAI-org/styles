@@ -84,9 +84,8 @@ class names and the values the classes output, and nothing else:
   How the package configures USWDS for the build is contributor material
   (`docs/styles/uswds-build-settings.md`), not linked from these pages.
 
-A utility or token page needs no pixel baseline (it has no component to
-draw). It must have at least one fixture, shown with `<!-- examples -->` under
-**States**. Every other rule holds: one example, no `usa-` anywhere, and every
+A utility or token page must have at least one fixture, shown with
+`<!-- examples -->` under **States**. Every other rule holds: one example, no `usa-` anywhere, and every
 class in an example, fixtures included, must be a class selector in the
 compiled CSS.
 

@@ -171,20 +171,15 @@ describe('chooseStories', () => {
     )
   })
 
-  it('adds the canonical and rollout lists for a shared change, unchanged', () => {
+  it('adds the canonical list for a shared change, unchanged', () => {
     const chosen = chooseStories({
       changedPaths: ['packages/styles/src/_colors.scss'],
       indexes: { styles: stylesIndex },
       canonical: [{ id: 'alert--info', mode: 'desktop' }],
-      pixelStories: [{ id: 'button--primary', key: 'button/primary' }],
-      rollout: ['button'],
     })
     assert.deepEqual(
       chosen.map((item) => [item.id, item.changed, item.mode]),
-      [
-        ['alert--info', false, 'desktop'],
-        ['button--primary', false, 'both'],
-      ],
+      [['alert--info', false, 'desktop']],
     )
   })
 

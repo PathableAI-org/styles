@@ -132,8 +132,8 @@ touches a [rendering path](visual-review.md#when-a-visual-review-runs).
    person reviews.
 
 The verifier and the capture script each build Storybooks. They may run at
-the same time: the verifier serves on ports 6006 and 6007, the pixel suite on
-6014, and the capture script on 6020 to 6023. If the session's disk
+the same time: the verifier serves on ports 6006 and 6007, and the capture
+script on 6020 to 6023. If the session's disk
 allowance runs low, run them one after the other.
 
 ## Delegating implementation

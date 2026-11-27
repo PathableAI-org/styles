@@ -6,7 +6,7 @@
  * Builds the base and head revisions in detached worktrees, chooses the
  * stories "What it captures" in docs/engineering/visual-review.md names,
  * captures them at both revisions, compares each pair, measures contrast at
- * the head, runs the pixel suite, and writes a manifest of files and numbers.
+ * the head, and writes a manifest of files and numbers.
  * It judges nothing; the visual reviewer does. Output stays quiet so whoever
  * runs it spends few tokens: build logs go to files, and stdout is a short
  * summary.
@@ -16,7 +16,6 @@
  *     [--story <id>]...       add a story (react:<id> for the React Storybook)
  *     [--only]                capture only the --story stories (a re-capture);
  *                             reuses the built worktrees, writes a new manifest
- *     [--no-pixels]           skip the pixel suite
  *   node scripts/visual-capture.mjs --out <dir> --clean
  *                             stop nothing, remove the worktrees under <dir>
  *
@@ -27,7 +26,6 @@
 
 import { spawn } from 'node:child_process'
 import {
-  cpSync,
   createWriteStream,
   existsSync,
   mkdirSync,
@@ -60,7 +58,7 @@ const VIEWPORTS = {
   tablet: { width: 768, height: 1024 },
   desktop: { width: 1280, height: 900 },
 }
-/** Ports the visual capture serves on; the verifier uses 6006-6007, the pixel suite 6014. */
+/** Ports the visual capture serves on; the verifier uses 6006-6007. */
 const PORTS = {
   styles: { base: 6020, head: 6021 },
   react: { base: 6022, head: 6023 },
@@ -85,7 +83,6 @@ const { values: args } = parseArgs({
     out: { type: 'string' },
     story: { type: 'string', multiple: true, default: [] },
     only: { type: 'boolean', default: false },
-    'no-pixels': { type: 'boolean', default: false },
     clean: { type: 'boolean', default: false },
   },
 })
@@ -248,11 +245,8 @@ async function headLists() {
       ? import(pathToFileURL(join(scripts, file)).href)
       : {}
   const gates = await load('quality-gates.mjs')
-  const pixels = await load('pixel-stories.mjs')
   return {
     canonical: gates.CANONICAL_STORIES ?? [],
-    pixelStories: pixels.STORIES ?? [],
-    rollout: pixels.ROLLOUT ?? [],
   }
 }
 
@@ -267,9 +261,7 @@ const indexes = {
   },
 }
 
-const lists = failures.head
-  ? { canonical: [], pixelStories: [], rollout: [] }
-  : await headLists()
+const lists = failures.head ? { canonical: [] } : await headLists()
 let stories = failures.head
   ? []
   : chooseStories({
@@ -547,61 +539,6 @@ const pairs = await mapLimit(plan, async (item) => {
   }
 })
 
-// ---------------------------------------------------------------------------
-// Changed baselines and the pixel suite
-// ---------------------------------------------------------------------------
-
-const baselines = []
-if (!args.only) {
-  for (const { status, path } of changed.filter((entry) =>
-    /^visual-baselines\/.*\.png$/.test(entry.path),
-  )) {
-    const dir = join(OUT, 'baselines', path.replace(/\.png$/, ''))
-    mkdirSync(dir, { recursive: true })
-    const entry = { path, status }
-    for (const side of ['base', 'head']) {
-      const shown = await run('git', ['show', `${sha[side]}:${path}`], {
-        log: join(dir, `${side}.png`),
-      })
-      if (shown.code === 0)
-        entry[side] = relative(OUT, join(dir, `${side}.png`))
-    }
-    if (entry.base && entry.head) {
-      Object.assign(
-        entry,
-        await compare(
-          join(OUT, entry.base),
-          join(OUT, entry.head),
-          join(dir, 'diff.png'),
-        ),
-      )
-    }
-    baselines.push(entry)
-  }
-}
-
-let pixels = { status: 'skipped' }
-if (!args.only && !args['no-pixels'] && !failures.head) {
-  const log = join(OUT, 'logs', 'head-pixels.log')
-  console.log('head: pixel suite')
-  const { code } = await run('pnpm', ['test:pixels-styles'], {
-    cwd: WORKTREES.head,
-    log,
-  })
-  const results = join(WORKTREES.head, 'apps/storybook/test-results/pixels')
-  let images = null
-  if (existsSync(results)) {
-    cpSync(results, join(OUT, 'pixels'), { recursive: true })
-    images = 'pixels'
-  }
-  pixels = {
-    status: code === 0 ? 'passed' : 'failed',
-    log: relative(OUT, log),
-    images,
-    tail: tail(log, 15),
-  }
-}
-
 await browser.close()
 for (const server of servers) server.close()
 
@@ -637,8 +574,6 @@ const manifest = {
     conditions: conditionsForStory(story, diffConditions),
   })),
   pairs,
-  baselines,
-  pixels,
   errors,
 }
 const manifestFile = join(OUT, args.only ? `${runName}.json` : 'manifest.json')
@@ -649,7 +584,6 @@ console.log(
   [
     `Manifest: ${manifestFile}`,
     `Stories: ${stories.length}; pairs: ${pairs.length} (${count('different')} different, ${count('same')} same, ${count('new')} new, ${count('error')} errors)`,
-    `Changed baselines: ${baselines.length}; pixel suite: ${pixels.status}`,
     ...errors.map(
       (error) => `Error: ${error.step}: ${error.detail ?? error.log}`,
     ),
