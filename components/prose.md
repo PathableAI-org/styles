@@ -13,7 +13,7 @@ guarantees:
   - id: heading-scale
     claim: Direct-child headings h1 to h6 are 1.49rem, 1.12rem, 1.12rem, 0.99rem, 0.87rem and 0.75rem, with a margin of 0 and a line height of 1.4, and an h6 is uppercase with 0.025em letter spacing.
   - id: heading-weight
-    claim: Direct-child headings h1 to h5 use the normal font weight token, --pathable-font-weight-normal.
+    claim: Direct-child headings h1 to h5 are set at weight 400, the normal weight.
   - id: block-rhythm
     claim: A direct child that follows another has a top margin of 1em, and a heading that follows another child has a top margin of 1.5em.
   - id: list-rules
@@ -67,9 +67,9 @@ JavaScript and are not part of this component.
 
 ## Tokens
 
-| What                    | Token                           |
-| ----------------------- | ------------------------------- |
-| Heading weight, h1 – h5 | `--pathable-font-weight-normal` |
+| What                    | Value       |
+| ----------------------- | ----------- |
+| Heading weight, h1 – h5 | 400, normal |
 
 The sizes, line heights and spacing on this page are fixed in the stylesheet
 and relative to the container's font size.

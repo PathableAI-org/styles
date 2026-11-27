@@ -39,7 +39,7 @@ Use these rules when creating or editing PathAble UI, documentation, prototypes,
 
 Agents MUST use the tokens and rules from `@pathableai/styles`.
 
-Agents MUST prefer semantic tokens over hardcoded color or font values.
+Agents MUST prefer the documented token classes and `pathable-*` component classes (see the `components/tokens-*.md` pages) over hardcoded color or font values. The `--pathable-*` custom properties are internal implementation that component SCSS uses; they are not a consumer API.
 
 Agents MUST NOT introduce new brand colors unless explicitly instructed.
 
@@ -69,9 +69,9 @@ Agents MUST NOT rename brand colors casually.
 
 ## Semantic Color Usage
 
-Agents MUST use semantic tokens for application UI when available.
+Agents MUST use the documented token classes and component classes for application UI when available (for example `bg-primary` or `text-ink`, listed on the `components/tokens-color.md` page).
 
-Examples:
+Internally, component SCSS reads these semantic custom properties. They are implementation, not a consumer token list:
 
 ```css
 --pathable-color-bg
@@ -199,9 +199,9 @@ Agents MUST document any new token with its intended role.
 
 Agents MUST check contrast before using color pairs for text.
 
-Agents MUST NOT hardcode brand values throughout application code when a token exists.
+Agents MUST NOT hardcode brand values throughout application code when a documented token class exists.
 
-Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. There are no exceptions by name.
+Inside component SCSS, agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. There are no exceptions by name.
 
 ## USWDS Token Usage
 
@@ -209,7 +209,7 @@ Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fail
 
 This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:
 
-- Agents MUST prefer `--pathable-*` custom properties (for example `var(--pathable-color-text)` or `var(--pathable-brand-pathable-blue)`) in component styles
+- Agents MUST prefer the internal `--pathable-*` custom properties (for example `var(--pathable-color-text)` or `var(--pathable-brand-pathable-blue)`) in component styles
 - When a USWDS function needs a color, Agents MUST use theme tokens such as `uswds.color('primary')` (PathAble Blue) or `uswds.color('accent-cool-dark')` (Tech Teal), which resolve to the brand values
 - Agents MUST NOT use USWDS system tokens such as `blue-warm-80v` for brand colors; they are only approximations of the brand palette
 - Agents MUST NOT use `$theme-color-primary` and other `$theme-*` settings directly — they are USWDS configuration values, not resolved colors
@@ -223,7 +223,7 @@ For SCSS consumers, the correct pattern is:
 $my-variable: uswds.color('primary'); // #00365c, PathAble Blue
 ```
 
-For CSS consumers, the compiled output contains resolved hex values via `--pathable-*` custom properties.
+For CSS consumers, the compiled output contains resolved hex values. Consumers use the token classes and component classes, not the `--pathable-*` custom properties.
 
 ## USWDS Typography Token Usage
 
@@ -231,9 +231,9 @@ This package wraps USWDS v3.x typography theme tokens. When creating or editing 
 
 ### Naming Convention
 
-Typography CSS custom properties are emitted in the `--pathable-font-*` namespace.
+Internal typography custom properties are emitted in the `--pathable-font-*` namespace for component SCSS to use.
 
-### CSS Custom Property Categories
+### Internal CSS Custom Property Categories
 
 - **Font role**: `--pathable-font-heading`, `--pathable-font-body`, `--pathable-font-mono`, `--pathable-font-alt`
 - **Font size**: `--pathable-font-size-*` tokens
@@ -246,9 +246,9 @@ Typography CSS custom properties are emitted in the `--pathable-font-*` namespac
 - Agents MUST NOT use `$theme-font-*` variables directly — those are USWDS internal configuration values
 - Agents MUST NOT edit `_uswds-theme.scss` to add new typography overrides without explicit instructions
 - Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss`
-- Agents MAY reference the `--pathable-font-*` CSS custom properties from CSS
+- Component SCSS MAY reference the `--pathable-font-*` custom properties; they are internal, not consumer API
 - For SCSS consumers: `@use 'uswds-core' as uswds;` then `uswds.family('heading')`
-- For CSS consumers: the compiled output contains resolved values via `--pathable-font-*` custom properties
+- For CSS consumers: use the typography token classes documented on the `components/tokens-typesetting*.md` pages
 
 ### Custom Typeface Token Documentation
 
@@ -269,7 +269,7 @@ Consuming projects do not need to manually place font files — they are distrib
 
 > Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes. See [target state](../../docs/engineering/target-state.md).
 
-This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as a `--pathable-*` CSS custom property.
+This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as an internal `--pathable-*` CSS custom property, which is not consumer API.
 
 ### Utility Class Naming Convention
 
@@ -319,7 +319,7 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 - Agents MUST use `.pathable-*` utility classes in HTML templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
 - Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
 - Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
-- Agents May use `--pathable-{module}-{value}` CSS custom properties as alternatives to the class-based utilities.
+- Agents MUST NOT present `--pathable-{module}-{value}` custom properties to consumers as an alternative to the class-based utilities; they are internal.
 
 ## USWDS Component Wrappers Usage
 

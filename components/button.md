@@ -107,26 +107,21 @@ style axis.
 
 ## Tokens
 
-| What                    | Token                                                               |
-| ----------------------- | ------------------------------------------------------------------- |
-| Default fill            | `--pathable-color-action-primary-bg`                                |
-| Default text            | `--pathable-color-action-primary-text`                              |
-| Secondary fill          | `--pathable-color-action-secondary-bg`                              |
-| Secondary text          | `--pathable-color-action-secondary-text`                            |
-| Accent-cool fill        | `--pathable-brand-bright-blue-brooks`                               |
-| Accent-cool text        | `--pathable-color-on-accent`                                        |
-| Accent-warm fill        | `--pathable-brand-lived-in-lime`                                    |
-| Accent-warm text        | `--pathable-brand-pathable-blue`                                    |
-| Base fill               | `--pathable-color-bg`                                               |
-| Base text               | `--pathable-color-text`                                             |
-| Outline text and border | `--pathable-color-text`                                             |
-| Unstyled text           | `--pathable-color-link`                                             |
-| Focus ring              | `--pathable-surface-focus-ring`, else `--pathable-color-focus-ring` |
+| What                    | Value                                                                                        |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| Default fill and text   | PathAble Blue, #00365c, with white, #ffffff, text                                            |
+| Secondary fill and text | Intelligent Jade, #1cae96, with #001a33 text                                                 |
+| Accent-cool fill, text  | Bright Blue Brooks, #4899e8, with #001a33 text                                               |
+| Accent-warm fill, text  | Lived-In Lime, #d3ff66, with PathAble Blue, #00365c, text                                    |
+| Base fill and text      | Shilling Silver, #dde2e8, with PathAble Blue, #00365c, text                                  |
+| Outline text and border | PathAble Blue, #00365c                                                                       |
+| Unstyled text           | Tech Teal, #015a76                                                                           |
+| Focus ring              | Bright Blue Brooks, #4899e8, or the surface's focus ring colour on a `pathable-bg-*` surface |
 
-The accent-warm colours are fixed brand colours, so a theme does not change
-them. The hover and pressed colours, the disabled colours, the padding, the
+The colour names and hex values are on [tokens-color.md](tokens-color.md). The
+hover and pressed colours, the disabled colours, the padding, the
 corner radius, the sizes and the inverse colours are fixed values in the
-stylesheet,. The pixel figures on
+stylesheet. The pixel figures on
 this page are those of the default theme.
 
 ## Composition

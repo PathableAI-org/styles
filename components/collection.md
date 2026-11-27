@@ -89,10 +89,10 @@ Add at most one modifier class to `pathable-collection`.
 
 ## Tokens
 
-| What                | Token                           |
-| ------------------- | ------------------------------- |
-| Heading typeface    | `--pathable-font-heading`       |
-| Heading font weight | `--pathable-font-weight-normal` |
+| What                | Value       |
+| ------------------- | ----------- |
+| Heading typeface    | Fredoka     |
+| Heading font weight | 400, normal |
 
 Every other value is fixed in the stylesheet. The rule between items has no
 colour of its own: it takes the item's text colour.

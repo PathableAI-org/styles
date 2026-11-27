@@ -114,9 +114,9 @@ the body, as in the list state.
 
 ## Tokens
 
-| What      | Token                  |
-| --------- | ---------------------- |
-| Body font | `--pathable-font-body` |
+| What      | Value  |
+| --------- | ------ |
+| Body font | Nunito |
 
 The pixel figures on this page are those of the default theme.
 

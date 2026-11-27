@@ -19,7 +19,7 @@ guarantees:
   - id: heading-style
     claim: The heading is 1.49rem, PathAble Blue (#00365c), with no margin, and the element after it has a 0.25rem top margin.
   - id: heading-typeface
-    claim: The heading is set in the brand heading typeface at normal weight, Fredoka Regular, through --pathable-font-heading and --pathable-font-weight-normal.
+    claim: The heading is set in the brand heading typeface at normal weight, Fredoka Regular, with weight 400.
   - id: custom-size
     claim: A type or spacing utility on an item, a heading or a description, such as font-sans-xl, line-height-sans-1, font-sans-lg or padding-bottom-4, sets that element's size or spacing in place of the list's own.
 ---
@@ -78,16 +78,14 @@ in what goes inside each item:
 
 ## Tokens
 
-| What                | Token                           |
-| ------------------- | ------------------------------- |
-| Heading typeface    | `--pathable-font-heading`       |
-| Heading font weight | `--pathable-font-weight-normal` |
+| What                | Value       |
+| ------------------- | ----------- |
+| Heading typeface    | Fredoka     |
+| Heading font weight | 400, normal |
 
-The marker, the connector line and the heading colour are not custom
-properties. They are compiled into the stylesheet from the theme's colour
-settings: PathAble Blue (`#00365c`) for the marker ring, the numeral and the
-heading, and its lightest grade (`#e6ebef`) for the line. A theme that
-overrides custom properties does not change them.
+The marker, the connector line and the heading colour are fixed values in
+the stylesheet: PathAble Blue (`#00365c`) for the marker ring, the numeral and the
+heading, and its lightest grade (`#e6ebef`) for the line.
 
 ## Composition
 
