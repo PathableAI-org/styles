@@ -55,11 +55,13 @@ can end early, and writes a manifest `verdict`:
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | `not-required`     | No changed path can change rendering. Written when the capture runs without `--classify` on a diff that needs no review.                                            | Records the verdict and summary; starts no reviewer. |
 | `no-render-change` | A styles-only diff whose built `packages/styles/dist` and `apps/storybook/generated` are byte-identical at base and head, with no Storybook-side dependency change. | Records the verdict and summary; starts no reviewer. |
-| `no-difference`    | Every pair matches and no story is one the change touches directly.                                                                                                 | Records the verdict and summary; starts no reviewer. |
-| `review`           | Something differs or a touched story needs judging.                                                                                                                 | Passes the manifest to the visual reviewer.          |
+| `no-difference`    | Every pair matches, no story is one the change touches directly and no story is gone at the head (`removedStories` is empty).                                       | Records the verdict and summary; starts no reviewer. |
+| `review`           | Something differs, a touched story needs judging, or a stories file's stories are gone at the head (removed stories).                                               | Passes the manifest to the visual reviewer.          |
 
 Only `review` goes to the visual reviewer. For the other three, the lead
 records the verdict and the capture summary as the round's visual evidence.
+For `no-render-change` and `no-difference` the script removes its worktrees
+itself, because no reviewer runs to do it.
 `--force` captures anyway, when the lead or a person wants a review on a diff
 the rule skips. It skips the classifier gate and the output pre-check, always
 ends with the verdict `review`, and, when the diff has no rendering paths,
@@ -110,7 +112,10 @@ the local base and head SHAs, in the background, and passes the manifest to the
 reviewer only when its verdict is `review`. The script does everything in the
 list below except naming themes, and writes a manifest (schema 2) of image
 paths and numbers, with the `verdict`, the `classification` of each changed
-path and the `precheck` result. The visual reviewer
+path, the `precheck` result and `removedStories` (the stories in the base
+index that the head index lacks, which always make the verdict `review`). The
+script removes its worktrees itself when the verdict is `no-render-change` or
+`no-difference`. The visual reviewer
 starts with that manifest, checks its SHAs and its story choice, and judges.
 It runs the same script with `--only` to add a story the choice missed or to
 re-capture a candidate finding, and removes the worktrees with `--clean`

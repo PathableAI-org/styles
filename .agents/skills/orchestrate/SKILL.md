@@ -174,8 +174,9 @@ node scripts/visual-capture.mjs --base <base SHA> --head <local head SHA> \
 
 When it finishes, read only the script's summary lines (the manifest path, the
 `Verdict:` line, the counts and any error lines) from the end of the log. Never read the
-screenshots, the manifest's contents or the full log. Leave the worktrees: the
-visual reviewer reuses them and removes them. The script exits non-zero
+screenshots, the manifest's contents or the full log. When the verdict is
+`no-render-change` or `no-difference`, the script removes the worktrees itself.
+For `review`, leave them: the visual reviewer reuses them and removes them. The script exits non-zero
 whenever the manifest has any `errors` entry, so a non-zero exit is not a
 failed run. When it writes a manifest, pass it to the visual reviewer even if
 it reports errors: a head that does not build is the reviewer's blocking

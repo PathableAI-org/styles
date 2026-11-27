@@ -186,6 +186,25 @@ describe('classifyManifest', () => {
     )
   })
 
+  it('lists every changed render field', () => {
+    const result = classifyManifest(
+      'packages/styles/package.json',
+      manifest(),
+      manifest({
+        exports: { '.': './x.css' },
+        dependencies: { '@uswds/uswds': '3.1.0' },
+        devDependencies: { sass: '1.1.0', 'test-lib': '2.0.0' },
+        scripts: { build: 'sass a c', lint: 'eslint .' },
+      }),
+    )
+    assert.deepEqual(result.fields, [
+      'dependencies',
+      'exports',
+      'devDependencies:sass',
+      'scripts:build',
+    ])
+  })
+
   it('is render for an added or deleted file or bad JSON', () => {
     assert.equal(kind(manifest(), null), 'render')
     assert.equal(kind(null), 'render')
@@ -376,6 +395,24 @@ describe('classifyLockfile', () => {
       lock.snapshots['react-only@1.1.0'] = {}
     })
     assert.deepEqual([result.kind, result.workspaces], ['render', ['react']])
+  })
+
+  it('is render when one binding switches and both versions stay reachable', () => {
+    const before = baseLock()
+    before.importers['packages/styles'].dependencies.foo = dep('1.0.0')
+    before.importers['scripts/component-docs'].dependencies.foo = dep('1.0.0')
+    before.snapshots['foo@1.0.0'] = {}
+    before.snapshots['foo@2.0.0'] = {}
+    before.importers['packages/styles'].dependencies['uses-foo-2'] =
+      dep('1.0.0')
+    before.snapshots['uses-foo-2@1.0.0'] = {
+      dependencies: { foo: '2.0.0' },
+    }
+    const after = structuredClone(before)
+    after.importers['packages/styles'].dependencies.foo = dep('2.0.0')
+    const result = classifyLockfile(lockfile(before), lockfile(after))
+    assert.deepEqual([result.kind, result.workspaces], ['render', ['styles']])
+    assert.deepEqual(result.parts, ['styles-package'])
   })
 
   it('ignores the first document, which holds the pnpm self-entry', () => {
@@ -1068,6 +1105,10 @@ describe('captureVerdict', () => {
   it('is always review under force', () => {
     assert.equal(verdict({ force: true }), 'review')
   })
+
+  it('is review when a story was removed, though every pair matches', () => {
+    assert.equal(verdict({ removedStories: ['button--gone'] }), 'review')
+  })
 })
 
 describe('pre-check', () => {
@@ -1121,6 +1162,25 @@ describe('pre-check', () => {
     assert.equal(
       precheckApplies({ paths: [entry('pnpm-lock.yaml', ['react'])] }),
       false,
+    )
+  })
+
+  it('is blocked by a styles manifest change the outputs cannot show', () => {
+    const manifestEntry = (fields) => ({
+      path: 'packages/styles/package.json',
+      render: true,
+      workspaces: ['styles'],
+      ...(fields && { fields }),
+    })
+    const applies = (fields) =>
+      precheckApplies({ paths: [manifestEntry(fields)] })
+    assert.equal(applies(['exports']), false)
+    assert.equal(applies(['dependencies', 'exports']), false)
+    assert.equal(applies(['peerDependencies']), false)
+    assert.equal(applies(undefined), false)
+    assert.equal(
+      applies(['dependencies', 'devDependencies:sass', 'scripts:build']),
+      true,
     )
   })
 

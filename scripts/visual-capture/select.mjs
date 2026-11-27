@@ -105,11 +105,19 @@ function firstOfEachFile(stories) {
 /**
  * The verdict of a finished capture: `no-difference` only when nothing failed,
  * at least one pair was captured, every pair matched, no story is one the
- * diff changed and the run was not forced; otherwise `review`.
+ * diff changed, no story was removed (`removedStories`: IDs in the base index
+ * that the head index lacks) and the run was not forced; otherwise `review`.
  */
-export function captureVerdict({ errors, pairs, stories, force = false }) {
+export function captureVerdict({
+  errors,
+  pairs,
+  stories,
+  removedStories = [],
+  force = false,
+}) {
   const clean =
     !force &&
+    removedStories.length === 0 &&
     errors.length === 0 &&
     pairs.length > 0 &&
     pairs.every((pair) => pair.status === 'same') &&

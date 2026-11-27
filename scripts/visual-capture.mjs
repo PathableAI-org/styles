@@ -30,6 +30,10 @@
  *   node scripts/visual-capture.mjs --out <dir> --clean
  *                             stop nothing, remove the worktrees under <dir>
  *
+ * With the verdict `no-render-change` or `no-difference` no reviewer runs, so
+ * the script removes the worktrees itself and prints `Worktrees removed.`; for
+ * `review` and for errors it leaves them for the reviewer and --only.
+ *
  * The manifest is <dir>/manifest.json (or <dir>/recapture-<n>.json with
  * --only). Its `verdict` is `not-required` (no path can change rendering),
  * `no-render-change` (the built outputs are identical), `no-difference` (at least
@@ -161,12 +165,17 @@ function tail(file, lines = 30) {
     .join('\n')
 }
 
-if (args.clean) {
+/** Remove the base and head worktrees under the output directory. */
+async function removeWorktrees() {
   for (const dir of Object.values(WORKTREES)) {
     if (existsSync(dir))
       await run('git', ['worktree', 'remove', '--force', dir])
   }
   await run('git', ['worktree', 'prune'])
+}
+
+if (args.clean) {
+  await removeWorktrees()
   console.log(`Removed the capture worktrees under ${OUT}.`)
   process.exit(0)
 }
@@ -395,6 +404,8 @@ if (precheckBlock) {
       'captures',
       [`The built outputs are identical (${base.size} files).`],
     )
+    await removeWorktrees()
+    console.log('Worktrees removed.')
     process.exit(0)
   }
 }
@@ -431,6 +442,18 @@ const indexes = {
     react: withReact ? readIndex('base', 'react') : null,
   },
 }
+
+// Stories in a base index that the head index lacks, for each workspace that
+// was built at both revisions; the workspace is a prefix for the React ones.
+const removedStories = ['styles', 'react'].flatMap((workspace) => {
+  const base = indexes.base[workspace]
+  const head = indexes.head[workspace]
+  if (!base || !head) return []
+  const present = new Set(head.map((entry) => entry.id))
+  return base
+    .filter((entry) => entry.type === 'story' && !present.has(entry.id))
+    .map((entry) => (workspace === 'react' ? `react:${entry.id}` : entry.id))
+})
 
 const lists = failures.head ? { canonical: [] } : await headLists()
 let stories = failures.head
@@ -730,10 +753,19 @@ for (const pair of pairs.filter((item) => item.status === 'error')) {
   })
 }
 
+const verdict = captureVerdict({
+  errors,
+  pairs,
+  stories,
+  removedStories,
+  force: args.force,
+})
+
 writeManifest(
   {
-    verdict: captureVerdict({ errors, pairs, stories, force: args.force }),
+    verdict,
     diffConditions,
+    removedStories,
     stories: stories.map((story) => ({
       ...story,
       inBase: inBase(story),
@@ -757,4 +789,10 @@ console.log(
     ),
   ].join('\n'),
 )
+// No reviewer runs after a skipped verdict, so nothing else removes the
+// worktrees.
+if (verdict === 'no-difference' && !args.only) {
+  await removeWorktrees()
+  console.log('Worktrees removed.')
+}
 process.exit(errors.length > 0 ? 1 : 0)

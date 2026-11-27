@@ -174,11 +174,19 @@ const renderBoth = (reason) => ({
 
 /**
  * Resolve a manifest to render or none from its base and head text (`null`
- * when the file is missing at that side).
+ * when the file is missing at that side). A render result carries `fields`,
+ * every changed render-relevant field (`dependencies`, `peerDependencies`,
+ * `exports`, `devDependencies:<name>`, `scripts:<name>`); it is empty when the
+ * manifest was added, deleted or does not parse.
  */
 export function classifyManifest(path, baseText, headText) {
   const workspaces = [...(INSPECT[path] ?? BOTH)]
-  const render = (reason) => ({ kind: 'render', workspaces, reason })
+  const render = (reason, fields = []) => ({
+    kind: 'render',
+    workspaces,
+    reason,
+    fields,
+  })
   if (baseText === null || headText === null) {
     return render('The manifest was added or deleted.')
   }
@@ -190,9 +198,10 @@ export function classifyManifest(path, baseText, headText) {
   } catch {
     return render('The manifest does not parse.')
   }
+  const changes = []
   for (const field of ['dependencies', 'peerDependencies', 'exports']) {
     if (!isDeepStrictEqual(base[field], head[field])) {
-      return render(`"${field}" changed.`)
+      changes.push({ field, reason: `"${field}" changed.` })
     }
   }
   const extra = IMPORTER_RENDER_DEV_DEPS[posix.dirname(path)] ?? []
@@ -203,7 +212,10 @@ export function classifyManifest(path, baseText, headText) {
     ...Object.keys(headDev),
   ])) {
     if (isRenderDevDep(name, extra) && baseDev[name] !== headDev[name]) {
-      return render(`devDependency ${name} changed.`)
+      changes.push({
+        field: `devDependencies:${name}`,
+        reason: `devDependency ${name} changed.`,
+      })
     }
   }
   const baseScripts = base.scripts ?? {}
@@ -214,8 +226,17 @@ export function classifyManifest(path, baseText, headText) {
     `post${script}`,
   ])) {
     if (baseScripts[name] !== headScripts[name]) {
-      return render(`Script "${name}" changed.`)
+      changes.push({
+        field: `scripts:${name}`,
+        reason: `Script "${name}" changed.`,
+      })
     }
+  }
+  if (changes.length > 0) {
+    return render(
+      changes[0].reason,
+      changes.map(({ field }) => field),
+    )
   }
   return {
     kind: 'none',
@@ -243,9 +264,20 @@ const CLOSURE_PARTS = {
   react: { roots: ['packages/react', 'apps/storybook-react'], follow: true },
 }
 
-/** The `name@version` set one workspace resolves to in a lockfile. */
+/** Whether two sets hold the same members. */
+function sameSet(a, b) {
+  return a.size === b.size && [...a].every((key) => b.has(key))
+}
+
+/**
+ * What one workspace resolves to in a lockfile: the `name@version` nodes and
+ * the edges between them, one string per importer binding
+ * (`<importerPath>><name>@<version>`) and per snapshot dependency
+ * (`<parentKey>><childName>@<childVersion>`).
+ */
 function closure(importers, snapshots, roots, follow = true) {
   const found = new Set()
+  const edges = new Set()
   const importersSeen = new Set()
 
   const visitSnapshot = (name, version) => {
@@ -256,6 +288,7 @@ function closure(importers, snapshots, roots, follow = true) {
     if (!snapshot) return
     const next = { ...snapshot.dependencies, ...snapshot.optionalDependencies }
     for (const [child, childVersion] of Object.entries(next)) {
+      edges.add(`${key}>${child}@${childVersion}`)
       visitSnapshot(child, String(childVersion))
     }
   }
@@ -283,13 +316,14 @@ function closure(importers, snapshots, roots, follow = true) {
           )
         }
       } else {
+        edges.add(`${importerPath}>${name}@${version}`)
         visitSnapshot(name, version)
       }
     }
   }
 
   for (const root of roots) visitImporter(root)
-  return found
+  return { nodes: found, edges }
 }
 
 /** Parse a lockfile's second document into `{ importers, snapshots }`. */
@@ -317,8 +351,8 @@ export function classifyLockfile(baseText, headText) {
         const before = closure(base.importers, base.snapshots, roots, follow)
         const after = closure(head.importers, head.snapshots, roots, follow)
         return (
-          before.size !== after.size ||
-          [...before].some((key) => !after.has(key))
+          !sameSet(before.nodes, after.nodes) ||
+          !sameSet(before.edges, after.edges)
         )
       })
       .map(([name]) => name)
@@ -370,6 +404,7 @@ export function classifyChanges({ changes, readFile }) {
       render,
       workspaces: render ? result.workspaces : [],
       ...(result.parts && { parts: result.parts }),
+      ...(result.fields && { fields: result.fields }),
       reason: result.reason,
     }
   })

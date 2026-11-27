@@ -25,6 +25,14 @@ export const COMPARED_DIRS = [
 
 const SAMPLE_LIMIT = 10
 
+/**
+ * The styles manifest. The styles Storybook resolves
+ * `@pathableai/styles/src/index.scss` through its `exports`, so an `exports` or
+ * `peerDependencies` change can redirect the iframe stylesheet without
+ * changing the compared outputs.
+ */
+const STYLES_MANIFEST = 'packages/styles/package.json'
+
 /** Whether the compared outputs show every render path's effect. */
 export function precheckCovers(renderPaths) {
   return renderPaths.every((path) => COVERED.some((rule) => rule.test(path)))
@@ -42,6 +50,17 @@ export function precheckApplies(classification) {
   return (
     render.every((entry) => !entry.workspaces.includes('react')) &&
     precheckCovers(render.map((entry) => entry.path)) &&
+    render.every(
+      (entry) =>
+        entry.path !== STYLES_MANIFEST ||
+        (Array.isArray(entry.fields) &&
+          entry.fields.every(
+            (field) =>
+              field === 'dependencies' ||
+              field.startsWith('devDependencies:') ||
+              field.startsWith('scripts:'),
+          )),
+    ) &&
     (!lockfile ||
       (Array.isArray(lockfile.parts) &&
         !lockfile.parts.some(
