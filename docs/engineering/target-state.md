@@ -86,7 +86,7 @@ checkboxes and selects remain in scope.
 
 Accordion, combo box, date picker, modal, tooltip and the other components
 whose defining behavior needs package JavaScript are outside the current
-catalog. Their existing source does not make them part of the target.
+catalog, and the package ships no source for them.
 
 The design-token and utility documentation and fixture slices are in place.
 Current implementation work is bringing the documented static components into
@@ -150,7 +150,7 @@ or documented class back toward legacy SCSS. Fix the implementation in the
 component's scoped work, or record the known gap without expanding the pull
 request.
 
-Existing drift in a deferred React, JavaScript or legacy component area is not
+Existing drift in the deferred React area is not
 an invitation to fix it. Do not introduce a new failure there, but keep a
 confirmed unrelated defect out of the current change and report it through the
 repository bug process.
@@ -200,7 +200,6 @@ a component pull request:
 - whether and how GitHub issue automation applies component and area labels;
 - whether GitHub Pages becomes versioned or continues as a clearly identified
   rolling build;
-- the eventual disposition of React, styles JavaScript, JavaScript-dependent
-  wrappers and PathAble-only legacy components; and
+- the eventual disposition of React; and
 - any future compiled-CSS entry points beyond the package's current bundle
   shape.
