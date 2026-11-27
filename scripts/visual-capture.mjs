@@ -3,11 +3,15 @@
 /**
  * Visual capture: the mechanical half of a visual review.
  *
- * Builds the base and head revisions in detached worktrees, chooses the
+ * First classifies the diff (scripts/visual-capture/classify.mjs): when no
+ * changed path can change what a Storybook renders, it stops with the verdict
+ * `not-required`. Otherwise it builds the base and head revisions in detached
+ * worktrees; for a styles-only diff it compares the built outputs and stops
+ * with `no-render-change` when they are identical. Failing both, it chooses the
  * stories "What it captures" in docs/engineering/visual-review.md names,
  * captures them at both revisions, compares each pair, measures contrast at
- * the head, and writes a manifest of files and numbers.
- * It judges nothing; the visual reviewer does. Output stays quiet so whoever
+ * the head, and writes a manifest of files and numbers with a verdict.
+ * It judges nothing about what it renders; the visual reviewer does. Output stays quiet so whoever
  * runs it spends few tokens: build logs go to files, and stdout is a short
  * summary.
  *
@@ -16,21 +20,32 @@
  *     [--story <id>]...       add a story (react:<id> for the React Storybook)
  *     [--only]                capture only the --story stories (a re-capture);
  *                             reuses the built worktrees, writes a new manifest
+ *     [--force]               skip the classifier gate and the output
+ *                             pre-check (a review was asked for anyway)
+ *   node scripts/visual-capture.mjs --base <sha> --head <sha> --classify
+ *                             print the verdict and the render paths with
+ *                             their reasons; build nothing (--out not needed)
  *   node scripts/visual-capture.mjs --out <dir> --clean
  *                             stop nothing, remove the worktrees under <dir>
  *
  * The manifest is <dir>/manifest.json (or <dir>/recapture-<n>.json with
- * --only). Exit status: 0 when every capture ran, 1 when a build or a capture
- * failed (the manifest says which), 2 on bad arguments.
+ * --only). Its `verdict` is `not-required` (no path can change rendering),
+ * `no-render-change` (the built outputs are identical), `no-difference` (every
+ * capture matched and no story changed) or `review` (the reviewer judges).
+ * Exit status: 0 when every capture ran or none was needed, 1 when a build or
+ * a capture failed (the manifest says which), 2 on bad arguments, 3 with
+ * --classify when no review is required.
  */
 
-import { spawn } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import {
   createWriteStream,
   existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
+  statSync,
   writeFileSync,
 } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
@@ -43,16 +58,21 @@ import {
   collectContrast,
   diffRgba,
 } from './visual-capture/measure.mjs'
+import { classifyChanges } from './visual-capture/classify.mjs'
+import {
+  COMPARED_DIRS,
+  compareTrees,
+  precheckApplies,
+} from './visual-capture/precheck.mjs'
 import {
   chooseStories,
   conditionsForDiff,
   conditionsForStory,
-  touchesReact,
   viewportsForMode,
 } from './visual-capture/select.mjs'
 
 const ROOT = resolve(import.meta.dirname, '..')
-const SCHEMA_VERSION = 1
+const SCHEMA_VERSION = 2
 const VIEWPORTS = {
   mobile: { width: 375, height: 812 },
   tablet: { width: 768, height: 1024 },
@@ -83,12 +103,14 @@ const { values: args } = parseArgs({
     out: { type: 'string' },
     story: { type: 'string', multiple: true, default: [] },
     only: { type: 'boolean', default: false },
+    force: { type: 'boolean', default: false },
+    classify: { type: 'boolean', default: false },
     clean: { type: 'boolean', default: false },
   },
 })
 
-if (!args.out) usage('--out <dir> is required.')
-const OUT = resolve(args.out)
+if (!args.out && !args.classify) usage('--out <dir> is required.')
+const OUT = resolve(args.out ?? '.')
 const WORKTREES = {
   base: join(OUT, 'worktrees/base'),
   head: join(OUT, 'worktrees/head'),
@@ -160,9 +182,9 @@ for (const side of ['base', 'head']) {
   }
 }
 
-mkdirSync(join(OUT, 'logs'), { recursive: true })
-
-const changed = (await git('diff', '--name-status', `${sha.base}..${sha.head}`))
+const changed = (
+  await git('diff', '--name-status', '--no-renames', `${sha.base}..${sha.head}`)
+)
   .split('\n')
   .filter(Boolean)
   .map((line) => {
@@ -170,15 +192,91 @@ const changed = (await git('diff', '--name-status', `${sha.base}..${sha.head}`))
     return { status, path: paths.at(-1) }
   })
 const changedPaths = changed.map((entry) => entry.path)
+
+/** A file's text at a revision, or `null` when the path is missing there. */
+function readAt(side, path) {
+  const result = spawnSync('git', ['show', `${sha[side]}:${path}`], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    maxBuffer: 1 << 30,
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })
+  return result.status === 0 ? result.stdout : null
+}
+
+const classification = classifyChanges({ changes: changed, readFile: readAt })
+const renderPaths = classification.paths.filter((entry) => entry.render)
+
+if (args.classify) {
+  const noneCount = classification.paths.length - renderPaths.length
+  console.log(
+    [
+      `Verdict: ${classification.required ? 'review required' : 'not required'}`,
+      ...renderPaths.map(
+        (entry) =>
+          `render [${entry.workspaces.join(',')}] ${entry.path}: ${entry.reason}`,
+      ),
+      `${noneCount} path${noneCount === 1 ? '' : 's'} cannot change rendering.`,
+    ].join('\n'),
+  )
+  process.exit(classification.required ? 0 : 3)
+}
+
+mkdirSync(join(OUT, 'logs'), { recursive: true })
+
 const withReact =
-  changedPaths.some(touchesReact) ||
+  renderPaths.some((entry) => entry.workspaces.includes('react')) ||
   args.story.some((story) => story.startsWith('react:'))
+
+const errors = []
+
+/** Write a manifest and print the summary; the caller exits. */
+function writeManifest(manifest, runName, lines = []) {
+  const file = join(OUT, args.only ? `${runName}.json` : 'manifest.json')
+  writeFileSync(
+    file,
+    `${JSON.stringify(
+      {
+        schemaVersion: SCHEMA_VERSION,
+        baseSha: sha.base,
+        headSha: sha.head,
+        run: runName,
+        createdAt: new Date().toISOString(),
+        rules: 'docs/engineering/visual-review.md#what-it-captures',
+        threshold: DIFF_THRESHOLD,
+        changedPaths: changed,
+        classification,
+        ...manifest,
+      },
+      null,
+      2,
+    )}\n`,
+  )
+  console.log(
+    [`Manifest: ${file}`, `Verdict: ${manifest.verdict}`, ...lines].join('\n'),
+  )
+  return file
+}
+
+if (!classification.required && !args.only && !args.force) {
+  writeManifest(
+    {
+      verdict: 'not-required',
+      diffConditions: [],
+      stories: [],
+      pairs: [],
+      precheck: { status: 'skipped', reason: 'not required' },
+      errors,
+    },
+    'captures',
+    ['No changed path can change what a Storybook renders.'],
+  )
+  process.exit(0)
+}
 
 // ---------------------------------------------------------------------------
 // Worktrees and builds
 // ---------------------------------------------------------------------------
-
-const errors = []
 
 async function prepare(side) {
   const dir = WORKTREES[side]
@@ -229,6 +327,76 @@ const failures = {}
 for (const side of ['base', 'head']) failures[side] = await prepare(side)
 
 // ---------------------------------------------------------------------------
+// Output pre-check
+// ---------------------------------------------------------------------------
+
+/** SHA-256 of every file under the compared output directories of a worktree. */
+function hashOutputs(side) {
+  const hashes = new Map()
+  const walk = (dir) => {
+    for (const name of readdirSync(join(WORKTREES[side], dir))) {
+      const path = `${dir}/${name}`
+      if (statSync(join(WORKTREES[side], path)).isDirectory()) walk(path)
+      else {
+        hashes.set(
+          path,
+          createHash('sha256')
+            .update(readFileSync(join(WORKTREES[side], path)))
+            .digest('hex'),
+        )
+      }
+    }
+  }
+  for (const dir of COMPARED_DIRS) {
+    if (existsSync(join(WORKTREES[side], dir))) walk(dir)
+  }
+  return hashes
+}
+
+let precheck
+const precheckBlock = args.only
+  ? 'this is a re-capture'
+  : args.force
+    ? 'a review was forced'
+    : withReact
+      ? 'the React Storybook is in play'
+      : failures.base || failures.head
+        ? 'a build failed'
+        : !precheckApplies(classification)
+          ? 'a changed path shows in more than the built styles outputs'
+          : null
+if (precheckBlock) {
+  precheck = { status: 'skipped', reason: precheckBlock }
+} else {
+  const base = hashOutputs('base')
+  const head = hashOutputs('head')
+  const compared = compareTrees(base, head)
+  precheck = {
+    status: compared.same ? 'same' : 'different',
+    files: { base: base.size, head: head.size },
+    added: compared.added,
+    removed: compared.removed,
+    changed: compared.changed,
+    total: compared.total,
+  }
+  if (compared.same) {
+    writeManifest(
+      {
+        verdict: 'no-render-change',
+        diffConditions: [],
+        stories: [],
+        pairs: [],
+        precheck,
+        errors,
+      },
+      'captures',
+      [`The built outputs are identical (${base.size} files).`],
+    )
+    process.exit(0)
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Story choice
 // ---------------------------------------------------------------------------
 
@@ -266,6 +434,7 @@ let stories = failures.head
   ? []
   : chooseStories({
       changedPaths,
+      classification: classification.paths,
       indexes: indexes.head,
       extra: args.story,
       ...lists,
@@ -557,32 +726,31 @@ for (const pair of pairs.filter((item) => item.status === 'error')) {
   })
 }
 
-const manifest = {
-  schemaVersion: SCHEMA_VERSION,
-  baseSha: sha.base,
-  headSha: sha.head,
-  run: runName,
-  createdAt: new Date().toISOString(),
-  rules: 'docs/engineering/visual-review.md#what-it-captures',
-  threshold: DIFF_THRESHOLD,
-  changedPaths: changed,
-  diffConditions,
-  stories: stories.map((story) => ({
-    ...story,
-    inBase: inBase(story),
-    viewports: viewportsForMode(story.mode),
-    conditions: conditionsForStory(story, diffConditions),
-  })),
-  pairs,
-  errors,
-}
-const manifestFile = join(OUT, args.only ? `${runName}.json` : 'manifest.json')
-writeFileSync(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`)
+const clean =
+  errors.length === 0 &&
+  pairs.every((pair) => pair.status === 'same') &&
+  !stories.some((story) => story.changed)
+writeManifest(
+  {
+    verdict: clean ? 'no-difference' : 'review',
+    diffConditions,
+    stories: stories.map((story) => ({
+      ...story,
+      inBase: inBase(story),
+      viewports: viewportsForMode(story.mode),
+      conditions: conditionsForStory(story, diffConditions),
+    })),
+    pairs,
+    precheck,
+    errors,
+  },
+  runName,
+  [],
+)
 
 const count = (status) => pairs.filter((pair) => pair.status === status).length
 console.log(
   [
-    `Manifest: ${manifestFile}`,
     `Stories: ${stories.length}; pairs: ${pairs.length} (${count('different')} different, ${count('same')} same, ${count('new')} new, ${count('error')} errors)`,
     ...errors.map(
       (error) => `Error: ${error.step}: ${error.detail ?? error.log}`,
