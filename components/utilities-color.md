@@ -27,11 +27,11 @@ guarantees:
   - id: surface-background
     claim: 'pathable-bg-primary sets background-color to #00365c, pathable-bg-surface to #ffffff, pathable-bg-link to #015a76, pathable-bg-accent and pathable-bg-success to #1cae96, pathable-bg-base to #dde2e8, pathable-bg-danger to #dc3545, pathable-bg-focus-ring to #4899e8 and pathable-bg-transparent to transparent.'
   - id: surface-focus-ring
-    claim: 'A focused pathable-button or pathable-link inside pathable-bg-link draws its outline in #ffffff, inside pathable-bg-accent in #001a33 and inside pathable-bg-base in #00365c.'
+    claim: 'A focused pathable-button inside pathable-bg-link draws its outline in #ffffff and inside pathable-bg-accent or pathable-bg-success in #001a33, and a focused pathable-button or pathable-link inside pathable-bg-base draws it in #00365c.'
   - id: surface-ring-reset
     claim: 'Inside a pathable-bg-surface that sits inside pathable-bg-link, a focused pathable-button or pathable-link draws its outline in #4899e8.'
   - id: surface-hover-ring
-    claim: 'hover:pathable-bg-link sets background-color to #015a76 and gives a focused pathable-button or pathable-link inside it an outline of #ffffff only while the container is hovered.'
+    claim: 'hover:pathable-bg-link sets background-color to #015a76 and gives a focused pathable-button inside it an outline of #ffffff only while the container is hovered.'
   - id: brand-contrast
     claim: text-white on bg-primary has a contrast ratio of 12.48:1, text-primary on bg-base-lightest 11.72:1, text-accent-warm on bg-primary 10.86:1, and text-primary-darker on bg-secondary 6.12:1.
 ---
@@ -42,8 +42,10 @@ Utility classes that set the background colour and the text colour of an
 element from the PathAble theme colour tokens. `bg-primary` fills an element
 with PathAble Blue and `text-white` sets its text to white; the token after the
 prefix is a USWDS theme colour token, so the same names work in every
-application that uses the package. The classes are single-property rules with
-no prefix and no JavaScript.
+application that uses the package. The `bg-<token>` and `text-<token>` classes
+are single-property rules with no prefix and no JavaScript; the
+`pathable-bg-<role>` family is prefixed and sets the background and the focus
+ring of the controls on it.
 
 ## When to use
 
@@ -195,11 +197,11 @@ default, so a control on that inner surface keeps the default ring. The
 
 ## Variants
 
-| Prefix                              | `bg-<token>`, `text-<token>` | Notes                                                                     |
-| ----------------------------------- | ---------------------------- | ------------------------------------------------------------------------- |
-| `mobile-lg:`, `tablet:`, `desktop:` | Not output                   | No responsive variant of a colour class exists                            |
-| `hover:`                            | Output                       | `hover:bg-primary-vivid`, `hover:text-primary`: the rule ends in `:hover` |
-| `focus:`, `active:`, `visited:`     | Not output                   | No `focus:`, `active:` or `visited:` variant of a colour class exists     |
+| Prefix                              | `bg-<token>`, `text-<token>` | `pathable-bg-<role>`                                                               | Notes                                                                     |
+| ----------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `mobile-lg:`, `tablet:`, `desktop:` | Not output                   | Not output                                                                         | No responsive variant of a colour class exists                            |
+| `hover:`                            | Output                       | Output: sets the background and the focus ring only while the container is hovered | `hover:bg-primary-vivid`, `hover:text-primary`: the rule ends in `:hover` |
+| `focus:`, `active:`, `visited:`     | Not output                   | Not part of the documented classes: use only `hover:`                              | No `focus:`, `active:` or `visited:` variant of a colour class exists     |
 
 The breakpoints are `min-width` media queries in `em`: `mobile-lg` 30em
 (480px), `tablet` 40em (640px) and `desktop` 64em (1024px). A hover rule gives
@@ -250,5 +252,10 @@ On `bg-secondary` and `bg-accent-cool` use `text-primary-darker` (6.12:1 and
   it. Put such a control on the `pathable-bg-*` equivalent in the
   [surface table](#surface-classes-with-a-focus-ring), which sets a
   contrasting ring.
+- Links on a coloured surface. A `pathable-link` does not keep text contrast in
+  its hover and visited states on `pathable-bg-link`, `pathable-bg-accent`,
+  `pathable-bg-success` or `pathable-bg-danger`, and a text colour class on the
+  link does not fix that. Put links on `pathable-bg-base` or on a
+  `pathable-bg-surface` panel inside the coloured surface.
 - Surfaces nested inside a coloured surface, which do not reset the text colour
   for you: set the text colour on the surface or on each child.

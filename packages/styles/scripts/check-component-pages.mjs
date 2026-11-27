@@ -20,8 +20,9 @@
  *     When to use, Example, Variants, Composition, Guarantees and The consumer
  *     owns. Everything below that is not marked otherwise applies to it.
  *   - `utility`, a family of USWDS utility classes (slug `utilities-<uswds
- *     slug>`): `uswds` and a non-empty `classes` list of unprefixed class
- *     patterns, and the sections When to use, Example, Classes, Variants, States,
+ *     slug>`): `uswds` and a non-empty `classes` list of class patterns
+ *     (unprefixed USWDS names, plus any declared `pathable-` utility
+ *     patterns), and the sections When to use, Example, Classes, Variants, States,
  *     Guarantees and The consumer owns, in that order.
  *   - `token`, a USWDS design token group (slug `tokens-<uswds path>`): `uswds`
  *     and no `classes`, and the sections When to use, Example, Values, Utilities,
