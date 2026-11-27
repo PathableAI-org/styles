@@ -50,20 +50,46 @@ function undefinedTokens(content) {
 }
 
 describe('lint-tokens defined token set', () => {
-  it('reads the non-prefixed and --pathable-* design tokens from the token sources', () => {
+  it('defines exactly the declared design tokens', () => {
+    const definedTokens = extractDefinedTokens()
+    const colorTokens = definedTokens.filter((token) =>
+      token.startsWith('--pathable-color-'),
+    )
+    assert.equal(colorTokens.length, 25)
+    assert.deepEqual(
+      definedTokens.filter((token) => !token.startsWith('--pathable-color-')),
+      [
+        '--elevation-lg',
+        '--elevation-md',
+        '--elevation-sm',
+        '--elevation-xl',
+        '--pathable-brand-bright-blue-brooks',
+        '--pathable-brand-lived-in-lime',
+        '--pathable-brand-pathable-blue',
+        '--pathable-font-body',
+        '--pathable-font-heading',
+        '--pathable-font-weight-bold',
+        '--pathable-font-weight-normal',
+      ],
+    )
+    assert.equal(definedTokens.length, 36)
+  })
+
+  it('defines no removed token family', () => {
     const definedTokens = extractDefinedTokens()
     for (const prefix of [
       '--space-',
       '--radius-',
-      '--elevation-',
       '--ui-',
-      '--pathable-font-size-',
       '--pathable-space-',
+      '--pathable-font-size-',
       '--pathable-bg-',
+      '--pathable-margin-',
     ]) {
-      assert.ok(
-        definedTokens.some((token) => token.startsWith(prefix)),
-        `expected a defined ${prefix}* token`,
+      assert.deepEqual(
+        definedTokens.filter((token) => token.startsWith(prefix)),
+        [],
+        `expected no defined ${prefix}* token`,
       )
     }
   })

@@ -1,6 +1,6 @@
 // Theme token entry point.
-// Compiles the default :root token declarations (brand + semantic color and
-// all non-color tokens) into dist/theme-default.css.
+// Compiles the default :root token declarations (the brand and semantic
+// colors, font roles and weights, and elevations) into dist/theme-default.css.
 // Configure USWDS before loading any PathAble additions.
 @forward 'uswds-theme';
 
@@ -10,4 +10,3 @@
 @forward '_elevation';
 @forward '_radius';
 @forward '_semantic';
-@forward '_utilities-tokens';
