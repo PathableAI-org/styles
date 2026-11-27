@@ -1,0 +1,22 @@
+// packages/styles/src/pathable-component-wrappers/_pathable-card-mixins.scss
+//
+// CSS-free public mixins of pathable-card, kept apart so the component index
+// can forward them.
+
+// Media scales to the card width at every viewport instead of keeping an
+// intrinsic width attribute that overflows narrow cards. A flag card crops its
+// media to a fixed column from the tablet breakpoint up while the card is wide
+// enough for it (see the flag rules below); a narrower flag card, or one below
+// the breakpoint, is sized like any other card.
+@mixin pathable-card-media-fit {
+  > img,
+  > svg,
+  > video,
+  > picture,
+  > picture > img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+}

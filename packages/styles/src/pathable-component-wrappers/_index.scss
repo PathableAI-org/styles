@@ -6,6 +6,11 @@
 
 @use 'sass:meta';
 
+// meta.load-css forwards nothing, so forward the wrappers' public Sass members
+// (a mixin and selector variables) from their CSS-free partials.
+@forward 'pathable-card-mixins';
+@forward 'pathable-step-indicator-selectors';
+
 @layer pathable.components {
   @include meta.load-css('pathable-all');
 }

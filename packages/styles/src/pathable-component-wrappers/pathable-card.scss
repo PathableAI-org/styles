@@ -6,6 +6,8 @@
 // Requires .usa-* on DOM: No
 
 @use 'sass:math';
+@forward 'pathable-card-mixins';
+@use 'pathable-card-mixins' as *;
 @use 'uswds-core' as *;
 
 @use 'usa-card/src/styles';
@@ -159,24 +161,6 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 
 .pathable-card__media {
   @extend .usa-card__media;
-}
-
-// Media scales to the card width at every viewport instead of keeping an
-// intrinsic width attribute that overflows narrow cards. A flag card crops its
-// media to a fixed column from the tablet breakpoint up while the card is wide
-// enough for it (see the flag rules below); a narrower flag card, or one below
-// the breakpoint, is sized like any other card.
-@mixin pathable-card-media-fit {
-  > img,
-  > svg,
-  > video,
-  > picture,
-  > picture > img {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-  }
 }
 
 .pathable-card:not(.pathable-card--flag) .pathable-card__media {

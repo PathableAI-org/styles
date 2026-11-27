@@ -1,0 +1,16 @@
+// packages/styles/src/pathable-component-wrappers/_pathable-step-indicator-selectors.scss
+//
+// CSS-free public selector variables of pathable-step-indicator, kept apart so
+// the component index can forward them.
+
+// A segment lays its bar, counter circle and label in one grid cell instead of
+// positioning the bar and circle absolutely. axe reports colour contrast on the
+// label as incomplete when an absolute pseudo-element with a background sits on
+// an ancestor, and the fixture harness fails on incomplete results. Relative
+// positioning in the cell keeps USWDS's top and left offsets, so at the default
+// text size the bars, circles and labels render where USWDS draws them. The
+// single minmax(0, 1fr) column means a long label no longer widens its
+// segment, so segments stay equal under enlarged text instead of overflowing
+// the row.
+$pathable-step-indicator-segments: '.pathable-step-indicator__segment';
+$pathable-step-indicator-labels: '.pathable-step-indicator__segment-label';
