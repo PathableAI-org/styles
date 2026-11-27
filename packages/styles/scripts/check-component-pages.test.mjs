@@ -12,8 +12,11 @@ import {
   currentRecords,
   modifiersOf,
   readCss,
+  readUtilityClasses,
   renderForCheck,
   renderTrace,
+  undeclaredUtilityClasses,
+  utilityPatterns,
   wrapperComponents,
 } from './check-component-pages.mjs'
 import { parsePage, renderIndex } from './component-pages.mjs'
@@ -965,4 +968,74 @@ test('the index lists no settings page', () => {
   const index = renderIndex([page(), settings()])
   assert.ok(!index.includes('settings-color.md'))
   assert.ok(!index.includes('Color'))
+})
+
+// --- PathAble utility classes ----------------------------------------------
+
+const utilitiesCss = `
+.pathable-margin-top-2 { margin-top: 1rem; }
+.pathable-bg-link { background-color: #015a76; }
+.hover\\:pathable-bg-link:hover { background-color: #015a76; }
+.focus\\:pathable-bg-link:focus { background-color: #015a76; }
+.pathable-bg-link:not(:where(.pathable-button, .pathable-link)) { --x: 1; }
+`
+const utilityFacts2 = (
+  declared = ['pathable-bg-<role>', 'hover:pathable-bg-<role>'],
+) => ({
+  css: readCss(`.margin-2 { margin: 1rem; } ${utilitiesCss}`),
+  utilities: readUtilityClasses(utilitiesCss),
+  utilityPatterns: utilityPatterns([{ data: { classes: declared } }]),
+})
+const withExample = (example) =>
+  utility(utilityFront, uswdsBody(UTILITY_SECTIONS, example))
+
+test('readUtilityClasses ignores classes inside a pseudo-class argument', () => {
+  const found = readUtilityClasses(utilitiesCss)
+  assert.ok(found.has('pathable-bg-link'))
+  assert.ok(found.has('hover:pathable-bg-link'))
+  assert.ok(!found.has('pathable-button'))
+  assert.ok(!found.has('pathable-link'))
+})
+
+test('a page citing an undeclared pathable utility fails', () => {
+  const errors = checkPage(
+    withExample('<span class="pathable-margin-top-2"></span>'),
+    utilityFacts2(),
+  )
+  assert.ok(includes(errors, '.pathable-margin-top-2 is a PathAble utility'))
+})
+
+test('declared pathable utilities and their hover variant pass', () => {
+  const example =
+    '<span class="pathable-bg-link hover:pathable-bg-link"></span>'
+  assert.deepEqual(checkPage(withExample(example), utilityFacts2()), [])
+})
+
+test('a focus: variant is not declared by the hover: pattern', () => {
+  const errors = checkPage(
+    withExample('<span class="focus:pathable-bg-link"></span>'),
+    utilityFacts2(),
+  )
+  assert.ok(includes(errors, '.focus:pathable-bg-link is a PathAble utility'))
+})
+
+test('a guarantee claim citing an undeclared utility fails', () => {
+  const front = utilityFront.replace(
+    'claim: margin-2 sets margin to 1rem.',
+    'claim: pathable-margin-top-2 sets margin.',
+  )
+  const errors = checkPage(utility(front), utilityFacts2())
+  assert.ok(includes(errors, '.pathable-margin-top-2 is a PathAble utility'))
+})
+
+test('a component class used only inside :not(:where()) is not a utility', () => {
+  const found = readUtilityClasses(utilitiesCss)
+  assert.deepEqual(
+    undeclaredUtilityClasses(
+      new Set(['pathable-button']),
+      found,
+      utilityPatterns([]),
+    ),
+    [],
+  )
 })
