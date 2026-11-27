@@ -117,9 +117,10 @@ file. An organization-level GitHub Project orders them, alongside consumer work
 in other PathAble repositories.
 
 1. **File it here.** A consumer that needs something it cannot do with the
-   released packages files an issue in this repository, using the
-   [delivery template](../../.github/ISSUE_TEMPLATE/delivery.md). The issue
-   states the outcome, links the consumer's own issue or pull request, and
+   released packages files an issue in this repository. A consumer may file a plain issue; a
+   maintainer runs `/to-spec` on it (the
+   [`to-spec` skill](../../.agents/skills/to-spec/SKILL.md)) to make it a
+   spec. The spec states the outcome, links the consumer's own issue or pull request, and
    proposes a [risk tier](git-workflow.md#risk-tiers). Issues
    [#262](https://github.com/PathableAI-org/styles/issues/262) (router-aware
    links) and [#264](https://github.com/PathableAI-org/styles/issues/264)

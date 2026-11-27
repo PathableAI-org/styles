@@ -36,7 +36,12 @@ implementation approach. This skill owns the execution loop.
 
 From the person, take the delivery issue number.
 
-1. Read the issue and its risk tier. Confirm the outcome, scope, contract
+1. Read the issue and its risk tier. When it is a child issue (it has a
+   `parent` in `gh api repos/PathableAI-org/styles/issues/<n>`, or a "##
+   Parent" link), read the parent spec too: its Outcome, Out of scope and
+   Contract impact are accepted scope context, and the child's "What to build",
+   Contract impact subset and Acceptance criteria define what this pull request
+   must deliver; a parent item assigned to another child is not owed here. Confirm the outcome, scope, contract
    impact, dependencies, claims and implementation approach are sufficient.
    For High new behaviour, stop unless a maintainer has accepted the issue.
    Raise an understated tier; never lower one. For a component that embeds
@@ -147,7 +152,7 @@ since: <40-character SHA it reviewed last round, or none>
 ```
 
 Scope reviewer: the same fields, plus
-`task: <delivery issue URL or number; with no issue, the person's task text quoted verbatim>`.
+`task: <delivery issue URL or number (a child issue's parent is read from it); with no issue, the person's task text quoted verbatim>`.
 
 Visual reviewer: `base`, `head`, `round`, `previous`, `task` as above, plus
 `capture: <manifest path>` and, from round 2,
