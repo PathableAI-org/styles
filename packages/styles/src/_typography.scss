@@ -109,15 +109,17 @@ $typography-tokens: (
   'font-line-height-caption-md': 1.33,
 );
 
-:where(:root) {
-  --pathable-font-heading: #{$pathable-font-heading};
-  --pathable-font-body: #{$pathable-font-body};
-  --pathable-font-weight-normal: #{map.get(
-      $typography-tokens,
-      'font-weight-normal'
-    )};
-  --pathable-font-weight-bold: #{map.get(
-      $typography-tokens,
-      'font-weight-bold'
-    )};
+@layer pathable.base {
+  :where(:root) {
+    --pathable-font-heading: #{$pathable-font-heading};
+    --pathable-font-body: #{$pathable-font-body};
+    --pathable-font-weight-normal: #{map.get(
+        $typography-tokens,
+        'font-weight-normal'
+      )};
+    --pathable-font-weight-bold: #{map.get(
+        $typography-tokens,
+        'font-weight-bold'
+      )};
+  }
 }

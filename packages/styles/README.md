@@ -49,7 +49,7 @@ Import the compiled CSS entry point to get all default styles, tokens, and utili
 ```
 
 React consumers should import only `@pathableai/react`, which loads the
-theme, component and utility layers automatically.
+theme, component and utility files automatically.
 
 The root import and all three subpath imports resolve to corresponding files
 under `dist/`:
@@ -61,9 +61,35 @@ under `dist/`:
 | `@pathableai/styles/utilities`  | `dist/utilities.css`     |
 | `@pathableai/styles/theme`      | `dist/theme-default.css` |
 
-The `components` and `utilities` layers read their colours, fonts and other
-values from the `theme` layer; import `@pathableai/styles` (all three) unless
+The `components` and `utilities` entry points read their colours, fonts and
+other values from the `theme` entry point; import `@pathableai/styles` (all three) unless
 you import `theme` as well.
+
+### Cascade layers
+
+Every rule in the compiled CSS sits in one of three cascade layers, declared in
+this order, lowest priority first:
+
+1. `pathable.base`: tokens (custom properties) and font faces.
+2. `pathable.components`: the `pathable-*` component classes.
+3. `pathable.utilities`: the USWDS and `pathable-*` utility classes and the
+   USWDS layout grid.
+
+Each of the four files starts with the same
+`@layer pathable.base, pathable.components, pathable.utilities;` statement, so
+a utility beats a component class whatever order the files load in.
+
+CSS in your app that is not in a layer beats every package rule, whatever its
+specificity. Overrides no longer need extra specificity, and an unlayered app
+rule can override a package rule unintentionally. To place your own CSS in the
+order, declare your layer order before the package loads, for example
+`@layer pathable.base, pathable.components, pathable.utilities, app;` to put
+`app` above the package, or `@layer app, pathable.base, pathable.components,
+pathable.utilities;` to put it below.
+
+For `!important` declarations the order is reversed: an `!important` in
+`pathable.base` or `pathable.components` beats one in a later layer, and beats
+an unlayered `!important` in your app.
 
 ### SCSS (`@use`)
 

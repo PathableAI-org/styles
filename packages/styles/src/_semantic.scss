@@ -80,34 +80,36 @@ $semantic-colors: (
   'on-accent': #001a33,
 );
 
-:where(:root) {
-  --pathable-color-bg: #{$pathable-color-bg};
-  --pathable-color-surface: #{$pathable-color-surface};
-  --pathable-color-text: #{$pathable-color-text};
-  --pathable-color-text-muted: #{$pathable-color-text-muted};
-  --pathable-color-border: #{$pathable-color-border};
-  --pathable-color-link: #{$pathable-color-link};
-  --pathable-color-accent: #{$pathable-color-accent};
-  --pathable-color-focus-ring: #{$pathable-color-focus-ring};
-  --pathable-color-danger: #{$pathable-color-danger};
-  --pathable-color-success: #{$pathable-color-success};
-  --pathable-color-text-success: #{$pathable-color-text-success};
-  // Action Role
-  --pathable-color-action-primary-bg: #{$pathable-color-action-primary-bg};
-  --pathable-color-action-primary-text: #{$pathable-color-action-primary-text};
-  --pathable-color-action-secondary-bg: #{$pathable-color-action-secondary-bg};
-  --pathable-color-action-secondary-text: #{$pathable-color-action-secondary-text};
-  // Status Role
-  --pathable-color-status-success-bg: #{$pathable-color-status-success-bg};
-  --pathable-color-status-success-text: #{$pathable-color-status-success-text};
-  --pathable-color-status-warning-bg: #{$pathable-color-status-warning-bg};
-  --pathable-color-status-warning-text: #{$pathable-color-status-warning-text};
-  --pathable-color-status-danger-bg: #{$pathable-color-status-danger-bg};
-  --pathable-color-status-danger-text: #{$pathable-color-status-danger-text};
-  // Workflow State
-  --pathable-color-workflow-active: #{$pathable-color-workflow-active};
-  --pathable-color-workflow-complete: #{$pathable-color-workflow-complete};
-  --pathable-color-workflow-blocked: #{$pathable-color-workflow-blocked};
-  // Accessibility-Derived
-  --pathable-color-on-accent: #{$pathable-color-on-accent};
+@layer pathable.base {
+  :where(:root) {
+    --pathable-color-bg: #{$pathable-color-bg};
+    --pathable-color-surface: #{$pathable-color-surface};
+    --pathable-color-text: #{$pathable-color-text};
+    --pathable-color-text-muted: #{$pathable-color-text-muted};
+    --pathable-color-border: #{$pathable-color-border};
+    --pathable-color-link: #{$pathable-color-link};
+    --pathable-color-accent: #{$pathable-color-accent};
+    --pathable-color-focus-ring: #{$pathable-color-focus-ring};
+    --pathable-color-danger: #{$pathable-color-danger};
+    --pathable-color-success: #{$pathable-color-success};
+    --pathable-color-text-success: #{$pathable-color-text-success};
+    // Action Role
+    --pathable-color-action-primary-bg: #{$pathable-color-action-primary-bg};
+    --pathable-color-action-primary-text: #{$pathable-color-action-primary-text};
+    --pathable-color-action-secondary-bg: #{$pathable-color-action-secondary-bg};
+    --pathable-color-action-secondary-text: #{$pathable-color-action-secondary-text};
+    // Status Role
+    --pathable-color-status-success-bg: #{$pathable-color-status-success-bg};
+    --pathable-color-status-success-text: #{$pathable-color-status-success-text};
+    --pathable-color-status-warning-bg: #{$pathable-color-status-warning-bg};
+    --pathable-color-status-warning-text: #{$pathable-color-status-warning-text};
+    --pathable-color-status-danger-bg: #{$pathable-color-status-danger-bg};
+    --pathable-color-status-danger-text: #{$pathable-color-status-danger-text};
+    // Workflow State
+    --pathable-color-workflow-active: #{$pathable-color-workflow-active};
+    --pathable-color-workflow-complete: #{$pathable-color-workflow-complete};
+    --pathable-color-workflow-blocked: #{$pathable-color-workflow-blocked};
+    // Accessibility-Derived
+    --pathable-color-on-accent: #{$pathable-color-on-accent};
+  }
 }

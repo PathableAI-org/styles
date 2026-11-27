@@ -1,0 +1,8 @@
+// packages/styles/src/pathable-component-wrappers/_pathable-step-indicator-selectors.scss
+//
+// CSS-free public selector variables of pathable-step-indicator, kept apart so
+// the component index can forward them.
+
+// The segment and label selectors the step indicator rules loop over.
+$pathable-step-indicator-segments: '.pathable-step-indicator__segment';
+$pathable-step-indicator-labels: '.pathable-step-indicator__segment-label';

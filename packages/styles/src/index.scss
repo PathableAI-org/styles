@@ -2,6 +2,7 @@
 
 // Configure USWDS before loading any USWDS source or PathAble additions.
 @forward 'uswds-theme';
+@forward 'layers';
 
 @forward 'fonts';
 @forward '_colors';
@@ -11,19 +12,25 @@
 @forward '_radius';
 @forward '_utilities-config';
 @forward '_semantic';
-// T011: Forward USWDS layout grid component to make grid-container, grid-row, grid-gap available
-@forward 'usa-layout-grid/src/styles';
 
-// Component wrappers — forwards every component wrapper.
-// Consumers can also import an individual wrapper directly:
+// Component wrappers: forwards every component wrapper, in the
+// pathable.components layer.
+// A wrapper loaded on its own, for example
 //   @forward 'pathable-component-wrappers/pathable-button';
+// is not layered.
 @forward 'pathable-component-wrappers';
 
-// USWDS utilities (unprefixed, same names as USWDS). Before the
-// .pathable-* utilities so those still win on equal specificity.
+// USWDS layout grid (grid-container, grid-row, grid-gap), in the
+// pathable.utilities layer.
+@forward 'layout-grid';
+
+// USWDS utilities (unprefixed, same names as USWDS), in the pathable.utilities
+// layer. Before the .pathable-* utilities in that layer, so source order still
+// decides between the two where one class sets what the other sets.
 @forward '_uswds-utility-classes';
 
-// Utilities come last so a .pathable-* utility overrides a component class
-// that sets the same property. Both have one-class specificity, so the later
-// rule wins.
+// .pathable-* utilities, in the pathable.utilities layer after the USWDS
+// ones. The layer order puts utilities after components, so a utility
+// overrides a component class that sets the same property whatever order the
+// files load in.
 @forward '_utilities';

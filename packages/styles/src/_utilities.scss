@@ -15,48 +15,20 @@
 @forward '_utilities-config' show $pathable-utilities,
   $pathable-utility-breakpoints;
 
-// ==========================================
-// Utility Class Generation
-// ==========================================
-@each $module-name, $module in uc.$pathable-utilities {
-  $class-prefix: map.get($module, 'class');
-  $properties: map.get($module, 'property');
-  $values: map.get($module, 'values');
-  $responsive: map.get($module, 'responsive');
-  $states: map.get($module, 'state');
+@layer pathable.utilities {
+  // ==========================================
+  // Utility Class Generation
+  // ==========================================
+  @each $module-name, $module in uc.$pathable-utilities {
+    $class-prefix: map.get($module, 'class');
+    $properties: map.get($module, 'property');
+    $values: map.get($module, 'values');
+    $responsive: map.get($module, 'responsive');
+    $states: map.get($module, 'state');
 
-  @each $val-name, $val in $values {
-    // --- Base class ---
-    .#{$class-prefix}-#{$val-name} {
-      @if meta.type-of($properties) == 'list' {
-        @each $prop in $properties {
-          #{$prop}: #{$val};
-        }
-      } @else {
-        #{$properties}: #{$val};
-      }
-    }
-
-    // --- Responsive variants ---
-    @if $responsive {
-      @each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
-        @media (min-width: $bp-width) {
-          .#{$bp-name}\:#{$class-prefix}-#{$val-name} {
-            @if meta.type-of($properties) == 'list' {
-              @each $prop in $properties {
-                #{$prop}: #{$val};
-              }
-            } @else {
-              #{$properties}: #{$val};
-            }
-          }
-        }
-      }
-    }
-
-    // --- State variants ---
-    @each $state in $states {
-      .#{$state}\:#{$class-prefix}-#{$val-name}:#{$state} {
+    @each $val-name, $val in $values {
+      // --- Base class ---
+      .#{$class-prefix}-#{$val-name} {
         @if meta.type-of($properties) == 'list' {
           @each $prop in $properties {
             #{$prop}: #{$val};
@@ -65,72 +37,108 @@
           #{$properties}: #{$val};
         }
       }
+
+      // --- Responsive variants ---
+      @if $responsive {
+        @each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
+          @media (min-width: $bp-width) {
+            .#{$bp-name}\:#{$class-prefix}-#{$val-name} {
+              @if meta.type-of($properties) == 'list' {
+                @each $prop in $properties {
+                  #{$prop}: #{$val};
+                }
+              } @else {
+                #{$properties}: #{$val};
+              }
+            }
+          }
+        }
+      }
+
+      // --- State variants ---
+      @each $state in $states {
+        .#{$state}\:#{$class-prefix}-#{$val-name}:#{$state} {
+          @if meta.type-of($properties) == 'list' {
+            @each $prop in $properties {
+              #{$prop}: #{$val};
+            }
+          } @else {
+            #{$properties}: #{$val};
+          }
+        }
+      }
     }
   }
-}
 
-// Background utilities set the surface focus ring
-// (--pathable-surface-focus-ring) for the controls in them, because the ring is drawn on the background behind the control.
-// Bright Blue Brooks (--pathable-color-focus-ring) is 4.2:1 on PathAble Blue
-// and 3.0:1 on white. So the dark pathable-bg-primary resets it to that
-// fallback, and the Tech Teal pathable-bg-link, where it is only 2.6:1 (#382),
-// sets a light ring (--pathable-color-surface, 7.7:1). A light ring would
-// inherit into light containers nested in the teal one, where it is 1.0:1, so
-// the pathable-bg-surface utility and every light component container reset
-// --pathable-surface-focus-ring themselves (a new light container needs the
-// same reset). The Jade, Silver and danger utilities and every alert set a
-// ring of their own, so they hold inside the teal container too. The hover variants of the utilities set the ring the
-// same way, for a container that changes under the pointer while a control in
-// it has focus. The focus variants do not: :focus matches only the focused
-// control. The shared state-focus controls are left out, because their ring is
-// drawn on the surface behind them, so one that carries one of these classes
-// itself keeps that surface's ring.
-// The :where() keeps the reset at the utility's own specificity. In
-// styles.css utilities come after the component rules, so on the same element
-// this reset wins over a one-class ring set by a component or surface variant,
-// as the utility's background does; a container's own ring on a different
-// element is unaffected. Keep the list in step with the selectors that
-// include state-focus and with the other controls whose own outline reads the
-// ring: the unstyled button and the link.
-$-surface-focus-ring-controls: '.pathable-button, .pathable-button--unstyled, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-breadcrumb__link';
+  // Background utilities set the surface focus ring
+  // (--pathable-surface-focus-ring) for the controls in them, because the ring is drawn on the background behind the control.
+  // Bright Blue Brooks (--pathable-color-focus-ring) is 4.2:1 on PathAble Blue
+  // and 3.0:1 on white. So the dark pathable-bg-primary resets it to that
+  // fallback, and the Tech Teal pathable-bg-link, where it is only 2.6:1 (#382),
+  // sets a light ring (--pathable-color-surface, 7.7:1). A light ring would
+  // inherit into light containers nested in the teal one, where it is 1.0:1, so
+  // the pathable-bg-surface utility and every light component container reset
+  // --pathable-surface-focus-ring themselves (a new light container needs the
+  // same reset). The Jade, Silver and danger utilities and every alert set a
+  // ring of their own, so they hold inside the teal container too. The hover variants of the utilities set the ring the
+  // same way, for a container that changes under the pointer while a control in
+  // it has focus. The focus variants do not: :focus matches only the focused
+  // control. The shared state-focus controls are left out, because their ring is
+  // drawn on the surface behind them, so one that carries one of these classes
+  // itself keeps that surface's ring.
+  // The :where() keeps the reset at the utility's own specificity. The
+  // utilities layer comes after the components layer, so on the same element
+  // this reset wins over a one-class ring set by a component or surface variant,
+  // as the utility's background does; a container's own ring on a different
+  // element is unaffected. Keep the list in step with the selectors that
+  // include state-focus and with the other controls whose own outline reads the
+  // ring: the unstyled button and the link.
+  $-surface-focus-ring-controls: '.pathable-button, .pathable-button--unstyled, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-breadcrumb__link';
 
-.pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-primary:hover:not(:where(#{$-surface-focus-ring-controls})),
-.pathable-bg-surface:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-surface:hover:not(
-    :where(#{$-surface-focus-ring-controls})
-  ) {
-  --pathable-surface-focus-ring: initial;
-}
+  .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-primary:hover:not(
+      :where(#{$-surface-focus-ring-controls})
+    ),
+  .pathable-bg-surface:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-surface:hover:not(
+      :where(#{$-surface-focus-ring-controls})
+    ) {
+    --pathable-surface-focus-ring: initial;
+  }
 
-// Jade, Silver and danger backgrounds set the ring for the controls and
-// components on them. Bright Blue Brooks is 1.1:1 on Intelligent Jade, 2.3:1 on
-// Shilling Silver and 1.5:1 on the danger red (WCAG 1.4.11 needs 3:1), so the
-// on-accent dark blue (6.3:1 on Jade, 3.9:1 on the red) and the text blue
-// (9.6:1 on Silver) take its place. A dark ring also stays visible on the light
-// containers that sit inside these backgrounds. The shared state-focus controls are left out for the same reason
-// as above: a control that carries the class itself sits on the surface
-// behind it.
-.pathable-bg-accent:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-accent:hover:not(:where(#{$-surface-focus-ring-controls})),
-.pathable-bg-success:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-success:hover:not(
-    :where(#{$-surface-focus-ring-controls})
-  ) {
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
-}
+  // Jade, Silver and danger backgrounds set the ring for the controls and
+  // components on them. Bright Blue Brooks is 1.1:1 on Intelligent Jade, 2.3:1 on
+  // Shilling Silver and 1.5:1 on the danger red (WCAG 1.4.11 needs 3:1), so the
+  // on-accent dark blue (6.3:1 on Jade, 3.9:1 on the red) and the text blue
+  // (9.6:1 on Silver) take its place. A dark ring also stays visible on the light
+  // containers that sit inside these backgrounds. The shared state-focus controls are left out for the same reason
+  // as above: a control that carries the class itself sits on the surface
+  // behind it.
+  .pathable-bg-accent:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-accent:hover:not(
+      :where(#{$-surface-focus-ring-controls})
+    ),
+  .pathable-bg-success:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-success:hover:not(
+      :where(#{$-surface-focus-ring-controls})
+    ) {
+    --pathable-surface-focus-ring: var(--pathable-color-on-accent);
+  }
 
-.pathable-bg-base:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-base:hover:not(:where(#{$-surface-focus-ring-controls})) {
-  --pathable-surface-focus-ring: var(--pathable-color-text);
-}
+  .pathable-bg-base:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-base:hover:not(:where(#{$-surface-focus-ring-controls})) {
+    --pathable-surface-focus-ring: var(--pathable-color-text);
+  }
 
-.pathable-bg-danger:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-danger:hover:not(:where(#{$-surface-focus-ring-controls})) {
-  --pathable-surface-focus-ring: var(--pathable-color-on-accent);
-}
+  .pathable-bg-danger:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-danger:hover:not(
+      :where(#{$-surface-focus-ring-controls})
+    ) {
+    --pathable-surface-focus-ring: var(--pathable-color-on-accent);
+  }
 
-.pathable-bg-link:not(:where(#{$-surface-focus-ring-controls})),
-.hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
-  --pathable-surface-focus-ring: var(--pathable-color-surface);
+  .pathable-bg-link:not(:where(#{$-surface-focus-ring-controls})),
+  .hover\:pathable-bg-link:hover:not(:where(#{$-surface-focus-ring-controls})) {
+    --pathable-surface-focus-ring: var(--pathable-color-surface);
+  }
 }

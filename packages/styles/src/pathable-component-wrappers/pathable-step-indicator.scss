@@ -5,21 +5,11 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
+@forward 'pathable-step-indicator-selectors';
+@use 'pathable-step-indicator-selectors' as *;
 @use 'uswds-core' as *;
 
 @use 'usa-step-indicator/src/styles';
-
-// A segment lays its bar, counter circle and label in one grid cell instead of
-// positioning the bar and circle absolutely. axe reports colour contrast on the
-// label as incomplete when an absolute pseudo-element with a background sits on
-// an ancestor, and the fixture harness fails on incomplete results. Relative
-// positioning in the cell keeps USWDS's top and left offsets, so at the default
-// text size the bars, circles and labels render where USWDS draws them. The
-// single minmax(0, 1fr) column means a long label no longer widens its
-// segment, so segments stay equal under enlarged text instead of overflowing
-// the row.
-$pathable-step-indicator-segments: '.pathable-step-indicator__segment';
-$pathable-step-indicator-labels: '.pathable-step-indicator__segment-label';
 
 .pathable-step-indicator {
   @extend .usa-step-indicator;
@@ -94,6 +84,15 @@ $pathable-step-indicator-labels: '.pathable-step-indicator__segment-label';
   @extend .usa-step-indicator--no-labels;
 }
 
+// A segment lays its bar, counter circle and label in one grid cell instead of
+// positioning the bar and circle absolutely. axe reports colour contrast on the
+// label as incomplete when an absolute pseudo-element with a background sits on
+// an ancestor, and the fixture harness fails on incomplete results. Relative
+// positioning in the cell keeps USWDS's top and left offsets, so at the default
+// text size the bars, circles and labels render where USWDS draws them. The
+// single minmax(0, 1fr) column means a long label no longer widens its
+// segment, so segments stay equal under enlarged text instead of overflowing
+// the row.
 @each $segment in $pathable-step-indicator-segments {
   // The root class raises specificity to match USWDS's counter rule, which
   // sets position: absolute and comes earlier in the output.

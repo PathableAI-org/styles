@@ -113,6 +113,8 @@ stylesheet outputs at a 16px root font size.
   adjacent blocks collapse, so set the gap on one of the two blocks.
 - Making padding large enough for touch targets where the padded element is
   interactive.
-- Overriding component spacing with care: a utility class on a component
-  competes with the component's own rule on specificity and order, so test the
-  result.
+- Overriding component spacing with care: utilities sit in a later cascade
+  layer than component classes, so a margin or padding utility on a component
+  replaces the component's own spacing whatever the specificity or file load
+  order. Check the result still meets the component's guarantees, such as touch
+  target size.

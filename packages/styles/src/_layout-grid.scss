@@ -1,0 +1,7 @@
+// USWDS layout grid (grid-container, grid-row, grid-gap), in the utilities
+// layer.
+@use 'sass:meta';
+
+@layer pathable.utilities {
+  @include meta.load-css('usa-layout-grid/src/styles');
+}

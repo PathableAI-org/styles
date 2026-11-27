@@ -9,12 +9,11 @@
 
 // Form controls
 @forward 'pathable-checkbox';
-// The USWDS font faces, input and icon modules load here, ahead of the
-// wrappers that @extend them, so the cascade order the component pages were
-// verified against holds: the USWDS search rule that hides the submit icon
-// on wide screens must come after the icon rule, and the font faces give the
-// mono utilities their Roboto Mono face.
-@use 'uswds-fonts';
+// The USWDS input and icon modules load here, ahead of the wrappers that
+// @extend them, so the cascade order the component pages were verified
+// against holds: the USWDS search rule that hides the submit icon on wide
+// screens must come after the icon rule. The USWDS font faces load with the
+// brand ones in _fonts.scss.
 @use 'usa-input/src/styles' as usa-input;
 @use 'usa-icon/src/styles' as usa-icon;
 @forward 'pathable-error-message';
@@ -47,10 +46,6 @@
 @forward 'pathable-pagination';
 @forward 'pathable-search';
 @forward 'pathable-sidenav';
-
-// The USWDS layout grid loads here, as before. index.scss loads it earlier,
-// so this only sets its place in components.css.
-@use 'usa-layout-grid/src/styles' as usa-layout-grid;
 
 // Communication
 @forward 'pathable-alert';

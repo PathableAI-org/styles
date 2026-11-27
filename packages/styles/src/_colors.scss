@@ -70,8 +70,10 @@ $brand-uswds-color-mappings: (
   ),
 );
 
-:where(:root) {
-  --pathable-brand-pathable-blue: #{$pathable-brand-pathable-blue};
-  --pathable-brand-bright-blue-brooks: #{$pathable-brand-bright-blue-brooks};
-  --pathable-brand-lived-in-lime: #{$pathable-brand-lived-in-lime};
+@layer pathable.base {
+  :where(:root) {
+    --pathable-brand-pathable-blue: #{$pathable-brand-pathable-blue};
+    --pathable-brand-bright-blue-brooks: #{$pathable-brand-bright-blue-brooks};
+    --pathable-brand-lived-in-lime: #{$pathable-brand-lived-in-lime};
+  }
 }
