@@ -32,11 +32,11 @@ Check first against `GLOSSARY.md`, if it exists, then against:
 - The naming conventions in
   [packages/styles/AGENTS.md](../../../packages/styles/AGENTS.md) and
   [BRAND_RULES.md](../../../packages/styles/BRAND_RULES.md), including the
-  component wrapper naming convention.
+  component class naming convention.
 - Component names and their pages in `components/`.
 - Token names and meanings in `packages/styles/src`.
 
-Naming conventions (class-name patterns, wrapper naming rules) stay owned by
+Naming conventions (class-name patterns, component class naming rules) stay owned by
 the package documents; `GLOSSARY.md` defines what terms mean. When a glossary
 term would contradict one of those documents, surface it rather than silently
 diverging.

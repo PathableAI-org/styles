@@ -14,7 +14,7 @@ any hand-written story added again; the helpers they name, such as
 ## Token Rules
 
 - [ ] Use `--pathable-*` CSS custom properties instead of raw hex values.
-- [ ] Use semantic tokens (`--pathable-color-text`, `--pathable-color-surface`, etc.)
+- [ ] Use runtime custom properties (`--pathable-color-text`, `--pathable-color-surface`, etc.)
       for application UI, not brand-level tokens.
 - [ ] Do not hardcode brand hex values (`#00365c`, `#1cae96`, etc.) in story
       or component code — reference tokens via `var(--pathable-*)`.

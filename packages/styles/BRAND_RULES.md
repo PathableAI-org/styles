@@ -300,11 +300,11 @@ Use breakpoint prefixes for responsive layouts:
 
 Breakpoints: `mobile-lg` (480px), `tablet` (640px), `desktop` (1024px).
 
-## USWDS Component Wrappers
+## Component Classes
 
-This package provides `.pathable-{component}` CSS class wrappers for the static USWDS components that have a page in `components/`. Most `.pathable-{component}` classes resolve to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`, so markup needs no `.usa-*` class. Some components (noted below) do not emit a base class because USWDS does not define one for the corresponding component — in those cases the wrapper only provides child element classes.
+This package provides `.pathable-{component}` component classes for the static USWDS components that have a page in `components/`. Most `.pathable-{component}` classes resolve to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`, so markup needs no `.usa-*` class. Some components (noted below) do not emit a base class because USWDS does not define one for the corresponding component — in those cases the component class only provides child element classes.
 
-### Component Wrapper Naming Convention
+### Component Class Naming Convention
 
 | Component           | PathAble Class                  | USWDS Equivalent       | Notes                                                                 |
 | ------------------- | ------------------------------- | ---------------------- | --------------------------------------------------------------------- |
@@ -347,9 +347,9 @@ This package provides `.pathable-{component}` CSS class wrappers for the static 
 | tag                 | `.pathable-tag`                 | `.usa-tag`             |                                                                       |
 | textarea            | `.pathable-textarea`            | `.usa-textarea`        |                                                                       |
 
-### Component Wrapper Rules
+### Component Class Rules
 
 - Use `.pathable-{component}` classes in HTML templates, never `.usa-{component}` classes.
 - Use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
-- For components where USWDS does not define a base class (checkbox, radio), the wrapper provides element-level selectors — use the available `.pathable-{component}__{element}` classes directly.
+- For components where USWDS does not define a base class (checkbox, radio), the component class provides element-level selectors — use the available `.pathable-{component}__{element}` classes directly.

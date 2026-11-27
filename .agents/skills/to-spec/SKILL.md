@@ -55,7 +55,9 @@ documentation, and use their vocabulary.
 
 A **seam** is a place where the outcome can be observed: a fixture, a
 Storybook contract, a component-page check or an observation of the packed
-package. Sketch the seams that will prove the outcome. Prefer existing seams
+package. Each seam is observed through one evidence channel in
+[verification-harness.md](../../../docs/engineering/verification-harness.md#evidence-channels).
+Sketch the seams that will prove the outcome. Prefer existing seams
 to new ones, and as few as possible; the ideal is one. If a new seam is
 needed, propose it at the highest point you can.
 
@@ -116,9 +118,9 @@ the published body.
 ## Contract impact
 
 <!-- Which published contracts change, in source-first order:
-1. @pathableai/styles compiled CSS: tokens, CSS custom properties, static .pathable-* classes, assets, or "none".
+1. @pathableai/styles compiled CSS: tokens, static .pathable-* classes, assets, component-page guarantees, or "none".
 2. @pathableai/styles consumer agent guidance: installed component pages, package-wide selection or bug-reporting guidance, or "none".
-3. Retained/deferred surfaces: @pathableai/react API or React consumer guidance, but only when this issue explicitly puts one in scope; otherwise "none".
+3. Retained/deferred surfaces: @pathableai/react API or React consumer guidance, but only when this issue explicitly puts one in scope; otherwise "none". Exception: a change to a runtime custom property that a React theme colour maps to is always listed here, even when React is not in scope.
 Say whether each change is additive, a visible change, or a removal or rename. Static styles work must not expand into a retained/deferred surface. If an explicitly scoped React change needs a styles contract that does not exist yet, the styles change lands first.
 Name contracts, never file locations. No file paths or code snippets anywhere in this issue. -->
 

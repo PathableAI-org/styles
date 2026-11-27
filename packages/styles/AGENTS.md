@@ -318,18 +318,18 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 - Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
 - Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
 
-## USWDS Component Wrappers Usage
+## Component Classes Usage
 
 > Current implementation, being replaced for the supported static catalog:
 > the target is `pathable-*` selectors with no `@extend .usa-*`. See
 > [target state](../../docs/engineering/target-state.md).
 
-This package provides `.pathable-{component}` CSS class wrappers for the static USWDS components that have a page in `components/` and canonical markup in `fixtures/`. Each `.pathable-{component}` class takes the USWDS styles of the corresponding `.usa-{component}` class through SCSS `@extend`, so consumer markup needs no `.usa-*` class. The component pages list the components and their elements and modifiers.
+This package provides `.pathable-{component}` component classes for the static USWDS components that have a page in `components/` and canonical markup in `fixtures/`. Each `.pathable-{component}` class takes the USWDS styles of the corresponding `.usa-{component}` class through SCSS `@extend`, so consumer markup needs no `.usa-*` class. The component pages list the components and their elements and modifiers.
 
-### Component Wrapper Rules
+### Component Class Rules
 
 - Agents MUST use `.pathable-{component}` classes in HTML templates, never `.usa-{component}` classes.
 - Agents MUST use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Agents MUST use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
 - Agents MUST use only the components, elements and modifiers a component page documents.
-- Agents MUST NOT write ad-hoc CSS rules for styling that can be achieved by applying component wrapper classes.
+- Agents MUST NOT write ad-hoc CSS rules for styling that can be achieved by applying component classes.
