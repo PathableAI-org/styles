@@ -101,9 +101,6 @@ pnpm test:storybook-styles --filter interaction-controls-segmentedcontrol
 
 # Default repository test suite
 pnpm test
-
-# Visual smoke tests
-pnpm test:visual
 ```
 
 Also run package-specific type, lint, build, or server-rendering checks required

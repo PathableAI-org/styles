@@ -55,7 +55,6 @@ import {
   writeFileSync,
 } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 import { chromium } from 'playwright'
 
@@ -73,10 +72,12 @@ import {
 import {
   captureVerdict,
   chooseStories,
+  classPages,
   conditionsForDiff,
   conditionsForStory,
   viewportsForMode,
 } from './visual-capture/select.mjs'
+import { startServer } from './visual-capture/serve.mjs'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const SCHEMA_VERSION = 2
@@ -420,16 +421,32 @@ function readIndex(side, workspace) {
   return Object.values(JSON.parse(readFileSync(file, 'utf8')).entries ?? {})
 }
 
-async function headLists() {
-  const scripts = join(WORKTREES.head, 'packages/styles/scripts')
-  const load = async (file) =>
-    existsSync(join(scripts, file))
-      ? import(pathToFileURL(join(scripts, file)).href)
-      : {}
-  const gates = await load('quality-gates.mjs')
-  return {
-    canonical: gates.CANONICAL_STORIES ?? [],
-  }
+/** The pages and fixtures of the head worktree, as `classPages` reads them. */
+function headClassPages() {
+  const root = WORKTREES.head
+  const names = (dir) =>
+    existsSync(join(root, dir)) ? readdirSync(join(root, dir)) : []
+  const pages = names('components')
+    .filter((name) => name.endsWith('.md') && name !== 'README.md')
+    .map((name) => ({
+      slug: name.slice(0, -'.md'.length),
+      text: readFileSync(join(root, 'components', name), 'utf8'),
+    }))
+  const fixtures = names('fixtures')
+    .filter(
+      (slug) =>
+        !['harness', 'scripts', 'node_modules'].includes(slug) &&
+        statSync(join(root, 'fixtures', slug)).isDirectory(),
+    )
+    .flatMap((slug) =>
+      names(`fixtures/${slug}`)
+        .filter((name) => name.endsWith('.html'))
+        .map((name) => ({
+          slug,
+          html: readFileSync(join(root, 'fixtures', slug, name), 'utf8'),
+        })),
+    )
+  return classPages({ pages, fixtures })
 }
 
 const indexes = {
@@ -455,7 +472,6 @@ const removedStories = ['styles', 'react'].flatMap((workspace) => {
     .map((entry) => (workspace === 'react' ? `react:${entry.id}` : entry.id))
 })
 
-const lists = failures.head ? { canonical: [] } : await headLists()
 let stories = failures.head
   ? []
   : chooseStories({
@@ -464,7 +480,7 @@ let stories = failures.head
       indexes: indexes.head,
       extra: args.story,
       force: args.force,
-      ...lists,
+      classPages: headClassPages(),
     })
 if (args.only) {
   const wanted = new Set(
@@ -495,10 +511,6 @@ const diffConditions = conditionsForDiff(styleDiff)
 // ---------------------------------------------------------------------------
 // Serving and capturing
 // ---------------------------------------------------------------------------
-
-const { startServer } = await import(
-  pathToFileURL(join(ROOT, 'packages/styles/scripts/quality-gates.mjs')).href
-)
 
 const servers = []
 const urls = { base: {}, head: {} }

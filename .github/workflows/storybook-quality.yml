@@ -16,7 +16,7 @@ permissions:
 jobs:
   # The workflow runs on every pull request so its aggregate check always
   # reports. This job decides which Storybook jobs need to run:
-  #   html_storybook   the HTML (styles) Storybook jobs
+  #   html_storybook   the HTML (styles) Storybook build
   #   component_pages  the component-pages job, which checks component
   #                    pages (components/*.md) against the tests when the
   #                    HTML Storybook jobs do not run
@@ -66,6 +66,9 @@ jobs:
             component_pages:
               - 'components/**'
 
+  # Proves the human documentation still builds; Docs Deploy builds it only
+  # on main. Accessibility and contract checks of the fixture HTML run in the
+  # Fixtures workflow (docs/testing/fixtures.md), against the compiled CSS.
   build:
     name: Build styles Storybook
     needs: changes
@@ -90,13 +93,6 @@ jobs:
 
       - name: Build HTML Storybook
         run: pnpm --filter @pathable/storybook build-storybook
-
-      - name: Upload HTML Storybook static
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: storybook-html-static
-          path: apps/storybook/storybook-static/
-          retention-days: 1
 
   # Checks component pages when they changed but nothing the HTML Storybook
   # is built or tested from did, so the HTML Storybook jobs, which check them
@@ -160,125 +156,6 @@ jobs:
       - name: Component page guarantees are covered by tests that ran
         run: pnpm --filter @pathableai/styles check:component-pages:executed
 
-  accessibility-tests:
-    name: Storybook accessibility tests
-    needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-
-      - name: Download HTML Storybook static
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: storybook-html-static
-          path: apps/storybook/storybook-static/
-
-      - name: Test HTML Storybook
-        run: |
-          set +e
-          npx serve -n -l 6006 apps/storybook/storybook-static &
-          SERVE_PID=$!
-          for i in $(seq 1 30); do
-            if curl -s -o /dev/null http://127.0.0.1:6006/ 2>/dev/null; then
-              echo "Server ready after ${i}s"
-              break
-            fi
-            if [ "$i" -eq 30 ]; then
-              echo "Server failed to start"
-              kill $SERVE_PID 2>/dev/null || true
-              exit 1
-            fi
-            sleep 1
-          done
-          pnpm --filter @pathable/storybook test-storybook --index-json --url http://127.0.0.1:6006
-          TEST_EXIT=$?
-          kill $SERVE_PID 2>/dev/null || true
-          exit $TEST_EXIT
-
-      # Disabled: most component page guarantees have no test that cites them
-      # yet. Re-enable when check:component-pages:executed passes.
-      - name: Component page guarantees are covered by tests that ran
-        if: false
-        run: pnpm --filter @pathableai/styles check:component-pages:executed
-
-  visual-smoke:
-    name: Storybook visual smoke
-    needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-
-      - name: Download HTML Storybook static
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: storybook-html-static
-          path: apps/storybook/storybook-static/
-
-      - name: Visual smoke tests
-        run: pnpm test:visual
-
-      - name: Upload failure artifacts
-        if: failure()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: visual-failures
-          path: apps/storybook/test-results/visual-failures/
-          if-no-files-found: ignore
-
-  coverage:
-    name: Storybook coverage
-    needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-
-      - name: Download HTML Storybook static
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: storybook-html-static
-          path: apps/storybook/storybook-static/
-
-      - name: Check storybook coverage
-        run: pnpm storybook:coverage
-
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: storybook-coverage
-          path: apps/storybook/test-results/storybook-coverage.*
-          if-no-files-found: ignore
-
-  quality-gates:
-    name: Storybook Quality Gates
-    needs: [changes, build]
-    if: needs.changes.outputs.html_storybook == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-        with:
-          install_playwright: 'true'
-
-      - name: Download HTML Storybook static
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: storybook-html-static
-          path: apps/storybook/storybook-static/
-
-      - name: Quality Gates
-        run: pnpm quality-gates
-
   # One aggregate check for the branch ruleset to require. It passes when
   # every needed job succeeded or was skipped by the path filters in the
   # changes job.
@@ -289,10 +166,6 @@ jobs:
       - changes
       - build
       - component-pages
-      - accessibility-tests
-      - visual-smoke
-      - coverage
-      - quality-gates
     runs-on: ubuntu-latest
     steps:
       - name: Check job results

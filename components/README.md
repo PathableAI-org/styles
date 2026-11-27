@@ -299,5 +299,6 @@ tables only, with no stories file. For the others, there is one live preview per
 and the example module verbatim (only **HTML** when the React package does not
 cover the component). Package blocks are shown labelled with their package.
 The front matter is not shown. Each fixture is also a story
-under **Fixtures**, which the Storybook test-runner checks with axe. The pages
+under **Fixtures**; the fixture checks ([HTML fixtures](../docs/testing/fixtures.md))
+run axe on the same HTML. The pages
 publish to GitHub Pages with the rest of the Storybook.
