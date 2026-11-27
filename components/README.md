@@ -72,9 +72,9 @@ class names and the values the classes output, and nothing else:
   instruction to enable a class "through settings". A class the package does
   not output is simply not in the contract; do not tell consumers how to turn
   it on. There are no `## Sass` or `## Settings` sections;
-- no custom properties: runtime `--pathable-*` properties are documented
-  elsewhere, and the checker fails a utility or token page that names one. Do
-  not deny that they exist either;
+- no custom properties: the package's runtime CSS custom properties are
+  internal implementation, not consumer API, and the checker fails a utility
+  or token page that names one. Do not deny that they exist either;
 - guarantees are about compiled CSS for a class (selector, computed property
   and value at PathAble defaults), never about Sass functions, and carry no
   `status:` line;

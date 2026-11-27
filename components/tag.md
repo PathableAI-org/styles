@@ -73,7 +73,7 @@ The big tag changes only the font size; the padding is the same.
 ## Tokens
 
 None. The font size, padding, corner radius and colours are fixed values in
-the stylesheet, so a theme does not change them. The tag sets no line height, so
+the stylesheet. The tag sets no line height, so
 its height follows the line height of the text around it.
 
 ## Composition

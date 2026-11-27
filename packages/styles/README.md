@@ -44,23 +44,12 @@ pnpm add @pathableai/styles
 Import the compiled CSS entry point to get all default styles, tokens, and utilities:
 
 ```css
-/* Full import — components, utilities, and default theme tokens */
+/* Full import — theme, components and utilities */
 @import '@pathableai/styles';
 ```
 
-CSS-only consumers that supply a complete application-owned theme can import
-only the component and utility layers without loading the default tokens:
-
-```css
-/* Component styles and utilities only — no default :root theme tokens */
-@import '@pathableai/styles/components';
-@import '@pathableai/styles/utilities';
-/* Define the complete application-owned token set separately. */
-```
-
-React consumers should import only `@pathableai/react`, which loads the default
-theme, component, and utility layers automatically. Use `ThemeProvider` for
-scoped runtime overrides.
+React consumers should import only `@pathableai/react`, which loads the
+theme, component and utility layers automatically.
 
 The root import and all three subpath imports resolve to corresponding files
 under `dist/`:
@@ -71,6 +60,10 @@ under `dist/`:
 | `@pathableai/styles/components` | `dist/components.css`    |
 | `@pathableai/styles/utilities`  | `dist/utilities.css`     |
 | `@pathableai/styles/theme`      | `dist/theme-default.css` |
+
+The `components` and `utilities` layers read their colours, fonts and other
+values from the `theme` layer; import `@pathableai/styles` (all three) unless
+you import `theme` as well.
 
 ### SCSS (`@use`)
 
@@ -127,30 +120,16 @@ brand-aligned USWDS components.
 The example above is the supported source-build path. Consumers that only need
 the PathAble contract should import the package's compiled CSS instead.
 
-### Token Usage
+## Tokens
 
-Use exported tokens instead of hardcoded colors or font names whenever possible.
-
-```css
-.example {
-  color: var(--pathable-color-text);
-  background: var(--pathable-color-surface);
-  font-family: var(--pathable-font-body);
-}
-```
-
-## Theming
-
-Override semantic color tokens with the typed theming API in
-`@pathableai/react`. Package defaults use zero selector specificity, so CSS-only
-consumers can also define an application-wide theme with `:root` declarations.
-The canonical theming documentation lives under `docs/theming/`:
-
-- [Consumer guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/consumer-guide.md) — override with
-  `createTheme` + `ThemeProvider`, extend `defaultTheme`, and understand
-  automatic React styles versus CSS-only imports.
-- [Token vocabulary on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/theming/token-vocabulary.md) — every overridable
-  color token with its CSS custom property, default value, and role.
+A token is the suffix of a class, such as `primary` in `bg-primary` or `2` in
+`padding-2`, with a value fixed when the package is built. The token pages in the installed package's
+`components/` directory list them, for example `components/tokens-color.md`,
+`components/tokens-spacing-units.md` and `components/tokens-typesetting.md`;
+`components/index.md` lists the rest. The utility class pages,
+`components/utilities-*.md`, show the classes that use them. Use those classes
+and the `pathable-*` component classes instead of hardcoded colors or font
+names.
 
 ## Guidance
 
@@ -158,7 +137,7 @@ See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
 See `components/index.md` in the installed package for the component pages: one page per component with its markup, variants, tokens and guarantees. Few components have a page yet. In this repository the package build writes the pages and the index from the source pages in the top-level [components/](https://github.com/PathableAI-org/styles/tree/main/components) directory, taking each converted page's examples from the HTML fixtures.
 See the [story authoring guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/STORY_AUTHORING.md) for its checklist and PR requirements.
-Applications SHOULD consume semantic tokens like --pathable-color-text instead of directly using brand colors like #00365c.
+Applications SHOULD use the documented token classes and `pathable-*` component classes instead of directly using brand hex values like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
 
 ## Accessibility

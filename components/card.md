@@ -112,7 +112,7 @@ element modifiers, set on the element and not on the card:
 ## Tokens
 
 None. The sizes, colours and spacing are fixed values in the compiled
-stylesheet, not custom properties. The pixel figures on this page are those of
+stylesheet. The pixel figures on this page are those of
 the default theme.
 
 ## Composition

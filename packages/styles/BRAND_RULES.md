@@ -46,7 +46,7 @@ The USWDS theme in `src/_uswds-theme.scss` is configured with the exact brand he
 | Warning            | Amber `#f5a623` (functional)  | lighter `#fef6e9`, dark `#c4851c`                                                                             |
 | Error              | Danger `#dc3545` (functional) | lighter `#fcebec`, dark `#a52834`                                                                             |
 
-USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Bright Blue Brooks, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
+USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Bright Blue Brooks, matching the internal `--pathable-color-link` and `--pathable-color-focus-ring` properties.
 
 The shared PathAble focus outline (used by `.pathable-button`, `.pathable-input`, `.pathable-select` and `.pathable-textarea`) is drawn on the surface behind the control, so a coloured background sets its colour through `--pathable-surface-focus-ring`. It is Bright Blue Brooks by default. Dark containers reset it to Bright Blue Brooks: the `pathable-bg-primary` utility and `.pathable-dark-background`. The `pathable-bg-accent` and `pathable-bg-success` utilities (Jade) set it to the on-accent dark blue, `pathable-bg-base` (Silver) and the footer primary and secondary sections (Silver family, whose links also draw the outline in that colour) to PathAble Blue, `pathable-bg-danger` to the on-accent dark blue (3.9:1), `.pathable-alert--success`, `--warning` and `--error` to the on-accent dark blue, and `.pathable-alert--emergency` to white, because Bright Blue Brooks is only 1.5:1 and 2.3:1 on those reds. Every other `.pathable-alert` (info, plain, slim) sets it to PathAble Blue, because Bright Blue Brooks is only 2.7:1 on the info tint. The outlines that components draw outside themselves read the same property, so they follow the background too: `.pathable-link`, `.pathable-breadcrumb__link`, `.pathable-button--unstyled`, and the scrollable table container. Outlines drawn inside an element (negative `outline-offset`) are drawn on the element's own background and are not covered. Tech Teal (`pathable-bg-link`) sets it to white (`--pathable-color-surface`, 7.7:1), because Bright Blue Brooks is only 2.6:1 on it. A white ring would inherit into light containers nested in the teal one, where it is 1.0:1, so the `pathable-bg-surface` utility and the light component containers (the card container, table and breadcrumb) reset it to Bright Blue Brooks. A new light container needs the same reset. The Jade, Silver and danger utilities and the alerts set their own ring, so they hold inside the teal container too.
 
@@ -155,7 +155,7 @@ The design system also uses Nunito SemiBold (600) for UI labels. This weight is 
 | Montserrat | Bold (700)                    | alt                 | `montserrat`          | `'Montserrat', system-ui, sans-serif` |
 | Poppins    | Bold (700)                    | — (subheading only) | `poppins`             | `'Poppins', system-ui, sans-serif`    |
 
-> **Note:** USWDS supports a single `alt` role. Montserrat is assigned to that role via the `cond` font type. Poppins is available as a design token (`--pathable-font-subheading`) for subheading use but is not assigned to any USWDS role.
+> **Note:** USWDS supports a single `alt` role. Montserrat is assigned to that role via the `cond` font type. Poppins is in the package font stack for subheadings, set internally, and is not assigned to any USWDS role. No font-family class names it; see `components/tokens-typesetting-font-family.md` for the font-family classes.
 
 ### Type Scale Mapping
 
@@ -243,7 +243,7 @@ Icons may sit on a circle of a tertiary (10%) color, with the icon in the matchi
 
 The brand guide defines the core palette but does not define complete light, dark, or high-contrast themes.
 
-Themes should be implemented through semantic tokens such as:
+Themes are implemented internally through semantic custom properties such as the following; they are implementation, not a consumer token list. Consumers use the token classes on the `components/tokens-*.md` pages:
 
 ```css
 --pathable-color-bg

@@ -128,18 +128,18 @@ soon". Colour and the icon are never the only cue.
 
 ## Tokens
 
-| What                                  | Token                                                                        |
-| ------------------------------------- | ---------------------------------------------------------------------------- |
-| Success background and text           | `--pathable-color-status-success-bg`, `--pathable-color-status-success-text` |
-| Warning background and text           | `--pathable-color-status-warning-bg`, `--pathable-color-status-warning-text` |
-| Error background and text             | `--pathable-color-status-danger-bg`, `--pathable-color-status-danger-text`   |
-| Focus ring on success, warning, error | `--pathable-color-on-accent`                                                 |
-| Focus ring on emergency               | `--pathable-color-status-danger-text`                                        |
-| Focus ring on info and plain alerts   | none: PathAble Blue from the theme's colour palette                          |
+| What                                  | Value                                                                      |
+| ------------------------------------- | -------------------------------------------------------------------------- |
+| Success background and text           | Intelligent Jade, #1cae96, with #001a33 text                               |
+| Warning background and text           | Amber, #f5a623, with #001a33 text                                          |
+| Error background and text             | Danger, #dc3545, with white, #ffffff, text                                 |
+| Focus ring on success, warning, error | #001a33 on all three, which is also the text colour on success and warning |
+| Focus ring on emergency               | White, #ffffff, the text colour of the alert                               |
+| Focus ring on info and plain alerts   | PathAble Blue, #00365c                                                     |
 
 The pixel figures on this page are those of the default theme. The info and
-emergency colours come from the theme's colour palette, not from a PathAble
-token.
+emergency colours come from the theme's colour palette, shown on
+[tokens-color.md](tokens-color.md).
 
 ## Composition
 

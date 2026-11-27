@@ -74,7 +74,7 @@ filled and the alternatives use `pathable-button--outline`.
 ## Tokens
 
 None. The group's spacing is fixed: its 480 px breakpoint and its margins
-are not custom properties and do not change with the theme.
+are fixed in the stylesheet.
 
 ## Composition
 

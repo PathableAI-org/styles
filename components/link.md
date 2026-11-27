@@ -13,11 +13,11 @@ variants:
     values: [light, alt]
 guarantees:
   - id: link-colour
-    claim: A link, visited or not, is underlined and takes the colour of --pathable-color-link, which is #015a76 in the default theme.
+    claim: A link, visited or not, is underlined and takes the colour Tech Teal, #015a76.
   - id: hover-active-colour
     claim: A hovered link takes the PathAble primary colour, and a pressed link the darker primary colour, including a link that has been visited.
   - id: focus-ring
-    claim: A focused link draws its outline in the colour of --pathable-surface-focus-ring when the surface sets one, otherwise in --pathable-color-focus-ring.
+    claim: A focused link draws its outline in the surface's focus ring colour when the surface sets one, otherwise in Bright Blue Brooks, #4899e8.
   - id: external-icon
     claim: An external link shows a launch icon after its text, drawn in the text colour.
   - id: external-label
@@ -83,12 +83,14 @@ modifier.
 
 ## Tokens
 
-| What                    | Token                                                               |
-| ----------------------- | ------------------------------------------------------------------- |
-| Link and visited colour | `--pathable-color-link`                                             |
-| Focus outline colour    | `--pathable-surface-focus-ring`, else `--pathable-color-focus-ring` |
+| What                    | Value                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| Link and visited colour | Tech Teal, #015a76                                                           |
+| Focus outline colour    | Bright Blue Brooks, #4899e8, or the surface's focus ring colour on a surface |
 
-Hover and pressed colours are fixed brand values and are not tokens.
+The colours are named on [tokens-color.md](tokens-color.md).
+
+Hover and pressed colours are fixed values in the stylesheet.
 
 ## Composition
 

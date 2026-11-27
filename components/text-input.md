@@ -110,13 +110,13 @@ focused and copied but not changed uses the `readonly` attribute.
 
 ## Tokens
 
-| What                           | Token                                                               |
-| ------------------------------ | ------------------------------------------------------------------- |
-| Focus ring colour on a surface | `--pathable-surface-focus-ring`, else `--pathable-color-focus-ring` |
+| What                           | Value                                                                                        |
+| ------------------------------ | -------------------------------------------------------------------------------------------- |
+| Focus ring colour on a surface | Bright Blue Brooks, #4899e8, or the surface's focus ring colour on a `pathable-bg-*` surface |
 
 The pixel figures on this page are those of the default theme. The border,
 text, error, success and disabled colours come from the theme's colour settings
-at build time and are not custom properties.
+at build time.
 
 ## Composition
 
