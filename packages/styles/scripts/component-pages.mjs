@@ -71,10 +71,14 @@ const INDEX_GROUPS = [
   { heading: 'Components', kinds: ['static'] },
 ]
 
-/** One index line. A component names its class; a utility or token page has none. */
+/**
+ * One index line. A component names its class, inside the link text so that a
+ * name such as "Link" still makes descriptive link text (markdownlint MD059
+ * lints this build output); a utility or token page has no class.
+ */
 const indexLine = ({ file, data }) =>
   data['styles-class']
-    ? `- [${data.name}](${file}) (\`${data['styles-class']}\`, ${data.kind}): ${data.summary}`
+    ? `- [${data.name} (\`${data['styles-class']}\`)](${file}) (${data.kind}): ${data.summary}`
     : `- [${data.name}](${file}) (${data.kind}): ${data.summary}`
 
 /**
