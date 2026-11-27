@@ -72,14 +72,16 @@ work, but writes only build output and its own scratchpad.
 The [risk tier](git-workflow.md#risk-tiers) on the delivery issue decides the
 phases, as [Process by tier](git-workflow.md#process-by-tier) sets them:
 
-| Work            | Pull requests    | Subagents per review round                                                  | Merge    |
-| --------------- | ---------------- | --------------------------------------------------------------------------- | -------- |
-| High            | One pull request | Code review, scope review, verification; visual review for a rendering path | A person |
-| Standard, Light | One pull request | Code review, scope review; visual review for a rendering path               | A person |
+| Work            | Pull requests    | Subagents per review round                                                              | Merge    |
+| --------------- | ---------------- | --------------------------------------------------------------------------------------- | -------- |
+| High            | One pull request | Code review, scope review, verification; visual review when the classifier requires one | A person |
+| Standard, Light | One pull request | Code review, scope review; visual review when the classifier requires one               | A person |
 
 [Visual-only styles work](git-workflow.md#visual-only-styles-work) gets a
-visual review at every tier. Visual review runs only when the round's diff
-touches a [rendering path](visual-review.md#when-a-visual-review-runs).
+visual review at every tier. Visual review runs when
+`visual-capture.mjs --classify` requires one, as
+[When a visual review runs](visual-review.md#when-a-visual-review-runs)
+describes.
 
 ### One round
 
@@ -96,12 +98,14 @@ touches a [rendering path](visual-review.md#when-a-visual-review-runs).
    its request fields, as the `orchestrate` skill's
    [requests](../../.agents/skills/orchestrate/SKILL.md#requests) list them:
    the code reviewer and the scope reviewer always, the visual reviewer when
-   the round's diff touches a rendering path, and the verifier for High work.
-   The reviewers read the local commits (`git diff <base>...<head>`). When the
-   round has a visual review, the lead first runs the capture script itself
-   in the background on the local base and head SHAs and passes the visual
-   reviewer the manifest. Then it ends its turn; each subagent's completion
-   wakes it.
+   `visual-capture.mjs --classify` requires a review, and the verifier for
+   High work. The reviewers read the local commits (`git diff <base>...<head>`).
+   The lead first runs `--classify` on the local base and head SHAs. When it
+   requires a review, the lead runs the capture script itself in the
+   background and starts the visual reviewer only when the manifest verdict is
+   `review`, passing it the manifest; for any other verdict it records the
+   verdict and capture summary as the round's visual evidence. Then it ends
+   its turn; each subagent's completion wakes it.
 3. **Answer.** It reads each reply and answers every finding with a fix,
    which goes back through step 1, or a written justification. The next
    review round passes each reviewer its own previous findings and the lead's
@@ -231,7 +235,7 @@ Three more rules keep the brief complete and the cost down:
   is embedded in one, the lead reads both component pages in `components/`. A
   conflict between their guarantees is a decision to settle before briefing,
   or a [stop point](#stop-points) when it needs a design trade-off.
-- The brief carries an `acceptance:` field for a change on a rendering path:
+- The brief carries an `acceptance:` field for a change the classifier marks as rendering:
   the Section 508 checks the visual reviewer applies, as they bear on the
   change, and its defect checks. They are text at 200 % at the captured
   viewports (375, 768 and 1280 px) without loss or overlap, text contrast, a
@@ -527,3 +531,4 @@ request.
 | Review rounds              | Decided 2026-11-25. Repeat rounds review only what changed since the last review; advisory findings are batched; a blocking finding open in round three or later, or one that needs a design trade-off, stops for the person ([One round](#one-round), [Stop points](#stop-points))                 |
 | Local review, replies only | Decided 2026-11-25. Every review runs on local commits before the first push and replies to the lead only; nothing posts records, notes or findings on GitHub, and the pull request opens only when the reviews are clean. The scope reviewer was added                                             |
 | Subagents over sessions    | Decided 2026-11-19, changed 2026-11-25. One lead session per delivery issue; every independent role runs as a clean-context subagent from a `.claude/agents/` definition and replies to the lead only, replacing the orchestrator and per-role sessions                                             |
+| Visual review trigger      | Decided 2026-11-27. `scripts/visual-capture/classify.mjs` replaced the rendering-path list, with `--classify`, a lockfile and manifest content rule, an output pre-check and the zero-difference verdict. Revisit by comparing visual reviews skipped with visible regressions found after merge    |
