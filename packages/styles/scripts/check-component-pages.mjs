@@ -40,10 +40,10 @@
  * `utility` and `token` pages have no `styles-class` and no `variants` (both
  * are rejected), because they describe unprefixed USWDS names rather than one
  * `pathable-*` component with modifiers. The class of a variant, the variant
- * rules, the "every modifier is a variant" rule and the custom property rule
- * (`--name` in prose must be used by the component's rules) are therefore
- * `static` only; a utility or token page that names a `--custom-property`
- * fails, because runtime properties are documented elsewhere. Every other rule applies to all three kinds: the guarantees, the
+ * rules and the "every modifier is a variant" rule are therefore `static`
+ * only. A page of any of the three kinds that names a `--custom-property` in
+ * prose or in a guarantee claim fails, because no custom property is public. Every other rule applies
+ * to all three kinds: the guarantees, the
  * title and summary paragraph, no `usa-` anywhere, exactly one html example,
  * and every class in an html example (fixtures included) being a class
  * selector in the compiled CSS, so a utility class the package does not emit
@@ -63,7 +63,7 @@
  *     in the compiled CSS; a default variant has no modifier class; every
  *     modifier the CSS has for the class is a variant on the page (static);
  *   - the body's summary paragraph and Variants table agree with the front
- *     matter, and every token the page names is used by the component's rules;
+ *     matter, and no page names a custom property in prose or a claim;
  * It does not look at play functions.
  *
  * Stage 2, `… check:component-pages:executed`, needs the records the Storybook
@@ -258,30 +258,16 @@ export function classesInSelector(selector) {
 
 /**
  * Parses compiled CSS into the facts the checks use: every class that appears
- * in a rule's selector, and for each class the custom properties the rules
- * that mention it declare or read through `var()`. Comments are not rules, so
- * a class named only in a comment is not found.
+ * in a rule's selector. Comments are not rules, so a class named only in a
+ * comment is not found.
  */
 export function readCss(css) {
   const classes = new Set()
-  const tokens = new Map()
 
   postcss.parse(css).walkRules((rule) => {
-    const inRule = classesInSelector(rule.selector)
-
-    const used = new Set()
-    rule.walkDecls((declaration) => {
-      if (declaration.prop.startsWith('--')) used.add(declaration.prop)
-      for (const [, name] of declaration.value.matchAll(/var\(\s*(--[\w-]+)/gu))
-        used.add(name)
-    })
-    for (const name of inRule) {
-      classes.add(name)
-      if (!tokens.has(name)) tokens.set(name, new Set())
-      for (const token of used) tokens.get(name).add(token)
-    }
+    for (const name of classesInSelector(rule.selector)) classes.add(name)
   })
-  return { classes, tokens }
+  return { classes }
 }
 
 /** The modifiers (`class--modifier`) the CSS has for a class. */
@@ -289,21 +275,6 @@ export const modifiersOf = (css, className) =>
   [...css.classes]
     .filter((name) => name.startsWith(`${className}--`))
     .map((name) => name.slice(className.length + 2))
-
-/** The custom properties the rules of a class and its modifiers use. */
-const tokensOf = (css, className) =>
-  className === undefined
-    ? new Set()
-    : new Set(
-        [...css.tokens]
-          .filter(
-            ([name]) =>
-              name === className ||
-              name.startsWith(`${className}--`) ||
-              name.startsWith(`${className}__`),
-          )
-          .flatMap(([, used]) => [...used]),
-      )
 
 // ---------------------------------------------------------------------------
 // Stage 1: the page against the compiled CSS
@@ -610,15 +581,21 @@ function checkNames(page, css, errors) {
       )
     }
   }
-  const used = tokensOf(css, page.data['styles-class'])
   for (const token of named(/`(--[a-z0-9-]+)`/gu)) {
-    if (isUswdsPage(page)) {
+    errors.push(
+      `the page names \`${token}\`, but a page names no custom property: none is public`,
+    )
+  }
+  // Claims ship in the packed page too. A custom property is `--x` not
+  // preceded by a word character, so a BEM modifier does not match.
+  for (const guarantee of list(page.data.guarantees)) {
+    const claim = typeof guarantee?.claim === 'string' ? guarantee.claim : ''
+    const tokens = new Set(
+      [...claim.matchAll(/(?<!\w)(--[a-z0-9-]+)/gu)].map((match) => match[1]),
+    )
+    for (const token of tokens) {
       errors.push(
-        `the page names \`${token}\`, but utility and token pages do not document custom properties; they are documented elsewhere`,
-      )
-    } else if (!used.has(token)) {
-      errors.push(
-        `the page names \`${token}\`, which the component's rules do not use`,
+        `guarantee "${guarantee.id}" names \`${token}\`, but a page names no custom property: none is public`,
       )
     }
   }

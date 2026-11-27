@@ -98,6 +98,9 @@ status is set on the site alert, not on the nested `pathable-alert`.
 Info is the default status; the examples also carry
 `pathable-site-alert--info`, which gives the same look.
 
+The body font is Nunito. The pixel figures on this page assume a 16 px root font
+size.
+
 ## Urgency
 
 A site alert that is in the page when it loads needs no role. One the
@@ -111,14 +114,6 @@ application adds after load has an urgency, set on the `<section>`:
 Show one site alert at a time. Several stacked site alerts bury the message
 that matters: put several short messages in one site alert, as a list inside
 the body, as in the list state.
-
-## Tokens
-
-| What      | Value  |
-| --------- | ------ |
-| Body font | Nunito |
-
-The pixel figures on this page are those of the default theme.
 
 ## Composition
 

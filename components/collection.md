@@ -87,15 +87,8 @@ Add at most one modifier class to `pathable-collection`.
 | density | `default`   | none                             | 1rem of margin and padding around each item                           |
 | density | `condensed` | `pathable-collection--condensed` | 0.5rem of margin and padding around each item, for a list of headings |
 
-## Tokens
-
-| What                | Value       |
-| ------------------- | ----------- |
-| Heading typeface    | Fredoka     |
-| Heading font weight | 400, normal |
-
-Every other value is fixed in the stylesheet. The rule between items has no
-colour of its own: it takes the item's text colour.
+The heading typeface is Fredoka at weight 400 (normal). The rule between items
+has no colour of its own: it takes the item's text colour.
 
 ## Composition
 

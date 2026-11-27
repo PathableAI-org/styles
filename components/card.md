@@ -109,11 +109,7 @@ element modifiers, set on the element and not on the card:
 `pathable-card__header--exdent`, `pathable-card__body--exdent` and
 `pathable-card__footer--exdent` (the part over the container border).
 
-## Tokens
-
-None. The sizes, colours and spacing are fixed values in the compiled
-stylesheet. The pixel figures on this page are those of
-the default theme.
+The pixel figures on this page assume a 16 px root font size.
 
 ## Composition
 
