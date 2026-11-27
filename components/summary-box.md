@@ -87,8 +87,8 @@ class.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. The
-colours are fixed in the stylesheet; the figures on this page are those of the
-PathAble theme.
+colours are fixed in the stylesheet. The figures on this page are those of the
+default theme.
 
 ## The consumer owns
 

@@ -94,8 +94,8 @@ disabled select uses the `disabled` attribute.
 The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour.
 
-The colours are fixed in the stylesheet; the figures on this page are those of
-the PathAble theme.
+The colours are fixed in the stylesheet. The figures on this page are those of
+the default theme.
 
 ## The consumer owns
 
