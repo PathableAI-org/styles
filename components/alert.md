@@ -154,6 +154,8 @@ token.
 - The status icon is drawn by the stylesheet next to the body; do not add an
   icon element. The `no-icon` alert has none.
 - Alerts that follow each other in one parent are 16 px apart.
+- An alert can sit inside `pathable-dark-background`. It keeps its own
+  surface, text and link colours there.
 
 ## Guarantees
 
