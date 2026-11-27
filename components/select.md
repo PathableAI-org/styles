@@ -7,7 +7,7 @@ styles-class: pathable-select
 variants: []
 guarantees:
   - id: box
-    claim: The select is a block 40 px tall that fills its container up to 480 px, with a 1 px border, a white background, square corners, an 8 px top margin and 32 px of padding on the right for the arrow.
+    claim: The select is a block 40 px tall that fills its container up to 480 px, with a 1 px border, a white background, square corners, an 8 px top margin and room on the right for the arrow, so the value never runs under it.
   - id: arrow
     claim: The select hides the browser's own arrow and draws an up-and-down arrow icon 20 px square, 8 px from the right edge and centred vertically.
   - id: text
@@ -72,8 +72,8 @@ The select has no modifier classes: there is one look. The error state uses
 disabled select uses the `disabled` attribute.
 
 In browsers that support `appearance: base-select` (currently Chromium) the
-arrow is drawn with `::picker-icon` and the opened list is the browser's
-base-select picker. Elsewhere the arrow is the usual background image.
+closed select's arrow is drawn with `::picker-icon`. Elsewhere the arrow is the
+usual background image. The opened list is the browser's own in both.
 
 ## Composition
 

@@ -50,7 +50,8 @@
         // area clear of it, so the value wraps instead of running underneath.
 
         &::picker-icon {
-          background-color: currentcolor;
+          // Black, as the USWDS icon is, not the select's text colour.
+          background-color: color('black');
           content: '';
           display: block;
           flex: none;
