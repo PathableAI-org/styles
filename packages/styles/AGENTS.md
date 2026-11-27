@@ -201,7 +201,7 @@ Agents MUST check contrast before using color pairs for text.
 
 Agents MUST NOT hardcode brand values throughout application code when a documented token class exists.
 
-Inside component SCSS, agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. There are no exceptions by name.
+Inside component SCSS, agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--elevation-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. There are no exceptions by name.
 
 ## USWDS Token Usage
 
@@ -235,10 +235,8 @@ Internal typography custom properties are emitted in the `--pathable-font-*` nam
 
 ### Internal CSS Custom Property Categories
 
-- **Font role**: `--pathable-font-heading`, `--pathable-font-body`, `--pathable-font-mono`, `--pathable-font-alt`
-- **Font size**: `--pathable-font-size-*` tokens
-- **Font weight**: `--pathable-font-weight-normal`, `--pathable-font-weight-semibold`, `--pathable-font-weight-bold`
-- **Line height**: `--pathable-font-line-height-body`
+- **Font role**: `--pathable-font-heading`, `--pathable-font-body`
+- **Font weight**: `--pathable-font-weight-normal`, `--pathable-font-weight-bold`
 
 ### SCSS Typography Token Reference Rules
 

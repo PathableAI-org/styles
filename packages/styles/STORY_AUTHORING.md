@@ -57,6 +57,6 @@ Copy this section into your PR description:
 ```markdown
 ### Story Authoring Checklist
 
-- [ ] All token references (`--pathable-*` and non-prefixed tokens such as `--space-*`) are defined (`pnpm lint:tokens` passes)
+- [ ] All token references (`--pathable-*` and non-prefixed tokens such as `--elevation-*`) are defined (`pnpm lint:tokens` passes)
 - [ ] Axe accessibility tests pass (`pnpm test:storybook`)
 ```

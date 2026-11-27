@@ -3,8 +3,7 @@
  *
  * Validates that every var(--*) reference in SCSS source files and story files
  * references a custom property that is actually defined. That covers the
- * --pathable-* namespace and the non-prefixed design tokens (--space-*,
- * --radius-*, --elevation-*, --ui-*). A reference
+ * --pathable-* namespace and the non-prefixed design tokens (--elevation-*). A reference
  * resolves when the token source files define it, when any SCSS source file
  * declares it, or when it carries a fallback value. References inside comments
  * are checked too, so a comment that names a token must name a real one;
@@ -129,83 +128,6 @@ function parseScssMap(content, mapName) {
   return result
 }
 
-/**
- * Parse a nested SCSS utility map like:
- *   $pathable-utilities: (
- *     'bg': ( ... 'values': ( 'primary': ..., 'base': ..., ), ... ),
- *     ...
- *   );
- * Returns Map<moduleName, valueKey[]>
- */
-function parseNestedMapValues(content, mapName) {
-  const entries = new Map()
-
-  const startRe = new RegExp(`\\$${escapeRegex(mapName)}\\s*:\\s*\\(`, 's')
-  const startM = content.match(startRe)
-  if (!startM) return entries
-
-  const startIdx = startM.index + startM[0].length
-  let depth = 1
-  let endIdx = startIdx
-  while (depth > 0 && endIdx < content.length) {
-    if (content[endIdx] === '(') {
-      depth++
-    } else if (content[endIdx] === ')') {
-      depth--
-    }
-    endIdx++
-  }
-  const block = content.slice(startIdx, endIdx - 1)
-
-  // Find top-level entries: 'key': ( ... ),
-  const entryRe = /(['"]?)([a-zA-Z0-9_\-.]+)\1\s*:\s*\(/g
-  let em
-  while ((em = entryRe.exec(block)) !== null) {
-    const key = em[2]
-    const valStart = em.index + em[0].length
-
-    // Find matching closing paren
-    let vDepth = 1
-    let vEnd = valStart
-    while (vDepth > 0 && vEnd < block.length) {
-      if (block[vEnd] === '(') {
-        vDepth++
-      } else if (block[vEnd] === ')') {
-        vDepth--
-      }
-      vEnd++
-    }
-    const valueBlock = block.slice(valStart, vEnd - 1)
-
-    // Find the 'values' sub-map
-    const valuesRe = /['"]values['"]\s*:\s*\(/s
-    const vm = valueBlock.match(valuesRe)
-    if (vm) {
-      const valMapStart = vm.index + vm[0].length
-      let valDepth = 1
-      let valMapEnd = valMapStart
-      while (valDepth > 0 && valMapEnd < valueBlock.length) {
-        if (valueBlock[valMapEnd] === '(') {
-          valDepth++
-        } else if (valueBlock[valMapEnd] === ')') {
-          valDepth--
-        }
-        valMapEnd++
-      }
-      const valMapBlock = valueBlock.slice(valMapStart, valMapEnd - 1)
-      const valKeyRe = /(['"]?)([a-zA-Z0-9_\-.]+)\1\s*:/g
-      const valueKeys = []
-      let vkm
-      while ((vkm = valKeyRe.exec(valMapBlock)) !== null) {
-        valueKeys.push(vkm[2])
-      }
-      entries.set(key, valueKeys)
-    }
-  }
-
-  return entries
-}
-
 // ---------------------------------------------------------------------------
 // Token extraction from SCSS source files
 // ---------------------------------------------------------------------------
@@ -254,60 +176,24 @@ function extractStaticTokens(content, tokens) {
 }
 
 /**
- * Collect every token the token source files define, including the tokens
- * generated from SCSS maps. Exported for the tooling tests.
+ * Collect every token the token source files declare. Exported for the
+ * tooling tests.
  *
  * @returns {string[]} sorted token names
  */
 export function extractDefinedTokens() {
   const tokens = new Set()
 
-  // _colors.scss — static --pathable-brand-* in :root
-  const colors = readFileSync(resolve(SRC, '_colors.scss'), 'utf-8')
-  extractStaticTokens(colors, tokens)
-
-  // _semantic.scss — static --pathable-color-* in :root
-  const semantic = readFileSync(resolve(SRC, '_semantic.scss'), 'utf-8')
-  extractStaticTokens(semantic, tokens)
-
-  // _typography.scss — static tokens in :root (font roles) + @each over $typography-tokens
-  const typography = readFileSync(resolve(SRC, '_typography.scss'), 'utf-8')
-  extractStaticTokens(typography, tokens)
-
-  // Parse $typography-tokens map for dynamically generated tokens
-  const typographyTokensMap = parseScssMap(typography, 'typography-tokens')
-  for (const key of typographyTokensMap.keys()) {
-    tokens.add(`--pathable-${key}`)
-  }
-
-  // _radius.scss and _elevation.scss — static --radius-* and --elevation-*
-  for (const file of ['_radius.scss', '_elevation.scss']) {
+  // _colors.scss (--pathable-brand-*), _semantic.scss (--pathable-color-*),
+  // _typography.scss (font roles and weights) and _elevation.scss
+  // (--elevation-*): static declarations in :root / :where(:root)
+  for (const file of [
+    '_colors.scss',
+    '_semantic.scss',
+    '_typography.scss',
+    '_elevation.scss',
+  ]) {
     extractStaticTokens(readFileSync(resolve(SRC, file), 'utf-8'), tokens)
-  }
-
-  // _spacing.scss — static --space-* plus @each over $pathable-spacing-scale
-  const spacing = readFileSync(resolve(SRC, '_spacing.scss'), 'utf-8')
-  extractStaticTokens(spacing, tokens)
-
-  const spacingScale = parseScssMap(spacing, 'pathable-spacing-scale')
-  for (const step of spacingScale.keys()) {
-    tokens.add(`--pathable-space-${step}`)
-  }
-
-  // _utilities-config.scss contains $pathable-utilities — the map source of truth
-  // (extracted from _utilities.scss in this feature). Parse it for dynamically
-  // generated utility tokens; _utilities-tokens.scss emits them from the same map.
-  const utilConfig = readFileSync(
-    resolve(SRC, '_utilities-config.scss'),
-    'utf-8',
-  )
-  extractStaticTokens(utilConfig, tokens)
-
-  const utilEntries = parseNestedMapValues(utilConfig, 'pathable-utilities')
-  for (const [moduleName, valueKeys] of utilEntries) {
-    for (const vk of valueKeys) {
-      tokens.add(`--pathable-${moduleName}-${vk}`)
-    }
   }
 
   return Array.from(tokens).sort()
