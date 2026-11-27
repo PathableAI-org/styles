@@ -308,8 +308,9 @@ checkbox label or radio label is border-box too. A footer's social links are
 border-box by inheriting from the footer, so a social link outside a footer
 stays content-box. `this-border-box-sizing` sets only the element itself: it
 makes `grid-container` border-box (its `max-width` then includes its padding),
-and also `grid-row`, every `grid-col` class and the direct children of a
-`grid-gap` row (their gap padding is then inside their width). The card container is the exception: it takes USWDS's declarations
+and also `grid-row` and the direct children of a `grid-gap` row (their gap
+padding is then inside their width). The `grid-col` classes are border-box
+whatever the setting, because the layout grid declares it on them directly. The card container is the exception: it takes USWDS's declarations
 without the mixin, so card content keeps the sizing it has outside a card, and
 only the card's own parts are border-box. Elements no mixin covers, such as the
 pagination overflow item, the step indicator counter and the process list
