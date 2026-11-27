@@ -5,9 +5,6 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
-@use 'sass:list';
-@use 'sass:map';
-@use 'sass:string';
 @use 'uswds-core' as *;
 @use 'pathable-alert-icon-mixins' as icons;
 
@@ -66,6 +63,27 @@
 
 .pathable-alert--slim .pathable-alert__body::before {
   @include icons.in-flow-icon-slim;
+}
+
+// Inside pathable-dark-background, usa-dark-background sets `a` at (0,1,1) and
+// `a:visited`, `a:hover` and `a:active` at (0,2,1), which out-rank
+// `.pathable-link` (0,1,0) and its hover and active rules (0,2,0). These rules
+// put the link colours back at (0,2,0) and (0,3,0), just above the dark
+// container. They stay at or below the status alerts' and wrappers' own link
+// rules at (0,3,0), the status rules later in this file and pathable-site-alert's
+// later in the bundle, which win ties by source order, so this block must stay
+// before them. The visited colour needs no rule: pathable-link.scss's
+// `.pathable-link:visited:not(:hover, :active)` (0,3,0) already wins.
+:where(.pathable-dark-background) .pathable-alert__body .pathable-link {
+  color: var(--pathable-color-link);
+
+  &:hover {
+    color: color($theme-link-hover-color);
+  }
+
+  &:active {
+    color: color($theme-link-active-color);
+  }
 }
 
 // The success, warning and error alerts fill the whole alert, body included,
@@ -129,38 +147,6 @@ $-status-fills: (
 // colours: text takes the alert body's colour for every status.
 .pathable-dark-background .pathable-alert__body :where(p, span) {
   color: inherit;
-}
-
-// The status alerts set their own link colour at (0,3,0) for every state, so
-// only the info and plain alerts need their link colours restored, as
-// pathable-link.scss sets them outside a dark container.
-$-status-exclusions: ();
-
-@each $modifier in list.join(map.keys($-status-fills), emergency) {
-  $-status-exclusions: list.append(
-    $-status-exclusions,
-    string.unquote('.pathable-alert--#{$modifier}'),
-    comma
-  );
-}
-
-.pathable-dark-background
-  .pathable-alert:not(#{$-status-exclusions})
-  .pathable-alert__body
-  .pathable-link {
-  color: var(--pathable-color-link);
-
-  &:visited:not(:hover, :active) {
-    color: var(--pathable-color-link);
-  }
-
-  &:hover {
-    color: color($theme-link-hover-color);
-  }
-
-  &:active {
-    color: color($theme-link-active-color);
-  }
 }
 
 // Forced colours drop the icon's mask fill; see the mixin.
