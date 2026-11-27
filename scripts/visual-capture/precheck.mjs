@@ -19,6 +19,7 @@ export const COVERED = [
 /** Output directories, relative to a worktree, the pre-check hashes. */
 export const COMPARED_DIRS = [
   'packages/styles/dist',
+  'packages/styles/fonts',
   'apps/storybook/generated',
 ]
 

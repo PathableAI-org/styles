@@ -61,14 +61,17 @@ can end early, and writes a manifest `verdict`:
 Only `review` goes to the visual reviewer. For the other three, the lead
 records the verdict and the capture summary as the round's visual evidence.
 `--force` captures anyway, when the lead or a person wants a review on a diff
-the rule skips.
+the rule skips. It skips the classifier gate and the output pre-check, always
+ends with the verdict `review`, and, when the diff has no rendering paths,
+samples the first story of each stories file.
 
-[Visual-only styles work](git-workflow.md#visual-only-styles-work) and High
-work still get a visual review whenever their diff changes rendering, because
-such a diff always touches SCSS, stories, fixtures or component pages, which
-have no exclusions. For visual-only work the visual review is its evidence;
-when the verdict is `no-render-change` or `no-difference`, the capture itself
-is that evidence, because it shows nothing visible changed. The verifier's
+[Visual-only styles work](git-workflow.md#visual-only-styles-work) gets a
+visual review at every tier, because the visual review is its evidence. For
+visual-only work the lead runs the capture with `--force`, so the reviewer
+always runs and a missing visible change is reported as `missing`. High work
+gets a visual review whenever its diff changes rendering, because such a diff
+always touches SCSS, stories, fixtures or component pages, which have no
+exclusions. The verifier's
 [screenshots for visual claims](verification-harness.md#screenshots-for-visual-claims)
 still apply to High work.
 

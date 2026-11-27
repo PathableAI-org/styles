@@ -6,6 +6,7 @@ import { stringify } from 'yaml'
 
 import {
   EXCLUSIONS,
+  IMPORTER_RENDER_DEV_DEPS,
   RENDER_DEV_DEPS,
   classifyChanges,
   classifyLockfile,
@@ -13,11 +14,12 @@ import {
   classifyPath,
 } from '../visual-capture/classify.mjs'
 import {
+  COMPARED_DIRS,
   compareTrees,
   precheckApplies,
   precheckCovers,
 } from '../visual-capture/precheck.mjs'
-import { chooseStories } from '../visual-capture/select.mjs'
+import { captureVerdict, chooseStories } from '../visual-capture/select.mjs'
 
 const ROOT = resolve(import.meta.dirname, '../..')
 
@@ -34,6 +36,8 @@ describe('classifyPath', () => {
       'packages/react/src/test/fixture-manifest.ts',
       'packages/react/src/components/Button/Button.tsx',
       'packages/styles/scripts/new-thing.mjs',
+      'packages/styles/scripts/component-pages.mjs',
+      'packages/storybook-contracts/src/index.ts',
     ]) {
       assert.equal(classifyPath(path).kind, 'render', path)
     }
@@ -56,13 +60,16 @@ describe('classifyPath', () => {
       classifyPath('apps/storybook-react/.storybook/preview.js').workspaces,
       ['react'],
     )
+    assert.deepEqual(
+      classifyPath('packages/storybook-contracts/src/index.ts').workspaces,
+      ['react'],
+    )
   })
 
   it('classifies paths that cannot change rendering as none, with a reason', () => {
     for (const path of [
       'apps/storybook/.storybook/test-runner.js',
       'packages/styles/scripts/lint-tokens.mjs',
-      'packages/styles/scripts/component-pages.mjs',
       'components/README.md',
       'fixtures/README.md',
       'fixtures/harness/axe.mjs',
@@ -70,7 +77,8 @@ describe('classifyPath', () => {
       'packages/styles/README.md',
       'docs/engineering/visual-review.md',
       'scripts/visual-capture/select.mjs',
-      'packages/storybook-contracts/src/index.ts',
+      'packages/storybook-contracts/README.md',
+      'packages/storybook-contracts/test/index.test.ts',
     ]) {
       const result = classifyPath(path)
       assert.equal(result.kind, 'none', path)
@@ -103,10 +111,7 @@ describe('classifyPath', () => {
 
 describe('build scripts', () => {
   // A build script that runs a file must classify that file as render, or an
-  // edit to it would skip the review. component-pages.mjs is the one named
-  // exception: `build` runs it, but it writes the shipped consumer component
-  // pages, which Storybook does not render.
-  const EXCEPTIONS = new Set(['packages/styles/scripts/component-pages.mjs'])
+  // edit to it would skip the review.
   const SCRIPTS = [
     'build',
     'build-storybook',
@@ -131,11 +136,7 @@ describe('build scripts', () => {
     }
     assert.ok(seen.size > 0)
     for (const path of seen) {
-      assert.equal(
-        classifyPath(path).kind,
-        EXCEPTIONS.has(path) ? 'none' : 'render',
-        path,
-      )
+      assert.equal(classifyPath(path).kind, 'render', path)
     }
   })
 })
@@ -191,6 +192,25 @@ describe('classifyManifest', () => {
     assert.equal(kind('{'), 'render')
   })
 
+  it('counts yaml as a render dev dependency of the styles package only', () => {
+    assert.deepEqual(IMPORTER_RENDER_DEV_DEPS, { 'packages/styles': ['yaml'] })
+    assert.equal(RENDER_DEV_DEPS.includes('yaml'), false)
+    const yaml = (version) =>
+      manifest({ devDependencies: { sass: '1.0.0', yaml: version } })
+    assert.equal(
+      classifyManifest(
+        'packages/styles/package.json',
+        yaml('^2.9.1'),
+        yaml('^2.9.2'),
+      ).kind,
+      'render',
+    )
+    assert.equal(
+      classifyManifest('package.json', yaml('^2.9.1'), yaml('^2.9.2')).kind,
+      'none',
+    )
+  })
+
   it('names the workspaces by path', () => {
     assert.deepEqual(
       classifyManifest('apps/storybook-react/package.json', null, '{}')
@@ -227,7 +247,11 @@ const baseLock = () => ({
         sass: dep('1.0.0'),
         'eslint-plugin-x': dep('1.0.0'),
         'test-only': dep('1.0.0'),
+        yaml: dep('2.9.1'),
       },
+    },
+    'scripts/component-docs': {
+      dependencies: { 'mdast-util-from-markdown': dep('2.0.2') },
     },
     'apps/storybook': {
       dependencies: {
@@ -254,6 +278,8 @@ const baseLock = () => ({
     'plugin-dep@1.0.0': {},
     'test-only@1.0.0': { dependencies: { 'test-dep': '1.0.0' } },
     'test-dep@1.0.0': {},
+    'mdast-util-from-markdown@2.0.2': {},
+    'yaml@2.9.1': {},
     '@storybook/html-vite@1.0.0': { dependencies: { 'html-helper': '1.0.0' } },
     'html-helper@1.0.0': {},
     'react-only@1.0.0': {},
@@ -301,6 +327,38 @@ describe('classifyLockfile', () => {
     assert.deepEqual(result.parts, ['styles-package'])
   })
 
+  it('is render for styles-package when a component-docs dependency is bumped', () => {
+    const result = changed((lock) => {
+      lock.importers['scripts/component-docs'].dependencies[
+        'mdast-util-from-markdown'
+      ] = dep('2.0.3')
+      lock.snapshots['mdast-util-from-markdown@2.0.3'] = {}
+    })
+    assert.deepEqual([result.kind, result.workspaces], ['render', ['styles']])
+    assert.deepEqual(result.parts, ['styles-package'])
+  })
+
+  it('is render for styles-package when yaml is bumped in packages/styles', () => {
+    const result = changed((lock) => {
+      lock.importers['packages/styles'].devDependencies.yaml = dep('2.9.2')
+      lock.snapshots['yaml@2.9.2'] = {}
+    })
+    assert.deepEqual([result.kind, result.workspaces], ['render', ['styles']])
+    assert.deepEqual(result.parts, ['styles-package'])
+  })
+
+  it('is none when yaml is bumped only in the root importer', () => {
+    const before = baseLock()
+    before.importers['.'] = { devDependencies: { yaml: dep('2.9.1') } }
+    const after = baseLock()
+    after.importers['.'] = { devDependencies: { yaml: dep('2.9.2') } }
+    after.snapshots['yaml@2.9.2'] = {}
+    assert.equal(
+      classifyLockfile(lockfile(before), lockfile(after)).kind,
+      'none',
+    )
+  })
+
   it('is render for styles when a transitive of @storybook/html-vite is bumped', () => {
     const result = changed((lock) => {
       lock.snapshots['@storybook/html-vite@1.0.0'] = {
@@ -343,9 +401,49 @@ describe('classifyChanges', () => {
   const reader = (files) => (side, path) => files[side]?.[path] ?? null
   const none = () => null
 
+  const nameStatus = (rows) => rows.map(([status, path]) => ({ status, path }))
+
+  // `git diff --name-status --no-renames 259c6877^ 259c6877`, pinned.
+  const PIXEL_SUITE_REMOVAL = nameStatus([
+    ['M', '.agents/skills/orchestrate/SKILL.md'],
+    ['M', '.agents/skills/verification-harness/SKILL.md'],
+    ['M', '.agents/skills/visual-reviewer/SKILL.md'],
+    ['M', '.github/actions/setup/action.yml'],
+    ['M', '.github/pull_request_template.md'],
+    ['M', '.github/workflows/storybook-quality.yml'],
+    ['M', 'AGENTS.md'],
+    ['D', 'apps/storybook/.storybook/pixels.js'],
+    ['M', 'apps/storybook/.storybook/test-runner.js'],
+    ['M', 'apps/storybook/package.json'],
+    ['M', 'components/README.md'],
+    ['M', 'docs/engineering/git-workflow.md'],
+    ['M', 'docs/engineering/orchestration.md'],
+    ['M', 'docs/engineering/verification-harness.md'],
+    ['M', 'docs/engineering/visual-review.md'],
+    ['M', 'docs/testing/README.md'],
+    ['M', 'docs/testing/choosing-tests.md'],
+    ['M', 'docs/testing/tooling-and-structure.md'],
+    ['D', 'docs/testing/visual-regression.md'],
+    ['M', 'package.json'],
+    ['M', 'packages/styles/STORY_AUTHORING.md'],
+    ['M', 'packages/styles/scripts/check-component-pages.mjs'],
+    ['M', 'packages/styles/scripts/check-component-pages.test.mjs'],
+    ['D', 'packages/styles/scripts/pixel-stories.mjs'],
+    ['M', 'packages/styles/scripts/quality-gates.mjs'],
+    ['D', 'packages/styles/scripts/test-pixels.mjs'],
+    ['M', 'pnpm-lock.yaml'],
+    ['M', 'scripts/component-pages-records-key.mjs'],
+    ['M', 'scripts/tests/component-pages-records-key.test.mjs'],
+    ['M', 'scripts/tests/visual-capture.test.mjs'],
+    ['M', 'scripts/visual-capture.mjs'],
+    ['M', 'scripts/visual-capture/measure.mjs'],
+    ['M', 'scripts/visual-capture/select.mjs'],
+  ])
+
   it('replays the pixel-suite removal as not required', () => {
-    const manifest = (devDependencies) =>
-      JSON.stringify({ scripts: { build: 'x' }, devDependencies })
+    const manifest = (scripts, devDependencies) =>
+      JSON.stringify({ scripts: { build: 'x', ...scripts }, devDependencies })
+    const pixelScripts = { 'test:pixels': 'a', 'test:pixels-styles': 'b' }
     const before = baseLock()
     before.importers['apps/storybook'].devDependencies['jest-image-snapshot'] =
       dep('1.0.0')
@@ -354,34 +452,457 @@ describe('classifyChanges', () => {
     }
     before.snapshots['pixelmatch@1.0.0'] = {}
     const result = classifyChanges({
-      changes: [
-        { status: 'D', path: 'apps/storybook/.storybook/pixels.js' },
-        { status: 'M', path: 'apps/storybook/.storybook/test-runner.js' },
-        { status: 'M', path: 'apps/storybook/package.json' },
-        { status: 'D', path: 'packages/styles/scripts/test-pixels.mjs' },
-        { status: 'D', path: 'packages/styles/scripts/pixel-stories.mjs' },
-        {
-          status: 'M',
-          path: 'packages/styles/scripts/check-component-pages.mjs',
-        },
-        { status: 'M', path: 'components/README.md' },
-        { status: 'M', path: 'docs/testing/visual-regression.md' },
-        { status: 'M', path: 'pnpm-lock.yaml' },
-      ],
+      changes: PIXEL_SUITE_REMOVAL,
       readFile: reader({
         base: {
-          'apps/storybook/package.json': manifest({
+          'package.json': manifest(pixelScripts, {
+            'jest-image-snapshot': '1.0.0',
+            yaml: '^2.9.1',
+          }),
+          'apps/storybook/package.json': manifest(pixelScripts, {
             'jest-image-snapshot': '1.0.0',
           }),
           'pnpm-lock.yaml': lockfile(before),
         },
         head: {
-          'apps/storybook/package.json': manifest({}),
+          'package.json': manifest({}, { yaml: '^2.9.1' }),
+          'apps/storybook/package.json': manifest({}, {}),
           'pnpm-lock.yaml': lockfile(baseLock()),
         },
       }),
     })
     assert.equal(result.required, false)
+  })
+
+  // `git diff --name-status --no-renames 6632c923^ 6632c923` (#750), pinned.
+  const SHIP_ONLY_DOCUMENTED = nameStatus([
+    ['M', '.agents/skills/drift-review/SKILL.md'],
+    ['A', '.changeset/remove-dead-code.md'],
+    ['M', '.github/ISSUE_TEMPLATE/delivery.md'],
+    ['M', 'AGENTS.md'],
+    ['M', 'README.md'],
+    ['M', 'apps/storybook-react/.storybook/preview.js'],
+    ['D', 'apps/storybook-react/.storybook/styles-js-noop.js'],
+    ['M', 'apps/storybook/.storybook/preview.js'],
+    ['M', 'components/button-group.md'],
+    ['M', 'components/button.md'],
+    ['M', 'components/card.md'],
+    ['M', 'components/checkbox.md'],
+    ['M', 'components/collection.md'],
+    ['M', 'components/form.md'],
+    ['M', 'components/icon-list.md'],
+    ['M', 'components/icon.md'],
+    ['M', 'components/list.md'],
+    ['M', 'components/step-indicator.md'],
+    ['M', 'components/summary-box.md'],
+    ['M', 'components/table.md'],
+    ['M', 'components/text-input.md'],
+    ['M', 'docs/engineering/drift-review.md'],
+    ['M', 'docs/engineering/git-workflow.md'],
+    ['M', 'docs/engineering/intent.md'],
+    ['M', 'docs/engineering/target-state.md'],
+    ['M', 'docs/testing/visual-regression.md'],
+    ['M', 'docs/theming/token-vocabulary.md'],
+    ['M', 'fixtures/README.md'],
+    ['M', 'packages/styles/AGENTS.md'],
+    ['M', 'packages/styles/BRAND_RULES.md'],
+    ['M', 'packages/styles/README.md'],
+    ['M', 'packages/styles/package.json'],
+    ['D', 'packages/styles/scripts/build-js.mjs'],
+    ['M', 'packages/styles/scripts/copy-icons.mjs'],
+    ['M', 'packages/styles/scripts/lint-tokens.mjs'],
+    ['M', 'packages/styles/scripts/test-pixels.mjs'],
+    ['D', 'packages/styles/src/_components-custom-properties.scss'],
+    ['M', 'packages/styles/src/_semantic.scss'],
+    ['M', 'packages/styles/src/_typography.scss'],
+    ['M', 'packages/styles/src/_utilities-tokens.scss'],
+    ['M', 'packages/styles/src/_utilities.scss'],
+    ['M', 'packages/styles/src/index.scss'],
+    ['D', 'packages/styles/src/js/pathable-init.ts'],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/_pathable-interaction-state-mixins.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-accordion.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-activity-list.scss',
+    ],
+    ['M', 'packages/styles/src/pathable-component-wrappers/pathable-all.scss'],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-app-shell-layout.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-app-shell.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-banner.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-bento-grid.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-bottom-navigation.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-button.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-card-grid.scss',
+    ],
+    ['M', 'packages/styles/src/pathable-component-wrappers/pathable-card.scss'],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-character-count.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-checklist.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-chip-rail.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-cluster.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-combo-box.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-communication.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-container.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-content.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-dark-background.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-dashboard-header.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-dashboard.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-date-picker.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-date-range-picker.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-decorative-background.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-discovery.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-display.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-embed-container.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-empty-state.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-file-input.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-filter-bar.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-filter-pill.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-filterable-option-list.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-form-controls.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-form-row.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-graphic-list.scss',
+    ],
+    ['D', 'packages/styles/src/pathable-component-wrappers/pathable-grid.scss'],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-header.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-heading.scss',
+    ],
+    ['D', 'packages/styles/src/pathable-component-wrappers/pathable-hero.scss'],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-icon-button.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-icon-tile.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-identifier.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-in-page-navigation.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-inline.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-input-mask.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-input.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-interaction-controls.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-interaction-states.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-kpi-grid.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-language-selector.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-layout-composition.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-layout-docs.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-layout-grid.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-layout.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-legend.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-loading.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-marketing-patterns.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-media-block.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-modal.scss',
+    ],
+    ['D', 'packages/styles/src/pathable-component-wrappers/pathable-nav.scss'],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-navigation.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-optional-form-section.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-page-error.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-range.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-record-header.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-resource-card.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-save-status.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-schedule-item.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-screenshot-frame.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-search.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-section.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-segmented-control.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-sidebar-layout.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-site-title.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-skeleton.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-skipnav.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-split.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-stack.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-step-indicator.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-sticky-panel.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-structured-workflow.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-surface.scss',
+    ],
+    [
+      'M',
+      'packages/styles/src/pathable-component-wrappers/pathable-table.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-text-highlight.scss',
+    ],
+    ['D', 'packages/styles/src/pathable-component-wrappers/pathable-text.scss'],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-time-picker.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-toast.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-tooltip.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-typography.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-validation.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-wayfinder.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-wizard-actions.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-wizard.scss',
+    ],
+    [
+      'D',
+      'packages/styles/src/pathable-component-wrappers/pathable-workflow-panel.scss',
+    ],
+    ['M', 'packages/styles/src/theme-default.scss'],
+    ['M', 'packages/styles/test/selective-import.scss'],
+    ['M', 'pnpm-lock.yaml'],
+    ['M', 'scripts/check-agent-guidance-impact.mjs'],
+    ['M', 'scripts/tests/lint-tokens.test.mjs'],
+    ['M', 'scripts/tests/utility-order.test.mjs'],
+  ])
+
+  it('replays #750 as required', () => {
+    const same = {
+      'packages/styles/package.json': '{}',
+      'pnpm-lock.yaml': lockfile(baseLock()),
+    }
+    const result = classifyChanges({
+      changes: SHIP_ONLY_DOCUMENTED,
+      readFile: reader({ base: same, head: same }),
+    })
+    assert.equal(result.required, true)
   })
 
   it('requires a review for a text input stylesheet change', () => {
@@ -465,6 +986,47 @@ describe('chooseStories with the classifier', () => {
     )
   })
 
+  it('samples shared-like render paths that name no component', () => {
+    for (const path of [
+      'scripts/component-docs/render.mjs',
+      'packages/react/src/test/fixture-manifest.ts',
+      'packages/styles/scripts/copy-icons.mjs',
+      'apps/storybook/scripts/copy-icons.mjs',
+    ]) {
+      const chosen = chooseStories({
+        changedPaths: [path],
+        indexes: { styles: stylesIndex },
+      })
+      assert.deepEqual(
+        chosen.map((item) => item.id),
+        ['a--one', 'b--one'],
+        path,
+      )
+    }
+  })
+
+  it('samples every file of each Storybook for a forced run with nothing chosen', () => {
+    const reactIndex = [story('r--one', './src/r.stories.tsx')]
+    const chosen = chooseStories({
+      changedPaths: [],
+      indexes: { styles: stylesIndex, react: reactIndex },
+      force: true,
+    })
+    assert.deepEqual(
+      chosen.map((item) => `${item.workspace}:${item.id}`),
+      ['react:r--one', 'styles:a--one', 'styles:b--one'],
+    )
+    assert.deepEqual(
+      chooseStories({
+        changedPaths: [],
+        indexes: { styles: stylesIndex },
+        extra: ['a--two'],
+        force: true,
+      }).map((item) => item.id),
+      ['a--two'],
+    )
+  })
+
   it('does not sample the styles Storybook for a React-only lockfile change', () => {
     const chosen = chooseStories({
       changedPaths: ['pnpm-lock.yaml'],
@@ -478,6 +1040,33 @@ describe('chooseStories with the classifier', () => {
       indexes: { styles: stylesIndex },
     })
     assert.deepEqual(chosen, [])
+  })
+})
+
+describe('captureVerdict', () => {
+  const same = { status: 'same' }
+  const verdict = (overrides) =>
+    captureVerdict({
+      errors: [],
+      pairs: [same],
+      stories: [{ changed: false }],
+      force: false,
+      ...overrides,
+    })
+
+  it('is no-difference only for a clean capture of matching pairs', () => {
+    assert.equal(verdict({}), 'no-difference')
+  })
+
+  it('is review for no pairs, a different pair, a changed story or an error', () => {
+    assert.equal(verdict({ pairs: [] }), 'review')
+    assert.equal(verdict({ pairs: [same, { status: 'different' }] }), 'review')
+    assert.equal(verdict({ stories: [{ changed: true }] }), 'review')
+    assert.equal(verdict({ errors: [{ step: 'x' }] }), 'review')
+  })
+
+  it('is always review under force', () => {
+    assert.equal(verdict({ force: true }), 'review')
   })
 })
 
@@ -533,6 +1122,10 @@ describe('pre-check', () => {
       precheckApplies({ paths: [entry('pnpm-lock.yaml', ['react'])] }),
       false,
     )
+  })
+
+  it('compares the styles fonts output too', () => {
+    assert.ok(COMPARED_DIRS.includes('packages/styles/fonts'))
   })
 
   it('compares trees by hash', () => {

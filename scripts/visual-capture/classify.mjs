@@ -23,6 +23,7 @@ const TREES = [
   ['fixtures/', ['styles']],
   ['scripts/component-docs/', ['styles']],
   ['packages/react/', ['react']],
+  ['packages/storybook-contracts/', ['react']],
   ['apps/storybook-react/', ['react']],
 ]
 
@@ -73,11 +74,6 @@ export const EXCLUSIONS = [
       /^packages\/styles\/scripts\/(?:lint-tokens|check-component-pages|quality-gates|storybook-coverage|test-visual|test-pixels|pixel-stories)\.mjs$/,
   },
   {
-    reason:
-      'Writes the shipped consumer component pages, which Storybook does not render.',
-    match: /^packages\/styles\/scripts\/component-pages\.mjs$/,
-  },
-  {
     reason: 'The retired pixel suite, which never fed a Storybook build.',
     match: /^apps\/storybook\/\.storybook\/pixels\.js$/,
   },
@@ -110,6 +106,16 @@ export const RENDER_DEV_DEPS = [
   '@pathableai/component-docs',
 ]
 
+/**
+ * Extra render dev dependencies of one importer, for packages its build
+ * scripts import. `packages/styles/scripts/component-pages.mjs` is imported by
+ * scripts/component-docs/write.mjs, which feeds the generated Storybook pages.
+ * Not global: the root `yaml` devDependency does not render.
+ */
+export const IMPORTER_RENDER_DEV_DEPS = {
+  'packages/styles': ['yaml'],
+}
+
 /** Manifest scripts that run in a build; `pre` and `post` hooks count too. */
 const BUILD_SCRIPTS = [
   'build',
@@ -120,11 +126,14 @@ const BUILD_SCRIPTS = [
 ]
 
 /** Whether a package name is a render dev dependency. */
-export function isRenderDevDep(name) {
-  return RENDER_DEV_DEPS.some((pattern) =>
-    pattern.endsWith('*')
-      ? name.startsWith(pattern.slice(0, -1))
-      : name === pattern,
+export function isRenderDevDep(name, extra = []) {
+  return (
+    extra.includes(name) ||
+    RENDER_DEV_DEPS.some((pattern) =>
+      pattern.endsWith('*')
+        ? name.startsWith(pattern.slice(0, -1))
+        : name === pattern,
+    )
   )
 }
 
@@ -186,13 +195,14 @@ export function classifyManifest(path, baseText, headText) {
       return render(`"${field}" changed.`)
     }
   }
+  const extra = IMPORTER_RENDER_DEV_DEPS[posix.dirname(path)] ?? []
   const baseDev = base.devDependencies ?? {}
   const headDev = head.devDependencies ?? {}
   for (const name of new Set([
     ...Object.keys(baseDev),
     ...Object.keys(headDev),
   ])) {
-    if (isRenderDevDep(name) && baseDev[name] !== headDev[name]) {
+    if (isRenderDevDep(name, extra) && baseDev[name] !== headDev[name]) {
       return render(`devDependency ${name} changed.`)
     }
   }
@@ -216,15 +226,19 @@ export function classifyManifest(path, baseText, headText) {
 
 /**
  * The parts of the resolved closure, each with its importer roots and whether
- * `link:` entries are followed. `styles-package` shows in
- * `packages/styles/dist`; `styles-storybook` (Storybook, Vite, React and the
- * Vite-side sass) is bundled straight into the iframe, so the output pre-check
- * cannot see it, and its links are covered by their own parts or by
+ * `link:` entries are followed. `styles-package` (the styles package and the
+ * component-docs importer, whose output lands in `apps/storybook/generated`)
+ * shows in the compared outputs; `styles-storybook` (Storybook, Vite, React
+ * and the Vite-side sass) is bundled straight into the iframe, so the output
+ * pre-check cannot see it, and its links are covered by their own parts or by
  * `apps/storybook/generated`. Known limit: a sass bump changes both styles
  * parts, so the pre-check does not apply to it.
  */
 const CLOSURE_PARTS = {
-  'styles-package': { roots: ['packages/styles'], follow: true },
+  'styles-package': {
+    roots: ['packages/styles', 'scripts/component-docs'],
+    follow: true,
+  },
   'styles-storybook': { roots: ['apps/storybook'], follow: false },
   react: { roots: ['packages/react', 'apps/storybook-react'], follow: true },
 }
@@ -257,7 +271,7 @@ function closure(importers, snapshots, roots, follow = true) {
       ...Object.entries(importer.dependencies ?? {}),
       ...Object.entries(importer.optionalDependencies ?? {}),
       ...Object.entries(importer.devDependencies ?? {}).filter(([name]) =>
-        isRenderDevDep(name),
+        isRenderDevDep(name, IMPORTER_RENDER_DEV_DEPS[importerPath]),
       ),
     ]
     for (const [name, entry] of deps) {

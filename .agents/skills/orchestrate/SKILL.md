@@ -187,7 +187,11 @@ Start the visual reviewer only when the verdict line says `review`. For
 `not-required`, `no-render-change` and `no-difference`, record the verdict and
 the capture summary as the round's visual evidence and start no reviewer.
 `--force` captures anyway, when you or a person want a review on a diff the
-rule skips.
+rule skips. It skips the classifier gate and the output pre-check, always ends
+with the verdict `review`, and, with no rendering paths, samples the first
+story of each stories file. For visual-only styles work, always run the
+capture with `--force`: the visual review is its evidence, so the reviewer
+always runs and a missing visible change is reported as `missing`.
 
 The visual reviewer gets the manifest path plus the common request fields.
 From round 2 it also gets `previous capture: <path to the previous round's

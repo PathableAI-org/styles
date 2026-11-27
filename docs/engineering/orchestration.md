@@ -78,7 +78,8 @@ phases, as [Process by tier](git-workflow.md#process-by-tier) sets them:
 | Standard, Light | One pull request | Code review, scope review; visual review when the classifier requires one               | A person |
 
 [Visual-only styles work](git-workflow.md#visual-only-styles-work) gets a
-visual review at every tier. Visual review runs when
+visual review at every tier: the lead runs its capture with `--force`, so the
+reviewer always runs. Other work gets a visual review when
 `visual-capture.mjs --classify` requires one, as
 [When a visual review runs](visual-review.md#when-a-visual-review-runs)
 describes.

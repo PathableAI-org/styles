@@ -21,7 +21,9 @@
  *     [--only]                capture only the --story stories (a re-capture);
  *                             reuses the built worktrees, writes a new manifest
  *     [--force]               skip the classifier gate and the output
- *                             pre-check (a review was asked for anyway)
+ *                             pre-check; the run always ends in `review`, and
+ *                             with no rendering paths it samples the first
+ *                             story of each stories file
  *   node scripts/visual-capture.mjs --base <sha> --head <sha> --classify
  *                             print the verdict and the render paths with
  *                             their reasons; build nothing (--out not needed)
@@ -30,8 +32,8 @@
  *
  * The manifest is <dir>/manifest.json (or <dir>/recapture-<n>.json with
  * --only). Its `verdict` is `not-required` (no path can change rendering),
- * `no-render-change` (the built outputs are identical), `no-difference` (every
- * capture matched and no story changed) or `review` (the reviewer judges).
+ * `no-render-change` (the built outputs are identical), `no-difference` (at least
+ * one capture, every one matched, no story changed, not forced) or `review` (the reviewer judges).
  * Exit status: 0 when every capture ran or none was needed, 1 when a build or
  * a capture failed (the manifest says which), 2 on bad arguments, 3 with
  * --classify when no review is required.
@@ -65,6 +67,7 @@ import {
   precheckApplies,
 } from './visual-capture/precheck.mjs'
 import {
+  captureVerdict,
   chooseStories,
   conditionsForDiff,
   conditionsForStory,
@@ -437,6 +440,7 @@ let stories = failures.head
       classification: classification.paths,
       indexes: indexes.head,
       extra: args.story,
+      force: args.force,
       ...lists,
     })
 if (args.only) {
@@ -726,13 +730,9 @@ for (const pair of pairs.filter((item) => item.status === 'error')) {
   })
 }
 
-const clean =
-  errors.length === 0 &&
-  pairs.every((pair) => pair.status === 'same') &&
-  !stories.some((story) => story.changed)
 writeManifest(
   {
-    verdict: clean ? 'no-difference' : 'review',
+    verdict: captureVerdict({ errors, pairs, stories, force: args.force }),
     diffConditions,
     stories: stories.map((story) => ({
       ...story,

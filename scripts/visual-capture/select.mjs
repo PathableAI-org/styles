@@ -93,6 +93,30 @@ function entryMatchesSlug(entry, slug) {
   return loose(titleSlug(entry.title ?? '')) === loose(slug)
 }
 
+/** The first story of each stories file, in index order. */
+function firstOfEachFile(stories) {
+  return stories.filter(
+    (entry, index) =>
+      stories.findIndex((other) => other.importPath === entry.importPath) ===
+      index,
+  )
+}
+
+/**
+ * The verdict of a finished capture: `no-difference` only when nothing failed,
+ * at least one pair was captured, every pair matched, no story is one the
+ * diff changed and the run was not forced; otherwise `review`.
+ */
+export function captureVerdict({ errors, pairs, stories, force = false }) {
+  const clean =
+    !force &&
+    errors.length === 0 &&
+    pairs.length > 0 &&
+    pairs.every((pair) => pair.status === 'same') &&
+    !stories.some((story) => story.changed)
+  return clean ? 'no-difference' : 'review'
+}
+
 /** Whether a Storybook index entry comes from a stories file the diff changed. */
 function entryFromChangedFile(entry, renderPaths) {
   const importPath = (entry.importPath ?? '').replace(/^(\.\.\/)+|^\.\//, '')
@@ -111,6 +135,8 @@ function entryFromChangedFile(entry, renderPaths) {
  * - `classification`: `classifyChanges(...).paths`, so a manifest or the
  *   lockfile counts only for the workspaces its content changed; without it
  *   every path is classified by name alone
+ * - `force`: when nothing else chose a story and none was asked for, sample
+ *   the first story of each stories file of every Storybook in `indexes`
  *
  * Returns `[{ workspace, id, title, importPath, reasons, changed, mode }]`.
  * `changed` marks a story the pull request changes, which also gets the
@@ -122,6 +148,7 @@ export function chooseStories({
   canonical = [],
   extra = [],
   classification = null,
+  force = false,
 }) {
   const resolved = new Map(
     (classification ?? []).map((item) => [item.path, item]),
@@ -155,7 +182,22 @@ export function chooseStories({
     ...new Set(renderPaths.map(componentSlug).filter((slug) => slug !== null)),
   ]
   const inspectedFor = (path) => resolved.get(path)?.workspaces
-  const sharedFor = (path) => sharedWorkspaces(path, inspectedFor(path))
+  // A render path that names no component, is not shared above and matched no
+  // stories file still counts as shared for its classified workspaces, so it
+  // is never left without a sample.
+  const sharedFor = (path) => {
+    const named = sharedWorkspaces(path, inspectedFor(path))
+    if (named.length > 0 || componentSlug(path) !== null) return named
+    // A changed stories file already chose its own stories.
+    const ownStories = Object.values(indexes).some((entries) =>
+      (entries ?? []).some(
+        (entry) =>
+          entry.type === 'story' && entryFromChangedFile(entry, [path]),
+      ),
+    )
+    if (ownStories) return named
+    return inspectedFor(path) ?? classifyPath(path).workspaces
+  }
   const shared = renderPaths.filter((path) => sharedFor(path).length > 0)
   const workspaces = Object.entries(indexes).filter(([, entries]) => entries)
 
@@ -189,12 +231,7 @@ export function chooseStories({
     // With no canonical story in this Storybook (the React one has none, and
     // the styles list is empty while it is rebuilt), fall back to the first
     // story of each stories file.
-    const firstOfEachFile = stories.filter(
-      (entry, index) =>
-        stories.findIndex((other) => other.importPath === entry.importPath) ===
-        index,
-    )
-    const sample = listed.length > 0 ? listed : firstOfEachFile
+    const sample = listed.length > 0 ? listed : firstOfEachFile(stories)
     const sampleReason =
       listed.length > 0 ? reason : `${reason} First story of its file.`
     for (const entry of sample) add(workspace, entry, sampleReason, false)
@@ -209,6 +246,20 @@ export function chooseStories({
     )
     add(workspace, entry ?? { id }, 'Asked for explicitly.', true)
     if (!entry) chosen.get(`${workspace}:${id}`).inIndex = false
+  }
+
+  if (force && chosen.size === 0) {
+    for (const [workspace, entries] of workspaces) {
+      const stories = entries.filter((entry) => entry.type === 'story')
+      for (const entry of firstOfEachFile(stories)) {
+        add(
+          workspace,
+          entry,
+          'A review was forced. First story of its file.',
+          false,
+        )
+      }
+    }
   }
 
   return [...chosen.values()].sort((a, b) =>
