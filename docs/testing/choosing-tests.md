@@ -13,10 +13,11 @@ Use these questions in order:
    shared component behavior validation.
 3. **Is this behavior specific to one framework API?** Use a package-specific
    test.
-4. **Is this a supported visual state?** Add a deterministic fixed story and
-   visual smoke test coverage.
-5. **Can an automated accessibility rule detect the problem?** Cover the story
-   with the accessibility runner.
+4. **Is this a supported visual state?** Add a deterministic fixed story, or
+   for `@pathableai/styles` a fixture, which becomes one.
+5. **Can an automated accessibility rule detect the problem?** Cover it with
+   an Axe check: the fixture checks for styles, the accessibility runner for
+   React stories.
 6. **Does the requirement involve keyboard operation, focus, or changing
    state?** Add a Storybook `play` test; static accessibility scanning cannot
    prove these behaviors.

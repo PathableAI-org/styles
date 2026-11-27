@@ -31,8 +31,11 @@ Stories import `within`, `userEvent`, `expect`, and related utilities from
 
 ## Automated accessibility checks
 
-Both Storybook applications run Axe through their test-runner configuration.
-Stable stories are checked for detectable accessibility violations. Exceptions
+Both Storybook applications run Axe through their test-runner configuration
+when their suite runs locally. In CI, the styles fixture HTML is checked by the
+Fixtures workflow instead ([HTML fixtures](fixtures.md)), which runs Axe
+against the compiled CSS at desktop and phone widths; Storybook Quality only
+builds the styles Storybook. Exceptions
 must be narrow and documented; an exception does not make the underlying issue
 conformant.
 
@@ -59,9 +62,6 @@ pnpm build:docs-react
 
 # Run the default repository test suite
 pnpm test
-
-# Run visual smoke tests
-pnpm test:visual
 ```
 
 `test:storybook-styles` and `test:storybook-react` drive the corresponding
@@ -73,9 +73,8 @@ or unregistered target is a hard failure, never hidden by a green overall
 result.
 
 The current Storybook test command builds each catalog, serves it locally, and
-runs its stories in a browser. CI runs equivalent build, browser-test,
-accessibility and visual-smoke steps, although workflow wiring may call
-package scripts directly.
+runs its stories in a browser. CI does not run it: pull requests build the
+styles Storybook (Storybook Quality) and run the fixture checks (Fixtures).
 
 ## Shared validation structure
 

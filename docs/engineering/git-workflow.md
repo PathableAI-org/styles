@@ -158,8 +158,8 @@ Evidence each tier needs, in addition to the checks in
     Storybook first and then the React Storybook;
   - `pnpm test:storybook-styles` and/or `pnpm test:storybook-react`, which run
     the Storybook test-runner with rendered accessibility checks;
-  - `pnpm test:visual`, and screenshots or story links in the pull request
-    for each rendering change;
+  - screenshots or story links in the pull request for each rendering
+    change;
   - for `packages/react`: `pnpm --filter @pathableai/react test:unit`,
     `pnpm build`, `pnpm --filter @pathableai/react check:package` and
     `pnpm --filter @pathableai/react check:types`;
@@ -338,11 +338,10 @@ pushes to `main`, and `docs-deploy.yml` on pushes to `main` only:
   stylelint (on a pull request, only the changed `.scss` files) with the
   token lint, and Prettier. Each job but Markdownlint runs only when its
   paths change.
-- `storybook-quality.yml`: the styles Storybook build and its accessibility
-  tests, when anything the HTML Storybook is built from changes. The visual
-  smoke tests, Storybook coverage and the quality
-  gates run then too, but their story lists are empty for now, so they check
-  nothing until stories are added to them.
+- `storybook-quality.yml`: the styles Storybook build only, when anything
+  the HTML Storybook is built from changes. A pass proves the documentation
+  builds, not that it is accessible: axe runs on the fixture HTML in
+  `fixtures.yml`.
 - `fixtures.yml`: every fixture check on every folder; see
   [Fixtures in CI](../testing/fixtures.md#in-ci).
 - `docs-deploy.yml`: on `main`, the token lint and the styles Storybook

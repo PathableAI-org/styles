@@ -42,9 +42,8 @@ jobs:
       # step does not install Playwright, and the only build uses the
       # /styles/ base path while this step serves it at the root. Re-enabling
       # needs install_playwright and an unprefixed build to test, with the
-      # Pages build after the records are saved. Pull requests already run
-      # these accessibility tests (Storybook Quality's accessibility-tests
-      # job).
+      # Pages build after the records are saved. Pull requests run axe on the
+      # fixture HTML in the Fixtures workflow instead.
       - name: Storybook accessibility tests
         if: false
         run: |
