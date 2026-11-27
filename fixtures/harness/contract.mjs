@@ -13,6 +13,10 @@
  *     @pathableai/styles/dist/styles.css (a class without the prefix, such as
  *     the USWDS utility `margin-x-2`, is not checked here: the component-page
  *     check reads every class of a page's examples, fixtures included);
+ *   - a `pathable-` utility class in a fixture (one in dist/utilities.css
+ *     outside a pseudo-class argument, such as `pathable-margin-top-2` or
+ *     `hover:pathable-bg-link`) is not declared by the `classes` front matter
+ *     of any page: a fixture may show only a documented utility;
  *   - a non-default variant in the page's front matter has no fixture in the
  *     folder that uses its modifier class (a utility or token page has no
  *     variants, so this does not apply to it).
@@ -34,10 +38,16 @@ import process from 'node:process'
 
 import { parseFragment } from 'parse5'
 
-import { readCss } from '../../packages/styles/scripts/check-component-pages.mjs'
+import {
+  readCss,
+  readUtilityClasses,
+  undeclaredUtilityClasses,
+  undeclaredUtilityMessage,
+  utilityPatterns,
+} from '../../packages/styles/scripts/check-component-pages.mjs'
 import { readPages } from '../../packages/styles/scripts/component-pages.mjs'
 
-import { stylesCssPath } from './css.mjs'
+import { stylesCssPath, utilitiesCssPath } from './css.mjs'
 import { fixtureFiles, fixturesRoot, foldersFromArgs } from './folders.mjs'
 
 /** A fixture file name: a kebab-case state name ending in `.html`. */
@@ -77,9 +87,12 @@ export function checkFolderEntries(folder, entries) {
 
 /**
  * Checks one folder. `fixtures` maps file name to markup, `page` is the parsed
- * component page (or undefined) and `css` is readCss() output. Returns errors.
+ * component page (or undefined) and `css` is readCss() output. `utility` is
+ * `{ classes, patterns }`: the utility classes of dist/utilities.css and the
+ * patterns every page declares (omitted: utility citations are not checked).
+ * Returns errors.
  */
-export function checkFolder(folder, fixtures, page, css) {
+export function checkFolder(folder, fixtures, page, css, utility) {
   if (!page) {
     return [
       `${folder}/: no component page components/${folder}.md; a fixture folder must be named after a page slug`,
@@ -95,7 +108,17 @@ export function checkFolder(folder, fixtures, page, css) {
         `${folder}/${file}: a fixture file name must be a kebab-case state name, such as no-actions.html`,
       )
     }
-    for (const name of classesIn(html)) {
+    const classes = classesIn(html)
+    if (utility) {
+      for (const name of undeclaredUtilityClasses(
+        classes,
+        utility.classes,
+        utility.patterns,
+      )) {
+        errors.push(`${folder}/${file}: ${undeclaredUtilityMessage(name)}`)
+      }
+    }
+    for (const name of classes) {
       used.add(name)
       if (name.startsWith('pathable-') && !css.classes.has(name)) {
         errors.push(
@@ -123,7 +146,12 @@ export function checkFolder(folder, fixtures, page, css) {
 }
 
 export async function checkFolders(folders, root = fixturesRoot) {
-  const pages = new Map((await readPages()).map((page) => [page.slug, page]))
+  const allPages = await readPages()
+  const pages = new Map(allPages.map((page) => [page.slug, page]))
+  const utility = {
+    classes: readUtilityClasses(readFileSync(utilitiesCssPath(), 'utf8')),
+    patterns: utilityPatterns(allPages),
+  }
   const css = readCss(readFileSync(stylesCssPath(), 'utf8'))
   return folders.flatMap((folder) => {
     if (!existsSync(join(root, folder)))
@@ -139,7 +167,7 @@ export async function checkFolders(folders, root = fixturesRoot) {
     }).map((entry) => ({ name: entry.name, isDirectory: entry.isDirectory() }))
     return [
       ...checkFolderEntries(folder, entries),
-      ...checkFolder(folder, fixtures, pages.get(folder), css),
+      ...checkFolder(folder, fixtures, pages.get(folder), css, utility),
     ]
   })
 }

@@ -43,7 +43,10 @@ fixtures/
   for a utility page (`utilities-margin-and-padding`) and `tokens-<uswds path>`
   for a token page (`tokens-spacing-units`), which show unprefixed USWDS
   classes such as `margin-x-2` or `bg-primary` rather than `pathable-*`
-  classes. The contract check reads only `pathable-*` classes and only the
+  classes, apart from the `pathable-` utilities a page declares in `classes`
+  (such as `pathable-bg-link`). The contract check fails a `pathable-`
+  utility class that no page declares, reads the other `pathable-*` classes
+  against the stylesheet and checks only the
   variants of a component page, so a utility or token folder owes no modifier
   fixtures; the component-page check still requires every class in its
   examples to be in the compiled CSS. On Storybook each fixture is a story
@@ -74,7 +77,7 @@ fixtures/
 - No `html-validate-*` directive comments. The check rejects them; fix the
   markup, or ask a person if a rule seems wrong.
 - No `style` attributes. Where the page asks the consumer to adjust something,
-  use a documented class, such as `pathable-margin-0`.
+  use a documented class, such as `margin-0`.
 - Literal IDs, unique within the fixture and prefixed with the folder and
   state where they could clash, such as `activity-grouped-today`. No generated
   or placeholder IDs.
