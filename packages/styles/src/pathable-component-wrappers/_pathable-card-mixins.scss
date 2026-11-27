@@ -6,7 +6,7 @@
 // Media scales to the card width at every viewport instead of keeping an
 // intrinsic width attribute that overflows narrow cards. A flag card crops its
 // media to a fixed column from the tablet breakpoint up while the card is wide
-// enough for it (see the flag rules below); a narrower flag card, or one below
+// enough for it (see the flag rules in pathable-card.scss); a narrower flag card, or one below
 // the breakpoint, is sized like any other card.
 @mixin pathable-card-media-fit {
   > img,
