@@ -303,10 +303,13 @@ reset (`html { box-sizing: border-box }` and `*, *::before, *::after
 the setting off, each USWDS component that calls `border-box-sizing` is
 border-box and its descendants and pseudo-elements inherit that, so content a
 consumer places inside a form, fieldset, alert body, table, prose table,
-summary box, search, side navigation, footer, tag, button, hint or input group
-is border-box too. `this-border-box-sizing` sets only the element itself, as on
-`grid-container` (whose `max-width` then includes its padding) and the social
-link. The card container is the exception: it takes USWDS's declarations
+summary box, search, side navigation, footer, tag, button, hint, input group,
+checkbox label or radio label is border-box too. A footer's social links are
+border-box by inheriting from the footer, so a social link outside a footer
+stays content-box. `this-border-box-sizing` sets only the element itself: it
+makes `grid-container` border-box (its `max-width` then includes its padding),
+and also `grid-row`, every `grid-col` class and the direct children of a
+`grid-gap` row (their gap padding is then inside their width). The card container is the exception: it takes USWDS's declarations
 without the mixin, so card content keeps the sizing it has outside a card, and
 only the card's own parts are border-box. Elements no mixin covers, such as the
 pagination overflow item, the step indicator counter and the process list
