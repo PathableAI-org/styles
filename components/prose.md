@@ -65,14 +65,8 @@ closest to what you need.
 `pathable-prose` has no modifier classes. Sortable table headers need
 JavaScript and are not part of this component.
 
-## Tokens
-
-| What                    | Value       |
-| ----------------------- | ----------- |
-| Heading weight, h1 – h5 | 400, normal |
-
-The sizes, line heights and spacing on this page are fixed in the stylesheet
-and relative to the container's font size.
+The headings h1 to h5 have weight 400 (normal). The sizes, line heights and
+spacing are relative to the container's font size.
 
 ## Composition
 

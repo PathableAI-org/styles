@@ -50,8 +50,6 @@ ${REQUIRED_SECTIONS.filter((name) => name !== 'Variants')
   .map((name) => `## ${name}\n\nText.\n`)
   .join('\n')}
 
-Its colour is \`--widget-colour\`.
-
 \`\`\`html
 <span class="pathable-widget pathable-widget--loud"></span>
 \`\`\`
@@ -74,7 +72,7 @@ const page = (markdown = frontMatter + body) => ({
 const css = (extra = '') =>
   readCss(`
     /* .pathable-widget--ghost is only named in this comment */
-    .pathable-widget { color: var(--widget-colour, red); }
+    .pathable-widget { color: red; }
     .pathable-widget--loud { font-weight: bold; }
     ${extra}
   `)
@@ -170,7 +168,7 @@ test('reads classes from selectors, not from comments', () => {
 test('a modifier named only in a comment does not count as defined', () => {
   const onlyComment = readCss(`
     /* .pathable-widget--loud — the loud one */
-    .pathable-widget { color: var(--widget-colour); }
+    .pathable-widget { color: red; }
   `)
   const errors = checkPage(page(), facts({ css: onlyComment }))
   assert.ok(
@@ -220,7 +218,7 @@ test('the body must agree with the front matter it repeats', () => {
   ])
 })
 
-test('classes and tokens named in prose must exist', () => {
+test('classes named in prose must exist, and no custom property is named', () => {
   const errors = checkPage(
     page(
       `${frontMatter + body}\nUse \`pathable-gadget\` and \`--gadget-colour\`.\n`,
@@ -229,7 +227,17 @@ test('classes and tokens named in prose must exist', () => {
   )
   assert.deepEqual(errors, [
     'the page names `pathable-gadget`, which the compiled CSS does not define',
-    "the page names `--gadget-colour`, which the component's rules do not use",
+    'the page names `--gadget-colour`, but a page names no custom property: none is public',
+  ])
+})
+
+test('a static page naming a custom property in prose fails', () => {
+  const errors = checkPage(
+    page(`${frontMatter + body}\nSet \`--pathable-color-text\`.\n`),
+    facts(),
+  )
+  assert.deepEqual(errors, [
+    'the page names `--pathable-color-text`, but a page names no custom property: none is public',
   ])
 })
 
@@ -738,7 +746,7 @@ test('a utility or token page may not name a custom property or a usa- class', (
   assert.ok(
     includes(
       checkPage(named, utilityFacts()),
-      'do not document custom properties',
+      'a page names no custom property',
     ),
   )
   const prefixed = utility(

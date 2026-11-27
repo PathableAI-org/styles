@@ -87,8 +87,8 @@ class.
 ## Guarantees
 
 The guarantees are the list in the front matter at the top of this page. The
-colours are fixed in the stylesheet. The figures on this page are those of the
-default theme.
+colours are fixed when the package is built. The pixel figures on this page
+assume a 16 px root font size.
 
 ## The consumer owns
 

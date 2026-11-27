@@ -105,7 +105,7 @@ style axis.
 
 <!-- examples -->
 
-## Tokens
+## Composition
 
 | What                    | Value                                                                                        |
 | ----------------------- | -------------------------------------------------------------------------------------------- |
@@ -119,12 +119,7 @@ style axis.
 | Focus ring              | Bright Blue Brooks, #4899e8, or the surface's focus ring colour on a `pathable-bg-*` surface |
 
 The colour names and hex values are on [tokens-color.md](tokens-color.md). The
-hover and pressed colours, the disabled colours, the padding, the
-corner radius, the sizes and the inverse colours are fixed values in the
-stylesheet. The pixel figures on
-this page are those of the default theme.
-
-## Composition
+pixel figures on this page assume a 16 px root font size.
 
 - Put the class on a `<button>` for an action, and on an `<a href>` only when
   the control goes to another page. A link has no `type`, no `disabled` and no

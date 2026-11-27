@@ -72,10 +72,8 @@ that should keep a fixed size whatever the text around it does.
 | size | `size-8`  | `pathable-icon--size-8` | 64 px square                        |
 | size | `size-9`  | `pathable-icon--size-9` | 72 px square                        |
 
-## Tokens
-
-None. The size comes from the font size and the colour from the text colour
-where the icon sits.
+The size comes from the font size and the colour from the text colour where
+the icon sits.
 
 ## The sprite
 

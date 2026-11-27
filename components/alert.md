@@ -126,7 +126,7 @@ Put the alert type in the opening words of the heading, or of the message
 when there is no heading, such as "Warning: benefits recertification due
 soon". Colour and the icon are never the only cue.
 
-## Tokens
+## Composition
 
 | What                                  | Value                                                                      |
 | ------------------------------------- | -------------------------------------------------------------------------- |
@@ -137,11 +137,9 @@ soon". Colour and the icon are never the only cue.
 | Focus ring on emergency               | White, #ffffff, the text colour of the alert                               |
 | Focus ring on info and plain alerts   | PathAble Blue, #00365c                                                     |
 
-The pixel figures on this page are those of the default theme. The info and
-emergency colours come from the theme's colour palette, shown on
-[tokens-color.md](tokens-color.md).
-
-## Composition
+The info and emergency colours are fixed when the package is built and are
+named on [tokens-color.md](tokens-color.md). The pixel figures on this page
+assume a 16 px root font size.
 
 - `pathable-alert__body`: required, the only child of `pathable-alert`. It
   carries the padding, the icon and the indent of its children.

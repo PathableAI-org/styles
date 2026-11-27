@@ -73,10 +73,8 @@ so bulleted and numbered lists are not variants.
 | marker | `default`  | none                      | The browser's bullets or numbers, a 3ch indent and spacing around the list       |
 | marker | `unstyled` | `pathable-list--unstyled` | No markers, no indent and no outer margin, for items that read as separate lines |
 
-## Tokens
-
-None. Every value is fixed in the stylesheet and relative to the list's own
-font size (`em`, `ch`, `ex`), so the spacing scales with the text it inherits.
+Every value is relative to the list's own font size (`em`, `ch`, `ex`), so the
+spacing scales with the text it inherits.
 
 ## Composition
 

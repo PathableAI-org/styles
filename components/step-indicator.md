@@ -88,12 +88,9 @@ closest to what you need.
 The state of each step is set on the segment, not on the block; see
 Composition.
 
-## Tokens
-
-None. The colours, the Nunito font, sizes and spacing are fixed values in the
-stylesheet. The bar and heading colours are: PathAble Blue `#00365c` for the current step, its darker grade
-`#001e33` for complete steps, `#919191` for the upcoming bar and `#565c65` for
-the upcoming label text.
+The Nunito font is used throughout. The bar and label colours are PathAble Blue
+`#00365c` for the current step, its darker grade `#001e33` for complete steps,
+`#919191` for the upcoming bar and `#565c65` for the upcoming label text.
 
 ## Composition
 
