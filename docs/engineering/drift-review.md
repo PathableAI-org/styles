@@ -137,7 +137,6 @@ the semantic layer, component custom properties and the default theme.
   - `packages/styles/src/_elevation.scss`
   - `packages/styles/src/_fonts.scss`
   - `packages/styles/src/_semantic.scss`
-  - `packages/styles/src/_components-custom-properties.scss`
   - `packages/styles/src/_uswds-theme.scss`
   - `packages/styles/src/theme-default.scss`
   - `packages/styles/src/index.scss`

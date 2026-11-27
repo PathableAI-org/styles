@@ -98,8 +98,8 @@ to these rules:
 2. **Lists that hold rows are lists with a name.** Use `<ul role="list">` and
    `<li>`. The `role="list"` repeats the `<ul>` element's native role on
    purpose: WebKit (Safari with VoiceOver) exposes a `<ul>` whose items draw
-   no list marker as a plain group, and rows such as `pathable-activity-row`
-   are flex boxes with no marker, so the explicit role keeps the list and its
+   no list marker as a plain group, and rows styled as flex boxes have no
+   marker, so the explicit role keeps the list and its
    item count announced. The `<li>` keeps its native `listitem` role with no
    attribute. Give each list an accessible name:
    - a standalone list gets `aria-label` with meaningful text, such as
