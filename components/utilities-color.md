@@ -253,7 +253,8 @@ On `bg-secondary` and `bg-accent-cool` use `text-primary-darker` (6.12:1 and
   [surface table](#surface-classes-with-a-focus-ring), which sets a
   contrasting ring.
 - Links on a coloured surface. A `pathable-link` keeps text contrast in every
-  state only on `pathable-bg-base` and `pathable-bg-surface`. On every other
+  state only on `pathable-bg-base` and `pathable-bg-surface` (and on
+  `pathable-bg-transparent` over a light background). On every other
   `pathable-bg-*` surface, `pathable-bg-primary` and `pathable-bg-focus-ring`
   included, it loses contrast at rest, on hover or once visited, and a text
   colour class on the link does not fix that. Put links on `pathable-bg-base`
