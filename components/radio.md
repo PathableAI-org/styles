@@ -21,7 +21,7 @@ guarantees:
   - id: root-block
     claim: The root is display block, so each radio starts on its own line, unless the element is a bare input or has the hidden attribute.
   - id: description
-    claim: A label description is a block inside the label, 0.87rem (13.9 px at a 16 px root) with a 0.5rem (8 px) top margin.
+    claim: A label description is a block inside the label, 0.88rem (the 2xs size, 14.08 px at a 16 px root) with a 0.5rem (8 px) top margin.
   - id: tile
     claim: With pathable-radio__input--tile on the input, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the circle drawn inside the start padding.
   - id: tile-checked

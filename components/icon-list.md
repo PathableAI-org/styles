@@ -10,7 +10,7 @@ variants:
     values: [default, size-lg]
 guarantees:
   - id: list-reset
-    claim: The list has no bullets, no margin and no left padding, a body font of about 16 px (0.99rem) with 1.6 line height, and a maximum width of 72ex.
+    claim: The list has no bullets, no margin and no left padding, a body font of 1rem (the sm size, 16 px at a 16 px root) with 1.6 line height, and a maximum width of 72ex.
   - id: item-row
     claim: Each item is a flex row, with 12 px of space above every item except the first.
   - id: content-gap
@@ -22,7 +22,7 @@ guarantees:
   - id: title
     claim: The class pathable-icon-list__title sets a heading in the heading typeface at regular weight (400) and the body size with 1.2 line height, no bottom margin, and 8 px above the element that follows it.
   - id: size-lg
-    claim: The class pathable-icon-list--size-lg makes the icon 2.235rem square, the content text 1.49rem and the gap between icon and content 0.596rem, and removes the 72ex maximum width.
+    claim: The class pathable-icon-list--size-lg makes the icon 2.25rem square, the content text 1.5rem (the lg size) and the gap between icon and content 0.6rem, and removes the 72ex maximum width.
 ---
 
 # Icon list
@@ -67,7 +67,7 @@ Add at most one modifier class from the size axis to `pathable-icon-list`.
 | Axis | Value     | Class                         | What it is for                      |
 | ---- | --------- | ----------------------------- | ----------------------------------- |
 | size | `default` | none                          | A 1.5rem icon beside body-size text |
-| size | `size-lg` | `pathable-icon-list--size-lg` | A 2.235rem icon beside 1.49rem text |
+| size | `size-lg` | `pathable-icon-list--size-lg` | A 2.25rem icon beside 1.5rem text   |
 
 The icon takes the text colour of the list. To colour the icons, set `color`
 on `pathable-icon-list__icon`.

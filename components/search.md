@@ -20,7 +20,7 @@ guarantees:
   - id: touch-target
     claim: At a viewport width of 639.84 px or narrower, or on a coarse pointer, the field and the submit button inside the search are at least 2.75rem (44 px) tall and the button is at least 2.75rem wide.
   - id: big-size
-    claim: With the big modifier, from a viewport width of 480 px the field and the submit button are 3rem (48 px) tall, the field text is 0.99rem, the button text is 1.49rem and the button has 2rem (32 px) of padding on each side; below 480 px the big search matches the default.
+    claim: With the big modifier, from a viewport width of 480 px the field and the submit button are 3rem (48 px) tall, the field text is 1rem (the sm size), the button text is 1.5rem (the lg size) and the button has 2rem (32 px) of padding on each side; below 480 px the big search matches the default.
   - id: small-size
     claim: With the small modifier the submit button shows only its icon at every width, with 0.75rem (12 px) of padding on each side and a width of at least 3rem (48 px).
   - id: scoped-input-rules

@@ -17,7 +17,7 @@ guarantees:
   - id: inside-prose
     claim: A list that is a direct child of pathable-prose renders the same as one outside it, with the same list padding, item spacing, markers and connector line.
   - id: heading-style
-    claim: The heading is 1.49rem, PathAble Blue (#00365c), with no margin, and the element after it has a 0.25rem top margin.
+    claim: The heading is 1.5rem (the lg size), PathAble Blue (#00365c), with no margin, and the element after it has a 0.25rem top margin.
   - id: heading-typeface
     claim: The heading is set in the brand heading typeface at normal weight, Fredoka Regular, with weight 400.
   - id: custom-size
@@ -100,8 +100,8 @@ heading, and its lightest grade (`#e6ebef`) for the line.
   between its items. The first and last child of an item have no outer margin.
 - The markers are placed against the list's left edge. Do not add left padding
   to the list, or the markers and the line come apart.
-- The list's text is Nunito at 0.99rem with a line height of 1.6; the marker
-  numbers are 1.49rem.
+- The list's text is Nunito at 1rem (the sm size) with a line height of 1.6; the marker
+  numbers are 1.5rem.
 
 ## Guarantees
 
