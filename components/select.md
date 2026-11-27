@@ -2,14 +2,14 @@
 name: Select
 slug: select
 kind: static
-summary: A native drop-down list in a bordered box with the browser's own arrow, for choosing one value from a short fixed set.
+summary: A native drop-down list in a bordered box with an arrow icon, for choosing one value from a short fixed set.
 styles-class: pathable-select
 variants: []
 guarantees:
   - id: box
-    claim: The select is a block 40 px tall that fills its container up to 480 px, with a 1 px border, a white background, square corners, an 8 px top margin and 8 px of padding on the right.
+    claim: The select is a block 40 px tall that fills its container up to 480 px, with a 1 px border, a white background, square corners, an 8 px top margin and 32 px of padding on the right for the arrow.
   - id: arrow
-    claim: A single select shows the browser's own arrow and the stylesheet draws no icon of its own, so the arrow's look follows the browser and operating system.
+    claim: The select hides the browser's own arrow and draws an up-and-down arrow icon 20 px square, 8 px from the right edge and centred vertically.
   - id: text
     claim: The selected value is set in Nunito at the form text size in the theme's PathAble Blue.
   - id: focus-ring
@@ -24,8 +24,8 @@ guarantees:
 
 # Select
 
-A native drop-down list in a bordered box with the browser's own arrow, for
-choosing one value from a short fixed set. Put `pathable-select` on a `<select>` element
+A native drop-down list in a bordered box with an arrow icon, for choosing one
+value from a short fixed set. Put `pathable-select` on a `<select>` element
 with `<option>` children. The class adds no role: the element's native
 combobox or list box role is kept.
 
@@ -70,6 +70,10 @@ to what you need.
 The select has no modifier classes: there is one look. The error state uses
 `pathable-input--error` together with the group and label modifiers, and a
 disabled select uses the `disabled` attribute.
+
+In browsers that support `appearance: base-select` (currently Chromium) the
+arrow is drawn with `::picker-icon` and the opened list is the browser's
+base-select picker. Elsewhere the arrow is the usual background image.
 
 ## Composition
 
