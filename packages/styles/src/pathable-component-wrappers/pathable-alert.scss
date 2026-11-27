@@ -65,6 +65,27 @@
   @include icons.in-flow-icon-slim;
 }
 
+// Inside pathable-dark-background, usa-dark-background sets `a` at (0,1,1) and
+// `a:visited`, `a:hover` and `a:active` at (0,2,1), which out-rank
+// `.pathable-link` (0,1,0) and its hover and active rules (0,2,0). These rules
+// put the link colours back at (0,2,0) and (0,3,0), just above the dark
+// container. They stay at or below the status alerts' and wrappers' own link
+// rules at (0,3,0), the status rules later in this file and pathable-site-alert's
+// later in the bundle, which win ties by source order, so this block must stay
+// before them. The visited colour needs no rule: pathable-link.scss's
+// `.pathable-link:visited:not(:hover, :active)` (0,3,0) already wins.
+:where(.pathable-dark-background) .pathable-alert__body .pathable-link {
+  color: var(--pathable-color-link);
+
+  &:hover {
+    color: color($theme-link-hover-color);
+  }
+
+  &:active {
+    color: color($theme-link-active-color);
+  }
+}
+
 // The success, warning and error alerts fill the whole alert, body included,
 // with the PathAble status colour, where usa-alert uses a pale tint. Text,
 // icon and links all take the status text colour, which has at least 4.5:1 on
@@ -117,6 +138,14 @@ $-status-fills: (
 // links; the Tech Teal link colour is under 2:1 on the emergency red.
 .pathable-alert--emergency .pathable-alert__body .pathable-link,
 .pathable-alert--emergency .pathable-alert__body .pathable-link:visited {
+  color: inherit;
+}
+
+// Inside pathable-dark-background, usa-dark-background sets white text on
+// every p and span and pale link colours on every a, at (0,1,1) and (0,2,1).
+// These rules, at (0,2,0) and above, win over them so the alert keeps its own
+// colours: text takes the alert body's colour for every status.
+.pathable-dark-background .pathable-alert__body :where(p, span) {
   color: inherit;
 }
 
