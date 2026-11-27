@@ -123,7 +123,7 @@ the same pull request.
 ### `tokens`
 
 Tokens and foundations: color, typography, spacing, radius, elevation, fonts,
-the semantic layer, component custom properties and the default theme.
+the semantic layer and the default theme.
 
 - Owners: [`packages/styles/AGENTS.md`](../../packages/styles/AGENTS.md) and
   [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md)

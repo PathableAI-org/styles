@@ -12,8 +12,8 @@
 .pathable-dark-background {
   @extend .usa-dark-background;
 
-  // Content with no colour of its own, such as pathable-text on a <div> or
-  // <li>, takes this colour.
+  // Content with no colour of its own, such as text in a <div> or <li>, takes
+  // this colour.
   color: color('white');
 
   // A dark container resets the surface focus ring, so controls in it fall
