@@ -105,11 +105,8 @@ form caps every group at its own width too: from a 480 px viewport a
 wide as the form. Below 480 px the form fills its container, and a group is
 as wide as the form only when its own cap is wider.
 
-## Tokens
-
-The group has none of its own. The prefix and suffix text uses the muted text
-colour, kept at 4.5:1 or more against white for the affix-contrast guarantee.
-Every other value is fixed in the stylesheet.
+The prefix and suffix text uses the muted text colour, kept at 4.5:1 or more
+against white for the affix-contrast guarantee.
 
 ## Composition
 

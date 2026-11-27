@@ -112,7 +112,7 @@ There is one modifier, which is on the input and not on the wrapper: `pathable-c
 The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour.
 
-The pixel and colour figures on this page are those of the default theme.
+The pixel figures on this page assume a 16 px root font size.
 
 ## The consumer owns
 

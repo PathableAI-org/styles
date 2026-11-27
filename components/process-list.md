@@ -76,16 +76,9 @@ in what goes inside each item:
 - Custom size: type and spacing utilities on the heading, the description and
   the item make the steps larger, as in the custom-size example.
 
-## Tokens
-
-| What                | Value       |
-| ------------------- | ----------- |
-| Heading typeface    | Fredoka     |
-| Heading font weight | 400, normal |
-
-The marker, the connector line and the heading colour are fixed values in
-the stylesheet: PathAble Blue (`#00365c`) for the marker ring, the numeral and the
-heading, and its lightest grade (`#e6ebef`) for the line.
+The heading typeface is Fredoka at weight 400 (normal). The marker ring, the
+numeral and the heading are PathAble Blue (`#00365c`), and the connector line is
+its lightest grade (`#e6ebef`).
 
 ## Composition
 
@@ -109,7 +102,7 @@ The guarantees are the list in the front matter at the top of this page. The
 marker is sized as border-box so its 0.25rem border sits inside the 2.5rem,
 which centres the connector line on it; a list directly inside `pathable-prose`
 is given the same rules as one outside it; and the heading takes the Fredoka
-Regular typeface. The pixel figures are those of the default theme.
+Regular typeface. The pixel figures on this page assume a 16 px root font size.
 
 ## The consumer owns
 

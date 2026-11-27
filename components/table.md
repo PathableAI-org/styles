@@ -133,8 +133,8 @@ wraps the table; see Composition.
 The guarantees are the list in the front matter at the top of this page. Each
 is expected behaviour.
 
-The rem figures scale with the root font size. The pixel and rem figures on
-this page are those of the default theme.
+The rem figures scale with the root font size. The pixel figures on this page
+assume a 16 px root font size.
 
 ## The consumer owns
 

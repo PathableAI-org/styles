@@ -71,11 +71,6 @@ filled and the alternatives use `pathable-button--outline`.
 
 <!-- examples -->
 
-## Tokens
-
-None. The group's spacing is fixed: its 480 px breakpoint and its margins
-are fixed in the stylesheet.
-
 ## Composition
 
 - Make the group a `<ul>` and put each `pathable-button` or button-styled
