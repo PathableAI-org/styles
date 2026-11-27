@@ -393,7 +393,7 @@ test('counts only wrapper files named after a class the CSS defines', () => {
 test('renders the index as one unpadded line per page', () => {
   assert.ok(
     renderIndex([page()]).includes(
-      '\n- [Widget](widget.md) (`pathable-widget`, static): A test widget.\n',
+      '\n- [Widget (`pathable-widget`)](widget.md) (static): A test widget.\n',
     ),
   )
 })
