@@ -21,6 +21,12 @@
   // control is drawn natively there and ignores wrapping and `1lh`.
   @media not (forced-colors: active) {
     &:where(:not([multiple])) {
+      // Use the browser's own arrow. A background image on a <select> makes
+      // axe's color-contrast result incomplete (#736); the native arrow has
+      // none. The icon's 32px of right padding is no longer needed.
+      appearance: auto;
+      background-image: none;
+      padding-right: units(1);
       // USWDS fixes the control's height and keeps its value on one line, so at
       // larger text sizes on narrow screens a long selected value is cut off
       // behind the arrow area (WCAG 1.4.4). Let the value wrap and the control

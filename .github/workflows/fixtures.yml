@@ -33,12 +33,8 @@ permissions:
 env:
   # Folders whose axe step is held back by a maintainer-accepted exception,
   # each with its tracking issue. Every other check still runs for them.
-  # Space-separated.
-  #   memorable-date, select: the pathable-select arrow background image makes
-  #   axe's color-contrast rule incomplete (#736).
-  AXE_DEFERRED_FOLDERS: >-
-    memorable-date
-    select
+  # Space-separated. Currently empty: no folder has an accepted exception.
+  AXE_DEFERRED_FOLDERS: ''
 
 jobs:
   fixtures:

@@ -30,9 +30,8 @@ Each check takes a list of component folders and defaults to every folder.
 | Harness tests | `pnpm --filter @pathableai/fixtures test`           | The harness's own unit tests |
 | All three     | `pnpm --filter @pathableai/fixtures check`          | Every folder                 |
 
-Run locally, axe also checks the folders CI defers (see [In CI](#in-ci)), so
-until #736 is settled it reports incomplete colour-contrast results for
-`select` and `memorable-date` and exits 1. Any other result is a real failure.
+Run locally, axe also checks any folders CI defers (see [In CI](#in-ci)); none
+are deferred now, so any violation or incomplete result is a real failure.
 
 - **html-validate** uses the `html-validate:recommended` and
   `html-validate:a11y` presets, plus `no-missing-references`, with
@@ -80,9 +79,8 @@ workflow itself, and on every push to `main`. Its `fixtures` job:
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
 4. runs html-validate and the contract check on every folder;
-5. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, currently
-   `memorable-date` and `select`, until #736 settles the select arrow's
-   incomplete colour-contrast result; every other check still runs for them;
+5. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, which
+   currently lists no folder;
 6. uploads the axe report as the `fixtures-axe-report` artifact.
 
 A folder joins `AXE_DEFERRED_FOLDERS` only with a maintainer's acceptance and
