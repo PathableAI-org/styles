@@ -25,11 +25,6 @@
 .pathable-alert__body {
   @extend .usa-alert__body;
 
-  // usa-alert sizes the body's minimum height for border-box sizing, which
-  // USWDS normally sets on every element. The bundle does not, so a one-line
-  // alert grew 32 px taller than its icon needs.
-  box-sizing: border-box;
-
   // A long word in the heading, enlarged by browser text zoom on a narrow
   // screen, wraps instead of running out of the alert, where white text on
   // the emergency and error alerts would land on the page behind.

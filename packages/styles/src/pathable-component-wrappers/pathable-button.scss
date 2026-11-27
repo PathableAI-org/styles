@@ -15,7 +15,6 @@
 .pathable-button {
   @extend .usa-button;
   // Brand opinion: PathAble Blue primary CTA
-  box-sizing: border-box;
   background-color: var(--pathable-color-action-primary-bg);
   color: var(--pathable-color-action-primary-text);
 }

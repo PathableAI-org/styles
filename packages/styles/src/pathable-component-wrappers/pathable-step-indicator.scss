@@ -47,7 +47,7 @@ $pathable-step-indicator-labels: '.pathable-step-indicator__segment-label';
   @extend .usa-step-indicator__current-step !optional;
 
   // USWDS designs the counter for border-box and gets it from a global reset
-  // this package does not emit. Without it the padding is added to the 2.5rem.
+  // this package does not emit; USWDS's border-box mixins do not cover it. Without it the padding is added to the 2.5rem.
   // Border-box keeps the circle at 2.5rem with the digit centred.
   box-sizing: border-box;
 }
@@ -110,7 +110,7 @@ $pathable-step-indicator-labels: '.pathable-step-indicator__segment-label';
 
     &::before {
       // USWDS designs the circle for border-box and gets it from a global reset
-      // this package does not emit. Without it the padding is added to the
+      // this package does not emit; USWDS's border-box mixins do not cover it. Without it the padding is added to the
       // circle size.
       box-sizing: border-box;
       justify-self: start;

@@ -5,6 +5,7 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
+@use 'sass:math';
 @use 'uswds-core' as *;
 
 @use 'usa-card/src/styles';
@@ -89,14 +90,23 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
 }
 
 .pathable-card__container {
-  @extend .usa-card__container;
-
-  // USWDS designs the container for border-box and gets it from a global reset
-  // this package does not emit (its `border-box-sizing` mixin emits nothing
-  // while the theme's global border-box setting is on). In a card group that is
-  // a flex row (from 40em) the card has a definite height, and without
+  // USWDS's `.usa-card__container` declarations, without extending it and
+  // without its `border-box-sizing` mixin. With the theme's border-box setting
+  // that mixin also emits `* { box-sizing: inherit }` for every descendant, so
+  // content a consumer places in a card would lose the sizes it has outside
+  // one. The container gets border-box directly instead: in a card group that
+  // is a flex row (from 40em) the card has a definite height, and without
   // border-box the container's `height: 100%` plus its two 2px borders would
   // reach 4px past the card into the margin below it.
+  @include set-text-and-bg('white');
+  @include typeset($theme-card-font-family);
+  @include u-border($theme-card-border-width, $theme-card-border-color);
+  @include u-display('flex');
+  @include u-height('full');
+  @include u-flex('column');
+  @include u-margin-x(math.div($theme-card-gap, 2));
+  @include u-position('relative');
+  @include u-radius($theme-card-border-radius);
   box-sizing: border-box;
 
   // Light container: reset the surface focus ring (see pathable-bg-link in
@@ -104,9 +114,9 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   --pathable-surface-focus-ring: initial;
 }
 
-// USWDS assumes global border-box sizing, which this package does not emit, so
-// the card's own parts get it here: the flag media column's 15rem includes its
-// inset padding, for one. Only the parts, not the USWDS mixin's rule for every
+// USWDS's card parts are not covered by its border-box mixins, so the card's
+// own parts get border-box here: the flag media column's 15rem includes its
+// inset padding, for one. Only the parts, not a rule for every
 // descendant: content a consumer places in a card keeps the sizes it has
 // outside one. At no specificity, so any rule that sets its own box-sizing wins.
 :where(
@@ -228,6 +238,15 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
     min-width: 0;
     max-width: 100%;
   }
+}
+
+// USWDS's `.usa-card:not(.usa-card--flag) .usa-card__container > :only-child`
+// rule, for the container this file no longer extends. The `.usa-card--flag`
+// in `:not()` is kept as USWDS writes it, so it matches every `.pathable-card`
+// as it did when the container was extended, and a flag card's own rules below
+// override it.
+.pathable-card:not(.usa-card--flag) .pathable-card__container > :only-child {
+  @include u-padding($theme-card-padding-perimeter);
 }
 
 // USWDS gives a card's only child the perimeter padding, except in a flag card,
