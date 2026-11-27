@@ -195,7 +195,7 @@ person to look. The harness has no exceptions mechanism and no allowlist; the
 only exception is in CI, where the fixtures workflow runs axe on every folder
 except those listed in `AXE_DEFERRED_FOLDERS` in
 `.github/workflows/fixtures.yml`, each with a maintainer's acceptance and a
-tracking issue, currently `memorable-date` and `select` (#736) ([fixtures in CI](../docs/testing/fixtures.md#in-ci)). Each
+tracking issue; it currently lists no folder ([fixtures in CI](../docs/testing/fixtures.md#in-ci)). Each
 violation and incomplete result is printed with its nodes, and in GitHub
 Actions it is also listed in the job summary. Only these page-level
 rules are off, because a fixture is a fragment of a page, not a page:

@@ -71,6 +71,10 @@ The select has no modifier classes: there is one look. The error state uses
 `pathable-input--error` together with the group and label modifiers, and a
 disabled select uses the `disabled` attribute.
 
+In browsers that support `appearance: base-select` (currently Chromium) the
+closed select's arrow is drawn with `::picker-icon`. Elsewhere the arrow is the
+usual background image. The opened list is the browser's own in both.
+
 ## Composition
 
 - `pathable-label`: names the select; connect it with `for` and the select's

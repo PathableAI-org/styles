@@ -33,6 +33,37 @@
       padding-block: max(#{units(0.5)}, calc((#{units(5)} - 2px - 1lh) / 2));
       white-space: normal;
 
+      // Draw the arrow with ::picker-icon where the browser supports it. A
+      // background image on a <select> makes axe's color-contrast result
+      // incomplete (#736); a mask on the pseudo-element does not. Other
+      // browsers keep the USWDS background-image arrow.
+      @supports (appearance: base-select) {
+        appearance: base-select;
+        background-image: none;
+        // The icon is out of flow, so the select keeps the USWDS padding (32px
+        // on the right) and the value wraps clear of the icon.
+        // base-select lays the value out at the top; centre it as USWDS does
+        // in the taller 44px control on narrow screens.
+        align-items: center;
+        display: flex;
+        position: relative;
+
+        &::picker-icon {
+          // Black, as the USWDS icon is, not the select's text colour.
+          background-color: color('black');
+          content: '';
+          display: block;
+          height: units(2.5);
+          mask: url('#{$theme-image-path}/usa-icons/unfold_more.svg') center /
+            contain no-repeat;
+          position: absolute;
+          right: units(1);
+          top: 50%;
+          transform: translateY(-50%);
+          width: units(2.5);
+        }
+      }
+
       // The error state's thicker border would otherwise add to that height,
       // so size the padding for the error border on both sides instead.
       &.pathable-input--error {
