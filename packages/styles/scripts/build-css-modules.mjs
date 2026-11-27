@@ -83,29 +83,73 @@ export function pathableClasses(css) {
   return classes
 }
 
+/** Per class, how many complex selectors (selector-list items) in `css` name it. */
+function selectorCounts(css) {
+  const counts = new Map()
+  if (!css) return counts
+  postcss.parse(css).walkRules((rule) => {
+    selectorParser((selectors) => {
+      selectors.each((selector) => {
+        const seen = new Set()
+        selector.walkClasses((node) => seen.add(node.value))
+        for (const cls of seen) counts.set(cls, (counts.get(cls) ?? 0) + 1)
+      })
+    }).processSync(rule.selector)
+  })
+  return counts
+}
+
 /**
  * Assigns each class to one module. `components` is a list of
- * `{ name, classes }` in manifest order; `utilityClasses` is a Set. Returns a
- * Map class -> owner name (`utilities` for a utility class).
+ * `{ name, classes, css }` in manifest order (`shared-*` names are shared
+ * segments, not wrappers); `utilityClasses` is a Set. Returns a Map
+ * class -> owner name. In order: a utility class goes to `utilities`; a
+ * wrapper whose `pathable-<name>` is the class goes to that wrapper; among
+ * wrappers whose CSS names the class, the longest `pathable-<name>` prefix
+ * wins; otherwise the module with the most complex selectors naming it, the
+ * earlier module on a tie.
  */
 export function assignOwners(components, utilityClasses) {
   const owners = new Map()
   for (const name of utilityClasses) owners.set(name, 'utilities')
+  const wrappers = components.filter(({ name }) => !name.startsWith('shared-'))
+  const counts = new Map(
+    components.map(({ name, css }) => [name, selectorCounts(css)]),
+  )
   const all = new Set(components.flatMap(({ classes }) => [...classes]))
   for (const cls of all) {
     if (owners.has(cls)) continue
-    const byPrefix = components
-      .filter(({ name }) => {
+    const exact = wrappers.find(({ name }) => `pathable-${name}` === cls)
+    if (exact) {
+      owners.set(cls, exact.name)
+      continue
+    }
+    const byPrefix = wrappers
+      .filter(({ name, classes }) => {
         const prefix = `pathable-${name}`
         return (
-          cls === prefix ||
-          cls.startsWith(`${prefix}-`) ||
-          cls.startsWith(`${prefix}_`)
+          classes.has(cls) &&
+          (cls.startsWith(`${prefix}-`) || cls.startsWith(`${prefix}_`))
         )
       })
       .sort((a, b) => b.name.length - a.name.length)
-    const first = components.find(({ classes }) => classes.has(cls))
-    owners.set(cls, (byPrefix[0] ?? first).name)
+    if (byPrefix.length > 0) {
+      owners.set(cls, byPrefix[0].name)
+      continue
+    }
+    let best = null
+    let bestCount = 0
+    for (const { name } of components) {
+      const count = counts.get(name).get(cls) ?? 0
+      if (count > bestCount) {
+        best = name
+        bestCount = count
+      }
+    }
+    owners.set(
+      cls,
+      best ?? components.find(({ classes }) => classes.has(cls)).name,
+    )
   }
   return owners
 }
@@ -204,13 +248,22 @@ export function soleOwnersIn(css, owners, utilityClasses) {
     selectorParser((selectors) => {
       selectors.each((selector) => {
         const classes = new Set()
+        let needsUsaMarkup = false
         selector.walkClasses((node) => {
+          // A usa-* class outside a pseudo-class argument only matches USWDS
+          // markup, so the selector never applies to PathAble markup alone.
+          if (
+            node.value.startsWith('usa-') &&
+            node.parent?.parent?.type !== 'pseudo'
+          )
+            needsUsaMarkup = true
           if (
             node.value.startsWith('pathable-') &&
             !utilityClasses.has(node.value)
           )
             classes.add(node.value)
         })
+        if (needsUsaMarkup) return
         const names = new Set([...classes].map((cls) => owners.get(cls)))
         if (names.size === 1 && !names.has(undefined)) found.add([...names][0])
       })

@@ -9,6 +9,7 @@ import {
   assignOwners,
   deriveRequires,
   moduleFile,
+  pathableClasses,
   resolveEmptySegments,
   rewriteAssetUrls,
   segmentIds,
@@ -89,24 +90,53 @@ test('resolveEmptySegments renames a shared segment, else throws', () => {
   )
 })
 
-test('ownership: utility, longest wrapper prefix, else first containing', () => {
+const withCss = (name, css) => ({
+  name,
+  css,
+  classes: pathableClasses(css),
+})
+
+test('ownership: utility, then an exact wrapper name', () => {
   const owners = assignOwners(
     [
-      mod('button', 'pathable-button', 'pathable-select', 'pathable-current'),
-      mod('input', 'pathable-input-group'),
+      withCss('button', '.pathable-select{a:b}'),
       mod('select'),
-      mod('pagination', 'pathable-current'),
-      mod('form', 'pathable-form-group'),
-      mod('form-group'),
-      mod('x', 'pathable-sr-only'),
+      withCss('x', '.pathable-sr-only{a:b}'),
     ],
     new Set(['pathable-sr-only']),
   )
   assert.equal(owners.get('pathable-sr-only'), 'utilities')
   assert.equal(owners.get('pathable-select'), 'select')
-  assert.equal(owners.get('pathable-input-group'), 'input')
+})
+
+test('ownership: longest wrapper prefix among wrappers that name the class', () => {
+  const owners = assignOwners(
+    [
+      withCss('input', '.pathable-input{a:b}'),
+      withCss('input-prefix-suffix', '.pathable-input-group{a:b}'),
+      withCss('form', '.pathable-form-group{a:b}'),
+      withCss('form-group', '.pathable-form-group{a:b}'),
+      withCss('alert', '.pathable-alert__body{a:b}'),
+    ],
+    new Set(),
+  )
+  assert.equal(owners.get('pathable-input-group'), 'input-prefix-suffix')
   assert.equal(owners.get('pathable-form-group'), 'form-group')
-  assert.equal(owners.get('pathable-current'), 'button')
+  assert.equal(owners.get('pathable-alert__body'), 'alert')
+})
+
+test('ownership: otherwise most selectors, a tie to the earlier module', () => {
+  const owners = assignOwners(
+    [
+      withCss('pagination', '.pathable-current{a:b}'),
+      withCss('sidenav', '.pathable-current,.x .pathable-current{a:b}'),
+      withCss('tabs', '.pathable-tied{a:b}'),
+      withCss('menu', '.pathable-tied{a:b}'),
+    ],
+    new Set(),
+  )
+  assert.equal(owners.get('pathable-current'), 'sidenav')
+  assert.equal(owners.get('pathable-tied'), 'tabs')
 })
 
 test('requires: a rule for one module alone, plus base, in manifest order', () => {
@@ -130,6 +160,30 @@ test('requires: a rule for one module alone, plus base, in manifest order', () =
     ['base'],
     ['base', 'button'],
     ['base'],
+    ['base'],
+  ])
+})
+
+test('requires: a selector that needs a usa-* class outside :not() does not count', () => {
+  const modules = [
+    { name: 'base', css: '' },
+    { name: 'icon', css: '.pathable-icon{a:b}' },
+    {
+      name: 'pagination',
+      css: '.usa-pagination .pathable-icon{a:b}.pathable-input:not(.usa-input--small){c:d}',
+    },
+    { name: 'input', css: '.pathable-input{a:b}' },
+    { name: 'utilities', css: '' },
+  ]
+  const owners = new Map([
+    ['pathable-icon', 'icon'],
+    ['pathable-input', 'input'],
+  ])
+  assert.deepEqual(deriveRequires(modules, owners, new Set()), [
+    [],
+    ['base'],
+    ['base'],
+    ['base', 'pagination'],
     ['base'],
   ])
 })

@@ -87,7 +87,8 @@ subset of the bundle's rules in bundle order.
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
 on a pull request that changes `fixtures/**`, `components/*.md`,
-`packages/styles/scripts/check-component-pages.mjs` or `component-pages.mjs`,
+`packages/styles/scripts/check-component-pages.mjs`, `component-pages.mjs`,
+`build-css-modules.mjs` or `build-css-modules.test.mjs`,
 `packages/styles/src/**`, `packages/styles/package.json`, `pnpm-lock.yaml`,
 `pnpm-workspace.yaml`, `patches/**`, `.github/actions/setup/**` or the
 workflow itself, and on every push to `main`. Its `fixtures` job:
@@ -97,10 +98,13 @@ workflow itself, and on every push to `main`. Its `fixtures` job:
    job does not cover HTML;
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
-4. runs html-validate and the contract check on every folder;
-5. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, which
+4. runs the CSS module build tests (`test:css-modules` in
+   `@pathableai/styles`);
+5. runs html-validate and the contract check on every folder;
+6. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, which
    currently lists no folder;
-6. uploads the axe report as the `fixtures-axe-report` artifact.
+7. runs the modules check (`check:modules`) on every folder;
+8. uploads the axe report as the `fixtures-axe-report` artifact.
 
 A folder joins `AXE_DEFERRED_FOLDERS` only with a maintainer's acceptance and
 a tracking issue. It is not a required check.

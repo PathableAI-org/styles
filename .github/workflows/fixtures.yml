@@ -10,6 +10,8 @@ on:
       - 'components/*.md'
       - 'packages/styles/scripts/check-component-pages.mjs'
       - 'packages/styles/scripts/component-pages.mjs'
+      - 'packages/styles/scripts/build-css-modules.mjs'
+      - 'packages/styles/scripts/build-css-modules.test.mjs'
       - 'packages/styles/src/**'
       - 'packages/styles/package.json'
       # A dependency update (axe-core, html-validate, Playwright) can change
@@ -58,6 +60,8 @@ jobs:
           pnpm exec prettier --check fixtures
       - name: Test fixture harness
         run: pnpm --filter @pathableai/fixtures test
+      - name: Test CSS module build
+        run: pnpm --filter @pathableai/styles test:css-modules
       - name: html-validate
         run: pnpm --filter @pathableai/fixtures check:html
       - name: Contract
