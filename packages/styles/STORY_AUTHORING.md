@@ -63,10 +63,8 @@ any hand-written story added again; the helpers they name, such as
       `guarantee.unmet(step, id, …)`: it passes while the assertions fail and
       fails once they pass, until the page and the call are changed to met.
 - [ ] A guarantee marked `status: unverified` has no test yet. Citing it from
-      a play function or a pixel entry fails the check until the page marks it
-      met (or unmet, for `guarantee.unmet`).
-- [ ] A guarantee the pixel baseline shows is also listed in that story's
-      `covers` in `scripts/pixel-stories.mjs`.
+      a play function fails the check until the page marks it met (or unmet,
+      for `guarantee.unmet`).
 - [ ] After `pnpm build`, run
       `pnpm --filter @pathableai/styles check:component-pages`. After
       `pnpm test:storybook-styles`, run

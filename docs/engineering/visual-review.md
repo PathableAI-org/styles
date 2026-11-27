@@ -13,10 +13,8 @@ procedure.
 evidence. [Git workflow](git-workflow.md) owns the review that a person
 applies.
 
-The code reviewer reads the diff and can only infer what it renders. The pixel
-suite compares only the stories with baselines, and a baseline update passes it
-by definition. The visual reviewer covers the rest: it looks at the rendered
-result, as a person reviewing the pull request would, and replies to the lead
+The code reviewer reads the diff and can only infer what it renders. The visual
+reviewer looks at the rendered result, as a person reviewing the pull request would, and replies to the lead
 session with what it saw. There is no gate: the lead answers every finding.
 
 ## When a visual review runs
@@ -29,7 +27,6 @@ any of these paths:
   `packages/styles/package.json`
 - `packages/react/src/` or `packages/react/package.json`
 - `apps/storybook/` or `apps/storybook-react/`
-- `visual-baselines/`
 - `fixtures/` or `components/`
 - `pnpm-lock.yaml`
 
@@ -59,9 +56,9 @@ The visual reviewer starts with a clean context and reads only:
   task text), the commit messages between the two SHAs and the changeset, at
   the head SHA
 - the standards it judges by, in [priority order](#priorities): Section 508,
-  the repository's accessibility, responsive-state and visual-regression
-  rules, [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for the
-  default theme, and [Pixel visual regression](../testing/visual-regression.md)
+  the repository's accessibility and responsive-state rules,
+  and [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for the
+  default theme
 
 It never reads the lead session's transcript, worktree or messages,
 or another reviewer's findings. It does not read the diff's
@@ -87,11 +84,10 @@ log files, and serves them on ports 6020 to 6023.
 
 1. **Choose stories.** Every story in a stories file the pull request changes,
    every story of a component whose page, fixtures, styles or React source
-   changed, and every rollout story in the pixel suite whose component
-   is touched. A change to a shared token, a base partial or a dependency
-   affects every component: capture the full pixel rollout list and the
-   canonical stories in `CANONICAL_STORIES` instead, or, while both lists are
-   empty, the first story of each stories file. A shared React change (the
+   changed. A change to a shared token, a base partial or a dependency
+   affects every component: capture the canonical stories in
+   `CANONICAL_STORIES` instead, or, while that list is empty, the first story
+   of each stories file. A shared React change (the
    theming source, the React Storybook configuration, the React package's
    dependencies or the lockfile) samples the first story of each React stories
    file. The script matches stories to changed files by component name, and
@@ -100,33 +96,24 @@ log files, and serves them on ports 6020 to 6023.
    missed. The
    reviewer names each chosen story, why, and its
    [theme](#the-default-theme-and-the-brand-book) in its reply.
-2. **Changed baselines.** For each PNG the pull request adds, changes or
-   removes under `visual-baselines/`, take the base and head versions from
-   Git and put them side by side with a difference image.
-3. **Pixel suite.** Run `pnpm test:pixels-styles` at the head SHA, in the
-   pinned container, as
-   [Pixel visual regression](../testing/visual-regression.md#in-a-claude-code-cloud-session)
-   describes. A failure is a finding in its own right; its diff images are
-   evidence.
-4. **Stories without baselines.** Capture each remaining chosen story with the
+2. **Captures.** Capture each chosen story with the
    pre-installed Playwright Chromium at the base and head SHAs, at the
    story's viewports (375, 768 and 1280 px, as its `mode` sets), full page,
    with animations disabled, after fonts load. Compare each pair by YIQ
-   colour distance at the pixel suite's threshold and produce a difference
-   image.
-5. **Conditions.** Capture every story the pull request changes with keyboard
+   colour distance, with a pixel counting as different past 1 % of the largest
+   distance, and produce a difference image.
+3. **Conditions.** Capture every story the pull request changes with keyboard
    focus on its first interactive control and at 200 % text size, because
    Section 508 needs both. When the change touches colour, motion or
    forced-colors styles, also capture the affected stories under emulated
    `forced-colors: active` or `prefers-reduced-motion: reduce`.
-6. **Measurements.** For every text and focus indicator in a chosen story at
+4. **Measurements.** For every text and focus indicator in a chosen story at
    the head, read the foreground and background colours from the page's
    computed styles and compute the contrast ratio. The script marks text over
    an image or gradient `needsSample`, and the reviewer samples its pixels
    from the capture.
 
-Captures are evidence for the review, not committed baselines. They are never
-committed and never copied into `visual-baselines/`.
+Captures are evidence for the review. They are never committed.
 
 ## Priorities
 
@@ -243,7 +230,6 @@ open, the findings this round closes, and any escalations. Each finding has:
   | `unexplained` | A visible change the task, commit messages and changeset do not describe                            |
   | `defect`      | A visible defect at the head, whether or not the base had it, in a story the change touches         |
   | `brand`       | A default-theme rendering that breaks [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md)      |
-  | `baseline`    | A baseline added or changed without a stated reason, or one that captures a defect                  |
   | `missing`     | A stated visible change with no visible difference, or an affected state no story shows             |
   | `tier`        | A visible change on work labelled Light                                                             |
 
@@ -329,8 +315,8 @@ sessions how to continue.
 
 ## Boundaries
 
-The visual reviewer is read-only. It edits no branch, pull request, issue,
-baseline file, and does not fix rendering or propose patches. It posts
+The visual reviewer is read-only. It edits no branch, pull request, or issue,
+and does not fix rendering or propose patches. It posts
 nothing on GitHub. Its only writes are the private screenshots page, its reply
 and bug issues for unrelated defects.
 
@@ -338,13 +324,10 @@ and bug issues for unrelated defects.
 
 - Captures are Chromium only. `forced-colors` and reduced motion are
   emulated.
-- The capture's pixel counts include anti-aliased edge pixels, which the
-  pixel suite leaves out. Base and head render in the same browser, so edges
-  differ only where content moved.
+- The capture's pixel counts include anti-aliased edge pixels. Base and head
+  render in the same browser, so edges differ only where content moved.
 - The reviewer judges stories. A rendering change that no story shows is
   invisible to it, which is why `missing` is a category: it reports an
   affected state without a story rather than passing it.
 - When the head merges the base branch in, captures taken before that merge
-  do not show how the base's own changes combine with the pull request's. The
-  pixel suite in CI runs at the head and catches that for the stories it
-  covers.
+  do not show how the base's own changes combine with the pull request's.

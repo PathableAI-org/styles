@@ -1,5 +1,5 @@
 /**
- * Pixel comparison and contrast measurement for the visual capture.
+ * Screenshot comparison and contrast measurement for the visual capture.
  *
  * `diffRgba` and `collectContrast` run inside the browser page, so each is
  * self-contained: it uses only its arguments and browser globals, and is
@@ -9,9 +9,8 @@
  */
 
 /**
- * The pixel suite's comparison threshold (THRESHOLD in
- * packages/styles/scripts/test-pixels.mjs): a pixel differs when its YIQ
- * colour distance exceeds this fraction of the largest possible distance.
+ * The comparison threshold: a pixel differs when its YIQ colour distance
+ * exceeds this fraction of the largest possible distance.
  */
 export const DIFF_THRESHOLD = 0.01
 

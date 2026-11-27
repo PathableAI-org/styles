@@ -76,20 +76,11 @@ or changes what a consumer sees:
   typography or layout change in an existing class;
 - additive consumer agent guidance for new public API.
 
-A change to a committed [pixel visual-regression](../testing/visual-regression.md)
-baseline in either Storybook workspace is a visible rendering change, so it
-makes work Standard rather than Light. The converse holds only as far as the
-baselines reach, which is only the stories listed under
-[Coverage today](../testing/visual-regression.md#coverage-today). A rendering
-change that shows only in other stories updates no baseline, so judge it from
-the change itself.
-
 Otherwise, work is **Light**: documentation, tests, stories for existing
 behaviour, repository tooling, CI, dependency updates (including lockfile-only
 updates and minor or patch range bumps of runtime dependencies), and refactors
 or fixes that stay inside an existing contract with
-no consumer-visible change (same exports and declarations, no baseline change,
-and no visible rendering change outside baseline coverage). A dependency update
+no consumer-visible change (same exports and declarations and no visible rendering change). A dependency update
 that changes rendering is Standard.
 
 When it is unclear whether a trigger matches, use the higher tier.
@@ -140,7 +131,7 @@ Each issue links the others and owns its own tier, scope, claims and evidence.
 
 Work is visual-only when every changed path is in `packages/styles`
 (SCSS, tokens, fonts, icons and other assets), its styles stories,
-`apps/storybook` or `visual-baselines/`, and it changes no behaviour: no
+or `apps/storybook`, and it changes no behaviour: no
 JavaScript helper, no keyboard, focus or ARIA behaviour, no interaction story's
 play function asserting new behaviour, and no React source or API.
 
@@ -161,18 +152,14 @@ Evidence each tier needs, in addition to the checks in
 
 - **Light.** The applicable checks pass. For a refactor or fix inside
   published source, say why there is no consumer-visible change (for example
-  the pixel visual-regression suites pass with no baseline change, every
-  state the change can affect has baselines, and the declarations are
-  unchanged).
+  the declarations and compiled CSS are unchanged).
 - **Standard.** Everything for Light, plus:
   - a deterministic, named story for each new or changed state, in the styles
     Storybook first and then the React Storybook;
   - `pnpm test:storybook-styles` and/or `pnpm test:storybook-react`, which run
     the Storybook test-runner with rendered accessibility checks;
-  - `pnpm test:visual`, and the pixel visual-regression suites with every
-    baseline update reviewed in the pull request's file diff; for a rendering
-    change the baselines do not cover, screenshots or story links in the pull
-    request;
+  - `pnpm test:visual`, and screenshots or story links in the pull request
+    for each rendering change;
   - for `packages/react`: `pnpm --filter @pathableai/react test:unit`,
     `pnpm build`, `pnpm --filter @pathableai/react check:package` and
     `pnpm --filter @pathableai/react check:types`;
@@ -352,7 +339,7 @@ pushes to `main`, and `docs-deploy.yml` on pushes to `main` only:
   paths change.
 - `storybook-quality.yml`: the styles Storybook build and its accessibility
   tests, when anything the HTML Storybook is built from changes. The visual
-  smoke tests, the styles pixel suite, Storybook coverage and the quality
+  smoke tests, Storybook coverage and the quality
   gates run then too, but their story lists are empty for now, so they check
   nothing until stories are added to them.
 - `fixtures.yml`: every fixture check on every folder; see

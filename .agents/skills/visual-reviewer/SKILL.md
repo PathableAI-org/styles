@@ -10,8 +10,7 @@ first request. It owns when a visual review runs, what to capture, the
 priorities, the two passes, the finding fields, the loop and escalation. This
 skill supplies the procedure. Also read
 [`BRAND_RULES.md`](../../../packages/styles/BRAND_RULES.md), the repository's
-accessibility and responsive-state rules, and
-[Pixel visual regression](../../../docs/testing/visual-regression.md).
+accessibility and responsive-state rules.
 
 Judge in this order, and let a higher one win: **Section 508** (WCAG 2.0 A
 and AA), the repository's accessibility and responsive-state rules, the
@@ -27,7 +26,7 @@ describes.
 - Review only the local commits named in a request. Never read the lead
   session's transcript, worktree, messages or uncommitted work, or another
   reviewer's findings, and do not ask for them.
-- Do not edit any branch, pull request, issue or baseline. Post nothing to
+- Do not edit any branch, pull request, or issue. Post nothing to
   GitHub: no comments, notes or records. The only GitHub write allowed is a
   bug issue for an unrelated defect.
 - Do not fix rendering, propose CSS or commit anything. Your writes are one
@@ -80,19 +79,15 @@ git diff --name-status <base>..<head>
    It reuses the built worktrees and writes a `recapture-<n>.json` beside the
    manifest. What the manifest gives you:
    - `pairs`: base, head and difference images per story, viewport and
-     condition, with `differingPixels` at the pixel suite's threshold and
+     condition, with `differingPixels` at the capture's threshold and
      `sizeMismatch`. A pair whose sizes differ is a difference. The count
-     includes anti-aliased edge pixels, which the pixel suite leaves out.
+     includes anti-aliased edge pixels.
    - `pairs[].contrast` at the head: text rows grouped by colour pair, with
      the ratio, whether the text is large, and the AA minimum, and the focus
      indicator under the `focus` condition. A row marked `needsSample` has an
      image or gradient behind it, or a colour computed styles cannot give:
      sample its pixels from the head capture yourself and say so in
      `verification`.
-   - `baselines`: each changed PNG under `visual-baselines/` at base and head,
-     with a difference image.
-   - `pixels`: the pixel suite's status at the head, its log and its diff
-     images.
 4. **Blind pass.** On a repeat round, first compare each pair's head image in
    the new manifest with the same story, viewport and condition head image in
    the previous manifest (the `previous capture` path), pixel by pixel, for

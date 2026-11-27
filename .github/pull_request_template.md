@@ -18,7 +18,7 @@
 
 ## Evidence
 
-<!-- One row per claim. For High work, number the claims. For UI changes, link the stories and attach screenshots, and say which pixel visual-regression baselines changed and why. -->
+<!-- One row per claim. For High work, number the claims. For UI changes, link the stories and attach screenshots. -->
 
 | Claim | Result | Evidence | Limits |
 | ----- | ------ | -------- | ------ |

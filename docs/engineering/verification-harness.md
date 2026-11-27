@@ -30,7 +30,7 @@ quietly changing the pull request's evidence.
 | Channel                | What it observes                                                                                                          |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `storybook-test`       | Named stories' play functions and rendered axe checks through `pnpm test:storybook-styles` or `pnpm test:storybook-react` |
-| `visual`               | Canonical rendering and committed pixel baselines through `pnpm test:visual` and `pnpm test:pixels-styles`                |
+| `visual`               | Canonical rendering through `pnpm test:visual` and screenshots                                                            |
 | `browser`              | Playwright observation of keyboard order, focus, responsive layouts, text zoom, forced colors and reduced motion          |
 | `package`              | Packed-package contents, exports, declarations and consumer installation                                                  |
 | `agent-guidance`       | `pnpm check:agent-guidance`                                                                                               |
@@ -53,7 +53,7 @@ are not committed.
 | Verification  | Building and observing the local head SHA; its reply              | Edit the branch, fix the implementation or post on GitHub              |
 | Code review   | Correctness and maintainability review at the same SHA            | Edit the branch                                                        |
 | Scope review  | Whether the diff delivers the accepted scope, no more and no less | Edit the branch                                                        |
-| Visual review | Judging captured rendering against the base and stated change     | Edit code or baselines                                                 |
+| Visual review | Judging captured rendering against the base and stated change     | Edit code                                                              |
 
 ## Verification loop
 
@@ -93,9 +93,8 @@ a person records the observation.
 
 ## Screenshots for visual claims
 
-For visual claims, committed pixel baselines are the primary evidence where
-they cover the story. Otherwise the verifier publishes one private screenshot
-page for the run and names its URL in its reply. A private page is allowed;
+For visual claims, the verifier publishes one private screenshot page for the
+run and names its URL in its reply. A private page is allowed;
 nothing is posted on the pull request. Screenshots do not decide the result on
 their own.
 

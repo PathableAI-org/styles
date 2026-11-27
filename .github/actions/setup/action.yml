@@ -40,8 +40,7 @@ runs:
     # No --with-deps: the hosted runner image already has every library
     # Chromium needs, and --with-deps only adds an apt-get update plus extra
     # font packages that are not cached and have taken up to five minutes to
-    # download. Pixel baselines render inside the pinned Playwright container,
-    # so they do not depend on the runner's fonts.
+    # download.
     - name: Install Playwright browser
       if: inputs.install_playwright == 'true'
       shell: bash

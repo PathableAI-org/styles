@@ -9,10 +9,9 @@
  * A page states guarantees: expected behaviour, each `met` (the default),
  * `unmet` (not implemented yet) or `unverified` (read from the source and
  * believed true, but no test cites it yet). It does not say how they are
- * tested. Tests cite guarantees, as `<page>/<guarantee-id>`:
+ * tested. A test cites a guarantee, as `<page>/<guarantee-id>`:
  *   - a story play function, with `guarantee(step, id, …)` or, for an unmet
- *     guarantee, `guarantee.unmet(step, id, …)` (src/stories/shared/guarantee.ts);
- *   - a pixel baseline entry, with `covers: [id]` (scripts/pixel-stories.mjs).
+ *     guarantee, `guarantee.unmet(step, id, …)` (src/stories/shared/guarantee.ts).
  *
  * There are two stages, because they need different inputs.
  *
@@ -44,10 +43,7 @@
  * rules, the "every modifier is a variant" rule and the custom property rule
  * (`--name` in prose must be used by the component's rules) are therefore
  * `static` only; a utility or token page that names a `--custom-property`
- * fails, because runtime properties are documented elsewhere. The pixel baseline rule is `static` only
- * too, by decision: a utility or token page has no component to draw, and its
- * guarantees are facts about computed CSS that a play function
- * cites. Every other rule applies to all three kinds: the guarantees, the
+ * fails, because runtime properties are documented elsewhere. Every other rule applies to all three kinds: the guarantees, the
  * title and summary paragraph, no `usa-` anywhere, exactly one html example,
  * and every class in an html example (fixtures included) being a class
  * selector in the compiled CSS, so a utility class the package does not emit
@@ -68,10 +64,6 @@
  *     modifier the CSS has for the class is a variant on the page (static);
  *   - the body's summary paragraph and Variants table agree with the front
  *     matter, and every token the page names is used by the component's rules;
- *   - every pixel citation names a met guarantee that exists, belongs to an
- *     entry on the rollout list (so the suite compares it) and has its images
- *     committed; a static component has at least one (utility and token pages
- *     do not need one).
  * It does not look at play functions.
  *
  * Stage 2, `… check:component-pages:executed`, needs the records the Storybook
@@ -79,10 +71,8 @@
  * (apps/storybook/test-results/component-pages/). It proves:
  *   - every guarantee id a play function executed exists, with the right
  *     form: `guarantee()` for met, `guarantee.unmet()` for unmet;
- *   - every met guarantee was executed by a play function or is covered by a
- *     pixel citation; an unmet guarantee may have no test yet;
- *   - a story whose pixel baseline covers a static page rendered the class
- *     and every non-default variant modifier.
+ *   - every met guarantee was executed by a play function; an unmet guarantee
+ *     may have no test yet.
  * It reads what ran, not the story source, so a `guarantee()` call that never
  * executes counts for nothing. A record left by an earlier run is not trusted:
  * one of a story the built Storybook no longer has is ignored, and one older
@@ -316,7 +306,7 @@ const tokensOf = (css, className) =>
       )
 
 // ---------------------------------------------------------------------------
-// Stage 1: the page against the compiled CSS and the pixel entries
+// Stage 1: the page against the compiled CSS
 // ---------------------------------------------------------------------------
 
 /**
@@ -665,15 +655,6 @@ function checkStates(page, errors) {
   }
 }
 
-/** A pixel citation of this page's guarantee `id` that the suite enforces. */
-const pixelCitations = (page, id, pixels) =>
-  pixels.filter(
-    (entry) =>
-      list(entry.covers).includes(`${page.slug}/${id}`) &&
-      entry.enforced &&
-      entry.missing.length === 0,
-  )
-
 /**
  * Renders a source page as the styles package ships it and checks its
  * placeholders. Returns { page, errors }: `page` is the rendered page, ready
@@ -738,16 +719,6 @@ export function checkPage(page, facts) {
   else checkVariants(page, facts.css, errors)
   checkNames(page, facts.css, errors)
 
-  const covered = page.data.guarantees.some(
-    ({ id }) => pixelCitations(page, id, facts.pixels).length > 0,
-  )
-  // A page with an unverified guarantee is still being brought under test; it
-  // owes its baseline once every guarantee is met or unmet.
-  if (page.data.kind === 'static' && !covered && isVerified(page)) {
-    errors.push(
-      'a static component needs a pixel baseline: no enforced pixel entry covers a guarantee of this page. While tests are still being written, mark the guarantees no test cites "status: unverified"',
-    )
-  }
   return errors
 }
 
@@ -768,46 +739,12 @@ function resolveId(pages, id) {
   return { guarantee }
 }
 
-/** Every pixel citation that points at nothing or is never compared. */
-export function checkPixelCitations(pages, pixels) {
-  const errors = []
-  for (const entry of pixels) {
-    for (const id of list(entry.covers)) {
-      const where = `pixel entry ${entry.key} cites "${id}"`
-      const { guarantee, error } = resolveId(pages, id)
-      if (error) {
-        errors.push(`${where}, ${error}`)
-        continue
-      }
-      if (statusOf(guarantee) === 'unmet') {
-        errors.push(
-          `${where}, which is unmet: a baseline cannot be expected to fail; cite it with guarantee.unmet() in a play function`,
-        )
-      }
-      if (statusOf(guarantee) === 'unverified') {
-        errors.push(
-          `${where}, which the page marks unverified: a test now cites it, so set its status to met`,
-        )
-      }
-      if (!entry.enforced) {
-        errors.push(
-          `${where}, but "${entry.key.split('/')[0]}" is not on ROLLOUT, so the suite never compares this baseline`,
-        )
-      }
-      for (const image of entry.missing) {
-        errors.push(`${where}, but the baseline ${image} is not committed`)
-      }
-    }
-  }
-  return errors
-}
-
 // ---------------------------------------------------------------------------
 // Stage 2: the pages against what the Storybook test run executed
 // ---------------------------------------------------------------------------
 
 /** Every stage 2 disagreement, as messages. `records` is one entry per story. */
-export function checkExecuted(pages, records, pixels) {
+export function checkExecuted(pages, records) {
   const errors = []
   const executed = records.flatMap((record) =>
     list(record.guarantees).map((entry) => ({ ...entry, story: record.story })),
@@ -834,52 +771,12 @@ export function checkExecuted(pages, records, pixels) {
   }
 
   for (const page of pages) {
-    const cls = page.data['styles-class']
     for (const guarantee of list(page.data.guarantees)) {
       const id = `${page.slug}/${guarantee.id}`
       const ran = executed.some((entry) => entry.id === id)
-      const pictured = pixelCitations(page, guarantee.id, pixels).length > 0
-      if (statusOf(guarantee) === 'met' && !ran && !pictured) {
+      if (statusOf(guarantee) === 'met' && !ran) {
         errors.push(
-          `${page.file}: guarantee "${guarantee.id}" is met but no test covers it: no play function executed guarantee(step, '${id}', …) and no enforced pixel entry lists it in covers. Mark it "status: unverified" if it holds but no test exists yet, or "status: unmet" if the component does not do this yet`,
-        )
-      }
-    }
-
-    // A static page's picture has to show every variant it describes.
-    const covering = new Set(
-      list(page.data.guarantees).flatMap(({ id }) =>
-        pixelCitations(page, id, pixels).map((entry) => entry.id),
-      ),
-    )
-    // Only a static page's picture has variants to show.
-    if (covering.size === 0 || page.data.kind !== 'static') continue
-    const rendered = new Set(
-      records
-        .filter((record) => covering.has(record.story))
-        .flatMap((record) => list(record.classes)),
-    )
-    const missingRecords = [...covering].filter(
-      (story) => !records.some((record) => record.story === story),
-    )
-    for (const story of missingRecords) {
-      errors.push(
-        `${page.file}: no record of story ${story}, whose pixel baseline covers this page; run pnpm test:storybook-styles`,
-      )
-    }
-    if (missingRecords.length > 0) continue
-    const expected = [
-      cls,
-      ...list(page.data.variants).flatMap((variant) =>
-        list(variant?.values)
-          .filter((value) => value !== variant.default)
-          .map((value) => `${cls}--${value}`),
-      ),
-    ]
-    for (const className of expected) {
-      if (!rendered.has(className)) {
-        errors.push(
-          `${page.file}: no story whose pixel baseline covers this page rendered .${className} (${[...covering].join(', ')})`,
+          `${page.file}: guarantee "${guarantee.id}" is met but no test covers it: no play function executed guarantee(step, '${id}', …). Mark it "status: unverified" if it holds but no test exists yet, or "status: unmet" if the component does not do this yet`,
         )
       }
     }
@@ -892,7 +789,7 @@ export function checkExecuted(pages, records, pixels) {
 // ---------------------------------------------------------------------------
 
 /** The traceability table: page → guarantee → the tests that cite it. */
-export function renderTrace(pages, pixels, records) {
+export function renderTrace(pages, records) {
   const lines = []
   for (const page of pages) {
     lines.push(`${page.data.name} (${page.file})`)
@@ -904,9 +801,6 @@ export function renderTrace(pages, pixels, records) {
       ]
       lines.push(`  ${label}${guarantee.id}: ${guarantee.claim}`)
       const cited = [
-        ...pixelCitations(page, guarantee.id, pixels).map(
-          (entry) => `pixel  baseline ${entry.key} of ${entry.id}`,
-        ),
         ...(records ?? [])
           .filter((record) =>
             list(record.guarantees).some((entry) => entry.id === id),
@@ -921,7 +815,7 @@ export function renderTrace(pages, pixels, records) {
         lines.push(
           records
             ? `    (no test${unmet ? ' yet' : ''})`
-            : '    (no pixel citation; play functions not read without --executed)',
+            : '    (play functions not read without --executed)',
         )
       }
     }
@@ -934,21 +828,6 @@ export function renderTrace(pages, pixels, records) {
 // ---------------------------------------------------------------------------
 
 /**
- * The pixel entries with what the checks need to know about each: whether the
- * suite compares it (its component is on the rollout list) and which of its
- * baseline images, one per viewport of the story's mode, are not committed.
- */
-export function readPixels({ stories, rollout, viewportsOf, hasImage }) {
-  return stories.map((entry) => ({
-    ...entry,
-    enforced: rollout.includes(entry.key.split('/')[0]),
-    missing: viewportsOf(entry.id)
-      .map((viewport) => `${entry.key}/${viewport}.png`)
-      .filter((image) => !hasImage(image)),
-  }))
-}
-
-/**
  * The denominator for coverage: wrapper files named after a class the
  * compiled CSS defines (`pathable-card.scss` and `.pathable-card`). That
  * leaves out partials and the bundle files that only forward other wrappers.
@@ -957,22 +836,6 @@ export const wrapperComponents = (fileNames, css) =>
   fileNames
     .map((file) => basename(file, '.scss'))
     .filter((name) => css.classes.has(name))
-
-async function readPixelEntries() {
-  const { ROLLOUT, STORIES } = await import('./pixel-stories.mjs')
-  const { CANONICAL_STORIES, visualViewportNames } =
-    await import('./quality-gates.mjs')
-  const modes = new Map(
-    CANONICAL_STORIES.map((story) => [story.id, story.mode]),
-  )
-  return readPixels({
-    stories: STORIES,
-    rollout: ROLLOUT,
-    viewportsOf: (id) => visualViewportNames(modes.get(id)),
-    hasImage: (image) =>
-      existsSync(join(repoRoot, 'visual-baselines/styles', image)),
-  })
-}
 
 async function readCompiledCss() {
   if (!existsSync(compiledCss)) {
@@ -1053,7 +916,6 @@ async function main() {
   if (only && pages.length === 0) {
     throw new Error(`no component page "${only}.md"`)
   }
-  const pixels = await readPixelEntries()
   const errors = []
   let records
   let summary
@@ -1061,7 +923,7 @@ async function main() {
   if (flags.has('--executed')) {
     const read = readRecords()
     records = read.records
-    errors.push(...read.errors, ...checkExecuted(pages, records, pixels))
+    errors.push(...read.errors, ...checkExecuted(pages, records))
     summary = `stage 2 (what ran): ${pages.length} page(s) checked against ${records.length} story records`
   } else {
     const css = await readCompiledCss()
@@ -1077,11 +939,10 @@ async function main() {
       errors.push(
         ...[
           ...rendered.errors,
-          ...(rendered.page ? checkPage(rendered.page, { css, pixels }) : []),
+          ...(rendered.page ? checkPage(rendered.page, { css }) : []),
         ].map((error) => `${page.file}: ${error}`),
       )
     }
-    if (!only) errors.push(...checkPixelCitations(pages, pixels))
     const components = wrapperComponents(
       readdirSync(join(packageRoot, 'src/pathable-component-wrappers')),
       css,
@@ -1091,11 +952,11 @@ async function main() {
     const verified = pages.filter(
       (page) => !isSettingsPage(page) && isVerified(page),
     ).length
-    summary = `stage 1 (page against compiled CSS and pixel entries): ${pages.length} page(s) checked, ${verified} with every guarantee under test; ${covered} of ${components.length} component wrapper stylesheets have a page`
+    summary = `stage 1 (page against compiled CSS): ${pages.length} page(s) checked, ${verified} with every guarantee under test; ${covered} of ${components.length} component wrapper stylesheets have a page`
   }
 
   for (const error of errors) console.error(`[component-pages] ${error}`)
-  if (flags.has('--trace')) console.log(renderTrace(pages, pixels, records))
+  if (flags.has('--trace')) console.log(renderTrace(pages, records))
   console.log(`[component-pages] ${summary}`)
   if (errors.length > 0) process.exitCode = 1
 }
