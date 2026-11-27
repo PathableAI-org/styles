@@ -34,14 +34,6 @@ own form submission and validation apply, and nothing here needs JavaScript.
 - The wrapper for fields built from `pathable-label`, `pathable-input` and
   `pathable-fieldset`.
 
-Use something else when:
-
-- fields should sit side by side on wide screens: put the groups in a
-  `pathable-form-row` inside the form;
-- the form is a multi-step process: use `pathable-wizard`;
-- you only need to space a set of groups and do not want the width cap: use
-  `pathable-stack` with `pathable-form-stack`.
-
 Show and hide password toggles, input masks, date pickers, combo boxes,
 character counters and client-side validation need JavaScript and are not part
 of this component.

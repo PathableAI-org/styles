@@ -65,10 +65,8 @@ cells that have a `scope`, are what assistive technology reads.
 
 Use something else when:
 
-- the rows are a feed of events with status and actions: use
-  `pathable-activity-list`;
-- the data is a layout, not values with headings: use a layout component such
-  as `pathable-grid`;
+- the data is a layout, not values with headings: use the layout grid
+  utilities;
 - the reader needs to sort the columns: sorting needs JavaScript and is not
   part of this component.
 

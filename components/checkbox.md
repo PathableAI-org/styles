@@ -50,9 +50,7 @@ Use something else when:
 - the choices exclude each other, or the question is yes or no: use two
   `pathable-radio` choices;
 - a setting takes effect the moment it changes: use a switch, which this
-  package does not provide;
-- the list has dozens of options to filter: use
-  `pathable-filterable-option-list`.
+  package does not provide.
 
 ## Example
 

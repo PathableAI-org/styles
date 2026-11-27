@@ -25,7 +25,7 @@ guarantees:
   - id: textarea
     claim: A textarea with the pathable-textarea class has the same border, padding, text, focus ring and disabled appearance as the input, and a fixed height that holds several lines of text.
   - id: form-width
-    claim: Inside a pathable-form or pathable-form-row the input has no 480 px cap and fills its container, unless it carries a width modifier.
+    claim: Inside a pathable-form the input has no 480 px cap and fills its container, unless it carries a width modifier.
   - id: widths
     claim: The width modifiers set a maximum width of 5ex (2xs), 9ex (xs), 13ex (sm and small), 20ex (md and medium), 30ex (lg), 40ex (xl) and 50ex (2xl), and win over the form's own width rule.
   - id: error

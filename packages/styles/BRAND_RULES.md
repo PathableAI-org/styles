@@ -48,7 +48,7 @@ The USWDS theme in `src/_uswds-theme.scss` is configured with the exact brand he
 
 USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and the USWDS focus outline uses Bright Blue Brooks, matching `--pathable-color-link` and `--pathable-color-focus-ring`.
 
-The shared PathAble focus outline (used by `.pathable-button`, `.pathable-input`, `.pathable-select`, `.pathable-textarea` and `.pathable-icon-button`) is drawn on the surface behind the control, so each `.pathable-surface` variant sets its colour through `--pathable-surface-focus-ring`. It is Bright Blue Brooks by default. On the Intelligent Jade surfaces (`--brand`, `--tone-primary`) it is the on-accent dark blue, and on the Shilling Silver surfaces (`--inset`, `--tone-subtle`) it is PathAble Blue. Bright Blue Brooks is only 1.1:1 and 2.3:1 on those, and a focus outline needs 3:1. Dark containers reset it to Bright Blue Brooks: the `--inverse` surface, the `pathable-bg-primary` utility, `.pathable-section--dark`, `.pathable-dark-background`, `.pathable-hero__callout` and `.pathable-identifier`. The `pathable-bg-accent` and `pathable-bg-success` utilities (Jade) set it to the on-accent dark blue, `pathable-bg-base` (Silver) and the footer primary and secondary sections (Silver family, whose links also draw the outline in that colour) to PathAble Blue, `pathable-bg-danger` to the on-accent dark blue (3.9:1), `.pathable-alert--success`, `--warning` and `--error` to the on-accent dark blue, and `.pathable-alert--emergency` to white, because Bright Blue Brooks is only 1.5:1 and 2.3:1 on those reds. Every other `.pathable-alert` (info, plain, slim) sets it to PathAble Blue, because Bright Blue Brooks is only 2.7:1 on the info tint. The outlines that components draw outside themselves read the same property, so they follow the background too: `.pathable-link`, `.pathable-breadcrumb__link`, `.pathable-button--unstyled`, `.pathable-surface--interactive`, and the filter pill, card, resource card, filter bar, optional form section, toast and app shell navigation rules. Outlines drawn inside an element (negative `outline-offset`) are drawn on the element's own background and are not covered, except the app shell content region's, which has no background of its own and reads the ring. Tech Teal (`pathable-bg-link`) sets it to white (`--pathable-color-surface`, 7.7:1), because Bright Blue Brooks is only 2.6:1 on it. A white ring would inherit into light containers nested in the teal one, where it is 1.0:1, so the `pathable-bg-surface` utility and the light component containers (the card container, modal, accordion content, table, breadcrumb, toast, filter bar and the other white panels) reset it to Bright Blue Brooks. A new light container needs the same reset. The Jade, Silver and danger utilities and the alerts set their own ring, so they hold inside the teal container too.
+The shared PathAble focus outline (used by `.pathable-button`, `.pathable-input`, `.pathable-select` and `.pathable-textarea`) is drawn on the surface behind the control, so a coloured background sets its colour through `--pathable-surface-focus-ring`. It is Bright Blue Brooks by default. Dark containers reset it to Bright Blue Brooks: the `pathable-bg-primary` utility and `.pathable-dark-background`. The `pathable-bg-accent` and `pathable-bg-success` utilities (Jade) set it to the on-accent dark blue, `pathable-bg-base` (Silver) and the footer primary and secondary sections (Silver family, whose links also draw the outline in that colour) to PathAble Blue, `pathable-bg-danger` to the on-accent dark blue (3.9:1), `.pathable-alert--success`, `--warning` and `--error` to the on-accent dark blue, and `.pathable-alert--emergency` to white, because Bright Blue Brooks is only 1.5:1 and 2.3:1 on those reds. Every other `.pathable-alert` (info, plain, slim) sets it to PathAble Blue, because Bright Blue Brooks is only 2.7:1 on the info tint. The outlines that components draw outside themselves read the same property, so they follow the background too: `.pathable-link`, `.pathable-breadcrumb__link`, `.pathable-button--unstyled`, the scrollable table container and the card rules. Outlines drawn inside an element (negative `outline-offset`) are drawn on the element's own background and are not covered. Tech Teal (`pathable-bg-link`) sets it to white (`--pathable-color-surface`, 7.7:1), because Bright Blue Brooks is only 2.6:1 on it. A white ring would inherit into light containers nested in the teal one, where it is 1.0:1, so the `pathable-bg-surface` utility and the light component containers (the card container, table and breadcrumb) reset it to Bright Blue Brooks. A new light container needs the same reset. The Jade, Silver and danger utilities and the alerts set their own ring, so they hold inside the teal container too.
 
 The brand book defines no red or amber. Danger (`#dc3545`) and warning (`#f5a623`) are functional status colors added by the design system; use them only for status, never as decoration.
 
@@ -300,89 +300,54 @@ Breakpoints: `mobile-lg` (480px), `tablet` (640px), `desktop` (1024px).
 
 ## USWDS Component Wrappers
 
-This package provides `.pathable-{component}` CSS class wrappers for all USWDS components. Most `.pathable-{component}` classes resolve to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`. Some components (noted below) do not emit a base class because USWDS does not define one for the corresponding component — in those cases the wrapper only provides child element classes or forwards the USWDS bundle for selective import.
+This package provides `.pathable-{component}` CSS class wrappers for the static USWDS components that have a page in `components/`. Most `.pathable-{component}` classes resolve to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`, so markup needs no `.usa-*` class. Some components (noted below) do not emit a base class because USWDS does not define one for the corresponding component — in those cases the wrapper only provides child element classes.
 
 ### Component Wrapper Naming Convention
 
-| Component           | PathAble Class                  | USWDS Equivalent       | Notes                                                                  |
-| ------------------- | ------------------------------- | ---------------------- | ---------------------------------------------------------------------- |
-| accordion           | `.pathable-accordion`           | `.usa-accordion`       |                                                                        |
-| alert               | `.pathable-alert`               | `.usa-alert`           |                                                                        |
-| banner              | `.pathable-banner`              | `.usa-banner`          |                                                                        |
-| breadcrumb          | `.pathable-breadcrumb`          | `.usa-breadcrumb`      |                                                                        |
-| button              | `.pathable-button`              | `.usa-button`          |                                                                        |
-| button-group        | `.pathable-button-group`        | `.usa-button-group`    |                                                                        |
-| card                | `.pathable-card`                | `.usa-card`            |                                                                        |
-| character-count     | —                               | —                      | USWDS has no base class; only `__status` selectors                     |
-| checkbox            | `.pathable-checkbox__*`         | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level  |
-| checklist           | `.pathable-checklist`           | `.usa-checklist`       |                                                                        |
-| collection          | `.pathable-collection`          | `.usa-collection`      |                                                                        |
-| combo-box           | `.pathable-combo-box`           | `.usa-combo-box`       |                                                                        |
-| content             | `.pathable-content`             | `.usa-content`         |                                                                        |
-| dark-background     | `.pathable-dark-background`     | `.usa-dark-background` |                                                                        |
-| date-picker         | —                               | —                      | USWDS has no base class; only child/state selectors                    |
-| date-range-picker   | —                               | —                      | JS-only component; no CSS class defined                                |
-| display             | `.pathable-display`             | `.usa-display`         |                                                                        |
-| embed-container     | `.pathable-embed-container`     | `.usa-embed-container` |                                                                        |
-| error-message       | `.pathable-error-message`       | `.usa-error-message`   |                                                                        |
-| fieldset            | `.pathable-fieldset`            | `.usa-fieldset`        |                                                                        |
-| file-input          | `.pathable-file-input`          | `.usa-file-input`      |                                                                        |
-| footer              | `.pathable-footer`              | `.usa-footer`          |                                                                        |
-| form                | `.pathable-form`                | `.usa-form`            |                                                                        |
-| form-group          | `.pathable-form-group`          | `.usa-form-group`      |                                                                        |
-| graphic-list        | `.pathable-graphic-list`        | `.usa-graphic-list`    |                                                                        |
-| header              | `.pathable-header`              | `.usa-header`          |                                                                        |
-| hero                | `.pathable-hero`                | `.usa-hero`            |                                                                        |
-| hint                | `.pathable-hint`                | `.usa-hint`            |                                                                        |
-| icon                | `.pathable-icon`                | `.usa-icon`            |                                                                        |
-| icon-list           | `.pathable-icon-list`           | `.usa-icon-list`       |                                                                        |
-| identifier          | `.pathable-identifier`          | `.usa-identifier`      |                                                                        |
-| in-page-navigation  | `.pathable-in-page-navigation`  | `.usa-in-page-nav`     |                                                                        |
-| input               | `.pathable-input`               | `.usa-input`           |                                                                        |
-| input-mask          | `.pathable-input-mask`          | `.usa-input-mask`      |                                                                        |
-| input-prefix-suffix | `.pathable-input-prefix-suffix` | `.usa-input-group`     | Maps to `.usa-input-group` (the USWDS base class)                      |
-| intro               | `.pathable-intro`               | `.usa-intro`           |                                                                        |
-| label               | `.pathable-label`               | `.usa-label`           |                                                                        |
-| language-selector   | `.pathable-language-selector`   | `.usa-language`        | Maps to `.usa-language` (the USWDS base class)                         |
-| layout-docs         | `.pathable-layout-docs`         | `.usa-layout-docs`     |                                                                        |
-| layout-grid         | `.pathable-grid-*`              | `.grid-*`              |                                                                        |
-| legend              | `.pathable-legend`              | `.usa-legend`          |                                                                        |
-| link                | `.pathable-link`                | `.usa-link`            |                                                                        |
-| list                | `.pathable-list`                | `.usa-list`            |                                                                        |
-| media-block         | `.pathable-media-block`         | `.usa-media-block`     |                                                                        |
-| memorable-date      | `.pathable-memorable-date`      | `.usa-memorable-date`  |                                                                        |
-| modal               | `.pathable-modal`               | `.usa-modal`           | Dialog; dual-class with `.usa-modal` for JS-driven interactivity       |
-| modal-wrapper       | `.pathable-modal-wrapper`       | `.usa-modal-wrapper`   | Open shell; `.is-visible` when open; PathAble-only works without JS    |
-| modal-overlay       | `.pathable-modal-overlay`       | `.usa-modal-overlay`   | Dimmed full-viewport backdrop + centering for the open shell           |
-| nav                 | `.pathable-nav`                 | `.usa-nav`             |                                                                        |
-| pagination          | `.pathable-pagination`          | `.usa-pagination`      |                                                                        |
-| paragraph           | `.pathable-paragraph`           | `.usa-paragraph`       |                                                                        |
-| process-list        | `.pathable-process-list`        | `.usa-process-list`    |                                                                        |
-| prose               | `.pathable-prose`               | `.usa-prose`           |                                                                        |
-| radio               | `.pathable-radio__*`            | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level        |
-| range               | `.pathable-range`               | `.usa-range`           |                                                                        |
-| search              | `.pathable-search`              | `.usa-search`          |                                                                        |
-| section             | `.pathable-section`             | `.usa-section`         |                                                                        |
-| select              | `.pathable-select`              | `.usa-select`          |                                                                        |
-| sidenav             | `.pathable-sidenav`             | `.usa-sidenav`         |                                                                        |
-| site-alert          | `.pathable-site-alert`          | `.usa-site-alert`      |                                                                        |
-| site-title          | —                               | —                      | No CSS class defined; `.usa-logo` / `.usa-logo__text` used in template |
-| skipnav             | `.pathable-skipnav`             | `.usa-skipnav`         |                                                                        |
-| step-indicator      | `.pathable-step-indicator`      | `.usa-step-indicator`  |                                                                        |
-| summary-box         | `.pathable-summary-box`         | `.usa-summary-box`     |                                                                        |
-| table               | `.pathable-table`               | `.usa-table`           |                                                                        |
-| tag                 | `.pathable-tag`                 | `.usa-tag`             |                                                                        |
-| textarea            | `.pathable-textarea`            | `.usa-textarea`        |                                                                        |
-| time-picker         | `.pathable-time-picker`         | `.usa-time-picker`     |                                                                        |
-| tooltip             | `.pathable-tooltip`             | `.usa-tooltip`         |                                                                        |
-| validation          | —                               | —                      | JS-only bundle; forwards form component styles                         |
+| Component           | PathAble Class                  | USWDS Equivalent       | Notes                                                                 |
+| ------------------- | ------------------------------- | ---------------------- | --------------------------------------------------------------------- |
+| alert               | `.pathable-alert`               | `.usa-alert`           |                                                                       |
+| breadcrumb          | `.pathable-breadcrumb`          | `.usa-breadcrumb`      |                                                                       |
+| button              | `.pathable-button`              | `.usa-button`          |                                                                       |
+| button-group        | `.pathable-button-group`        | `.usa-button-group`    |                                                                       |
+| card                | `.pathable-card`                | `.usa-card`            |                                                                       |
+| checkbox            | `.pathable-checkbox__*`         | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level |
+| collection          | `.pathable-collection`          | `.usa-collection`      |                                                                       |
+| dark-background     | `.pathable-dark-background`     | `.usa-dark-background` |                                                                       |
+| error-message       | `.pathable-error-message`       | `.usa-error-message`   |                                                                       |
+| fieldset            | `.pathable-fieldset`            | `.usa-fieldset`        |                                                                       |
+| footer              | `.pathable-footer`              | `.usa-footer`          |                                                                       |
+| form                | `.pathable-form`                | `.usa-form`            |                                                                       |
+| form-group          | `.pathable-form-group`          | `.usa-form-group`      |                                                                       |
+| hint                | `.pathable-hint`                | `.usa-hint`            |                                                                       |
+| icon                | `.pathable-icon`                | `.usa-icon`            |                                                                       |
+| icon-list           | `.pathable-icon-list`           | `.usa-icon-list`       |                                                                       |
+| input               | `.pathable-input`               | `.usa-input`           |                                                                       |
+| input-prefix-suffix | `.pathable-input-prefix-suffix` | `.usa-input-group`     | Maps to `.usa-input-group` (the USWDS base class)                     |
+| intro               | `.pathable-intro`               | `.usa-intro`           |                                                                       |
+| label               | `.pathable-label`               | `.usa-label`           |                                                                       |
+| legend              | `.pathable-legend`              | `.usa-legend`          |                                                                       |
+| link                | `.pathable-link`                | `.usa-link`            |                                                                       |
+| list                | `.pathable-list`                | `.usa-list`            |                                                                       |
+| memorable-date      | `.pathable-memorable-date`      | `.usa-memorable-date`  |                                                                       |
+| pagination          | `.pathable-pagination`          | `.usa-pagination`      |                                                                       |
+| paragraph           | `.pathable-paragraph`           | `.usa-paragraph`       |                                                                       |
+| process-list        | `.pathable-process-list`        | `.usa-process-list`    |                                                                       |
+| prose               | `.pathable-prose`               | `.usa-prose`           |                                                                       |
+| radio               | `.pathable-radio__*`            | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level       |
+| search              | `.pathable-search`              | `.usa-search`          |                                                                       |
+| select              | `.pathable-select`              | `.usa-select`          |                                                                       |
+| sidenav             | `.pathable-sidenav`             | `.usa-sidenav`         |                                                                       |
+| site-alert          | `.pathable-site-alert`          | `.usa-site-alert`      |                                                                       |
+| step-indicator      | `.pathable-step-indicator`      | `.usa-step-indicator`  |                                                                       |
+| summary-box         | `.pathable-summary-box`         | `.usa-summary-box`     |                                                                       |
+| table               | `.pathable-table`               | `.usa-table`           |                                                                       |
+| tag                 | `.pathable-tag`                 | `.usa-tag`             |                                                                       |
+| textarea            | `.pathable-textarea`            | `.usa-textarea`        |                                                                       |
 
 ### Component Wrapper Rules
 
-- Use `.pathable-{component}` classes in HTML templates instead of `.usa-{component}` classes when a wrapper exists.
+- Use `.pathable-{component}` classes in HTML templates, never `.usa-{component}` classes.
 - Use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
-- For components where USWDS does not define a base class (character-count, checkbox, radio, date-picker, date-range-picker, site-title, validation), the wrapper provides element-level selectors or forwards the USWDS bundle — use the available `.pathable-{component}__{element}` classes directly.
-- For JS-driven components (accordion, banner, character-count, combo-box, date-picker, date-range-picker, file-input, header, in-page-navigation, input-mask, language-selector, modal, nav, site-alert, time-picker, tooltip, validation), keep `.usa-{component}` on the DOM element AND add `.pathable-{component}` as an additional class — the USWDS JavaScript selects DOM nodes by `.usa-*` class names, and removing them would break interactivity.
-- Modal open presentation uses a styles-owned shell: `.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` → `.pathable-modal` (and `.usa-modal` on the dialog). PathAble-only wrapper/overlay classes with `.is-visible` are enough for backdrop and centering; do not invent ad-hoc overlay CSS. Place only the dialog inside `.pathable-modal-overlay`: the overlay sets `font-size: 0` to keep the dialog on its centring line, so other content there would not render. When dual-classing (for example React), also emit `.usa-modal-wrapper` and `.usa-modal-overlay` beside the PathAble shell classes.
-- Use `--pathable-{component}-{property}` and `--usa-{component}-{property}` CSS custom properties as alternatives to the class-based components.
+- For components where USWDS does not define a base class (checkbox, radio), the wrapper provides element-level selectors — use the available `.pathable-{component}__{element}` classes directly.

@@ -66,7 +66,6 @@ accessible name and no behaviour of its own.
 Use something else when:
 
 - the action is a plain link inside a sentence or a list: use a link;
-- the control is only an icon: use `pathable-icon-button`;
 - a set of related buttons needs a shared row that stacks on a phone: put them in
   a `pathable-button-group`;
 - the control chooses between values or toggles a setting: use a form control
@@ -169,8 +168,7 @@ Intake assessment</span>`. Do not replace the visible label with `aria-label`.
   `aria-disabled="true"` keeps it focusable but only changes how it looks: the
   application has to stop the action itself.
 - Icons. Hide an icon next to a label with `aria-hidden="true"` and
-  `focusable="false"`. A button that has only an icon needs a name; use
-  `pathable-icon-button`.
+  `focusable="false"`. A button that has only an icon needs an accessible name.
 - Colour is not the only cue. An action that deletes or cannot be undone needs
   words that say so.
 - The dark surface behind an inverse button, and a focus ring that shows on it.

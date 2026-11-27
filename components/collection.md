@@ -54,7 +54,6 @@ its own page.
 Use something else when:
 
 - the items are plain text points: use `pathable-list`;
-- there is only one item: use `pathable-media-block`;
 - the items are steps in order: use `pathable-process-list`;
 - each item is a boxed panel in a grid: use `pathable-card`.
 

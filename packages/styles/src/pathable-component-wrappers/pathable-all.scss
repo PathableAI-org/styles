@@ -1,21 +1,66 @@
 // packages/styles/src/pathable-component-wrappers/pathable-all.scss
 //
-// All-in-one entry point: forwards all individual component wrappers and bundle packages.
-// Consumers can import this to get all component wrappers at once.
+// All-in-one entry point: forwards every component wrapper.
+// The order is the cascade order; keep it when adding a wrapper.
 
 @forward 'pathable-button';
 @forward 'pathable-button-group';
 @forward 'pathable-sr-only';
-@forward 'pathable-form-controls';
-@forward 'pathable-typography';
-@forward 'pathable-navigation';
-@forward 'pathable-layout';
-@forward 'pathable-layout-composition';
-@forward 'pathable-communication';
-@forward 'pathable-interaction-controls';
-@forward 'pathable-discovery';
-@forward 'pathable-dashboard';
-@forward 'pathable-empty-state';
-@forward 'pathable-page-error';
-@forward 'pathable-structured-workflow';
-@forward 'pathable-marketing-patterns';
+
+// Form controls
+@forward 'pathable-checkbox';
+// The USWDS font faces, input and icon modules load here, ahead of the
+// wrappers that @extend them, so the cascade order the component pages were
+// verified against holds: the USWDS search rule that hides the submit icon
+// on wide screens must come after the icon rule, and the font faces give the
+// mono utilities their Roboto Mono face.
+@use 'uswds-fonts';
+@use 'usa-input/src/styles' as usa-input;
+@use 'usa-icon/src/styles' as usa-icon;
+@forward 'pathable-error-message';
+@forward 'pathable-fieldset';
+@forward 'pathable-form';
+@forward 'pathable-form-group';
+@forward 'pathable-hint';
+@forward 'pathable-input';
+@forward 'pathable-input-prefix-suffix';
+@forward 'pathable-label';
+@forward 'pathable-legend';
+@forward 'pathable-memorable-date';
+@forward 'pathable-radio';
+@forward 'pathable-select';
+@forward 'pathable-textarea';
+// The USWDS alert rules load at the end of the form controls, as before.
+@use 'usa-alert/src/styles' as usa-alert;
+
+// Typography
+@forward 'pathable-dark-background';
+@forward 'pathable-intro';
+@forward 'pathable-link';
+@forward 'pathable-list';
+@forward 'pathable-paragraph';
+@forward 'pathable-prose';
+
+// Navigation
+@forward 'pathable-breadcrumb';
+@forward 'pathable-footer';
+@forward 'pathable-pagination';
+@forward 'pathable-search';
+@forward 'pathable-sidenav';
+
+// The USWDS layout grid loads here, as before. index.scss loads it earlier,
+// so this only sets its place in components.css.
+@use 'usa-layout-grid/src/styles' as usa-layout-grid;
+
+// Communication
+@forward 'pathable-alert';
+@forward 'pathable-card';
+@forward 'pathable-collection';
+@forward 'pathable-icon';
+@forward 'pathable-icon-list';
+@forward 'pathable-process-list';
+@forward 'pathable-site-alert';
+@forward 'pathable-step-indicator';
+@forward 'pathable-summary-box';
+@forward 'pathable-table';
+@forward 'pathable-tag';

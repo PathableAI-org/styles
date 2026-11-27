@@ -81,8 +81,8 @@ class.
   background.
 - `pathable-list`: the list of key points. A `pathable-list` that ends the
   text adds no bottom margin.
-- A box that follows a sibling is 16 px below it. Place the box inside a
-  `pathable-stack` when the page needs another gap.
+- A box that follows a sibling is 16 px below it. Set another gap with a margin
+  utility when the page needs one.
 
 ## Guarantees
 

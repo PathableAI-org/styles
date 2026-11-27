@@ -442,9 +442,6 @@ importers:
       '@pathableai/component-docs':
         specifier: workspace:*
         version: link:../../scripts/component-docs
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
       postcss:
         specifier: ^8.5.33
         version: 8.5.33

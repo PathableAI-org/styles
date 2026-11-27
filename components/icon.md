@@ -10,15 +10,13 @@ variants:
     values: [default, size-3, size-4, size-5, size-6, size-7, size-8, size-9]
 guarantees:
   - id: em-size
-    claim: Outside a pathable-icon-tile or a pathable-bottom-navigation__item, the icon is 1em square, the font size of the icon element, whatever width and height attributes the SVG carries.
+    claim: The icon is 1em square, the font size of the icon element, whatever width and height attributes the SVG carries.
   - id: current-colour
     claim: The SVG's fill is the current text colour, so every shape in the referenced sprite symbol paints in that colour, and a fill attribute on the svg element itself is overridden.
   - id: baseline
     claim: The icon is an inline block with no vertical alignment of its own, so its bottom edge sits on the baseline of the text around it.
   - id: relative
     claim: The icon is relatively positioned with no offset, so a top or left value nudges it without moving the text around it.
-  - id: in-tile
-    claim: Inside a pathable-icon-tile the tile's icon size replaces the 1em size, and the icon stays centred in the tile.
   - id: size-modifiers
     claim: The classes pathable-icon--size-3 to pathable-icon--size-9 make the icon a square of 24, 32, 40, 48, 56, 64 and 72 px, whatever the font size around it.
 ---
@@ -34,16 +32,11 @@ not interactive: the class adds no role, no tab stop and no accessible name.
 
 - A small icon inside a line of text, a link, a button label or a list item,
   where it should grow and shrink with the text.
-- The icon inside a `pathable-icon-tile`, which then sets its size.
 
 Use something else when:
 
-- the icon needs a tile or background behind it, or a status colour: put it
-  in a `pathable-icon-tile`;
-- the icon is itself a control: use a `<button>` with
-  `pathable-icon-button`;
-- the icon stands for an empty view: use `pathable-empty-state__icon` inside
-  `pathable-empty-state`.
+- the icon is itself a control: use a `<button>` with an accessible name and
+  put the icon inside it.
 
 ## Example
 
@@ -127,8 +120,6 @@ An icon that carries meaning on its own has a `<title>` and is named by
 - Sitting on the baseline, the icon rises slightly above the centre of
   lowercase text. To centre it on a line, place it in a flex row with
   `pathable-flex-align-center`.
-- Inside `pathable-icon-tile` the tile sets the icon's size; see that
-  component's page. Inside a `pathable-bottom-navigation__item` it is 20 px.
 
 ## Guarantees
 

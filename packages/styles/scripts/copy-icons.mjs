@@ -3,7 +3,7 @@
  * that `dist/styles.css` resolves through `../img/...`.
  *
  * It also copies the icon sprite (`img/sprite.svg`), which markup references
- * through `<use>`.
+ * through `<use>`, and `img/hero.jpg`, the fixtures' sample image.
  *
  * The `dist/img` mirror remains available for the existing Storybook asset
  * copier and other distribution-path consumers.
@@ -43,8 +43,10 @@ if (!existsSync(stylesheetPath)) {
 
 const css = readFileSync(stylesheetPath, 'utf8')
 // The icon sprite is not referenced from CSS: components point an inline
-// `<use href>` at it, so it ships with the stylesheet's other images.
-const imagePaths = new Set(['sprite.svg'])
+// `<use href>` at it, so it ships with the stylesheet's other images. The
+// fixtures' card, collection and footer examples use `hero.jpg` as their
+// sample image, so it ships too.
+const imagePaths = new Set(['sprite.svg', 'hero.jpg'])
 const urlPattern = /url\(\s*(['"]?)(.*?)\1\s*\)/gu
 
 for (const match of css.matchAll(urlPattern)) {

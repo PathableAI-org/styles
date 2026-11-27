@@ -1,24 +1,7 @@
-// Selective import test: imports only pathable-button and verifies no other component classes appear.
+// Selective import test: forwards single component wrappers to check that each
+// compiles on its own without pulling in unrelated component classes.
 // Compile: sass --load-path=node_modules/@uswds/uswds/packages test/selective-import.scss test/selective-import.css
 
-// @forward '../src/pathable-component-wrappers/pathable-button';
-
-// Selective import test for the responsive form-row composition.
-@forward '../src/pathable-component-wrappers/pathable-form-row';
-
-// Selective import test for FormStack control expansion.
-@forward '../src/pathable-component-wrappers/pathable-stack';
-
-// Selective import tests for structured workflow components:
-// Import each new composition individually to verify they compile without pulling in unrelated classes.
-@forward '../src/pathable-component-wrappers/pathable-wizard';
-@forward '../src/pathable-component-wrappers/pathable-wizard-actions';
-@forward '../src/pathable-component-wrappers/pathable-workflow-panel';
-@forward '../src/pathable-component-wrappers/pathable-save-status';
-
-// Selective import tests for marketing patterns:
-@forward '../src/pathable-component-wrappers/pathable-decorative-background';
-@forward '../src/pathable-component-wrappers/pathable-screenshot-frame';
-@forward '../src/pathable-component-wrappers/pathable-bento-grid';
-@forward '../src/pathable-component-wrappers/pathable-chip-rail';
-@forward '../src/pathable-component-wrappers/pathable-text-highlight';
+@forward '../src/pathable-component-wrappers/pathable-button';
+@forward '../src/pathable-component-wrappers/pathable-form-group';
+@forward '../src/pathable-component-wrappers/pathable-search';

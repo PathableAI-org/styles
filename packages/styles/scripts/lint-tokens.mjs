@@ -4,7 +4,7 @@
  * Validates that every var(--*) reference in SCSS source files and story files
  * references a custom property that is actually defined. That covers the
  * --pathable-* namespace and the non-prefixed design tokens (--space-*,
- * --radius-*, --elevation-*, --ui-*) and their --usa-* aliases. A reference
+ * --radius-*, --elevation-*, --ui-*). A reference
  * resolves when the token source files define it, when any SCSS source file
  * declares it, or when it carries a fallback value. References inside comments
  * are checked too, so a comment that names a token must name a real one;
@@ -215,7 +215,7 @@ function parseNestedMapValues(content, mapName) {
  * hyphen, `&`, `}` or `(`, so a BEM modifier before a pseudo-class
  * (`.card--sm:hover`, `&--sm:hover`, `#{&}--sm:hover`) and an `@supports`
  * feature query (`(--x: y)`) are not mistaken for declarations. Interpolated
- * names (`--usa-#{$x}:`) do not match; the map parsers below cover those.
+ * names (`--pathable-#{$x}:`) do not match; the map parsers below cover those.
  * Callers strip comments first (see stripComments).
  */
 const DECLARATION_PATTERN = /(?<![\w&}(-])(--[a-zA-Z0-9_-]+)\s*:/g
@@ -278,7 +278,6 @@ export function extractDefinedTokens() {
   const typographyTokensMap = parseScssMap(typography, 'typography-tokens')
   for (const key of typographyTokensMap.keys()) {
     tokens.add(`--pathable-${key}`)
-    tokens.add(`--usa-${key}`)
   }
 
   // _radius.scss and _elevation.scss — static --radius-* and --elevation-*
@@ -308,16 +307,8 @@ export function extractDefinedTokens() {
   for (const [moduleName, valueKeys] of utilEntries) {
     for (const vk of valueKeys) {
       tokens.add(`--pathable-${moduleName}-${vk}`)
-      tokens.add(`--usa-${moduleName}-${vk}`)
     }
   }
-
-  // _components-custom-properties.scss — static --pathable-* in :root
-  const comp = readFileSync(
-    resolve(SRC, '_components-custom-properties.scss'),
-    'utf-8',
-  )
-  extractStaticTokens(comp, tokens)
 
   return Array.from(tokens).sort()
 }

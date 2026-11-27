@@ -107,7 +107,7 @@ order below. It skips an area with no commit since its last review. When every
 area is unchanged, the run records that on the tracking issue and stops.
 
 During the current static styles refactor, scheduled selection also skips
-`styles-js`, `react-primitives`, `react-theming` and `react-agent-guidance`.
+`react-primitives`, `react-theming` and `react-agent-guidance`.
 Review one only when the maintainer explicitly requests that deferred area.
 This keeps existing code visible without allowing drift review to turn it into
 active modernization work; the boundary is owned by
@@ -176,19 +176,6 @@ The `.pathable-*` component classes and their styles stories.
   - `packages/styles/src/stories/recipes`
   - `packages/styles/scripts/quality-gates.mjs`
   - `packages/styles/scripts/test-visual.mjs`
-
-### `styles-js`
-
-The framework-neutral JavaScript helpers `@pathableai/styles` still publishes.
-This is a retained, deferred area, not a current refactor target.
-
-- Owners: [`packages/styles/README.md`](../../packages/styles/README.md) and
-  [Target state](target-state.md)
-- Paths:
-  - `packages/styles/README.md`
-  - `packages/styles/src/js`
-  - `packages/styles/scripts/build-js.mjs`
-  - `packages/styles/package.json`
 
 ### `react-primitives`
 

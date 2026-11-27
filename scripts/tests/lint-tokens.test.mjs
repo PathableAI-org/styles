@@ -50,22 +50,29 @@ function undefinedTokens(content) {
 }
 
 describe('lint-tokens defined token set', () => {
-  it('reads the non-prefixed design tokens and their --usa-* aliases from the token sources', () => {
+  it('reads the non-prefixed and --pathable-* design tokens from the token sources', () => {
     const definedTokens = extractDefinedTokens()
     for (const prefix of [
       '--space-',
       '--radius-',
       '--elevation-',
       '--ui-',
-      '--usa-font-size-',
+      '--pathable-font-size-',
       '--pathable-space-',
-      '--usa-bg-',
+      '--pathable-bg-',
     ]) {
       assert.ok(
         definedTokens.some((token) => token.startsWith(prefix)),
         `expected a defined ${prefix}* token`,
       )
     }
+  })
+
+  it('defines no --usa-* alias tokens', () => {
+    assert.deepEqual(
+      extractDefinedTokens().filter((token) => token.startsWith('--usa-')),
+      [],
+    )
   })
 })
 
