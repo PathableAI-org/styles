@@ -53,7 +53,7 @@ are not committed.
 | Verification  | Building and observing the local head SHA; its reply              | Edit the branch, fix the implementation or post on GitHub              |
 | Code review   | Correctness and maintainability review at the same SHA            | Edit the branch                                                        |
 | Scope review  | Whether the diff delivers the accepted scope, no more and no less | Edit the branch                                                        |
-| Visual review | Judging captured rendering against the base and stated change     | Edit code or baselines                                                 |
+| Visual review | Judging captured rendering against the base and stated change     | Edit code                                                              |
 
 ## Verification loop
 

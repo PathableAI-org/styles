@@ -16,7 +16,7 @@
  *     [--story <id>]...       add a story (react:<id> for the React Storybook)
  *     [--only]                capture only the --story stories (a re-capture);
  *                             reuses the built worktrees, writes a new manifest
- * *   node scripts/visual-capture.mjs --out <dir> --clean
+ *   node scripts/visual-capture.mjs --out <dir> --clean
  *                             stop nothing, remove the worktrees under <dir>
  *
  * The manifest is <dir>/manifest.json (or <dir>/recapture-<n>.json with
