@@ -20,13 +20,13 @@ guarantees:
   - id: inside-prose
     claim: A card group that is a direct child of pathable-prose renders the same as one outside it, with no list padding or bullets and the same card spacing.
   - id: box
-    claim: The container is a white box with a 2 px solid #eef0f4 border, 0.5rem rounded corners and 0.5rem left and right margins, set in Nunito at 0.99rem with a line height of 1.6 in the theme text colour; the card itself draws no background, border or padding.
+    claim: The container is a white box with a 2 px solid #eef0f4 border, 0.5rem rounded corners and 0.5rem left and right margins, set in Nunito at 1rem (the sm size) with a line height of 1.6 in the theme text colour; the card itself draws no background, border or padding.
   - id: card-spacing
     claim: A card has a bottom margin of 2.5rem below a 40em viewport and 2rem from 40em, including when it is the last child of its parent.
   - id: part-padding
     claim: The header, body and footer have 1.5rem of padding left and right; the header has 1.5rem above and 0.5rem below, the body 0.5rem above and below, and the footer 0.5rem above and 1.5rem below; the first part has 1.5rem above it and the last part 1.5rem below it.
   - id: heading-style
-    claim: The heading is set in Fredoka Regular at 1.49rem with a line height of 1.2 and no margin, and a word wider than the card breaks instead of leaving it.
+    claim: The heading is set in Fredoka Regular at 1.5rem (the lg size) with a line height of 1.2 and no margin, and a word wider than the card breaks instead of leaving it.
   - id: media-fit
     claim: Outside a flag card, the media is ordered before the other parts, so it sits at the top of the card, and its image is as wide as the container, cropped to cover the image box, which has a light grey background.
   - id: media-corners
@@ -112,7 +112,7 @@ element modifiers, set on the element and not on the card:
 ## Tokens
 
 None. The sizes, colours and spacing are fixed values in the compiled
-stylesheet, not custom properties. The pixel figures on this page are those of
+stylesheet. The pixel figures on this page are those of
 the default theme.
 
 ## Composition

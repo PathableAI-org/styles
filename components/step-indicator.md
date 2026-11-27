@@ -26,11 +26,11 @@ guarantees:
   - id: counter
     claim: 'The current-step number in the heading is a 2.5rem circle with its number centred, a #00365c background and white text.'
   - id: heading-size
-    claim: 'The heading is bold #00365c at 1.12rem with a 1rem top margin below a 40em viewport, and 1.49rem with a 2rem top margin from 40em.'
+    claim: 'The heading is bold #00365c at 1.13rem (the md size) with a 1rem top margin below a 40em viewport, and 1.5rem (the lg size) with a 2rem top margin from 40em.'
   - id: segment-counters
     claim: With the counters modifier, from 40em each segment shows its number in a 2.5rem circle centred on its bar, upcoming circles ringed #919191 with #565c65 numbers, complete circles #001e33 and the current circle #00365c with white numbers, and the last segment has no bar.
   - id: segment-counters-small
-    claim: With the counters-sm modifier the segment circles are 1.5rem across with 0.87rem numbers and the same colours as counters.
+    claim: With the counters-sm modifier the segment circles are 1.5rem across with 0.88rem (the 2xs size) numbers and the same colours as counters.
   - id: centered-segments
     claim: With the center modifier, from 40em the segment circles and labels are centred on each segment and the label text is centred.
   - id: no-labels
@@ -90,16 +90,15 @@ Composition.
 
 ## Tokens
 
-None. The colours, the Nunito font, sizes and spacing are fixed values and do
-not follow a theme. The bar and heading colours come from the theme's colour
-settings: PathAble Blue `#00365c` for the current step, its darker grade
+None. The colours, the Nunito font, sizes and spacing are fixed values in the
+stylesheet. The bar and heading colours are: PathAble Blue `#00365c` for the current step, its darker grade
 `#001e33` for complete steps, `#919191` for the upcoming bar and `#565c65` for
 the upcoming label text.
 
 ## Composition
 
 - `pathable-step-indicator` is the block, a `<div>`. It sets the body font at
-  0.99rem with a line height of 1.2, a white background and a 2rem bottom
+  1rem with a line height of 1.2, a white background and a 2rem bottom
   margin. Below 40em it has a −1 px side margin so the first and last bars
   line up with the container edge.
 - `pathable-step-indicator__segments` is the `<ol>` of steps: a flex row with

@@ -107,10 +107,9 @@ as wide as the form only when its own cap is wider.
 
 ## Tokens
 
-The group has none of its own. The prefix and suffix text takes the theme's
-muted text colour, so a theme that changes that colour changes the affix too,
-and must keep it at 4.5:1 or more against white for the affix-contrast
-guarantee to hold. Every other value is fixed in the stylesheet.
+The group has none of its own. The prefix and suffix text uses the muted text
+colour, kept at 4.5:1 or more against white for the affix-contrast guarantee.
+Every other value is fixed in the stylesheet.
 
 ## Composition
 

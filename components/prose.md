@@ -7,19 +7,19 @@ styles-class: pathable-prose
 variants: []
 guarantees:
   - id: base-type
-    claim: The container sets the body typeface, Nunito, at 0.99rem with a line height of 1.6 for the text inside it.
+    claim: The container sets the body typeface, Nunito, at 1rem (the sm size) with a line height of 1.6 for the text inside it.
   - id: paragraph-measure
     claim: A paragraph that is a direct child has a line height of 1.6 and is at most 68ex wide, and longer text wraps inside that width.
   - id: heading-scale
-    claim: Direct-child headings h1 to h6 are 1.49rem, 1.12rem, 1.12rem, 0.99rem, 0.87rem and 0.75rem, with a margin of 0 and a line height of 1.4, and an h6 is uppercase with 0.025em letter spacing.
+    claim: Direct-child headings h1 to h6 are 1.5rem, 1.13rem, 1.13rem, 1rem, 0.88rem and 0.75rem (the lg, md, md, sm, 2xs and 3xs sizes), with a margin of 0 and a line height of 1.4, and an h6 is uppercase with 0.025em letter spacing.
   - id: heading-weight
-    claim: Direct-child headings h1 to h5 use the normal font weight token, --pathable-font-weight-normal.
+    claim: Direct-child headings h1 to h5 are set at weight 400, the normal weight.
   - id: block-rhythm
     claim: A direct child that follows another has a top margin of 1em, and a heading that follows another child has a top margin of 1.5em.
   - id: list-rules
     claim: A list that is a direct child has a 1em top and bottom margin, 3ch of left padding and a line height of 1.6, and its items have a 0.25em bottom margin and a width of at most 68ex.
   - id: table-rules
-    claim: A table that is a direct child has the body typeface at 0.99rem, collapsed borders and a 1.25rem top and bottom margin.
+    claim: A table that is a direct child has the body typeface at 1rem (the sm size), collapsed borders and a 1.25rem top and bottom margin.
   - id: heading-typeface
     claim: A direct-child heading is set in the heading typeface at weight 400, Fredoka Regular.
 ---
@@ -67,9 +67,9 @@ JavaScript and are not part of this component.
 
 ## Tokens
 
-| What                    | Token                           |
-| ----------------------- | ------------------------------- |
-| Heading weight, h1 – h5 | `--pathable-font-weight-normal` |
+| What                    | Value       |
+| ----------------------- | ----------- |
+| Heading weight, h1 – h5 | 400, normal |
 
 The sizes, line heights and spacing on this page are fixed in the stylesheet
 and relative to the container's font size.

@@ -10,7 +10,7 @@ variants:
     values: [default, big]
 guarantees:
   - id: font-size
-    claim: The tag text is uppercase Nunito at 0.87rem by default and 0.99rem at big, which is 13.92 px and 15.84 px at a 16 px root font size.
+    claim: The tag text is uppercase Nunito at 0.88rem (the 2xs size) by default and 1rem (the sm size) at big, which is 14.08 px and 16 px at a 16 px root font size.
   - id: box
     claim: The tag has 1 px of padding above and below, 0.5rem of padding left and right, and 2 px rounded corners, at both sizes.
   - id: colour
@@ -63,17 +63,17 @@ what you need.
 
 Add at most one modifier class to `pathable-tag`.
 
-| Axis | Value     | Class               | What it is for                               |
-| ---- | --------- | ------------------- | -------------------------------------------- |
-| size | `default` | none                | 0.87rem text, for most labels                |
-| size | `big`     | `pathable-tag--big` | 0.99rem text, beside larger headings or text |
+| Axis | Value     | Class               | What it is for                            |
+| ---- | --------- | ------------------- | ----------------------------------------- |
+| size | `default` | none                | 0.88rem text, for most labels             |
+| size | `big`     | `pathable-tag--big` | 1rem text, beside larger headings or text |
 
 The big tag changes only the font size; the padding is the same.
 
 ## Tokens
 
 None. The font size, padding, corner radius and colours are fixed values in
-the stylesheet, so a theme does not change them. The tag sets no line height, so
+the stylesheet. The tag sets no line height, so
 its height follows the line height of the text around it.
 
 ## Composition

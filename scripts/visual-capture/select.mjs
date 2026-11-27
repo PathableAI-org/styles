@@ -183,7 +183,6 @@ function entryFromChangedFile(entry, renderPaths) {
  * - `changedPaths`: repository paths the diff changes
  * - `indexes`: `{ styles, react }`, each the head Storybook's `index.json`
  *   entries as an array (`react` may be absent when not built)
- * - `canonical`: the canonical story list, `{ id, mode }`
  * - `extra`: story IDs asked for explicitly, `react:<id>` for the React
  *   Storybook
  * - `classification`: `classifyChanges(...).paths`, so a manifest or the
@@ -202,7 +201,6 @@ function entryFromChangedFile(entry, renderPaths) {
 export function chooseStories({
   changedPaths: allPaths,
   indexes,
-  canonical = [],
   extra = [],
   classification = null,
   force = false,
@@ -219,7 +217,6 @@ export function chooseStories({
       : classifyPath(path).kind !== 'none',
   )
   const chosen = new Map()
-  const modes = new Map(canonical.map((story) => [story.id, story.mode]))
   const add = (workspace, entry, reason, changed) => {
     const key = `${workspace}:${entry.id}`
     const story = chosen.get(key) ?? {
@@ -229,7 +226,7 @@ export function chooseStories({
       importPath: entry.importPath ?? '',
       reasons: [],
       changed: false,
-      mode: modes.get(entry.id) ?? 'both',
+      mode: 'both',
     }
     if (!story.reasons.includes(reason)) story.reasons.push(reason)
     story.changed ||= changed
@@ -319,26 +316,16 @@ export function chooseStories({
     }
   }
 
-  const styles = (indexes.styles ?? []).filter(
-    (entry) => entry.type === 'story',
-  )
-  const byId = new Map(styles.map((entry) => [entry.id, entry]))
   for (const [workspace, entries] of workspaces) {
     const paths = shared.filter((path) => sharedFor(path).includes(workspace))
     if (paths.length === 0) continue
     const reason = `Shared path changed (${paths[0]}${paths.length > 1 ? ', …' : ''}).`
     const stories = entries.filter((entry) => entry.type === 'story')
-    const listed =
-      workspace === 'styles'
-        ? canonical.map(({ id }) => byId.get(id)).filter(Boolean)
-        : []
-    // With no canonical story in this Storybook (the React one has none, and
-    // the styles list is empty while it is rebuilt), fall back to the first
-    // story of each stories file.
-    const sample = listed.length > 0 ? listed : firstOfEachFile(stories)
-    const sampleReason =
-      listed.length > 0 ? reason : `${reason} First story of its file.`
-    for (const entry of sample) add(workspace, entry, sampleReason, false)
+    // A shared change samples the first story of each stories file.
+    const sampleReason = `${reason} First story of its file.`
+    for (const entry of firstOfEachFile(stories)) {
+      add(workspace, entry, sampleReason, false)
+    }
   }
 
   for (const request of extra) {

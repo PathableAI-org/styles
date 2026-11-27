@@ -237,19 +237,7 @@ describe('chooseStories', () => {
     )
   })
 
-  it('adds the canonical list for a shared change, unchanged', () => {
-    const chosen = chooseStories({
-      changedPaths: ['packages/styles/src/_colors.scss'],
-      indexes: { styles: stylesIndex },
-      canonical: [{ id: 'alert--info', mode: 'desktop' }],
-    })
-    assert.deepEqual(
-      chosen.map((item) => [item.id, item.changed, item.mode]),
-      [['alert--info', false, 'desktop']],
-    )
-  })
-
-  it('falls back to the first story of each file when the lists are empty', () => {
+  it('samples the first story of each file for a shared change', () => {
     const chosen = chooseStories({
       changedPaths: ['packages/styles/src/_colors.scss'],
       indexes: { styles: stylesIndex },

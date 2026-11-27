@@ -32,7 +32,7 @@ guarantees:
   - id: status-fill
     claim: The success, warning and error alerts fill the whole alert, body included, with the status background (#1cae96, #f5a623, #dc3545) and set their text in the status text colour (#001a33, #001a33, #ffffff), so every pairing has at least 4.5:1 contrast.
   - id: heading-text-type
-    claim: The heading is set about 24 px (1.49rem) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves.
+    claim: The heading is set at 1.5rem (the lg size, 24 px at a 16 px root) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves.
   - id: link-colour
     claim: A link inside an alert is set in a colour that has at least 4.5:1 contrast on that alert's background.
   - id: no-icon
@@ -128,18 +128,18 @@ soon". Colour and the icon are never the only cue.
 
 ## Tokens
 
-| What                                  | Token                                                                        |
-| ------------------------------------- | ---------------------------------------------------------------------------- |
-| Success background and text           | `--pathable-color-status-success-bg`, `--pathable-color-status-success-text` |
-| Warning background and text           | `--pathable-color-status-warning-bg`, `--pathable-color-status-warning-text` |
-| Error background and text             | `--pathable-color-status-danger-bg`, `--pathable-color-status-danger-text`   |
-| Focus ring on success, warning, error | `--pathable-color-on-accent`                                                 |
-| Focus ring on emergency               | `--pathable-color-status-danger-text`                                        |
-| Focus ring on info and plain alerts   | none: PathAble Blue from the theme's colour palette                          |
+| What                                  | Value                                                                      |
+| ------------------------------------- | -------------------------------------------------------------------------- |
+| Success background and text           | Intelligent Jade, #1cae96, with #001a33 text                               |
+| Warning background and text           | Amber, #f5a623, with #001a33 text                                          |
+| Error background and text             | Danger, #dc3545, with white, #ffffff, text                                 |
+| Focus ring on success, warning, error | #001a33 on all three, which is also the text colour on success and warning |
+| Focus ring on emergency               | White, #ffffff, the text colour of the alert                               |
+| Focus ring on info and plain alerts   | PathAble Blue, #00365c                                                     |
 
 The pixel figures on this page are those of the default theme. The info and
-emergency colours come from the theme's colour palette, not from a PathAble
-token.
+emergency colours come from the theme's colour palette, shown on
+[tokens-color.md](tokens-color.md).
 
 ## Composition
 
