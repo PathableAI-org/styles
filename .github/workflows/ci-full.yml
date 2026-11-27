@@ -140,7 +140,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # test:tooling launches Chromium (scripts/tests/visual-capture.test.mjs).
       - uses: ./.github/actions/setup
+        with:
+          install_playwright: 'true'
       - name: Build ESLint scope
         id: scope
         run: |
