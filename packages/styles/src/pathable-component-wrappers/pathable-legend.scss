@@ -28,12 +28,7 @@
 // default above by source order, and a colour utility on the legend itself
 // still wins over both.
 $-legend-inherits-colour-under: (
-  '.pathable-surface--inverse',
-  '.pathable-surface--tone-primary',
-  '.pathable-section--dark',
-  '.pathable-hero',
   '.pathable-dark-background',
-  '.pathable-surface--brand',
   '.pathable-alert',
   '.pathable-bg-accent',
   '.pathable-bg-danger',
@@ -41,8 +36,6 @@ $-legend-inherits-colour-under: (
   '.pathable-bg-primary',
   '.pathable-bg-success',
   '.pathable-bg-focus-ring',
-  '.pathable-identifier',
-  '.pathable-screenshot-frame--dashboard',
   '.pathable-text-accent',
   '.pathable-text-base',
   '.pathable-text-link',

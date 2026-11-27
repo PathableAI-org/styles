@@ -53,9 +53,8 @@ Use something else when:
 
 - the steps are instructions to read, not progress: use
   `pathable-process-list`;
-- the person needs to move between steps: build the wizard with
-  `pathable-wizard` and its own navigation, and keep the step indicator as a
-  display only.
+- the person needs to move between steps: build that navigation in the
+  application, and keep the step indicator as a display only.
 
 ## Example
 

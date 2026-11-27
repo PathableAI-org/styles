@@ -34,14 +34,11 @@
 // holds at every viewport regardless of stylesheet order. The responsive
 // variants are repeated in the same breakpoint order as the utilities, so a
 // mobile-first override such as `tablet:pathable-width-auto` still beats the
-// unprefixed class. `--destructive` is listed because it renders a whole
-// button on its own; --primary and --continue pick the rule up through their
-// @extend.
+// unprefixed class.
 @each $width-name,
   $width-value in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
 {
-  .pathable-button.pathable-width-#{$width-name},
-  .pathable-button--destructive.pathable-width-#{$width-name} {
+  .pathable-button.pathable-width-#{$width-name} {
     width: $width-value;
   }
 }
@@ -52,16 +49,11 @@
       $width-value
         in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
     {
-      .pathable-button.#{$bp-name}\:pathable-width-#{$width-name},
-      .pathable-button--destructive.#{$bp-name}\:pathable-width-#{$width-name} {
+      .pathable-button.#{$bp-name}\:pathable-width-#{$width-name} {
         width: $width-value;
       }
     }
   }
-}
-
-.pathable-button--primary {
-  @extend .pathable-button;
 }
 
 .pathable-button--accent-cool {
@@ -131,16 +123,11 @@
 
 // USWDS colours button focus outlines only through its global element rule,
 // which this package does not include, so apply the shared brand focus ring.
-// The other modifiers are used with .pathable-button, which carries the ring.
-// --primary and --continue @extend .pathable-button and --destructive
-// @extends .usa-button, so each also renders a whole button on its own; the
-// first two pick the ring up through that @extend and --destructive is listed.
-// The mixin's :focus-within also shows the ring after a pointer click, as on
-// the icon button. USWDS's more specific .usa-button:not([disabled]):focus
+// The modifiers are used with .pathable-button, which carries the ring.
+// The mixin's :focus-within also shows the ring after a pointer click. USWDS's more specific .usa-button:not([disabled]):focus
 // rule keeps its 0.25rem outline-offset. This rule stays above --unstyled, so
 // its later :focus rule keeps the USWDS 4px ring at equal specificity.
-.pathable-button,
-.pathable-button--destructive {
+.pathable-button {
   @include states.state-focus;
 }
 
@@ -167,29 +154,6 @@
       var(--pathable-color-focus-ring)
     );
   }
-}
-
-// Workflow-intent variant classes (T016-T020)
-.pathable-button--save {
-  @extend .pathable-button--secondary;
-}
-
-.pathable-button--continue {
-  @extend .pathable-button--primary;
-}
-
-.pathable-button--review {
-  @extend .pathable-button--accent-cool;
-}
-
-.pathable-button--destructive {
-  @extend .usa-button;
-  background-color: var(--pathable-color-danger);
-  color: #ffffff;
-}
-
-.pathable-button--low-emphasis {
-  @extend .pathable-button--base;
 }
 
 @media (max-width: 39.99em), (pointer: coarse) {

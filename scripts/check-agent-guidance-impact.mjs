@@ -38,17 +38,14 @@ const categories = [
         'Toast',
       ].some((component) =>
         path.startsWith(`packages/react/src/components/${component}/`),
-      ) ||
-      path.startsWith('packages/styles/src/js/') ||
-      path === 'scripts/check-react-server-compatibility.mjs',
+      ) || path === 'scripts/check-react-server-compatibility.mjs',
   },
   {
     name: 'published manifests or entry points',
     matches: (path) =>
       path === 'packages/react/package.json' ||
       path === 'packages/styles/package.json' ||
-      path === 'packages/react/vite.config.ts' ||
-      path === 'packages/styles/scripts/build-js.mjs',
+      path === 'packages/react/vite.config.ts',
   },
 ]
 

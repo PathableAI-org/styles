@@ -102,10 +102,8 @@ $ui-caption-md: 0.75rem;
   --ui-caption-md: #{$ui-caption-md};
 }
 
-// Dual-Named CSS Custom Properties for Typography Tokens
-// These emit both --pathable-#{$name} and --usa-#{$name} from a single
-// source of truth. The two namespaces always resolve to identical values.
-// Adding a new token requires editing only one map entry.
+// CSS Custom Properties for Typography Tokens
+// These emit --pathable-#{$name} for each entry of the map below.
 $typography-tokens: (
   'font-heading': $pathable-font-heading,
   'font-body': $pathable-font-body,
@@ -133,6 +131,5 @@ $typography-tokens: (
 :where(:root) {
   @each $name, $value in $typography-tokens {
     --pathable-#{$name}: #{$value};
-    --usa-#{$name}: #{$value};
   }
 }

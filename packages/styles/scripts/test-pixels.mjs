@@ -11,7 +11,7 @@
  * docs/testing/visual-regression.md.
  *
  *   node packages/styles/scripts/test-pixels.mjs                  compare
- *   node packages/styles/scripts/test-pixels.mjs --update --component icon-button
+ *   node packages/styles/scripts/test-pixels.mjs --update --component button
  *   node packages/styles/scripts/test-pixels.mjs --no-container   compare on the host
  */
 
@@ -75,9 +75,7 @@ function run(command, args, options = {}) {
 const componentOf = (story) => story.key.split('/')[0]
 
 if (values.update && values.component.length === 0) {
-  fail(
-    'An update needs --component <key>, for example --component icon-button.',
-  )
+  fail('An update needs --component <key>, for example --component button.')
 }
 for (const component of values.component) {
   if (!STORIES.some((story) => componentOf(story) === component)) {

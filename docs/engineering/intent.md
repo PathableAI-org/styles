@@ -84,12 +84,12 @@ scope; a component that requires package JavaScript to provide its defining
 behavior does not. The exact catalog is owned by
 [`components/README.md`](../../components/README.md#catalog-scope).
 
-`packages/react/`, the React Storybook and React consumer guidance,
-`packages/styles/src/js/`, the styles package's existing JavaScript exports,
-and legacy custom or JavaScript-dependent wrappers remain in the repository.
-They are retained to avoid accidental breaking changes but are not current
-refactor targets. Their presence is not permission to broaden static component
-work, modernize them opportunistically or delete them. Shared generators and
+`packages/react/`, the React Storybook and React consumer guidance remain in
+the repository. The styles package's JavaScript and its JavaScript-dependent
+and PathAble-only component wrappers were removed. The React surfaces are
+retained to avoid accidental breaking changes but are not current refactor
+targets. Their presence is not permission to broaden static component work,
+modernize them opportunistically or delete them. Shared generators and
 existing checks may still require mechanical output updates.
 
 The current package layout is hybrid: generated component Markdown already

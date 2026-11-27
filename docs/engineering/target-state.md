@@ -86,7 +86,7 @@ checkboxes and selects remain in scope.
 
 Accordion, combo box, date picker, modal, tooltip and the other components
 whose defining behavior needs package JavaScript are outside the current
-catalog. Their existing source does not make them part of the target.
+catalog, and the package ships no source for them.
 
 The design-token and utility documentation and fixture slices are in place.
 Current implementation work is bringing the documented static components into
@@ -118,13 +118,10 @@ Presence in the repository is not the same as active support scope. The
 following areas remain to avoid accidental breaking changes, but are not
 current refactor targets unless a task explicitly names them:
 
-| Area                                                      | Current instruction                                                                                                                                                              |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/react/`                                         | Do not expand, modernize or remove React components, APIs, stories or guidance as part of static styles work. Do not use React behavior to redefine a component page or fixture. |
-| React Storybook and the former `/react` Pages surface     | Retained but not currently built or deployed during the static styles refactor. Do not re-enable, expand or remove it without an explicitly scoped task.                         |
-| `packages/styles/src/js/` and the existing `./js` exports | Do not add JavaScript behavior, make a static component depend on it, modernize it opportunistically or delete it.                                                               |
-| JavaScript-dependent component wrappers                   | Do not bring them into the supported catalog or change their DOM contract during static component work.                                                                          |
-| Legacy PathAble-only components                           | Keep them unless a separate decision says to retain, move or remove one. They do not expand the USWDS static catalog.                                                            |
+| Area                                                  | Current instruction                                                                                                                                                              |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/react/`                                     | Do not expand, modernize or remove React components, APIs, stories or guidance as part of static styles work. Do not use React behavior to redefine a component page or fixture. |
+| React Storybook and the former `/react` Pages surface | Retained but not currently built or deployed during the static styles refactor. Do not re-enable, expand or remove it without an explicitly scoped task.                         |
 
 A component-page or fixture change may make committed React guidance stale.
 When an existing check requires it, update only the generated output
@@ -153,7 +150,7 @@ or documented class back toward legacy SCSS. Fix the implementation in the
 component's scoped work, or record the known gap without expanding the pull
 request.
 
-Existing drift in a deferred React, JavaScript or legacy component area is not
+Existing drift in the deferred React area is not
 an invitation to fix it. Do not introduce a new failure there, but keep a
 confirmed unrelated defect out of the current change and report it through the
 repository bug process.
@@ -203,7 +200,6 @@ a component pull request:
 - whether and how GitHub issue automation applies component and area labels;
 - whether GitHub Pages becomes versioned or continues as a clearly identified
   rolling build;
-- the eventual disposition of React, styles JavaScript, JavaScript-dependent
-  wrappers and PathAble-only legacy components; and
+- the eventual disposition of React; and
 - any future compiled-CSS entry points beyond the package's current bundle
   shape.

@@ -42,11 +42,7 @@ state.
 
 Use something else when:
 
-- the buttons should wrap onto more lines at every width, including below
-  480 px where the group stacks: use `pathable-cluster`;
-- the buttons should stay in a row at every width: use `pathable-inline`;
-- the items are form fields: use `pathable-form-row`;
-- the items are cards or tiles: use `pathable-grid`.
+- the items are cards: use a `pathable-card-group`.
 
 ## Example
 
@@ -89,12 +85,10 @@ are not custom properties and do not change with the theme.
 - Below 480 px each item is full width and the stacked buttons sit 8 px apart,
   so the focused button's focus ring shows on all four sides.
 - The group has a negative inline margin of 4 px on each side, so it extends
-  4 px beyond its container at the start and the end. Leave room for it, or
-  use `pathable-cluster`, which has no negative margin.
+  4 px beyond its container at the start and the end. Leave room for it.
 - From 480 px the row wraps: when the items do not fit the group's container,
   such as with long labels, more than three buttons or enlarged text, the last
   one moves to a new line 8 px below instead of running past the container.
-  Use `pathable-cluster` when you want wrapping at every width.
 - The 480 px breakpoint follows the viewport, not the group's container. It
   is set as 30em, which is 480 px at the browser's default 16 px font size;
   a larger default font size moves it.

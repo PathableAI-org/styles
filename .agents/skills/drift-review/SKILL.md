@@ -1,6 +1,6 @@
 ---
 name: drift-review
-description: Review one area of the PathAble design system (tokens, utilities, component wrappers, styles JS, React primitives, React theming, agent guidance, Storybook infrastructure) for slow drift from its current owning documents, verify and cap the findings, and file or update GitHub issues labelled drift. Read-only on the repository. Use for the scheduled drift review or when a person asks for a drift review of an area.
+description: Review one area of the PathAble design system (tokens, utilities, component wrappers, React primitives, React theming, agent guidance, Storybook infrastructure) for slow drift from its current owning documents, verify and cap the findings, and file or update GitHub issues labelled drift. Read-only on the repository. Use for the scheduled drift review or when a person asks for a drift review of an area.
 ---
 
 # Drift review

@@ -40,8 +40,6 @@ roles: give it a name yourself.
 
 Use something else when:
 
-- the items have a status, a date and an owner the reader scans: use
-  `pathable-activity-list`;
 - the items are ordered steps of a process: use `pathable-process-list`;
 - the list has no icons: use a plain `<ul>`.
 

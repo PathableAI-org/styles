@@ -19,8 +19,7 @@ $pathable-color-danger: #dc3545;
 $pathable-color-success: #1cae96;
 // Text-safe success color — deep jade validated to pass WCAG AA (≥ 4.5:1)
 // contrast on --pathable-color-surface, unlike the brand accent
-// --pathable-color-success (#1cae96), which fails. Used by the
-// .pathable-text--tone-success semantic text tone.
+// --pathable-color-success (#1cae96), which fails.
 $pathable-color-text-success: #0d7a63;
 
 // Action Role Tokens

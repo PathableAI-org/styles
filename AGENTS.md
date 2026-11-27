@@ -36,20 +36,17 @@ component's CSS is a defect in the CSS; never change the page or fixture back
 to match legacy SCSS.
 
 The current catalog is limited to components whose defining behavior needs no
-design-system JavaScript. `packages/react/`, the React Storybook and consumer
-guidance, `packages/styles/src/js/`, and the existing `./js` exports are
-**retained but deferred**. Unless a task explicitly puts one in scope, do not
-modernize, expand or remove it, and do not use its current behavior to redefine
-the styles target. A shared-source change may still require a mechanical
+design-system JavaScript, and `@pathableai/styles` ships no JavaScript.
+`packages/react/`, the React Storybook and consumer guidance are **retained
+but deferred**. Unless a task explicitly puts one in scope, do not modernize,
+expand or remove it, and do not use its current behavior to redefine the
+styles target. A shared-source change may still require a mechanical
 generated React-guidance update or an existing check to pass; that does not
 make React behavior part of the change.
 
 Read [`docs/engineering/intent.md`](docs/engineering/intent.md) for the product
 model and [`docs/engineering/target-state.md`](docs/engineering/target-state.md)
-before changing the styles package, its fixtures or component pages. Where a
-package document describes `usa-` dual-classing or JavaScript-powered
-components, it describes retained implementation, not the current direction
-of the package.
+before changing the styles package, its fixtures or component pages.
 
 ## Where the rules live
 

@@ -66,10 +66,7 @@ is the container, and the card itself only sets spacing.
 Use something else when:
 
 - the items are rows in a scannable list, each with a title and details:
-  use `pathable-collection`;
-- the box only groups content and has no heading or action: use
-  `pathable-surface`;
-- the item is a count or a metric: use `pathable-kpi-grid`.
+  use `pathable-collection`.
 
 ## Example
 

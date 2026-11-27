@@ -26,10 +26,10 @@ function compile(entry) {
 // specificity, so the utility only wins when it is emitted after the component.
 test('styles.css emits utilities after every component rule', () => {
   const css = compile('src/index.scss')
-  // The last component rule: marketing and text patterns end the component
-  // bundle, so check against one of the final ones as well as the checkbox.
+  // The last component rule: the table is one of the final components in the
+  // bundle, so check against it as well as the checkbox.
   const lastComponent = Math.max(
-    css.lastIndexOf('\n.pathable-text-highlight'),
+    css.lastIndexOf('\n.pathable-table'),
     css.lastIndexOf('\n.pathable-checkbox'),
   )
   const firstUtility = css.indexOf('\n.pathable-bg-primary')

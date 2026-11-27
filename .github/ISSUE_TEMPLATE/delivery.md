@@ -27,7 +27,7 @@ title: ''
 <!-- Which published contracts change, in source-first order:
 1. @pathableai/styles compiled CSS: tokens, CSS custom properties, static .pathable-* classes, assets, or "none".
 2. @pathableai/styles consumer agent guidance: installed component pages, package-wide selection or bug-reporting guidance, or "none".
-3. Retained/deferred surfaces: @pathableai/styles JavaScript, @pathableai/react API or React consumer guidance, but only when this issue explicitly puts one in scope; otherwise "none".
+3. Retained/deferred surfaces: @pathableai/react API or React consumer guidance, but only when this issue explicitly puts one in scope; otherwise "none".
 Say whether each change is additive, a visible change, or a removal or rename. Static styles work must not expand into a retained/deferred surface. If an explicitly scoped React change needs a styles contract that does not exist yet, the styles change lands first. -->
 
 ## Dependencies

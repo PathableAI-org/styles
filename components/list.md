@@ -85,8 +85,8 @@ font size (`em`, `ch`, `ex`), so the spacing scales with the text it inherits.
 - A list nested inside an item gets the 0.25em top margin, 0.25em between its
   items and the 68ex item width without the class. Its indent is then the
   browser's default, not 3ch.
-- The list can sit anywhere text does, including inside `pathable-prose`,
-  `pathable-card` and `pathable-media-block`.
+- The list can sit anywhere text does, including inside `pathable-prose` and
+  `pathable-card`.
 
 ## Guarantees
 

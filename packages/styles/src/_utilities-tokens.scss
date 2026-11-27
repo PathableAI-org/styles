@@ -1,9 +1,8 @@
 // ==========================================
-// Utility Dual CSS Custom Properties
+// Utility CSS Custom Properties
 // ==========================================
 //
-// Emits every utility token value as both --pathable-{name} and --usa-{name}
-// in :root. Names are prefixed with the module name (e.g., --pathable-bg-primary,
+// Emits every utility token value as --pathable-{name} in :root. Names are prefixed with the module name (e.g., --pathable-bg-primary,
 // --pathable-padding-4) to avoid collisions across modules. Lives in its own
 // partial so the token block can be compiled into theme-default.css while the
 // utility classes compile into utilities.css.
@@ -17,7 +16,6 @@
   @each $module-name, $module in uc.$pathable-utilities {
     @each $val-name, $val in map.get($module, 'values') {
       --pathable-#{$module-name}-#{$val-name}: #{$val};
-      --usa-#{$module-name}-#{$val-name}: #{$val};
     }
   }
 }

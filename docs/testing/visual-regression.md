@@ -125,11 +125,8 @@ story, can get a baseline of its own by the rule above.
 pnpm build                      # build the packages; the Storybook imports them
 pnpm build:docs                 # build the styles Storybook
 pnpm test:pixels-styles         # compare the rollout list with its baselines
-pnpm test:pixels-styles:update --component icon-button
+pnpm test:pixels-styles:update --component button
 ```
-
-`pnpm build:docs` fails to resolve `@pathableai/styles/js` until
-`pnpm build` has run in the checkout.
 
 Both commands run in the pinned container through Docker, with the
 repository mounted at the same path and your user ID. The container uses the

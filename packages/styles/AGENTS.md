@@ -17,16 +17,15 @@ Use these rules when creating or editing PathAble UI, documentation, prototypes,
 > applies PathAble brand settings. See
 > [`docs/engineering/target-state.md`](../../docs/engineering/target-state.md),
 > which wins for the direction of the package. Sections below marked "current
-> implementation, being replaced" describe today's code, including `usa-`
-> dual-classing; follow them to work on that code, but do not copy the pattern
-> into new docs or fixtures.
+> implementation, being replaced" describe today's code; follow them to work on
+> that code, but do not copy the pattern into new docs or fixtures.
 >
 > **Active scope.** Work only on the documented static catalog, its component
 > pages and fixtures, tokens and utilities, and the compiled CSS unless the task
-> explicitly says otherwise. `packages/react/`, `src/js/`, the existing `./js`
-> exports, JavaScript-dependent wrappers and legacy PathAble-only components
-> are retained but deferred. Do not modernize, expand or remove them as cleanup,
-> and do not make a static component depend on package JavaScript. Existing
+> explicitly says otherwise. The package ships no JavaScript and only the
+> components that have a page in `components/` and a folder in `fixtures/`; do
+> not add a component without both, and do not make a component depend on
+> package JavaScript. `packages/react/` is retained but deferred. Existing
 > generated-output checks may still require a mechanical React-guidance update;
 > stop and ask if that would require a semantic React decision.
 >
@@ -202,11 +201,11 @@ Agents MUST check contrast before using color pairs for text.
 
 Agents MUST NOT hardcode brand values throughout application code when a token exists.
 
-Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`, `--usa-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. There are no exceptions by name.
+Agents MUST reference only custom properties that exist. `pnpm lint:tokens` fails on any `var(--*)` reference without a fallback, prefixed (`--pathable-*`) or not (`--space-*`, `--radius-*`, `--elevation-*`, `--ui-*`), that the token source files do not define and no SCSS source file declares. References inside comments are checked too, so a comment that names a token must name one that exists. There are no exceptions by name.
 
 ## USWDS Token Usage
 
-> Current implementation, being replaced: consumer SCSS through `uswds-core` and the dual `--usa-*` custom properties are not part of the target contract. See [target state](../../docs/engineering/target-state.md).
+> Current implementation, being replaced: consumer SCSS through `uswds-core` is not part of the target contract. See [target state](../../docs/engineering/target-state.md).
 
 This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:
 
@@ -228,20 +227,18 @@ For CSS consumers, the compiled output contains resolved hex values via `--patha
 
 ## USWDS Typography Token Usage
 
-> Current implementation, being replaced: the `--usa-font-*` namespace is not part of the target contract. See [target state](../../docs/engineering/target-state.md).
-
 This package wraps USWDS v3.x typography theme tokens. When creating or editing SCSS that references typography values:
 
-### Dual Naming Convention
+### Naming Convention
 
-Most typography CSS custom properties are emitted in two namespaces: `--pathable-font-*` and `--usa-font-*`, both resolving to identical values. The `--pathable-font-*` namespace is the source of truth. PathAble-specific tokens (`--pathable-font-subheading`) that have no USWDS role equivalent are only emitted under the `--pathable-*` namespace.
+Typography CSS custom properties are emitted in the `--pathable-font-*` namespace.
 
 ### CSS Custom Property Categories
 
-- **Font role**: `--pathable-font-heading`, `--pathable-font-body`, `--pathable-font-mono`, `--pathable-font-alt` (and `--usa-font-heading`, `--usa-font-body`, `--usa-font-mono`, `--usa-font-alt` equivalents)
-- **Font size**: `--pathable-font-size-*` tokens (and `--usa-font-size-*` equivalents)
-- **Font weight**: `--pathable-font-weight-normal`, `--pathable-font-weight-semibold`, `--pathable-font-weight-bold` (and `--usa-font-weight-normal`, `--usa-font-weight-semibold`, `--usa-font-weight-bold` equivalents)
-- **Line height**: `--pathable-font-line-height-body` (and `--usa-font-line-height-body`, `--usa-font-line-height-heading` equivalents)
+- **Font role**: `--pathable-font-heading`, `--pathable-font-body`, `--pathable-font-mono`, `--pathable-font-alt`
+- **Font size**: `--pathable-font-size-*` tokens
+- **Font weight**: `--pathable-font-weight-normal`, `--pathable-font-weight-semibold`, `--pathable-font-weight-bold`
+- **Line height**: `--pathable-font-line-height-body`
 
 ### SCSS Typography Token Reference Rules
 
@@ -249,9 +246,9 @@ Most typography CSS custom properties are emitted in two namespaces: `--pathable
 - Agents MUST NOT use `$theme-font-*` variables directly — those are USWDS internal configuration values
 - Agents MUST NOT edit `_uswds-theme.scss` to add new typography overrides without explicit instructions
 - Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss`
-- Agents MAY reference the `--pathable-font-*` or `--usa-font-*` CSS custom properties from CSS
+- Agents MAY reference the `--pathable-font-*` CSS custom properties from CSS
 - For SCSS consumers: `@use 'uswds-core' as uswds;` then `uswds.family('heading')`
-- For CSS consumers: the compiled output contains resolved values via `--pathable-font-*` and `--usa-font-*` custom properties
+- For CSS consumers: the compiled output contains resolved values via `--pathable-font-*` custom properties
 
 ### Custom Typeface Token Documentation
 
@@ -270,9 +267,9 @@ Consuming projects do not need to manually place font files — they are distrib
 
 ## USWDS Utility Wrappers Usage
 
-> Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes, and drops the `--usa-*` alternatives. See [target state](../../docs/engineering/target-state.md).
+> Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes. See [target state](../../docs/engineering/target-state.md).
 
-This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as dual `--pathable-*` / `--usa-*` CSS custom properties.
+This package generates `.pathable-*` CSS utility classes from configuration maps. Each utility value is also emitted as a `--pathable-*` CSS custom property.
 
 ### Utility Class Naming Convention
 
@@ -322,67 +319,20 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 - Agents MUST use `.pathable-*` utility classes in HTML templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
 - Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
 - Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
-- Agents May use `--pathable-{module}-{value}` and `--usa-{module}-{value}` CSS custom properties as alternatives to the class-based utilities.
+- Agents May use `--pathable-{module}-{value}` CSS custom properties as alternatives to the class-based utilities.
 
 ## USWDS Component Wrappers Usage
 
 > Current implementation, being replaced for the supported static catalog:
-> the target is `pathable-*` selectors with no `@extend .usa-*` and no
-> `.usa-*` class in canonical fixture markup. The JS-driven instructions below
-> describe retained, deferred code. They are not a request to modernize its DOM
-> contract or bring it into the current catalog. See
+> the target is `pathable-*` selectors with no `@extend .usa-*`. See
 > [target state](../../docs/engineering/target-state.md).
 
-This package provides `.pathable-{component}` CSS class wrappers for all USWDS components, organized into a package system. Each `.pathable-{component}` class resolves to the same computed styles as the corresponding `.usa-{component}` class via SCSS `@extend`.
-
-### Component Wrapper Naming Convention
-
-| Component      | PathAble Class             | USWDS Equivalent      |
-| -------------- | -------------------------- | --------------------- |
-| accordion      | `.pathable-accordion`      | `.usa-accordion`      |
-| alert          | `.pathable-alert`          | `.usa-alert`          |
-| banner         | `.pathable-banner`         | `.usa-banner`         |
-| breadcrumb     | `.pathable-breadcrumb`     | `.usa-breadcrumb`     |
-| button         | `.pathable-button`         | `.usa-button`         |
-| button-group   | `.pathable-button-group`   | `.usa-button-group`   |
-| card           | `.pathable-card`           | `.usa-card`           |
-| checkbox       | `.pathable-checkbox`       | `.usa-checkbox`       |
-| combo-box      | `.pathable-combo-box`      | `.usa-combo-box`      |
-| date-picker    | `.pathable-date-picker`    | `.usa-date-picker`    |
-| footer         | `.pathable-footer`         | `.usa-footer`         |
-| form           | `.pathable-form`           | `.usa-form`           |
-| header         | `.pathable-header`         | `.usa-header`         |
-| icon           | `.pathable-icon`           | `.usa-icon`           |
-| identifier     | `.pathable-identifier`     | `.usa-identifier`     |
-| input          | `.pathable-input`          | `.usa-input`          |
-| link           | `.pathable-link`           | `.usa-link`           |
-| list           | `.pathable-list`           | `.usa-list`           |
-| media-block    | `.pathable-media-block`    | `.usa-media-block`    |
-| modal          | `.pathable-modal`          | `.usa-modal`          |
-| modal-wrapper  | `.pathable-modal-wrapper`  | `.usa-modal-wrapper`  |
-| modal-overlay  | `.pathable-modal-overlay`  | `.usa-modal-overlay`  |
-| nav            | `.pathable-nav`            | `.usa-nav`            |
-| pagination     | `.pathable-pagination`     | `.usa-pagination`     |
-| process-list   | `.pathable-process-list`   | `.usa-process-list`   |
-| prose          | `.pathable-prose`          | `.usa-prose`          |
-| radio          | `.pathable-radio`          | `.usa-radio`          |
-| search         | `.pathable-search`         | `.usa-search`         |
-| sidenav        | `.pathable-sidenav`        | `.usa-sidenav`        |
-| skipnav        | `.pathable-skipnav`        | `.usa-skipnav`        |
-| step-indicator | `.pathable-step-indicator` | `.usa-step-indicator` |
-| summary-box    | `.pathable-summary-box`    | `.usa-summary-box`    |
-| table          | `.pathable-table`          | `.usa-table`          |
-| tag            | `.pathable-tag`            | `.usa-tag`            |
-| textarea       | `.pathable-textarea`       | `.usa-textarea`       |
-| tooltip        | `.pathable-tooltip`        | `.usa-tooltip`        |
-| validation     | `.pathable-validation`     | `.usa-validation`     |
+This package provides `.pathable-{component}` CSS class wrappers for the static USWDS components that have a page in `components/` and canonical markup in `fixtures/`. Each `.pathable-{component}` class takes the USWDS styles of the corresponding `.usa-{component}` class through SCSS `@extend`, so consumer markup needs no `.usa-*` class. The component pages list the components and their elements and modifiers.
 
 ### Component Wrapper Rules
 
-- Agents MUST use `.pathable-{component}` classes in HTML templates instead of `.usa-{component}` classes when a wrapper exists.
+- Agents MUST use `.pathable-{component}` classes in HTML templates, never `.usa-{component}` classes.
 - Agents MUST use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Agents MUST use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
-- For JS-driven components (accordion, banner, combo-box, date-picker, date-range-picker, file-input, header, in-page-navigation, input-mask, modal, nav, site-alert, time-picker, tooltip, validation), Agents MUST keep `.usa-{component}` on the DOM element AND add `.pathable-{component}` as an additional class — the USWDS JavaScript selects DOM nodes by `.usa-*` class names, and removing them would break interactivity.
-- For Modal open presentation, Agents MUST use the styles-owned open shell: `.pathable-modal-wrapper.is-visible` → `.pathable-modal-overlay` → `.pathable-modal` **and** `.usa-modal` on the dialog. PathAble-only wrapper/overlay with `.is-visible` MUST show backdrop and centering without USWDS JS. Agents MUST place only the dialog inside `.pathable-modal-overlay`: the overlay sets `font-size: 0` to keep the dialog on its centring line, so other content there would not render. When dual-classing (for example React portals), Agents MUST also emit `.usa-modal-wrapper` and `.usa-modal-overlay` beside the PathAble shell classes.
-- Agents MUST NOT write ad-hoc CSS rules for Modal backdrop or centering (or for any styling that can be achieved by applying component wrapper classes).
-- Agent MAY use `--pathable-{component}-{property}` and `--usa-{component}-{property}` CSS custom properties as alternatives to the class-based components.
+- Agents MUST use only the components, elements and modifiers a component page documents.
+- Agents MUST NOT write ad-hoc CSS rules for styling that can be achieved by applying component wrapper classes.
