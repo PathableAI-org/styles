@@ -9,6 +9,8 @@ classes:
   - text-<token>
   - hover:bg-<token>
   - hover:text-<token>
+  - pathable-bg-<role>
+  - hover:pathable-bg-<role>
 guarantees:
   - id: background-token
     claim: 'bg-primary sets background-color to #00365c, bg-primary-vivid to #015a76, bg-secondary to #1cae96, bg-accent-warm to #d3ff66, bg-accent-cool to #4899e8 and bg-base to #dde2e8.'
@@ -22,6 +24,14 @@ guarantees:
     claim: 'hover:bg-primary-vivid sets background-color to #015a76 only while the element is hovered, and hover:text-primary sets color to #00365c only while it is hovered.'
   - id: no-other-variants
     claim: 'The stylesheet has no mobile-lg:, tablet: or desktop: variant of bg-<token> or text-<token>, and no focus:, active: or visited: variant.'
+  - id: surface-background
+    claim: 'pathable-bg-primary sets background-color to #00365c, pathable-bg-surface to #ffffff, pathable-bg-link to #015a76, pathable-bg-accent and pathable-bg-success to #1cae96, pathable-bg-base to #dde2e8, pathable-bg-danger to #dc3545, pathable-bg-focus-ring to #4899e8 and pathable-bg-transparent to transparent.'
+  - id: surface-focus-ring
+    claim: 'A focused pathable-button or pathable-link inside pathable-bg-link draws its outline in #ffffff, inside pathable-bg-accent in #001a33 and inside pathable-bg-base in #00365c.'
+  - id: surface-ring-reset
+    claim: 'Inside a pathable-bg-surface that sits inside pathable-bg-link, a focused pathable-button or pathable-link draws its outline in #4899e8.'
+  - id: surface-hover-ring
+    claim: 'hover:pathable-bg-link sets background-color to #015a76 and gives a focused pathable-button or pathable-link inside it an outline of #ffffff only while the container is hovered.'
   - id: brand-contrast
     claim: text-white on bg-primary has a contrast ratio of 12.48:1, text-primary on bg-base-lightest 11.72:1, text-accent-warm on bg-primary 10.86:1, and text-primary-darker on bg-secondary 6.12:1.
 ---
@@ -155,6 +165,34 @@ Pick the nearest theme token instead.
 
 The values these classes take are defined by the design tokens: [Color tokens](tokens-color.md), [Theme color tokens](tokens-color-theme-tokens.md), [State color tokens](tokens-color-state-tokens.md) and [System color tokens](tokens-color-system-tokens.md).
 
+### Surface classes with a focus ring
+
+`pathable-bg-<role>` sets a background colour like `bg-<token>` and, on a dark
+or mid-tone surface, also sets the focus ring of the controls placed on it, so
+the ring keeps 3:1 contrast with the surface (WCAG 1.4.11, 2.4.7). `<role>` is
+one of the classes in the table; each has a `hover:` variant too.
+
+| Class                     | Background    | Focus ring of controls on it |
+| ------------------------- | ------------- | ---------------------------- |
+| `pathable-bg-primary`     | `#00365c`     | `#4899e8` (default)          |
+| `pathable-bg-surface`     | `#ffffff`     | `#4899e8` (default)          |
+| `pathable-bg-link`        | `#015a76`     | `#ffffff`                    |
+| `pathable-bg-accent`      | `#1cae96`     | `#001a33`                    |
+| `pathable-bg-success`     | `#1cae96`     | `#001a33`                    |
+| `pathable-bg-base`        | `#dde2e8`     | `#00365c`                    |
+| `pathable-bg-danger`      | `#dc3545`     | `#001a33`                    |
+| `pathable-bg-focus-ring`  | `#4899e8`     | Unchanged                    |
+| `pathable-bg-transparent` | `transparent` | Unchanged                    |
+
+The controls whose ring follows the surface are `pathable-button`,
+`pathable-button--unstyled`, `pathable-input`, `pathable-select`,
+`pathable-textarea`, `pathable-link` and `pathable-breadcrumb__link`. A class
+on the control itself does not change that control's own ring: the ring follows
+the surface behind the control, not the control. A `pathable-bg-surface` (and a
+light component container) inside a `pathable-bg-link` resets the ring to the
+default, so a control on that inner surface keeps the default ring. The
+`hover:` variants set the ring only while the container is hovered.
+
 ## Variants
 
 | Prefix                              | `bg-<token>`, `text-<token>` | Notes                                                                     |
@@ -209,7 +247,8 @@ On `bg-secondary` and `bg-accent-cool` use `text-primary-darker` (6.12:1 and
 - The focus ring on a coloured background. Unprefixed `bg-*` classes are
   unchanged USWDS output and do not change the focus ring colour, so a
   control placed directly on one can keep a ring that does not contrast with
-  it. Put such a control on the `pathable-bg-*` equivalent, which sets a
+  it. Put such a control on the `pathable-bg-*` equivalent in the
+  [surface table](#surface-classes-with-a-focus-ring), which sets a
   contrasting ring.
 - Surfaces nested inside a coloured surface, which do not reset the text colour
   for you: set the text colour on the surface or on each child.

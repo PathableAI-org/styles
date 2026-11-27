@@ -117,7 +117,7 @@ An icon that carries meaning on its own has a `<title>` and is named by
   between them.
 - Sitting on the baseline, the icon rises slightly above the centre of
   lowercase text. To centre it on a line, place it in a flex row with
-  `pathable-flex-align-center`.
+  `flex-align-center`.
 
 ## Guarantees
 

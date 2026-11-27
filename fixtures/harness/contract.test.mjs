@@ -7,6 +7,10 @@ import {
   checkFolderEntries,
   classesIn,
 } from './contract.mjs'
+import {
+  readUtilityClasses,
+  utilityPatterns,
+} from '../../packages/styles/scripts/check-component-pages.mjs'
 
 const page = {
   data: {
@@ -182,4 +186,55 @@ test('an unknown pathable class still fails in a utility folder', () => {
   )
   assert.equal(errors.length, 1)
   assert.match(errors[0], /\.pathable-bogus is not a class selector/u)
+})
+
+const utilitiesCss = `
+.pathable-margin-top-2 { margin-top: 1rem; }
+.pathable-bg-link { background-color: #015a76; }
+.hover\\:pathable-bg-link:hover { background-color: #015a76; }
+.focus\\:pathable-bg-link:focus { background-color: #015a76; }
+.pathable-bg-link:not(:where(.pathable-button)) { --x: 1; }
+`
+const utilityCheck = (markup) =>
+  checkFolder(
+    'utilities-color',
+    new Map([['a.html', markup]]),
+    { data: { kind: 'utility' } },
+    {
+      classes: new Set([
+        'pathable-margin-top-2',
+        'pathable-bg-link',
+        'pathable-button',
+      ]),
+    },
+    {
+      classes: readUtilityClasses(utilitiesCss),
+      patterns: utilityPatterns([
+        {
+          data: { classes: ['pathable-bg-<role>', 'hover:pathable-bg-<role>'] },
+        },
+      ]),
+    },
+  )
+
+test('a fixture citing an undeclared pathable utility fails', () => {
+  const errors = utilityCheck('<div class="pathable-margin-top-2"></div>')
+  assert.equal(errors.length, 1)
+  assert.match(errors[0], /\.pathable-margin-top-2 is a PathAble utility/u)
+})
+
+test('declared pathable utilities and hover variants pass in a fixture', () => {
+  assert.deepEqual(
+    utilityCheck('<div class="pathable-bg-link hover:pathable-bg-link"></div>'),
+    [],
+  )
+})
+
+test('a focus: variant of a declared utility fails in a fixture', () => {
+  const errors = utilityCheck('<div class="focus:pathable-bg-link"></div>')
+  assert.match(errors.join(), /\.focus:pathable-bg-link is a PathAble utility/u)
+})
+
+test('a component class only in :not(:where()) is not a utility', () => {
+  assert.deepEqual(utilityCheck('<a class="pathable-button"></a>'), [])
 })

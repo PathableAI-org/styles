@@ -19,3 +19,15 @@ export function stylesCssPath() {
   if (!existsSync(path)) throw new Error(BUILD_HINT)
   return path
 }
+
+/** The absolute path of @pathableai/styles/dist/utilities.css; throws if unbuilt. */
+export function utilitiesCssPath() {
+  let path
+  try {
+    path = require.resolve('@pathableai/styles/dist/utilities.css')
+  } catch {
+    throw new Error(BUILD_HINT)
+  }
+  if (!existsSync(path)) throw new Error(BUILD_HINT)
+  return path
+}

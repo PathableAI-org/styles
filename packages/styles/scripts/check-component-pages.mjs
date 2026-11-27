@@ -49,6 +49,11 @@
  * selector in the compiled CSS, so a utility class the package does not emit
  * is reported as a defect.
  *
+ * A page may cite a `pathable-` utility class (one in dist/utilities.css outside
+ * a pseudo-class argument, with or without a `hover:` style prefix) only when
+ * a page's `classes` declares it, in prose, an html block, a fixture or a
+ * guarantee claim. `<name>` placeholders in `classes` match `[a-z0-9-]+`.
+ *
  * Stage 1, `pnpm --filter @pathableai/styles check:component-pages`, needs the
  * built stylesheet (dist/styles.css). It proves:
  *   - every placeholder resolves: each fixture it names exists, package
@@ -112,6 +117,7 @@ import { parsePage, readPages } from './component-pages.mjs'
 const packageRoot = resolve(import.meta.dirname, '..')
 const repoRoot = resolve(packageRoot, '../..')
 const compiledCss = join(packageRoot, 'dist/styles.css')
+const utilitiesCss = join(packageRoot, 'dist/utilities.css')
 const executedDir = join(
   repoRoot,
   'apps/storybook/test-results/component-pages',
@@ -269,6 +275,68 @@ export function readCss(css) {
   })
   return { classes }
 }
+
+/**
+ * The PathAble utility classes in compiled utilities CSS: classes that begin
+ * `pathable-`, with an optional `<state>:` prefix, in a selector outside any
+ * pseudo-class argument, so `.pathable-button` inside `:not(:where(...))` is a
+ * component class and does not count.
+ */
+export function readUtilityClasses(css) {
+  const utilities = new Set()
+  postcss.parse(css).walkRules((rule) => {
+    selectorParser((selectors) => {
+      selectors.walkClasses((node) => {
+        if (node.parent?.parent?.type === 'pseudo') return
+        if (/^(?:[a-z-]+:)?pathable-/u.test(node.value)) {
+          utilities.add(node.value)
+        }
+      })
+    }).processSync(rule.selector)
+  })
+  return utilities
+}
+
+/**
+ * The patterns the pages declare for PathAble utility classes: every entry of
+ * a page's `classes` that contains `pathable-`. `<name>` matches `[a-z0-9-]+`.
+ */
+export function utilityPatterns(pages) {
+  return pages
+    .flatMap((page) => list(page.data?.classes))
+    .filter((entry) => typeof entry === 'string' && entry.includes('pathable-'))
+    .map(
+      (entry) =>
+        new RegExp(
+          `^${entry
+            .split(/<[^>]+>/u)
+            .map((part) => part.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&'))
+            .join('[a-z0-9-]+')}$`,
+          'u',
+        ),
+    )
+}
+
+/** The `pathable-` utility classes cited in `text`, as written. */
+export const citedUtilityClasses = (text) =>
+  new Set(
+    [...text.matchAll(/(?<![\w:-])((?:[a-z-]+:)?pathable-[a-z0-9-]+)/gu)].map(
+      (match) => match[1].replace(/-+$/u, ''),
+    ),
+  )
+
+/**
+ * The classes among `cited` that are PathAble utility classes (in `utilities`)
+ * no pattern declares.
+ */
+export const undeclaredUtilityClasses = (cited, utilities, patterns) =>
+  [...cited].filter(
+    (name) =>
+      utilities.has(name) && !patterns.some((pattern) => pattern.test(name)),
+  )
+
+export const undeclaredUtilityMessage = (name) =>
+  `.${name} is a PathAble utility class no page declares: a page may cite only a \`pathable-\` utility that a page's \`classes\` front matter declares`
 
 /** The modifiers (`class--modifier`) the CSS has for a class. */
 export const modifiersOf = (css, className) =>
@@ -601,6 +669,22 @@ function checkNames(page, css, errors) {
   }
 }
 
+/** Reports each undeclared PathAble utility class the body or a claim cites. */
+function checkUtilityCitations(page, facts, errors) {
+  if (!facts.utilities) return
+  const text = [
+    page.body,
+    ...list(page.data.guarantees).map((guarantee) => guarantee?.claim ?? ''),
+  ].join('\n')
+  for (const name of undeclaredUtilityClasses(
+    citedUtilityClasses(text),
+    facts.utilities,
+    facts.utilityPatterns ?? [],
+  )) {
+    errors.push(undeclaredUtilityMessage(name))
+  }
+}
+
 /**
  * A settings page shows no example: no html block, no example placeholder and
  * no package block, and it names no custom property (the settings are Sass
@@ -695,6 +779,7 @@ export function checkPage(page, facts) {
   if (isUswdsPage(page)) checkStates(page, errors)
   else checkVariants(page, facts.css, errors)
   checkNames(page, facts.css, errors)
+  checkUtilityCitations(page, facts, errors)
 
   return errors
 }
@@ -814,6 +899,15 @@ export const wrapperComponents = (fileNames, css) =>
     .map((file) => basename(file, '.scss'))
     .filter((name) => css.classes.has(name))
 
+async function readUtilityCss() {
+  if (!existsSync(utilitiesCss)) {
+    throw new Error(
+      `${relative(repoRoot, utilitiesCss)} is missing; run pnpm --filter @pathableai/styles build first`,
+    )
+  }
+  return readUtilityClasses(await readFile(utilitiesCss, 'utf8'))
+}
+
 async function readCompiledCss() {
   if (!existsSync(compiledCss)) {
     throw new Error(
@@ -904,6 +998,8 @@ async function main() {
     summary = `stage 2 (what ran): ${pages.length} page(s) checked against ${records.length} story records`
   } else {
     const css = await readCompiledCss()
+    const utilities = await readUtilityCss()
+    const patterns = utilityPatterns(allPages)
     const coverage = await readCoverage()
     for (const page of pages) {
       const rendered = await pageSources(page, coverage).then(
@@ -916,7 +1012,13 @@ async function main() {
       errors.push(
         ...[
           ...rendered.errors,
-          ...(rendered.page ? checkPage(rendered.page, { css }) : []),
+          ...(rendered.page
+            ? checkPage(rendered.page, {
+                css,
+                utilities,
+                utilityPatterns: patterns,
+              })
+            : []),
         ].map((error) => `${page.file}: ${error}`),
       )
     }
