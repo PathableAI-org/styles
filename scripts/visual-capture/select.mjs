@@ -269,9 +269,9 @@ export function chooseStories({
           (!byClass || classifiedFor(path).includes(workspace)),
       )
       .map(([, reason]) => reason)
-  // Whether a path matches any story in a Storybook it is classified for, by
-  // its own stories file, its component or its wrapper class.
-  const matchedAny = (path) =>
+  // Whether a styles wrapper partial matches any story in a Storybook it is
+  // classified for, by its own stories file, its component or its class.
+  const wrapperMatched = (path) =>
     Object.entries(indexes).some(
       ([workspace, entries]) =>
         classifiedFor(path).includes(workspace) &&
@@ -282,14 +282,25 @@ export function chooseStories({
               matchesPath(workspace, entry, path).length > 0),
         ),
     )
-  // A render path that is not shared above and matches no story, by its
-  // component, the components showing its class or its own stories file, is
-  // treated as shared for its classified workspaces, so it is never left
-  // without a sample.
+  // A render path that names no component, is not shared above and matched no
+  // stories file still counts as shared for its classified workspaces, so it
+  // is never left without a sample. A styles wrapper partial that matches no
+  // story does too; no other component path falls back.
   const sharedFor = (path) => {
     const named = sharedWorkspaces(path, inspectedFor(path))
-    if (named.length > 0 || matchedAny(path)) return named
-    return inspectedFor(path) ?? classifyPath(path).workspaces
+    if (named.length > 0) return named
+    if (wrapperClass(path) !== null) {
+      return wrapperMatched(path) ? named : classifiedFor(path)
+    }
+    if (componentSlug(path) !== null) return named
+    // A changed stories file already chose its own stories.
+    const ownStories = Object.values(indexes).some((entries) =>
+      (entries ?? []).some(
+        (entry) =>
+          entry.type === 'story' && entryFromChangedFile(entry, [path]),
+      ),
+    )
+    return ownStories ? named : classifiedFor(path)
   }
   const shared = renderPaths.filter((path) => sharedFor(path).length > 0)
   const workspaces = Object.entries(indexes).filter(([, entries]) => entries)

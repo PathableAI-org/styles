@@ -440,6 +440,31 @@ describe('chooseStories', () => {
     assert.match(chosen[1].reasons[0], /First story of its file/)
   })
 
+  it('does not sample React when a React component has only styles stories', () => {
+    const react = ['Alpha', 'Beta'].map((name) =>
+      story(
+        `components-${name}--default`,
+        `Components/${name}`,
+        `../../packages/react/src/stories/components/${name}.stories.tsx`,
+      ),
+    )
+    const styles = [
+      story(
+        'component-examples-foo--default',
+        'Component examples/foo',
+        './generated/foo.stories.ts',
+      ),
+    ]
+    const chosen = chooseStories({
+      changedPaths: ['packages/react/src/components/Foo/Foo.tsx'],
+      indexes: { styles, react },
+    })
+    assert.deepEqual(
+      chosen.map((item) => `${item.workspace}:${item.id}`),
+      ['styles:component-examples-foo--default'],
+    )
+  })
+
   it('adds stories asked for explicitly and flags unknown ones', () => {
     const chosen = chooseStories({
       changedPaths: [],
