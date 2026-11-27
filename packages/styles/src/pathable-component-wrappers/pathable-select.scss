@@ -40,25 +40,26 @@
       @supports (appearance: base-select) {
         appearance: base-select;
         background-image: none;
-        // Keep the closed control's own box: base-select's UA styles lay it
-        // out as a flex row with its own padding, gap and alignment.
+        // The icon is out of flow, so the select keeps the USWDS padding (32px
+        // on the right) and the value wraps clear of the icon.
+        // base-select lays the value out at the top; centre it as USWDS does
+        // in the taller 44px control on narrow screens.
         align-items: center;
         display: flex;
-        gap: units(1);
-        padding-inline: units(1) 0;
-        // The icon is a flex item: the gap and its own margin keep the value
-        // area clear of it, so the value wraps instead of running underneath.
+        position: relative;
 
         &::picker-icon {
           // Black, as the USWDS icon is, not the select's text colour.
           background-color: color('black');
           content: '';
           display: block;
-          flex: none;
           height: units(2.5);
-          margin-inline: auto units(1);
           mask: url('#{$theme-image-path}/usa-icons/unfold_more.svg') center /
             contain no-repeat;
+          position: absolute;
+          right: units(1);
+          top: 50%;
+          transform: translateY(-50%);
           width: units(2.5);
         }
       }
