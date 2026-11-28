@@ -47,8 +47,8 @@ Look facts up rather than asking. Dispatch a read-only subagent on the `haiku`
 model (the `Explore` or `general-purpose` agent type) with a narrow question,
 and do not hand it the plan or ask it to judge anything. Read the documents
 the routing table in [AGENTS.md](../../../AGENTS.md) names for the area, such
-as [target-state.md](../../../docs/engineering/target-state.md),
-[intent.md](../../../docs/engineering/intent.md) and the owning package
+as [GLOSSARY.md](../../../GLOSSARY.md),
+[git-workflow.md](../../../docs/engineering/git-workflow.md) and the owning package
 documentation, and use their vocabulary.
 
 ### 2. Agree the verification seams

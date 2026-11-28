@@ -350,8 +350,7 @@ map is `()` everywhere, so no extra token has a class.
 | [Shadow](../../components/utilities-shadow.md)                             | `box-shadow`                                                                                                                                                | `output: true`, `responsive: false`, `hover: true`, other states `false`. `$box-shadow-palettes: ('palette-box-shadow-default')`                                                      | None                                                                                                                                                          |
 | [Text styles](../../components/utilities-text-styles.md)                   | `font-style`, `font-weight`, `font-feature`, `letter-spacing`, `text-decoration`, `text-decoration-color`, `text-transform`, `vertical-align`, `whitespace` | `font-weight`: `responsive: true`, no states. `text-decoration`, `text-decoration-color`: `responsive: false`, `hover: true`. The others: `responsive: false`, no states.             | `semibold` weight on at 600 (see Typography)                                                                                                                  |
 
-While the styles refactor catches up
-([target state](../engineering/target-state.md)), `_uswds-theme.scss` turns
+While the styles refactor catches up, `_uswds-theme.scss` turns
 the `responsive` and `hover` variants off for every module whose table row says
 otherwise, except where a `tokens-*` or `utilities-*` fixture uses one: `order`,
 `display`, `font`, `line-height`, `measure`, `margin`, `padding`, `border` and

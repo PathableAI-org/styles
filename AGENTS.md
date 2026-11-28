@@ -44,19 +44,14 @@ styles target. A shared-source change may still require a mechanical
 generated React-guidance update or an existing check to pass; that does not
 make React behavior part of the change.
 
-Read [`docs/engineering/intent.md`](docs/engineering/intent.md) for the product
-model and [`docs/engineering/target-state.md`](docs/engineering/target-state.md)
-before changing the styles package, its fixtures or component pages.
-
 ## Where the rules live
 
 | When you are…                                                                                                                                                      | Read                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Making an architectural or packaging decision                                                                                                                      | [`docs/engineering/intent.md`](docs/engineering/intent.md), [`docs/engineering/target-state.md`](docs/engineering/target-state.md), and the owning package documentation       |
+| Making an architectural or packaging decision                                                                                                                      | [`GLOSSARY.md`](GLOSSARY.md) and the owning package documentation                                                                                                              |
 | Making a release or quality-gate decision                                                                                                                          | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md), [`.changeset/README.md`](.changeset/README.md), and [`docs/testing/README.md`](docs/testing/README.md) |
-| Changing the direction of `@pathableai/styles`, or judging a fixture or doc against the refactor                                                                   | [`docs/engineering/target-state.md`](docs/engineering/target-state.md)                                                                                                         |
-| Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/intent.md`](docs/engineering/intent.md)                                                                                                                     |
-| Defining, naming or using a design-system term                                                                                                                     | `GLOSSARY.md` (once it exists) and the `domain-modeling` skill                                                                                                                 |
+| Deciding why a change belongs here, who it serves, or how a consumer need becomes a release                                                                        | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                                         |
+| Defining, naming or using a design-system term                                                                                                                     | [`GLOSSARY.md`](GLOSSARY.md) and the `domain-modeling` skill                                                                                                                   |
 | Choosing a risk tier, branching, opening or merging a pull request                                                                                                 | [`docs/engineering/git-workflow.md`](docs/engineering/git-workflow.md)                                                                                                         |
 | Leading a delivery issue through implementation and its review and verification subagents, or choosing a role's model and effort                                   | [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md) and the `orchestrate` skill                                                                           |
 | Defining High-risk claims or verifying them as the `verifier` subagent                                                                                             | [`docs/engineering/verification-harness.md`](docs/engineering/verification-harness.md) and the `verification-harness` skill                                                    |
@@ -67,7 +62,6 @@ before changing the styles package, its fixtures or component pages.
 | Planning a change or stress-testing a plan by interview, before `/to-spec`                                                                                         | the `grill-me` skill, then `/to-spec` (and `grill-with-docs` when terms or decisions need recording in their owning documents)                                                 |
 | Filing a confirmed defect                                                                                                                                          | [`.github/ISSUE_TEMPLATE/bug.md`](.github/ISSUE_TEMPLATE/bug.md) and [`docs/engineering/orchestration.md`](docs/engineering/orchestration.md)                                  |
 | Editing tokens, SCSS, CSS, component classes, utilities or brand-facing UI                                                                                         | [`packages/styles/AGENTS.md`](packages/styles/AGENTS.md) and [`packages/styles/BRAND_RULES.md`](packages/styles/BRAND_RULES.md)                                                |
-| Writing or changing `@pathableai/styles` Storybook stories                                                                                                         | [`packages/styles/STORY_AUTHORING.md`](packages/styles/STORY_AUTHORING.md)                                                                                                     |
 | Writing or changing HTML fixtures in `fixtures/`                                                                                                                   | [`fixtures/README.md`](fixtures/README.md)                                                                                                                                     |
 | Writing or changing component pages in `components/`, or the docs built from them                                                                                  | [`components/README.md`](components/README.md)                                                                                                                                 |
 | Changing `@pathableai/react` components or their public API                                                                                                        | [`packages/react/README.md`](packages/react/README.md)                                                                                                                         |
@@ -85,8 +79,6 @@ before changing the styles package, its fixtures or component pages.
   update its current owner as part of the change.
 - Delivery issues and pull requests record the accepted scope, decisions and
   evidence for one change. They are history, not a second current source.
-- `docs/plans/` is historical; see [`docs/plans/README.md`](docs/plans/README.md).
-  Do not move or rename existing plans or treat them as current rules.
 
 ## No check suppressions
 

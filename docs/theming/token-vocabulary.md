@@ -53,5 +53,4 @@ The focus outline is drawn on the background behind a control, so `focusRing` is
 
 `pnpm lint:tokens` enforces that the 25-key set stays in lockstep between the
 SCSS `$semantic-colors` map and `THEME_COLOR_KEYS`. If a token is added to or
-removed from the theme but this reference is not updated, that is a defect — see
-the verification record in [acceptance-verification.md](./acceptance-verification.md).
+removed from the theme but this reference is not updated, that is a defect.

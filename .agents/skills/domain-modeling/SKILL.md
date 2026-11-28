@@ -25,8 +25,8 @@ below says ("Where current behaviour is documented" in
 When the person uses a term that conflicts with its owner, say so at once.
 Check first against `GLOSSARY.md`, if it exists, then against:
 
-- "Documentation terms" in
-  [intent.md](../../../docs/engineering/intent.md): for example, consumer agent
+- The agent guidance terms at the top of
+  [AGENTS.md](../../../AGENTS.md): for example, consumer agent
   guidance and contributor agent guidance are different things, and the
   unqualified "agent-facing docs" is never used.
 - The naming conventions in
@@ -41,7 +41,7 @@ the package documents; `GLOSSARY.md` defines what terms mean. When a glossary
 term would contradict one of those documents, surface it rather than silently
 diverging.
 
-Example: "intent.md defines consumer agent guidance as Markdown shipped in the
+Example: "AGENTS.md defines consumer agent guidance as Markdown shipped in the
 package, but you seem to mean the skills in `.agents/`. That is contributor
 agent guidance. Which do you mean?"
 
@@ -115,10 +115,6 @@ Rules:
   and never as the definition; if the definition would change when the
   implementation changes, leave it out.
 
-`intent.md` currently defines consumer and contributor agent guidance. Do not
-move existing definitions out of `intent.md` on your own; you may propose it to
-the person.
-
 If a settled term needs an edit to an owning document (a naming convention, a
 page), propose that edit separately: show the diff and apply it when the person
 says yes. If no owner fits, ask where it belongs; do not invent a home.
@@ -140,10 +136,7 @@ record.
 Record it in the document that owns the topic:
 
 - **Product direction or package contract**:
-  [target-state.md](../../../docs/engineering/target-state.md). When it
-  settles an item under "Open decisions", move the item out of that list into
-  a decided entry. That document has no section for decided items yet:
-  propose adding one; do not invent it silently.
+  [AGENTS.md](../../../AGENTS.md) and the owning package documentation.
 - **Process, roles, models or tooling**: the Decisions table in
   [orchestration.md](../../../docs/engineering/orchestration.md), with the
   date.

@@ -68,7 +68,8 @@ any conflict.
 
 1. **Outcome** and **Consumer** first. Everything else depends on them.
 2. **In scope**, **Out of scope** and **Contract impact**. Read
-   [target-state.md](../../../docs/engineering/target-state.md) and the owning
+   [GLOSSARY.md](../../../GLOSSARY.md),
+   [git-workflow.md](../../../docs/engineering/git-workflow.md) and the owning
    package documents before recommending, and look up facts as above.
 3. **Dependencies**: what blocks starting and what blocks release.
 4. **Risk tier**. Recommend a tier with every trigger that matched, taken from

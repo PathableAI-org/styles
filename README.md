@@ -65,7 +65,7 @@ Run these from the repository root.
 - Commits follow Conventional Commits and are checked by commitlint.
 - Delivery issues record the accepted scope and outcome for new work. Current
   behaviour is documented in `docs/`, component pages, fixtures and package
-  READMEs; `docs/plans/` remains historical.
+  READMEs.
 
 ## License
 

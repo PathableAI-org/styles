@@ -6,7 +6,7 @@
 // pathable.utilities layer: the @use'd rule modules emit CSS at @use time, so
 // the whole module must be loaded that way. Emits the unprefixed USWDS utility classes (bg-primary, text-white,
 // padding-2, margin-bottom-1, add-list-reset, shadow-2, font-body-sm) that the
-// target-state document says are re-exported unchanged. USWDS generates them
+// utility component pages say are re-exported unchanged. USWDS generates them
 // with its own utility builder and rule definitions. The values come from the
 // theme tokens set in _uswds-theme.scss, which also holds the per-utility
 // settings (responsive and state variants are off unless a fixture needs one).

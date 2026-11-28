@@ -1,9 +1,63 @@
 # Git workflow
 
 This document owns how a change moves through Git and GitHub here: branches,
-pull requests, risk tiers and merging. Why the repository exists and how a
-consumer need reaches a release is in [Repository intent](intent.md). The
+pull requests, risk tiers and merging. How a consumer need reaches a release is
+in [How a consumer need flows](#how-a-consumer-need-flows). The
 checks to run before committing are in [`AGENTS.md`](../../AGENTS.md#before-committing).
+
+## How a consumer need flows
+
+Open delivery issues in this repository are the backlog; there is no roadmap
+file. An organization-level GitHub Project orders them, alongside consumer work
+in other PathAble repositories.
+
+1. **File it here.** A consumer that needs something it cannot do with the
+   released packages files an issue in this repository. A consumer may file a plain issue; a
+   maintainer runs `/to-spec` on it (the
+   [`to-spec` skill](../../.agents/skills/to-spec/SKILL.md)) to make it a
+   spec. The spec states the outcome, links the consumer's own issue or pull request, and
+   proposes a [risk tier](#risk-tiers). Issues
+   [#262](https://github.com/PathableAI-org/styles/issues/262) (router-aware
+   links) and [#264](https://github.com/PathableAI-org/styles/issues/264)
+   (blocking modal) are examples: each describes current behaviour in a named
+   release, the consumer's use case, and what "done" looks like.
+2. **Land it source-first.** New visual behaviour, classes, tokens and assets
+   land in `packages/styles` first.
+   React is deferred during the current refactor and changes only when an issue
+   explicitly puts it in scope. In that separate scope, an adapter change still
+   begins from the existing styles contract; a change that only adds React
+   ergonomics over that contract can land in `packages/react` alone.
+3. **Record the release.** A pull request that changes a published package's
+   code carries a changeset ([`.changeset/README.md`](../../.changeset/README.md)).
+4. **Release it.** On `main`, [`publish.yml`](../../.github/workflows/publish.yml)
+   opens or updates the `ci: version packages` pull request. Once that pull
+   request merges, the workflow's publish job waits in the protected `npm`
+   environment, and publishes the new versions to npm when a person approves
+   it. Merges that release nothing never wait for approval.
+5. **Adopt it.** Renovate in the consuming repository opens the version bump.
+   The consumer then uses the new contract, guided by the updated agent
+   guidance.
+
+## Cross-repository links
+
+- Write cross-repository references as full issue or pull request URLs, not
+  `owner/repo#123` shorthand, so they read the same in every tool and in
+  copied text.
+- In a pull request body, use `Closes <url-or-#n>` only when merging that pull
+  request satisfies the issue. Otherwise use `Contributes to <url-or-#n>`.
+- Because a consumer need is done only on release (see What "done" means), the pull request
+  that implements it normally says `Contributes to`. Close the issue by hand
+  once the release that contains it is published, and link that release.
+- Link back the other way too: comment on the consumer's issue with the styles
+  issue URL, and later with the released version.
+
+## What "done" means
+
+A consumer need is done when a published version of `@pathableai/styles` or
+`@pathableai/react` contains it, not when its pull request merges. Merged but
+unreleased work is invisible to consumers. The issue's Completion evidence
+section names the release and the stories or checks that prove the behaviour;
+adoption in the consumer repository is tracked there, not here.
 
 ## Branches
 
@@ -28,7 +82,7 @@ per workspace package where that makes sense.
   on `main`, so it is the durable history: make it say what changed for a
   reader of `git log`.
 - Link issues with `Closes` or `Contributes to` as described in
-  [Cross-repository links](intent.md#cross-repository-links).
+  [Cross-repository links](#cross-repository-links).
 
 ### Decisions for the reviewer
 
@@ -360,7 +414,7 @@ workflow:
   with a maintainer's acceptance and a tracking issue.
 
 CI does not run the `@pathableai/react` checks or the React Storybook, which
-are retained but deferred ([Target state](target-state.md)).
+are retained but deferred (see [GLOSSARY.md](../../GLOSSARY.md)).
 
 GitHub's required checks are the aggregate jobs `CI result` and
 `Storybook result`. They treat skipped jobs as passing.

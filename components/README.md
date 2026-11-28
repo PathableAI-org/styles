@@ -144,9 +144,6 @@ pnpm --filter @pathableai/styles build
 pnpm --filter @pathableai/styles check:component-pages
 ```
 
-How tests cite a page's guarantees is in
-[`STORY_AUTHORING.md`](../packages/styles/STORY_AUTHORING.md#component-page-guarantees).
-
 ## What a page describes
 
 A page describes the contract the component should have, stated as if it

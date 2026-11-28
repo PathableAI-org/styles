@@ -8,15 +8,12 @@ Use these rules when creating or editing PathAble UI, documentation, prototypes,
 > includes it. Consumer component guidance is auditable Markdown generated
 > from the component pages and fixtures and shipped with the CSS; package-wide
 > routing, selection and bug-reporting guidance also belongs in the installed
-> package but is not generated from individual component pages. See
-> [`docs/engineering/intent.md`](../../docs/engineering/intent.md).
+> package but is not generated from individual component pages.
 >
 > **Refactor in progress.** `@pathableai/styles` is becoming a thin wrapper
 > around the static portion of USWDS. It exposes `pathable-` component names,
 > re-exports unprefixed USWDS tokens and utilities under the same names, and
-> applies PathAble brand settings. See
-> [`docs/engineering/target-state.md`](../../docs/engineering/target-state.md),
-> which wins for the direction of the package. Sections below marked "current
+> applies PathAble brand settings. Sections below marked "current
 > implementation, being replaced" describe today's code; follow them to work on
 > that code, but do not copy the pattern into new docs or fixtures.
 >
@@ -205,7 +202,7 @@ Inside component SCSS, agents MUST reference only custom properties that exist. 
 
 ## USWDS Token Usage
 
-> Current implementation, being replaced: consumer SCSS through `uswds-core` is not part of the target contract. See [target state](../../docs/engineering/target-state.md).
+> Current implementation, being replaced: consumer SCSS through `uswds-core` is not part of the target contract.
 
 This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:
 
@@ -265,7 +262,7 @@ Consuming projects do not need to manually place font files — they are distrib
 
 ## USWDS Utility Wrappers Usage
 
-> Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes. See [target state](../../docs/engineering/target-state.md).
+> Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes.
 
 This package generates `.pathable-*` CSS utility classes from configuration maps. It emits no custom property for a utility value; each class sets its value directly.
 
@@ -321,8 +318,7 @@ State variants follow `.{state}\:pathable-{base}-{value}`:
 ## Component Classes Usage
 
 > Current implementation, being replaced for the supported static catalog:
-> the target is `pathable-*` selectors with no `@extend .usa-*`. See
-> [target state](../../docs/engineering/target-state.md).
+> the target is `pathable-*` selectors with no `@extend .usa-*`.
 
 This package provides `.pathable-{component}` component classes for the static USWDS components that have a page in `components/` and canonical markup in `fixtures/`. Each `.pathable-{component}` class takes the USWDS styles of the corresponding `.usa-{component}` class through SCSS `@extend`, so consumer markup needs no `.usa-*` class. The component pages list the components and their elements and modifiers.
 
