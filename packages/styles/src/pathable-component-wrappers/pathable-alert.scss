@@ -14,11 +14,11 @@
 .pathable-alert {
   @extend .usa-alert;
 
-  // Bright Blue Brooks is 2.7:1 on the info tint and 2.8:1 on the plain alert
-  // surface, under the 3:1 a focus outline needs. The ring takes the alert's
-  // own ink, PathAble Blue (about 11:1 on both). Like the surfaces, it is
-  // compiled rather than read from a theme token, so a theme cannot make it
-  // vanish against them. The status alerts below set their own ring.
+  // Bright Blue Brooks is 2.7:1 on the info tint, under the 3:1 a focus
+  // outline needs. The ring takes the alert's own ink, PathAble Blue (about
+  // 11:1). Like the surfaces, it is compiled rather than read from a theme
+  // token, so a theme cannot make it vanish against them. The status alerts
+  // below set their own ring.
   --pathable-surface-focus-ring: #{color('ink')};
 }
 
@@ -39,7 +39,18 @@
   @extend .usa-alert__text;
 }
 
-.pathable-alert--info {
+// Info is the default status: an alert with no status modifier looks like the
+// info alert. :where() keeps the specificity of the info rules and leaves the
+// other statuses, which USWDS emits before info, in charge of their own looks.
+.pathable-alert--info,
+.pathable-alert:where(
+  :not(
+    .pathable-alert--success,
+    .pathable-alert--warning,
+    .pathable-alert--error,
+    .pathable-alert--emergency
+  )
+) {
   @extend .usa-alert--info;
 }
 

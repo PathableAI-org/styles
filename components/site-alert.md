@@ -7,6 +7,7 @@ styles-class: pathable-site-alert
 variants:
   - axis: status
     default: info
+    default-modifier: true
     values: [info, emergency]
   - axis: size
     default: default

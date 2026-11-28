@@ -63,7 +63,11 @@ them. The sections, in order:
   lists the class suffixes that encode the values, linking to the utility
   pages.
 - `static`: When to use, Example, Variants, Composition, Guarantees, The
-  consumer owns.
+  consumer owns. An axis in the `variants` front matter may set
+  `default-modifier: true` when its default value also has a modifier class
+  that gives the same look, kept for markup that names the status. The
+  checker then requires that class's rule, and the Variants table still gives
+  `none` for the default.
 - `settings`: Not public API, then Values on every page but the overview.
   See [Settings pages](#settings-pages).
 

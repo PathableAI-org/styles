@@ -7,6 +7,7 @@ styles-class: pathable-alert
 variants:
   - axis: status
     default: info
+    default-modifier: true
     values: [info, success, warning, error, emergency]
   - axis: size
     default: default
@@ -38,7 +39,7 @@ guarantees:
   - id: no-icon
     claim: With the no-icon modifier the icon is hidden, the body has no minimum height and the heading and text have no indent.
   - id: focus-ring
-    claim: A focus outline inside an alert has at least 3:1 contrast on that alert's surface; on the info and plain alerts it is PathAble Blue (#00365c).
+    claim: A focus outline inside an alert has at least 3:1 contrast on that alert's surface; on the info alert it is PathAble Blue (#00365c).
   - id: long-words
     claim: A word too long for the body, such as a heading word under browser text zoom on a narrow screen, wraps inside the alert instead of running out of it.
   - id: forced-colors
@@ -117,7 +118,7 @@ Info is the default status; the examples also carry
 - Focus ring on success, warning and error: #001a33 on all three, which is
   also the text colour on success and warning.
 - Focus ring on emergency: White, #ffffff, the text colour of the alert.
-- Focus ring on info and plain alerts: PathAble Blue, #00365c.
+- Focus ring on info alerts: PathAble Blue, #00365c.
 
 The info and emergency colours are fixed when the package is built and are
 named on [tokens-color.md](tokens-color.md). The pixel figures on this page
