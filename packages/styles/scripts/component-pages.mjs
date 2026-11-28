@@ -120,8 +120,10 @@ export function renderIndex(pages) {
     'Utility and token pages describe USWDS names that carry no prefix, so',
     'they are the same in @pathableai/styles as in USWDS.',
     '',
-    'Components not listed here have no page yet. For those, use the package',
-    'README and the stylesheet source under `src/`.',
+    'Every component class the package ships appears on one of these pages.',
+    'Classes for parts of a component, such as the form label, hint and error',
+    'message or `pathable-sr-only`, are on the pages of the components that',
+    'use them.',
     '',
     ...groups,
   ].join('\n')
