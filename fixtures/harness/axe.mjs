@@ -168,8 +168,9 @@ export const stylesPackageDir = () => dirname(dirname(stylesCssPath()))
 
 /**
  * Serves `state.html` at / and everything else from the styles package root,
- * except that /assets/ is the package's dist folder. Set `state.html` before
- * each navigation. Paths that are not found are added to `missing`.
+ * and /assets/ is also served from the package root, where img/ is. Set
+ * `state.html` before each navigation. Paths that are not found are added to
+ * `missing`.
  */
 export async function serve(context, packageDir, missing, state) {
   await context.route(`${ORIGIN}/**`, async (route) => {
@@ -179,11 +180,8 @@ export async function serve(context, packageDir, missing, state) {
       return
     }
     // Fixtures reference the sprite at /assets/img/sprite.svg, where an
-    // application serves the package's dist folder.
-    const served = decodeURIComponent(pathname).replace(
-      /^\/assets\//u,
-      '/dist/',
-    )
+    // application serves the package root, which holds img/.
+    const served = decodeURIComponent(pathname).replace(/^\/assets\//u, '/')
     const file = normalize(join(packageDir, served))
     if (!file.startsWith(packageDir)) {
       await route.fulfill({ status: 403 })

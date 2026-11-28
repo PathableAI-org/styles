@@ -17,14 +17,13 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const appRoot = join(__dirname, '..')
 
-// Source: icons built by @pathableai/styles into dist/img/usa-icons/
+// Source: icons built by @pathableai/styles into img/usa-icons/
 const sourceDir = join(
   appRoot,
   '..',
   '..',
   'packages',
   'styles',
-  'dist',
   'img',
   'usa-icons',
 )
