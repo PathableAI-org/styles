@@ -27,3 +27,13 @@ export function stylesCssPath() {
 export function utilitiesCssPath() {
   return distPath('utilities.css')
 }
+
+/** The absolute path of @pathableai/styles/dist/css/<file>; throws if unbuilt. */
+export function cssModulePath(file) {
+  return distPath(`css/${file}`)
+}
+
+/** The absolute path of @pathableai/styles/dist/css/manifest.json; throws if unbuilt. */
+export function manifestPath() {
+  return cssModulePath('manifest.json')
+}

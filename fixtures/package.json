@@ -8,10 +8,11 @@
     "./*.html": "./*.html"
   },
   "scripts": {
-    "check": "pnpm check:html && pnpm check:contract && pnpm check:axe",
+    "check": "pnpm check:html && pnpm check:contract && pnpm check:axe && pnpm check:modules",
     "check:html": "node harness/html.mjs",
     "check:contract": "node harness/contract.mjs",
     "check:axe": "node harness/axe.mjs",
+    "check:modules": "node harness/modules-check.mjs",
     "test": "node --test \"harness/*.test.mjs\""
   },
   "dependencies": {

@@ -83,7 +83,7 @@ test('the contract check fails a folder missing a variant fixture', async () => 
   )
   const errors = await checkFolders(['tag'], root)
   assert.ok(
-    errors.some((error) => /__bogus is not a class selector/u.test(error)),
+    errors.some((error) => /__bogus is not defined by any module/u.test(error)),
   )
   assert.ok(errors.some((error) => /size=big/u.test(error)))
 })

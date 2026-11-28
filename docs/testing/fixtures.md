@@ -27,8 +27,9 @@ Each check takes a list of component folders and defaults to every folder.
 | html-validate | `pnpm --filter @pathableai/fixtures check:html`     | Every fixture                |
 | Contract      | `pnpm --filter @pathableai/fixtures check:contract` | Every folder                 |
 | axe           | `pnpm --filter @pathableai/fixtures check:axe`      | Every folder                 |
+| Modules       | `pnpm --filter @pathableai/fixtures check:modules`  | Every folder                 |
 | Harness tests | `pnpm --filter @pathableai/fixtures test`           | The harness's own unit tests |
-| All three     | `pnpm --filter @pathableai/fixtures check`          | Every folder                 |
+| All four      | `pnpm --filter @pathableai/fixtures check`          | Every folder                 |
 
 Run locally, axe also checks any folders CI defers (see [In CI](#in-ci)); none
 are deferred now, so any violation or incomplete result is a real failure.
@@ -44,8 +45,8 @@ are deferred now, so any violation or incomplete result is a real failure.
 - **Contract** fails when a folder is not named after a page
   in `components/`, when a fixture's file name is not a
   kebab-case state name (`^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$`), when a
-  `pathable-*` class in a fixture is not a class selector in
-  `@pathableai/styles/dist/styles.css`, when a `pathable-` utility class in a
+  `pathable-*` class in a fixture is not in the `classes` of any module in
+  `@pathableai/styles/dist/css/manifest.json`, when a `pathable-` utility class in a
   fixture (one in `dist/utilities.css`, such as `hover:pathable-bg-link`) is
   not declared by the `classes` front matter of any page, or when a non-default variant in the
   page's front matter has no fixture using its modifier class. Classes are
@@ -53,24 +54,41 @@ are deferred now, so any violation or incomplete result is a real failure.
   `data-class` and the like or markup inside comments. It reads the page and
   the CSS with the same code as the component-page check
   (`packages/styles/scripts/`).
-- **axe** loads each fixture into a `<main>` on a page that links
-  `styles.css`, in Chromium at 1280 px and 375 px wide, and runs
+- **axe** loads each fixture into a `<main>` on a page that links the CSS
+  modules the fixture needs (its classes' owners in the manifest, what they
+  require, `base.css` and `utilities.css`), not `styles.css`, in Chromium at 1280 px and 375 px wide, and runs
   `@axe-core/playwright`. Only the page-level rules `region`,
   `landmark-one-main` and `page-has-heading-one` are off. It also fails when
   two buttons or links in a fixture share an accessible name. Any violation
   fails, and so does any axe "incomplete" result; there is no exceptions
   mechanism or allowlist. Each is listed with its nodes in the output and in
   the GitHub job summary. It writes a JSON report to
-  `fixtures/.cache/axe-report.json`, or to `FIXTURES_AXE_REPORT`.
+  `fixtures/.cache/axe-report.json`, or to `FIXTURES_AXE_REPORT`. It fails
+  if a linked stylesheet does not load.
+- **Modules** renders each fixture twice, at 1280 px and 375 px wide: once on
+  a page that links only `dist/styles.css`, once on the module page axe uses.
+  After the fonts load, it reads every property of `getComputedStyle` for
+  every element under `<html>` (not the `<head>`) and its `::before` and
+  `::after`, and compares the two pages element by element. Any difference
+  fails, and each is printed with the element path, the property and both
+  values (the first 20 per fixture and viewport). It checks that the modules
+  split the bundle without changing what a fixture renders.
 
-The contract and axe checks need the built stylesheet, so run
+The contract, axe and modules checks need the built stylesheet, so run
 `pnpm --filter @pathableai/styles build` first.
+
+The modules are slices of `dist/styles.css` in `pathable-all.scss` order, not
+separate compiles: one per wrapper, `shared-input` and `shared-alert` for the
+USWDS rules several wrappers extend, `base` and `utilities`. A module page
+loads the needed modules and their `requires` in manifest order, so it holds a
+subset of the bundle's rules in bundle order.
 
 ## In CI
 
 [`.github/workflows/fixtures.yml`](../../.github/workflows/fixtures.yml) runs
 on a pull request that changes `fixtures/**`, `components/*.md`,
-`packages/styles/scripts/check-component-pages.mjs` or `component-pages.mjs`,
+`packages/styles/scripts/check-component-pages.mjs`, `component-pages.mjs`,
+`build-css-modules.mjs` or `build-css-modules.test.mjs`,
 `packages/styles/src/**`, `packages/styles/package.json`, `pnpm-lock.yaml`,
 `pnpm-workspace.yaml`, `patches/**`, `.github/actions/setup/**` or the
 workflow itself, and on every push to `main`. Its `fixtures` job:
@@ -80,10 +98,13 @@ workflow itself, and on every push to `main`. Its `fixtures` job:
    job does not cover HTML;
 3. runs the harness tests, including the integration tests that feed
    known-bad markup through each check;
-4. runs html-validate and the contract check on every folder;
-5. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, which
+4. runs the CSS module build tests (`test:css-modules` in
+   `@pathableai/styles`);
+5. runs html-validate and the contract check on every folder;
+6. runs axe on every folder except those in `AXE_DEFERRED_FOLDERS`, which
    currently lists no folder;
-6. uploads the axe report as the `fixtures-axe-report` artifact.
+7. runs the modules check (`check:modules`) on every folder;
+8. uploads the axe report as the `fixtures-axe-report` artifact.
 
 A folder joins `AXE_DEFERRED_FOLDERS` only with a maintainer's acceptance and
 a tracking issue. It is not a required check.

@@ -21,6 +21,7 @@
     "./components": "./dist/components.css",
     "./utilities": "./dist/utilities.css",
     "./theme": "./dist/theme-default.css",
+    "./css/*": "./dist/css/*",
     "./dist/*": "./dist/*",
     "./src/*": "./src/*"
   },
@@ -28,14 +29,15 @@
     "access": "public"
   },
   "scripts": {
-    "build": "sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node ../../scripts/component-docs/cli.mjs styles && node scripts/component-pages.mjs index",
+    "build": "sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/build-css-modules.mjs && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node ../../scripts/component-docs/cli.mjs styles && node scripts/component-pages.mjs index",
     "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss:dist/styles.css src/components.scss:dist/components.css src/utilities.scss:dist/utilities.css src/theme-default.scss:dist/theme-default.css",
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "check:component-pages": "node scripts/check-component-pages.mjs",
     "check:component-pages:executed": "node scripts/check-component-pages.mjs --executed",
     "trace:component-pages": "node scripts/check-component-pages.mjs --executed --trace",
-    "test:component-pages": "node --test scripts/check-component-pages.test.mjs"
+    "test:component-pages": "node --test scripts/check-component-pages.test.mjs",
+    "test:css-modules": "node --test scripts/build-css-modules.test.mjs"
   },
   "dependencies": {
     "@uswds/uswds": "3.14.0"
