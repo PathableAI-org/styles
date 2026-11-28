@@ -60,10 +60,30 @@ under `dist/`:
 | `@pathableai/styles/components` | `dist/components.css`    |
 | `@pathableai/styles/utilities`  | `dist/utilities.css`     |
 | `@pathableai/styles/theme`      | `dist/theme-default.css` |
+| `@pathableai/styles/css/<file>` | `dist/css/<file>`        |
 
 The `components` and `utilities` entry points read their colours, fonts and
 other values from the `theme` entry point; import `@pathableai/styles` (all three) unless
 you import `theme` as well.
+
+### Component imports
+
+To load only the CSS a component needs instead of the whole bundle, import
+the files from `@pathableai/styles/css/<file>`, which resolves to
+`dist/css/<file>`. Each styles component page in the package
+(`components/<slug>.md`) lists the files that component needs.
+
+- `base.css` holds the tokens and font faces. Every component needs it.
+- `utilities.css` is needed for any utility class. Every page lists it because
+  its examples may use utilities.
+- Every file starts with the same
+  `@layer pathable.base, pathable.components, pathable.utilities;` statement,
+  so the base, component and utility files can load in any order relative to
+  one another.
+- List the component files in the order a page gives, which is the order of
+  the bundle, because rules in the same layer cascade by source order.
+- To use several components, import the union of their lists, each file once,
+  in the order of `dist/css/manifest.json`.
 
 ### Cascade layers
 

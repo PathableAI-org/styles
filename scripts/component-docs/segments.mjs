@@ -6,6 +6,8 @@
  *
  *   <!-- example: <state> -->   one fixture state
  *   <!-- examples -->           every state in the component's fixture folder
+ *   <!-- css-files -->          the CSS module imports the page needs (styles
+ *                                 page only; top level, not in a package block)
  *   <!-- package: styles -->    content for one package only, up to
  *   <!-- package: react -->       the next <!-- /package -->
  *   <!-- /package -->
@@ -17,6 +19,7 @@
  *   { type: 'markdown', text }            source text between placeholders
  *   { type: 'example', state, line }
  *   { type: 'examples', line }
+ *   { type: 'css-files', line }
  *   { type: 'package', name, segments, line }
  */
 
@@ -50,6 +53,11 @@ export function readPlaceholder(value) {
     return text === 'examples'
       ? { type: 'examples' }
       : { error: `"<!-- examples -->" takes no argument; found "${value}"` }
+  }
+  if (keyword === 'css-files') {
+    return text === 'css-files'
+      ? { type: 'css-files' }
+      : { error: `"<!-- css-files -->" takes no argument; found "${value}"` }
   }
   if (keyword === 'example') {
     const state = text.match(/^example:\s*(\S+)$/u)?.[1]
@@ -171,6 +179,12 @@ export function segment(markdown) {
       current = root
     } else {
       const { type, state } = placeholder
+      if (type === 'css-files' && open) {
+        problems.push(
+          `line ${line}: put <!-- css-files --> at the top level, outside package blocks`,
+        )
+        continue
+      }
       current.push(type === 'example' ? { type, state, line } : { type, line })
     }
   }

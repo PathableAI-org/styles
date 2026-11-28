@@ -31,6 +31,7 @@ import {
 } from '../component-docs/sources.mjs'
 import {
   compareFiles,
+  cssFilesFor,
   renderTarget,
   storybookOnly,
   writeFiles,
@@ -628,5 +629,134 @@ describe('component docs: one fixture folder per component', () => {
         'the React fixture manifest maps both "sr-only" and "visually-hidden" to SrOnly; each component may own one fixture folder',
       ],
     )
+  })
+})
+
+describe('component docs: css-files placeholder', () => {
+  const staticPage = (body) => ({
+    ...page(body),
+    data: { name: 'Widget', kind: 'static' },
+  })
+  const body = '# Widget\n\nIntro.\n\n<!-- css-files -->\n\n## End\n'
+  const cssFiles = ['base.css', 'tag.css', 'utilities.css']
+
+  it('lists one @import per file on the styles page', () => {
+    assert.equal(
+      render(staticPage(body), 'styles', { ...stylesOnly, cssFiles }),
+      `${frontMatter}# Widget\n\nIntro.\n\nTo load only the CSS this component needs instead of the whole bundle, import these files in this order:\n\n\`\`\`css\n@import '@pathableai/styles/css/base.css';\n@import '@pathableai/styles/css/tag.css';\n@import '@pathableai/styles/css/utilities.css';\n\`\`\`\n\n## End\n`,
+    )
+  })
+
+  it('renders nothing for it on the react page', () => {
+    assert.equal(
+      render(staticPage(body), 'react', { ...covered, cssFiles }),
+      `${frontMatter}# Widget\n\nIntro.\n\n## End\n`,
+    )
+  })
+
+  it('renders nothing for it in Storybook', () => {
+    const { mdx } = render(staticPage(body), 'storybook', {
+      ...stylesOnly,
+      cssFiles,
+    })
+    assert.doesNotMatch(mdx, /css-files|@import/u)
+  })
+
+  it('does not treat it as an example', () => {
+    const { stories } = render(staticPage(body), 'storybook', stylesOnly)
+    assert.doesNotMatch(stories, /CssFiles/u)
+  })
+
+  it('requires exactly one on a static page', () => {
+    const none = problems(() =>
+      render(staticPage('# Widget\n\n<!-- example: loud -->\n'), 'styles', {
+        ...stylesOnly,
+        cssFiles,
+      }),
+    )
+    assert.match(none.join('\n'), /exactly one .*found 0/u)
+    const two = problems(() =>
+      render(
+        staticPage('<!-- css-files -->\n\n<!-- css-files -->\n'),
+        'styles',
+        { ...stylesOnly, cssFiles },
+      ),
+    )
+    assert.match(two.join('\n'), /exactly one .*found 2/u)
+  })
+
+  it('is not allowed on a page of another kind', () => {
+    assert.match(
+      problems(() =>
+        render(page(body), 'styles', { ...stylesOnly, cssFiles }),
+      ).join('\n'),
+      /only for kind: static/u,
+    )
+  })
+
+  it('needs css files from the sources', () => {
+    for (const empty of [undefined, []]) {
+      assert.match(
+        problems(() =>
+          render(staticPage(body), 'styles', {
+            ...stylesOnly,
+            cssFiles: empty,
+          }),
+        ).join('\n'),
+        /no CSS module files/u,
+      )
+    }
+  })
+
+  it('is an error inside a package block', () => {
+    const inside =
+      '<!-- package: styles -->\n\n<!-- css-files -->\n\n<!-- /package -->\n'
+    assert.match(
+      problems(() => segment(inside)).join('\n'),
+      /top level, outside package blocks/u,
+    )
+  })
+
+  it('takes no argument', () => {
+    assert.match(
+      problems(() => segment('<!-- css-files: base -->\n')).join('\n'),
+      /takes no argument/u,
+    )
+  })
+
+  it('counts as a placeholder', () => {
+    assert.equal(findPlaceholders(body).placeholders.length, 1)
+  })
+
+  it('takes the union of the fixtures modules in manifest order', () => {
+    const manifest = {
+      modules: [
+        { name: 'base', file: 'base.css', classes: [], requires: [] },
+        {
+          name: 'a',
+          file: 'a.css',
+          classes: ['pathable-a'],
+          requires: ['base'],
+        },
+        {
+          name: 'b',
+          file: 'b.css',
+          classes: ['pathable-b'],
+          requires: ['base'],
+        },
+        { name: 'utilities', file: 'utilities.css', classes: [], requires: [] },
+      ],
+    }
+    const pageFixtures = new Map([
+      ['one', { html: '<p class="pathable-b">x</p>' }],
+      ['two', { html: '<p class="pathable-a">x</p>' }],
+    ])
+    assert.deepEqual(cssFilesFor(pageFixtures, manifest), [
+      'base.css',
+      'a.css',
+      'b.css',
+      'utilities.css',
+    ])
+    assert.deepEqual(cssFilesFor(new Map(), manifest), [])
   })
 })

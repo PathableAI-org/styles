@@ -446,7 +446,7 @@ test('the index explains the unmet and unverified guarantee statuses', () => {
 const loud = '<span class="pathable-widget pathable-widget--loud"></span>\n'
 const converted = (frontMatter + body).replace(
   '```html\n' + loud + '```\n',
-  '<!-- example: loud -->\n\n## States\n\n<!-- examples -->\n',
+  '<!-- css-files -->\n\n<!-- example: loud -->\n\n## States\n\n<!-- examples -->\n',
 )
 const sources = (overrides = {}) => ({
   fixtures: new Map([
@@ -459,6 +459,7 @@ const sources = (overrides = {}) => ({
       },
     ],
   ]),
+  cssFiles: ['base.css', 'widget.css', 'utilities.css'],
   examples: undefined,
   component: undefined,
   ...overrides,
@@ -506,7 +507,14 @@ test('fails when a converted page does not show every fixture', () => {
 test('fails when the React package covers an unconverted page', () => {
   const covered = sources({ examples: new Map(), component: 'Widget' })
   assert.ok(
-    includes(renderForCheck(page(), covered).errors, 'must take its examples'),
+    includes(
+      // A kind other than static, so the styles page needs no css-files.
+      renderForCheck(
+        page(frontMatter.replace('kind: static', 'kind: token') + body),
+        covered,
+      ).errors,
+      'must take its examples',
+    ),
   )
 })
 

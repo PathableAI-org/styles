@@ -55,6 +55,8 @@ Load the stylesheet once in the application; no JavaScript is needed:
 
 <!-- /package -->
 
+<!-- css-files -->
+
 <!-- example: default -->
 
 ## States

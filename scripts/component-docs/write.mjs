@@ -21,6 +21,8 @@ import {
 
 import prettier from 'prettier'
 
+import { modulesFor } from '../../fixtures/harness/modules.mjs'
+import { cssManifestPath } from './paths.mjs'
 import { render, storybookTitle } from './render.mjs'
 import { ComponentDocsError } from './segments.mjs'
 import {
@@ -44,11 +46,37 @@ export const REACT_INDEX = 'index.md'
  */
 export const storybookOnly = (page) => page.data?.kind === 'settings'
 
+/** The parsed CSS module manifest; throws a clear error when unbuilt. */
+export function readCssManifest(path = cssManifestPath) {
+  if (!existsSync(path)) {
+    throw new Error(
+      `${relative(repoRoot, path)} is missing: run \`node scripts/build-css-modules.mjs\` (or \`pnpm --filter @pathableai/styles build\`) first`,
+    )
+  }
+  return JSON.parse(readFileSync(path, 'utf8'))
+}
+
+/**
+ * The CSS module files a page's fixtures need together: the union of
+ * modulesFor over every fixture, in manifest order. Empty with no fixture.
+ */
+export function cssFilesFor(fixtures, manifest) {
+  const needed = new Set()
+  for (const { html } of fixtures.values()) {
+    for (const name of modulesFor(html, manifest)) needed.add(name)
+  }
+  return manifest.modules
+    .filter((module) => needed.has(module.name))
+    .map((module) => module.file)
+}
+
 /** The sources one page renders from, for every target. */
-export async function pageSources(page, coverage) {
+export async function pageSources(page, coverage, manifest) {
   const { component, notOffered = {} } = coverage.get(page.slug) ?? {}
+  const fixtures = readFixtures(page.slug)
   return {
-    fixtures: readFixtures(page.slug),
+    fixtures,
+    cssFiles: manifest ? cssFilesFor(fixtures, manifest) : undefined,
     examples: component ? readExamples(component) : undefined,
     component,
     notOffered,
@@ -67,6 +95,8 @@ export async function renderTarget(target, { pages, coverage } = {}) {
   coverage ??= target === 'styles' ? new Map() : await readCoverage()
   const files = new Map()
   const problems = []
+  // Only the styles target reads the manifest; the others run without a build.
+  const manifest = target === 'styles' ? readCssManifest() : undefined
   // The Storybook docs route of each page that has a Storybook page, for the
   // links between pages (a Markdown link to `other.md` does not route there).
   const titles =
@@ -83,7 +113,7 @@ export async function renderTarget(target, { pages, coverage } = {}) {
   for (const page of pages) {
     if (target !== 'storybook' && storybookOnly(page)) continue
     try {
-      const sources = await pageSources(page, coverage)
+      const sources = await pageSources(page, coverage, manifest)
       if (target === 'styles') {
         files.set(page.file, render(page, 'styles', sources))
       } else if (target === 'react') {

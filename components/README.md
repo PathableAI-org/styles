@@ -236,12 +236,13 @@ or takes its examples from the component's HTML fixtures
 with any placeholder is a converted page. Placeholders are HTML comments, so a
 source page still renders cleanly on GitHub:
 
-| Placeholder                 | Becomes                                                                                          |
-| --------------------------- | ------------------------------------------------------------------------------------------------ |
-| `<!-- example: <state> -->` | The fixture `fixtures/<slug>/<state>.html` (styles) or the example module `<state>.tsx` (React)  |
-| `<!-- examples -->`         | Every fixture in the folder, in file-name order, each under a `###` heading with its description |
-| `<!-- package: styles -->`  | Content up to `<!-- /package -->` that only the styles page shows                                |
-| `<!-- package: react -->`   | Content up to `<!-- /package -->` that only the React page shows                                 |
+| Placeholder                 | Becomes                                                                                                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<!-- example: <state> -->` | The fixture `fixtures/<slug>/<state>.html` (styles) or the example module `<state>.tsx` (React)                                                                                          |
+| `<!-- examples -->`         | Every fixture in the folder, in file-name order, each under a `###` heading with its description                                                                                         |
+| `<!-- css-files -->`        | The `@import` lines for `base.css`, the CSS modules the page's fixtures need and `utilities.css`, from `dist/css/manifest.json` (styles page only; the React page and Storybook omit it) |
+| `<!-- package: styles -->`  | Content up to `<!-- /package -->` that only the styles page shows                                                                                                                        |
+| `<!-- package: react -->`   | Content up to `<!-- /package -->` that only the React page shows                                                                                                                         |
 
 For example:
 
@@ -269,6 +270,9 @@ Rules:
   example above.
 - A package block cannot hold another package block. Example placeholders
   may sit inside one.
+- `<!-- css-files -->` takes no argument and goes at the top level, never
+  inside a package block. Every `kind: static` page has it exactly once, after
+  the whole-bundle import. A page of any other kind must not have it.
 - Each state's description comes from the fixture's optional leading
   `<!-- description: … -->` comment. The example shows the rest of the fixture
   verbatim.
