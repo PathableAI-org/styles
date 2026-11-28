@@ -38,8 +38,7 @@ tests at the reviewed commit, and looks for:
 | `correctness`         | A defect found while reviewing for the above; the review does not hunt for bugs                                                                           |
 
 Lint, stylelint, token-lint, typecheck and test-runner findings are out of
-scope. The review may read their output as context but never files one. It
-does not review `docs/plans/`, which are historical.
+scope. The review may read their output as context but never files one.
 
 The review is read-only. It edits no file, branch or pull request, opens no
 pull request and pushes nothing. It writes only GitHub issues and issue
@@ -111,7 +110,7 @@ During the current static styles refactor, scheduled selection also skips
 Review one only when the maintainer explicitly requests that deferred area.
 This keeps existing code visible without allowing drift review to turn it into
 active modernization work; the boundary is owned by
-[Target state](target-state.md#retained-but-deferred-areas).
+[GLOSSARY.md](../../GLOSSARY.md).
 
 ## Areas
 
@@ -163,11 +162,9 @@ The utility classes and their configuration.
 The `.pathable-*` component classes and their styles stories.
 
 - Owners: [`packages/styles/AGENTS.md`](../../packages/styles/AGENTS.md),
-  [`STORY_AUTHORING.md`](../../packages/styles/STORY_AUTHORING.md),
   [`packages/styles/README.md`](../../packages/styles/README.md)
 - Paths:
   - `packages/styles/AGENTS.md`
-  - `packages/styles/STORY_AUTHORING.md`
   - `packages/styles/README.md`
   - `packages/styles/src/pathable-component-wrappers`
   - `packages/styles/src/components.scss`
@@ -207,7 +204,7 @@ The `@pathableai/react` components, their internals, entry point and stories.
 The installed styles component guidance and the planned styles package-wide
 guidance.
 
-- Owners: [Repository intent](intent.md), [Target state](target-state.md),
+- Owners: [GLOSSARY.md](../../GLOSSARY.md), [Git workflow](git-workflow.md),
   [`components/README.md`](../../components/README.md)
 - Paths:
   - `components`
@@ -224,7 +221,7 @@ the maintainer explicitly requests it.
 
 - Owners:
   [`react-agent-guidance.instructions.md`](../../.github/instructions/react-agent-guidance.instructions.md),
-  [Repository intent](intent.md) and [Target state](target-state.md)
+  [GLOSSARY.md](../../GLOSSARY.md) and [Git workflow](git-workflow.md)
 - Paths:
   - `.github/instructions/react-agent-guidance.instructions.md`
   - `packages/react/agent-guidance`
@@ -242,7 +239,6 @@ lifecycle and the accessibility exceptions.
   [Tooling and structure](../testing/tooling-and-structure.md)
 - Paths:
   - `docs/testing/tooling-and-structure.md`
-  - `docs/testing/behavior-parity.md`
   - `apps/storybook`
   - `apps/storybook-react`
   - `packages/storybook-contracts`

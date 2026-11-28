@@ -145,5 +145,3 @@ fixtures (story presence), executable behavior-contract adoption (read from the
 runner's evidence file), and automated Axe execution. It does not label any
 result WCAG certification, and visual smoke and manual keyboard/focus/
 assistive-technology review remain separate evidence.
-
-Next: [Adding tests for a component](adding-component-tests.md).

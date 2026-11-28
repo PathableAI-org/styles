@@ -8,17 +8,12 @@ Use these rules when creating or editing PathAble UI, documentation, prototypes,
 > includes it. Consumer component guidance is auditable Markdown generated
 > from the component pages and fixtures and shipped with the CSS; package-wide
 > routing, selection and bug-reporting guidance also belongs in the installed
-> package but is not generated from individual component pages. See
-> [`docs/engineering/intent.md`](../../docs/engineering/intent.md).
+> package but is not generated from individual component pages.
 >
-> **Refactor in progress.** `@pathableai/styles` is becoming a thin wrapper
-> around the static portion of USWDS. It exposes `pathable-` component names,
-> re-exports unprefixed USWDS tokens and utilities under the same names, and
-> applies PathAble brand settings. See
-> [`docs/engineering/target-state.md`](../../docs/engineering/target-state.md),
-> which wins for the direction of the package. Sections below marked "current
-> implementation, being replaced" describe today's code; follow them to work on
-> that code, but do not copy the pattern into new docs or fixtures.
+> **What the package is.** `@pathableai/styles` is a thin wrapper around the
+> static portion of USWDS. It exposes `pathable-` component classes,
+> re-exports USWDS tokens and utilities under their USWDS names, and applies
+> PathAble brand settings.
 >
 > **Active scope.** Work only on the documented static catalog, its component
 > pages and fixtures, tokens and utilities, and the compiled CSS unless the task
@@ -33,7 +28,7 @@ Use these rules when creating or editing PathAble UI, documentation, prototypes,
 > motivated by either an approved PathAble brand choice that configuration
 > cannot express or a demonstrated accessibility defect, with fixture, story,
 > automated or visual evidence. General redesign and convenience divergence are
-> outside the current refactor.
+> out of scope.
 
 ## Required Source Of Truth
 
@@ -205,8 +200,6 @@ Inside component SCSS, agents MUST reference only custom properties that exist. 
 
 ## USWDS Token Usage
 
-> Current implementation, being replaced: consumer SCSS through `uswds-core` is not part of the target contract. See [target state](../../docs/engineering/target-state.md).
-
 This package configures the USWDS v3.x theme color families with the exact brand hex values (see "USWDS Theme Colors" in BRAND_RULES.md). When creating or editing SCSS that references brand colors:
 
 - Agents MUST prefer the internal `--pathable-*` custom properties (for example `var(--pathable-color-text)` or `var(--pathable-brand-pathable-blue)`) in component styles
@@ -215,13 +208,6 @@ This package configures the USWDS v3.x theme color families with the exact brand
 - Agents MUST NOT use `$theme-color-primary` and other `$theme-*` settings directly — they are USWDS configuration values, not resolved colors
 - Agents MUST NOT edit `_uswds-theme.scss` to add new theme overrides without explicit instructions
 - Agents MUST keep all USWDS theme color overrides scoped within `_uswds-theme.scss`
-
-For SCSS consumers, the correct pattern is:
-
-```scss
-@use 'uswds-core' as uswds;
-$my-variable: uswds.color('primary'); // #00365c, PathAble Blue
-```
 
 For CSS consumers, the compiled output contains resolved hex values. Consumers use the token classes and component classes, not the `--pathable-*` custom properties.
 
@@ -245,7 +231,6 @@ Internal typography custom properties are emitted in the `--pathable-font-*` nam
 - Agents MUST NOT edit `_uswds-theme.scss` to add new typography overrides without explicit instructions
 - Agents MUST keep all USWDS theme typography overrides scoped within `_uswds-theme.scss`
 - Component SCSS MAY reference the `--pathable-font-*` custom properties; they are internal, not consumer API
-- For SCSS consumers: `@use 'uswds-core' as uswds;` then `uswds.family('heading')`
 - For CSS consumers: use the typography token classes documented on the `components/tokens-typesetting*.md` pages
 
 ### Custom Typeface Token Documentation
@@ -263,73 +248,24 @@ Font files (`.woff2`) are bundled with the `@pathableai/styles` npm package. The
 
 Consuming projects do not need to manually place font files — they are distributed automatically with the package.
 
-## USWDS Utility Wrappers Usage
+## Utility Classes Usage
 
-> Current implementation, being replaced: the target re-exports USWDS utilities under their unprefixed names (`margin-top-2`), not as `.pathable-*` classes. See [target state](../../docs/engineering/target-state.md).
+The utility contract is the USWDS utility classes under their USWDS names (for example `margin-top-2`, `bg-primary`, `display-flex`, `text-primary`), emitted in the `pathable.utilities` cascade layer, plus one prefixed family, `pathable-bg-<role>`. The `components/utilities-*.md` pages list the supported families, values, breakpoint prefixes and state prefixes. Nothing else is part of the contract.
 
-This package generates `.pathable-*` CSS utility classes from configuration maps. It emits no custom property for a utility value; each class sets its value directly.
+### Utility Class Rules
 
-### Utility Class Naming Convention
-
-| Module           | Class Pattern                     | CSS Property                     |
-| ---------------- | --------------------------------- | -------------------------------- |
-| background-color | `.pathable-bg-{value}`            | `background-color`               |
-| color            | `.pathable-text-{value}`          | `color`                          |
-| padding          | `.pathable-padding-{n}`           | `padding`                        |
-| padding-x        | `.pathable-padding-x-{n}`         | `padding-left` + `padding-right` |
-| padding-y        | `.pathable-padding-y-{n}`         | `padding-top` + `padding-bottom` |
-| margin           | `.pathable-margin-{n}`            | `margin`                         |
-| margin-x         | `.pathable-margin-x-{n}`          | `margin-left` + `margin-right`   |
-| margin-y         | `.pathable-margin-y-{n}`          | `margin-top` + `margin-bottom`   |
-| margin-top       | `.pathable-margin-top-{n}`        | `margin-top`                     |
-| margin-bottom    | `.pathable-margin-bottom-{n}`     | `margin-bottom`                  |
-| display          | `.pathable-display-{value}`       | `display`                        |
-| font-family      | `.pathable-font-family-{role}`    | `font-family`                    |
-| font-weight      | `.pathable-text-{weight}`         | `font-weight`                    |
-| border           | `.pathable-border-{n}`            | `border`                         |
-| border-radius    | `.pathable-border-radius-{value}` | `border-radius`                  |
-| flex             | `.pathable-flex-{n}`              | `flex`                           |
-| align-items      | `.pathable-flex-align-{value}`    | `align-items`                    |
-| justify-content  | `.pathable-flex-justify-{value}`  | `justify-content`                |
-| width            | `.pathable-width-{value}`         | `width`                          |
-| max-width        | `.pathable-maxw-{value}`          | `max-width`                      |
-| text-align       | `.pathable-text-{alignment}`      | `text-align`                     |
-
-### Responsive Variants
-
-Breakpoint-prefixed variants follow `.{breakpoint}\:pathable-{base}-{value}`:
-
-| Breakpoint  | Min Width |
-| ----------- | --------- |
-| `mobile-lg` | 480px     |
-| `tablet`    | 640px     |
-| `desktop`   | 1024px    |
-
-### State Variants
-
-State variants follow `.{state}\:pathable-{base}-{value}`:
-
-- `hover:` — for background-color and color modules
-- `focus:` — for background-color and color modules
-
-### SCSS Utility Token Reference Rules
-
-- Agents MUST use `.pathable-*` utility classes in HTML templates instead of ad-hoc CSS for background-color, color, padding, margin, display, font-family, border, border-radius, flex, align-items, justify-content, width, and text-align.
-- Agents MUST NOT write ad-hoc CSS rules for properties that have a `.pathable-*` utility class equivalent.
+- Agents MUST use only utility classes, breakpoint prefixes and state prefixes that a `components/utilities-*.md` page documents.
+- Agents MUST NOT write ad-hoc CSS for a property a documented utility covers.
 - Agents MUST keep directional border and complex layout CSS (grid, max-width with theme variables, custom `z-index`) in component `<style>` blocks since these have no utility equivalents.
 
-## USWDS Component Wrappers Usage
+## Component Classes Usage
 
-> Current implementation, being replaced for the supported static catalog:
-> the target is `pathable-*` selectors with no `@extend .usa-*`. See
-> [target state](../../docs/engineering/target-state.md).
+This package provides `.pathable-{component}` component classes for the static USWDS components that have a page in `components/` and canonical markup in `fixtures/`. Each `.pathable-{component}` class takes the USWDS styles of the corresponding `.usa-{component}` class through SCSS `@extend`, so consumer markup needs no `.usa-*` class. The component pages list the components and their elements and modifiers.
 
-This package provides `.pathable-{component}` CSS class wrappers for the static USWDS components that have a page in `components/` and canonical markup in `fixtures/`. Each `.pathable-{component}` class takes the USWDS styles of the corresponding `.usa-{component}` class through SCSS `@extend`, so consumer markup needs no `.usa-*` class. The component pages list the components and their elements and modifiers.
-
-### Component Wrapper Rules
+### Component Class Rules
 
 - Agents MUST use `.pathable-{component}` classes in HTML templates, never `.usa-{component}` classes.
 - Agents MUST use `.pathable-{component}__{element}` for child element classes (e.g., `.pathable-card__header`, `.pathable-card__body`).
 - Agents MUST use `.pathable-{component}--{modifier}` for modifier variants (e.g., `.pathable-button--outline`, `.pathable-table--borderless`).
 - Agents MUST use only the components, elements and modifiers a component page documents.
-- Agents MUST NOT write ad-hoc CSS rules for styling that can be achieved by applying component wrapper classes.
+- Agents MUST NOT write ad-hoc CSS rules for styling that can be achieved by applying component classes.

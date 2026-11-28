@@ -46,7 +46,6 @@ The reviewer starts with a clean context. It reads only:
   documents for the code the diff changes, as the routing table names them:
   for example [`packages/styles/AGENTS.md`](../../packages/styles/AGENTS.md)
   and [`BRAND_RULES.md`](../../packages/styles/BRAND_RULES.md) for styles,
-  [`STORY_AUTHORING.md`](../../packages/styles/STORY_AUTHORING.md) or
   [`STORYBOOK_STANDARD.md`](../../packages/react/STORYBOOK_STANDARD.md) for
   stories, and [Component testing](../testing/README.md) for tests
 

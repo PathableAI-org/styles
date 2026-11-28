@@ -1,6 +1,6 @@
 # @pathableai/styles
 
-PathAble's shared style package provides brand-aligned SCSS tokens, typography defaults, color values, and usage guidance for building consistent PathAble interfaces.
+PathAble's shared style package provides brand-aligned compiled CSS, tokens, typography and colour values, and usage guidance for building consistent PathAble interfaces.
 
 This package is the implementation source for PathAble visual design foundations. It should be used by applications, documentation sites, prototypes, and agent-generated UI work that needs to follow the PathAble brand.
 
@@ -91,61 +91,6 @@ For `!important` declarations the order is reversed: an `!important` in
 `pathable.base` or `pathable.components` beats one in a later layer, and beats
 an unlayered `!important` in your app.
 
-### SCSS (`@use`)
-
-Install Dart Sass and USWDS, then use the published source subpath with a stable
-namespace:
-
-```bash
-pnpm add @pathableai/styles @uswds/uswds
-pnpm add -D sass
-```
-
-```scss
-@use '@pathableai/styles/src/index' as pathable;
-```
-
-When using the command-line compiler, include the package and USWDS module load
-paths shown below. The source entry emits font URLs relative to the compiled CSS;
-ensure your bundler copies those assets, or use the copy command below.
-
-### USWDS Integration
-
-This package configures the USWDS v3.x theme color families with the exact PathAble brand hex values.
-Compile the PathAble source before USWDS in the same Sass build to apply that
-configuration to USWDS components.
-
-**Installation with USWDS:**
-
-```bash
-pnpm add @pathableai/styles @uswds/uswds
-pnpm add -D sass
-```
-
-**Usage with USWDS components:**
-
-```scss
-@use '@pathableai/styles/src/index' as pathable;
-@use 'uswds';
-```
-
-Configure Dart Sass to resolve both installed packages and the USWDS package
-modules. For the command-line compiler:
-
-```bash
-pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
-node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
-```
-
-The compiled PathAble CSS already includes the USWDS component styles that the
-`.pathable-*` wrappers use, compiled with the PathAble theme. Importing the stock
-precompiled USWDS CSS adds stock, unbranded components; it does not apply the
-PathAble Sass configuration. Use the combined Sass build above for any other
-brand-aligned USWDS components.
-
-The example above is the supported source-build path. Consumers that only need
-the PathAble contract should import the package's compiled CSS instead.
-
 ## Tokens
 
 A token is the suffix of a class, such as `primary` in `bg-primary` or `2` in
@@ -162,7 +107,6 @@ names.
 See BRAND_RULES.md for full color and typography guidance.
 See AGENTS.md for short operational rules intended for coding agents.
 See `components/index.md` in the installed package for the component pages: one page per component with its markup, variants, composition and guarantees, plus the token and utility pages. In this repository the package build writes the pages and the index from the source pages in the top-level [components/](https://github.com/PathableAI-org/styles/tree/main/components) directory, taking each converted page's examples from the HTML fixtures.
-See the [story authoring guide on GitHub](https://github.com/PathableAI-org/styles/blob/main/packages/styles/STORY_AUTHORING.md) for its checklist and PR requirements.
 Applications SHOULD use the documented token classes and `pathable-*` component classes instead of directly using brand hex values like #00365c.
 Brand colors SHOULD be used through this package so changes can be made centrally.
 

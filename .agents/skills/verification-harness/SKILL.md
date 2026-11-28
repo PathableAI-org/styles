@@ -31,7 +31,8 @@ claims are missing, ambiguous or inconsistent with each other, reply with a
    and build the affected packages.
 2. Gather each claim's evidence through its named channel: Storybook tests,
    visual checks, Playwright browser observation, packed-package checks, agent
-   guidance checks, unit tests or a person's assistive-technology observation.
+   guidance checks, unit tests, fixture checks, component-page checks or a
+   person's assistive-technology observation.
 3. Confirm that every named story exists and ran. Report it as `passing`,
    `failing` or `missing` for the applicable Storybook.
 4. For a visual claim, publish one

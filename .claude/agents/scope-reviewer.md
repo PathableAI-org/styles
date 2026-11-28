@@ -36,6 +36,12 @@ read, reply with what is missing and stop.
    issue with `gh api repos/PathableAI-org/styles/issues/<n>` and
    `gh api repos/PathableAI-org/styles/issues/<n>/comments`. When `task` is
    quoted text, that text is the accepted scope.
+   When the issue is a child issue (`gh api repos/PathableAI-org/styles/issues/<n>`
+   returns a `parent`, or the body has a "## Parent" link), also read the parent
+   spec: its Outcome, Out of scope and Contract impact are accepted scope
+   context, while the child's "What to build", Contract impact subset and
+   Acceptance criteria define what this diff must deliver. A parent item not
+   assigned to this child is not `not delivered`.
 2. Read the diff: `git diff <base>...<head>` and `git log <base>..<head>`, in a
    detached worktree of the lead's clone or with `git show`. On a repeat round
    with a `since` SHA, review `git log -p --no-merges <since>..<head> ^<base>`

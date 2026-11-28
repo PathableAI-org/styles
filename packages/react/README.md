@@ -1703,9 +1703,7 @@ Keep focus inside the dialog while open; Escape and the close control call `onCl
 When a desired utility from `@pathableai/styles` does not yet have a semantic
 prop mapped in the resolver layer, consumers can use the standard `className`
 prop directly with the CSS class name from the `@pathableai/styles` utility
-catalog. See the
-[capability inventory on GitHub](https://github.com/PathableAI-org/styles/blob/main/docs/capability-inventory.md)
-for the full list of available utility classes.
+catalog.
 
 ```tsx
 // Direct className usage when no semantic prop exists:

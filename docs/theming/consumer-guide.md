@@ -93,6 +93,4 @@ import '@pathableai/react'
 `ThemeProvider` is the preferred path for scoped runtime overrides.
 
 The public types and exports in `packages/react/src/theme/` own the runtime
-API. `packages/styles/package.json` owns stylesheet subpaths, and
-[acceptance-verification.md](./acceptance-verification.md) lists the checks
-that keep these contracts observable.
+API. `packages/styles/package.json` owns stylesheet subpaths.

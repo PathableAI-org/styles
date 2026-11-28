@@ -1,42 +1,11 @@
 # Component testing
 
-This documentation describes how this project tests components and maintains
-behavioral parity between `@pathableai/styles`, `@pathableai/react`, and future
-framework packages.
-
-Parity means that equivalent components provide the same user-facing and
-assistive-technology-facing capabilities. It does not require each package to
-use the same markup generator, state model, or event implementation.
-
-Shared component behavior is authored once in the private
-[`packages/storybook-contracts/`](../../packages/storybook-contracts/) package as
-renderer-neutral, single-capability validation helpers, and it follows the
-**Styles-first rule**: a shared validation must be proven first by the styles
-catalog through the published `@pathableai/styles` runtime
-(`pnpm test:storybook-styles`) before any framework package adopts it. See
-[Behavioral parity](behavior-parity.md) and
-[Tooling and structure](tooling-and-structure.md).
-
-The rollout ledger in
-[`packages/storybook-contracts/src/rollout/rollout.ts`](../../packages/storybook-contracts/src/rollout/rollout.ts)
-records whether each component is not started, Styles-proven, or adopted by a
-downstream package. Fixture presence, shared behavior, Axe execution, visual
-review, and manual review remain separate evidence.
+This documentation describes how this project tests components.
 
 ## Start here
 
-- [Testing principles](principles.md) explains the values behind the test
-  strategy.
-- [Choosing what to test](choosing-tests.md) helps place a requirement at the
-  correct test layer.
-- [Baseline component coverage](component-baseline.md) defines the checks that
-  normally apply to every component.
-- [Behavioral parity](behavior-parity.md) explains shared validation across
-  package implementations.
 - [Tooling and structure](tooling-and-structure.md) describes Storybook, its
   browser tests, and the repository layout.
-- [Adding tests for a component](adding-component-tests.md) is the practical
-  workflow for new work.
 - [HTML fixtures](fixtures.md) describes the canonical per-state HTML in
   `fixtures/`, the checks that validate it, and the React fixture tests that
   hold `@pathableai/react` components to it.

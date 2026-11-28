@@ -36,6 +36,12 @@ quietly changing the pull request's evidence.
 | `agent-guidance`       | `pnpm check:agent-guidance`                                                                                               |
 | `unit-test`            | `pnpm --filter @pathableai/react test:unit`                                                                               |
 | `assistive-technology` | A person's manual screen-reader or other assistive-technology check                                                       |
+| `fixture`              | Fixture markup, CSS-contract and axe checks through `pnpm --filter @pathableai/fixtures check`                            |
+| `component-page`       | Component pages through `pnpm --filter @pathableai/styles test:component-pages` and `check:component-pages`               |
+
+A delivery's verification seams are the specific places its outcome is
+observed, such as one fixture or one story. Each seam is observed through
+exactly one channel.
 
 Pick the channel that can observe the fact. A successful build does not prove
 keyboard behavior, a DOM snapshot does not prove rendering, and a source diff
