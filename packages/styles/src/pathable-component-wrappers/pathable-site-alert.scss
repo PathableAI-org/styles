@@ -14,6 +14,9 @@
 .pathable-site-alert {
   font-family: var(--pathable-font-body);
   @extend .usa-site-alert;
+
+  // Paragraphs in it take the alert's text colour (white when emergency).
+  --pathable-surface-text: currentColor;
 }
 
 // Info is the default status: a site alert without --emergency looks like the

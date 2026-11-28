@@ -5,12 +5,55 @@
 // The background colour utilities are the unprefixed USWDS classes, emitted by
 // _uswds-utility-classes.scss. This partial adds no utility class of its own:
 // it gives the background classes of the PathAble roles the focus-ring colour
-// of the controls on them. It emits no custom property declaration other than
-// --pathable-surface-focus-ring.
+// of the controls on them, and the text colour classes the text-colour hook of
+// the paragraphs in them. It emits no custom property declaration other than
+// --pathable-surface-focus-ring and --pathable-surface-text.
 //
 // ==========================================
 
+@use 'sass:list';
+@use 'sass:map';
+@use 'uswds-utilities/src/styles/rules/color' as uswds-color;
+
 @layer pathable.utilities {
+  // A text colour utility sets --pathable-surface-text to currentColor, so a
+  // .pathable-paragraph inside it takes the utility's colour instead of the
+  // theme text colour. The selectors come from the token map the USWDS color
+  // utility uses (text-<token>), so only colour classes set it, not text-center
+  // or text-bold. The hover variants do the same.
+  $-text-color-selectors: ();
+  // USWDS emits no class for a token whose value is false or null.
+  @each $-token, $-value in map.get(uswds-color.$u-color, 'color', 'values') {
+    @if $-value {
+      $-text-color-selectors: list.append(
+        $-text-color-selectors,
+        '.text-#{$-token}, .hover\\:text-#{$-token}:hover',
+        comma
+      );
+    }
+  }
+
+  #{$-text-color-selectors} {
+    --pathable-surface-text: currentColor;
+  }
+
+  // A coloured background utility sets its own text colour for the content in
+  // it, so a .pathable-paragraph inside it inherits that colour.
+  .bg-primary,
+  .hover\:bg-primary:hover,
+  .bg-primary-vivid,
+  .hover\:bg-primary-vivid:hover,
+  .bg-secondary,
+  .hover\:bg-secondary:hover,
+  .bg-success,
+  .hover\:bg-success:hover,
+  .bg-error,
+  .hover\:bg-error:hover,
+  .bg-accent-cool,
+  .hover\:bg-accent-cool:hover {
+    --pathable-surface-text: currentColor;
+  }
+
   // A background utility sets the surface focus ring
   // (--pathable-surface-focus-ring) for the controls in it, because the ring is
   // drawn on the background behind the control. Bright Blue Brooks

@@ -20,4 +20,7 @@
   // back to --pathable-color-focus-ring even inside a light background that
   // sets a dark ring.
   --pathable-surface-focus-ring: initial;
+
+  // Paragraphs in it take its white text colour.
+  --pathable-surface-text: currentColor;
 }
