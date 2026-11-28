@@ -28,7 +28,7 @@ guarantees:
   - id: heading-size
     claim: 'The heading is bold #00365c at 1.13rem (the md size) with a 1rem top margin below a 40em viewport, and 1.5rem (the lg size) with a 2rem top margin from 40em.'
   - id: segment-counters
-    claim: With the counters modifier, from 40em each segment shows its number in a 2.5rem circle centred on its bar, upcoming circles ringed #919191 with #565c65 numbers, complete circles #001e33 and the current circle #00365c with white numbers, and the last segment has no bar.
+    claim: 'With the counters modifier, from 40em each segment shows its number in a 2.5rem circle centred on its bar, upcoming circles ringed #919191 with #565c65 numbers, complete circles #001e33 and the current circle #00365c with white numbers, and the last segment has no bar.'
   - id: segment-counters-small
     claim: With the counters-sm modifier the segment circles are 1.5rem across with 0.88rem (the 2xs size) numbers and the same colours as counters.
   - id: centered-segments

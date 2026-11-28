@@ -6,11 +6,11 @@ summary: The fixed USWDS colour palette of 25 families with numbered grades and 
 uswds: https://designsystem.digital.gov/design-tokens/color/system-tokens/
 guarantees:
   - id: system-values
-    claim: The classes bg-red and bg-blue set background-color to #e52207 and #0076d6, the USWDS values of the system tokens red-50v and blue-50v, because PathAble does not change system tokens.
+    claim: 'The classes bg-red and bg-blue set background-color to #e52207 and #0076d6, the USWDS values of the system tokens red-50v and blue-50v, because PathAble does not change system tokens.'
   - id: default-grayscale
-    claim: The classes bg-gray-5, bg-gray-10, bg-gray-30, bg-gray-50, bg-gray-70 and bg-gray-90 set background-color to #f0f0f0, #e6e6e6, #adadad, #757575, #454545 and #1b1b1b.
+    claim: 'The classes bg-gray-5, bg-gray-10, bg-gray-30, bg-gray-50, bg-gray-70 and bg-gray-90 set background-color to #f0f0f0, #e6e6e6, #adadad, #757575, #454545 and #1b1b1b.'
   - id: basic-aliases
-    claim: The classes bg-red, bg-orange, bg-gold, bg-yellow, bg-green, bg-mint, bg-cyan, bg-blue, bg-indigo, bg-violet and bg-magenta set background-color to #e52207, #e66f0e, #ffbe2e, #fee685, #538200, #04c585, #009ec1, #0076d6, #676cc8, #8168b3 and #d72d79.
+    claim: 'The classes bg-red, bg-orange, bg-gold, bg-yellow, bg-green, bg-mint, bg-cyan, bg-blue, bg-indigo, bg-violet and bg-magenta set background-color to #e52207, #e66f0e, #ffbe2e, #fee685, #538200, #04c585, #009ec1, #0076d6, #676cc8, #8168b3 and #d72d79.'
   - id: grades-not-classes
     claim: The compiled CSS has no class for a numbered system token, so bg-red-50v and bg-gray-cool-60 do not exist.
   - id: global-tokens

@@ -6,11 +6,11 @@ summary: How PathAble colour tokens are organised into theme, state, system, bas
 uswds: https://designsystem.digital.gov/design-tokens/color/overview/
 guarantees:
   - id: brand-primary
-    claim: The class bg-primary sets background-color to #00365c (PathAble Blue).
+    claim: 'The class bg-primary sets background-color to #00365c (PathAble Blue).'
   - id: ink-and-white
-    claim: The class text-ink sets color to #00365c and the class text-white sets color to white.
+    claim: 'The class text-ink sets color to #00365c and the class text-white sets color to white.'
   - id: unprefixed-utilities
-    claim: The classes bg-primary, text-primary, border-primary, outline-primary and underline-primary exist with no prefix and set background-color, color, border-color, outline-color and text-decoration-color to #00365c.
+    claim: 'The classes bg-primary, text-primary, border-primary, outline-primary and underline-primary exist with no prefix and set background-color, color, border-color, outline-color and text-decoration-color to #00365c.'
   - id: default-palettes
     claim: The compiled CSS has colour classes for the theme, state, basic, grayscale and global tokens, and has no class for a system token such as bg-red-50v.
   - id: unset-grades

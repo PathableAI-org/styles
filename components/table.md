@@ -24,19 +24,19 @@ guarantees:
   - id: type
     claim: The table text is Nunito at 1rem (the sm size) with a line height of 1.6 in dark blue (#00365c), and header cells have a line height of 1.4.
   - id: cell-box
-    claim: Cells have a 1 px solid #00365c border, collapsed so neighbouring cells share one line, and 0.5rem of padding above and below and 1rem left and right.
+    claim: 'Cells have a 1 px solid #00365c border, collapsed so neighbouring cells share one line, and 0.5rem of padding above and below and 1rem left and right.'
   - id: header-surface
-    claim: Header cells have a #eef0f4 background and body cells a white background, with the text in both at a contrast of at least 12:1.
+    claim: 'Header cells have a #eef0f4 background and body cells a white background, with the text in both at a contrast of at least 12:1.'
   - id: table-margin
     claim: The table has a 1.25rem margin above and below and none at the sides, and its text is left aligned.
   - id: caption
     claim: The caption is left aligned Nunito bold at 0.93rem with 0.75rem of space between it and the table.
   - id: borderless
-    claim: With the borderless modifier, cells have no left or right border, header cells have no top border, and header cells have a white background instead of #eef0f4.
+    claim: 'With the borderless modifier, cells have no left or right border, header cells have no top border, and header cells have a white background instead of #eef0f4.'
   - id: compact
     claim: With the compact modifier, cells have 0.25rem of padding above and below and 0.75rem left and right.
   - id: striped
-    claim: With the striped modifier, the cells of every odd body row have a #f6f8f9 background, with the text at a contrast of at least 11:1.
+    claim: 'With the striped modifier, the cells of every odd body row have a #f6f8f9 background, with the text at a contrast of at least 11:1.'
   - id: stacked
     claim: At a viewport narrower than 480 px, with the stacked modifier, each row is a block and each cell is on its own line preceded by the text of its data-label attribute.
   - id: stacked-header

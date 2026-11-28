@@ -9,15 +9,15 @@ guarantees:
   - id: input-hidden
     claim: The native input is moved off-screen (position absolute, 999em to the left) but stays in the tab order, and the label draws the visible control.
   - id: circle
-    claim: The unselected control is a 1.25rem (20 px at a 16 px root) circle with a white fill and a 2 px outline in #00365c, drawn 2rem (32 px) to the left of the label text.
+    claim: 'The unselected control is a 1.25rem (20 px at a 16 px root) circle with a white fill and a 2 px outline in #00365c, drawn 2rem (32 px) to the left of the label text.'
   - id: label-layout
     claim: The label is inline-block with a 0.75rem (12 px) top margin and 2rem (32 px) of left padding, in normal weight, and shows a pointer cursor.
   - id: checked
-    claim: A selected radio shows a #015a76 centre inside a 2 px white ring, inside a 2 px #015a76 outline.
+    claim: 'A selected radio shows a #015a76 centre inside a 2 px white ring, inside a 2 px #015a76 outline.'
   - id: disabled
-    claim: A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white circle with a 2 px #757575 outline, and a selected one shows a #757575 centre and outline.
+    claim: 'A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white circle with a 2 px #757575 outline, and a selected one shows a #757575 centre and outline.'
   - id: focus-ring
-    claim: When the input has focus, the circle shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it, except on a focused tile input that is checked and does not have aria-disabled="true", where the outline is #00365c so it keeps 3:1 against the tile tint (an input with the disabled attribute cannot take focus).
+    claim: 'When the input has focus, the circle shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it, except on a focused tile input that is checked and does not have aria-disabled="true", where the outline is #00365c so it keeps 3:1 against the tile tint (an input with the disabled attribute cannot take focus).'
   - id: root-block
     claim: The root is display block, so each radio starts on its own line, unless the element is a bare input or has the hidden attribute.
   - id: description
@@ -25,7 +25,7 @@ guarantees:
   - id: tile
     claim: With pathable-radio__input--tile on the input, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the circle drawn inside the start padding.
   - id: tile-checked
-    claim: A selected tile has a #015a76 border and a background of #015a76 at 10 percent opacity; a disabled tile has a lighter border and a white background.
+    claim: 'A selected tile has a #015a76 border and a background of #015a76 at 10 percent opacity; a disabled tile has a lighter border and a white background.'
 ---
 
 # Radio buttons

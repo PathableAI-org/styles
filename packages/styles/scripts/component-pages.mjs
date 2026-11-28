@@ -18,7 +18,7 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import { parse } from 'yaml'
+import { parse, parseDocument } from 'yaml'
 
 /** Where the source pages live, shared by every package's documentation. */
 export const pagesDir = resolve(import.meta.dirname, '../../../components')
@@ -28,11 +28,22 @@ export const indexFile = 'index.md'
 /** Markdown in the source directory that is not a component page. */
 const NOT_PAGES = new Set([indexFile, 'README.md'])
 
-/** Splits a page into its front matter (parsed as YAML) and its Markdown body. */
-export function parsePage(markdown) {
+/** Finds the front matter block of a page: the match, and the text between the fences. */
+function frontMatterMatch(markdown) {
   const normalized = markdown.replace(/\r\n?/gu, '\n')
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n/u)
   if (!match) throw new Error('A component page must start with front matter')
+  return { normalized, match }
+}
+
+/** The front matter of a page as a YAML document, which keeps comments. */
+export function parseFrontMatterDocument(markdown) {
+  return parseDocument(frontMatterMatch(markdown).match[1])
+}
+
+/** Splits a page into its front matter (parsed as YAML) and its Markdown body. */
+export function parsePage(markdown) {
+  const { normalized, match } = frontMatterMatch(markdown)
 
   const data = parse(match[1])
   if (data === null || typeof data !== 'object' || Array.isArray(data)) {

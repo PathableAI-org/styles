@@ -9,17 +9,17 @@ guarantees:
   - id: input-hidden
     claim: The native input is moved off-screen (position absolute, 999em to the left) but stays in the tab order, and the label draws the visible control.
   - id: box
-    claim: The unchecked box is a 1.25rem (20 px at a 16 px root) square with 2 px rounded corners, a white fill and a 2 px outline in #00365c, drawn 2rem (32 px) to the left of the label text.
+    claim: 'The unchecked box is a 1.25rem (20 px at a 16 px root) square with 2 px rounded corners, a white fill and a 2 px outline in #00365c, drawn 2rem (32 px) to the left of the label text.'
   - id: label-layout
     claim: The label is inline-block with a 0.75rem (12 px) top margin and 2rem (32 px) of left padding, in normal weight, and shows a pointer cursor.
   - id: checked
-    claim: A checked box is filled #015a76 with a 2 px #015a76 outline and a check mark centred in it.
+    claim: 'A checked box is filled #015a76 with a 2 px #015a76 outline and a check mark centred in it.'
   - id: indeterminate
-    claim: An input with the data-indeterminate attribute, or whose indeterminate property is true, shows a box filled #015a76 with a dash centred in it.
+    claim: 'An input with the data-indeterminate attribute, or whose indeterminate property is true, shows a box filled #015a76 with a dash centred in it.'
   - id: disabled
-    claim: A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white box with a 2 px #757575 outline, and a checked or indeterminate one fills the box #757575.
+    claim: 'A disabled input, or one with aria-disabled="true", shows its label in #757575 with a not-allowed cursor and a white box with a 2 px #757575 outline, and a checked or indeterminate one fills the box #757575.'
   - id: focus-ring
-    claim: When the input has focus, the box shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it, except on a focused tile input that is checked or indeterminate and does not have aria-disabled="true", where the outline is #00365c so it keeps 3:1 against the tile tint (an input with the disabled attribute cannot take focus).
+    claim: 'When the input has focus, the box shows a 0.25rem (4 px) solid #4899e8 outline 0.25rem (4 px) outside it, except on a focused tile input that is checked or indeterminate and does not have aria-disabled="true", where the outline is #00365c so it keeps 3:1 against the tile tint (an input with the disabled attribute cannot take focus).'
   - id: root-block
     claim: The root is display block, so each checkbox starts on its own line, unless the element is a bare input or has the hidden attribute.
   - id: description
@@ -27,7 +27,7 @@ guarantees:
   - id: tile
     claim: With pathable-checkbox__input--tile on the input, the label is a box with a 2 px border in a light grey, 4 px rounded corners, 0.5rem (8 px) top margin and padding of 0.75rem (12 px) above and below, 1rem (16 px) at the end and 2.5rem (40 px) at the start, with the check box drawn inside the start padding.
   - id: tile-checked
-    claim: A checked or indeterminate tile has a #015a76 border and a background of #015a76 at 10 percent opacity; a disabled tile has a lighter border and a white background.
+    claim: 'A checked or indeterminate tile has a #015a76 border and a background of #015a76 at 10 percent opacity; a disabled tile has a lighter border and a white background.'
 ---
 
 # Checkbox

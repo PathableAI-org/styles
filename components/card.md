@@ -20,7 +20,7 @@ guarantees:
   - id: inside-prose
     claim: A card group that is a direct child of pathable-prose renders the same as one outside it, with no list padding or bullets and the same card spacing.
   - id: box
-    claim: The container is a white box with a 2 px solid #eef0f4 border, 0.5rem rounded corners and 0.5rem left and right margins, set in Nunito at 1rem (the sm size) with a line height of 1.6 in the theme text colour; the card itself draws no background, border or padding.
+    claim: 'The container is a white box with a 2 px solid #eef0f4 border, 0.5rem rounded corners and 0.5rem left and right margins, set in Nunito at 1rem (the sm size) with a line height of 1.6 in the theme text colour; the card itself draws no background, border or padding.'
   - id: card-spacing
     claim: A card has a bottom margin of 2.5rem below a 40em viewport and 2rem from 40em, including when it is the last child of its parent.
   - id: part-padding
