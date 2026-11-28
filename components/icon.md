@@ -80,7 +80,8 @@ the icon sits.
 ## The sprite
 
 The icons are the named symbols of the PathAble sprite, the package's asset
-`@pathableai/styles/dist/img/sprite.svg`. An icon is the symbol's name after
+`@pathableai/styles/img/sprite.svg` (the file `img/sprite.svg` in the
+package). An icon is the symbol's name after
 the `#` in the `<use>` reference, such as `#check_circle`, `#schedule`,
 `#warning` or `#navigate_next`. The sprite is a file that the application
 serves, and the `href` is the URL it is served from, such as
