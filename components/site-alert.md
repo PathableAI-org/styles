@@ -98,7 +98,8 @@ status is set on the site alert, not on the nested `pathable-alert`.
 | heading | `default`    | none                              | A heading above the message                          |
 | heading | `no-heading` | `pathable-site-alert--no-heading` | A bold lead-in in the message and no heading         |
 
-Info is the default status; the examples also carry
+A site alert with no status modifier is the info site alert, as the
+default-status example shows; the other info examples also carry
 `pathable-site-alert--info`, which gives the same look.
 
 The body font is Nunito. The pixel figures on this page assume a 16 px root font

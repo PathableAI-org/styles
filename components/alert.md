@@ -109,8 +109,9 @@ Add at most one modifier class from each axis to `pathable-alert`.
 | icon   | `default`   | none                        | The status icon shows                                         |
 | icon   | `no-icon`   | `pathable-alert--no-icon`   | The icon is hidden and the text uses the full width           |
 
-Info is the default status; the examples also carry
-`pathable-alert--info`, which gives the same look. An alert with no heading needs no modifier: leave the heading out.
+An alert with no status modifier is the info alert, as the default-status
+example shows; the other info examples also carry `pathable-alert--info`,
+which gives the same look. An alert with no heading needs no modifier: leave the heading out.
 
 - Success: Intelligent Jade, #1cae96, with #001a33 text.
 - Warning: Amber, #f5a623, with #001a33 text.

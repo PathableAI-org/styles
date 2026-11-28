@@ -78,11 +78,7 @@
 // heading's units(1) bottom margin. Take the heading's margin off the list's
 // so the gap stays the larger of the two, as in normal flow. Every site alert
 // has a status, so the body is always a flex column.
-.pathable-site-alert--info .pathable-alert__heading + .pathable-list,
-.pathable-site-alert:where(:not(.pathable-site-alert--emergency))
-  .pathable-alert__heading
-  + .pathable-list,
-.pathable-site-alert--emergency .pathable-alert__heading + .pathable-list {
+.pathable-site-alert .pathable-alert__heading + .pathable-list {
   margin-top: calc(1em - #{units(1)});
 }
 
