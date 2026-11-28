@@ -760,3 +760,15 @@ describe('component docs: css-files placeholder', () => {
     assert.deepEqual(cssFilesFor(new Map(), manifest), [])
   })
 })
+
+describe('component docs: manifest loading', () => {
+  it('does not read the manifest for pages that are not static', async () => {
+    const files = await renderTarget('styles', {
+      pages: [page('# Widget\n')],
+      loadManifest: () => {
+        throw new Error('the manifest must not be read')
+      },
+    })
+    assert.deepEqual([...files.keys()], ['widget.md'])
+  })
+})

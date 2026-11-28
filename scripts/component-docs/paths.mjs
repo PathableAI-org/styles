@@ -10,8 +10,3 @@ export const fixtureManifestPath = join(
   reactSourceDir,
   'test/fixture-manifest.ts',
 )
-/** The CSS module manifest the styles build writes (build-css-modules.mjs). */
-export const cssManifestPath = join(
-  repoRoot,
-  'packages/styles/dist/css/manifest.json',
-)
