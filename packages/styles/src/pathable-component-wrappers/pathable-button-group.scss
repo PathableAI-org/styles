@@ -177,9 +177,10 @@ $-half-stroke: math.div(units($theme-button-stroke-width), 2);
 
 // USWDS sets the width of a segmented button with rules as specific as
 // `.usa-button-group--segmented .usa-button-group__item:last-child >
-// .usa-button`, which beat a width class such as `width-auto`. Repeat each width class for a button in a segmented
-// item, after those rules, as pathable-button.scss does for the plain button,
-// so the class wins at every viewport width. `width-full` is not repeated, as
+// .usa-button`, which beat a width class such as `width-auto` when this file
+// is loaded on its own, outside the cascade layers. Repeat each width class for
+// a button in a segmented item, after those rules, so the class wins at every
+// viewport width. `width-full` is not repeated, as
 // explained above.
 @each $width-name,
   $width-value in map.get(map.get(uswds-width.$u-width, 'width'), 'values')

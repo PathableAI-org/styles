@@ -18,7 +18,12 @@ moves to the matching unprefixed background class, with its `hover:` variant:
 `bg-error` to the on-accent dark blue (`#001a33`) and `bg-base` to PathAble
 Blue. A control placed directly on one of those classes now draws that ring
 where it drew Bright Blue Brooks before. Other background classes leave the
-ring unchanged.
+ring unchanged. In the same way, a `pathable-legend` inside `bg-primary`,
+`bg-primary-vivid`, `bg-secondary`, `bg-success`, `bg-error`,
+`bg-accent-cool`, `text-base`, `text-primary`, `text-primary-vivid`,
+`text-secondary` or `text-white` now inherits the container's text colour, as
+it did inside the `pathable-` classes those replace, instead of taking
+PathAble Blue.
 
 The compiled CSS also stops declaring the 12 root custom properties that only
 the retained React package read: `--pathable-color-border`,
