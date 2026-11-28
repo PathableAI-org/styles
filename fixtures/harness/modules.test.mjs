@@ -68,7 +68,12 @@ test('renderPage links each stylesheet in order', () => {
 
 const snapshot = (...rows) => ({
   props: ['color', 'display'],
-  rows: rows.map(([path, pseudo, ...values]) => ({ path, pseudo, values })),
+  rows: rows.map(([path, pseudo, ...values]) => ({
+    path,
+    pseudo,
+    values: values.slice(0, 2),
+    extra: values[2] ?? {},
+  })),
 })
 
 test('identical snapshots have no differences', () => {
@@ -109,4 +114,41 @@ test('a different element count is reported', () => {
   )
   assert.equal(diffs.length, 1)
   assert.equal(diffs[0].property, '(element)')
+})
+
+test('a custom property only on a descendant row is compared', () => {
+  const rows = (extra) => [
+    ['html', '', 'red', 'block'],
+    ['html > body > div', '', 'red', 'block', extra],
+  ]
+  assert.deepEqual(
+    compareSnapshots(
+      snapshot(...rows({ '--ring': '2px' })),
+      snapshot(...rows({ '--ring': '3px' })),
+    ),
+    [
+      {
+        path: 'html > body > div',
+        pseudo: '',
+        property: '--ring',
+        bundle: '2px',
+        modules: '3px',
+      },
+    ],
+  )
+  assert.deepEqual(
+    compareSnapshots(
+      snapshot(...rows({ '--ring': '2px' })),
+      snapshot(...rows({})),
+    ),
+    [
+      {
+        path: 'html > body > div',
+        pseudo: '',
+        property: '--ring',
+        bundle: '2px',
+        modules: '(missing)',
+      },
+    ],
+  )
 })

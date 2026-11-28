@@ -9,7 +9,8 @@
  * picks. After document.fonts.ready, every element under <html> (the <head>
  * and what it holds are skipped: the two pages link different stylesheets
  * there) and its ::before and ::after are read through getComputedStyle, every
- * property, and compared element by element in document order. Any difference
+ * property that style enumerates (custom properties included, even ones only
+ * some elements carry), and compared element by element in document order. Any difference
  * fails the run.
  */
 
@@ -33,9 +34,20 @@ import { readManifest, renderPage } from './modules.mjs'
 /** Printed differences per fixture and viewport. */
 export const MAX_PRINTED = 20
 
+/** The value of each property a row records, by name. */
+function valuesByName(snapshot, row) {
+  const byName = new Map(snapshot.props.map((name, i) => [name, row.values[i]]))
+  for (const [name, value] of Object.entries(row.extra)) byName.set(name, value)
+  return byName
+}
+
 /**
  * Compares two snapshots, `{ props, rows }`, where each row is
- * `{ path, pseudo, values }` and `values` follows `props`. Returns
+ * `{ path, pseudo, values, extra }`: `values` follows the shared `props` list
+ * and `extra` maps every other property name the row's own computed style
+ * enumerates (custom properties set only on some elements, for one) to its
+ * value. Per row, the union of the names from both pages is compared; a name
+ * one side lacks is `(missing)`. Returns
  * `{ path, pseudo, property, bundle, modules }` for each difference, with a
  * row-level difference (a different element at that position) reported under
  * the property `(element)`.
@@ -43,7 +55,6 @@ export const MAX_PRINTED = 20
 export function compareSnapshots(bundle, modules) {
   const differences = []
   const count = Math.max(bundle.rows.length, modules.rows.length)
-  const modulesProps = new Map(modules.props.map((name, i) => [name, i]))
   for (let i = 0; i < count; i++) {
     const a = bundle.rows[i]
     const b = modules.rows[i]
@@ -57,20 +68,21 @@ export function compareSnapshots(bundle, modules) {
       })
       continue
     }
-    bundle.props.forEach((property, index) => {
-      const other = modulesProps.has(property)
-        ? b.values[modulesProps.get(property)]
-        : '(missing)'
-      if (a.values[index] !== other) {
+    const left = valuesByName(bundle, a)
+    const right = valuesByName(modules, b)
+    for (const property of new Set([...left.keys(), ...right.keys()])) {
+      const one = left.get(property) ?? '(missing)'
+      const other = right.get(property) ?? '(missing)'
+      if (one !== other) {
         differences.push({
           path: a.path,
           pseudo: a.pseudo,
           property,
-          bundle: a.values[index],
+          bundle: one,
           modules: other,
         })
       }
-    })
+    }
   }
   return differences
 }
@@ -104,11 +116,21 @@ function snapshotPage() {
   }
   const read = (element, pseudo) => {
     const style = getComputedStyle(element, pseudo || null)
-    props ??= [...Array(style.length).keys()].map((i) => style[i])
+    const names = [...Array(style.length).keys()].map((i) => style[i])
+    props ??= names
+    const shared = new Set(props)
+    const extra = {}
+    for (const name of names) {
+      if (!shared.has(name)) extra[name] = style.getPropertyValue(name)
+    }
+    const own = new Set(names)
     rows.push({
       path: pathOf(element),
       pseudo,
-      values: props.map((name) => style.getPropertyValue(name)),
+      values: props.map((name) =>
+        own.has(name) ? style.getPropertyValue(name) : '(missing)',
+      ),
+      extra,
     })
   }
   for (const element of [
