@@ -11,6 +11,12 @@
 
 .pathable-pagination {
   @extend .usa-pagination;
+
+  // The controls' focus outline is drawn on this white background, whatever
+  // surface the pagination sits in. A light ring set by a surface behind it,
+  // such as the white one of pathable-bg-link, would be 1.0:1 here, so this
+  // resets it, as every light container does (see _utilities.scss).
+  --pathable-surface-focus-ring: initial;
 }
 
 .pathable-pagination__list {
@@ -129,4 +135,19 @@
     min-width: 2.75rem;
     min-height: 2.75rem;
   }
+}
+
+// USWDS draws the link focus outline from its element styles (uswds-elements),
+// which this package does not load, so the controls draw it here. The ring is
+// drawn on the pagination's own white background and takes the ring colour the
+// pagination resets to: Bright Blue Brooks, 3.0:1 on white and 4.2:1 against
+// the PathAble Blue current-page fill.
+.pathable-pagination__button:focus,
+.pathable-pagination__link:focus {
+  @include focus-outline;
+
+  outline-color: var(
+    --pathable-surface-focus-ring,
+    var(--pathable-color-focus-ring)
+  );
 }
