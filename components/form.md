@@ -10,6 +10,8 @@ guarantees:
     claim: From a viewport 480 px wide upward the form is at most 320 px wide; below that it fills its container.
   - id: control-fill
     claim: A pathable-input, pathable-select or pathable-textarea inside the form has no maximum width of its own and fills the form, unless it carries one of the maxw-mobile, maxw-mobile-lg, maxw-tablet or maxw-desktop width utilities, which still apply.
+  - id: fieldset-spacing
+    claim: A pathable-fieldset inside the form has a 24 px top margin, the same as a pathable-label, so its legend is set apart from the field above; a fieldset that is the first child of a pathable-form-group has no top margin of its own, because the group spaces it.
   - id: required-mark
     claim: An abbr element whose title is "required" inside the form has no underline or other text decoration, and with the pathable-hint--required class its asterisk is drawn in the dark error text colour.
   - id: link-style
@@ -17,7 +19,7 @@ guarantees:
   - id: field-error
     claim: A pathable-form-group--error group, a pathable-label--error label and a pathable-input--error control mark the one field that has an error, and the form itself carries no error class. See the error and error-group guarantees of the Text input page.
   - id: button-margin
-    claim: A pathable-button inside the form has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field.
+    claim: A pathable-button inside the form, other than one in a pathable-button-group, has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field.
 ---
 
 # Form
@@ -76,7 +78,8 @@ The form has no variants. It is one width, at most 320 px, from a viewport 480 p
   label and `pathable-input--error` on its control, so only the question with
   the error is marked and the form itself carries no error class.
 - `pathable-fieldset` and `pathable-legend`: group radios and checkboxes under
-  one question.
+  one question. The fieldset has a 24 px top margin inside the form, like a
+  label, so it follows the field before it directly with no wrapper.
 - `pathable-input`, `pathable-checkbox` and `pathable-radio`: the controls.
   See the [Text input](text-input.md) page for the text input.
 - `pathable-button`: the submit button, as the form's last child. It has a top
@@ -128,3 +131,9 @@ The guarantees are the list in the front matter at the top of this page.
 - The page title, including its error notification, and where the error
   summary, if any, goes and how focus moves to it.
 - Any data minimisation for the sensitive records the form collects.
+- At least 1.25 rem of space to the left of a `pathable-form-group--error`
+  group, from a viewport 64 em wide upward (20 px and 1024 px at a 16 px root
+  font size). There the group moves 1.25 rem to the left so that its dark red
+  bar hangs outside the field's left edge, as in USWDS, and a container with
+  less left padding or margin clips the bar. Set the gutter in rem, not px, so
+  it grows with the reader's font size.

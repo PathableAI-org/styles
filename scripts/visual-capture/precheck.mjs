@@ -20,6 +20,7 @@ export const COVERED = [
 export const COMPARED_DIRS = [
   'packages/styles/dist',
   'packages/styles/fonts',
+  'packages/styles/img',
   'apps/storybook/generated',
 ]
 

@@ -113,3 +113,9 @@ assume a 16 px root font size.
 - Announcing an error that appears after the page loads.
 - Explaining why a control is disabled in nearby visible text, and avoiding a
   disabled select where the person needs to read its value.
+- At least 1.25 rem of space to the left of a `pathable-form-group--error`
+  group, from a viewport 64 em wide upward (20 px and 1024 px at a 16 px root
+  font size). There the group moves 1.25 rem to the left so that its dark red
+  bar hangs outside the field's left edge, as in USWDS, and a container with
+  less left padding or margin clips the bar. Set the gutter in rem, not px, so
+  it grows with the reader's font size.

@@ -2,60 +2,37 @@
 '@pathableai/styles': minor
 ---
 
-**Breaking change**: the package no longer ships `pathable-` utility classes.
-The utility classes are the USWDS ones under their USWDS names, which the
-package already shipped beside them. Every `pathable-` utility class is
-removed, with its `mobile-lg:`, `tablet:` and `desktop:` variants and its
-`hover:` and `focus:` variants, and the Sass maps they were generated from
-(`$pathable-utilities` and `$pathable-utility-breakpoints`) are gone. The
-`src/_utilities-config.scss` partial stays, so loading it still compiles, but
-it now defines nothing.
+**Breaking change**: Removes every `pathable-` utility class, such as
+`pathable-margin-x-2`, `pathable-bg-primary` and `tablet:pathable-display-flex`,
+and the 12 root custom properties that only `@pathableai/react` read. The
+utility classes are the USWDS ones under their USWDS names, such as
+`margin-x-2`, `bg-primary` and `tablet:display-flex`.
 
-The focus-ring colour that `pathable-bg-<role>` set for the controls on it
-moves to the matching unprefixed background class, with its `hover:` variant:
-`bg-primary` and `bg-white` reset the ring to Bright Blue Brooks,
-`bg-primary-vivid` sets it to white, `bg-secondary`, `bg-success` and
-`bg-error` to the on-accent dark blue (`#001a33`) and `bg-base` to PathAble
-Blue. A control placed directly on one of those classes now draws that ring
-where it drew Bright Blue Brooks before. Other background classes leave the
-ring unchanged. In the same way, a `pathable-legend` inside `bg-primary`,
-`bg-primary-vivid`, `bg-secondary`, `bg-success`, `bg-error`,
-`bg-accent-cool`, `text-base`, `text-primary`, `text-primary-vivid`,
-`text-secondary` or `text-white` now inherits the container's text colour, as
-it did inside the `pathable-` classes those replace, instead of taking
-PathAble Blue.
+- The removed properties are `--pathable-color-border`,
+  `--pathable-color-accent`, `--pathable-color-danger`,
+  `--pathable-color-success`, `--pathable-color-text-success`,
+  `--pathable-color-workflow-active`, `--pathable-color-workflow-complete`,
+  `--pathable-color-workflow-blocked` and `--elevation-sm|md|lg|xl`.
+- Sass: `$pathable-utilities` and `$pathable-utility-breakpoints` are removed,
+  and `$semantic-colors` loses the eight colour keys above.
+  `src/_utilities-config.scss` still loads but defines nothing.
+- `@pathableai/react` components and layout props still emit `pathable-`
+  utility classes and read those properties, so their spacing, layout, width
+  and colour props render unstyled, and their borders, accents, workflow
+  markers and shadows lose their value unless a `ThemeProvider` sets it.
 
-The compiled CSS also stops declaring the 12 root custom properties that only
-the retained React package read: `--pathable-color-border`,
-`--pathable-color-accent`, `--pathable-color-danger`,
-`--pathable-color-success`, `--pathable-color-text-success`,
-`--pathable-color-workflow-active`, `--pathable-color-workflow-complete`,
-`--pathable-color-workflow-blocked` and `--elevation-sm|md|lg|xl`. No rule in
-the stylesheet reads them, so no component or utility class renders
-differently. The Sass
-variables and the `$elevation-levels` map they came from stay; the
-`$semantic-colors` map loses those eight keys. For a value, use the colour
-utility of the same colour (`bg-secondary` or `text-secondary` for the accent,
-`bg-error` for danger, `text-secondary-dark` for text success) or the
-elevation's shadow value in CSS.
+**Migration**: replace each removed class with the unprefixed class in the
+table, which sets the same value (`maxw-*` in rem, the same width at a 16px root
+font size). Where the table names no class, write the CSS it gives instead.
 
-The legacy `@pathableai/react` components and layout props, which are retained
-but deferred, still emit `pathable-` utility classes and read those custom
-properties, so their spacing, layout, width and colour props render without
-styling, and their borders, accents, workflow markers and shadows lose their
-colour or shadow unless a `ThemeProvider` sets the property, once this version
-is installed.
-
-Migration: replace each removed class with the unprefixed class below, which
-sets the same value (the `maxw-*` classes in rem, the same width at a 16px root
-font size). A removed class with no unprefixed equivalent is named in the
-table with the CSS to write instead. The `mobile-lg:`, `tablet:` and
-`desktop:` variants of the padding, margin and display classes map the same
-way (`tablet:pathable-display-flex` becomes `tablet:display-flex`). The
-breakpoint variants of the flex, flex-align, flex-justify, width and text-align
-classes have no unprefixed equivalent: set the property in a `min-width` media
-query instead. A spacing step `<n>` is
-the same number of 0.5rem steps in both names.
+- A spacing step `<n>` is the same number of 0.5rem steps in both names.
+- The `mobile-lg:`, `tablet:` and `desktop:` variants of the padding, margin and
+  display classes map the same way. Those of the flex, flex-align,
+  flex-justify, width and text-align classes have no unprefixed class: set the
+  property in a `min-width` media query.
+- For a removed property, use the colour class of the same colour
+  (`bg-secondary` or `text-secondary` for the accent, `bg-error` for danger,
+  `text-secondary-dark` for text success), or the shadow value in your CSS.
 
 | Removed                                                                    | Replacement                                                                                                                                                                                |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

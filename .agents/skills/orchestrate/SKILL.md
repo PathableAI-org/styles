@@ -93,8 +93,8 @@ stack inside the repository.
      the person.
    - Commit only when a checker reports every check and acceptance item
      passed on the tree you commit, and commit all of it: send a change you do
-     not accept back to the implementer as a failure. When published package
-     code changes, whoever writes the code writes the changeset: put it in
+     not accept back to the implementer as a failure. When a change needs a
+     changeset, whoever writes the code writes the changeset: put it in
      the brief's `files` for an implementer, or write it with your own code.
 2. **Review round.** Nothing is pushed yet. On the committed local `HEAD`,
    start in parallel, each in a fresh context with only its

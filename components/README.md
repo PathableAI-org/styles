@@ -63,7 +63,11 @@ them. The sections, in order:
   lists the class suffixes that encode the values, linking to the utility
   pages.
 - `static`: When to use, Example, Variants, Composition, Guarantees, The
-  consumer owns.
+  consumer owns. An axis in the `variants` front matter may set
+  `default-modifier: true` when its default value also has a modifier class
+  that gives the same look, kept for markup that names the status. The
+  checker then requires that class's rule, and the Variants table still gives
+  `none` for the default.
 - `settings`: Not public API, then Values on every page but the overview.
   See [Settings pages](#settings-pages).
 
@@ -308,7 +312,8 @@ tables only, with no stories file. For the others, there is one live preview per
 `styles.css`, and **HTML** and **React** tabs beneath it showing the fixture
 and the example module verbatim (only **HTML** when the React package does not
 cover the component). Package blocks are shown labelled with their package.
-The front matter is not shown. Each fixture is also a story
+The front matter is not shown. Each preview renders with a 1.25 rem gutter so
+examples meet the gutter the pages ask consumers for. Each fixture is also a story
 under **Fixtures**; the fixture checks ([HTML fixtures](../docs/testing/fixtures.md))
 run axe on the same HTML. The pages
 publish to GitHub Pages with the rest of the Storybook.
