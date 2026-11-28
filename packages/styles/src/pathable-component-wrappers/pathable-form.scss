@@ -13,6 +13,18 @@
   @extend .usa-form;
 }
 
+// A fieldset's rendered legend is drawn in the fieldset's border area, so the
+// legend's own top margin has no effect and the fieldset would sit flush on
+// the field above. Space the fieldset like a label instead, and leave a
+// fieldset that is first in a form group to the group's own spacing.
+.pathable-form .pathable-fieldset {
+  margin-top: units(3);
+}
+
+.pathable-form .pathable-form-group > .pathable-fieldset:first-child {
+  margin-top: 0;
+}
+
 // USWDS scopes this rule to .usa-* controls, so repeat it for PathAble-only
 // markup. Explicit control max-width utilities remain intentional overrides.
 .pathable-form
