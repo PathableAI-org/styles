@@ -3,7 +3,7 @@
 ---
 
 `pathable-legend` no longer keeps the browser's default inline padding of 2px
-on each side, as in USWDS, whose normalize sets `legend { padding: 0 }`.
+on each side, matching USWDS.
 
 - The legend text lines up with the hint, labels and controls in the same
   fieldset instead of starting 2px to their right.
