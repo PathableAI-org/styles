@@ -26,7 +26,7 @@
 
 ## Changeset
 
-<!-- Either: the changeset file, the packages it bumps, and the bump type. Or: why none is needed (no code in a published package changed). -->
+<!-- Either: the changeset file, the packages it bumps, and the bump type. Or: why none is needed (nothing a consumer installs changed). -->
 
 ## Validation
 
