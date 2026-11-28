@@ -9,7 +9,6 @@ Controls inside `bg-primary-vivid` now draw the shared focus ring in white
 - Light containers nested in `bg-primary-vivid` reset the ring to Bright Blue
   Brooks, so a white ring does not inherit into them: the `bg-white`
   utility, the card container and the table.
-- The info alerts inside `bg-primary-vivid` use the on-accent dark
-  blue.
+- The info alerts inside `bg-primary-vivid` use PathAble Blue.
 - A custom light container nested in `bg-primary-vivid` should set
   `--pathable-surface-focus-ring: initial`.

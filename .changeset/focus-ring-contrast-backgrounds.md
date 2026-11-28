@@ -12,4 +12,8 @@ from the background behind them (`--pathable-surface-focus-ring`), so they keep
   on-accent blue, PathAble Blue, and white on the emergency alert.
 - On those backgrounds the ring no longer uses `--pathable-color-focus-ring`, so
   a theme's `focusRing` override does not reach controls there.
+- The `hover:` variants of those utilities and of `bg-primary-vivid` set the
+  ring only while the container is hovered.
+- Other background classes, including `bg-secondary-vivid`, `bg-ink` and
+  `bg-accent-cool-dark`, leave the ring as it is.
 - The outline is unchanged outside those backgrounds.
