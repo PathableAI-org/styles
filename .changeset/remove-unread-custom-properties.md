@@ -2,23 +2,26 @@
 '@pathableai/styles': minor
 ---
 
-**Breaking change**: the compiled CSS no longer declares 206 custom properties
-that no rule in the stylesheet reads. `dist/styles.css` and
-`dist/theme-default.css` now declare only the 36 root properties the component
-CSS or the retained React package reads: the 25 `--pathable-color-*`
-properties, `--pathable-brand-pathable-blue`, `--pathable-brand-lived-in-lime`,
-`--pathable-brand-bright-blue-brooks`, `--pathable-font-heading`,
-`--pathable-font-body`, `--pathable-font-weight-normal`,
-`--pathable-font-weight-bold` and `--elevation-sm|md|lg|xl`. Component and
-utility classes are unchanged and nothing renders differently. The Sass
-variables and maps the removed properties came from (`$spacing-scale`,
-`$pathable-spacing-scale`, `$radius-scale`, `$typography-tokens`, the `$ui-*`
-sizes and `$pathable-utilities`) stay in place. The `src/_utilities-tokens.scss`
-partial stays, so loading it still compiles, but it now emits nothing.
+**Breaking change**: Removes 206 custom properties that no rule in the
+stylesheet reads. `dist/styles.css` and `dist/theme-default.css` now declare
+only the 36 root properties the component CSS or `@pathableai/react` reads:
 
-Migration: replace each removed property with the class or value below. Spacing
-values follow the spacing token page (`tokens-spacing-units`), where one step
-is 0.5rem.
+- the 25 `--pathable-color-*` properties;
+- `--pathable-brand-pathable-blue`, `--pathable-brand-lived-in-lime` and
+  `--pathable-brand-bright-blue-brooks`;
+- `--pathable-font-heading`, `--pathable-font-body`,
+  `--pathable-font-weight-normal` and `--pathable-font-weight-bold`;
+- `--elevation-sm`, `--elevation-md`, `--elevation-lg` and `--elevation-xl`.
+
+Nothing renders differently. The Sass variables and maps the removed properties
+came from (`$spacing-scale`, `$pathable-spacing-scale`, `$radius-scale`,
+`$typography-tokens`, the `$ui-*` sizes and `$pathable-utilities`) stay in
+place. The `src/_utilities-tokens.scss` partial stays, so loading it still
+compiles, but it now emits nothing.
+
+**Migration**: replace each removed property with the class or value below.
+Spacing values follow the spacing token page (`tokens-spacing-units`), where one
+step is 0.5rem.
 
 | Removed                                                                                             | Replacement                                                                                                                                                          |
 | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -2,4 +2,14 @@
 '@pathableai/styles': patch
 ---
 
-Fix the shared focus ring on the `pathable-bg-link` utility. Controls that use the shared focus ring (`pathable-button`, `pathable-input`, `pathable-select`, `pathable-textarea`, `pathable-icon-button`) inside `pathable-bg-link` now draw it in white (7.7:1) instead of Bright Blue Brooks (2.6:1). Light containers nested in the teal one reset the ring to Bright Blue Brooks so a white ring does not inherit into them: the `pathable-bg-surface` utility, the card container, modal, accordion content, table, activity row, bento tile, KPI card, optional form section, page error, record header, schedule item, wayfinder, filterable option list, app shell top bar and the mobile workflow panel and wizard actions. The info alerts inside `pathable-bg-link` use the on-accent dark blue. A full-page page error keeps the ring of the background behind it. A custom light container nested in `pathable-bg-link` should set `--pathable-surface-focus-ring: initial`.
+Controls inside `pathable-bg-link` now draw the shared focus ring in white
+(7.7:1), instead of Bright Blue Brooks (2.6:1). The controls are
+`pathable-button`, `pathable-input`, `pathable-select` and `pathable-textarea`.
+
+- Light containers nested in `pathable-bg-link` reset the ring to Bright Blue
+  Brooks, so a white ring does not inherit into them: the `pathable-bg-surface`
+  utility, the card container and the table.
+- The info alerts inside `pathable-bg-link` use the on-accent dark
+  blue.
+- A custom light container nested in `pathable-bg-link` should set
+  `--pathable-surface-focus-ring: initial`.
