@@ -7,7 +7,7 @@
  *   render(page, 'storybook', sources)  { mdx, stories } for the styles Storybook
  *
  * `page` is { slug, markdown, data }, as readPages() returns it. `sources` is
- * { fixtures, examples, component, notOffered, titles }:
+ * { fixtures, examples, component, notOffered, titles, cssFiles }:
  * `fixtures` maps state to { description, html } (see sources.mjs);
  * `examples` maps state to React example module source, or is undefined when
  * the React package does not cover the component; `component` is the React
@@ -19,6 +19,11 @@
  * the previews from the sidebar. `titles` (Storybook target only, optional)
  * maps the slug of every page that has a Storybook page to its title, so a
  * link to another page can be rewritten to its docs route (rewritePageLinks).
+ * `cssFiles` (styles target) lists the CSS module file names the page needs,
+ * in manifest order, for `<!-- css-files -->`: the styles page shows them as
+ * `@import` lines, and the react and storybook targets render nothing for it.
+ * A `kind: static` page must have exactly one `<!-- css-files -->`; no other
+ * kind may have one.
  *
  * A page with no placeholder renders to itself, byte for byte, for the
  * Markdown targets. A settings page (`kind: settings`) has no fixtures and
@@ -161,11 +166,50 @@ function resolveAll(segments, slug, target, sources) {
   return resolved
 }
 
+/** The `@import` block `<!-- css-files -->` renders on the styles page. */
+const cssFilesBlock = (cssFiles) =>
+  [
+    'To load only the CSS this component needs instead of the whole bundle, import these files in this order:',
+    fence(
+      'css',
+      cssFiles
+        .map((file) => `@import '@pathableai/styles/css/${file}';`)
+        .join('\n'),
+    ),
+  ].join('\n\n')
+
+/** Problems with the page's `<!-- css-files -->` placeholders (styles only). */
+function cssFilesProblems(page, segments, sources) {
+  const found = segments.filter((item) => item.type === 'css-files')
+  const isStatic = page.data?.kind === 'static'
+  const problems = []
+  if (isStatic && found.length !== 1) {
+    problems.push(
+      `a kind: static page needs exactly one "<!-- css-files -->"; found ${found.length}`,
+    )
+  }
+  if (!isStatic && found.length > 0) {
+    problems.push(
+      `line ${found[0].line}: "<!-- css-files -->" is only for kind: static pages`,
+    )
+  }
+  if (found.length > 0 && !(sources.cssFiles?.length > 0)) {
+    problems.push(
+      `line ${found[0].line}: "<!-- css-files -->" but no CSS module files are known for this page (it needs fixtures and a built styles package)`,
+    )
+  }
+  return problems
+}
+
 const trimNewlines = (text) => text.replace(/^\n+|\n+$/gu, '')
 
 /** The Markdown targets: styles (HTML examples) and react (JSX examples). */
 function renderMarkdown(page, target, sources) {
   const segments = segment(page.markdown)
+  if (target === 'styles') {
+    const cssProblems = cssFilesProblems(page, segments, sources)
+    if (cssProblems.length > 0) throw new ComponentDocsError(cssProblems)
+  }
   if (findPlaceholders(page.markdown).placeholders.length === 0) {
     if (target === 'react') {
       // A React page made from an unconverted page would show HTML examples.
@@ -188,6 +232,9 @@ function renderMarkdown(page, target, sources) {
       if (item.type === 'markdown') return [trimNewlines(item.text)]
       if (item.type === 'package') {
         return item.name === target ? blocks(item.segments) : []
+      }
+      if (item.type === 'css-files') {
+        return target === 'styles' ? [cssFilesBlock(sources.cssFiles)] : []
       }
       if (item.type === 'example') return [code(item.state)]
       return resolved.get(item).flatMap((state) => {
@@ -338,6 +385,7 @@ function renderMdx(page, name, sources) {
           '</PackageNote>',
         ]
       }
+      if (item.type === 'css-files') return []
       if (item.type === 'example') return example(item.state)
       return resolved.get(item).flatMap((state) => {
         const { description } = sources.fixtures.get(state)

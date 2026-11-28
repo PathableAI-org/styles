@@ -64,6 +64,8 @@ Load the stylesheet once in the application; no JavaScript is needed:
 @import '@pathableai/styles';
 ```
 
+<!-- css-files -->
+
 <!-- example: default -->
 
 ## States

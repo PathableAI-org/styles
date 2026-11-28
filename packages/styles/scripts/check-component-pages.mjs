@@ -112,6 +112,7 @@ import {
 } from '../../../scripts/component-docs/segments.mjs'
 import { readCoverage } from '../../../scripts/component-docs/sources.mjs'
 import { pageSources } from '../../../scripts/component-docs/write.mjs'
+import { readManifest } from '../../../fixtures/harness/modules.mjs'
 
 import { parsePage, readPages } from './component-pages.mjs'
 
@@ -1002,8 +1003,9 @@ async function main() {
     const utilities = await readUtilityCss()
     const patterns = utilityPatterns(allPages)
     const coverage = await readCoverage()
+    const manifest = readManifest()
     for (const page of pages) {
-      const rendered = await pageSources(page, coverage).then(
+      const rendered = await pageSources(page, coverage, () => manifest).then(
         (sources) => renderForCheck(page, sources),
         (error) => {
           if (!(error instanceof ComponentDocsError)) throw error
