@@ -10,7 +10,6 @@ This package is the implementation source for PathAble visual design foundations
 - Typography tokens
 - Semantic color tokens
 - Light theme defaults
-- Dark and high-contrast theme foundations
 - Brand usage rules for humans and coding agents
 
 ## Brand Colors
@@ -32,6 +31,9 @@ This package is the implementation source for PathAble visual design foundations
 | Alternate Heading | `Montserrat` | `Bold`    |
 | Subheading        | `Poppins`    | `Bold`    |
 | Body Text         | `Nunito`     | `Regular` |
+
+No class applies Poppins. See `components/tokens-typesetting-font-family.md` for
+the guidance on subheadings.
 
 ## Usage
 
@@ -70,8 +72,8 @@ The `components/<slug>.md` entries are the component pages and
 references and the icon sprite, `img/sprite.svg`.
 
 The `components` and `utilities` entry points read their colours, fonts and
-other values from the `theme` entry point; import `@pathableai/styles` (all three) unless
-you import `theme` as well.
+other values from the `theme` entry point; import `@pathableai/styles`, the full import that includes the theme,
+components and utilities, unless you import `theme` as well.
 
 ### Component imports
 
