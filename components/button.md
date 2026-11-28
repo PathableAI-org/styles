@@ -23,19 +23,19 @@ guarantees:
   - id: touch-target
     claim: At a viewport width of 39.99em or narrower, and on a device with a coarse pointer at any width, a button is at least 2.75rem (44 px at a 16 px root font size) high.
   - id: default-colour
-    claim: The default button has the primary action fill and text colours, and darkens to #002845 under the pointer and to #001e33 while pressed, with white text.
+    claim: 'The default button has the primary action fill and text colours, and darkens to #002845 under the pointer and to #001e33 while pressed, with white text.'
   - id: colours
     claim: Secondary uses the secondary action fill and text colours, accent-cool a Bright Blue Brooks fill with the on-accent text colour, accent-warm a Lived-In Lime fill with PathAble Blue text, and base the page background fill with the body text colour.
   - id: outline
     claim: An outline button has a transparent background, so the surface behind it shows through, a 2 px border drawn inside its edge and text in the body text colour, and the border and text darken on hover and while pressed.
   - id: inverse
-    claim: The inverse modifier, used with the outline modifier, changes the border and text to #eef0f4 so the button is drawn on a dark surface.
+    claim: 'The inverse modifier, used with the outline modifier, changes the border and text to #eef0f4 so the button is drawn on a dark surface.'
   - id: big
     claim: A big button has 1rem of padding above and below, 1.5rem left and right and text at 1.5rem (the lg size).
   - id: unstyled
     claim: An unstyled button has no padding, border, margin or fill, and its text is underlined, left aligned, not bold and in the link colour.
   - id: disabled
-    claim: A button with the disabled attribute or aria-disabled="true" has a #c9c9c9 fill, shows a not-allowed cursor and does not change on hover or while pressed, and a disabled outline button keeps a transparent background with a grey #c9c9c9 border and grey text.
+    claim: 'A button with the disabled attribute or aria-disabled="true" has a #c9c9c9 fill, shows a not-allowed cursor and does not change on hover or while pressed, and a disabled outline button keeps a transparent background with a grey #c9c9c9 border and grey text.'
   - id: focus-ring
     claim: A focused enabled button has a 2 px solid outline in the focus ring colour of the surface it sits on, 0.25rem (4 px at a 16 px root font size) outside the button.
   - id: link

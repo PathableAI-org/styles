@@ -151,7 +151,9 @@ already held. It has no `status:` on its guarantees and no language about what
 the stylesheet does or does not do yet ("today", "not yet", "has no effect").
 Where the implementation falls short of a page, the gap is tracked in an
 issue, and the page stays as written. A guarantee has only an `id` and a
-`claim`.
+`claim`. Quote a claim that contains a space followed by `#`, such as one
+naming a hex colour, because YAML otherwise reads the rest of the line as a
+comment; check-component-pages fails such a claim.
 
 The front matter `name:` is the human name of the matching USWDS component
 (`Button group`, `Icon list`, `Input prefix/suffix`), and the page's `# H1`

@@ -70,6 +70,8 @@
  *     modifier the CSS has for the class is a variant on the page (static);
  *   - the body's summary paragraph and Variants table agree with the front
  *     matter, and no page names a custom property in prose or a claim;
+ *   - no guarantee claim is cut short by a YAML comment: a claim containing
+ *     " #" (a hex colour, say) must be quoted;
  * It does not look at play functions.
  *
  * Stage 2, `… check:component-pages:executed`, needs the records the Storybook
@@ -114,7 +116,11 @@ import { readCoverage } from '../../../scripts/component-docs/sources.mjs'
 import { pageSources } from '../../../scripts/component-docs/write.mjs'
 import { readManifest } from '../../../fixtures/harness/modules.mjs'
 
-import { parsePage, readPages } from './component-pages.mjs'
+import {
+  parseFrontMatterDocument,
+  parsePage,
+  readPages,
+} from './component-pages.mjs'
 
 const packageRoot = resolve(import.meta.dirname, '..')
 const repoRoot = resolve(packageRoot, '../..')
@@ -477,6 +483,22 @@ function checkFrontMatter(page, errors) {
   }
   if (Array.isArray(data.guarantees) && ids.size === 0) {
     errors.push('a page must state at least one guarantee')
+  }
+  checkClaimComments(page, errors)
+}
+
+/** Fails a claim that YAML cuts short at a ` #`, which it reads as a comment. */
+function checkClaimComments(page, errors) {
+  const guarantees = parseFrontMatterDocument(page.markdown).get(
+    'guarantees',
+    true,
+  )
+  for (const item of guarantees?.items ?? []) {
+    const claim = item?.get?.('claim', true)
+    if (claim?.comment === undefined || claim.comment === null) continue
+    errors.push(
+      `guarantee "${item.get('id')}": the claim stops before " #", which YAML reads as a comment; quote the claim`,
+    )
   }
 }
 

@@ -6,17 +6,17 @@ summary: The colour tokens error, warning, success, info, disabled and emergency
 uswds: https://designsystem.digital.gov/design-tokens/color/state-tokens/
 guarantees:
   - id: error-grades
-    claim: The classes bg-error-lighter, bg-error-light, bg-error, bg-error-dark and bg-error-darker set background-color to #fcebec, #f39268, #dc3545, #a52834 and #6f3331.
+    claim: 'The classes bg-error-lighter, bg-error-light, bg-error, bg-error-dark and bg-error-darker set background-color to #fcebec, #f39268, #dc3545, #a52834 and #6f3331.'
   - id: warning-grades
-    claim: The classes bg-warning-lighter, bg-warning-light, bg-warning, bg-warning-dark and bg-warning-darker set background-color to #fef6e9, #fee685, #f5a623, #c4851c and #936f38.
+    claim: 'The classes bg-warning-lighter, bg-warning-light, bg-warning, bg-warning-dark and bg-warning-darker set background-color to #fef6e9, #fee685, #f5a623, #c4851c and #936f38.'
   - id: success-grades
-    claim: The classes bg-success-lighter, bg-success-light, bg-success, bg-success-dark and bg-success-darker set background-color to #e8f7f4, #70e17b, #1cae96, #0d7a63 and #216e1f.
+    claim: 'The classes bg-success-lighter, bg-success-light, bg-success, bg-success-dark and bg-success-darker set background-color to #e8f7f4, #70e17b, #1cae96, #0d7a63 and #216e1f.'
   - id: info-grades
-    claim: The classes bg-info-lighter, bg-info-light, bg-info, bg-info-dark and bg-info-darker set background-color to #edf5fd, #99deea, #4899e8, #015a76 and #2e6276.
+    claim: 'The classes bg-info-lighter, bg-info-light, bg-info, bg-info-dark and bg-info-darker set background-color to #edf5fd, #99deea, #4899e8, #015a76 and #2e6276.'
   - id: disabled-grades
-    claim: The classes bg-disabled-lighter, bg-disabled-light, bg-disabled, bg-disabled-dark and bg-disabled-darker set background-color to #c9c9c9, #919191, #757575, #454545 and #1b1b1b.
+    claim: 'The classes bg-disabled-lighter, bg-disabled-light, bg-disabled, bg-disabled-dark and bg-disabled-darker set background-color to #c9c9c9, #919191, #757575, #454545 and #1b1b1b.'
   - id: emergency-tokens
-    claim: Only two emergency classes exist, and bg-emergency and bg-emergency-dark set background-color to #9c3d10 and #332d29.
+    claim: 'Only two emergency classes exist, and bg-emergency and bg-emergency-dark set background-color to #9c3d10 and #332d29.'
   - id: text-pairs
     claim: Every swatch in the states of this page pairs its background with a text colour that has a contrast ratio of at least 4.5:1.
 ---

@@ -261,6 +261,19 @@ test('a guarantee claim naming a custom property fails', () => {
   assert.deepEqual(claimed('The pathable-widget--big class is wide.'), [])
 })
 
+test('a claim cut short by a YAML comment fails, and passes once quoted', () => {
+  const claim = 'It is #4899e8 when active.'
+  const withClaim = (text) =>
+    checkPage(
+      page(frontMatter.replace('It looks right.', text) + body),
+      facts(),
+    )
+  assert.deepEqual(withClaim(claim), [
+    'guarantee "looks-right": the claim stops before " #", which YAML reads as a comment; quote the claim',
+  ])
+  assert.deepEqual(withClaim(`'${claim}'`), [])
+})
+
 test('consumer pages must not mention usa-* classes', () => {
   const errors = checkPage(
     page(`${frontMatter + body}\nAlso usa-button.\n`),

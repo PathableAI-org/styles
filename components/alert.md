@@ -26,11 +26,11 @@ guarantees:
   - id: info-colours
     claim: The info alert has a pale blue background (#edf5fd), a blue bar (#4899e8) and dark blue text (#00365c).
   - id: emergency-colours
-    claim: The emergency alert has a #9c3d10 background and bar, white text and a white icon.
+    claim: 'The emergency alert has a #9c3d10 background and bar, white text and a white icon.'
   - id: slim
     claim: The slim alert has 8 px of padding above and below, a 24 px icon and 32 px of indent for the text, and no minimum height.
   - id: status-fill
-    claim: The success, warning and error alerts fill the whole alert, body included, with the status background (#1cae96, #f5a623, #dc3545) and set their text in the status text colour (#001a33, #001a33, #ffffff), so every pairing has at least 4.5:1 contrast.
+    claim: 'The success, warning and error alerts fill the whole alert, body included, with the status background (#1cae96, #f5a623, #dc3545) and set their text in the status text colour (#001a33, #001a33, #ffffff), so every pairing has at least 4.5:1 contrast.'
   - id: heading-text-type
     claim: The heading is set at 1.5rem (the lg size, 24 px at a 16 px root) with a 8 px bottom margin and no top margin, and the text has no vertical margin, from the heading and text classes themselves.
   - id: link-colour

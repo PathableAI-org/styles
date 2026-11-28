@@ -21,15 +21,15 @@ guarantees:
   - id: affix-no-select
     claim: The prefix and suffix cannot be selected with the pointer and their text stays on one line.
   - id: disabled-affix
-    claim: A prefix that is followed by, or a suffix that follows, a disabled input or an input with aria-disabled="true" takes the disabled look, a grey #c9c9c9 background with a not-allowed cursor.
+    claim: 'A prefix that is followed by, or a suffix that follows, a disabled input or an input with aria-disabled="true" takes the disabled look, a grey #c9c9c9 background with a not-allowed cursor.'
   - id: affix-contrast
     claim: The prefix and suffix text and icon have a contrast of at least 4.5:1 against the white input background.
   - id: prefix-icon-size
     claim: A pathable-icon inside a pathable-input-prefix or pathable-input-suffix is 1.5rem (24 px) square.
   - id: error-modifier
-    claim: With pathable-input-group--error, the group has a 0.25rem (4 px) solid #a52834 border.
+    claim: 'With pathable-input-group--error, the group has a 0.25rem (4 px) solid #a52834 border.'
   - id: success-modifier
-    claim: With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.
+    claim: 'With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.'
   - id: state-focus-gap
     claim: In an error or success group, the focused input's 2 px focus ring is offset 0.25rem plus 1 px, so a 1 px gap separates it from the outside of the 4 px border, as the default group's 2 px offset does outside its 1 px border.
   - id: width-modifiers

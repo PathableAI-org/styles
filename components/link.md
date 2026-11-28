@@ -13,11 +13,11 @@ variants:
     values: [light, alt]
 guarantees:
   - id: link-colour
-    claim: A link, visited or not, is underlined and takes the colour Tech Teal, #015a76.
+    claim: 'A link, visited or not, is underlined and takes the colour Tech Teal, #015a76.'
   - id: hover-active-colour
     claim: A hovered link takes the PathAble primary colour, and a pressed link the darker primary colour, including a link that has been visited.
   - id: focus-ring
-    claim: A focused link draws its outline in the surface's focus ring colour when the surface sets one, otherwise in Bright Blue Brooks, #4899e8.
+    claim: "A focused link draws its outline in the surface's focus ring colour when the surface sets one, otherwise in Bright Blue Brooks, #4899e8."
   - id: external-icon
     claim: An external link shows a launch icon after its text, drawn in the text colour.
   - id: external-label

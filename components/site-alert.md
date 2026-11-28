@@ -21,7 +21,7 @@ guarantees:
   - id: body-font
     claim: The site alert is a block that fills the width of its container and sets its text in the PathAble body font.
   - id: nested-alert-surface
-    claim: The nested alert inside the site alert shows the status surface (pale blue #edf5fd with a #4899e8 bar for info, #9c3d10 for emergency), the status icon and the status text colour.
+    claim: 'The nested alert inside the site alert shows the status surface (pale blue #edf5fd with a #4899e8 bar for info, #9c3d10 for emergency), the status icon and the status text colour.'
   - id: content-width
     claim: The nested body is at most 1024 px wide with 20 px of side padding; from a viewport 1024 px wide it is centred with 28 px of side padding so its content lines up with the site margins.
   - id: status-icon

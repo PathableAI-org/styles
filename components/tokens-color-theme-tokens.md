@@ -6,15 +6,15 @@ summary: 'The role-based colour tokens base, primary, secondary, accent-warm, ac
 uswds: https://designsystem.digital.gov/design-tokens/color/theme-tokens/
 guarantees:
   - id: primary-grades
-    claim: The classes bg-primary-lighter, bg-primary-light, bg-primary, bg-primary-vivid, bg-primary-dark and bg-primary-darker set background-color to #e6ebef, #99afbe, #00365c, #015a76, #002845 and #001e33.
+    claim: 'The classes bg-primary-lighter, bg-primary-light, bg-primary, bg-primary-vivid, bg-primary-dark and bg-primary-darker set background-color to #e6ebef, #99afbe, #00365c, #015a76, #002845 and #001e33.'
   - id: secondary-grades
-    claim: The classes bg-secondary-lighter, bg-secondary-light, bg-secondary, bg-secondary-vivid, bg-secondary-dark and bg-secondary-darker set background-color to #e8f7f4, #a4dfd5, #1cae96, #1cae96, #0d7a63 and #0d4e44.
+    claim: 'The classes bg-secondary-lighter, bg-secondary-light, bg-secondary, bg-secondary-vivid, bg-secondary-dark and bg-secondary-darker set background-color to #e8f7f4, #a4dfd5, #1cae96, #1cae96, #0d7a63 and #0d4e44.'
   - id: accent-cool-grades
-    claim: The classes bg-accent-cool-lighter, bg-accent-cool-light, bg-accent-cool, bg-accent-cool-dark and bg-accent-cool-darker set background-color to #edf5fd, #b6d6f6, #4899e8, #015a76 and #00365c.
+    claim: 'The classes bg-accent-cool-lighter, bg-accent-cool-light, bg-accent-cool, bg-accent-cool-dark and bg-accent-cool-darker set background-color to #edf5fd, #b6d6f6, #4899e8, #015a76 and #00365c.'
   - id: accent-warm-grades
-    claim: The classes bg-accent-warm-lighter, bg-accent-warm-light, bg-accent-warm, bg-accent-warm-dark and bg-accent-warm-darker set background-color to #fbfff0, #edffc2, #d3ff66, #4a5924 and #354019.
+    claim: 'The classes bg-accent-warm-lighter, bg-accent-warm-light, bg-accent-warm, bg-accent-warm-dark and bg-accent-warm-darker set background-color to #fbfff0, #edffc2, #d3ff66, #4a5924 and #354019.'
   - id: base-grades
-    claim: The classes bg-base-lightest, bg-base-lighter, bg-base-light, bg-base, bg-base-dark, bg-base-darker, bg-base-darkest and bg-ink set background-color to #f6f8f9, #eef0f4, #e6e9ee, #dde2e8, #565c65, #00365c, #00365c and #00365c.
+    claim: 'The classes bg-base-lightest, bg-base-lighter, bg-base-light, bg-base, bg-base-dark, bg-base-darker, bg-base-darkest and bg-ink set background-color to #f6f8f9, #eef0f4, #e6e9ee, #dde2e8, #565c65, #00365c, #00365c and #00365c.'
   - id: lightest-darkest-off
     claim: No class exists for the tokens primary-lightest, primary-darkest, secondary-lightest, secondary-darkest, accent-cool-lightest, accent-cool-darkest, accent-warm-lightest or accent-warm-darkest, because PathAble defines no such grade.
   - id: text-pairs
