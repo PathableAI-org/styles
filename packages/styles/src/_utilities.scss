@@ -79,8 +79,8 @@
   // inherit into light containers nested in the teal one, where it is 1.0:1, so
   // the pathable-bg-surface utility and every light component container reset
   // --pathable-surface-focus-ring themselves (a new light container needs the
-  // same reset). The Jade, Silver and danger utilities and every alert set a
-  // ring of their own, so they hold inside the teal container too. The hover variants of the utilities set the ring the
+  // same reset). The Jade, Silver and danger utilities, every alert and the summary box
+  // set a ring of their own, so they hold inside the teal container too. The hover variants of the utilities set the ring the
   // same way, for a container that changes under the pointer while a control in
   // it has focus. The focus variants do not: :focus matches only the focused
   // control. The shared state-focus controls are left out, because their ring is
@@ -92,8 +92,9 @@
   // as the utility's background does; a container's own ring on a different
   // element is unaffected. Keep the list in step with the selectors that
   // include state-focus and with the other controls whose own outline reads the
-  // ring: the unstyled button and the link.
-  $-surface-focus-ring-controls: '.pathable-button, .pathable-button--unstyled, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-breadcrumb__link';
+  // ring: the unstyled button, the link, the breadcrumb link and the pagination
+  // buttons and links.
+  $-surface-focus-ring-controls: '.pathable-button, .pathable-button--unstyled, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-breadcrumb__link, .pathable-pagination__button, .pathable-pagination__link, .pathable-summary-box__link';
 
   .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
   .hover\:pathable-bg-primary:hover:not(

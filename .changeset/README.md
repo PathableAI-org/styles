@@ -1,31 +1,31 @@
 # Changesets
 
-Changesets record user-facing changes to `@pathableai/styles` and
-`@pathableai/react`. Both packages start at `0.0.0` and are versioned
-independently.
+A changeset records one consumer-visible change to `@pathableai/styles` or
+`@pathableai/react` and becomes that change's entry in the package's
+`CHANGELOG.md`. The two packages are versioned independently.
 
-Create a changeset with:
+In short:
+
+- A pull request that changes anything a package ships (its code, its
+  consumer agent guidance or its other shipped documentation) carries a
+  changeset. Tests, stories, the Storybook site, `docs/` and tooling do not.
+- Both packages are below 1.0.0, so a breaking change is a `minor` marked
+  `**Breaking change**`, with migration steps; additions are `minor`; fixes,
+  visual changes and documentation are `patch`.
+- The summary is written for someone upgrading the package, not for a
+  reviewer.
+
+The full rules (the public contract, the bump table and how to write the
+summary) are in the [`changeset` skill](../.agents/skills/changeset/SKILL.md),
+which agents follow and people can read too.
+
+## Commands
+
+Create a changeset:
 
 ```bash
 pnpm changeset
 ```
-
-Select each package affected by the change, choose the appropriate semantic
-version bump, and write a consumer-focused summary.
-
-Changesets are only for code changes to a published package: source, styles,
-build output, entry points, types or other runtime behaviour of
-`@pathableai/styles` or `@pathableai/react`. Documentation-only changes do not
-need a changeset, even when the documentation ships inside the package tarball
-(for example `README.md`, `AGENTS.md` or `BRAND_RULES.md`). Changes to tests,
-stories or repository tooling do not need one either.
-
-While a package is below 1.0.0, a breaking change (a removed or renamed token,
-CSS custom property, component class, React export or prop, or any other
-incompatible contract change) uses a `minor` bump, not `major`: a `major` bump
-on 0.x would publish 1.0.0. Start its summary with `**Breaking change**:` and
-include migration notes for consumers. From 1.0.0 onward, breaking changes use
-`major`. Moving to 1.0.0 is a maintainer decision.
 
 Inspect pending releases without changing package manifests:
 
@@ -33,7 +33,7 @@ Inspect pending releases without changing package manifests:
 pnpm changeset:status
 ```
 
-Apply pending changesets to package versions and changelogs with:
+Apply pending changesets to package versions and changelogs:
 
 ```bash
 pnpm version-packages

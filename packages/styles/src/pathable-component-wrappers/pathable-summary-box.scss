@@ -6,6 +6,7 @@
 // Requires .usa-* on DOM: No
 
 @use 'uswds-core' as *;
+@use 'pathable-interaction-state-mixins' as states;
 
 @use 'usa-summary-box/src/styles';
 
@@ -15,6 +16,13 @@
   // Enlarged text on a narrow screen: break a word wider than the box instead
   // of letting it run past the border.
   overflow-wrap: break-word;
+
+  // Bright Blue Brooks (#4899e8) is 2.73:1 on the box background (#edf5fd),
+  // under the 3:1 a focus outline needs. The ring takes PathAble Blue (about
+  // 11:1). It is compiled rather than read from a theme token, and setting its
+  // own ring also keeps one inherited from an enclosing background, such as the
+  // white ring of pathable-bg-link, from reaching the box.
+  --pathable-surface-focus-ring: #{color('ink')};
 }
 
 .pathable-summary-box__heading {
@@ -27,6 +35,7 @@
 
 .pathable-summary-box__link {
   @extend .usa-summary-box__link;
+  @include states.state-focus;
 }
 
 // USWDS styles no body element. This rule gives the documented element its

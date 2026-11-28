@@ -345,8 +345,8 @@ packages:
     resolution: {integrity: sha512-kwZ50TqGszxj3+MQhm+c84hI0y8rIKoc7ZLKbuHg+8rTkFisp9lXOMRD2wclyyuYZahpADxMvaPong7bwL7cew==}
     engines: {node: '>=20'}
 
-  caniuse-lite@1.0.30001826:
-    resolution: {integrity: sha512-wTB+9tIbLro/BCXwLuNV1meHE4L9dS6dArMDwgYfNBPMYScqClHyGunhkCSDtHhe/69Xl0sHlKgBVZ+fNsYtWA==}
+  caniuse-lite@1.0.30001828:
+    resolution: {integrity: sha512-7MWeT+3DlrpuDybTWHl4Zb1Z80Z1fLLnOXuBjDXebzDVcqnEWUlV8JcbASg8B8BhcW8QT2UiR1KAtzYFIZHZYA==}
 
   chokidar@5.0.0:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
@@ -694,7 +694,7 @@ snapshots:
     dependencies:
       lit: 3.3.3
 
-  caniuse-lite@1.0.30001826: {}
+  caniuse-lite@1.0.30001828: {}
 
   chokidar@5.0.0:
     dependencies:
@@ -743,7 +743,7 @@ snapshots:
     dependencies:
       '@next/env': 15.5.29
       '@swc/helpers': 0.5.15
-      caniuse-lite: 1.0.30001826
+      caniuse-lite: 1.0.30001828
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
