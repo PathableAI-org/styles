@@ -234,6 +234,17 @@ describe('component docs: Storybook', () => {
     assert.ok(!stories.includes('react'))
   })
 
+  it('renders each story in a fullscreen layout with a 1.25rem gutter', () => {
+    const { stories } = render(page(body), 'storybook', covered)
+    assert.ok(stories.includes("parameters: { layout: 'fullscreen' }"))
+    assert.ok(stories.includes('<div style="padding: 1.25rem">'))
+    const html = [...stories.matchAll(/ {6}html: (".*"),\n/gu)].map((m) =>
+      JSON.parse(m[1]),
+    )
+    assert.ok(html.length > 0)
+    for (const markup of html) assert.ok(!markup.includes('padding: 1.25rem'))
+  })
+
   it('renders the same stories whether or not the React package covers the component', () => {
     assert.equal(
       render(page(body), 'storybook', stylesOnly).stories,
