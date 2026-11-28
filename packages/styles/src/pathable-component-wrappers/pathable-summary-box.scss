@@ -23,6 +23,9 @@
   // own ring also keeps one inherited from an enclosing background, such as the
   // white ring of bg-primary-vivid, from reaching the box.
   --pathable-surface-focus-ring: #{color('ink')};
+
+  // Paragraphs in it take the box's text colour.
+  --pathable-surface-text: currentColor;
 }
 
 .pathable-summary-box__heading {

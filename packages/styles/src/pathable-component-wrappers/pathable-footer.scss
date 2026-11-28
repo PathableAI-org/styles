@@ -136,6 +136,9 @@
 .pathable-footer__secondary-section {
   --pathable-surface-focus-ring: var(--pathable-color-text);
 
+  // Paragraphs in it take the section's text colour.
+  --pathable-surface-text: currentColor;
+
   a:focus {
     @include focus-outline;
 

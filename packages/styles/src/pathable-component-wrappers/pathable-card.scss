@@ -114,6 +114,9 @@ $-card-parts: '.pathable-card__header, .pathable-card__body, .pathable-card__foo
   // Light container: reset the surface focus ring (see bg-primary-vivid in
   // _utilities.scss).
   --pathable-surface-focus-ring: initial;
+
+  // Paragraphs in it take the container's text colour.
+  --pathable-surface-text: currentColor;
 }
 
 // USWDS's card parts are not covered by its border-box mixins, so the card's

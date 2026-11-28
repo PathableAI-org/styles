@@ -20,6 +20,10 @@
   // token, so a theme cannot make it vanish against them. The status alerts
   // below set their own ring.
   --pathable-surface-focus-ring: #{color('ink')};
+
+  // Paragraphs in it take the alert's text colour, set by the status
+  // modifiers and the body below.
+  --pathable-surface-text: currentColor;
 }
 
 .pathable-alert__body {
