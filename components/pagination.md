@@ -18,6 +18,8 @@ guarantees:
     claim: The overflow item (`pathable-pagination__overflow`) has 8 px of padding and its text cannot be selected.
   - id: current-page
     claim: A numbered page button with the pathable-current class has a solid background in the theme's dark colour, white text and no visible border, and keeps that look on hover and focus.
+  - id: focus-ring
+    claim: "A focused page button, arrow link or current page button draws a 4 px outline in Bright Blue Brooks, #4899e8, on the pagination's white background, whatever surface the pagination sits in."
   - id: arrow-spacing
     claim: From a viewport width of 640 px the previous link has 20 px of margin after it and the next link has 20 px of margin before it.
   - id: arrow-icon-size
