@@ -19,7 +19,7 @@ guarantees:
   - id: field-error
     claim: A pathable-form-group--error group, a pathable-label--error label and a pathable-input--error control mark the one field that has an error, and the form itself carries no error class. See the error and error-group guarantees of the Text input page.
   - id: button-margin
-    claim: A pathable-button inside the form has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field. A pathable-button in a pathable-button-group gets no top margin from the form, so the group's own spacing applies.
+    claim: A pathable-button inside the form, other than one in a pathable-button-group, has a top margin of 8 px, and 24 px from a viewport 480 px wide upward, so the submit button is set apart from the last field.
 ---
 
 # Form
