@@ -22,15 +22,35 @@
   // utility uses (text-<token>), so only colour classes set it, not text-center
   // or text-bold. The hover variants do the same.
   $-text-color-selectors: ();
+  // USWDS emits no class for a token whose value is false or null.
   @each $-token, $-value in map.get(uswds-color.$u-color, 'color', 'values') {
-    $-text-color-selectors: list.append(
-      $-text-color-selectors,
-      '.text-#{$-token}, .hover\\:text-#{$-token}:hover',
-      comma
-    );
+    @if $-value {
+      $-text-color-selectors: list.append(
+        $-text-color-selectors,
+        '.text-#{$-token}, .hover\\:text-#{$-token}:hover',
+        comma
+      );
+    }
   }
 
   #{$-text-color-selectors} {
+    --pathable-surface-text: currentColor;
+  }
+
+  // A coloured background utility sets its own text colour for the content in
+  // it, so a .pathable-paragraph inside it inherits that colour.
+  .bg-primary,
+  .hover\:bg-primary:hover,
+  .bg-primary-vivid,
+  .hover\:bg-primary-vivid:hover,
+  .bg-secondary,
+  .hover\:bg-secondary:hover,
+  .bg-success,
+  .hover\:bg-success:hover,
+  .bg-error,
+  .hover\:bg-error:hover,
+  .bg-accent-cool,
+  .hover\:bg-accent-cool:hover {
     --pathable-surface-text: currentColor;
   }
 

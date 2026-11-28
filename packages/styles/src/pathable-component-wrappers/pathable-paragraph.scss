@@ -18,3 +18,11 @@
   font-family: family('body');
   color: var(--pathable-surface-text, var(--pathable-color-text));
 }
+
+// USWDS colours `.pathable-dark-background p` white (0,1,1), which beats the
+// rule above, so a paragraph in a light container inside it would be white on
+// white. Inside a dark background the hook is always set, so the paragraph takes
+// the colour of its nearest container.
+.pathable-dark-background .pathable-paragraph {
+  color: var(--pathable-surface-text, var(--pathable-color-text));
+}
