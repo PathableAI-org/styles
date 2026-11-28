@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** Every directory the build writes, relative to the package root. */
-export const outputDirs = ['dist', 'img', 'fonts', 'components']
+const outputDirs = ['dist', 'img', 'fonts', 'components']
 
 for (const dir of outputDirs) {
   rmSync(join(packageRoot, dir), { recursive: true, force: true })
