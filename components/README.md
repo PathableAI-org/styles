@@ -312,7 +312,8 @@ tables only, with no stories file. For the others, there is one live preview per
 `styles.css`, and **HTML** and **React** tabs beneath it showing the fixture
 and the example module verbatim (only **HTML** when the React package does not
 cover the component). Package blocks are shown labelled with their package.
-The front matter is not shown. Each fixture is also a story
+The front matter is not shown. Each preview renders with a 1.25 rem gutter so
+examples meet the gutter the pages ask consumers for. Each fixture is also a story
 under **Fixtures**; the fixture checks ([HTML fixtures](../docs/testing/fixtures.md))
 run axe on the same HTML. The pages
 publish to GitHub Pages with the rest of the Storybook.
