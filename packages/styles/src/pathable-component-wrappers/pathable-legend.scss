@@ -11,6 +11,11 @@
 
 .pathable-legend {
   @extend .usa-legend;
+
+  // USWDS normalize sets legend { padding: 0 }, but that normalize is not part
+  // of this package, so the browser's default inline padding would push the
+  // legend text 2px right of the hint, labels and controls under it.
+  padding: 0;
 }
 
 // The USWDS legend sets no colour, so it would inherit the browser's black on a
