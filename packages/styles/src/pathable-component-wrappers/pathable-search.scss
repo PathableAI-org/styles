@@ -48,6 +48,27 @@
   }
 }
 
+// The field's flex basis is 50%. When the button fits in half the row it keeps
+// its full content width (3rem icon-only, or text plus padding from 480 px) and
+// the field grows into the rest, still capped by pathable-input's max-width.
+// When the button needs more than half, the field and button share the shrink
+// in proportion to their bases, so a long label wraps and the field stays
+// usable. Below mobile-lg the icon-only button never shrinks, so the field
+// gives way in a very narrow row.
+.pathable-search [type='search'] {
+  flex: 1 1 50%;
+}
+
+.pathable-search [type='submit'] {
+  @include at-media-max('mobile-lg') {
+    flex-shrink: 0;
+  }
+}
+
+// The touch-target block sets only min-height. A min-width here would override
+// the small modifier's min-width: 3rem and the button's min-width: auto floor.
+// The 2.75rem width guarantee holds because the icon-only button is 3rem wide
+// and a text button is its text plus padding.
 @media (max-width: 39.99em), (pointer: coarse) {
   .pathable-search {
     input,
@@ -55,11 +76,6 @@
     .pathable-input,
     .pathable-button {
       min-height: 2.75rem;
-    }
-
-    button,
-    .pathable-button {
-      min-width: 2.75rem;
     }
   }
 }

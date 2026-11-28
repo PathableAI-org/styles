@@ -92,8 +92,9 @@
   // as the utility's background does; a container's own ring on a different
   // element is unaffected. Keep the list in step with the selectors that
   // include state-focus and with the other controls whose own outline reads the
-  // ring: the unstyled button and the link.
-  $-surface-focus-ring-controls: '.pathable-button, .pathable-button--unstyled, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-breadcrumb__link';
+  // ring: the unstyled button, the link, the breadcrumb link and the pagination
+  // buttons and links.
+  $-surface-focus-ring-controls: '.pathable-button, .pathable-button--unstyled, .pathable-input, .pathable-select, .pathable-textarea, .pathable-link, .pathable-breadcrumb__link, .pathable-pagination__button, .pathable-pagination__link';
 
   .pathable-bg-primary:not(:where(#{$-surface-focus-ring-controls})),
   .hover\:pathable-bg-primary:hover:not(

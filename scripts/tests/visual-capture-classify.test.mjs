@@ -1188,6 +1188,10 @@ describe('pre-check', () => {
     assert.ok(COMPARED_DIRS.includes('packages/styles/fonts'))
   })
 
+  it('compares the styles images output too', () => {
+    assert.ok(COMPARED_DIRS.includes('packages/styles/img'))
+  })
+
   it('compares trees by hash', () => {
     const base = new Map([
       ['a', '1'],
