@@ -48,6 +48,17 @@
   }
 }
 
+// The field's flex basis is 0, so it grows into only the row width the button
+// leaves (still capped by pathable-input's max-width) and never pushes the
+// button below its own width: 3rem icon-only, or text plus padding from 480 px.
+.pathable-search [type='search'] {
+  flex: 1 1 0%;
+}
+
+// The touch-target block sets only min-height. A min-width here would override
+// the small modifier's min-width: 3rem and the button's min-width: auto floor.
+// The 2.75rem width guarantee holds because the icon-only button is 3rem wide
+// and a text button is its text plus padding.
 @media (max-width: 39.99em), (pointer: coarse) {
   .pathable-search {
     input,
@@ -55,11 +66,6 @@
     .pathable-input,
     .pathable-button {
       min-height: 2.75rem;
-    }
-
-    button,
-    .pathable-button {
-      min-width: 2.75rem;
     }
   }
 }
