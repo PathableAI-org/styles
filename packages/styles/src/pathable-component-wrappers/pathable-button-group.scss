@@ -9,7 +9,6 @@
 @use 'sass:map';
 @use 'sass:math';
 @use 'uswds-core' as *;
-@use '../utilities-config' as uc;
 @use 'uswds-utilities/src/styles/rules/width' as uswds-width;
 
 @use 'usa-button-group/src/styles';
@@ -125,18 +124,6 @@ $-own-width-classes: ();
   }
 }
 
-@each $width-name
-  in map.keys(map.get(map.get(uc.$pathable-utilities, 'width'), 'values'))
-{
-  @if $width-name != 'full' {
-    $-own-width-classes: list.append(
-      $-own-width-classes,
-      '.pathable-width-#{$width-name}',
-      $separator: comma
-    );
-  }
-}
-
 $-half-stroke: math.div(units($theme-button-stroke-width), 2);
 
 // Below mobile-lg USWDS makes each segmented button 2px wider than its item
@@ -190,12 +177,10 @@ $-half-stroke: math.div(units($theme-button-stroke-width), 2);
 
 // USWDS sets the width of a segmented button with rules as specific as
 // `.usa-button-group--segmented .usa-button-group__item:last-child >
-// .usa-button`, which beat a width class such as `width-auto` or
-// `pathable-width-auto`. Repeat each width class for a button in a segmented
+// .usa-button`, which beat a width class such as `width-auto`. Repeat each width class for a button in a segmented
 // item, after those rules, as pathable-button.scss does for the plain button,
 // so the class wins at every viewport width. `width-full` is not repeated, as
-// explained above. The unprefixed `width-*` utilities have no responsive
-// variants; the `pathable-width-*` ones do.
+// explained above.
 @each $width-name,
   $width-value in map.get(map.get(uswds-width.$u-width, 'width'), 'values')
 {
@@ -204,35 +189,6 @@ $-half-stroke: math.div(units($theme-button-stroke-width), 2);
       .pathable-button-group__item
       > .pathable-button.width-#{$width-name} {
       width: $width-value;
-    }
-  }
-}
-
-@each $width-name,
-  $width-value in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
-{
-  @if $width-name != 'full' {
-    .pathable-button-group--segmented
-      .pathable-button-group__item
-      > .pathable-button.pathable-width-#{$width-name} {
-      width: $width-value;
-    }
-  }
-}
-
-@each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
-  @media (min-width: $bp-width) {
-    @each $width-name,
-      $width-value
-        in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
-    {
-      @if $width-name != 'full' {
-        .pathable-button-group--segmented
-          .pathable-button-group__item
-          > .pathable-button.#{$bp-name}\:pathable-width-#{$width-name} {
-          width: $width-value;
-        }
-      }
     }
   }
 }

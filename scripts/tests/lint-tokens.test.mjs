@@ -55,14 +55,10 @@ describe('lint-tokens defined token set', () => {
     const colorTokens = definedTokens.filter((token) =>
       token.startsWith('--pathable-color-'),
     )
-    assert.equal(colorTokens.length, 25)
+    assert.equal(colorTokens.length, 17)
     assert.deepEqual(
       definedTokens.filter((token) => !token.startsWith('--pathable-color-')),
       [
-        '--elevation-lg',
-        '--elevation-md',
-        '--elevation-sm',
-        '--elevation-xl',
         '--pathable-brand-bright-blue-brooks',
         '--pathable-brand-lived-in-lime',
         '--pathable-brand-pathable-blue',
@@ -72,7 +68,7 @@ describe('lint-tokens defined token set', () => {
         '--pathable-font-weight-normal',
       ],
     )
-    assert.equal(definedTokens.length, 36)
+    assert.equal(definedTokens.length, 24)
   })
 
   it('defines no removed token family', () => {

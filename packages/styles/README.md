@@ -92,8 +92,8 @@ this order, lowest priority first:
 
 1. `pathable.base`: tokens (custom properties) and font faces.
 2. `pathable.components`: the `pathable-*` component classes.
-3. `pathable.utilities`: the USWDS and `pathable-*` utility classes and the
-   USWDS layout grid.
+3. `pathable.utilities`: the USWDS utility classes, under their USWDS names,
+   and the USWDS layout grid.
 
 Each of the four files starts with the same
 `@layer pathable.base, pathable.components, pathable.utilities;` statement, so

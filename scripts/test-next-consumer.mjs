@@ -394,7 +394,7 @@ async function assertStylesAssets(stylesRoot) {
   )
   assert.match(
     utilitiesCss,
-    /\.pathable-bg-primary(?:\b|[_{,:.-])/u,
+    /\.bg-primary(?:\b|[_{,:.-])/u,
     'Packed utilities stylesheet omits generated utility selectors',
   )
   const defaultTokens = new Set(
@@ -936,18 +936,14 @@ async function assertBrowserConsumer(fixtureRoot) {
         throw new Error('DashboardHeader DOM is incomplete')
       }
       return {
-        accent: root.getPropertyValue('--pathable-color-accent').trim(),
+        link: root.getPropertyValue('--pathable-color-link').trim(),
         fontWeight: root.getPropertyValue('--pathable-font-weight-bold').trim(),
         text: root.getPropertyValue('--pathable-color-text').trim(),
         titleColor: getComputedStyle(title).color,
         headerDisplay: getComputedStyle(header).display,
       }
     })
-    assert.equal(
-      computed.accent,
-      '#1cae96',
-      'Default accent token is not applied',
-    )
+    assert.equal(computed.link, '#015a76', 'Default link token is not applied')
     assert.equal(
       computed.fontWeight,
       '700',

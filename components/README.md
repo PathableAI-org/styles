@@ -47,10 +47,11 @@ Utility and token pages describe names that USWDS does not prefix, which
 `@pathableai/styles` keeps unchanged (`margin-x-2`, `tablet:padding-3`). They
 have no `styles-class` and no `variants`, and take a `uswds` link to the
 matching page on designsystem.digital.gov instead; a utility page also lists
-the class patterns it defines in `classes`, unprefixed except for the few
-`pathable-` utilities (`pathable-bg-<role>`). A page or fixture may cite a
-`pathable-` utility class (one in `dist/utilities.css`, with or without a
-`hover:` prefix) only when some page's `classes` declares it, and
+the class patterns it defines in `classes`, all unprefixed: the package has
+no `pathable-` utility classes. A page or fixture may cite a `pathable-` class
+in `dist/utilities.css`, with or without a `hover:` prefix, only when some
+page's `classes` declares it, so a `pathable-` utility added by mistake fails
+the checks. `<name>` in a pattern matches one or more of `a-z`, `0-9` and `-`, and
 `<name>` in a pattern matches one or more of `a-z`, `0-9` and `-`. A token page has no
 classes: its fixtures show the tokens through the utility classes that read
 them. The sections, in order:

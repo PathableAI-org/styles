@@ -46,8 +46,8 @@ are deferred now, so any violation or incomplete result is a real failure.
   in `components/`, when a fixture's file name is not a
   kebab-case state name (`^[a-z][a-z0-9]*(-[a-z0-9]+)*\.html$`), when a
   `pathable-*` class in a fixture is not in the `classes` of any module in
-  `@pathableai/styles/dist/css/manifest.json`, when a `pathable-` utility class in a
-  fixture (one in `dist/utilities.css`, such as `hover:pathable-bg-link`) is
+  `@pathableai/styles/dist/css/manifest.json`, when a `pathable-` class in a
+  fixture that `dist/utilities.css` defines (the package ships none) is
   not declared by the `classes` front matter of any page, or when a non-default variant in the
   page's front matter has no fixture using its modifier class. Classes are
   read by parsing each fixture, so only element `class` attributes count, not

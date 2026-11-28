@@ -5,8 +5,7 @@
 // Emits nothing. This partial used to declare a --pathable-{module}-{value}
 // custom property for every utility value; no rule read them, so they were
 // removed (#770). The file stays so a Sass consumer that loads it through the
-// ./src/* export still compiles. The utility values live in
-// _utilities-config.scss, and _utilities.scss sets them on the classes
-// directly.
+// ./src/* export still compiles. The utility classes are the USWDS ones
+// (_uswds-utility-classes.scss), which set their values directly.
 //
 // ==========================================

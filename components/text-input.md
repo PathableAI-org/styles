@@ -110,8 +110,9 @@ A disabled input is not a modifier: use the `disabled` attribute, or
 `aria-disabled="true"` to keep the control focusable. A value that can be
 focused and copied but not changed uses the `readonly` attribute.
 
-The focus ring is Bright Blue Brooks, #4899e8, or the surface's focus ring
-colour on a `pathable-bg-*` surface. The border, text, error, success and
+The focus ring is Bright Blue Brooks, #4899e8, or the focus ring colour of the
+background it sits on, for a background that sets one (see
+[Color utilities](utilities-color.md#backgrounds-that-set-the-focus-ring)). The border, text, error, success and
 disabled colours are fixed when the package is built. The pixel figures on this
 page assume a 16 px root font size.
 

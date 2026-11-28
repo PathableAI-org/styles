@@ -16,7 +16,7 @@
 // The USWDS legend sets no colour, so it would inherit the browser's black on a
 // page that sets none. Default to the brand text colour. :where() keeps the
 // default at zero specificity, so a colour utility on the legend itself, such
-// as pathable-text-white, still wins.
+// as text-white, still wins.
 :where(.pathable-legend) {
   color: var(--pathable-color-text);
 }
@@ -30,18 +30,17 @@
 $-legend-inherits-colour-under: (
   '.pathable-dark-background',
   '.pathable-alert',
-  '.pathable-bg-accent',
-  '.pathable-bg-danger',
-  '.pathable-bg-link',
-  '.pathable-bg-primary',
-  '.pathable-bg-success',
-  '.pathable-bg-focus-ring',
-  '.pathable-text-accent',
-  '.pathable-text-base',
-  '.pathable-text-link',
-  '.pathable-text-muted',
-  '.pathable-text-primary',
-  '.pathable-text-white'
+  '.bg-primary',
+  '.bg-primary-vivid',
+  '.bg-secondary',
+  '.bg-success',
+  '.bg-error',
+  '.bg-accent-cool',
+  '.text-base',
+  '.text-primary',
+  '.text-primary-vivid',
+  '.text-secondary',
+  '.text-white'
 );
 
 @each $container in $-legend-inherits-colour-under {

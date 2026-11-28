@@ -15,9 +15,12 @@ the SCSS semantic map owns the defaults.
 Rows follow the authoritative `THEME_COLOR_KEYS` order in
 `packages/react/src/theme/tokens.ts`. The key-to-property mapping is the
 existing `THEME_COLOR_TOKEN_MAP`; default values are copied from
-`defaultTheme.colors`, itself generated from `$semantic-colors` in
-`packages/styles/src/_semantic.scss` — so this table cannot drift from the
-compiled stylesheet.
+`defaultTheme.colors`. Nothing checks them against
+`packages/styles/src/_semantic.scss` any more. The stylesheet does not declare
+`border`, `accent`, `danger`, `success`, `textSuccess`, `workflowActive`,
+`workflowComplete` or `workflowBlocked` at `:root` (#781), so those properties
+have a value only inside a `ThemeProvider` that sets them; their default here
+is the `defaultTheme` value, not a stylesheet default.
 
 | Key                   | CSS custom property                      | Default value | Role                                                            |
 | --------------------- | ---------------------------------------- | ------------- | --------------------------------------------------------------- |
@@ -47,7 +50,7 @@ compiled stylesheet.
 | `workflowBlocked`     | `--pathable-color-workflow-blocked`      | `#dc3545`     | Blocked workflow-state marker.                                  |
 | `onAccent`            | `--pathable-color-on-accent`             | `#001a33`     | Text on accent, success, or warning backgrounds (WCAG-AA safe). |
 
-The focus outline is drawn on the background behind a control, so `focusRing` is not used on every background. Each background sets this through `--pathable-surface-focus-ring`. The `pathable-bg-accent`, `pathable-bg-success` and `pathable-bg-danger` utilities and the success, warning and error alerts use `onAccent`; `pathable-bg-base` and the footer sections use `text`; the emergency alerts use `statusDangerText` (white); and the info and plain alerts use PathAble Blue, compiled to match their backgrounds, so neither `focusRing` nor any other theme token changes it there. Component outlines drawn outside the element, and the link and unstyled button outlines, read the same property. The dark containers and the light component containers reset it: the `pathable-bg-primary` and `pathable-bg-surface` utilities, `.pathable-dark-background`, the breadcrumb, the card container and the table. The `pathable-bg-link` utility instead sets it to white, because `focusRing` is under 3:1 on Tech Teal, and the containers above reset it so a white ring does not inherit into them. There, and outside any of these backgrounds, the outline uses `focusRing`, and a scoped `ThemeProvider` override of `focusRing` applies as usual.
+The focus outline is drawn on the background behind a control, so `focusRing` is not used on every background. Each background sets this through `--pathable-surface-focus-ring`. The `bg-secondary`, `bg-success` and `bg-error` utilities and the success, warning and error alerts use `onAccent`; `bg-base` and the footer sections use `text`; the emergency alerts use `statusDangerText` (white); and the info and plain alerts use PathAble Blue, compiled to match their backgrounds, so neither `focusRing` nor any other theme token changes it there. Component outlines drawn outside the element, and the link and unstyled button outlines, read the same property. The dark containers and the light component containers reset it: the `bg-primary` and `bg-white` utilities, `.pathable-dark-background`, the breadcrumb, the card container and the table. The `bg-primary-vivid` utility instead sets it to white, because `focusRing` is under 3:1 on Tech Teal, and the containers above reset it so a white ring does not inherit into them. There, and outside any of these backgrounds, the outline uses `focusRing`, and a scoped `ThemeProvider` override of `focusRing` applies as usual.
 
 ## Staying in sync
 

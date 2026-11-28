@@ -110,8 +110,9 @@ style axis.
 - Base: Shilling Silver, #dde2e8, with PathAble Blue, #00365c, text.
 - Outline: PathAble Blue, #00365c, for the text and the border.
 - Unstyled: Tech Teal, #015a76, for the text.
-- Focus ring: Bright Blue Brooks, #4899e8, or the surface's focus ring colour
-  on a `pathable-bg-*` surface.
+- Focus ring: Bright Blue Brooks, #4899e8, or the focus ring colour of the
+  background it sits on, for a background that sets one (see
+  [Color utilities](utilities-color.md#backgrounds-that-set-the-focus-ring)).
 
 The colour names and hex values are on [tokens-color.md](tokens-color.md). The
 pixel figures on this page assume a 16 px root font size.
