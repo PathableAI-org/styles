@@ -11,5 +11,7 @@ describe only what the package contains.
   components and utilities, and points to the font-family page for Poppins
   subheadings, because no class applies Poppins.
 - `BRAND_RULES.md` describes focus-ring and paragraph colours by class and
-  resulting colour, without naming internal custom properties.
+  resulting colour, without naming internal custom properties. It also says no
+  class or role applies Poppins and points to the font-family page for
+  subheading guidance.
 - The component index says every component class appears on one of its pages.
