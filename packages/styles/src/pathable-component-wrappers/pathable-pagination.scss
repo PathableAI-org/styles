@@ -17,6 +17,17 @@
   // such as the white one of pathable-bg-link, would be 1.0:1 here, so this
   // resets it, as every light container does (see _utilities.scss).
   --pathable-surface-focus-ring: initial;
+
+  // The controls' 4px outline is drawn outside them, so it would reach above and
+  // below this box and sit on the surface behind it, under 3:1 on a coloured one.
+  // The vertical padding is the outline's width, so the outline fits inside the
+  // white box; the margin is reduced by the same amount, so the box takes the
+  // same space and the items do not move. Only a margin collapsing with the
+  // smaller one, as a following paragraph's does, puts what follows lower.
+  padding-bottom: units(0.5);
+  padding-top: units(0.5);
+  margin-bottom: calc(#{units(2)} - #{units(0.5)});
+  margin-top: calc(#{units(2)} - #{units(0.5)});
 }
 
 .pathable-pagination__list {
@@ -129,6 +140,14 @@
 // The page guarantees 44 px targets at a viewport of 640 px (40em) or
 // narrower, so the bound includes 40em itself.
 @media (max-width: 40em), (pointer: coarse) {
+  // The 44 px targets extend 0.25rem below their 40 px item, so the bottom
+  // padding adds that to the outline's width to keep the outline inside the box.
+  // The margin gives the same amount back, as above.
+  .pathable-pagination {
+    padding-bottom: units(1);
+    margin-bottom: calc(#{units(2)} - #{units(1)});
+  }
+
   .pathable-pagination__button,
   .pathable-pagination__link {
     box-sizing: border-box;
