@@ -29,8 +29,12 @@
 
 // USWDS spaces a submit button from the last field with `.usa-form
 // .usa-button`. The button wrapper's @extend does not reach this module's
-// rules, so repeat the margin for `.pathable-button`.
-.pathable-form .pathable-button {
+// rules, so repeat the margin for `.pathable-button`. A button in a
+// pathable-button-group is left out: the group's row gap spaces it, and a
+// margin inside the stretched group item would make the button taller.
+// :where() keeps the selector at two classes, so `.pathable-sign-up
+// .pathable-button` in the footer still wins by source order.
+.pathable-form .pathable-button:where(:not(.pathable-button-group__item > *)) {
   margin-top: units(1);
 
   @include at-media('mobile-lg') {
