@@ -29,7 +29,7 @@ guarantees:
   - id: error-modifier
     claim: 'With pathable-input-group--error, the group has a 0.25rem (4 px) solid #a52834 border.'
   - id: success-modifier
-    claim: 'With pathable-input-group--success, the group has a 0.25rem (4 px) solid #1cae96 border.'
+    claim: 'With pathable-input-group--success, the group has a 0.25rem (4 px) solid #0d7a63 border.'
   - id: state-focus-gap
     claim: In an error or success group, the focused input's 2 px focus ring is offset 0.25rem plus 1 px, so a 1 px gap separates it from the outside of the 4 px border, as the default group's 2 px offset does outside its 1 px border.
   - id: width-modifiers

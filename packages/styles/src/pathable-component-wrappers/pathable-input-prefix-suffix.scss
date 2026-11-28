@@ -20,6 +20,10 @@
 
 .pathable-input-group--success {
   @extend .usa-input-group--success;
+  // USWDS draws this border in the theme's success colour, which PathAble
+  // sets to Intelligent Jade (2.8:1 on white). A state border needs 3:1, so use
+  // the text-safe dark jade (5.3:1), as the text input's success state does.
+  border-color: color('success-dark');
 }
 
 // USWDS moves the focus ring out by the state border width, which leaves it
