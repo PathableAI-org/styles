@@ -1,6 +1,6 @@
 // packages/styles/src/pathable-component-wrappers/pathable-input-prefix-suffix.scss
 //
-// Wraps usa-input-prefix-suffix component as pathable-input-prefix-suffix.
+// Wraps usa-input-prefix-suffix component as pathable-input-group.
 // USWDS dependencies: uswds-fonts
 // JS-driven: No
 // Requires .usa-* on DOM: No
@@ -9,7 +9,6 @@
 
 @use 'usa-input-prefix-suffix/src/styles' as input-affix;
 
-.pathable-input-prefix-suffix,
 .pathable-input-group {
   @extend .usa-input-group;
 }

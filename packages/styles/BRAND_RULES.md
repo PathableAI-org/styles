@@ -302,46 +302,46 @@ This package provides `.pathable-{component}` component classes for the static U
 
 ### Component Class Naming Convention
 
-| Component           | PathAble Class                  | USWDS Equivalent       | Notes                                                                 |
-| ------------------- | ------------------------------- | ---------------------- | --------------------------------------------------------------------- |
-| alert               | `.pathable-alert`               | `.usa-alert`           |                                                                       |
-| breadcrumb          | `.pathable-breadcrumb`          | `.usa-breadcrumb`      |                                                                       |
-| button              | `.pathable-button`              | `.usa-button`          |                                                                       |
-| button-group        | `.pathable-button-group`        | `.usa-button-group`    |                                                                       |
-| card                | `.pathable-card`                | `.usa-card`            |                                                                       |
-| checkbox            | `.pathable-checkbox__*`         | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level |
-| collection          | `.pathable-collection`          | `.usa-collection`      |                                                                       |
-| dark-background     | `.pathable-dark-background`     | `.usa-dark-background` |                                                                       |
-| error-message       | `.pathable-error-message`       | `.usa-error-message`   |                                                                       |
-| fieldset            | `.pathable-fieldset`            | `.usa-fieldset`        |                                                                       |
-| footer              | `.pathable-footer`              | `.usa-footer`          |                                                                       |
-| form                | `.pathable-form`                | `.usa-form`            |                                                                       |
-| form-group          | `.pathable-form-group`          | `.usa-form-group`      |                                                                       |
-| hint                | `.pathable-hint`                | `.usa-hint`            |                                                                       |
-| icon                | `.pathable-icon`                | `.usa-icon`            |                                                                       |
-| icon-list           | `.pathable-icon-list`           | `.usa-icon-list`       |                                                                       |
-| input               | `.pathable-input`               | `.usa-input`           |                                                                       |
-| input-prefix-suffix | `.pathable-input-prefix-suffix` | `.usa-input-group`     | Maps to `.usa-input-group` (the USWDS base class)                     |
-| intro               | `.pathable-intro`               | `.usa-intro`           |                                                                       |
-| label               | `.pathable-label`               | `.usa-label`           |                                                                       |
-| legend              | `.pathable-legend`              | `.usa-legend`          |                                                                       |
-| link                | `.pathable-link`                | `.usa-link`            |                                                                       |
-| list                | `.pathable-list`                | `.usa-list`            |                                                                       |
-| memorable-date      | `.pathable-memorable-date`      | `.usa-memorable-date`  |                                                                       |
-| pagination          | `.pathable-pagination`          | `.usa-pagination`      |                                                                       |
-| paragraph           | `.pathable-paragraph`           | `.usa-paragraph`       |                                                                       |
-| process-list        | `.pathable-process-list`        | `.usa-process-list`    |                                                                       |
-| prose               | `.pathable-prose`               | `.usa-prose`           |                                                                       |
-| radio               | `.pathable-radio__*`            | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level       |
-| search              | `.pathable-search`              | `.usa-search`          |                                                                       |
-| select              | `.pathable-select`              | `.usa-select`          |                                                                       |
-| sidenav             | `.pathable-sidenav`             | `.usa-sidenav`         |                                                                       |
-| site-alert          | `.pathable-site-alert`          | `.usa-site-alert`      |                                                                       |
-| step-indicator      | `.pathable-step-indicator`      | `.usa-step-indicator`  |                                                                       |
-| summary-box         | `.pathable-summary-box`         | `.usa-summary-box`     |                                                                       |
-| table               | `.pathable-table`               | `.usa-table`           |                                                                       |
-| tag                 | `.pathable-tag`                 | `.usa-tag`             |                                                                       |
-| textarea            | `.pathable-textarea`            | `.usa-textarea`        |                                                                       |
+| Component           | PathAble Class              | USWDS Equivalent       | Notes                                                                 |
+| ------------------- | --------------------------- | ---------------------- | --------------------------------------------------------------------- |
+| alert               | `.pathable-alert`           | `.usa-alert`           |                                                                       |
+| breadcrumb          | `.pathable-breadcrumb`      | `.usa-breadcrumb`      |                                                                       |
+| button              | `.pathable-button`          | `.usa-button`          |                                                                       |
+| button-group        | `.pathable-button-group`    | `.usa-button-group`    |                                                                       |
+| card                | `.pathable-card`            | `.usa-card`            |                                                                       |
+| checkbox            | `.pathable-checkbox__*`     | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level |
+| collection          | `.pathable-collection`      | `.usa-collection`      |                                                                       |
+| dark-background     | `.pathable-dark-background` | `.usa-dark-background` |                                                                       |
+| error-message       | `.pathable-error-message`   | `.usa-error-message`   |                                                                       |
+| fieldset            | `.pathable-fieldset`        | `.usa-fieldset`        |                                                                       |
+| footer              | `.pathable-footer`          | `.usa-footer`          |                                                                       |
+| form                | `.pathable-form`            | `.usa-form`            |                                                                       |
+| form-group          | `.pathable-form-group`      | `.usa-form-group`      |                                                                       |
+| hint                | `.pathable-hint`            | `.usa-hint`            |                                                                       |
+| icon                | `.pathable-icon`            | `.usa-icon`            |                                                                       |
+| icon-list           | `.pathable-icon-list`       | `.usa-icon-list`       |                                                                       |
+| input               | `.pathable-input`           | `.usa-input`           |                                                                       |
+| input-prefix-suffix | `.pathable-input-group`     | `.usa-input-group`     | Maps to `.usa-input-group` (the USWDS base class)                     |
+| intro               | `.pathable-intro`           | `.usa-intro`           |                                                                       |
+| label               | `.pathable-label`           | `.usa-label`           |                                                                       |
+| legend              | `.pathable-legend`          | `.usa-legend`          |                                                                       |
+| link                | `.pathable-link`            | `.usa-link`            |                                                                       |
+| list                | `.pathable-list`            | `.usa-list`            |                                                                       |
+| memorable-date      | `.pathable-memorable-date`  | `.usa-memorable-date`  |                                                                       |
+| pagination          | `.pathable-pagination`      | `.usa-pagination`      |                                                                       |
+| paragraph           | `.pathable-paragraph`       | `.usa-paragraph`       |                                                                       |
+| process-list        | `.pathable-process-list`    | `.usa-process-list`    |                                                                       |
+| prose               | `.pathable-prose`           | `.usa-prose`           |                                                                       |
+| radio               | `.pathable-radio__*`        | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level       |
+| search              | `.pathable-search`          | `.usa-search`          |                                                                       |
+| select              | `.pathable-select`          | `.usa-select`          |                                                                       |
+| sidenav             | `.pathable-sidenav`         | `.usa-sidenav`         |                                                                       |
+| site-alert          | `.pathable-site-alert`      | `.usa-site-alert`      |                                                                       |
+| step-indicator      | `.pathable-step-indicator`  | `.usa-step-indicator`  |                                                                       |
+| summary-box         | `.pathable-summary-box`     | `.usa-summary-box`     |                                                                       |
+| table               | `.pathable-table`           | `.usa-table`           |                                                                       |
+| tag                 | `.pathable-tag`             | `.usa-tag`             |                                                                       |
+| textarea            | `.pathable-textarea`        | `.usa-textarea`        |                                                                       |
 
 ### Component Class Rules
 

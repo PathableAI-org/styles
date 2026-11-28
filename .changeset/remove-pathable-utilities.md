@@ -13,6 +13,8 @@ utility classes are the USWDS ones under their USWDS names, such as
   `--pathable-color-success`, `--pathable-color-text-success`,
   `--pathable-color-workflow-active`, `--pathable-color-workflow-complete`,
   `--pathable-color-workflow-blocked` and `--elevation-sm|md|lg|xl`.
+- `pathable-input-prefix-suffix`, an undocumented second name for
+  `pathable-input-group`, is removed too.
 - Sass: `$pathable-utilities` and `$pathable-utility-breakpoints` are removed,
   and `$semantic-colors` loses the eight colour keys above.
   `src/_utilities-config.scss` still loads but defines nothing.
@@ -25,6 +27,7 @@ utility classes are the USWDS ones under their USWDS names, such as
 table, which sets the same value (`maxw-*` in rem, the same width at a 16px root
 font size). Where the table names no class, write the CSS it gives instead.
 
+- Replace `pathable-input-prefix-suffix` with `pathable-input-group`.
 - A spacing step `<n>` is the same number of 0.5rem steps in both names.
 - The `mobile-lg:`, `tablet:` and `desktop:` variants of the padding, margin and
   display classes map the same way. Those of the flex, flex-align,
