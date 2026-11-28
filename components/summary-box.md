@@ -18,6 +18,8 @@ guarantees:
     claim: A pathable-list that is the last child of the text has no bottom margin, so the box's 24 px padding is the only space below the last item.
   - id: link-colours
     claim: A link in the box has the theme link colour with a contrast ratio of at least 4.5 to 1 against the box background, and a different colour while hovered.
+  - id: focus-ring
+    claim: 'A focused link in the box draws a 2 px solid outline 2 px outside it in PathAble Blue, #00365c, which has a contrast ratio of at least 3 to 1 against the box background; in forced-colours mode the outline is the system Highlight colour.'
 ---
 
 # Summary box
@@ -79,8 +81,8 @@ class.
 - `pathable-summary-box__text`: the body text. It is a `<div>` that holds a
   `pathable-list` or paragraphs.
 - `pathable-summary-box__link`: a link inside the text, in the box's own link
-  colours. A plain `pathable-link` also works but does not follow the box
-  background.
+  colours, with the PathAble focus ring in PathAble Blue. A plain
+  `pathable-link` also works but does not follow the box background.
 - `pathable-list`: the list of key points. A `pathable-list` that ends the
   text adds no bottom margin.
 - A box that follows a sibling is 16 px below it. Set another gap with a margin
