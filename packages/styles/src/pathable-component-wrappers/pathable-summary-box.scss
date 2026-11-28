@@ -21,7 +21,7 @@
   // under the 3:1 a focus outline needs. The ring takes PathAble Blue (about
   // 11:1). It is compiled rather than read from a theme token, and setting its
   // own ring also keeps one inherited from an enclosing background, such as the
-  // white ring of pathable-bg-link, from reaching the box.
+  // white ring of bg-primary-vivid, from reaching the box.
   --pathable-surface-focus-ring: #{color('ink')};
 }
 

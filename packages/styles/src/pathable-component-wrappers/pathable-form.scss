@@ -29,12 +29,7 @@
 // markup. Explicit control max-width utilities remain intentional overrides.
 .pathable-form
   :where(.pathable-input, .pathable-select, .pathable-textarea):not(
-    :where(
-      .pathable-maxw-mobile,
-      .pathable-maxw-mobile-lg,
-      .pathable-maxw-tablet,
-      .pathable-maxw-desktop
-    )
+    :where(.maxw-mobile, .maxw-mobile-lg, .maxw-tablet, .maxw-desktop)
   ) {
   max-width: none;
 }

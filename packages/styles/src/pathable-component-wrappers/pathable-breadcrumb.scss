@@ -14,7 +14,7 @@
 
   // The links' focus outline is drawn on this white background, whatever
   // surface the trail sits in. A light ring set by a surface behind it, such as
-  // the white one of pathable-bg-link, would be 1.0:1 here, so this resets it,
+  // the white one of bg-primary-vivid, would be 1.0:1 here, so this resets it,
   // as every light container does (see _utilities.scss).
   --pathable-surface-focus-ring: initial;
 }

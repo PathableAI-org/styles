@@ -53,7 +53,7 @@ $_shilling-silver: #dde2e8;
 $_danger: #dc3545;
 $_warning: #f5a623;
 
-// Text-safe deep jade (5.3:1 on white), matching --pathable-color-text-success.
+// Text-safe deep jade (5.3:1 on white), matching $pathable-color-text-success.
 $_jade-text: #0d7a63;
 
 @use 'uswds-core' with (

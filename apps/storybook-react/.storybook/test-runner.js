@@ -132,7 +132,9 @@ async function assertThemeResolution(page, context) {
     assertEqual(text, '#00365c', 'default --pathable-color-text')
 
     // (c) FR-008 — the override is scoped to the provider subtree: a sibling
-    // rendered outside the provider resolves the :root default, not the override.
+    // rendered outside the provider does not get the override. The styles
+    // package no longer declares a :root default for the accent (#781), so it
+    // resolves to no value there.
     const outsideAccent = await page
       .getByText('Outside the provider subtree')
       .evaluate((el) =>
@@ -140,7 +142,7 @@ async function assertThemeResolution(page, context) {
       )
     assertEqual(
       outsideAccent,
-      '#1cae96',
+      '',
       'scoped --pathable-color-accent outside provider',
     )
   }

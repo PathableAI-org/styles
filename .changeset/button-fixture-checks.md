@@ -13,7 +13,7 @@ rounded outer corners only.
   by default).
 - Below 480px the divider between two outline segments is 2px wide, the same as
   the outer border. In forced colours every divider is a single line.
-- A width class (`width-auto`, `pathable-width-auto` or another `width-*`) wins
+- A width class (`width-auto` or another `width-*`) wins
   on a button in a segmented group at every viewport width, and below 480px the
   button's item takes the button's width, so the strip stays joined.
   `width-full` keeps a segmented button at its share of the strip.

@@ -10,7 +10,6 @@
 @forward '_spacing';
 @forward '_elevation';
 @forward '_radius';
-@forward '_utilities-config';
 @forward '_semantic';
 
 // Component wrappers: forwards every component wrapper, in the
@@ -25,12 +24,11 @@
 @forward 'layout-grid';
 
 // USWDS utilities (unprefixed, same names as USWDS), in the pathable.utilities
-// layer. Before the .pathable-* utilities in that layer, so source order still
-// decides between the two where one class sets what the other sets.
-@forward '_uswds-utility-classes';
-
-// .pathable-* utilities, in the pathable.utilities layer after the USWDS
-// ones. The layer order puts utilities after components, so a utility
+// layer. The layer order puts utilities after components, so a utility
 // overrides a component class that sets the same property whatever order the
 // files load in.
+@forward '_uswds-utility-classes';
+
+// The surface focus ring of the background utilities, in the
+// pathable.utilities layer.
 @forward '_utilities';

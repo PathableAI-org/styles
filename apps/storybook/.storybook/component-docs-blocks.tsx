@@ -43,7 +43,7 @@ export function PackageNote({
   return (
     <div
       style={{
-        borderLeft: '4px solid var(--pathable-color-border)',
+        borderLeft: '4px solid var(--pathable-color-bg)',
         margin: '1rem 0',
         paddingLeft: '1rem',
       }}

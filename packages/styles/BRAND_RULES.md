@@ -50,7 +50,7 @@ USWDS links use Tech Teal (PathAble Blue on hover, `#002845` when active), and t
 
 The breadcrumb separators and back arrow use the base family's dark grade (`gray-cool-60`, 6.7:1 on white), because USWDS's default, the base grade, is Shilling Silver here.
 
-The shared PathAble focus outline (used by `.pathable-button`, `.pathable-input`, `.pathable-select`, `.pathable-textarea` and `.pathable-summary-box__link`) is drawn on the surface behind the control, so a coloured background sets its colour through `--pathable-surface-focus-ring`. It is Bright Blue Brooks by default. Dark containers reset it to Bright Blue Brooks: the `pathable-bg-primary` utility and `.pathable-dark-background`. The `pathable-bg-accent` and `pathable-bg-success` utilities (Jade) set it to the on-accent dark blue, `pathable-bg-base` (Silver) and the footer primary and secondary sections (Silver family, whose links also draw the outline in that colour) to PathAble Blue, `pathable-bg-danger` to the on-accent dark blue (3.9:1), `.pathable-alert--success`, `--warning` and `--error` to the on-accent dark blue, and `.pathable-alert--emergency` to white, because Bright Blue Brooks is only 1.5:1 and 2.3:1 on those reds. Every other `.pathable-alert` (info, including an alert with no status modifier, and slim) sets it to PathAble Blue, because Bright Blue Brooks is only 2.7:1 on the info tint. `.pathable-summary-box` sets it to PathAble Blue for the same reason: Bright Blue Brooks is only 2.7:1 on its information tint. The outlines that components draw outside themselves read the same property, so they follow the background too: `.pathable-link`, `.pathable-breadcrumb__link`, `.pathable-pagination__button`, `.pathable-pagination__link`, `.pathable-button--unstyled`, and the scrollable table container. Outlines drawn inside an element (negative `outline-offset`) are drawn on the element's own background and are not covered. Tech Teal (`pathable-bg-link`) sets it to white (`--pathable-color-surface`, 7.7:1), because Bright Blue Brooks is only 2.6:1 on it. A white ring would inherit into light containers nested in the teal one, where it is 1.0:1, so the `pathable-bg-surface` utility and the light component containers (the card container, table, breadcrumb and pagination) reset it to Bright Blue Brooks. A new light container needs the same reset. The Jade, Silver and danger utilities, the alerts and the summary box set their own ring, so they hold inside the teal container too.
+The shared PathAble focus outline (used by `.pathable-button`, `.pathable-input`, `.pathable-select`, `.pathable-textarea` and `.pathable-summary-box__link`) is drawn on the surface behind the control, so a coloured background sets its colour through `--pathable-surface-focus-ring`. It is Bright Blue Brooks by default. Dark containers reset it to Bright Blue Brooks: the `bg-primary` utility and `.pathable-dark-background`. The `bg-secondary` and `bg-success` utilities (Jade) set it to the on-accent dark blue, `bg-base` (Silver) and the footer primary and secondary sections (Silver family, whose links also draw the outline in that colour) to PathAble Blue, `bg-error` to the on-accent dark blue (3.9:1), `.pathable-alert--success`, `--warning` and `--error` to the on-accent dark blue, and `.pathable-alert--emergency` to white, because Bright Blue Brooks is only 1.5:1 and 2.3:1 on those reds. Every other `.pathable-alert` (info, including an alert with no status modifier, and slim) sets it to PathAble Blue, because Bright Blue Brooks is only 2.7:1 on the info tint. `.pathable-summary-box` sets it to PathAble Blue for the same reason: Bright Blue Brooks is only 2.7:1 on its information tint. The outlines that components draw outside themselves read the same property, so they follow the background too: `.pathable-link`, `.pathable-breadcrumb__link`, `.pathable-pagination__button`, `.pathable-pagination__link`, `.pathable-button--unstyled`, and the scrollable table container. Outlines drawn inside an element (negative `outline-offset`) are drawn on the element's own background and are not covered. Tech Teal (`bg-primary-vivid`) sets it to white (`--pathable-color-surface`, 7.7:1), because Bright Blue Brooks is only 2.6:1 on it. A white ring would inherit into light containers nested in the teal one, where it is 1.0:1, so the `bg-white` utility and the light component containers (the card container, table, breadcrumb and pagination) reset it to Bright Blue Brooks. A new light container needs the same reset. The Jade, Silver and error utilities, the alerts and the summary box set their own ring, so they hold inside the teal container too.
 
 The brand book defines no red or amber. Danger (`#dc3545`) and warning (`#f5a623`) are functional status colors added by the design system; use them only for status, never as decoration.
 
@@ -252,9 +252,7 @@ Themes are implemented internally through semantic custom properties such as the
 --pathable-color-surface
 --pathable-color-text
 --pathable-color-text-muted
---pathable-color-border
 --pathable-color-link
---pathable-color-accent
 --pathable-color-focus-ring
 ```
 
@@ -266,14 +264,14 @@ High-contrast themes should prioritize readability and WCAG contrast over subtle
 
 ## Utility Classes
 
-The `@pathableai/styles` package provides the USWDS utility classes under their USWDS names, plus one prefixed family, `pathable-bg-<role>`, which sets a background colour and the focus-ring colour of components inside it. The `components/utilities-*.md` pages list the supported families, values, breakpoint prefixes and state prefixes.
+The `@pathableai/styles` package provides the USWDS utility classes under their USWDS names and no `pathable-` utility classes. A few background classes, such as `bg-primary-vivid` and `bg-secondary`, also set the focus-ring colour of components inside them. The `components/utilities-*.md` pages list the supported families, values, breakpoint prefixes and state prefixes.
 
 ### Common Utility Class Examples
 
 | Purpose            | Class                 | Effect                   |
 | ------------------ | --------------------- | ------------------------ |
 | Primary background | `bg-primary`          | PathAble Blue background |
-| Surface background | `pathable-bg-surface` | White surface background |
+| Surface background | `bg-white`            | White surface background |
 | Primary text       | `text-primary`        | PathAble Blue text       |
 | Body font          | `font-family-body`    | Nunito font              |
 | Heading font       | `font-family-heading` | Fredoka font             |
@@ -304,46 +302,46 @@ This package provides `.pathable-{component}` component classes for the static U
 
 ### Component Class Naming Convention
 
-| Component           | PathAble Class                  | USWDS Equivalent       | Notes                                                                 |
-| ------------------- | ------------------------------- | ---------------------- | --------------------------------------------------------------------- |
-| alert               | `.pathable-alert`               | `.usa-alert`           |                                                                       |
-| breadcrumb          | `.pathable-breadcrumb`          | `.usa-breadcrumb`      |                                                                       |
-| button              | `.pathable-button`              | `.usa-button`          |                                                                       |
-| button-group        | `.pathable-button-group`        | `.usa-button-group`    |                                                                       |
-| card                | `.pathable-card`                | `.usa-card`            |                                                                       |
-| checkbox            | `.pathable-checkbox__*`         | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level |
-| collection          | `.pathable-collection`          | `.usa-collection`      |                                                                       |
-| dark-background     | `.pathable-dark-background`     | `.usa-dark-background` |                                                                       |
-| error-message       | `.pathable-error-message`       | `.usa-error-message`   |                                                                       |
-| fieldset            | `.pathable-fieldset`            | `.usa-fieldset`        |                                                                       |
-| footer              | `.pathable-footer`              | `.usa-footer`          |                                                                       |
-| form                | `.pathable-form`                | `.usa-form`            |                                                                       |
-| form-group          | `.pathable-form-group`          | `.usa-form-group`      |                                                                       |
-| hint                | `.pathable-hint`                | `.usa-hint`            |                                                                       |
-| icon                | `.pathable-icon`                | `.usa-icon`            |                                                                       |
-| icon-list           | `.pathable-icon-list`           | `.usa-icon-list`       |                                                                       |
-| input               | `.pathable-input`               | `.usa-input`           |                                                                       |
-| input-prefix-suffix | `.pathable-input-prefix-suffix` | `.usa-input-group`     | Maps to `.usa-input-group` (the USWDS base class)                     |
-| intro               | `.pathable-intro`               | `.usa-intro`           |                                                                       |
-| label               | `.pathable-label`               | `.usa-label`           |                                                                       |
-| legend              | `.pathable-legend`              | `.usa-legend`          |                                                                       |
-| link                | `.pathable-link`                | `.usa-link`            |                                                                       |
-| list                | `.pathable-list`                | `.usa-list`            |                                                                       |
-| memorable-date      | `.pathable-memorable-date`      | `.usa-memorable-date`  |                                                                       |
-| pagination          | `.pathable-pagination`          | `.usa-pagination`      |                                                                       |
-| paragraph           | `.pathable-paragraph`           | `.usa-paragraph`       |                                                                       |
-| process-list        | `.pathable-process-list`        | `.usa-process-list`    |                                                                       |
-| prose               | `.pathable-prose`               | `.usa-prose`           |                                                                       |
-| radio               | `.pathable-radio__*`            | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level       |
-| search              | `.pathable-search`              | `.usa-search`          |                                                                       |
-| select              | `.pathable-select`              | `.usa-select`          |                                                                       |
-| sidenav             | `.pathable-sidenav`             | `.usa-sidenav`         |                                                                       |
-| site-alert          | `.pathable-site-alert`          | `.usa-site-alert`      |                                                                       |
-| step-indicator      | `.pathable-step-indicator`      | `.usa-step-indicator`  |                                                                       |
-| summary-box         | `.pathable-summary-box`         | `.usa-summary-box`     |                                                                       |
-| table               | `.pathable-table`               | `.usa-table`           |                                                                       |
-| tag                 | `.pathable-tag`                 | `.usa-tag`             |                                                                       |
-| textarea            | `.pathable-textarea`            | `.usa-textarea`        |                                                                       |
+| Component           | PathAble Class              | USWDS Equivalent       | Notes                                                                 |
+| ------------------- | --------------------------- | ---------------------- | --------------------------------------------------------------------- |
+| alert               | `.pathable-alert`           | `.usa-alert`           |                                                                       |
+| breadcrumb          | `.pathable-breadcrumb`      | `.usa-breadcrumb`      |                                                                       |
+| button              | `.pathable-button`          | `.usa-button`          |                                                                       |
+| button-group        | `.pathable-button-group`    | `.usa-button-group`    |                                                                       |
+| card                | `.pathable-card`            | `.usa-card`            |                                                                       |
+| checkbox            | `.pathable-checkbox__*`     | `.usa-checkbox__*`     | No base `.usa-checkbox`; the `.pathable-checkbox` root is block-level |
+| collection          | `.pathable-collection`      | `.usa-collection`      |                                                                       |
+| dark-background     | `.pathable-dark-background` | `.usa-dark-background` |                                                                       |
+| error-message       | `.pathable-error-message`   | `.usa-error-message`   |                                                                       |
+| fieldset            | `.pathable-fieldset`        | `.usa-fieldset`        |                                                                       |
+| footer              | `.pathable-footer`          | `.usa-footer`          |                                                                       |
+| form                | `.pathable-form`            | `.usa-form`            |                                                                       |
+| form-group          | `.pathable-form-group`      | `.usa-form-group`      |                                                                       |
+| hint                | `.pathable-hint`            | `.usa-hint`            |                                                                       |
+| icon                | `.pathable-icon`            | `.usa-icon`            |                                                                       |
+| icon-list           | `.pathable-icon-list`       | `.usa-icon-list`       |                                                                       |
+| input               | `.pathable-input`           | `.usa-input`           |                                                                       |
+| input-prefix-suffix | `.pathable-input-group`     | `.usa-input-group`     | Maps to `.usa-input-group` (the USWDS base class)                     |
+| intro               | `.pathable-intro`           | `.usa-intro`           |                                                                       |
+| label               | `.pathable-label`           | `.usa-label`           |                                                                       |
+| legend              | `.pathable-legend`          | `.usa-legend`          |                                                                       |
+| link                | `.pathable-link`            | `.usa-link`            |                                                                       |
+| list                | `.pathable-list`            | `.usa-list`            |                                                                       |
+| memorable-date      | `.pathable-memorable-date`  | `.usa-memorable-date`  |                                                                       |
+| pagination          | `.pathable-pagination`      | `.usa-pagination`      |                                                                       |
+| paragraph           | `.pathable-paragraph`       | `.usa-paragraph`       |                                                                       |
+| process-list        | `.pathable-process-list`    | `.usa-process-list`    |                                                                       |
+| prose               | `.pathable-prose`           | `.usa-prose`           |                                                                       |
+| radio               | `.pathable-radio__*`        | `.usa-radio__*`        | No base `.usa-radio`; the `.pathable-radio` root is block-level       |
+| search              | `.pathable-search`          | `.usa-search`          |                                                                       |
+| select              | `.pathable-select`          | `.usa-select`          |                                                                       |
+| sidenav             | `.pathable-sidenav`         | `.usa-sidenav`         |                                                                       |
+| site-alert          | `.pathable-site-alert`      | `.usa-site-alert`      |                                                                       |
+| step-indicator      | `.pathable-step-indicator`  | `.usa-step-indicator`  |                                                                       |
+| summary-box         | `.pathable-summary-box`     | `.usa-summary-box`     |                                                                       |
+| table               | `.pathable-table`           | `.usa-table`           |                                                                       |
+| tag                 | `.pathable-tag`             | `.usa-tag`             |                                                                       |
+| textarea            | `.pathable-textarea`        | `.usa-textarea`        |                                                                       |
 
 ### Component Class Rules
 

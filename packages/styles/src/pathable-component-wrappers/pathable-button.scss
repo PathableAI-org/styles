@@ -5,10 +5,8 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
-@use 'sass:map';
 @use 'uswds-core' as *;
 @use 'pathable-interaction-state-mixins' as states;
-@use '../utilities-config' as uc;
 
 @use 'usa-button/src/styles';
 
@@ -24,35 +22,6 @@
 // rules, so repeat it here for `.pathable-icon`.
 .pathable-icon {
   @extend .usa-icon;
-}
-
-// USWDS sets `width: auto` on buttons from mobile-lg (30em) up. That rule and
-// the width utilities have one class of specificity, so the button rule won
-// wherever it compiled later and `width="full"` stopped filling the container.
-// Repeat each width utility with the button class so the utility's intent
-// holds at every viewport regardless of stylesheet order. The responsive
-// variants are repeated in the same breakpoint order as the utilities, so a
-// mobile-first override such as `tablet:pathable-width-auto` still beats the
-// unprefixed class.
-@each $width-name,
-  $width-value in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
-{
-  .pathable-button.pathable-width-#{$width-name} {
-    width: $width-value;
-  }
-}
-
-@each $bp-name, $bp-width in uc.$pathable-utility-breakpoints {
-  @media (min-width: $bp-width) {
-    @each $width-name,
-      $width-value
-        in map.get(map.get(uc.$pathable-utilities, 'width'), 'values')
-    {
-      .pathable-button.#{$bp-name}\:pathable-width-#{$width-name} {
-        width: $width-value;
-      }
-    }
-  }
 }
 
 .pathable-button--accent-cool {

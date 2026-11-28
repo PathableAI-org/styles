@@ -43,9 +43,8 @@ fixtures/
   for a utility page (`utilities-margin-and-padding`) and `tokens-<uswds path>`
   for a token page (`tokens-spacing-units`), which show unprefixed USWDS
   classes such as `margin-x-2` or `bg-primary` rather than `pathable-*`
-  classes, apart from the `pathable-` utilities a page declares in `classes`
-  (such as `pathable-bg-link`). The contract check fails a `pathable-`
-  utility class that no page declares, reads the other `pathable-*` classes
+  classes; the package has no `pathable-` utility classes. The contract check
+  fails a `pathable-` class in `dist/utilities.css` that no page declares, reads the other `pathable-*` classes
   against the stylesheet and checks only the
   variants of a component page, so a utility or token folder owes no modifier
   fixtures; the component-page check still requires every class in its

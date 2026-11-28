@@ -73,9 +73,7 @@ Internally, component SCSS reads these semantic custom properties. They are impl
 --pathable-color-surface
 --pathable-color-text
 --pathable-color-text-muted
---pathable-color-border
 --pathable-color-link
---pathable-color-accent
 --pathable-color-focus-ring
 ```
 
@@ -250,7 +248,7 @@ Consuming projects do not need to manually place font files — they are distrib
 
 ## Utility Classes Usage
 
-The utility contract is the USWDS utility classes under their USWDS names (for example `margin-top-2`, `bg-primary`, `display-flex`, `text-primary`), emitted in the `pathable.utilities` cascade layer, plus one prefixed family, `pathable-bg-<role>`. The `components/utilities-*.md` pages list the supported families, values, breakpoint prefixes and state prefixes. Nothing else is part of the contract.
+The utility contract is the USWDS utility classes under their USWDS names (for example `margin-top-2`, `bg-primary`, `display-flex`, `text-primary`), emitted in the `pathable.utilities` cascade layer. The package has no `pathable-` utility classes. The `components/utilities-*.md` pages list the supported families, values, breakpoint prefixes and state prefixes. Nothing else is part of the contract.
 
 ### Utility Class Rules
 
