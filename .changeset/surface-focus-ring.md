@@ -2,12 +2,10 @@
 '@pathableai/styles': minor
 ---
 
-The shared focus outline on `.pathable-button`, `.pathable-input`, `.pathable-select`, `.pathable-textarea` and `.pathable-icon-button` now follows the surface it sits on, so it stays visible there. `.pathable-button--unstyled` keeps its USWDS 4px Bright Blue Brooks ring. Each `.pathable-surface` variant with its own background sets the new `--pathable-surface-focus-ring` custom property:
+Adds the `--pathable-surface-focus-ring` custom property, which sets the colour of the shared focus outline on `pathable-button`, `pathable-input`, `pathable-select` and `pathable-textarea` to suit the background behind them, so the outline stays visible there. Without it, the outline keeps `--pathable-color-focus-ring`. `pathable-button--unstyled` keeps its USWDS 4px ring.
 
-- `--brand` and `--tone-primary` use `--pathable-color-on-accent`. Bright Blue Brooks is only 1.1:1 on Intelligent Jade.
-- `--inset` and `--tone-subtle` use `--pathable-color-text`. Bright Blue Brooks is only 2.3:1 on Shilling Silver.
-- `--raised`, `--interactive`, `--inverse` and `--tone-default` reset it, so the nearest surface wins when surfaces nest. Controls there keep `--pathable-color-focus-ring`, including a value from a scoped `ThemeProvider`.
-
-On the brand, tone-primary, inset and tone-subtle surfaces the ring no longer uses `--pathable-color-focus-ring`, so a theme's `focusRing` override does not reach controls there. The ring follows the theme's `onAccent` or `text` instead.
-
-The package's dark containers reset it too: the `pathable-bg-primary` utility (with its `hover:` variant; `pathable-bg-link` sets a light ring instead, see the `bg-link-focus-ring` changeset), `.pathable-section--dark`, `.pathable-dark-background`, `.pathable-hero__callout` and `.pathable-identifier`. So a dark container inside a Jade or Silver surface keeps the Bright Blue Brooks ring. A button, icon button or form field that carries one of those utilities itself keeps the ring of the surface behind it. Outside a surface, and on `--base`, nothing changes. If you put a dark container of your own inside a Jade or Silver surface, set `--pathable-surface-focus-ring: initial` on it, or its controls inherit the surface's dark ring. To give a container of your own a different ring, set the property to that colour. The icon button now follows the same property, and no longer sets `--pathable-icon-button-focus-ring` on the brand and inverse surfaces. Setting that property yourself still overrides the icon button's ring. On the brand surface, the icon button's ring changes from PathAble Blue to the on-accent dark blue. The React `Surface` (`subtle` and `primary`), `Button`, `Input`, `Select`, `Textarea` and `IconButton` inherit the change.
+- The `pathable-bg-primary` utility (with its `hover:` variant) and `pathable-dark-background` reset the property, so a dark container inside a Jade or Silver background keeps the Bright Blue Brooks ring. `pathable-bg-link` sets a light ring instead.
+- A button or form field that carries one of those utilities itself keeps the ring of the background behind it.
+- Outside a background that sets the property, nothing changes.
+- If you put a dark container of your own inside a Jade or Silver background, set `--pathable-surface-focus-ring: initial` on it, or its controls inherit the background's dark ring.
+- To give a container of your own a different ring, set the property to that colour.
