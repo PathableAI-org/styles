@@ -2,4 +2,15 @@
 '@pathableai/styles': minor
 ---
 
-Compiles `pathable-footer` into the stylesheet, which it was not before, so the footer classes now reach `dist/styles.css`. Adds `pathable-footer--big`, `pathable-footer__primary-container`, `pathable-footer__primary-content--collapsible`, `pathable-footer__primary-link`, `pathable-footer__secondary-link`, `pathable-footer__logo`, `pathable-footer__logo-img`, `pathable-footer__contact-links`, `pathable-social-link`, `pathable-social-link__icon`, `pathable-sign-up` and `pathable-sign-up__heading`, wrapping the USWDS classes of the same names. Lists, labels and buttons inside a footer now get the USWDS footer spacing, scoped to the footer so they render as before elsewhere. The social-link icon now fills its square link. Links, the email input and the button in the footer's grey primary and secondary sections get a PathAble Blue focus ring, because Bright Blue Brooks is under 3:1 there. Contact links can wrap mid-address so a long email does not push the page sideways at 200 % text. The slim footer keeps its logo image and name together.
+Adds `pathable-footer` to the compiled stylesheet, which did not include it, so
+the footer classes now reach `dist/styles.css`: `pathable-footer--big`,
+`pathable-footer__primary-container`,
+`pathable-footer__primary-content--collapsible`,
+`pathable-footer__primary-link`, `pathable-footer__secondary-link`,
+`pathable-footer__logo`, `pathable-footer__logo-img`,
+`pathable-footer__contact-links`, `pathable-social-link`,
+`pathable-social-link__icon`, `pathable-sign-up` and
+`pathable-sign-up__heading`.
+
+- Lists, labels and buttons inside a footer get the USWDS footer spacing, scoped
+  to the footer so they render as before elsewhere.
