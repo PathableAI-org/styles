@@ -80,8 +80,10 @@ unbounded result set differ in which items the markup holds, not in classes.
 
 - `pathable-pagination`: the `<nav>`. Give it an `aria-label` that names what
   is being paged, such as `Participant list pages`.
-- `pathable-pagination__list`: the `<ul>`. It takes no `role="list"`: the
-  `<nav>` and its label already name the set of page links.
+- `pathable-pagination__list`: the `<ul>`. It takes no `role="list"`. Its
+  items are page links in a labelled `<nav>`, not rows, so the explicit list
+  role that marker-less lists of rows take does not apply, and Safari with
+  VoiceOver may not announce the item count.
 - `pathable-pagination__item`: one `<li>` per page button, arrow or overflow
   mark. Every item has it.
 - `pathable-pagination__page-no`: added to each `<li>` that holds a numbered
