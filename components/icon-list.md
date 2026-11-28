@@ -14,7 +14,7 @@ guarantees:
   - id: item-row
     claim: Each item is a flex row, with 12 px of space above every item except the first.
   - id: content-gap
-    claim: The content block has a left padding of about 6 px (0.396rem) between it and the icon, and its first and last children have no margin at the top and bottom.
+    claim: The content block has a left padding of 0.4rem (6.4 px at a 16 px root) between it and the icon, and its first and last children have no margin at the top and bottom.
   - id: long-words
     claim: The content block can shrink below its longest word and breaks a word too long for it, so an item never scrolls sideways under enlarged text on a narrow screen.
   - id: icon-box
