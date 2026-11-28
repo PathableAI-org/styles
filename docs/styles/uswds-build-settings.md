@@ -124,7 +124,7 @@ At the USWDS default: `error-light` (`'red-warm-30v'`), `error-darker`
 | `$theme-body-background-color`                                             | `'white'`                                                       | Page background |
 | `$theme-text-color`                                                        | `'ink'` (PathAble Blue)                                         | Body text       |
 | `$theme-link-color`, `$theme-link-hover-color`, `$theme-link-active-color` | `'accent-cool-dark'` (Tech Teal), `'primary'`, `'primary-dark'` | Link colours    |
-| `$theme-link-visited-color`                                                | `'violet-70v'` (USWDS default)                                  | Visited link    |
+| `$theme-link-visited-color`                                                | `'accent-cool-dark'` (Tech Teal)                                | Visited link    |
 | `$theme-focus-color`                                                       | `'accent-cool'` (Bright Blue Brooks)                            | Focus outline   |
 
 ### Component colours
