@@ -1,6 +1,6 @@
 # @pathableai/styles
 
-PathAble's shared style package provides brand-aligned SCSS tokens, typography defaults, color values, and usage guidance for building consistent PathAble interfaces.
+PathAble's shared style package provides brand-aligned compiled CSS, tokens, typography and colour values, and usage guidance for building consistent PathAble interfaces.
 
 This package is the implementation source for PathAble visual design foundations. It should be used by applications, documentation sites, prototypes, and agent-generated UI work that needs to follow the PathAble brand.
 
@@ -90,61 +90,6 @@ pathable.utilities;` to put it below.
 For `!important` declarations the order is reversed: an `!important` in
 `pathable.base` or `pathable.components` beats one in a later layer, and beats
 an unlayered `!important` in your app.
-
-### SCSS (`@use`)
-
-Install Dart Sass and USWDS, then use the published source subpath with a stable
-namespace:
-
-```bash
-pnpm add @pathableai/styles @uswds/uswds
-pnpm add -D sass
-```
-
-```scss
-@use '@pathableai/styles/src/index' as pathable;
-```
-
-When using the command-line compiler, include the package and USWDS module load
-paths shown below. The source entry emits font URLs relative to the compiled CSS;
-ensure your bundler copies those assets, or use the copy command below.
-
-### USWDS Integration
-
-This package configures the USWDS v3.x theme color families with the exact PathAble brand hex values.
-Compile the PathAble source before USWDS in the same Sass build to apply that
-configuration to USWDS components.
-
-**Installation with USWDS:**
-
-```bash
-pnpm add @pathableai/styles @uswds/uswds
-pnpm add -D sass
-```
-
-**Usage with USWDS components:**
-
-```scss
-@use '@pathableai/styles/src/index' as pathable;
-@use 'uswds';
-```
-
-Configure Dart Sass to resolve both installed packages and the USWDS package
-modules. For the command-line compiler:
-
-```bash
-pnpm exec sass --load-path=node_modules --load-path=node_modules/@uswds/uswds/packages src/app.scss dist/app.css
-node -e "require('node:fs').cpSync('node_modules/@pathableai/styles/fonts', 'fonts', { recursive: true })"
-```
-
-The compiled PathAble CSS already includes the USWDS component styles that the
-`.pathable-*` wrappers use, compiled with the PathAble theme. Importing the stock
-precompiled USWDS CSS adds stock, unbranded components; it does not apply the
-PathAble Sass configuration. Use the combined Sass build above for any other
-brand-aligned USWDS components.
-
-The example above is the supported source-build path. Consumers that only need
-the PathAble contract should import the package's compiled CSS instead.
 
 ## Tokens
 

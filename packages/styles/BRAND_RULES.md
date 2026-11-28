@@ -266,34 +266,32 @@ High-contrast themes should prioritize readability and WCAG contrast over subtle
 
 ## Utility Classes
 
-The `@pathableai/styles` package generates `.pathable-*` CSS utility classes. See `packages/styles/AGENTS.md` for the complete utility module reference.
+The `@pathableai/styles` package provides the USWDS utility classes under their USWDS names, plus one prefixed family, `pathable-bg-<role>`, which sets a background colour and the focus-ring colour of components inside it. The `components/utilities-*.md` pages list the supported families, values, breakpoint prefixes and state prefixes.
 
 ### Common Utility Class Examples
 
-| Purpose            | Class                            | Effect                   |
-| ------------------ | -------------------------------- | ------------------------ |
-| Primary background | `.pathable-bg-primary`           | PathAble Blue background |
-| Surface background | `.pathable-bg-surface`           | White surface background |
-| Primary text       | `.pathable-text-primary`         | PathAble Blue text       |
-| Body font          | `.pathable-font-family-body`     | Nunito font              |
-| Heading font       | `.pathable-font-family-heading`  | Fredoka font             |
-| Spacing            | `.pathable-padding-2`            | 8px padding all sides    |
-| Spacing            | `.pathable-padding-4`            | 16px padding all sides   |
-| Spacing            | `.pathable-margin-top-2`         | 8px top margin           |
-| Layout             | `.pathable-display-flex`         | Flex container           |
-| Alignment          | `.pathable-flex-align-center`    | Center alignment         |
-| Alignment          | `.pathable-flex-justify-between` | Space between            |
-| Border             | `.pathable-border-1`             | 1px border               |
-| Border radius      | `.pathable-border-radius-sm`     | 4px border radius        |
+| Purpose            | Class                 | Effect                   |
+| ------------------ | --------------------- | ------------------------ |
+| Primary background | `bg-primary`          | PathAble Blue background |
+| Surface background | `pathable-bg-surface` | White surface background |
+| Primary text       | `text-primary`        | PathAble Blue text       |
+| Body font          | `font-family-body`    | Nunito font              |
+| Heading font       | `font-family-heading` | Fredoka font             |
+| Spacing            | `padding-2`           | 8px padding all sides    |
+| Spacing            | `padding-4`           | 16px padding all sides   |
+| Spacing            | `margin-top-2`        | 8px top margin           |
+| Layout             | `display-flex`        | Flex container           |
+| Alignment          | `flex-align-center`   | Center alignment         |
+| Alignment          | `flex-justify`        | Space between            |
+| Border             | `border-1px`          | 1px border               |
+| Border radius      | `radius-sm`           | Small border radius      |
 
-### Responsive Variants
+### Breakpoint prefixes
 
 Use breakpoint prefixes for responsive layouts:
 
 ```html
-<div
-  class="pathable-padding-1 tablet:pathable-padding-4 desktop:pathable-padding-8"
->
+<div class="padding-1 tablet:padding-4 desktop:padding-8">
   Responsive padding
 </div>
 ```
