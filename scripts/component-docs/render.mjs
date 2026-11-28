@@ -256,6 +256,13 @@ const literal = (value) => JSON.stringify(value)
 /**
  * The CSF file: one story per fixture, rendering its markup. It only backs
  * the previews on the component page, so it is hidden from the sidebar.
+ *
+ * Each story renders in a fullscreen layout inside a 1.25rem gutter. From the
+ * USWDS desktop breakpoint (64em) up, pathable-form-group--error has
+ * margin-left -1.25rem so its error bar hangs left of the field; the pages ask
+ * consumers for at least 1.25rem of left gutter, and Storybook's default padded
+ * layout (1rem) clips the bar. rem keeps the gutter growing with the reader's
+ * root font size. The HTML tab keeps the bare fixture markup.
  */
 function renderStories(page, sources) {
   const lines = [
@@ -264,6 +271,10 @@ function renderStories(page, sources) {
     'export default {',
     `  title: ${literal(`Component examples/${page.slug}`)},`,
     "  tags: ['!autodocs', '!dev'],",
+    "  parameters: { layout: 'fullscreen' },",
+    '  decorators: [',
+    '    (story) => `<div style="padding: 1.25rem">${story()}</div>`,',
+    '  ],',
     '}',
   ]
   for (const [state, fixture] of sources.fixtures) {
