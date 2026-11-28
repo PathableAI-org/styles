@@ -5,8 +5,7 @@
  * It also copies the icon sprite (`img/sprite.svg`), which markup references
  * through `<use>`, and `img/hero.jpg`, the fixtures' sample image.
  *
- * The `dist/img` mirror remains available for the existing Storybook asset
- * copier and other distribution-path consumers.
+ * `img/` is the only image location in the package.
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
@@ -30,10 +29,7 @@ const sourceRoot = join(
   'dist',
   'img',
 )
-const destinations = [
-  join(packageRoot, 'img'),
-  join(packageRoot, 'dist', 'img'),
-]
+const destinationRoot = join(packageRoot, 'img')
 
 if (!existsSync(stylesheetPath)) {
   throw new Error(
@@ -78,12 +74,10 @@ for (const imagePath of [...imagePaths].sort()) {
     continue
   }
 
-  for (const destinationRoot of destinations) {
-    const destinationPath = resolve(destinationRoot, imagePath)
-    mkdirSync(dirname(destinationPath), { recursive: true })
-    copyFileSync(sourcePath, destinationPath)
-    copied += 1
-  }
+  const destinationPath = resolve(destinationRoot, imagePath)
+  mkdirSync(dirname(destinationPath), { recursive: true })
+  copyFileSync(sourcePath, destinationPath)
+  copied += 1
 }
 
 if (missing.length > 0) {
@@ -93,5 +87,5 @@ if (missing.length > 0) {
 }
 
 console.log(
-  `[copy-icons] Copied ${imagePaths.size} referenced image(s) to ${destinations.length} package location(s) (${copied} files)`,
+  `[copy-icons] Copied ${copied} of ${imagePaths.size} referenced image(s) to img/`,
 )

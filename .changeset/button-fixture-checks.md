@@ -22,5 +22,5 @@ the button's item takes the button's width, so the strip stays joined.
 A `pathable-icon` inside a `pathable-button` no longer shrinks when the label is
 long.
 
-`dist/img/sprite.svg`, the USWDS icon sprite that `<use href>` icons point at,
-is now copied into the package's `dist/img` folder by the build.
+`img/sprite.svg`, the USWDS icon sprite that `<use href>` icons point at, is
+now copied into the package's `img` folder by the build.

@@ -10,7 +10,8 @@
 // --pathable-color-focus-ring.
 // A control that includes this mixin also belongs in
 // $-surface-focus-ring-controls in _utilities.scss (so does the link, the
-// unstyled button and the breadcrumb link, whose outlines read the ring on
+// unstyled button, the breadcrumb link and the pagination buttons and
+// links, whose outlines read the ring on
 // the element itself), so a dark background
 // utility on the control itself does not reset its ring.
 @mixin state-focus {

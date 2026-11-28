@@ -19,17 +19,20 @@
   "exports": {
     ".": "./dist/styles.css",
     "./components": "./dist/components.css",
+    "./components/*": "./components/*",
     "./utilities": "./dist/utilities.css",
     "./theme": "./dist/theme-default.css",
     "./css/*": "./dist/css/*",
+    "./img/*": "./img/*",
     "./dist/*": "./dist/*",
-    "./src/*": "./src/*"
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/build-css-modules.mjs && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node ../../scripts/component-docs/cli.mjs styles && node scripts/component-pages.mjs index",
+    "build": "node scripts/clean.mjs && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss dist/styles.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/components.scss dist/components.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/utilities.scss dist/utilities.css && sass --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/theme-default.scss dist/theme-default.css && node scripts/build-css-modules.mjs && node scripts/copy-icons.mjs && node scripts/copy-fonts.mjs && node ../../scripts/component-docs/cli.mjs styles && node scripts/component-pages.mjs index",
     "watch": "sass --watch --quiet-deps --load-path=node_modules/@uswds/uswds/packages src/index.scss:dist/styles.css src/components.scss:dist/components.css src/utilities.scss:dist/utilities.css src/theme-default.scss:dist/theme-default.css",
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",

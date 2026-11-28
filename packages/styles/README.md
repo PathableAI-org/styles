@@ -51,16 +51,23 @@ Import the compiled CSS entry point to get all default styles, tokens, and utili
 React consumers should import only `@pathableai/react`, which loads the
 theme, component and utility files automatically.
 
-The root import and all three subpath imports resolve to corresponding files
-under `dist/`:
+The CSS imports resolve to files under `dist/`; the component pages, images and
+`package.json` resolve to files at the package root:
 
-| Import                          | Resolves to              |
-| ------------------------------- | ------------------------ |
-| `@pathableai/styles`            | `dist/styles.css`        |
-| `@pathableai/styles/components` | `dist/components.css`    |
-| `@pathableai/styles/utilities`  | `dist/utilities.css`     |
-| `@pathableai/styles/theme`      | `dist/theme-default.css` |
-| `@pathableai/styles/css/<file>` | `dist/css/<file>`        |
+| Import                                    | Resolves to              |
+| ----------------------------------------- | ------------------------ |
+| `@pathableai/styles`                      | `dist/styles.css`        |
+| `@pathableai/styles/components`           | `dist/components.css`    |
+| `@pathableai/styles/utilities`            | `dist/utilities.css`     |
+| `@pathableai/styles/theme`                | `dist/theme-default.css` |
+| `@pathableai/styles/css/<file>`           | `dist/css/<file>`        |
+| `@pathableai/styles/components/<slug>.md` | `components/<slug>.md`   |
+| `@pathableai/styles/img/<file>`           | `img/<file>`             |
+| `@pathableai/styles/package.json`         | `package.json`           |
+
+The `components/<slug>.md` entries are the component pages and
+`components/index.md`. The `img/<file>` entries are the images the CSS
+references and the icon sprite, `img/sprite.svg`.
 
 The `components` and `utilities` entry points read their colours, fonts and
 other values from the `theme` entry point; import `@pathableai/styles` (all three) unless

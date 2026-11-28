@@ -5,7 +5,6 @@
       <a
         href="/participants?page=7"
         class="pathable-pagination__link pathable-pagination__previous-page"
-        aria-label="Previous page"
       >
         <svg
           class="pathable-icon"
@@ -15,16 +14,13 @@
         >
           <use href="/assets/img/sprite.svg#navigate_before"></use>
         </svg>
-        <span class="pathable-pagination__link-text">Previous</span>
+        <span class="pathable-pagination__link-text"
+          >Previous<span class="pathable-sr-only"> page</span></span
+        >
       </a>
     </li>
     <li class="pathable-pagination__item pathable-pagination__page-no">
-      <a
-        href="/participants?page=1"
-        class="pathable-pagination__button"
-        aria-label="Page 1"
-        >1</a
-      >
+      <a href="/participants?page=1" class="pathable-pagination__button">1</a>
     </li>
     <li class="pathable-pagination__item pathable-pagination__overflow">
       <span aria-hidden="true">…</span>
@@ -33,44 +29,23 @@
       >
     </li>
     <li class="pathable-pagination__item pathable-pagination__page-no">
-      <a
-        href="/participants?page=4"
-        class="pathable-pagination__button"
-        aria-label="Page 4"
-        >4</a
-      >
+      <a href="/participants?page=4" class="pathable-pagination__button">4</a>
     </li>
     <li class="pathable-pagination__item pathable-pagination__page-no">
-      <a
-        href="/participants?page=5"
-        class="pathable-pagination__button"
-        aria-label="Page 5"
-        >5</a
-      >
+      <a href="/participants?page=5" class="pathable-pagination__button">5</a>
     </li>
     <li class="pathable-pagination__item pathable-pagination__page-no">
-      <a
-        href="/participants?page=6"
-        class="pathable-pagination__button"
-        aria-label="Page 6"
-        >6</a
-      >
+      <a href="/participants?page=6" class="pathable-pagination__button">6</a>
     </li>
     <li class="pathable-pagination__item pathable-pagination__page-no">
-      <a
-        href="/participants?page=7"
-        class="pathable-pagination__button"
-        aria-label="Page 7"
-        >7</a
-      >
+      <a href="/participants?page=7" class="pathable-pagination__button">7</a>
     </li>
     <li class="pathable-pagination__item pathable-pagination__page-no">
       <a
         href="/participants?page=8"
         class="pathable-pagination__button pathable-current"
-        aria-label="Last page, page 8"
         aria-current="page"
-        >8</a
+        >8<span class="pathable-sr-only">, last page</span></a
       >
     </li>
   </ul>
