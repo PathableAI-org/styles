@@ -150,7 +150,9 @@ is expected behaviour.
 - A text cue for success: the green border is not enough on its own, so show a
   visible success message.
 - Choosing a width that suits the expected value.
-- At least 20 px of space to the left of a `pathable-form-group--error`
-  group, from a viewport 1024 px wide upward. There the group moves 20 px to
-  the left so that its 4 px dark red bar hangs outside the field's left edge,
-  as in USWDS, and a container with less left padding or margin clips the bar.
+- At least 1.25 rem of space to the left of a `pathable-form-group--error`
+  group, from a viewport 64 em wide upward (20 px and 1024 px at a 16 px root
+  font size). There the group moves 1.25 rem to the left so that its dark red
+  bar hangs outside the field's left edge, as in USWDS, and a container with
+  less left padding or margin clips the bar. Set the gutter in rem, not px, so
+  it grows with the reader's font size.
