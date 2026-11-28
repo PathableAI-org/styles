@@ -27,8 +27,9 @@ in other PathAble repositories.
    explicitly puts it in scope. In that separate scope, an adapter change still
    begins from the existing styles contract; a change that only adds React
    ergonomics over that contract can land in `packages/react` alone.
-3. **Record the release.** A pull request that changes a published package's
-   code carries a changeset ([`.changeset/README.md`](../../.changeset/README.md)).
+3. **Record the release.** A pull request that changes anything a published
+   package ships carries a changeset, written with the
+   [`changeset` skill](../../.agents/skills/changeset/SKILL.md).
 4. **Release it.** On `main`, [`publish.yml`](../../.github/workflows/publish.yml)
    opens or updates the `ci: version packages` pull request. Once that pull
    request merges, the workflow's publish job waits in the protected `npm`
@@ -148,8 +149,8 @@ props and link semantics are untouched, and High if the design changes them.
 ### Tiers and changesets
 
 The changeset bump sets a minimum tier; a trigger can raise it. Changeset
-rules and version semantics are in
-[`.changeset/README.md`](../../.changeset/README.md).
+rules and version semantics are in the
+[`changeset` skill](../../.agents/skills/changeset/SKILL.md).
 
 | Changeset in the pull request                               | Minimum tier |
 | ----------------------------------------------------------- | ------------ |
@@ -158,14 +159,14 @@ rules and version semantics are in
 | `minor`                                                     | Standard     |
 | `patch` with a consumer-visible change                      | Standard     |
 | `patch` with no consumer-visible change                     | Light        |
-| None (no published package code changed)                    | Light        |
+| None (nothing a consumer installs changed)                  | Light        |
 
 A High trigger does not by itself mean `major`: a compatible keyboard fix to an
 interactive component is High with a `patch` changeset.
 
 Both packages are below 1.0.0, so breaking changes currently ship as `minor`
-with a breaking-change label and migration notes, as
-[`.changeset/README.md`](../../.changeset/README.md) defines.
+with a breaking-change label and migration notes, as the
+[`changeset` skill](../../.agents/skills/changeset/SKILL.md) defines.
 
 ### Process by tier
 
