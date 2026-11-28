@@ -6,3 +6,4 @@ The `pathable-tag` component page examples now set the brand face and text colou
 
 - The headings beside the default and big tags carry `font-family-heading text-normal text-ink`: Fredoka Regular in `#00365c`.
 - The text before the tag group carries `pathable-paragraph`: Nunito in `#00365c`.
+- That paragraph also takes `pathable-paragraph` spacing: no top margin and a 1.6 line height, so when the tags wrap, their rows sit about 6px apart instead of touching.
