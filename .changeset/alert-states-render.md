@@ -10,7 +10,7 @@ alert's text is no longer white on a pale pink tint.
 - The success, warning and error alerts fill the body with the status colour and
   set text, icon and links in the status text colour.
 - Links in the emergency alert are white.
-- The info and plain alerts use a PathAble Blue focus ring, which has 3:1 on
+- The info alerts use a PathAble Blue focus ring, which has 3:1 on
   their surface.
 - Long words in an alert wrap instead of running out of it under large text.
 - The status icon is laid out in the normal flow of the body and shows in

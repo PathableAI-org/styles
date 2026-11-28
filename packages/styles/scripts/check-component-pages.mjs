@@ -66,7 +66,8 @@
  *   - the class, every non-default variant's modifier class, every class in
  *     the markup examples (fixtures included) and every class named in prose
  *     is a class selector
- *     in the compiled CSS; a default variant has no modifier class; every
+ *     in the compiled CSS; a default variant has no modifier class, unless
+ *     its axis sets `default-modifier: true`, which then requires that rule; every
  *     modifier the CSS has for the class is a variant on the page (static);
  *   - the body's summary paragraph and Variants table agree with the front
  *     matter, and no page names a custom property in prose or a claim;
@@ -565,6 +566,10 @@ function checkVariants(page, css, errors) {
       errors.push('each variant needs "axis", "default" and a "values" list')
       continue
     }
+    const hasModifier = variant['default-modifier']
+    if (hasModifier !== undefined && typeof hasModifier !== 'boolean') {
+      errors.push(`variant "${axis}": default-modifier must be true or false`)
+    }
     if (!values.includes(variant.default)) {
       errors.push(
         `variant "${axis}": default "${variant.default}" is not one of its values`,
@@ -578,7 +583,12 @@ function checkVariants(page, css, errors) {
         `${axis} | \`${value}\``,
         isDefault ? 'none' : `\`${modifier}\``,
       )
-      if (isDefault && css.classes.has(modifier)) {
+      if (isDefault && hasModifier === true && !css.classes.has(modifier)) {
+        errors.push(
+          `${label}: default-modifier is set but there is no .${modifier} rule`,
+        )
+      }
+      if (isDefault && hasModifier !== true && css.classes.has(modifier)) {
         errors.push(
           `${label}: the default has a .${modifier} rule, so it is not the default`,
         )

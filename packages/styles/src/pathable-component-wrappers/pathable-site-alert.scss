@@ -16,7 +16,10 @@
   @extend .usa-site-alert;
 }
 
-.pathable-site-alert--info {
+// Info is the default status: a site alert without --emergency looks like the
+// info site alert, at the same specificity.
+.pathable-site-alert--info,
+.pathable-site-alert:where(:not(.pathable-site-alert--emergency)) {
   @extend .usa-site-alert--info;
 }
 
@@ -73,10 +76,9 @@
 // The status rules make the nested body a flex column, where margins do not
 // collapse: a list after the heading would add its 1em top margin to the
 // heading's units(1) bottom margin. Take the heading's margin off the list's
-// so the gap stays the larger of the two, as in normal flow. Only the status
-// modifiers make the body a flex column; without one the margins collapse.
-.pathable-site-alert--info .pathable-alert__heading + .pathable-list,
-.pathable-site-alert--emergency .pathable-alert__heading + .pathable-list {
+// so the gap stays the larger of the two, as in normal flow. Every site alert
+// has a status, so the body is always a flex column.
+.pathable-site-alert .pathable-alert__heading + .pathable-list {
   margin-top: calc(1em - #{units(1)});
 }
 

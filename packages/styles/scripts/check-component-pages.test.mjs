@@ -195,6 +195,43 @@ test('reports a modifier the page leaves out, and a default with a rule', () => 
   )
 })
 
+test('default-modifier allows a default rule and requires it', () => {
+  const withField = page(
+    frontMatter.replace(
+      '    default: plain\n',
+      '    default: plain\n    default-modifier: true\n',
+    ) + body,
+  )
+  assert.deepEqual(
+    checkPage(withField, facts({ css: css('.pathable-widget--plain { }') })),
+    [],
+  )
+  assert.ok(
+    includes(
+      checkPage(page(), facts({ css: css('.pathable-widget--plain { }') })),
+      'the default has a .pathable-widget--plain rule',
+    ),
+  )
+  assert.ok(
+    includes(
+      checkPage(withField, facts()),
+      'variant "tone=plain": default-modifier is set but there is no .pathable-widget--plain rule',
+    ),
+  )
+  const notBoolean = page(
+    frontMatter.replace(
+      '    default: plain\n',
+      '    default: plain\n    default-modifier: yes please\n',
+    ) + body,
+  )
+  assert.ok(
+    includes(
+      checkPage(notBoolean, facts()),
+      'default-modifier must be true or false',
+    ),
+  )
+})
+
 test('the body must agree with the front matter it repeats', () => {
   const summary = page(frontMatter + body.replace('A test widget. It', 'It'))
   assert.deepEqual(checkPage(summary, facts()), [
