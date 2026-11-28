@@ -5,10 +5,8 @@
 // JS-driven: No
 // Requires .usa-* on DOM: No
 
-@use 'sass:map';
 @use 'uswds-core' as *;
 @use 'pathable-interaction-state-mixins' as states;
-@use 'uswds-utilities/src/styles/rules/width' as uswds-width;
 
 @use 'usa-button/src/styles';
 
@@ -24,19 +22,6 @@
 // rules, so repeat it here for `.pathable-icon`.
 .pathable-icon {
   @extend .usa-icon;
-}
-
-// USWDS sets `width: auto` on buttons from mobile-lg (30em) up. That rule and
-// the width utilities have one class of specificity, so the button rule won
-// wherever it compiled later and `width-full` stopped filling the container.
-// Repeat each width utility with the button class so the utility's intent
-// holds at every viewport regardless of stylesheet order.
-@each $width-name,
-  $width-value in map.get(map.get(uswds-width.$u-width, 'width'), 'values')
-{
-  .pathable-button.width-#{$width-name} {
-    width: $width-value;
-  }
 }
 
 .pathable-button--accent-cool {

@@ -26,7 +26,8 @@ the retained React package read: `--pathable-color-border`,
 `--pathable-color-success`, `--pathable-color-text-success`,
 `--pathable-color-workflow-active`, `--pathable-color-workflow-complete`,
 `--pathable-color-workflow-blocked` and `--elevation-sm|md|lg|xl`. No rule in
-the stylesheet reads them, so nothing it styles renders differently. The Sass
+the stylesheet reads them, so no component or utility class renders
+differently. The Sass
 variables and the `$elevation-levels` map they came from stay; the
 `$semantic-colors` map loses those eight keys. For a value, use the colour
 utility of the same colour (`bg-secondary` or `text-secondary` for the accent,
@@ -41,11 +42,14 @@ colour or shadow unless a `ThemeProvider` sets the property, once this version
 is installed.
 
 Migration: replace each removed class with the unprefixed class below, which
-sets the same value. A removed class with no unprefixed equivalent is named in
-the table with the CSS to write instead. Each
-removed breakpoint variant maps the same way (`tablet:pathable-display-flex`
-becomes `tablet:display-flex`) where the unprefixed family has that variant;
-the colour, width and max-width families have none. A spacing step `<n>` is
+sets the same value (the `maxw-*` classes in rem, the same width at a 16px root
+font size). A removed class with no unprefixed equivalent is named in the
+table with the CSS to write instead. The `mobile-lg:`, `tablet:` and
+`desktop:` variants of the padding, margin and display classes map the same
+way (`tablet:pathable-display-flex` becomes `tablet:display-flex`). The
+breakpoint variants of the flex, flex-align, flex-justify, width and text-align
+classes have no unprefixed equivalent: set the property in a `min-width` media
+query instead. A spacing step `<n>` is
 the same number of 0.5rem steps in both names.
 
 | Removed                                                                    | Replacement                                                                                                                                                                                |

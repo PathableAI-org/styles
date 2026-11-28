@@ -29,18 +29,7 @@
 // still wins over both.
 $-legend-inherits-colour-under: (
   '.pathable-dark-background',
-  '.pathable-alert',
-  '.bg-primary',
-  '.bg-primary-vivid',
-  '.bg-secondary',
-  '.bg-success',
-  '.bg-error',
-  '.bg-accent-cool',
-  '.text-base',
-  '.text-primary',
-  '.text-primary-vivid',
-  '.text-secondary',
-  '.text-white'
+  '.pathable-alert'
 );
 
 @each $container in $-legend-inherits-colour-under {
