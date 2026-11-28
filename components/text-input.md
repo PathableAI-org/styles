@@ -57,7 +57,7 @@ Use something else when:
 - the value is one of a fixed set: use `pathable-select`, or radios in a
   `pathable-fieldset`;
 - the field needs a prefix or suffix inside the box: use
-  `pathable-input-prefix-suffix`.
+  `pathable-input-group`.
 
 Input masks, date pickers, character counters and client-side validation need
 JavaScript and are not part of this component.
